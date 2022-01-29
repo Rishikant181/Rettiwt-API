@@ -6,7 +6,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "build": "npx tsc -w --project ./",
+    "start": "nodemon --experimental-specifier-resolution=node ./dist/server.js"
   },
   "repository": {
     "type": "git",
@@ -21,5 +22,11 @@
   "dependencies": {
     "express": "^4.17.2",
     "node-fetch": "^3.2.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node": "^17.0.13",
+    "@types/node-fetch": "^3.0.3",
+    "typescript": "^4.5.5"
   }
 }

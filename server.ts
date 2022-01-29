@@ -4,10 +4,10 @@ import express from 'express';
 // Custom libs
 import {
     config
-} from './config/env.js';
+} from './config/env';
 import {
     AuthService
-} from './services/AuthService.js';
+} from './services/AuthService';
 
 // Initialising express instance
 const app = express();
