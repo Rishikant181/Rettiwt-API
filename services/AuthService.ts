@@ -4,9 +4,6 @@ import fetch from "node-fetch";
 // This file contains the service that handles various function related to authentication and authorization
 
 export class AuthService {
-    // MEMBER DATA
-    private guestToken: string = '';                                            // To store the guest token
-
     // MEMBER METHODS    
     // Method to generate guest token from twitter API
     /*
@@ -41,9 +38,9 @@ export class AuthService {
             const guestTokenIndex: number = res.indexOf("gt=") + 3;
             
             // Scraping the guest token from the response string
-            this.guestToken = res.substring(guestTokenIndex, guestTokenIndex + 19);
+            const guestToken = res.substring(guestTokenIndex, guestTokenIndex + 19);
 
-            return this.guestToken;
+            return guestToken;
         });
     }
 };
