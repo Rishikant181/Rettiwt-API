@@ -1,7 +1,7 @@
-// Package libs
+// PACKAGE LIBS
 import express from 'express';
 
-// Custom libs
+// CUSTOM LIBS
 import {
     config
 } from './config/env';
@@ -14,7 +14,7 @@ const app = express();
 
 // Creating root end point
 app.use('/', (req, res) => {
-    res.send("Hello World");
+    res.send("Hello World");    
 })
 
 // Setting up express server
