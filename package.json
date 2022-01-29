@@ -1,11 +1,12 @@
 {
+  "type": "module",
   "name": "twitter-api",
   "version": "0.1.0",
   "description": "An API to fetch data from Twitter APIs and serve it to other frontend services",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "nodemon server.js --experimental-json-modules"
   },
   "repository": {
     "type": "git",

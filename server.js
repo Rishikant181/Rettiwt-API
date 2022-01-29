@@ -1,11 +1,13 @@
-// Setting app root directory
-global.__basedir = __dirname;
-
 // Package libs
-const express = require('express');
+import express from 'express';
 
 // Custom libs
-const config = require(__basedir + '/config/env.json');
+import {
+    config
+} from './config/env.js';
+import {
+    AuthService
+} from './services/AuthService.js';
 
 // Initialising express instance
 const app = express();
