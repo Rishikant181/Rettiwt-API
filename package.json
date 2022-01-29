@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Rishikant181/twitter-api#readme",
   "dependencies": {
-    "express": "^4.17.2"
+    "express": "^4.17.2",
+    "node-fetch": "^3.2.0"
   }
 }
