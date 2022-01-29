@@ -6,7 +6,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js --experimental-json-modules"
+    "start": "nodemon server.js"
   },
   "repository": {
     "type": "git",
