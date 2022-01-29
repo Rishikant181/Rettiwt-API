@@ -10,13 +10,16 @@ class UID{
 }
 
 class User{
-    
+    _id : UID
     relation = class{
         followers:[relativeUser]
         following:[relativeUser]
     }
     tweets=class{
 
+    }
+    Mutual = class extends this.relation{
+        
     }
 
 }
