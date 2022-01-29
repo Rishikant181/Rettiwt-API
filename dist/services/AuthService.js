@@ -16,7 +16,7 @@ export class AuthService {
             "sec-fetch-user": "?1",
             "upgrade-insecure-requests": "1"
         };
-        fetch(url, {
+        return fetch(url, {
             headers: headers,
             "referrerPolicy": "strict-origin-when-cross-origin",
             "body": null,
@@ -26,6 +26,7 @@ export class AuthService {
             .then(res => {
             const guestTokenIndex = res.indexOf("gt=") + 3;
             this.guestToken = res.substring(guestTokenIndex, guestTokenIndex + 19);
+            return this.guestToken;
         });
     }
 }

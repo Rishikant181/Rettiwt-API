@@ -13,7 +13,7 @@ export class AuthService {
     For the time being, all this does is make a query to twitter home page and from the returned data,
     scraps the guest token that is embbedded into the html page
     */
-    generateGuestToken(url: string) {
+    generateGuestToken(url: string): Promise<string> {
         // Preparing the headers
         const headers: any = {
             "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -29,7 +29,7 @@ export class AuthService {
         };
 
         // Fetching the raw html from twitter
-        fetch(url, {
+        return fetch(url, {
             headers: headers,
             "referrerPolicy": "strict-origin-when-cross-origin",
             "body": null,
@@ -42,6 +42,8 @@ export class AuthService {
             
             // Scraping the guest token from the response string
             this.guestToken = res.substring(guestTokenIndex, guestTokenIndex + 19);
-        })
+
+            return this.guestToken;
+        });
     }
 };
