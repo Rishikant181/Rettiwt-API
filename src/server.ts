@@ -1,18 +1,17 @@
-// Setting app root directory
-global.__basedir = __dirname;
+// PACKAGE LIBS
+import express from 'express';
 
-// Package libs
-const express = require('express');
-
-// Custom libs
-const config = require(__basedir + '/config/env.json');
+// CUSTOM LIBS
+import { config } from './config/env';
+import { AuthService } from './services/AuthService';
+import { UserService } from './services/UserService';
 
 // Initialising express instance
 const app = express();
 
 // Creating root end point
 app.use('/', (req, res) => {
-    res.send("Hello World");
+    res.send("Hello World");    
 })
 
 // Setting up express server
