@@ -7,6 +7,7 @@ export class UserAccountDetails implements Deserializable {
     // MEMBER DATA
     __typename: string = '';                                                // To store the type of account
     id: string = '';                                                        // To store the internal data id
+    rest_id: string = '';                                                   // To store the internal rest id of user account
     screen_name: string = '';                                               // To store the screen name of the user
     name: string = '';                                                      // To store the actual name of the user
     created_at: string = '';                                                // To store the time when the account was created
@@ -22,10 +23,25 @@ export class UserAccountDetails implements Deserializable {
     profile_banner_url: string = '';                                        // To store the url to the profile's banner
     profile_image_url_https: string = '';                                   // To store the url to the profile's image
 
-    
+    // MEMBER METHODS
     // Method to deserialize input data into current object
+    /*
+    For now, this take in input data of 'any' format, then removes unnecessary, non-required fields,
+    then copies required fields from input data
+    NOTE: There might be a more elegant and faster method to do this
+    */
     deserialize(data: any): this {
-        Object.assign(this, data);
+        // Flatteining data.legacy json
+        Object.assign(data, data.legacy);
+
+        // Removing flattened data.legacy
+        delete data.legacy;
+
+        // Copying common fields into this object
+        for(var key in this) {
+            this[key] = data[key];
+        }
+        
         return this;
     }
 }

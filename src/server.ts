@@ -4,7 +4,7 @@ import express from 'express';
 // CUSTOM LIBS
 import { config } from './config/env';
 import { AuthService } from './services/AuthService';
-import { UserService } from './services/UserService';
+import { UserAccountService } from './services/UserAccountService';
 
 // Initialising express instance
 const app = express();
