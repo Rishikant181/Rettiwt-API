@@ -19,8 +19,8 @@ export class TweetEntities implements Deserializable {
     }
 }
 
-// Object to hold the actual tweet content
-export class TweetContent implements Deserializable {
+// Object to hold the actual tweet
+export class Tweet implements Deserializable {
     // MEMBER DATA
     rest_id: string;                                                        // To store the conversation id
     user_id_str: string;                                                    // To store the rest id of the user who made the tweet
