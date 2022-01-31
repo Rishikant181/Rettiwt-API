@@ -16,5 +16,14 @@ app.use('/', (req, res) => {
 
 // Setting up express server
 app.listen(config['server']['port'], () => {
+    new AuthService().generateGuestToken('https://twitter.com/')
+        .then(token => {
+            new UserAccountService().getUserAccountDetails(
+                "elonmusk",
+                config['twitter']['authToken'],
+                token
+            )
+            .then(data => console.log(data));
+        })
     console.log(`Listening on port ${config['server']['port']}`);
 });
