@@ -28,6 +28,6 @@ export class TweetService {
         .then(res => res.json())
         // Ignoring the next line because we still don't know the structure of response, so indexing it throws error
         //@ts-ignore
-        .then(res => res.data.user.result)
+        .then(res => res.data.user.result.timeline.timeline.instructions[0].entries)
     }
 }
