@@ -1,5 +1,6 @@
 
 import {GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString, } from 'graphql'
+import internal from 'stream'
 import { UID } from './uidModel'
 
 export const targetUser = new GraphQLObjectType(
@@ -13,13 +14,17 @@ export const targetUser = new GraphQLObjectType(
             following:{type:new GraphQLList(UID)},          //TODO: than test if we can forward User itself as type
             
             RecentTweet:{type:new GraphQLList(UID),
-                        args:{size:{type:GraphQLInt}}},
+                        args:{size:{type:GraphQLInt!}}
+            },
             
             LikedTweet:{type:new GraphQLList(UID),
-                        args:{size:{type:GraphQLInt}}},
-            _hierarchy:{type:GraphQLInt}
-
+                        args:{size:{type:GraphQLInt!}}},
             
+            
+            _hierarchy:{type:GraphQLInt}
+           
+            
+                
         })
     })
 

@@ -11,19 +11,19 @@ export const Tweet = new GraphQLObjectType(
             retweets:{type:new GraphQLList(UID)},
             likes:{type:new GraphQLList(UID)},
             comments:{type:new GraphQLList(UID)},
-            
+
             
         })
     
     
     })
 const Content =new GraphQLObjectType({
-    name:"coreMedia",
-    description:"Basic Tweet",
+    name:"Content",
+    description:"Content ",
     fields:()=>({
         media:{type:new GraphQLList(GraphQLString)},
         rawText:{type:GraphQLString},
-        filters:{type:Filter},
+        filters:{type:Filter}
 
 
     })
