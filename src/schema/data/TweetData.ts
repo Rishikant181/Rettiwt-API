@@ -25,7 +25,6 @@ class MentionedUser implements Deserializable {
 class TweetEntities implements Deserializable {
     // MEMBER DATA
     hastags: string[];                                                          // To store a list of hastags used
-    symbols: string[];                                                          // To store a list of symbold used
     urls: string[];                                                             // To store a list of urls mentioned
     user_mentions: MentionedUser[];                                             // To store a list of users mentioned
 
@@ -33,17 +32,27 @@ class TweetEntities implements Deserializable {
     // The constructor
     constructor() {
         this.hastags = [];
-        this.symbols = [];
         this.urls = [];
         this.user_mentions = [];
     }
 
     // Method to deserialize input data into this object
     deserialize(data: any): this {
-        for(const user of data.user_mentions) {
+        // Extracting user mentions
+        for(const user of data['user_mentions']) {
             this.user_mentions.push(new MentionedUser().deserialize(user));
         }
+
+        // Extracting urls
+        for(const url of data['urls']) {
+            this.urls.push(url.expanded_url);
+        }
         
+        // Extracting hashtags
+        for(const hashtag of data['hashtags']) {
+            this.hastags.push(hashtag.text);
+        }
+
         return this;
     }
 }
