@@ -73,7 +73,7 @@ export class Tweet implements Deserializable {
         this.user_id_str = data['user_id_str'];
         this.entities = new TweetEntities().deserialize(data['entities']);
         this.full_text = data['full_text'];
-        this.lang = data['land'];
+        this.lang = data['lang'];
         this.quote_count = data['quote_count'];
         this.reply_count = data['reply_count'];
         this.retweet_count = data['retweet_count'];
