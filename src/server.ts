@@ -4,6 +4,7 @@ import express from 'express';
 // CUSTOM LIBS
 import { config } from './config/env';
 import { AuthService } from './services/AuthService';
+import { TweetService } from './services/TweetService';
 import { UserAccountService } from './services/UserAccountService';
 
 // Initialising express instance

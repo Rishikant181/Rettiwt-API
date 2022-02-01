@@ -1,12 +1,10 @@
-// This file contains various object for handling data related to User Account
+// This file contains various objects for handling data related to User Account
 
 // CUSTOM LIBS
 import { Deserializable } from "./Data";
 
 export class UserAccountDetails implements Deserializable {
     // MEMBER DATA
-    __typename: string = '';                                                // To store the type of account
-    id: string = '';                                                        // To store the internal data id
     rest_id: string = '';                                                   // To store the internal rest id of user account
     screen_name: string = '';                                               // To store the screen name of the user
     name: string = '';                                                      // To store the actual name of the user
@@ -31,15 +29,12 @@ export class UserAccountDetails implements Deserializable {
     NOTE: There might be a more elegant and faster method to do this
     */
     deserialize(data: any): this {
-        // Flatteining data.legacy json
-        Object.assign(data, data.legacy);
-
-        // Removing flattened data.legacy
-        delete data.legacy;
-
+        // Copying the rest id
+        this["rest_id"] = data["rest_id"];
+        
         // Copying common fields into this object
         for(var key in this) {
-            this[key] = data[key];
+            this[key] = data.legacy[key];
         }
         
         return this;
