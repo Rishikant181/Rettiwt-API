@@ -33,11 +33,18 @@ export class TweetService {
         .then(data => {
             const tweets: Tweet[] = [];
 
+            //@ts-ignore
             for(var i = 0; i < data.length - 2; i++) {
-                //@ts-ignore
-                const tweet = data[i]['content']['itemContent']['tweet_results']['result'];
+                // Checking if actual tweet content is available
+                if(data[i]['content']['itemContent']) {
+                    //@ts-ignore
+                    console.log(data[i]['content']['itemContent']);
 
-                tweets.push(new Tweet().deserialize(tweet));
+                    //@ts-ignore
+                    const tweet = data[i]['content']['itemContent']['tweet_results']['result'];
+
+                    tweets.push(new Tweet().deserialize(tweet));
+                }
             }
 
             return tweets;
