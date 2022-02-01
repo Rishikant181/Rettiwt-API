@@ -20,3 +20,4 @@ export function authorizedGuestHeader(
         "x-guest-token": `${guestToken}`
     };
 }
+
