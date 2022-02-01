@@ -4,7 +4,7 @@
 import fetch from "node-fetch";
 
 // CUSTOM LIBS
-import { Tweet, TweetEntities } from "../schema/data/TweetData";
+import { Tweet } from "../schema/data/TweetData";
 
 import {
     userTweetsUrl,
@@ -19,7 +19,7 @@ export class TweetService {
         numTweets: number,
         authToken: string,
         guestToken: string
-    ): Promise<any> {
+    ): Promise<Tweet[]> {
         return fetch(userTweetsUrl(userId, numTweets), {
             headers: authorizedGuestHeader(authToken, guestToken),
             body: null,
