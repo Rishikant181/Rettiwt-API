@@ -27,6 +27,7 @@ class TweetEntities implements Deserializable {
     hastags: string[];                                                          // To store a list of hastags used
     urls: string[];                                                             // To store a list of urls mentioned
     user_mentions: MentionedUser[];                                             // To store a list of users mentioned
+    media: string[];                                                            // To store urls to various media files
 
     // MEMBER METHODS
     // The constructor
@@ -34,6 +35,7 @@ class TweetEntities implements Deserializable {
         this.hastags = [];
         this.urls = [];
         this.user_mentions = [];
+        this.media = [];
     }
 
     // Method to deserialize input data into this object
@@ -51,6 +53,13 @@ class TweetEntities implements Deserializable {
         // Extracting hashtags
         for(const hashtag of data['hashtags']) {
             this.hastags.push(hashtag.text);
+        }
+
+        // Extracting media urls (if any)
+        if(data['media']) {
+            for(const media of data['media']) {
+                this.media.push(media['media_url_https']);
+            }
         }
 
         return this;
