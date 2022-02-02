@@ -37,10 +37,6 @@ export class TweetService {
             for(var i = 0; i < data.length - 2; i++) {
                 // Checking if actual tweet content is available
                 if(data[i]['content']['itemContent']) {
-                    //@ts-ignore
-                    console.log(data[i]['content']['itemContent']);
-
-                    //@ts-ignore
                     const tweet = data[i]['content']['itemContent']['tweet_results']['result'];
 
                     tweets.push(new Tweet().deserialize(tweet));

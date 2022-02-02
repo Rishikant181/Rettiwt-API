@@ -3,11 +3,32 @@
 // CUSTOM LIBS
 import { Deserializable } from "./Data";
 
-export class UserAccountDetails implements Deserializable {
+// Object to store a user's identification
+export class UserID implements Deserializable {
     // MEMBER DATA
     id: string;                                                             // To store the internal rest id of user account
     userName: string;                                                       // To store the screen name of the user
     fullName: string;                                                       // To store the actual name of the user
+
+    // MEMEBER METHODS
+    // Method to deserialize input data into this object
+    deserialize(data: {
+        id: string,
+        userName: string,
+        fullName: string
+    }): this {
+            this.id = data.id;
+            this.userName = data.userName;
+            this.fullName = data.fullName;
+        
+            return this;
+    }
+}
+
+// Object to hold the details about a user
+export class User implements Deserializable {
+    // MEMBER DATA
+    user: UserID;                                                             // To store the internal rest id of user account
     createdAt: string;                                                      // To store the time when the account was created
     description: string;                                                    // To store the account description
     isVerified: boolean ;                                                   // To store whether this is a verified account or not
@@ -28,9 +49,11 @@ export class UserAccountDetails implements Deserializable {
     NOTE: There might be a more elegant and faster method to do this
     */
     deserialize(data: any): this {
-        this.id = data['rest_id'];
-        this.userName = data['legacy']['screen_name'];
-        this.fullName = data['legacy']['name'];
+        this.user = new UserID().deserialize({
+            id: data['rest_id'],
+            userName: data['legacy']['screen_name'],
+            fullName: data['legacy']['name']
+        })
         this.createdAt = data['legacy']['created_at'];
         this.description = data['legacy']['description'];
         this.isVerified = data['legacy']['verified'];

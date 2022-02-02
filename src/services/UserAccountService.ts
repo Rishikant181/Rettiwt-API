@@ -4,7 +4,7 @@
 import fetch from 'node-fetch';
 
 // Custom libs
-import { UserAccountDetails } from '../schema/data/UserAccountData';
+import { User } from '../schema/data/UserAccountData';
 
 import {
     userAccountUrl,
@@ -18,7 +18,7 @@ export class UserAccountService {
         screenName: string,
         authToken: string,
         guestToken: string
-    ): Promise<UserAccountDetails> {
+    ): Promise<User> {
         return fetch(userAccountUrl(screenName), {
             headers: authorizedGuestHeader(authToken, guestToken),
             body: null,
@@ -27,6 +27,6 @@ export class UserAccountService {
         .then(res => res.json())
         // Ignoring the next line because we still don't know the structure of response, so indexing it throws error
         //@ts-ignore
-        .then(res => new UserAccountDetails().deserialize(res.data.user.result));
+        .then(res => new User().deserialize(res.data.user.result));
     }
 };
