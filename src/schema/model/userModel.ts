@@ -27,4 +27,5 @@ export const targetUser = new GraphQLObjectType(
                 
         })
     })
-
+//TODO: Add meta USer Model
+//REVIEW: Check if every thing is working
