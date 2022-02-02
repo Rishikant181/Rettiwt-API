@@ -5,21 +5,20 @@ import { Deserializable } from "./Data";
 
 export class UserAccountDetails implements Deserializable {
     // MEMBER DATA
-    rest_id: string = '';                                                   // To store the internal rest id of user account
-    screen_name: string = '';                                               // To store the screen name of the user
-    name: string = '';                                                      // To store the actual name of the user
-    created_at: string = '';                                                // To store the time when the account was created
-    description: string = '';                                               // To store the account description
-    verified: boolean = false;                                              // To store whether this is a verified account or not
-    favourites_count: number = 0;                                           // To store the number of favourites
-    followers_count: number = 0;                                            // To store the number of followers
-    friends_count: number = 0;                                              // To store the number of friends
-    statuses_count: number = 0;                                             // To store the number of status posted by user
-    location: string = '';                                                  // To store the user's location
-    media_count = 0;                                                        // To store the number of media posted by user
-    pinned_tweet_ids_str: string[] = [];                                    // To store the ids of tweets that are pinned in the account
-    profile_banner_url: string = '';                                        // To store the url to the profile's banner
-    profile_image_url_https: string = '';                                   // To store the url to the profile's image
+    id: string;                                                             // To store the internal rest id of user account
+    userName: string;                                                       // To store the screen name of the user
+    fullName: string;                                                       // To store the actual name of the user
+    createdAt: string;                                                      // To store the time when the account was created
+    description: string;                                                    // To store the account description
+    isVerified: boolean ;                                                   // To store whether this is a verified account or not
+    favouritesCount: number;                                                // To store the number of favourites
+    followersCount: number;                                                 // To store the number of followers
+    friendsCount: number;                                                   // To store the number of friends
+    statusesCount: number;                                                  // To store the number of status posted by user
+    location: string;                                                       // To store the user's location
+    pinnedTweets: string[];                                                 // To store the ids of tweets that are pinned in the account
+    profileBanner: string;                                                  // To store the url to the profile's banner
+    profileImage: string;                                                   // To store the url to the profile's image
 
     // MEMBER METHODS
     // Method to deserialize input data into current object
@@ -29,13 +28,20 @@ export class UserAccountDetails implements Deserializable {
     NOTE: There might be a more elegant and faster method to do this
     */
     deserialize(data: any): this {
-        // Copying the rest id
-        this["rest_id"] = data["rest_id"];
-        
-        // Copying common fields into this object
-        for(var key in this) {
-            this[key] = data.legacy[key];
-        }
+        this.id = data['rest_id'];
+        this.userName = data['legacy']['screen_name'];
+        this.fullName = data['legacy']['name'];
+        this.createdAt = data['legacy']['created_at'];
+        this.description = data['legacy']['description'];
+        this.isVerified = data['legacy']['verified'];
+        this.favouritesCount = data['legacy']['favourites_count'];
+        this.followersCount = data['legacy']['followers_count'];
+        this.friendsCount = data['legacy']['friends_count'];
+        this.statusesCount = data['legacy']['statuses_count'];
+        this.location = data['legacy']['location'];
+        this.pinnedTweets = data['legacy']['pinned_tweet_ids_str'];
+        this.profileBanner = data['legacy']['profile_banner_url'];
+        this.profileImage = data['legacy']['profile_image_url'];
         
         return this;
     }
