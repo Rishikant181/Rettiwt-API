@@ -4,7 +4,10 @@
 import fetch from "node-fetch";
 
 // CUSTOM LIBS
-import { Tweet } from "../schema/data/TweetData";
+import {
+    TweetFilter,
+    Tweet
+} from "../schema/data/TweetData";
 
 import {
     userTweetsUrl,
@@ -13,8 +16,8 @@ import {
 
 export class TweetService {
     // MEMBER METHODS
-    // Method to fetch tweets made by a user using user id (rest_id)
-    getUserRecentTweets(
+    // Method to fetch recent tweets made by a user using user id (rest_id)
+    getRecentTweets(
         userId: string,
         numTweets: number,
         authToken: string,
@@ -45,5 +48,14 @@ export class TweetService {
 
             return tweets;
         });
+    }
+
+    // Method to fetch tweets filtered by the supplied filter
+    getFilteredTweets(
+        filter: TweetFilter,
+        authToken: string,
+        guestToken: string
+    ): any {
+        
     }
 }
