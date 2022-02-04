@@ -13,7 +13,7 @@ export class TweetFilter {
     toUsers: string[];                                                          // To store the list of users to whom the tweet was meant for
     mentions: string[];                                                         // To store the list of mentioned users
     startDate: string;                                                          // To store the beginning date to search tweets
-    endData: string;                                                            // To store the ending date to search tweets
+    endDate: string;                                                            // To store the ending date to search tweets
     count: number;                                                              // To store the number of tweets to fetch
 
     // MEMBER METHODS
@@ -25,7 +25,7 @@ export class TweetFilter {
         toUsers: string[],
         mentions: string[],
         startDate: string,
-        endData: string,
+        endDate: string,
         count: number
     }) {
         Object.assign(this, filter);

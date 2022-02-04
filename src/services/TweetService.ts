@@ -11,6 +11,7 @@ import {
 
 import {
     userTweetsUrl,
+    filteredTweetsUrl,
     authorizedGuestHeader
 } from './helper/Requests';
 
@@ -56,6 +57,6 @@ export class TweetService {
         authToken: string,
         guestToken: string
     ): any {
-        
+        filteredTweetsUrl(filter);
     }
 }
