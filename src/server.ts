@@ -18,22 +18,5 @@ app.use('/', (req, res) => {
 
 // Setting up express server
 app.listen(config['server']['port'], () => {
-    new AuthService().generateGuestToken('https://twitter.com/')
-        .then(token => {
-            new TweetService().getFilteredTweets(
-                new TweetFilter({
-                    words: ['tesla'],
-                    fromUsers: ['elonmusk'],
-                    toUsers: [],
-                    count: 20,
-                    startDate: '',
-                    endDate: '',
-                    mentions: [],
-                    hashtags: []
-                }),
-                config['twitter']['authToken'],
-                token
-            )
-        })
     console.log(`Listening on port ${config['server']['port']}`);
 });

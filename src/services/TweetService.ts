@@ -57,6 +57,6 @@ export class TweetService {
         authToken: string,
         guestToken: string
     ): any {
-        filteredTweetsUrl(filter);
+        
     }
 }
