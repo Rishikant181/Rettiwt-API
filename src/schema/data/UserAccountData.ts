@@ -64,7 +64,7 @@ export class User implements Deserializable {
         this.location = data['legacy']['location'];
         this.pinnedTweets = data['legacy']['pinned_tweet_ids_str'];
         this.profileBanner = data['legacy']['profile_banner_url'];
-        this.profileImage = data['legacy']['profile_image_url'];
+        this.profileImage = data['legacy']['profile_image_url_https'];
         
         return this;
     }
