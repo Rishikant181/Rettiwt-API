@@ -4,6 +4,34 @@
 import { Deserializable } from "./Data";
 import { UserID } from './UserAccountData';
 
+// Object to hold filters for Tweets
+export class TweetFilter {
+    // MEMBER DATA
+    words: string[];                                                            // To store the list of words to search
+    hashtags: string[];                                                         // To store the list of hashtags to seach
+    fromUsers: string[];                                                        // To store the list of users who made the tweet
+    toUsers: string[];                                                          // To store the list of users to whom the tweet was meant for
+    mentions: string[];                                                         // To store the list of mentioned users
+    startDate: string;                                                          // To store the beginning date to search tweets
+    endData: string;                                                            // To store the ending date to search tweets
+    count: number;                                                              // To store the number of tweets to fetch
+
+    // MEMBER METHODS
+    // The constructor
+    constructor(filter: {
+        words: string[],
+        hashtags: string[],
+        fromUsers: string[],
+        toUsers: string[],
+        mentions: string[],
+        startDate: string,
+        endData: string,
+        count: number
+    }) {
+        Object.assign(this, filter);
+    }
+}
+
 // Object to hold additional tweet entites
 class TweetEntities implements Deserializable {
     // MEMBER DATA
