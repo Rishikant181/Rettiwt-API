@@ -98,14 +98,14 @@ export class Tweet implements Deserializable {
     // Method to deserialize input data into this object
     deserialize(data: any): this {
         this.id = data['rest_id'];
-        this.createdAt = data['legacy']['created_at'];
-        this.tweetBy = data['legacy']['user_id_str'];
-        this.entities = new TweetEntities().deserialize(data['legacy']['entities']);
-        this.fullText = data['legacy']['full_text'];
-        this.lang = data['legacy']['lang'];
-        this.quoteCount = data['legacy']['quote_count'];
-        this.replyCount = data['legacy']['reply_count'];
-        this.retweetCount = data['legacy']['retweet_count'];
+        this.createdAt = data['created_at'];
+        this.tweetBy = data['user_id_str'];
+        this.entities = new TweetEntities().deserialize(data['entities']);
+        this.fullText = data['full_text'];
+        this.lang = data['lang'];
+        this.quoteCount = data['quote_count'];
+        this.replyCount = data['reply_count'];
+        this.retweetCount = data['retweet_count'];
 
         return this;
     }
