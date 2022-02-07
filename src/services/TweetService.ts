@@ -19,13 +19,13 @@ export class TweetService {
     // MEMBER METHODS
     // Method to fetch all tweets and replies made by a user
     getTweets(
-        userId: string,
-        numTweets: number,
-        cursor: string,
         authToken: string,
         csrfToken: string,
-        cookie: string
-    ): Promise <{ tweets: Tweet[]; next: string }> {
+        cookie: string,
+        userId: string,
+        numTweets: number,
+        cursor: string,        
+    ): Promise<{ tweets: Tweet[]; next: string }> {
         return fetch(userTweetsUrl(userId, numTweets, cursor), {
             headers: authorizedHeader(authToken, csrfToken, cookie),
             body: null,
@@ -57,11 +57,11 @@ export class TweetService {
     }
 
     // Method to fetch tweets filtered by the supplied filter
-    getFilteredTweets(
-        filter: TweetFilter,
+    private getFilteredTweets(
         authToken: string,
         csrfToken: string,
-        cookie: string
+        cookie: string,
+        filter: TweetFilter        
     ): Promise<Tweet[]> {
         return fetch(filteredTweetsUrl(filter), {
             headers: authorizedHeader(
