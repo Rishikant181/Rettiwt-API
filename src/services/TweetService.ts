@@ -58,15 +58,31 @@ export class TweetService {
             var tweets: Tweet[] = [];
 
             //@ts-ignore
-            for(var i = 0; i < data.length - 2; i++) {
-                // Checking if actual tweet content is available
-                if(data[i]['content']['itemContent']) {
-                    const tweet = data[i]['content']['itemContent']['tweet_results']['result'];
+            for(var entry of data) {
+                // If the entry is a tweet
+                if(entry['entryId'].indexOf("tweet") != -1) {
+                    // Extracting the tweet
+                    const tweet = entry['content']['itemContent']['tweet_results']['result'];
 
+                    // Adding the tweet to tweet list
                     tweets.push(new Tweet().deserialize({
                         'rest_id': tweet['rest_id'],
                         ...tweet['legacy']
                     }));
+                }
+                // If the entry is a retweet
+                else if(entry['entryId'].indexOf("homeConversation") != -1) {
+                    // Iterating through sub entries
+                    for(var entry of entry['content']['items']) {
+                        // Extracting the tweet
+                        const tweet = entry['item']['itemContent']['tweet_results']['result'];
+
+                        // Adding the tweet to tweet list
+                        tweets.push(new Tweet().deserialize({
+                            'rest_id': tweet['rest_id'],
+                            ...tweet['legacy']
+                        }));
+                    }
                 }
             }
 
