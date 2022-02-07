@@ -91,10 +91,15 @@ export class TweetService {
     }
 
     // Method to fetch tweets filtered by the supplied filter
+    /*
+    This feature is experimental and it's accuracy fails when after fetching around 30-40 tweets.
+    This feature needs to be refined more by using some other method to search tweets
+    */
     getFilteredTweets(
-        filter: TweetFilter        
-    ): Promise<Tweet[]> {
-        return fetch(filteredTweetsUrl(filter), {
+        filter: TweetFilter,
+        cursor: string        
+    ): Promise<{ tweets: Tweet[], next: string }> {
+        return fetch(filteredTweetsUrl(filter, cursor), {
             headers: authorizedHeader(
                 this.authToken,
                 this.csrfToken,
@@ -102,19 +107,38 @@ export class TweetService {
             )
         })
         .then(res => res.json())
-        //@ts-ignore
-        .then(res => res['globalObjects']['tweets'])
+        // Extracting tweets list and cursor to next batch from the response
+        .then(res => {
+            var next: '';                                                           // To store cursor the next batch
+
+            // If not a first batch
+            //@ts-ignore
+            if(res['timeline']['instructions'][2]) {
+                //@ts-ignore
+                next = res['timeline']['instructions'][2]['replaceEntry']['entry']['content']['operation']['cursor']['value'];
+            }
+            // If first batch
+            else {
+                //@ts-ignore
+                next = res['timeline']['instructions'][0]['addEntries']['entries'].at(-1)['content']['operation']['cursor']['value'];
+            }
+
+            //@ts-ignore
+            return { tweets: res['globalObjects']['tweets'], next: next }
+        })
         .then(data => {
             var tweets: Tweet[] = [];
 
-            for(var key of Object.keys(data)) {
+            // Iterating through the json array of tweets
+            for(var key of Object.keys(data.tweets)) {
+                // Adding the tweets to the Tweet[] list
                 tweets.push(new Tweet().deserialize({
-                    'rest_id': data[key]['id_str'],
-                    ...data[key]
+                    'rest_id': data.tweets[key]['id_str'],
+                    ...data.tweets[key]
                 }));
             }
 
-            return tweets;
+            return { tweets: tweets, next: data.next };
         });
     }
 }
