@@ -16,18 +16,36 @@ import {
 } from './helper/Requests';
 
 export class TweetService {
+    // MEMBER DATA
+    authToken: string;                                                          // To store the authentication token
+    csrfToken: string;                                                          // To store the csrfToken
+    cookie: string;                                                             // To store the cookie
+    
     // MEMBER METHODS
-    // Method to fetch all tweets and replies made by a user
-    getTweets(
+    // The constructor
+    constructor(
         authToken: string,
         csrfToken: string,
-        cookie: string,
+        cookie: string
+    ) {
+        // Initialising authentication data
+        this.authToken = authToken;
+        this.csrfToken = csrfToken;
+        this.cookie = cookie;
+    }
+
+    // Method to fetch all tweets and replies made by a user
+    getTweets(
         userId: string,
         numTweets: number,
         cursor: string,        
     ): Promise<{ tweets: Tweet[]; next: string }> {
         return fetch(userTweetsUrl(userId, numTweets, cursor), {
-            headers: authorizedHeader(authToken, csrfToken, cookie),
+            headers: authorizedHeader(
+                this.authToken,
+                this.csrfToken,
+                this.cookie
+            ),
             body: null,
             method: "GET"
         })
@@ -57,17 +75,14 @@ export class TweetService {
     }
 
     // Method to fetch tweets filtered by the supplied filter
-    private getFilteredTweets(
-        authToken: string,
-        csrfToken: string,
-        cookie: string,
+    getFilteredTweets(
         filter: TweetFilter        
     ): Promise<Tweet[]> {
         return fetch(filteredTweetsUrl(filter), {
             headers: authorizedHeader(
-                authToken,
-                csrfToken,
-                cookie
+                this.authToken,
+                this.csrfToken,
+                this.cookie
             )
         })
         .then(res => res.json())
