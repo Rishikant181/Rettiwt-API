@@ -63,7 +63,7 @@ export class TweetService {
         authToken: string,
         csrfToken: string,
         cookie: string
-    ): Promise <Tweet[]> {
+    ): Promise <{ tweets: Tweet[]; next: string }> {
         return fetch(userTweetsUrl(userId, numTweets, cursor), {
             headers: authorizedHeader(authToken, csrfToken, cookie),
             body: null,
@@ -90,7 +90,7 @@ export class TweetService {
                 }
             }
 
-            return tweets;
+            return { tweets: tweets, next: data[data.length - 1]['content']['value'] };
         });
     }
 
