@@ -17,9 +17,9 @@ import {
 
 export class TweetService {
     // MEMBER DATA
-    authToken: string;                                                          // To store the authentication token
-    csrfToken: string;                                                          // To store the csrfToken
-    cookie: string;                                                             // To store the cookie
+    private authToken: string;                                                   // To store the authentication token
+    private csrfToken: string;                                                   // To store the csrfToken
+    private cookie: string;                                                      // To store the cookie
     
     // MEMBER METHODS
     // The constructor
