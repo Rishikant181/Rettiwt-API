@@ -17,10 +17,11 @@ export class UserAccountService {
     getUserAccountDetails(
         screenName: string,
         authToken: string,
-        csrfToken: string
+        csrfToken: string,
+        cookie: string
     ): Promise<User> {
         return fetch(userAccountUrl(screenName), {
-            headers: authorizedHeader(authToken, csrfToken),
+            headers: authorizedHeader(authToken, csrfToken, cookie),
             body: null,
             method: "GET"
         })

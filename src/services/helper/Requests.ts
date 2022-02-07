@@ -42,7 +42,8 @@ export function filteredTweetsUrl(
 // Method to return a header for unauthorized guest users
 export function authorizedHeader(
     authToken: string,
-    csrfToken: string
+    csrfToken: string,
+    cookie: string
 ) {
     return {
         "accept": "*/*",
@@ -58,6 +59,7 @@ export function authorizedHeader(
         "x-csrf-token": `${csrfToken}`,
         "x-twitter-active-user": "no",
         "x-twitter-auth-type": "OAuth2Session",
-        "x-twitter-client-language": "en"
+        "x-twitter-client-language": "en",
+        "cookie": `${cookie}`,
     };
 }

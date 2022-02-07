@@ -22,10 +22,11 @@ export class TweetService {
         userId: string,
         numTweets: number,
         authToken: string,
-        csrfToken: string
+        csrfToken: string,
+        cookie: string
     ): Promise<Tweet[]> {
         return fetch(userTweetsUrl(userId, numTweets), {
-            headers: authorizedHeader(authToken, csrfToken),
+            headers: authorizedHeader(authToken, csrfToken, cookie),
             body: null,
             method: "GET"
         })
@@ -58,12 +59,14 @@ export class TweetService {
     getFilteredTweets(
         filter: TweetFilter,
         authToken: string,
-        csrfToken: string
+        csrfToken: string,
+        cookie: string
     ): Promise<Tweet[]> {
         return fetch(filteredTweetsUrl(filter), {
             headers: authorizedHeader(
                 authToken,
-                csrfToken
+                csrfToken,
+                cookie
             )
         })
         .then(res => res.json())
