@@ -55,6 +55,17 @@ export class TweetService {
         });
     }
 
+    // Method to fetch all tweets and replies made by a user
+    getTweets(
+        userId: string,
+        numTweets: number,
+        authToken: string,
+        csrfToken: string,
+        cookie: string
+    ): Promise <Tweet[]> {
+        
+    }
+
     // Method to fetch tweets filtered by the supplied filter
     getFilteredTweets(
         filter: TweetFilter,
