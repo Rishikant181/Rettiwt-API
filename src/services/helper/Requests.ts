@@ -40,7 +40,7 @@ export function filteredTweetsUrl(
 
 // HEADERS
 // Method to return a header for unauthorized guest users
-export function authorizedGuestHeader(
+export function authorizedHeader(
     authToken: string,
     csrfToken: string
 ) {

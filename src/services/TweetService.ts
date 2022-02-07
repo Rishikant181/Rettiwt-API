@@ -12,7 +12,7 @@ import {
 import {
     userTweetsUrl,
     filteredTweetsUrl,
-    authorizedGuestHeader
+    authorizedHeader
 } from './helper/Requests';
 
 export class TweetService {
@@ -22,10 +22,10 @@ export class TweetService {
         userId: string,
         numTweets: number,
         authToken: string,
-        guestToken: string
+        csrfToken: string
     ): Promise<Tweet[]> {
         return fetch(userTweetsUrl(userId, numTweets), {
-            headers: authorizedGuestHeader(authToken, guestToken),
+            headers: authorizedHeader(authToken, csrfToken),
             body: null,
             method: "GET"
         })
@@ -58,12 +58,12 @@ export class TweetService {
     getFilteredTweets(
         filter: TweetFilter,
         authToken: string,
-        guestToken: string
+        csrfToken: string
     ): Promise<Tweet[]> {
         return fetch(filteredTweetsUrl(filter), {
-            headers: authorizedGuestHeader(
+            headers: authorizedHeader(
                 authToken,
-                guestToken
+                csrfToken
             )
         })
         .then(res => res.json())

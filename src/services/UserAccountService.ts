@@ -8,7 +8,7 @@ import { User } from '../schema/data/UserAccountData';
 
 import {
     userAccountUrl,
-    authorizedGuestHeader
+    authorizedHeader
 } from './helper/Requests';
 
 export class UserAccountService {
@@ -17,10 +17,10 @@ export class UserAccountService {
     getUserAccountDetails(
         screenName: string,
         authToken: string,
-        guestToken: string
+        csrfToken: string
     ): Promise<User> {
         return fetch(userAccountUrl(screenName), {
-            headers: authorizedGuestHeader(authToken, guestToken),
+            headers: authorizedHeader(authToken, csrfToken),
             body: null,
             method: "GET"
         })
