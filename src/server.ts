@@ -3,6 +3,7 @@ import express from 'express';
 
 // CUSTOM LIBS
 import { config } from './config/env';
+import { TweetFilter } from './schema/data/TweetData';
 import { AuthService } from './services/AuthService';
 import { TweetService } from './services/TweetService';
 import { UserAccountService } from './services/UserAccountService';

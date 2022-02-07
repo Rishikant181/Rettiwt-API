@@ -4,6 +4,34 @@
 import { Deserializable } from "./Data";
 import { UserID } from './UserAccountData';
 
+// Object to hold filters for Tweets
+export class TweetFilter {
+    // MEMBER DATA
+    words: string[];                                                            // To store the list of words to search
+    hashtags: string[];                                                         // To store the list of hashtags to seach
+    fromUsers: string[];                                                        // To store the list of users who made the tweet
+    toUsers: string[];                                                          // To store the list of users to whom the tweet was meant for
+    mentions: string[];                                                         // To store the list of mentioned users
+    startDate: string;                                                          // To store the beginning date to search tweets
+    endDate: string;                                                            // To store the ending date to search tweets
+    count: number;                                                              // To store the number of tweets to fetch
+
+    // MEMBER METHODS
+    // The constructor
+    constructor(filter: {
+        words: string[],
+        hashtags: string[],
+        fromUsers: string[],
+        toUsers: string[],
+        mentions: string[],
+        startDate: string,
+        endDate: string,
+        count: number
+    }) {
+        Object.assign(this, filter);
+    }
+}
+
 // Object to hold additional tweet entites
 class TweetEntities implements Deserializable {
     // MEMBER DATA
@@ -70,14 +98,14 @@ export class Tweet implements Deserializable {
     // Method to deserialize input data into this object
     deserialize(data: any): this {
         this.id = data['rest_id'];
-        this.createdAt = data['legacy']['created_at'];
-        this.tweetBy = data['legacy']['user_id_str'];
-        this.entities = new TweetEntities().deserialize(data['legacy']['entities']);
-        this.fullText = data['legacy']['full_text'];
-        this.lang = data['legacy']['lang'];
-        this.quoteCount = data['legacy']['quote_count'];
-        this.replyCount = data['legacy']['reply_count'];
-        this.retweetCount = data['legacy']['retweet_count'];
+        this.createdAt = data['created_at'];
+        this.tweetBy = data['user_id_str'];
+        this.entities = new TweetEntities().deserialize(data['entities']);
+        this.fullText = data['full_text'];
+        this.lang = data['lang'];
+        this.quoteCount = data['quote_count'];
+        this.replyCount = data['reply_count'];
+        this.retweetCount = data['retweet_count'];
 
         return this;
     }

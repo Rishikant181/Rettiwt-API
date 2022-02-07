@@ -4,17 +4,21 @@
 import fetch from "node-fetch";
 
 // CUSTOM LIBS
-import { Tweet } from "../schema/data/TweetData";
+import {
+    TweetFilter,
+    Tweet
+} from "../schema/data/TweetData";
 
 import {
     userTweetsUrl,
+    filteredTweetsUrl,
     authorizedGuestHeader
 } from './helper/Requests';
 
 export class TweetService {
     // MEMBER METHODS
-    // Method to fetch tweets made by a user using user id (rest_id)
-    getUserRecentTweets(
+    // Method to fetch recent tweets made by a user using user id (rest_id)
+    getRecentTweets(
         userId: string,
         numTweets: number,
         authToken: string,
@@ -31,7 +35,7 @@ export class TweetService {
         .then(res => res['data']['user']['result']['timeline']['timeline']['instructions'][0]['entries'])
         // Extracting required data from the tweets
         .then(data => {
-            const tweets: Tweet[] = [];
+            var tweets: Tweet[] = [];
 
             //@ts-ignore
             for(var i = 0; i < data.length - 2; i++) {
@@ -39,8 +43,40 @@ export class TweetService {
                 if(data[i]['content']['itemContent']) {
                     const tweet = data[i]['content']['itemContent']['tweet_results']['result'];
 
-                    tweets.push(new Tweet().deserialize(tweet));
+                    tweets.push(new Tweet().deserialize({
+                        'rest_id': tweet['rest_id'],
+                        ...tweet['legacy']
+                    }));
                 }
+            }
+
+            return tweets;
+        });
+    }
+
+    // Method to fetch tweets filtered by the supplied filter
+    getFilteredTweets(
+        filter: TweetFilter,
+        authToken: string,
+        guestToken: string
+    ): Promise<Tweet[]> {
+        return fetch(filteredTweetsUrl(filter), {
+            headers: authorizedGuestHeader(
+                authToken,
+                guestToken
+            )
+        })
+        .then(res => res.json())
+        //@ts-ignore
+        .then(res => res['globalObjects']['tweets'])
+        .then(data => {
+            var tweets: Tweet[] = [];
+
+            for(var key of Object.keys(data)) {
+                tweets.push(new Tweet().deserialize({
+                    'rest_id': data[key]['id_str'],
+                    ...data[key]
+                }));
             }
 
             return tweets;
