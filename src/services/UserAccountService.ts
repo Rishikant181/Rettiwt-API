@@ -46,7 +46,7 @@ export class UserAccountService {
         .then(res => new User().deserialize(res.data.user.result));
     }
 
-    // Method to fetch the list of followers of a user
+    // Method to fetch the list of users followed by given user
     getUserFollowing(
         userId: string,
         count: number,
@@ -97,4 +97,7 @@ export class UserAccountService {
             return { following: following, next: next };
         })
     }
+
+    // Method to fetch a list of followers of the given user
+    
 };
