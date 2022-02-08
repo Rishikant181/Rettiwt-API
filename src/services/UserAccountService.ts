@@ -12,6 +12,7 @@ import {
 import {
     userAccountUrl,
     userFollowingUrl,
+    userFollowersUrl,
     authorizedHeader
 } from './helper/Requests';
 
@@ -99,5 +100,54 @@ export class UserAccountService {
     }
 
     // Method to fetch a list of followers of the given user
-    
+    getUserFollowers(
+        userId: string,
+        count: number,
+        cursor: string
+    ): Promise<{ followers: UserID[], next: string }> {
+        return fetch(userFollowersUrl(userId, count, cursor), {
+            headers: authorizedHeader(
+                this.authToken,
+                this.csrfToken,
+                this.cookie
+            )
+        })
+        .then(res => res.json())
+        // Extracting the raw list of followers
+        //@ts-ignore
+        .then(res => res['data']['user']['result']['timeline']['timeline']['instructions'].filter(entry => entry['type'] === 'TimelineAddEntries')[0]['entries'])
+        .then(data => {
+            var followers: UserID[] = [];                                           // To store the UIDS for following
+            var next: string = '';                                                  // To store the cursor to next batch
+
+            // Itearating over the raw list of following
+            for(var entry of data) {
+                // Checking if the entry is of type user
+                // If entry is of user type
+                if(entry['entryId'].indexOf('user') != -1) {
+                    // Extracting user details
+                    const user = entry['content']['itemContent']['user_results']['result'];
+                    
+                    // Adding the follower ID to list of IDs
+                    followers.push(new UserID().deserialize({
+                        id: user['rest_id'],
+                        userName: user['legacy']['screen_name'],
+                        fullName: user['legacy']['name']
+                    }));
+                }
+                // If entry is of type bottom cursor
+                else if(entry['entryId'].indexOf('cursor-bottom') != -1) {
+                    // Storing the cursor to next batch
+                    /**
+                     * Replacing '|' with '%7C'
+                     * Template string does not(apparently) implicitly replace characters with their url encodings.
+                     * Therefore not explicitly replacing casuses bad request
+                     */
+                    next = entry['content']['value'].replace('|', '%7C');
+                }
+            }
+            
+            return { followers: followers, next: next };
+        })
+    }
 };
