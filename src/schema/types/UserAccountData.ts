@@ -17,11 +17,11 @@ export class UserID implements Deserializable {
         userName: string,
         fullName: string
     }): this {
-            this.id = data.id;
-            this.userName = data.userName;
-            this.fullName = data.fullName;
+        this.id = data.id;
+        this.userName = data.userName;
+        this.fullName = data.fullName;
         
-            return this;
+        return this;
     }
 }
 
