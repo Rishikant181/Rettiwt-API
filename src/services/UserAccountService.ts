@@ -12,16 +12,27 @@ import {
 } from './helper/Requests';
 
 export class UserAccountService {
+    // MEMBER DATA
+    private authToken: string;                                                  // To store the authenctication token
+    private csrfToken: string;                                                  // To store the csrfToken
+    private cookie: string;                                                     // To store the cookies
+    
     // MEMBER METHODS
-    // Method to fetch the user account details using screen name
-    getUserAccountDetails(
-        screenName: string,
+    // The constructor
+    constructor(
         authToken: string,
         csrfToken: string,
         cookie: string
-    ): Promise<User> {
+    ) {
+        this.authToken = authToken;
+        this.csrfToken = csrfToken;
+        this.cookie = cookie;
+    }
+
+    // Method to fetch the user account details using screen name
+    getUserAccountDetails(screenName: string): Promise<User> {
         return fetch(userAccountUrl(screenName), {
-            headers: authorizedHeader(authToken, csrfToken, cookie),
+            headers: authorizedHeader(this.authToken, this.csrfToken, this.cookie),
             body: null,
             method: "GET"
         })
@@ -36,6 +47,6 @@ export class UserAccountService {
         userId: string,
         count: number
     ): any {
-        
+
     }
 };
