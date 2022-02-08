@@ -93,6 +93,7 @@ export class Tweet implements Deserializable {
     quoteCount: number;                                                     // To store the number of quotes of the tweet
     replyCount: number;                                                     // To store the number of replies to the tweet
     retweetCount: number;                                                   // To store the number of retweets
+    replies: string[];                                                      // To store the list of IDs of replies
 
     // MEMBER METHODS
     // Method to deserialize input data into this object

@@ -12,6 +12,7 @@ import {
 import {
     userTweetsUrl,
     filteredTweetsUrl,
+    tweetDetailsUrl,
     authorizedHeader
 } from './helper/Requests';
 
@@ -144,6 +145,22 @@ export class TweetService {
 
     /* Method to get individual tweet details using tweet id */
     getTweetDetails(tweetId: string): Promise<Tweet> {
-        
+        return fetch(tweetDetailsUrl(tweetId, ''), {
+            headers: authorizedHeader(
+                this.authToken,
+                this.csrfToken,
+                this.cookie
+            )
+        })
+        .then(res => res.json())
+        // Extracting raw tweet data from response
+        //@ts-ignore
+        .then(res => res['data']['threaded_conversation_with_injections']['instructions'][0]['entries'][0]['content']['itemContent']['tweet_results']['result'])
+        .then(data => {
+            return new Tweet().deserialize({
+                rest_id: data['rest_id'],
+                ...data['legacy']
+            });
+        })
     }
 }
