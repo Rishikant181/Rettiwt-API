@@ -59,9 +59,10 @@ export class UserAccountService {
                 this.cookie
             )
         })
+        .then(res => res.json())
         // Extracting the raw list of following
         //@ts-ignore
-        .then(res => res['data']['user']['result']['timeline']['timeline']['instructions'][2]['entries'])
+        .then(res => res['data']['user']['result']['timeline']['timeline']['instructions'].filter(entry => entry['type'] === 'TimelineAddEntries')[0]['entries'])
         .then(data => {
             var following: UserID[] = [];                                           // To store the UIDS for following
             var next: string = '';                                                  // To store the cursor to next batch
@@ -84,7 +85,12 @@ export class UserAccountService {
                 // If entry is of type bottom cursor
                 else if(entry['entryId'].indexOf('cursor-bottom') != -1) {
                     // Storing the cursor to next batch
-                    next = entry['content']['value'];
+                    /**
+                     * Replacing '|' with '%7C'
+                     * Template string does not(apparently) implicitly replace characters with their url encodings.
+                     * Therefore not explicitly replacing casuses bad request
+                     */
+                    next = entry['content']['value'].replace('|', '%7C');
                 }
             }
             
