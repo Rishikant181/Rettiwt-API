@@ -11,7 +11,7 @@ import {
 
 import {
     userAccountUrl,
-    userFollowersUrl,
+    userFollowingUrl,
     authorizedHeader
 } from './helper/Requests';
 
@@ -47,11 +47,12 @@ export class UserAccountService {
     }
 
     // Method to fetch the list of followers of a user
-    getUserFollowers(
+    getUserFollowing(
         userId: string,
-        count: number
+        count: number,
+        cursor: string
     ): Promise<{ following: UserID[], next: string }> {
-        return fetch(userFollowersUrl(userId, count), {
+        return fetch(userFollowingUrl(userId, count, cursor), {
             headers: authorizedHeader(
                 this.authToken,
                 this.csrfToken,
@@ -83,9 +84,7 @@ export class UserAccountService {
                 // If entry is of type bottom cursor
                 else if(entry['entryId'].indexOf('cursor-bottom') != -1) {
                     // Storing the cursor to next batch
-                    const cursor = entry['content']['value'];
-
-                    next = cursor.subString(0, cursor.indexOf('|'));
+                    next = entry['content']['value'];
                 }
             }
             
