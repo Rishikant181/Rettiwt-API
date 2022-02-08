@@ -30,4 +30,12 @@ export class UserAccountService {
         //@ts-ignore
         .then(res => new User().deserialize(res.data.user.result));
     }
+
+    // Method to fetch the list of followers of a user
+    getUserFollowers(
+        userId: string,
+        count: number
+    ): any {
+        
+    }
 };
