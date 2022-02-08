@@ -141,4 +141,9 @@ export class TweetService {
             return { tweets: tweets, next: data.next };
         });
     }
+
+    /* Method to get individual tweet details using tweet id */
+    getTweetDetails(tweetId: string): Promise<Tweet> {
+        
+    }
 }
