@@ -7,7 +7,7 @@ import fetch from "node-fetch";
 import {
     TweetFilter,
     Tweet
-} from "../schema/data/TweetData";
+} from "../schema/types/TweetData";
 
 import {
     userTweetsUrl,

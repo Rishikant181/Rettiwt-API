@@ -4,7 +4,7 @@
 import fetch from 'node-fetch';
 
 // Custom libs
-import { User } from '../schema/data/UserAccountData';
+import { User } from '../schema/types/UserAccountData';
 
 import {
     userAccountUrl,

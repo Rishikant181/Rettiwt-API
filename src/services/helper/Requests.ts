@@ -1,6 +1,6 @@
 // This file contains various helper method for operations related to HTTP requests sent to twitter
 
-import { TweetFilter } from "../../schema/data/TweetData";
+import { TweetFilter } from "../../schema/types/TweetData";
 
 // URLS
 // Method to return the url for fetching user account details from screen name
