@@ -1,4 +1,4 @@
-# twitter-api
+# Rettiwt-API
 An API that fetches data from Twitter for other services to use
 
 To run the API on your local machine, first install all required dependencies from packages.json using:
