@@ -23,7 +23,16 @@ app.listen(config['server']['port'], () => {
         config['twitter']['csrfToken'],
         config['twitter']['cookie']
     )
-    .getTweets("44196397", 1, '')
+    .getFilteredTweets(new TweetFilter({
+        words: [],
+        hashtags: [],
+        fromUsers: ['@elonmusk'],
+        toUsers: [],
+        count: 10,
+        startDate: '',
+        endDate: '',
+        mentions: []
+    }), '')
     .then(data => {
         console.log(data.tweets);
     })

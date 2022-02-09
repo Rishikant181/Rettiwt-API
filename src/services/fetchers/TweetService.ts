@@ -88,10 +88,11 @@ export class TweetService extends FetcherService {
     ): Promise<{ tweets: Tweet[], next: string }> {
         return this.fetchData(filteredTweetsUrl(filter, cursor))
         .then(res => res.json())
-        // Extracting tweets list and cursor to next batch from the response
         .then(res => {
-            var next: '';                                                           // To store cursor the next batch
+            var tweets: Tweet[] = [];
+            var next: '';
 
+            // Extracting tweets list and cursor to next batch from the response
             // If not a first batch
             //@ts-ignore
             if(res['timeline']['instructions'][2]) {
@@ -104,23 +105,20 @@ export class TweetService extends FetcherService {
                 next = res['timeline']['instructions'][0]['addEntries']['entries'].at(-1)['content']['operation']['cursor']['value'];
             }
 
-            //@ts-ignore
-            return { tweets: res['globalObjects']['tweets'], next: next }
-        })
-        .then(data => {
-            var tweets: Tweet[] = [];
+            // Getting the raw list of tweets from response
+            res = res['globalObjects']['tweets'];
 
             // Iterating through the json array of tweets
-            for(var key of Object.keys(data.tweets)) {
+            for(var key of Object.keys(res)) {
                 // Adding the tweets to the Tweet[] list
                 tweets.push(new Tweet().deserialize({
-                    'rest_id': data.tweets[key]['id_str'],
-                    ...data.tweets[key]
+                    'rest_id': res[key]['id_str'],
+                    ...res[key]
                 }));
             }
 
-            return { tweets: tweets, next: data.next };
-        });
+            return { tweets: tweets, next: next };
+        })
     }
 
     // Method to fetch tweet likes using tweet id
