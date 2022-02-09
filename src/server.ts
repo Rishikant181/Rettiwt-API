@@ -23,18 +23,9 @@ app.listen(config['server']['port'], () => {
         config['twitter']['csrfToken'],
         config['twitter']['cookie']
     )
-    .getFilteredTweets(new TweetFilter({
-        words: [],
-        hashtags: [],
-        fromUsers: ['@elonmusk'],
-        toUsers: [],
-        count: 10,
-        startDate: '',
-        endDate: '',
-        mentions: []
-    }), '')
+    .getTweetLikers("1490827367753056257", 10, '')
     .then(data => {
-        console.log(data.tweets);
+        console.log(data.likers);
     })
     
     console.log(`Listening on port ${config['server']['port']}`);

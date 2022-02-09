@@ -94,14 +94,11 @@ export class TweetService extends FetcherService {
 
             // Extracting tweets list and cursor to next batch from the response
             // If not a first batch
-            //@ts-ignore
             if(res['timeline']['instructions'][2]) {
-                //@ts-ignore
                 next = res['timeline']['instructions'][2]['replaceEntry']['entry']['content']['operation']['cursor']['value'];
             }
             // If first batch
             else {
-                //@ts-ignore
                 next = res['timeline']['instructions'][0]['addEntries']['entries'].at(-1)['content']['operation']['cursor']['value'];
             }
 
@@ -129,15 +126,15 @@ export class TweetService extends FetcherService {
     ): Promise<{ likers: User[], next: string }> {
         return this.fetchData(tweetLikesUrl(tweetId, count, cursor))
         .then(res => res.json())
-        // Extracting raw likes list from response
-        //@ts-ignore
-        .then(res => res['data']['favoriters_timeline']['timeline']['instructions'][0]['entries'])
-        .then(data => {
+        .then(res => {
             var likers: User[] = [];
             var next: string = '';
+            
+            // Extracting raw likes list from response
+            res = res['data']['favoriters_timeline']['timeline']['instructions'][0]['entries'];
 
             // Iterating over the raw list of likes
-            for(var entry of data) {
+            for(var entry of res) {
                 // Checking if entry is of type user
                 if(entry['entryId'].indexOf('user') != -1) {
                     // Extracting user from the entry
