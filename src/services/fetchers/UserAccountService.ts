@@ -5,17 +5,17 @@ import fetch from 'node-fetch';
 
 // Custom libs
 
-import { FetcherService } from './FetcherService';
+import { FetcherService } from '../FetcherService';
 
 import {
     User
-} from '../schema/types/UserAccountData';
+} from '../../schema/types/UserAccountData';
 
 import {
     userAccountUrl,
     userFollowingUrl,
     userFollowersUrl
-} from './helper/Requests';
+} from '../helper/Requests';
 
 export class UserAccountService extends FetcherService {
     // MEMBER METHODS

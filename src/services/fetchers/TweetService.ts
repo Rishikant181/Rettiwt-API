@@ -2,16 +2,16 @@
 
 // CUSTOM LIBS
 
-import { FetcherService } from "./FetcherService";
+import { FetcherService } from "../FetcherService";
 
 import {
     TweetFilter,
     Tweet
-} from "../schema/types/TweetData";
+} from "../../schema/types/TweetData";
 
 import {
     User
-} from "../schema/types/UserAccountData";
+} from "../../schema/types/UserAccountData";
 
 import {
     userTweetsUrl,
@@ -19,7 +19,7 @@ import {
     tweetRepliesUrl,
     tweetLikesUrl,
     tweetRetweetUrl
-} from './helper/Requests';
+} from '../helper/Requests';
 
 export class TweetService extends FetcherService {
     // MEMBER METHODS
