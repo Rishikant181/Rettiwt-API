@@ -12,6 +12,7 @@ import {
 import {
     User
 } from "../schema/types/UserAccountData";
+import { FetcherService } from "./FetcherService";
 
 import {
     userTweetsUrl,
@@ -22,42 +23,25 @@ import {
     tweetRetweetUrl
 } from './helper/Requests';
 
-export class TweetService {
-    // MEMBER DATA
-    private authToken: string;                                                   // To store the authentication token
-    private csrfToken: string;                                                   // To store the csrfToken
-    private cookie: string;                                                      // To store the cookie
-    
+export class TweetService extends FetcherService {
     // MEMBER METHODS
-    // The constructor
     constructor(
         authToken: string,
         csrfToken: string,
         cookie: string
     ) {
-        // Initialising authentication data
-        this.authToken = authToken;
-        this.csrfToken = csrfToken;
-        this.cookie = cookie;
+        super(authToken, csrfToken, cookie);
     }
-
+    
     // TODO: Implement handling of response when no data is received for all fetchers below
     // TODO: It seems some methods can be condensed together and some methods' implementation can be made more flexible
     // Method to fetch all tweets and replies made by a user
     getTweets(
         userId: string,
-        numTweets: number,
+        count: number,
         cursor: string,        
     ): Promise<{ tweets: Tweet[]; next: string }> {
-        return fetch(userTweetsUrl(userId, numTweets, cursor), {
-            headers: authorizedHeader(
-                this.authToken,
-                this.csrfToken,
-                this.cookie
-            ),
-            body: null,
-            method: "GET"
-        })
+        return this.fetchData(userTweetsUrl(userId, count, cursor))
         .then(res => res.json())
         // Ignoring the next line because we still don't know the structure of response, so indexing it throws error
         //@ts-ignore

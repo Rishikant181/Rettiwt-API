@@ -18,5 +18,19 @@ app.use('/', (req, res) => {
 
 // Setting up express server
 app.listen(config['server']['port'], () => {
+    // TEST_CODE
+    new TweetService(
+        config['twitter']['authToken'],
+        config['twitter']['csrfToken'],
+        config['twitter']['cookie']
+    )
+    .getTweets(
+        "44196397",
+        10,
+        ''
+    )
+    .then(data => console.log(data.tweets));
+    // TEST_CODE_END
+
     console.log(`Listening on port ${config['server']['port']}`);
 });
