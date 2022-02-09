@@ -41,6 +41,8 @@ export class TweetService {
         this.cookie = cookie;
     }
 
+    // TODO: Implement handling of response when no data is received for all fetchers below
+    // TODO: It seems some methods can be condensed together and some methods' implementation can be made more flexible
     // Method to fetch all tweets and replies made by a user
     getTweets(
         userId: string,
@@ -97,11 +99,8 @@ export class TweetService {
         });
     }
 
+    // FIXME: This feature does not work accurately and returns recurrent data most of the times
     // Method to fetch tweets filtered by the supplied filter
-    /*
-    This feature is experimental and it's accuracy fails when after fetching around 30-40 tweets.
-    This feature needs to be refined more by using some other method to search tweets
-    */
     getFilteredTweets(
         filter: TweetFilter,
         cursor: string        

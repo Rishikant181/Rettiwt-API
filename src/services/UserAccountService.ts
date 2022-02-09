@@ -34,6 +34,7 @@ export class UserAccountService {
         this.cookie = cookie;
     }
 
+    // TODO: Implement handling of response when no data is received for all fetchers below
     // Method to fetch the user account details using screen name
     getUserAccountDetails(screenName: string): Promise<User> {
         return fetch(userAccountUrl(screenName), {
