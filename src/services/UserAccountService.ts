@@ -4,24 +4,20 @@
 import fetch from 'node-fetch';
 
 // Custom libs
+
+import { FetcherService } from './FetcherService';
+
 import {
-    UserID,
     User
 } from '../schema/types/UserAccountData';
 
 import {
     userAccountUrl,
     userFollowingUrl,
-    userFollowersUrl,
-    authorizedHeader
+    userFollowersUrl
 } from './helper/Requests';
 
-export class UserAccountService {
-    // MEMBER DATA
-    private authToken: string;                                                  // To store the authenctication token
-    private csrfToken: string;                                                  // To store the csrfToken
-    private cookie: string;                                                     // To store the cookies
-    
+export class UserAccountService extends FetcherService {
     // MEMBER METHODS
     // The constructor
     constructor(
@@ -29,19 +25,13 @@ export class UserAccountService {
         csrfToken: string,
         cookie: string
     ) {
-        this.authToken = authToken;
-        this.csrfToken = csrfToken;
-        this.cookie = cookie;
+        super(authToken, csrfToken, cookie);
     }
 
     // TODO: Implement handling of response when no data is received for all fetchers below
     // Method to fetch the user account details using screen name
     getUserAccountDetails(screenName: string): Promise<User> {
-        return fetch(userAccountUrl(screenName), {
-            headers: authorizedHeader(this.authToken, this.csrfToken, this.cookie),
-            body: null,
-            method: "GET"
-        })
+        return this.fetchData(userAccountUrl(screenName))
         .then(res => res.json())
         // Ignoring the next line because we still don't know the structure of response, so indexing it throws error
         //@ts-ignore
@@ -54,13 +44,7 @@ export class UserAccountService {
         count: number,
         cursor: string
     ): Promise<{ following: User[], next: string }> {
-        return fetch(userFollowingUrl(userId, count, cursor), {
-            headers: authorizedHeader(
-                this.authToken,
-                this.csrfToken,
-                this.cookie
-            )
-        })
+        return this.fetchData(userFollowingUrl(userId, count, cursor))
         .then(res => res.json())
         // Extracting the raw list of following
         //@ts-ignore
@@ -102,13 +86,7 @@ export class UserAccountService {
         count: number,
         cursor: string
     ): Promise<{ followers: User[], next: string }> {
-        return fetch(userFollowersUrl(userId, count, cursor), {
-            headers: authorizedHeader(
-                this.authToken,
-                this.csrfToken,
-                this.cookie
-            )
-        })
+        return this.fetchData(userFollowersUrl(userId, count, cursor))
         .then(res => res.json())
         // Extracting the raw list of followers
         //@ts-ignore
