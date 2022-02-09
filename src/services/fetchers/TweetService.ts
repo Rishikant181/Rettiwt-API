@@ -161,15 +161,15 @@ export class TweetService extends FetcherService {
     ): Promise<{ retweeters: User[], next: string }> {
         return this.fetchData(tweetRetweetUrl(tweetId, count, cursor))
         .then(res => res.json())
-        // Extracting raw likes list from response
-        //@ts-ignore
-        .then(res => res['data']['retweeters_timeline']['timeline']['instructions'][0]['entries'])
-        .then(data => {
+        .then(res => {
             var retweeters: User[] = [];
             var next: string = '';
+            
+            // Extracting raw likes list from response
+            res = res['data']['retweeters_timeline']['timeline']['instructions'][0]['entries']
 
             // Iterating over the raw list of likes
-            for(var entry of data) {
+            for(var entry of res) {
                 // Checking if entry is of type user
                 if(entry['entryId'].indexOf('user') != -1) {
                     // Extracting user from the entry
