@@ -28,7 +28,6 @@ export class UserAccountService extends FetcherService {
         super(authToken, csrfToken, cookie);
     }
 
-    // TODO: Implement handling of response when no data is received for all fetchers below
     // Method to fetch the user account details using screen name
     getUserAccountDetails(screenName: string): Promise<User> {
         return this.fetchData(userAccountUrl(screenName))

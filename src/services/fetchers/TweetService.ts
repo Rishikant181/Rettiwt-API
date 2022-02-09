@@ -31,7 +31,6 @@ export class TweetService extends FetcherService {
         super(authToken, csrfToken, cookie);
     }
 
-    // TODO: Implement handling of response when no data is received for all fetchers below
     // TODO: Make this method also fetch the tweets as well as the replies made by the user
     // Method to fetch all tweets and replies made by a user
     getTweets(
