@@ -14,3 +14,11 @@ export class Error {
         this.details = details;
     }
 }
+
+// Object to hold data received from fetch request
+export class Response {
+    // MEMBER DATA
+    success: boolean;                                                       // To store whether success or failure
+    error: Error;                                                           // To store error details, if any
+    data: any;                                                              // To store the data received
+}
