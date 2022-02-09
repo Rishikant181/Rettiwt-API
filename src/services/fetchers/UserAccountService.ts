@@ -33,9 +33,7 @@ export class UserAccountService extends FetcherService {
     getUserAccountDetails(screenName: string): Promise<User> {
         return this.fetchData(userAccountUrl(screenName))
         .then(res => res.json())
-        // Ignoring the next line because we still don't know the structure of response, so indexing it throws error
-        //@ts-ignore
-        .then(res => new User().deserialize(res.data.user.result));
+        .then(res => new User().deserialize(res['data']['user']['result']));
     }
 
     // Method to fetch the list of users followed by given user
@@ -46,15 +44,16 @@ export class UserAccountService extends FetcherService {
     ): Promise<{ following: User[], next: string }> {
         return this.fetchData(userFollowingUrl(userId, count, cursor))
         .then(res => res.json())
-        // Extracting the raw list of following
-        //@ts-ignore
-        .then(res => res['data']['user']['result']['timeline']['timeline']['instructions'].filter(entry => entry['type'] === 'TimelineAddEntries')[0]['entries'])
-        .then(data => {
-            var following: User[] = [];                                             // To store the UIDS for following
-            var next: string = '';                                                  // To store the cursor to next batch
+        .then(res => {
+            var following: User[] = [];
+            var next: string = '';
+            
+            // Extracting the raw list of following
+            //@ts-ignore
+            res = res['data']['user']['result']['timeline']['timeline']['instructions'].filter(entry => entry['type'] === 'TimelineAddEntries')[0]['entries']
 
-            // Itearating over the raw list of following
-            for(var entry of data) {
+            // Iterating over the raw list of following
+            for(var entry of res) {
                 // Checking if the entry is of type user
                 // If entry is of user type
                 if(entry['entryId'].indexOf('user') != -1) {
@@ -88,15 +87,16 @@ export class UserAccountService extends FetcherService {
     ): Promise<{ followers: User[], next: string }> {
         return this.fetchData(userFollowersUrl(userId, count, cursor))
         .then(res => res.json())
-        // Extracting the raw list of followers
-        //@ts-ignore
-        .then(res => res['data']['user']['result']['timeline']['timeline']['instructions'].filter(entry => entry['type'] === 'TimelineAddEntries')[0]['entries'])
-        .then(data => {
-            var followers: User[] = [];                                             // To store the UIDS for following
-            var next: string = '';                                                  // To store the cursor to next batch
+        .then(res => {
+            var followers: User[] = [];
+            var next: string = '';
+            
+            // Extracting the raw list of followers
+            //@ts-ignore
+            res = res['data']['user']['result']['timeline']['timeline']['instructions'].filter(entry => entry['type'] === 'TimelineAddEntries')[0]['entries']
 
             // Itearating over the raw list of following
-            for(var entry of data) {
+            for(var entry of res) {
                 // Checking if the entry is of type user
                 // If entry is of user type
                 if(entry['entryId'].indexOf('user') != -1) {
