@@ -33,6 +33,7 @@ export class TweetService extends FetcherService {
     
     // TODO: Implement handling of response when no data is received for all fetchers below
     // TODO: It seems some methods can be condensed together and some methods' implementation can be made more flexible
+    // TODO: Make this method also fetch the tweets as well as the replies made by the user
     // Method to fetch all tweets and replies made by a user
     getTweets(
         userId: string,
@@ -41,11 +42,9 @@ export class TweetService extends FetcherService {
     ): Promise<{ tweets: Tweet[]; next: string }> {
         return this.fetchData(userTweetsUrl(userId, count, cursor))
         .then(res => res.json())
-        // Ignoring the next line because we still don't know the structure of response, so indexing it throws error
-        //@ts-ignore
-        .then(res => res['data']['user']['result']['timeline']['timeline']['instructions'][0]['entries'])
-        // Extracting required data from the tweets
-        .then(data => {
+        .then(res => {
+            var data = res['data']['user']['result']['timeline']['timeline']['instructions'][0]['entries'];
+
             var tweets: Tweet[] = [];
 
             //@ts-ignore
@@ -78,7 +77,7 @@ export class TweetService extends FetcherService {
             }
 
             return { tweets: tweets, next: data[data.length - 1]['content']['value'] };
-        });
+        })
     }
 
     // FIXME: This feature does not work accurately and returns recurrent data most of the times
