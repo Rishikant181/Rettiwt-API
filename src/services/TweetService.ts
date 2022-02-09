@@ -143,7 +143,7 @@ export class TweetService {
         });
     }
 
-    /* Method to get individual tweet details using tweet id */
+    // Method to get individual tweet details using tweet id
     getTweetDetails(tweetId: string): Promise<Tweet> {
         return fetch(tweetDetailsUrl(tweetId, ''), {
             headers: authorizedHeader(
@@ -161,6 +161,46 @@ export class TweetService {
                 rest_id: data['rest_id'],
                 ...data['legacy']
             });
+        })
+    }
+
+    // Method to fetch tweet replies using tweet id
+    getTweetReplies(
+        tweetId: string,
+        cursor: string
+    ): Promise<{ replies: Tweet[], next: string }> {
+        return fetch(tweetDetailsUrl(tweetId, cursor), {
+            headers: authorizedHeader(
+                this.authToken,
+                this.csrfToken,
+                this.cookie
+            )
+        })
+        .then(res => res.json())
+        // Extracting raw tweet data from response
+        //@ts-ignore
+        .then(res => res['data']['threaded_conversation_with_injections']['instructions'][0]['entries'])
+        .then(data => {
+            var replies: Tweet[] = [];
+            var next = '';
+            
+            for(var entry of data) {
+                // Checking if entry is of type reply
+                if(entry['entryId'].indexOf('conversationthread') != -1) {
+                    var reply = entry['content']['items'][0]['item']['itemContent']['tweet_results']['result'];
+
+                    replies.push(new Tweet().deserialize({
+                        rest_id: reply['rest_id'],
+                        ...reply['legacy']
+                    }));
+                }
+                // If entry is of type bottom cursor
+                else if(entry['entryId'].indexOf('cursor-bottom') != -1) {
+                    next = entry['content']['itemContent']['value'];
+                }
+            }
+
+            return { replies: replies, next: next };
         })
     }
 }
