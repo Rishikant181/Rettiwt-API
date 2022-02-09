@@ -18,7 +18,8 @@ import {
     filteredTweetsUrl,
     tweetRepliesUrl,
     authorizedHeader,
-    tweetLikesUrl
+    tweetLikesUrl,
+    tweetRetweetUrl
 } from './helper/Requests';
 
 export class TweetService {
@@ -149,11 +150,11 @@ export class TweetService {
     }
 
     // Method to fetch tweet likes using tweet id
-    getTweetlikes(
+    getTweetLikers(
         tweetId: string,
         count: number,
         cursor: string
-    ): Promise<{ likes: User[], next: string }> {
+    ): Promise<{ likers: User[], next: string }> {
         return fetch(tweetLikesUrl(tweetId, count, cursor), {
             headers: authorizedHeader(
                 this.authToken,
@@ -166,7 +167,7 @@ export class TweetService {
         //@ts-ignore
         .then(res => res['data']['favoriters_timeline']['timeline']['instructions'][0]['entries'])
         .then(data => {
-            var likes: User[] = [];
+            var likers: User[] = [];
             var next: string = '';
 
             // Iterating over the raw list of likes
@@ -177,7 +178,7 @@ export class TweetService {
                     var user = entry['content']['itemContent']['user_results']['result'];
 
                     // Inserting user into list of likes
-                    likes.push(new User().deserialize(user));
+                    likers.push(new User().deserialize(user));
                 }
                 // If entry is of type bottom cursor
                 else if(entry['entryId'].indexOf('cursor-bottom') != -1) {
@@ -185,7 +186,48 @@ export class TweetService {
                 }
             }
 
-            return { likes: likes, next: next };
+            return { likers: likers, next: next };
+        })
+    }
+
+    // Method to fetch tweet retweeters using tweet id
+    getTweetRetweeters(
+        tweetId: string,
+        count: number,
+        cursor: string
+    ): Promise<{ retweeters: User[], next: string }> {
+        return fetch(tweetRetweetUrl(tweetId, count, cursor), {
+            headers: authorizedHeader(
+                this.authToken,
+                this.csrfToken,
+                this.cookie
+            )
+        })
+        .then(res => res.json())
+        // Extracting raw likes list from response
+        //@ts-ignore
+        .then(res => res['data']['retweeters_timeline']['timeline']['instructions'][0]['entries'])
+        .then(data => {
+            var retweeters: User[] = [];
+            var next: string = '';
+
+            // Iterating over the raw list of likes
+            for(var entry of data) {
+                // Checking if entry is of type user
+                if(entry['entryId'].indexOf('user') != -1) {
+                    // Extracting user from the entry
+                    var user = entry['content']['itemContent']['user_results']['result'];
+
+                    // Inserting user into list of likes
+                    retweeters.push(new User().deserialize(user));
+                }
+                // If entry is of type bottom cursor
+                else if(entry['entryId'].indexOf('cursor-bottom') != -1) {
+                    next = entry['content']['value'];
+                }
+            }
+
+            return { retweeters: retweeters, next: next };
         })
     }
 
