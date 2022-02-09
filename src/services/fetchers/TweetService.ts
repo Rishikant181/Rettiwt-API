@@ -195,14 +195,14 @@ export class TweetService extends FetcherService {
     ): Promise<{ replies: Tweet[], next: string }> {
         return this.fetchData(tweetRepliesUrl(tweetId, cursor))
         .then(res => res.json())
-        // Extracting raw tweet data from response
-        //@ts-ignore
-        .then(res => res['data']['threaded_conversation_with_injections']['instructions'][0]['entries'])
-        .then(data => {
+        .then(res => {
             var replies: Tweet[] = [];
             var next = '';
             
-            for(var entry of data) {
+            // Extracting raw tweet data from response
+            res = res['data']['threaded_conversation_with_injections']['instructions'][0]['entries']
+
+            for(var entry of res) {
                 // Checking if entry is of type reply
                 if(entry['entryId'].indexOf('conversationthread') != -1) {
                     var reply = entry['content']['items'][0]['item']['itemContent']['tweet_results']['result'];
