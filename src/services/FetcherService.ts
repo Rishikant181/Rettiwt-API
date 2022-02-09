@@ -1,5 +1,8 @@
 // This file contains the base class for various fetcher services
 
+// PACKAGE LIBS
+import fetch from "node-fetch";
+
 // CUSTOM LIBS
 import {
     authorizedHeader

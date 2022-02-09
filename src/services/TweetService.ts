@@ -1,9 +1,9 @@
 // This file contains the serivce that handles fetching of various tweets and other similar content from official API
 
-// PACKAGE LIBS
-import fetch from "node-fetch";
-
 // CUSTOM LIBS
+
+import { FetcherService } from "./FetcherService";
+
 import {
     TweetFilter,
     Tweet
@@ -12,13 +12,11 @@ import {
 import {
     User
 } from "../schema/types/UserAccountData";
-import { FetcherService } from "./FetcherService";
 
 import {
     userTweetsUrl,
     filteredTweetsUrl,
     tweetRepliesUrl,
-    authorizedHeader,
     tweetLikesUrl,
     tweetRetweetUrl
 } from './helper/Requests';
@@ -89,13 +87,7 @@ export class TweetService extends FetcherService {
         filter: TweetFilter,
         cursor: string        
     ): Promise<{ tweets: Tweet[], next: string }> {
-        return fetch(filteredTweetsUrl(filter, cursor), {
-            headers: authorizedHeader(
-                this.authToken,
-                this.csrfToken,
-                this.cookie
-            )
-        })
+        return this.fetchData(filteredTweetsUrl(filter, cursor))
         .then(res => res.json())
         // Extracting tweets list and cursor to next batch from the response
         .then(res => {
@@ -138,13 +130,7 @@ export class TweetService extends FetcherService {
         count: number,
         cursor: string
     ): Promise<{ likers: User[], next: string }> {
-        return fetch(tweetLikesUrl(tweetId, count, cursor), {
-            headers: authorizedHeader(
-                this.authToken,
-                this.csrfToken,
-                this.cookie
-            )
-        })
+        return this.fetchData(tweetLikesUrl(tweetId, count, cursor))
         .then(res => res.json())
         // Extracting raw likes list from response
         //@ts-ignore
@@ -179,13 +165,7 @@ export class TweetService extends FetcherService {
         count: number,
         cursor: string
     ): Promise<{ retweeters: User[], next: string }> {
-        return fetch(tweetRetweetUrl(tweetId, count, cursor), {
-            headers: authorizedHeader(
-                this.authToken,
-                this.csrfToken,
-                this.cookie
-            )
-        })
+        return this.fetchData(tweetRetweetUrl(tweetId, count, cursor))
         .then(res => res.json())
         // Extracting raw likes list from response
         //@ts-ignore
@@ -219,13 +199,7 @@ export class TweetService extends FetcherService {
         tweetId: string,
         cursor: string
     ): Promise<{ replies: Tweet[], next: string }> {
-        return fetch(tweetRepliesUrl(tweetId, cursor), {
-            headers: authorizedHeader(
-                this.authToken,
-                this.csrfToken,
-                this.cookie
-            )
-        })
+        return this.fetchData(tweetRepliesUrl(tweetId, cursor))
         .then(res => res.json())
         // Extracting raw tweet data from response
         //@ts-ignore
