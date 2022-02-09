@@ -10,10 +10,15 @@ import {
 } from "../schema/types/TweetData";
 
 import {
+    User
+} from "../schema/types/UserAccountData";
+
+import {
     userTweetsUrl,
     filteredTweetsUrl,
-    tweetDetailsUrl,
-    authorizedHeader
+    tweetRepliesUrl,
+    authorizedHeader,
+    tweetLikesUrl
 } from './helper/Requests';
 
 export class TweetService {
@@ -143,12 +148,53 @@ export class TweetService {
         });
     }
 
+    // Method to fetch tweet likes using tweet id
+    getTweetlikes(
+        tweetId: string,
+        count: number,
+        cursor: string
+    ): Promise<{ likes: User[], next: string }> {
+        return fetch(tweetLikesUrl(tweetId, count, cursor), {
+            headers: authorizedHeader(
+                this.authToken,
+                this.csrfToken,
+                this.cookie
+            )
+        })
+        .then(res => res.json())
+        // Extracting raw likes list from response
+        //@ts-ignore
+        .then(res => res['data']['favoriters_timeline']['timeline']['instructions'][0]['entries'])
+        .then(data => {
+            var likes: User[] = [];
+            var next: string = '';
+
+            // Iterating over the raw list of likes
+            for(var entry of data) {
+                // Checking if entry is of type user
+                if(entry['entryId'].indexOf('user') != -1) {
+                    // Extracting user from the entry
+                    var user = entry['content']['itemContent']['user_results']['result'];
+
+                    // Inserting user into list of likes
+                    likes.push(new User().deserialize(user));
+                }
+                // If entry is of type bottom cursor
+                else if(entry['entryId'].indexOf('cursor-bottom') != -1) {
+                    next = entry['content']['value'];
+                }
+            }
+
+            return { likes: likes, next: next };
+        })
+    }
+
     // Method to fetch tweet replies using tweet id
     getTweetReplies(
         tweetId: string,
         cursor: string
     ): Promise<{ replies: Tweet[], next: string }> {
-        return fetch(tweetDetailsUrl(tweetId, cursor), {
+        return fetch(tweetRepliesUrl(tweetId, cursor), {
             headers: authorizedHeader(
                 this.authToken,
                 this.csrfToken,

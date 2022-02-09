@@ -101,7 +101,7 @@ export function filteredTweetsUrl(
 }
 
 // Method to return the url for fetching the details of a single tweet
-export function tweetDetailsUrl(
+export function tweetRepliesUrl(
     tweetId: string,
     cursor: string
 ): string {
