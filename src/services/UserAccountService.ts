@@ -52,7 +52,7 @@ export class UserAccountService {
         userId: string,
         count: number,
         cursor: string
-    ): Promise<{ following: UserID[], next: string }> {
+    ): Promise<{ following: User[], next: string }> {
         return fetch(userFollowingUrl(userId, count, cursor), {
             headers: authorizedHeader(
                 this.authToken,
@@ -65,7 +65,7 @@ export class UserAccountService {
         //@ts-ignore
         .then(res => res['data']['user']['result']['timeline']['timeline']['instructions'].filter(entry => entry['type'] === 'TimelineAddEntries')[0]['entries'])
         .then(data => {
-            var following: UserID[] = [];                                           // To store the UIDS for following
+            var following: User[] = [];                                             // To store the UIDS for following
             var next: string = '';                                                  // To store the cursor to next batch
 
             // Itearating over the raw list of following
@@ -77,11 +77,7 @@ export class UserAccountService {
                     const user = entry['content']['itemContent']['user_results']['result'];
                     
                     // Adding the followed user ID to list of IDs
-                    following.push(new UserID().deserialize({
-                        id: user['rest_id'],
-                        userName: user['legacy']['screen_name'],
-                        fullName: user['legacy']['name']
-                    }));
+                    following.push(new User().deserialize(user));
                 }
                 // If entry is of type bottom cursor
                 else if(entry['entryId'].indexOf('cursor-bottom') != -1) {
@@ -104,7 +100,7 @@ export class UserAccountService {
         userId: string,
         count: number,
         cursor: string
-    ): Promise<{ followers: UserID[], next: string }> {
+    ): Promise<{ followers: User[], next: string }> {
         return fetch(userFollowersUrl(userId, count, cursor), {
             headers: authorizedHeader(
                 this.authToken,
@@ -117,7 +113,7 @@ export class UserAccountService {
         //@ts-ignore
         .then(res => res['data']['user']['result']['timeline']['timeline']['instructions'].filter(entry => entry['type'] === 'TimelineAddEntries')[0]['entries'])
         .then(data => {
-            var followers: UserID[] = [];                                           // To store the UIDS for following
+            var followers: User[] = [];                                             // To store the UIDS for following
             var next: string = '';                                                  // To store the cursor to next batch
 
             // Itearating over the raw list of following
@@ -129,11 +125,7 @@ export class UserAccountService {
                     const user = entry['content']['itemContent']['user_results']['result'];
                     
                     // Adding the follower ID to list of IDs
-                    followers.push(new UserID().deserialize({
-                        id: user['rest_id'],
-                        userName: user['legacy']['screen_name'],
-                        fullName: user['legacy']['name']
-                    }));
+                    followers.push(new User().deserialize(user));
                 }
                 // If entry is of type bottom cursor
                 else if(entry['entryId'].indexOf('cursor-bottom') != -1) {
