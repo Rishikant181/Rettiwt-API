@@ -37,6 +37,7 @@ export class TweetService extends FetcherService {
     }
 
     // TODO: Make this method also fetch the tweets as well as the replies made by the user
+    // TODO: Make this method filter out retweets made by the user
     // Method to fetch all tweets and replies made by a user
     getTweets(
         userId: number,
