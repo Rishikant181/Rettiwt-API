@@ -45,9 +45,11 @@ export class TweetService extends FetcherService {
     ): Promise<Response<{ tweets: Tweet[]; next: string }>> {
         return this.fetchData(userTweetsUrl(userId, count, cursor))
             .then(res => {
-                var data = res['data']['user']['result']['timeline']['timeline']['instructions'][0]['entries'];
-
                 var tweets: Tweet[] = [];
+                var next: string = '';
+                
+                var data = res['data']['user']['result']['timeline']['timeline']['instructions'][0]['entries'];
+                next = data[data.length - 1]['content']['value'];
 
                 //@ts-ignore
                 for (var entry of data) {
@@ -81,7 +83,7 @@ export class TweetService extends FetcherService {
                 return new Response<{ tweets: Tweet[], next: string }>(
                     true,
                     new Error(null),
-                    { tweets: tweets, next: data[data.length - 1]['content']['value'] }
+                    { tweets: tweets, next: next }
                 );
             })
             // If error parsing json

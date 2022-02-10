@@ -1,17 +1,28 @@
 // This file contains various objects for handling data related to HTTP communication
 
-// TODO: Add object to hold error response and make the services use this error type
+// TODO: Evaluate the error message and generate different error objects for different errors
 
 // Object to hold error data for http communication
 export class Error {
     // MEMBER DATA
-    type: string;                                                           // To store the type of error
-    details: string;                                                        // To store additional details
+    name: string;                                                               // To store the type of error
+    message: string;                                                            // To store actual error message
+    details: any;                                                               // To store exact error message
 
     // MEMBER METHODS
     constructor(err: any) {
-        this.type = 'Error';
-        this.details = 'I dont know';
+        // If no error
+        if(!err) {
+            this.name = '';
+            this.message = '';
+            this.details = null;
+        }
+        // If error
+        else {
+            this.name = err.name;
+            this.message = err.message;
+            this.details = err;
+        }
     }
 }
 
