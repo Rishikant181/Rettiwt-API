@@ -58,9 +58,8 @@ export class UserAccountService extends FetcherService {
         userId: string,
         count: number,
         cursor: string
-    ): Promise<{ following: User[], next: string }> {
+    ): Promise<Response<{ following: User[], next: string }>> {
         return this.fetchData(userFollowingUrl(userId, count, cursor))
-            .then(res => res.json())
             .then(res => {
                 var following: User[] = [];
                 var next: string = '';
@@ -92,12 +91,19 @@ export class UserAccountService extends FetcherService {
                     }
                 }
 
-                return { following: following, next: next };
-            },
-            // If error parsing to json
-            (err) => {
-                console.log("Failed to parse data");
-                return { following: [], next: '' }
+                return new Response<{ following: User[], next: string }>(
+                    true,
+                    new Error(null),
+                    { following: following, next: next }
+                );
+            })
+            // If error parsing json
+            .catch(err => {
+                return new Response<{ following: User[], next: string }>(
+                    false,
+                    new Error(err),
+                    { following: [], next: '' }
+                )
             });
     }
 
@@ -106,9 +112,8 @@ export class UserAccountService extends FetcherService {
         userId: string,
         count: number,
         cursor: string
-    ): Promise<{ followers: User[], next: string }> {
+    ): Promise<Response<{ followers: User[], next: string }>> {
         return this.fetchData(userFollowersUrl(userId, count, cursor))
-            .then(res => res.json())
             .then(res => {
                 var followers: User[] = [];
                 var next: string = '';
@@ -140,12 +145,19 @@ export class UserAccountService extends FetcherService {
                     }
                 }
 
-                return { followers: followers, next: next };
-            },
-            // If error parsing to json
-            (err) => {
-                console.log("Failed to parse data");
-                return { followers: [], next: '' }
+                return new Response<{ followers: User[], next: string }>(
+                    true,
+                    new Error(null),
+                    { followers: followers, next: next }
+                );
+            })
+            // If error parsing json
+            .catch(err => {
+                return new Response<{ followers: User[], next: string }>(
+                    false,
+                    new Error(err),
+                    { followers: [], next: '' }
+                );
             });
     }
 };

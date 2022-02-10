@@ -23,7 +23,7 @@ app.listen(config['server']['port'], () => {
         config['twitter']['csrfToken'],
         config['twitter']['cookie']
     )
-    .getUserAccountDetails('elonmusk')
+    .getUserFollowers('44196397', 10, '')
     .then(data => console.log(data));
     
     console.log(`Listening on port ${config['server']['port']}`);
