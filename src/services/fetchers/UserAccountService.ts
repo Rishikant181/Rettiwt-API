@@ -50,7 +50,7 @@ export class UserAccountService extends FetcherService {
                     new Error(err),
                     new User(),
                 );
-            })
+            });
     }
 
     // Method to fetch the list of users followed by given user
