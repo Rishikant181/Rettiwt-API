@@ -36,9 +36,11 @@ export class FetcherService {
                 this.cookie
             )
         })
-        // If error connecting
+        // Parsing data to json
+        .then(res => res.json())
+        // If error connecting and parsing data
         .catch((err) => {
-            console.log("Failed to connect to Twitter");
+            throw err;
         })
     }
 }

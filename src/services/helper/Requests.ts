@@ -10,7 +10,7 @@ export function userAccountUrl(screenName: string): string {
 
 // Method to return the url for fetching the followers of the given user
 export function userFollowingUrl(
-    userId: string,
+    userId: number,
     count: number,
     cursor: string
 ): string {
@@ -30,7 +30,7 @@ export function userFollowingUrl(
 
 // Method to return the url for fetching the list of followers of the given user
 export function userFollowersUrl(
-    userId: string,
+    userId: number,
     count: number,
     cursor: string
 ): string {
@@ -50,7 +50,7 @@ export function userFollowersUrl(
 
 // Method to return the url for fetching user tweets from user id
 export function userTweetsUrl(
-    userId: string,
+    userId: number,
     count: number,
     cursor: string
 ): string {
@@ -102,7 +102,7 @@ export function filteredTweetsUrl(
 
 // Method to return the url for fetching the details of a single tweet
 export function tweetRepliesUrl(
-    tweetId: string,
+    tweetId: number,
     cursor: string
 ): string {
     var url = '';
@@ -121,7 +121,7 @@ export function tweetRepliesUrl(
 
 // Method to return url for fetching the list of users who liked the given tweet
 export function tweetLikesUrl(
-    tweetId: string,
+    tweetId: number,
     count: number,
     cursor: string
 ): string {
@@ -141,7 +141,7 @@ export function tweetLikesUrl(
 
 // Method to return the url for fetching the details of a single tweet
 export function tweetRetweetUrl(
-    tweetId: string,
+    tweetId: number,
     count: number,
     cursor: string
 ): string {

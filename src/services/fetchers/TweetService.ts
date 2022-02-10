@@ -5,6 +5,11 @@
 import { FetcherService } from "../FetcherService";
 
 import {
+    Error,
+    Response
+} from '../../schema/types/HTTP'
+
+import {
     TweetFilter,
     Tweet
 } from "../../schema/types/TweetData";
@@ -34,16 +39,17 @@ export class TweetService extends FetcherService {
     // TODO: Make this method also fetch the tweets as well as the replies made by the user
     // Method to fetch all tweets and replies made by a user
     getTweets(
-        userId: string,
+        userId: number,
         count: number,
         cursor: string,
-    ): Promise<{ tweets: Tweet[]; next: string }> {
+    ): Promise<Response<{ tweets: Tweet[]; next: string }>> {
         return this.fetchData(userTweetsUrl(userId, count, cursor))
-            .then(res => res.json())
             .then(res => {
-                var data = res['data']['user']['result']['timeline']['timeline']['instructions'][0]['entries'];
-
                 var tweets: Tweet[] = [];
+                var next: string = '';
+                
+                var data = res['data']['user']['result']['timeline']['timeline']['instructions'][0]['entries'];
+                next = data[data.length - 1]['content']['value'];
 
                 //@ts-ignore
                 for (var entry of data) {
@@ -74,13 +80,20 @@ export class TweetService extends FetcherService {
                     }
                 }
 
-                return { tweets: tweets, next: data[data.length - 1]['content']['value'] };
-            },
-            // If error parsing to json
-            (err) => {
-                console.log("Failed to parse data");
-                return { tweets: [], next: '' }
-            });
+                return new Response<{ tweets: Tweet[], next: string }>(
+                    true,
+                    new Error(null),
+                    { tweets: tweets, next: next }
+                );
+            })
+            // If error parsing json
+            .catch(err => {
+                return new Response<{ tweets: Tweet[], next: string }>(
+                    false,
+                    new Error(err),
+                    { tweets: [], next: '' }
+                );
+            })
     }
 
     // FIXME: This feature does not work accurately and returns recurrent data most of the times
@@ -88,9 +101,8 @@ export class TweetService extends FetcherService {
     getFilteredTweets(
         filter: TweetFilter,
         cursor: string
-    ): Promise<{ tweets: Tweet[], next: string }> {
+    ): Promise<Response<{ tweets: Tweet[], next: string }>> {
         return this.fetchData(filteredTweetsUrl(filter, cursor))
-            .then(res => res.json())
             .then(res => {
                 var tweets: Tweet[] = [];
                 var next: '';
@@ -117,23 +129,29 @@ export class TweetService extends FetcherService {
                     }));
                 }
 
-                return { tweets: tweets, next: next };
-            },
-            // If error parsing to json
-            (err) => {
-                console.log("Failed to parse data");
-                return { tweets: [], next: '' }
+                return new Response<{ tweets: Tweet[], next: string }>(
+                    true,
+                    new Error(null),
+                    { tweets: tweets, next: next }
+                );
+            })
+            // If error parsing json
+            .catch(err => {
+                return new Response<{ tweets: Tweet[], next: string }>(
+                    false,
+                    new Error(err),
+                    { tweets: [], next: '' }
+                );
             });
     }
 
     // Method to fetch tweet likes using tweet id
     getTweetLikers(
-        tweetId: string,
+        tweetId: number,
         count: number,
         cursor: string
-    ): Promise<{ likers: User[], next: string }> {
+    ): Promise<Response<{ likers: User[], next: string }>> {
         return this.fetchData(tweetLikesUrl(tweetId, count, cursor))
-            .then(res => res.json())
             .then(res => {
                 var likers: User[] = [];
                 var next: string = '';
@@ -157,23 +175,29 @@ export class TweetService extends FetcherService {
                     }
                 }
 
-                return { likers: likers, next: next };
-            },
-            // If error parsing to json
-            (err) => {
-                console.log("Failed to parse data");
-                return { likers: [], next: '' }
+                return new Response<{ likers: User[], next: string }>(
+                    true,
+                    new Error(null),
+                    { likers: likers, next: next }
+                );
+            })
+            // If error parsing json
+            .catch(err => {
+                return new Response<{ likers: User[], next: string }>(
+                    false,
+                    new Error(err),
+                    { likers: [], next: '' }
+                );
             });
     }
 
     // Method to fetch tweet retweeters using tweet id
     getTweetRetweeters(
-        tweetId: string,
+        tweetId: number,
         count: number,
         cursor: string
-    ): Promise<{ retweeters: User[], next: string }> {
+    ): Promise<Response<{ retweeters: User[], next: string }>> {
         return this.fetchData(tweetRetweetUrl(tweetId, count, cursor))
-            .then(res => res.json())
             .then(res => {
                 var retweeters: User[] = [];
                 var next: string = '';
@@ -197,22 +221,28 @@ export class TweetService extends FetcherService {
                     }
                 }
 
-                return { retweeters: retweeters, next: next };
-            },
-            // If error parsing to json
-            (err) => {
-                console.log("Failed to parse data");
-                return { retweeters: [], next: '' }
+                return new Response<{ retweeters: User[], next: string }>(
+                    true,
+                    new Error(null),
+                    { retweeters: retweeters, next: next }
+                );
+            })
+            // If error parsing json
+            .catch(err => {
+                return new Response<{ retweeters: User[], next: string }>(
+                    false,
+                    new Error(err),
+                    { retweeters: [], next: '' }
+                );
             });
     }
 
     // Method to fetch tweet replies using tweet id
     getTweetReplies(
-        tweetId: string,
+        tweetId: number,
         cursor: string
-    ): Promise<{ replies: Tweet[], next: string }> {
+    ): Promise<Response<{ replies: Tweet[], next: string }>> {
         return this.fetchData(tweetRepliesUrl(tweetId, cursor))
-            .then(res => res.json())
             .then(res => {
                 var replies: Tweet[] = [];
                 var next = '';
@@ -236,12 +266,19 @@ export class TweetService extends FetcherService {
                     }
                 }
 
-                return { replies: replies, next: next };
-            },
-            // If error parsing to json
-            (err) => {
-                console.log("Failed to parse data");
-                return { replies: [], next: '' }
+                return new Response<{ replies: Tweet[], next: string }>(
+                    true,
+                    new Error(null),
+                    { replies: replies, next: next }
+                );
+            })
+            // If error parsing json
+            .catch(err => {
+                return new Response<{ replies: Tweet[], next: string }>(
+                    false,
+                    new Error(err),
+                    { replies: [], next: '' }
+                );
             });
     }
 }

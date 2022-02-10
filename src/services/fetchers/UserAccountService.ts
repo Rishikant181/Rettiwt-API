@@ -1,11 +1,13 @@
 // This file contains the service that handles getting and posting User account data to and from official TwitterAPI
 
-// PACKAGE LIBS
-import fetch from 'node-fetch';
-
 // Custom libs
 
 import { FetcherService } from '../FetcherService';
+
+import {
+    Error,
+    Response
+} from '../../schema/types/HTTP'
 
 import {
     User
@@ -29,25 +31,32 @@ export class UserAccountService extends FetcherService {
     }
 
     // Method to fetch the user account details using screen name
-    getUserAccountDetails(screenName: string): Promise<User> {
+    getUserAccountDetails(screenName: string): Promise<Response<User>> {
         return this.fetchData(userAccountUrl(screenName))
-            .then(res => res.json())
-            .then(res => new User().deserialize(res['data']['user']['result']), 
-            // If error parsing to json
-            (err) => {
-                console.log("Failed to parse data");
-                return new User();
+            .then(res => {
+                return new Response<User>(
+                    true,
+                    new Error(null),
+                    new User().deserialize(res['data']['user']['result']),
+                );
+            })
+            // If error parsing data
+            .catch(err => {
+                return new Response<User>(
+                    false,
+                    new Error(err),
+                    new User(),
+                );
             });
     }
 
     // Method to fetch the list of users followed by given user
     getUserFollowing(
-        userId: string,
+        userId: number,
         count: number,
         cursor: string
-    ): Promise<{ following: User[], next: string }> {
+    ): Promise<Response<{ following: User[], next: string }>> {
         return this.fetchData(userFollowingUrl(userId, count, cursor))
-            .then(res => res.json())
             .then(res => {
                 var following: User[] = [];
                 var next: string = '';
@@ -79,23 +88,29 @@ export class UserAccountService extends FetcherService {
                     }
                 }
 
-                return { following: following, next: next };
-            },
-            // If error parsing to json
-            (err) => {
-                console.log("Failed to parse data");
-                return { following: [], next: '' }
+                return new Response<{ following: User[], next: string }>(
+                    true,
+                    new Error(null),
+                    { following: following, next: next }
+                );
+            })
+            // If error parsing json
+            .catch(err => {
+                return new Response<{ following: User[], next: string }>(
+                    false,
+                    new Error(err),
+                    { following: [], next: '' }
+                )
             });
     }
 
     // Method to fetch a list of followers of the given user
     getUserFollowers(
-        userId: string,
+        userId: number,
         count: number,
         cursor: string
-    ): Promise<{ followers: User[], next: string }> {
+    ): Promise<Response<{ followers: User[], next: string }>> {
         return this.fetchData(userFollowersUrl(userId, count, cursor))
-            .then(res => res.json())
             .then(res => {
                 var followers: User[] = [];
                 var next: string = '';
@@ -127,12 +142,19 @@ export class UserAccountService extends FetcherService {
                     }
                 }
 
-                return { followers: followers, next: next };
-            },
-            // If error parsing to json
-            (err) => {
-                console.log("Failed to parse data");
-                return { followers: [], next: '' }
+                return new Response<{ followers: User[], next: string }>(
+                    true,
+                    new Error(null),
+                    { followers: followers, next: next }
+                );
+            })
+            // If error parsing json
+            .catch(err => {
+                return new Response<{ followers: User[], next: string }>(
+                    false,
+                    new Error(err),
+                    { followers: [], next: '' }
+                );
             });
     }
 };
