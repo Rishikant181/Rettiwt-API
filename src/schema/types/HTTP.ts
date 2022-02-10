@@ -9,16 +9,23 @@ export class Error {
     details: string;                                                        // To store additional details
 
     // MEMBER METHODS
-    constructor(type: string, details: string) {
-        this.type = type;
-        this.details = details;
+    constructor(err: any) {
+        this.type = 'Error';
+        this.details = 'I dont know';
     }
 }
 
 // Object to hold data received from fetch request
-export class Response {
+export class Response<Type> {
     // MEMBER DATA
     success: boolean;                                                       // To store whether success or failure
     error: Error;                                                           // To store error details, if any
-    data: any;                                                              // To store the data received
+    data: Type;                                                             // To store the data received
+
+    // MEMBER METHODS
+    constructor(success: boolean, error: Error, data: any) {
+        this.success = success;
+        this.error = error;
+        this.data = data;
+    }
 }

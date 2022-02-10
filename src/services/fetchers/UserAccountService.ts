@@ -8,6 +8,11 @@ import fetch from 'node-fetch';
 import { FetcherService } from '../FetcherService';
 
 import {
+    Error,
+    Response
+} from '../../schema/types/HTTP'
+
+import {
     User
 } from '../../schema/types/UserAccountData';
 
@@ -29,15 +34,23 @@ export class UserAccountService extends FetcherService {
     }
 
     // Method to fetch the user account details using screen name
-    getUserAccountDetails(screenName: string): Promise<User> {
+    getUserAccountDetails(screenName: string): Promise<Response<User>> {
         return this.fetchData(userAccountUrl(screenName))
-            .then(res => res.json())
-            .then(res => new User().deserialize(res['data']['user']['result']), 
-            // If error parsing to json
-            (err) => {
-                console.log("Failed to parse data");
-                return new User();
-            });
+            .then(res => {
+                return new Response<User>(
+                    true,
+                    new Error({}),
+                    new User().deserialize(res['data']['user']['result']),
+                );
+            })
+            // If error parsing data
+            .catch(err => {
+                return new Response<User>(
+                    false,
+                    new Error(err),
+                    new User(),
+                );
+            })
     }
 
     // Method to fetch the list of users followed by given user
