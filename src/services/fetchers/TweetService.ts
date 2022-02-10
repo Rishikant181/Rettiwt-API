@@ -19,8 +19,7 @@ import {
 } from "../../schema/types/UserAccountData";
 
 import {
-    userTweetsUrl,
-    filteredTweetsUrl,
+    tweetsUrl,
     tweetRepliesUrl,
     tweetLikesUrl,
     tweetRetweetUrl
@@ -36,71 +35,12 @@ export class TweetService extends FetcherService {
         super(authToken, csrfToken, cookie);
     }
 
-    // TODO: Make this method also fetch the tweets as well as the replies made by the user
-    // TODO: Make this method filter out retweets made by the user
-    // Method to fetch all tweets and replies made by a user
-    getTweets(
-        userId: number,
-        count: number,
-        cursor: string,
-    ): Promise<Response<{ tweets: Tweet[]; next: string }>> {
-        return this.fetchData(userTweetsUrl(userId, count, cursor))
-            .then(res => {
-                var tweets: Tweet[] = [];
-                var next: string = '';
-                
-                var data = res['data']['user']['result']['timeline']['timeline']['instructions'][0]['entries'];
-                next = data[data.length - 1]['content']['value'];
-
-                //@ts-ignore
-                for (var entry of data) {
-                    // If the entry is a tweet
-                    if (entry['entryId'].indexOf("tweet") != -1) {
-                        // Extracting the tweet
-                        const tweet = entry['content']['itemContent']['tweet_results']['result'];
-
-                        // Adding the tweet to tweet list
-                        tweets.push(new Tweet().deserialize({
-                            'rest_id': tweet['rest_id'],
-                            ...tweet['legacy']
-                        }));
-                    }
-                    // If the entry is a retweet
-                    else if (entry['entryId'].indexOf("homeConversation") != -1) {
-                        // Extracting the tweet
-                        const tweet = entry['content']['items'][1]['item']['itemContent']['tweet_results']['result'];
-
-                        // Adding the tweet to tweet list
-                        tweets.push(new Tweet().deserialize({
-                            'rest_id': tweet['rest_id'],
-                            ...tweet['legacy']
-                        }));
-                    }
-                }
-
-                return new Response<{ tweets: Tweet[], next: string }>(
-                    true,
-                    new Error(null),
-                    { tweets: tweets, next: next }
-                );
-            })
-            // If error parsing json
-            .catch(err => {
-                return new Response<{ tweets: Tweet[], next: string }>(
-                    false,
-                    new Error(err),
-                    { tweets: [], next: '' }
-                );
-            })
-    }
-
-    // FIXME: This feature does not work accurately and returns recurrent data most of the times
     // Method to fetch tweets filtered by the supplied filter
-    getFilteredTweets(
+    getTweets(
         filter: TweetFilter,
         cursor: string
     ): Promise<Response<{ tweets: Tweet[], next: string }>> {
-        return this.fetchData(filteredTweetsUrl(filter, cursor))
+        return this.fetchData(tweetsUrl(filter, cursor))
             .then(res => {
                 var tweets: Tweet[] = [];
                 var next: '';
