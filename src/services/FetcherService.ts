@@ -40,7 +40,7 @@ export class FetcherService {
         .then(res => res.json())
         // If error connecting and parsing data
         .catch((err) => {
-            return { success: false };
+            throw err;
         })
     }
 }

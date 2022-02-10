@@ -7,7 +7,6 @@ export class Error {
     // MEMBER DATA
     name: string;                                                               // To store the type of error
     message: string;                                                            // To store actual error message
-    details: any;                                                               // To store exact error message
 
     // MEMBER METHODS
     constructor(err: any) {
@@ -15,13 +14,11 @@ export class Error {
         if(!err) {
             this.name = '';
             this.message = '';
-            this.details = null;
         }
         // If error
         else {
             this.name = err.name;
             this.message = err.message;
-            this.details = err;
         }
     }
 }
