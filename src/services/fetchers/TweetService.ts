@@ -67,17 +67,14 @@ export class TweetService extends FetcherService {
                     }
                     // If the entry is a retweet
                     else if (entry['entryId'].indexOf("homeConversation") != -1) {
-                        // Iterating through sub entries
-                        for (var entry of entry['content']['items']) {
-                            // Extracting the tweet
-                            const tweet = entry['item']['itemContent']['tweet_results']['result'];
+                        // Extracting the tweet
+                        const tweet = entry['content']['items'][1]['item']['itemContent']['tweet_results']['result'];
 
-                            // Adding the tweet to tweet list
-                            tweets.push(new Tweet().deserialize({
-                                'rest_id': tweet['rest_id'],
-                                ...tweet['legacy']
-                            }));
-                        }
+                        // Adding the tweet to tweet list
+                        tweets.push(new Tweet().deserialize({
+                            'rest_id': tweet['rest_id'],
+                            ...tweet['legacy']
+                        }));
                     }
                 }
 
