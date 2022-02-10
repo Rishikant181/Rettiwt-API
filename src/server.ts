@@ -23,7 +23,7 @@ app.listen(config['server']['port'], () => {
         config['twitter']['csrfToken'],
         config['twitter']['cookie']
     )
-    .getTweets('44196397', 1, '')
+    .getTweets(44196397, 2, '')
     .then(res => console.log(res));
     
     console.log(`Listening on port ${config['server']['port']}`);

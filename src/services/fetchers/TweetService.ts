@@ -39,7 +39,7 @@ export class TweetService extends FetcherService {
     // TODO: Make this method also fetch the tweets as well as the replies made by the user
     // Method to fetch all tweets and replies made by a user
     getTweets(
-        userId: string,
+        userId: number,
         count: number,
         cursor: string,
     ): Promise<Response<{ tweets: Tweet[]; next: string }>> {
@@ -147,7 +147,7 @@ export class TweetService extends FetcherService {
 
     // Method to fetch tweet likes using tweet id
     getTweetLikers(
-        tweetId: string,
+        tweetId: number,
         count: number,
         cursor: string
     ): Promise<Response<{ likers: User[], next: string }>> {
@@ -193,7 +193,7 @@ export class TweetService extends FetcherService {
 
     // Method to fetch tweet retweeters using tweet id
     getTweetRetweeters(
-        tweetId: string,
+        tweetId: number,
         count: number,
         cursor: string
     ): Promise<Response<{ retweeters: User[], next: string }>> {
@@ -239,7 +239,7 @@ export class TweetService extends FetcherService {
 
     // Method to fetch tweet replies using tweet id
     getTweetReplies(
-        tweetId: string,
+        tweetId: number,
         cursor: string
     ): Promise<Response<{ replies: Tweet[], next: string }>> {
         return this.fetchData(tweetRepliesUrl(tweetId, cursor))
