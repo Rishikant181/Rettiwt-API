@@ -1,8 +1,5 @@
 // This file contains the service that handles getting and posting User account data to and from official TwitterAPI
 
-// PACKAGE LIBS
-import fetch from 'node-fetch';
-
 // Custom libs
 
 import { FetcherService } from '../FetcherService';
@@ -39,7 +36,7 @@ export class UserAccountService extends FetcherService {
             .then(res => {
                 return new Response<User>(
                     true,
-                    new Error({}),
+                    new Error(null),
                     new User().deserialize(res['data']['user']['result']),
                 );
             })
