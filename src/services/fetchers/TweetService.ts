@@ -20,13 +20,13 @@ import {
 
 import {
     tweetsUrl,
+    tweetDetailsUrl,
     tweetRepliesUrl,
     tweetLikesUrl,
     tweetRetweetUrl
 } from '../helper/Requests';
 
 export class TweetService extends FetcherService {
-    // TODO: Add a method to fetch the tweet when it's id is given
     // MEMBER METHODS
     constructor(
         authToken: string,
@@ -97,9 +97,49 @@ export class TweetService extends FetcherService {
             });
     }
 
+    // Method to fetch a tweet using it's id
+    getTweetById(tweetId: string): Promise<Response<Tweet>> {
+        return this.fetchData(tweetDetailsUrl(tweetId))
+            .then(res => {
+                var tweet: Tweet;
+                
+                // Extracting raw tweet data from response
+                res = res['data']['threaded_conversation_with_injections']['instructions'][0]['entries']
+
+                // If the tweet is a reply
+                if (res[1]['entryId'].indexOf('tweet') != -1) {
+                    res = res[1]['content']['itemContent']['tweet_results']['result'];
+                }
+                // If the tweet is an original tweet
+                else {
+                    res = res[0]['content']['itemContent']['tweet_results']['result'];
+                }
+
+                // Storing the tweet in a tweet object
+                tweet = new Tweet().deserialize({
+                    'rest_id': res['rest_id'],
+                    ...res['legacy']
+                });
+
+                return new Response<Tweet>(
+                    true,
+                    new Error(null),
+                    tweet
+                );
+            })
+            // If error parsing json
+            .catch(err => {
+                return new Response<Tweet>(
+                    false,
+                    new Error(err),
+                    {}
+                );
+            });
+    }
+
     // Method to fetch tweet likes using tweet id
     getTweetLikers(
-        tweetId: number,
+        tweetId: string,
         count: number,
         cursor: string
     ): Promise<Response<{ likers: User[], next: string }>> {
@@ -145,7 +185,7 @@ export class TweetService extends FetcherService {
 
     // Method to fetch tweet retweeters using tweet id
     getTweetRetweeters(
-        tweetId: number,
+        tweetId: string,
         count: number,
         cursor: string
     ): Promise<Response<{ retweeters: User[], next: string }>> {
@@ -191,7 +231,7 @@ export class TweetService extends FetcherService {
 
     // Method to fetch tweet replies using tweet id
     getTweetReplies(
-        tweetId: number,
+        tweetId: string,
         cursor: string
     ): Promise<Response<{ replies: Tweet[], next: string }>> {
         return this.fetchData(tweetRepliesUrl(tweetId, cursor))
