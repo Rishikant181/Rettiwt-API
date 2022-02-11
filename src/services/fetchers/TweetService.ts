@@ -26,6 +26,7 @@ import {
 } from '../helper/Requests';
 
 export class TweetService extends FetcherService {
+    // TODO: Add a method to fetch the tweet when it's id is given
     // MEMBER METHODS
     constructor(
         authToken: string,
@@ -36,6 +37,7 @@ export class TweetService extends FetcherService {
     }
 
     // Method to fetch tweets filtered by the supplied filter
+    // TODO: Make this method also fetch the retweets made by the user
     getTweets(
         filter: TweetFilter,
         cursor: string
