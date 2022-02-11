@@ -18,5 +18,22 @@ app.use('/', (req, res) => {
 
 // Setting up express server
 app.listen(config['server']['port'], async () => {
+    new TweetService(
+        config['twitter']['auth']['authToken'],
+        config['twitter']['auth']['csrfToken'],
+        config['twitter']['auth']['cookie']
+    )
+    .getTweets(new TweetFilter({
+        words: [],
+        hashtags: [],
+        fromUsers: ['@elonmusk'],
+        toUsers: [],
+        mentions: [],
+        startDate: '2022-02-10',
+        endDate: '',
+        count: 1
+    }), '')
+    .then(res => console.log(res.data.tweets))
+    
     console.log(`Listening on port ${config['server']['port']}`);
 });

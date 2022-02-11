@@ -58,20 +58,32 @@ export class TweetService extends FetcherService {
                 // Getting the raw list of tweets from response
                 res = res['globalObjects']['tweets'];
 
-                // Iterating through the json array of tweets
-                for (var key of Object.keys(res)) {
-                    // Adding the tweets to the Tweet[] list
-                    tweets.push(new Tweet().deserialize({
-                        'rest_id': res[key]['id_str'],
-                        ...res[key]
-                    }));
+                // Checking if empty tweet list returned
+                // If empty, returning
+                if(Object.keys(res).length == 0) {
+                    return new Response<{ tweets: Tweet[], next: string }>(
+                        false,
+                        new Error(null),
+                        { tweets: [], next: '' }
+                    );
                 }
+                // If not empty, extracting tweets
+                else {
+                    // Iterating through the json array of tweets
+                    for (var key of Object.keys(res)) {
+                        // Adding the tweets to the Tweet[] list
+                        tweets.push(new Tweet().deserialize({
+                            'rest_id': res[key]['id_str'],
+                            ...res[key]
+                        }));
+                    }
 
-                return new Response<{ tweets: Tweet[], next: string }>(
-                    true,
-                    new Error(null),
-                    { tweets: tweets, next: next }
-                );
+                    return new Response<{ tweets: Tweet[], next: string }>(
+                        true,
+                        new Error(null),
+                        { tweets: tweets, next: next }
+                    );
+                }
             })
             // If error parsing json
             .catch(err => {
