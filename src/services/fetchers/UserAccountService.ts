@@ -52,7 +52,7 @@ export class UserAccountService extends FetcherService {
 
     // Method to fetch the list of users followed by given user
     getUserFollowing(
-        userId: number,
+        userId: string,
         count: number,
         cursor: string
     ): Promise<Response<{ following: User[], next: string }>> {
@@ -106,7 +106,7 @@ export class UserAccountService extends FetcherService {
 
     // Method to fetch a list of followers of the given user
     getUserFollowers(
-        userId: number,
+        userId: string,
         count: number,
         cursor: string
     ): Promise<Response<{ followers: User[], next: string }>> {

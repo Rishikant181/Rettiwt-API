@@ -10,7 +10,7 @@ export function userAccountUrl(screenName: string): string {
 
 // Method to return the url for fetching the followers of the given user
 export function userFollowingUrl(
-    userId: number,
+    userId: string,
     count: number,
     cursor: string
 ): string {
@@ -30,7 +30,7 @@ export function userFollowingUrl(
 
 // Method to return the url for fetching the list of followers of the given user
 export function userFollowersUrl(
-    userId: number,
+    userId: string,
     count: number,
     cursor: string
 ): string {
@@ -81,8 +81,20 @@ export function tweetsUrl(
 }
 
 // Method to return the url for fetching the details of a single tweet
+export function tweetDetailsUrl(
+    tweetId: string
+): string {
+    var url = '';
+
+    // If a cursor is provided
+    url = `https://twitter.com/i/api/graphql/L5bZJ8DPGqZjl6dXJ8lApw/TweetDetail?variables=%7B%22focalTweetId%22%3A%22${tweetId}%22%2C%22with_rux_injections%22%3Afalse%2C%22includePromotedContent%22%3Afalse%2C%22withCommunity%22%3Afalse%2C%22withQuickPromoteEligibilityTweetFields%22%3Afalse%2C%22withBirdwatchNotes%22%3Afalse%2C%22withSuperFollowsUserFields%22%3Afalse%2C%22withDownvotePerspective%22%3Afalse%2C%22withReactionsMetadata%22%3Afalse%2C%22withReactionsPerspective%22%3Afalse%2C%22withSuperFollowsTweetFields%22%3Afalse%2C%22withVoice%22%3Afalse%2C%22withV2Timeline%22%3Afalse%2C%22__fs_dont_mention_me_view_api_enabled%22%3Afalse%2C%22__fs_interactive_text_enabled%22%3Afalse%2C%22__fs_responsive_web_uc_gql_enabled%22%3Afalse%7D`;
+
+    return url;
+}
+
+// Method to return the url for fetching the replies to a tweet
 export function tweetRepliesUrl(
-    tweetId: number,
+    tweetId: string,
     cursor: string
 ): string {
     var url = '';
@@ -101,7 +113,7 @@ export function tweetRepliesUrl(
 
 // Method to return url for fetching the list of users who liked the given tweet
 export function tweetLikesUrl(
-    tweetId: number,
+    tweetId: string,
     count: number,
     cursor: string
 ): string {
@@ -121,7 +133,7 @@ export function tweetLikesUrl(
 
 // Method to return the url for fetching the details of a single tweet
 export function tweetRetweetUrl(
-    tweetId: number,
+    tweetId: string,
     count: number,
     cursor: string
 ): string {
