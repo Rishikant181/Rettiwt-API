@@ -89,6 +89,7 @@ export class Tweet implements Deserializable {
     createdAt: string;                                                      // To store the time when the tweet was created
     entities: TweetEntities;                                                // To store additional tweet entities
     fullText: string;                                                       // To store the full text in the tweet
+    replyTo: string;                                                        // To store the id of the tweet to which this was a reply
     lang: string;                                                           // To store the language used in the tweet
     quoteCount: number;                                                     // To store the number of quotes of the tweet
     replyCount: number;                                                     // To store the number of replies to the tweet
@@ -102,6 +103,7 @@ export class Tweet implements Deserializable {
         this.tweetBy = data['user_id_str'];
         this.entities = new TweetEntities().deserialize(data['entities']);
         this.fullText = data['full_text'];
+        this.replyTo = data['in_reply_to_status_id_str'];
         this.lang = data['lang'];
         this.quoteCount = data['quote_count'];
         this.replyCount = data['reply_count'];
