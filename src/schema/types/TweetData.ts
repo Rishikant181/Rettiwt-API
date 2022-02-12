@@ -88,6 +88,7 @@ export class Tweet implements Deserializable {
     tweetBy: string;                                                        // To store the rest id of the user who made the tweet
     createdAt: string;                                                      // To store the time when the tweet was created
     entities: TweetEntities;                                                // To store additional tweet entities
+    quoted: string;                                                         // To store the id of the tweet quote (if any)
     fullText: string;                                                       // To store the full text in the tweet
     replyTo: string;                                                        // To store the id of the tweet to which this was a reply
     lang: string;                                                           // To store the language used in the tweet
@@ -102,6 +103,7 @@ export class Tweet implements Deserializable {
         this.createdAt = data['created_at'];
         this.tweetBy = data['user_id_str'];
         this.entities = new TweetEntities().deserialize(data['entities']);
+        this.quoted = data['quoted_status_id_str'];
         this.fullText = data['full_text'];
         this.replyTo = data['in_reply_to_status_id_str'];
         this.lang = data['lang'];
