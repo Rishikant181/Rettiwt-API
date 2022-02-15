@@ -16,9 +16,11 @@ import {
 import {
     userAccountUrl,
     userFollowingUrl,
-    userFollowersUrl
+    userFollowersUrl,
+    userLikesUrl
 } from '../helper/Requests';
-import { Tweet } from 'src/schema/types/TweetData';
+
+import { Tweet } from '../../schema/types/TweetData';
 
 export class UserAccountService extends FetcherService {
     // MEMBER METHODS
@@ -164,7 +166,55 @@ export class UserAccountService extends FetcherService {
         userId: string,
         count: number,
         cursor: string
-    ): Promise<{ tweets: Tweet[], next: string }> {
-        
+    ): Promise<Response<{ tweets: Tweet[], next: string }>> {
+        return this.fetchData(userLikesUrl(userId, count, cursor))
+            .then(res => {
+                var tweets: Tweet[] = [];
+                var next: string = '';
+
+                // Extracting the raw list of followers
+                //@ts-ignore
+                res = res['data']['user']['result']['timeline_v2']['timeline']['instructions'].filter(entry => entry['type'] === 'TimelineAddEntries')[0]['entries']
+
+                // Itearating over the raw list of following
+                for (var entry of res) {
+                    // Checking if the entry is of type user
+                    // If entry is of tweet type
+                    if (entry['entryId'].indexOf('tweet') != -1) {
+                        // Extracting tweet
+                        const tweet = entry['content']['itemContent']['tweet_results']['result'];
+
+                        // Adding the follower ID to list of IDs
+                        tweets.push(new Tweet().deserialize({
+                            rest_id: tweet['rest_id'],
+                            ...tweet['legacy']
+                        }));
+                    }
+                    // If entry is of type bottom cursor
+                    else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
+                        // Storing the cursor to next batch
+                        /**
+                         * Replacing '|' with '%7C'
+                         * Template string does not(apparently) implicitly replace characters with their url encodings.
+                         * Therefore not explicitly replacing casuses bad request
+                         */
+                        next = entry['content']['value'].replace('|', '%7C');
+                    }
+                }
+
+                return new Response<{ tweets: Tweet[], next: string }>(
+                    true,
+                    new Error(null),
+                    { tweets: tweets, next: next }
+                );
+            })
+            // If error parsing json
+            .catch(err => {
+                return new Response<{ tweets: Tweet[], next: string }>(
+                    false,
+                    new Error(err),
+                    { tweets: [], next: '' }
+                );
+            });
     }
 };
