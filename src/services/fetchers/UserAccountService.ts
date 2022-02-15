@@ -18,6 +18,7 @@ import {
     userFollowingUrl,
     userFollowersUrl
 } from '../helper/Requests';
+import { Tweet } from 'src/schema/types/TweetData';
 
 export class UserAccountService extends FetcherService {
     // MEMBER METHODS
@@ -156,5 +157,14 @@ export class UserAccountService extends FetcherService {
                     { followers: [], next: '' }
                 );
             });
+    }
+
+    // Method to fetch the list of tweets liked by the user
+    getUserLikes(
+        userId: string,
+        count: number,
+        cursor: string
+    ): Promise<{ tweets: Tweet[], next: string }> {
+        
     }
 };

@@ -48,6 +48,26 @@ export function userFollowersUrl(
     return url;
 }
 
+// Method to return the url for fetching the list of tweets like by the user
+export function userLikesUrl(
+    userId: string,
+    count: number,
+    cursor: string
+): string {
+    var url: string = '';
+
+    // If cursor is supplied
+    if(cursor) {
+        url = `https://twitter.com/i/api/graphql/rosCAWUCmDmwRD3gy7oWPw/Likes?variables=%7B%22userId%22%3A%22${userId}%22%2C%22count%22%3A${count}%2C%22cursor%22%3A%22${cursor}%22%2C%22includePromotedContent%22%3Afalse%2C%22withSuperFollowsUserFields%22%3Afalse%2C%22withDownvotePerspective%22%3Afalse%2C%22withReactionsMetadata%22%3Afalse%2C%22withReactionsPerspective%22%3Afalse%2C%22withSuperFollowsTweetFields%22%3Afalse%2C%22withClientEventToken%22%3Afalse%2C%22withBirdwatchNotes%22%3Afalse%2C%22withVoice%22%3Afalse%2C%22withV2Timeline%22%3Atrue%2C%22__fs_dont_mention_me_view_api_enabled%22%3Afalse%2C%22__fs_interactive_text_enabled%22%3Afalse%2C%22__fs_responsive_web_uc_gql_enabled%22%3Afalse%7D`
+    }
+    // If no cursor if supplied
+    else {
+        url = `https://twitter.com/i/api/graphql/rosCAWUCmDmwRD3gy7oWPw/Likes?variables=%7B%22userId%22%3A%22${userId}%22%2C%22count%22%3A${count}%2C%22includePromotedContent%22%3Afalse%2C%22withSuperFollowsUserFields%22%3Afalse%2C%22withDownvotePerspective%22%3Afalse%2C%22withReactionsMetadata%22%3Afalse%2C%22withReactionsPerspective%22%3Afalse%2C%22withSuperFollowsTweetFields%22%3Afalse%2C%22withClientEventToken%22%3Afalse%2C%22withBirdwatchNotes%22%3Afalse%2C%22withVoice%22%3Afalse%2C%22withV2Timeline%22%3Atrue%2C%22__fs_dont_mention_me_view_api_enabled%22%3Afalse%2C%22__fs_interactive_text_enabled%22%3Afalse%2C%22__fs_responsive_web_uc_gql_enabled%22%3Afalse%7D`
+    }
+
+    return url;
+}
+
 // Method to return the url for fetching tweets using a given filter
 export function tweetsUrl(
     filter: TweetFilter,
