@@ -4,9 +4,9 @@ import express from 'express';
 // CUSTOM LIBS
 import { config } from './config/env';
 import { TweetFilter } from './schema/types/TweetData';
-import { AuthService } from './services/fetchers/AuthService';
-import { TweetService } from './services/fetchers/TweetService';
-import { UserAccountService } from './services/fetchers/UserAccountService';
+import { AuthService } from './services/DataServices/AuthService';
+import { TweetService } from './services/DataServices/TweetService';
+import { UserAccountService } from './services/DataServices/UserAccountService';
 
 // Initialising express instance
 const app = express();
