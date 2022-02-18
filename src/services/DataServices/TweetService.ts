@@ -46,7 +46,7 @@ export class TweetService extends FetcherService {
             .then(res => {
                 var tweets: Tweet[] = [];
                 var next: '';
-
+                
                 // Extracting tweets list and cursor to next batch from the response
                 // If not a first batch
                 if (res['timeline']['instructions'][2]) {
