@@ -1,7 +1,7 @@
 // This file contains various methods for extracting data from incoming JSON
 
 // Method to search for a value from a given JSON, when the key is supplied
-export function valueFromKey(data: any, key: string, last: boolean = false): any {
+export function findJSONKey(data: any, key: string, last: boolean = false): any {
     var jsonStr: string = JSON.stringify(data);                                 // To store the input data as string
     var extStr: string = '';                                                    // To store the extracted string
     var len: number = jsonStr.length;                                           // To store length of input data

@@ -26,7 +26,7 @@ import {
     tweetRetweetUrl
 } from '../helper/Requests';
 
-import { valueFromKey } from "../helper/Parser";
+import { findJSONKey } from "../helper/Parser";
 
 export class TweetService extends FetcherService {
     // MEMBER METHODS
@@ -50,10 +50,10 @@ export class TweetService extends FetcherService {
                 var next: '';
 
                 // Extracting the cursor to next batch
-                next = valueFromKey(res, 'operation', true)['cursor']['value'];
+                next = findJSONKey(res, 'operation', true)['cursor']['value'];
 
                 // Getting the raw list of tweets from response
-                res = valueFromKey(res, 'tweets');
+                res = findJSONKey(res, 'tweets');
 
                 // Checking if empty tweet list returned
                 // If empty, returning
@@ -99,15 +99,15 @@ export class TweetService extends FetcherService {
                 var tweet: Tweet;
 
                 // Extracting raw tweet data from response
-                res = valueFromKey(res, 'entries');
+                res = findJSONKey(res, 'entries');
 
                 // If the tweet is a reply
                 if (res[1]['entryId'].indexOf('tweet') != -1) {
-                    res = valueFromKey(res[1], 'result');
+                    res = findJSONKey(res[1], 'result');
                 }
                 // If the tweet is an original tweet
                 else {
-                    res = valueFromKey(res[0], 'result');
+                    res = findJSONKey(res[0], 'result');
                 }
 
                 // Storing the tweet in a tweet object
@@ -144,7 +144,7 @@ export class TweetService extends FetcherService {
                 var next: string = '';
                 
                 // Extracting raw likes list from response
-                res = valueFromKey(res, 'entries');
+                res = findJSONKey(res, 'entries');
 
                 // Iterating over the raw list of likes
                 for (var entry of res) {
@@ -190,14 +190,14 @@ export class TweetService extends FetcherService {
                 var next: string = '';
 
                 // Extracting raw retweeters list from response
-                res = valueFromKey(res, 'entries');
+                res = findJSONKey(res, 'entries');
 
                 // Iterating over the raw list of likes
                 for (var entry of res) {
                     // Checking if entry is of type user
                     if (entry['entryId'].indexOf('user') != -1) {
                         // Extracting user from the entry
-                        var user = valueFromKey(entry, 'result');
+                        var user = findJSONKey(entry, 'result');
 
                         // Inserting user into list of likes
                         retweeters.push(new User().deserialize(user));
@@ -235,12 +235,12 @@ export class TweetService extends FetcherService {
                 var next = '';
 
                 // Extracting raw tweet data from response
-                res = valueFromKey(res, 'entries');
+                res = findJSONKey(res, 'entries');
 
                 for (var entry of res) {
                     // Checking if entry is of type reply
                     if (entry['entryId'].indexOf('conversationthread') != -1) {
-                        var reply = valueFromKey(entry, 'result');
+                        var reply = findJSONKey(entry, 'result');
 
                         replies.push(new Tweet().deserialize({
                             rest_id: reply['rest_id'],

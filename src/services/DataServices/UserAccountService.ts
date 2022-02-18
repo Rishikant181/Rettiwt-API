@@ -19,7 +19,7 @@ import {
     userLikesUrl
 } from '../helper/Requests';
 
-import { valueFromKey } from '../helper/Parser';
+import { findJSONKey } from '../helper/Parser';
 
 export class UserAccountService extends FetcherService {
     // MEMBER METHODS
@@ -39,7 +39,7 @@ export class UserAccountService extends FetcherService {
                 return new Response<User>(
                     true,
                     new Error(null),
-                    new User().deserialize(valueFromKey(res, 'result')),
+                    new User().deserialize(findJSONKey(res, 'result')),
                 );
             })
             // If error parsing data
@@ -64,7 +64,7 @@ export class UserAccountService extends FetcherService {
                 var next: string = '';
 
                 // Extracting the raw list of following
-                res = valueFromKey(res, 'entries');
+                res = findJSONKey(res, 'entries');
 
                 // Iterating over the raw list of following
                 for (var entry of res) {
@@ -72,7 +72,7 @@ export class UserAccountService extends FetcherService {
                     // If entry is of user type
                     if (entry['entryId'].indexOf('user') != -1) {
                         // Extracting user details
-                        const user = valueFromKey(entry, 'result');
+                        const user = findJSONKey(entry, 'result');
 
                         // Adding the followed user ID to list of IDs
                         following.push(new User().deserialize(user));
@@ -117,7 +117,7 @@ export class UserAccountService extends FetcherService {
                 var next: string = '';
 
                 // Extracting the raw list of followers
-                res = valueFromKey(res, 'entries');
+                res = findJSONKey(res, 'entries');
 
                 // Itearating over the raw list of following
                 for (var entry of res) {
@@ -125,7 +125,7 @@ export class UserAccountService extends FetcherService {
                     // If entry is of user type
                     if (entry['entryId'].indexOf('user') != -1) {
                         // Extracting user details
-                        const user = valueFromKey(entry, 'result');
+                        const user = findJSONKey(entry, 'result');
 
                         // Adding the follower ID to list of IDs
                         followers.push(new User().deserialize(user));
@@ -171,7 +171,7 @@ export class UserAccountService extends FetcherService {
 
                 // Extracting the raw list of followers
                 //@ts-ignore
-                res = valueFromKey(res, 'entries');
+                res = findJSONKey(res, 'entries');
 
                 // Itearating over the raw list of following
                 for (var entry of res) {
@@ -179,7 +179,7 @@ export class UserAccountService extends FetcherService {
                     // If entry is of tweet type
                     if (entry['entryId'].indexOf('tweet') != -1) {
                         // Extracting tweet
-                        const tweet = valueFromKey(entry, 'result');
+                        const tweet = findJSONKey(entry, 'result');
 
                         // Adding the follower ID to list of IDs
                         tweets.push(new Tweet().deserialize({
