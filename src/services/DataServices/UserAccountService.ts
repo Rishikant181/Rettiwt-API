@@ -9,9 +9,8 @@ import {
     Response
 } from '../../schema/types/HTTP'
 
-import {
-    User
-} from '../../schema/types/UserAccountData';
+import { User } from '../../schema/types/UserAccountData';
+import { Tweet } from '../../schema/types/TweetData';
 
 import {
     userAccountUrl,
@@ -20,7 +19,7 @@ import {
     userLikesUrl
 } from '../helper/Requests';
 
-import { Tweet } from '../../schema/types/TweetData';
+import { valueFromKey } from '../helper/Parser';
 
 export class UserAccountService extends FetcherService {
     // MEMBER METHODS
@@ -40,7 +39,7 @@ export class UserAccountService extends FetcherService {
                 return new Response<User>(
                     true,
                     new Error(null),
-                    new User().deserialize(res['data']['user']['result']),
+                    new User().deserialize(valueFromKey(res, 'result')),
                 );
             })
             // If error parsing data
@@ -65,8 +64,7 @@ export class UserAccountService extends FetcherService {
                 var next: string = '';
 
                 // Extracting the raw list of following
-                //@ts-ignore
-                res = res['data']['user']['result']['timeline']['timeline']['instructions'].filter(entry => entry['type'] === 'TimelineAddEntries')[0]['entries']
+                res = valueFromKey(res, 'entries');
 
                 // Iterating over the raw list of following
                 for (var entry of res) {
@@ -74,7 +72,7 @@ export class UserAccountService extends FetcherService {
                     // If entry is of user type
                     if (entry['entryId'].indexOf('user') != -1) {
                         // Extracting user details
-                        const user = entry['content']['itemContent']['user_results']['result'];
+                        const user = valueFromKey(entry, 'result');
 
                         // Adding the followed user ID to list of IDs
                         following.push(new User().deserialize(user));
@@ -119,8 +117,7 @@ export class UserAccountService extends FetcherService {
                 var next: string = '';
 
                 // Extracting the raw list of followers
-                //@ts-ignore
-                res = res['data']['user']['result']['timeline']['timeline']['instructions'].filter(entry => entry['type'] === 'TimelineAddEntries')[0]['entries']
+                res = valueFromKey(res, 'entries');
 
                 // Itearating over the raw list of following
                 for (var entry of res) {
@@ -128,7 +125,7 @@ export class UserAccountService extends FetcherService {
                     // If entry is of user type
                     if (entry['entryId'].indexOf('user') != -1) {
                         // Extracting user details
-                        const user = entry['content']['itemContent']['user_results']['result'];
+                        const user = valueFromKey(entry, 'result');
 
                         // Adding the follower ID to list of IDs
                         followers.push(new User().deserialize(user));
@@ -174,7 +171,7 @@ export class UserAccountService extends FetcherService {
 
                 // Extracting the raw list of followers
                 //@ts-ignore
-                res = res['data']['user']['result']['timeline_v2']['timeline']['instructions'].filter(entry => entry['type'] === 'TimelineAddEntries')[0]['entries']
+                res = valueFromKey(res, 'entries');
 
                 // Itearating over the raw list of following
                 for (var entry of res) {
@@ -182,7 +179,7 @@ export class UserAccountService extends FetcherService {
                     // If entry is of tweet type
                     if (entry['entryId'].indexOf('tweet') != -1) {
                         // Extracting tweet
-                        const tweet = entry['content']['itemContent']['tweet_results']['result'];
+                        const tweet = valueFromKey(entry, 'result');
 
                         // Adding the follower ID to list of IDs
                         tweets.push(new Tweet().deserialize({

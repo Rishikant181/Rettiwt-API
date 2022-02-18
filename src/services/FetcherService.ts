@@ -8,6 +8,8 @@ import {
     authorizedHeader
 } from './helper/Requests'
 
+import { valueFromKey } from './helper/Parser';
+
 export class FetcherService {
     // MEMBER DATA
     protected authToken: string;                                                   // To store the authentication token
@@ -26,6 +28,9 @@ export class FetcherService {
         this.csrfToken = csrfToken;
         this.cookie = cookie;
     }
+
+    // Methods for sub classes to use
+    protected valueFromKey = valueFromKey;
 
     // Method to fetch data using an http reqiest
     protected fetchData(url: string): Promise<any> {

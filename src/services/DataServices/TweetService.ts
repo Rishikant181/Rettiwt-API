@@ -26,6 +26,8 @@ import {
     tweetRetweetUrl
 } from '../helper/Requests';
 
+import { valueFromKey } from "../helper/Parser";
+
 export class TweetService extends FetcherService {
     // MEMBER METHODS
     constructor(
@@ -46,23 +48,16 @@ export class TweetService extends FetcherService {
             .then(res => {
                 var tweets: Tweet[] = [];
                 var next: '';
-                
-                // Extracting tweets list and cursor to next batch from the response
-                // If not a first batch
-                if (res['timeline']['instructions'][2]) {
-                    next = res['timeline']['instructions'][2]['replaceEntry']['entry']['content']['operation']['cursor']['value'];
-                }
-                // If first batch
-                else {
-                    next = res['timeline']['instructions'][0]['addEntries']['entries'].at(-1)['content']['operation']['cursor']['value'];
-                }
+
+                // Extracting the cursor to next batch
+                next = valueFromKey(res, 'operation', true)['cursor']['value'];
 
                 // Getting the raw list of tweets from response
-                res = res['globalObjects']['tweets'];
+                res = valueFromKey(res, 'tweets');
 
                 // Checking if empty tweet list returned
                 // If empty, returning
-                if(Object.keys(res).length == 0) {
+                if (Object.keys(res).length == 0) {
                     return new Response<{ tweets: Tweet[], next: string }>(
                         false,
                         new Error(null),
@@ -102,17 +97,17 @@ export class TweetService extends FetcherService {
         return this.fetchData(tweetDetailsUrl(tweetId))
             .then(res => {
                 var tweet: Tweet;
-                
+
                 // Extracting raw tweet data from response
-                res = res['data']['threaded_conversation_with_injections']['instructions'][0]['entries']
+                res = valueFromKey(res, 'entries');
 
                 // If the tweet is a reply
                 if (res[1]['entryId'].indexOf('tweet') != -1) {
-                    res = res[1]['content']['itemContent']['tweet_results']['result'];
+                    res = valueFromKey(res[1], 'result');
                 }
                 // If the tweet is an original tweet
                 else {
-                    res = res[0]['content']['itemContent']['tweet_results']['result'];
+                    res = valueFromKey(res[0], 'result');
                 }
 
                 // Storing the tweet in a tweet object
@@ -147,9 +142,9 @@ export class TweetService extends FetcherService {
             .then(res => {
                 var likers: User[] = [];
                 var next: string = '';
-
+                
                 // Extracting raw likes list from response
-                res = res['data']['favoriters_timeline']['timeline']['instructions'][0]['entries'];
+                res = valueFromKey(res, 'entries');
 
                 // Iterating over the raw list of likes
                 for (var entry of res) {
@@ -194,15 +189,15 @@ export class TweetService extends FetcherService {
                 var retweeters: User[] = [];
                 var next: string = '';
 
-                // Extracting raw likes list from response
-                res = res['data']['retweeters_timeline']['timeline']['instructions'][0]['entries']
+                // Extracting raw retweeters list from response
+                res = valueFromKey(res, 'entries');
 
                 // Iterating over the raw list of likes
                 for (var entry of res) {
                     // Checking if entry is of type user
                     if (entry['entryId'].indexOf('user') != -1) {
                         // Extracting user from the entry
-                        var user = entry['content']['itemContent']['user_results']['result'];
+                        var user = valueFromKey(entry, 'result');
 
                         // Inserting user into list of likes
                         retweeters.push(new User().deserialize(user));
@@ -240,12 +235,12 @@ export class TweetService extends FetcherService {
                 var next = '';
 
                 // Extracting raw tweet data from response
-                res = res['data']['threaded_conversation_with_injections']['instructions'][0]['entries']
+                res = valueFromKey(res, 'entries');
 
                 for (var entry of res) {
                     // Checking if entry is of type reply
                     if (entry['entryId'].indexOf('conversationthread') != -1) {
-                        var reply = entry['content']['items'][0]['item']['itemContent']['tweet_results']['result'];
+                        var reply = valueFromKey(entry, 'result');
 
                         replies.push(new Tweet().deserialize({
                             rest_id: reply['rest_id'],

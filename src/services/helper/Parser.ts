@@ -1,13 +1,13 @@
 // This file contains various methods for extracting data from incoming JSON
 
 // Method to search for a value from a given JSON, when the key is supplied
-export function valueFromKey(data: any, key: string): any {
+export function valueFromKey(data: any, key: string, last: boolean = false): any {
     var jsonStr: string = JSON.stringify(data);                                 // To store the input data as string
     var extStr: string = '';                                                    // To store the extracted string
     var len: number = jsonStr.length;                                           // To store length of input data
     var braceStack: string[] = [];                                              // To store the stack of braces
     var reqData: any = {};                                                      // To store the required data
-    var start: number = jsonStr.indexOf(`"${key}"`) + `"${key}":`.length;       // To store starting position
+    var start: number = !last ? (jsonStr.indexOf(`"${key}"`) + `"${key}":`.length) : (jsonStr.lastIndexOf(`"${key}"`) + `"${key}":`.length);
 
     for (var i = start; i < len; i++) {
         // Getting each character
