@@ -22,8 +22,11 @@
   "dependencies": {
     "connect": "^3.7.0",
     "express": "^4.17.2",
+    "expressjs": "^1.0.1",
+    "graphiql": "^1.5.19",
     "graphql": "^16.3.0",
-    "node-fetch": "^3.2.0"
+    "node-fetch": "^3.2.0",
+    "nodemon": "^2.0.15"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",

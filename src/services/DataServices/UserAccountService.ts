@@ -22,7 +22,8 @@ import {
 
 import { Tweet } from '../../schema/types/TweetData';
 
-export class UserAccountService extends FetcherService {
+export class UserAccountService extends FetcherService 
+{   
     // MEMBER METHODS
     // The constructor
     constructor(
@@ -57,7 +58,8 @@ export class UserAccountService extends FetcherService {
     getUserFollowing(
         userId: string,
         count: number,
-        cursor: string
+        cursor: string 
+        //TODO: Add default value to cursor
     ): Promise<Response<{ following: User[], next: string }>> {
         return this.fetchData(userFollowingUrl(userId, count, cursor))
             .then(res => {
