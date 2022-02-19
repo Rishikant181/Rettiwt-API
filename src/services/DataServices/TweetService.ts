@@ -98,17 +98,11 @@ export class TweetService extends FetcherService {
             .then(res => {
                 var tweet: Tweet;
 
-                // Extracting raw tweet data from response
+                // Extracting raw list of tweets from response
                 res = findJSONKey(res, 'entries');
 
-                // If the tweet is a reply
-                if (res[1]['entryId'].indexOf('tweet') != -1) {
-                    res = findJSONKey(res[1], 'result');
-                }
-                // If the tweet is an original tweet
-                else {
-                    res = findJSONKey(res[0], 'result');
-                }
+                // Extracting required tweet from response
+                res = findJSONKey(res.filter((item: any) => item['entryId'].indexOf(tweetId) != -1)[0], 'result');
 
                 // Storing the tweet in a tweet object
                 tweet = new Tweet().deserialize({
