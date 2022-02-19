@@ -1,0 +1,492 @@
+[33mcommit 8fb3cf0c6c04a297757fb27ee0b0a822fe7894b8[m[33m ([m[1;36mHEAD -> [m[1;32mclientHandle[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Merge: de75893 1cf3a9b
+Author: dvnasutosh <71975246+dvnasutosh@users.noreply.github.com>
+Date:   Fri Feb 18 21:50:36 2022 +0530
+
+    Merge branch 'Rishikant181:main' into main
+
+[33mcommit de7589318fcf0e39971f9e060cea69d977207c4e[m
+Merge: 1a8d7fc e59a2b6
+Author: dvnasutosh <71975246+dvnasutosh@users.noreply.github.com>
+Date:   Fri Feb 18 20:18:04 2022 +0530
+
+    Buffer
+
+[33mcommit 1cf3a9b5a5d4e04115d89b5e3b31a938bd8c1e28[m
+Merge: 6dec7c2 33f64e0
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Thu Feb 17 15:24:28 2022 +0530
+
+    Merge pull request #24 from Rishikant181/dev
+    
+    Dev
+
+[33mcommit 33f64e0659597c69b9ebce020fb32f89b641b4a4[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Thu Feb 17 15:21:39 2022 +0530
+
+    Updated README.md to provide basic documentation for getting started
+
+[33mcommit 91efd8caaa2f6eb319f00a7396d6705192bbbf80[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Thu Feb 17 15:07:34 2022 +0530
+
+    Changed name of Data handler from Fetchers to DataServices
+
+[33mcommit 6dec7c2c6ee60d710dc38df5e2577fc15d099859[m
+Merge: 26a63f8 5c3db1d
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Tue Feb 15 12:11:25 2022 +0530
+
+    Merge pull request #23 from Rishikant181/dev
+    
+    Dev
+
+[33mcommit 5c3db1d20e24db198a0559fd248ff1f51fd71c6c[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Tue Feb 15 12:10:04 2022 +0530
+
+    Added functionality to get the tweets liked by the user
+
+[33mcommit 210f6cd276a96a0fc27bc24f27ccaf4780b33d11[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Tue Feb 15 09:28:16 2022 +0530
+
+    Added method to return the url to fetch list of tweets like by a given user
+
+[33mcommit 26a63f8f316626cfd0a05a86635d0d6a4b92a383[m
+Merge: 419aff5 6e0ca5e
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Sat Feb 12 11:38:01 2022 +0530
+
+    Merge pull request #22 from Rishikant181/dev
+    
+    Added .vscode to gitignore
+
+[33mcommit 6e0ca5ef6087bc015141f371e17f4bfe27bb8fa8[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Sat Feb 12 11:37:21 2022 +0530
+
+    Added .vscode to gitignore
+
+[33mcommit 419aff52e0eef074101b790fe6374e3f6166ab37[m
+Merge: 5d839e3 1642d8e
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Sat Feb 12 11:34:29 2022 +0530
+
+    Merge pull request #21 from Rishikant181/dev
+    
+    Added quoted field Tweet type to hold the id of tweet that this tweet…
+
+[33mcommit 1642d8e0a1de4fc176464ef33d62e9214d75abaf[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Fri Feb 11 16:59:28 2022 +0530
+
+    Added quoted field Tweet type to hold the id of tweet that this tweet quoted
+
+[33mcommit 5d839e3dcdccc70899b3a5d225f44b678ed27e3f[m
+Merge: 256bf50 dcdb9ac
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Fri Feb 11 13:39:39 2022 +0530
+
+    Merge pull request #20 from Rishikant181/dev
+    
+    Removed unnecessary async declaration from server.ts
+
+[33mcommit dcdb9ac27abd9c22e1a035eb347aae7f88259bc5[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Fri Feb 11 11:19:47 2022 +0530
+
+    Removed unnecessary async declaration from server.ts
+
+[33mcommit 256bf50c446a6b4ed04eb7ac63ed763395b30fa9[m
+Merge: f71fb5b f14bb6a
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Fri Feb 11 10:58:59 2022 +0530
+
+    Merge pull request #19 from Rishikant181/dev
+    
+    Dev
+
+[33mcommit f14bb6aee16ef3ef5fb7896978959f90002b122d[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Fri Feb 11 10:58:27 2022 +0530
+
+    Removed unnecessary log statements
+
+[33mcommit 1e8e4a22d4709d71e789943b6865de68d4fb3fd2[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Fri Feb 11 09:57:44 2022 +0530
+
+    Added ability to fetch a tweet when it's id is given
+
+[33mcommit f71fb5b78c64c002c900e23b033054b36aaca7ae[m
+Merge: c19d499 d79365b
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Fri Feb 11 08:36:48 2022 +0530
+
+    Merge pull request #16 from Rishikant181/dev
+    
+    Dev
+
+[33mcommit d79365bd5d49cae5a446b0b8510b7cd46a27653a[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Fri Feb 11 08:35:53 2022 +0530
+
+    Removed unnecssary code
+
+[33mcommit df02a5c54e111b33c5dad66ea264aaf0ade29724[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Fri Feb 11 08:33:53 2022 +0530
+
+    Fixed getTweets returning empty data after fetching all available data
+
+[33mcommit f546c5d2ae89542a5c5e65d22e50edf28ceb6b90[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Fri Feb 11 00:07:14 2022 +0530
+
+    Fetching of tweets using a given filter now works and is now the primary source of fetching tweets
+
+[33mcommit 03b488d2b987a7a87562aaa45ce26a182296b44e[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Thu Feb 10 22:27:35 2022 +0530
+
+    Added replyTo field to Tweet which stores the id of the tweet to which the given tweet is a reply
+
+[33mcommit f3848f841d416f4a9ef786fb24226f791be57ae1[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Thu Feb 10 18:31:58 2022 +0530
+
+    Temp
+
+[33mcommit 7723aad46363a28391eef9fdeaf20de13ccec132[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Thu Feb 10 18:07:55 2022 +0530
+
+    Changed config/env.ts structure:
+
+[33mcommit c19d4998bf7dfeab278d0af99d53c38604540580[m
+Merge: 092d4c9 cec0563
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Thu Feb 10 11:52:20 2022 +0530
+
+    Merge pull request #14 from Rishikant181/dev
+    
+    Dev
+
+[33mcommit cec0563cf6726126a20c04453b00e62b2e4c53fd[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Thu Feb 10 11:51:10 2022 +0530
+
+    Removed test code
+
+[33mcommit 2d68b71fed7baf607c3bc296d824a5c68b7e28d6[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Thu Feb 10 11:50:51 2022 +0530
+
+    Fetcher function now take IDs as number as opposed to string
+
+[33mcommit 6413c1acf6eff4686d0f03d7e9ee21b585deeae4[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Thu Feb 10 11:25:09 2022 +0530
+
+    Changed Error type structure
+
+[33mcommit de056e5d435550bd6077629c1042c47fe4510b75[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Thu Feb 10 10:15:59 2022 +0530
+
+    All Errors are now handled by the custom Error object in /schema/types/HTTP.ts
+
+[33mcommit 7846fad56274c4cc66eaebc3aff7639dd04350e6[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Thu Feb 10 09:45:16 2022 +0530
+
+    Removed unnecessary imports
+
+[33mcommit 9aa57d42105e8e361b5c903a27bef2012970221b[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Thu Feb 10 09:42:40 2022 +0530
+
+    Implemented better response and error handling in TweetService
+
+[33mcommit f7522f078e464c26382af22f1969a62a7b78ef9d[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Thu Feb 10 09:20:41 2022 +0530
+
+    Added better error handling to UserAccountService
+
+[33mcommit a59c096799f3eeb0c7d3d4e4e8f99a327463cf62[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Thu Feb 10 09:02:27 2022 +0530
+
+    Added better response and error handling to getUserAccountDetails
+
+[33mcommit 30364600d2cfbe5cc701e19573d2387a354a6ec8[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Wed Feb 9 22:06:11 2022 +0530
+
+    Added Response object for holding response received from fetch request
+
+[33mcommit bd452cc9a05ad0782c1cd46db62a470ccae324f0[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Wed Feb 9 22:03:36 2022 +0530
+
+    Added Error object for http communication
+
+[33mcommit 092d4c9f79492af5dbf3fcb544f60679c9f6a114[m
+Merge: 1572c48 55d2b30
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Wed Feb 9 17:36:28 2022 +0530
+
+    Merge pull request #13 from Rishikant181/dev
+    
+    Dev
+
+[33mcommit 55d2b3047ce49f751b54def312b384de8d0fe2cd[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Wed Feb 9 17:32:44 2022 +0530
+
+    Removed completed TODOs and added some more
+
+[33mcommit bc2f9fd20688d620053d52dfa7dfff7f3c6faa81[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Wed Feb 9 17:27:27 2022 +0530
+
+    Added minimal error handling to UserAccountService and TweetService
+
+[33mcommit 0bf55d2b229dba8484b64393c8880a37c67cdbc8[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Wed Feb 9 17:09:49 2022 +0530
+
+    Made UserAccountService then chaining a bit more concise
+
+[33mcommit 85364269c9ecad7682fb8cc21e942285a058ed2a[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Wed Feb 9 17:02:14 2022 +0530
+
+    Made TweetService.getTweetReplies then chaining a bit more concise
+
+[33mcommit 6ba1aa930779adfea63eeca5092d2ea4e75fad04[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Wed Feb 9 16:59:08 2022 +0530
+
+    Made TweetService.getTweetRetweeters then chaining a bit more concise
+
+[33mcommit e348fbef7e78f1ce94fc5f590cf0e603d1d87832[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Wed Feb 9 16:57:07 2022 +0530
+
+    Made TweetService.getTweetLikers then chaining a bit more concise
+
+[33mcommit 06293babac222ff4c26ac518123092c7eaf35985[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Wed Feb 9 16:53:16 2022 +0530
+
+    Made TweetService.getFilteredTweets then chaining a bit more concise
+
+[33mcommit 91bad06d537c3b76b1c01b4e7a628d9eaef7cafe[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Wed Feb 9 16:46:08 2022 +0530
+
+    Made TweetService.getTweet then chaining a bit more concise
+
+[33mcommit de8e0def65657828e9ae19b474df1c87b91a0419[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Wed Feb 9 16:16:59 2022 +0530
+
+    Removed test code from server.ts
+
+[33mcommit 6c80602b6b9246d1438912e6ff9664d19716d6d3[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Wed Feb 9 16:14:53 2022 +0530
+
+    Changed services folder structure a bit
+
+[33mcommit f3103ac88442c7b22fac1ea56b52f20ddb8b0796[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Wed Feb 9 16:10:12 2022 +0530
+
+    UserAccountService now inherits from FetcherService
+
+[33mcommit d16de588197398a2cae36f67ef39218a75a78421[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Wed Feb 9 16:03:20 2022 +0530
+
+    TweetService now inherits from FetcherService
+
+[33mcommit 12e9e77e77cb6deb675364ce8bc66b2fc961135a[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Wed Feb 9 15:57:56 2022 +0530
+
+    Created a base class FetcherService which is then inherited by other
+    services that fetch data
+    
+    This helps to reduce recurrent code and helps sharing of common
+    functions between different services
+
+[33mcommit 4ec400c2de406940e0e433ea2730e16e2778885a[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Wed Feb 9 13:59:22 2022 +0530
+
+    Added some TODOs and FIXMEs
+
+[33mcommit b6ca2f6f98196a1d624118fede878b707c7805db[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Wed Feb 9 11:02:37 2022 +0530
+
+    Added functionality to fetch the list of users who retweeted a given tweet
+
+[33mcommit f1317b31c62079f64495dc8e979b94198827e2d7[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Wed Feb 9 10:45:46 2022 +0530
+
+    Added functionality to fetch the list of users who like a given tweet
+
+[33mcommit c40cd504cf9b55e2bde287b49bd5df36623fc428[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Wed Feb 9 10:29:56 2022 +0530
+
+    Added method to return the url used to fetch tweet likes
+
+[33mcommit a20b5de175a47d9475d3afc05dc54b9b354fdef3[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Wed Feb 9 10:21:04 2022 +0530
+
+    getUserFollower and getUserFollowing now return list of users instead of list of user IDs
+
+[33mcommit 0c147ca7e0ba8cbe53ba5a0917efbdc4e4b5a4ac[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Wed Feb 9 09:22:40 2022 +0530
+
+    Removed unnecessary code
+
+[33mcommit d009674997bb6a5cb31b866fdd8e52c50e916d07[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Wed Feb 9 09:17:50 2022 +0530
+
+    Added functionality to fetch replies to a tweet with a given id
+
+[33mcommit 32e6e1470ee1bf14bc3fde691ad79a53ca34601f[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Tue Feb 8 16:57:23 2022 +0530
+
+    Added method to fetch tweet details using the tweet id
+
+[33mcommit 04fe17e03ff51c069d1bcb780fb7b740dbbaf0f8[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Tue Feb 8 16:28:49 2022 +0530
+
+    Added a method that return the url to fetch tweet details from
+
+[33mcommit 3cb656485f324110c5f9347fd182bf667cee1295[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Tue Feb 8 16:10:27 2022 +0530
+
+    Added a blank method to fetch details of a tweet when it's id is given
+
+[33mcommit 1572c4883b2cd54573f8e5f0e964841423c1bfbc[m
+Merge: 12dc969 4b714eb
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Tue Feb 8 15:48:32 2022 +0530
+
+    Merge pull request #9 from Rishikant181/dev
+    
+    Update README.md
+
+[33mcommit 4b714ebb17cf7b88e934cc5b4e6a1510b4622530[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Tue Feb 8 15:45:52 2022 +0530
+
+    Update README.md
+
+[33mcommit 12dc9697d092f80cf3a9616ad7af5fc814256a80[m
+Merge: b86b79a 522508b
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Tue Feb 8 15:45:02 2022 +0530
+
+    Merge pull request #8 from Rishikant181/readme-fix
+    
+    Update README.md
+
+[33mcommit 522508bdb0fbc4d4b93eced72fe4f6d5786c1be6[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Tue Feb 8 15:44:51 2022 +0530
+
+    Update README.md
+
+[33mcommit b86b79a85d29e893c060d1cb5663e5dd57847daf[m
+Merge: 192c1ae b7e89a1
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Tue Feb 8 11:37:14 2022 +0530
+
+    Merge pull request #7 from Rishikant181/dev
+    
+    Dev
+
+[33mcommit b7e89a1b753f59db83c8ac114d8d4754c33d217d[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Tue Feb 8 11:30:00 2022 +0530
+
+    Added functionality to fetch user followers list
+
+[33mcommit c09d90ba315fc83e9670d14ae2bfdebe99fe56cc[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Tue Feb 8 11:18:41 2022 +0530
+
+    Added a method that returns the url to fetch followers list from
+
+[33mcommit 4802d5a261ecd836bae0126b409979d68b8f045e[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Tue Feb 8 09:20:02 2022 +0530
+
+    Added cursor to get getUserFollowing so that the next batch can now be fetched
+
+[33mcommit 8f41734fecceb04eaf04b6c4b68a27ac3a22c522[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Tue Feb 8 08:35:38 2022 +0530
+
+    getUserFollowing now takes a cursor in order to fetch the next batch
+
+[33mcommit f4f5298bbec1c09f5478ea8b063719a799df338a[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Tue Feb 8 08:19:04 2022 +0530
+
+    Added method to fetch the list of user followed by the given user
+
+[33mcommit 4a882bd2caa1c2d7431535c5f7fa20f04adc9a96[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Tue Feb 8 07:59:41 2022 +0530
+
+    Added method that returns the url to fetch user followers data from, to Requests.ts
+
+[33mcommit 910ebf9193bdd1d2c2f851b81fcff6ba8b8a5180[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Tue Feb 8 07:54:06 2022 +0530
+
+    Moved authToken, csrfToken and cookie from the method to member data of
+    UserAccountServce.
+    
+    Now, whenever we need to use UserAccoutService, we need to initialize it
+    with these data by them into the constructor
+
+[33mcommit 23fc8ae21280997e457a8bec821dad79561e4698[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Tue Feb 8 07:51:19 2022 +0530
+
+    Added blank method to fetch user followers
+
+[33mcommit 96cd2825cc1731829e2d6122e61f9899895693d8[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Tue Feb 8 07:29:43 2022 +0530
+
+    Changed file and folder structure a bit
+
+[33mcommit da153650d8a229dc3366f2c13bd68dc562eaea8f[m
+Author: Rishikant Sahu <rishikantsahu181@gmail.com>
+Date:   Tue Feb 8 07:21:52 2022 +0530
+
+    Removed unneccessary files exp.ts and test.json
+
+[33mcommit 653adc56fa391cbde9bfb24789e3da350ddfdeec[m
+Merge: 1

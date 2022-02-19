@@ -87,7 +87,8 @@ export class UserAccountService extends FetcherService {
     async getUserFollowing(
         userId: string,
         count: number,
-        cursor: string
+        cursor: string 
+        //TODO: Add default value to cursor
     ): Promise<Response<{ following: User[], next: string }>> {
         return this.fetchData(userFollowingUrl(userId, count, cursor))
             .then(res => {
