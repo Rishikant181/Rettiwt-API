@@ -9,9 +9,8 @@ import {
     Response
 } from '../../schema/types/HTTP'
 
-import {
-    User
-} from '../../schema/types/UserAccountData';
+import { User } from '../../schema/types/UserAccountData';
+import { Tweet } from '../../schema/types/TweetData';
 
 import {
     userAccountUrl,
@@ -20,7 +19,7 @@ import {
     userLikesUrl
 } from '../helper/Requests';
 
-import { Tweet } from '../../schema/types/TweetData';
+import { findJSONKey } from '../helper/Parser';
 
 export class UserAccountService extends FetcherService {
     // MEMBER METHODS
@@ -40,7 +39,7 @@ export class UserAccountService extends FetcherService {
                 return new Response<User>(
                     true,
                     new Error(null),
-                    new User().deserialize(res['data']['user']['result']),
+                    new User().deserialize(findJSONKey(res, 'result')),
                 );
             })
             // If error parsing data
@@ -65,19 +64,14 @@ export class UserAccountService extends FetcherService {
                 var next: string = '';
 
                 // Extracting the raw list of following
-                //@ts-ignore
-                res = res['data']['user']['result']['timeline']['timeline']['instructions'].filter(entry => entry['type'] === 'TimelineAddEntries')[0]['entries']
+                res = findJSONKey(res, 'entries');
 
                 // Iterating over the raw list of following
                 for (var entry of res) {
                     // Checking if the entry is of type user
-                    // If entry is of user type
                     if (entry['entryId'].indexOf('user') != -1) {
-                        // Extracting user details
-                        const user = entry['content']['itemContent']['user_results']['result'];
-
-                        // Adding the followed user ID to list of IDs
-                        following.push(new User().deserialize(user));
+                        // Adding the followed users to list of users
+                        following.push(new User().deserialize(findJSONKey(entry, 'result')));
                     }
                     // If entry is of type bottom cursor
                     else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
@@ -87,7 +81,7 @@ export class UserAccountService extends FetcherService {
                          * Template string does not(apparently) implicitly replace characters with their url encodings.
                          * Therefore not explicitly replacing casuses bad request
                          */
-                        next = entry['content']['value'].replace('|', '%7C');
+                        next = findJSONKey(entry, 'value').replace('|', '%7C');
                     }
                 }
 
@@ -119,19 +113,14 @@ export class UserAccountService extends FetcherService {
                 var next: string = '';
 
                 // Extracting the raw list of followers
-                //@ts-ignore
-                res = res['data']['user']['result']['timeline']['timeline']['instructions'].filter(entry => entry['type'] === 'TimelineAddEntries')[0]['entries']
+                res = findJSONKey(res, 'entries');
 
                 // Itearating over the raw list of following
                 for (var entry of res) {
                     // Checking if the entry is of type user
-                    // If entry is of user type
                     if (entry['entryId'].indexOf('user') != -1) {
-                        // Extracting user details
-                        const user = entry['content']['itemContent']['user_results']['result'];
-
-                        // Adding the follower ID to list of IDs
-                        followers.push(new User().deserialize(user));
+                        // Adding the follower to list of followers
+                        followers.push(new User().deserialize(findJSONKey(entry, 'result')));
                     }
                     // If entry is of type bottom cursor
                     else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
@@ -141,7 +130,7 @@ export class UserAccountService extends FetcherService {
                          * Template string does not(apparently) implicitly replace characters with their url encodings.
                          * Therefore not explicitly replacing casuses bad request
                          */
-                        next = entry['content']['value'].replace('|', '%7C');
+                        next = findJSONKey(entry, 'value').replace('|', '%7C');
                     }
                 }
 
@@ -174,21 +163,14 @@ export class UserAccountService extends FetcherService {
 
                 // Extracting the raw list of followers
                 //@ts-ignore
-                res = res['data']['user']['result']['timeline_v2']['timeline']['instructions'].filter(entry => entry['type'] === 'TimelineAddEntries')[0]['entries']
+                res = findJSONKey(res, 'entries');
 
                 // Itearating over the raw list of following
                 for (var entry of res) {
                     // Checking if the entry is of type user
-                    // If entry is of tweet type
                     if (entry['entryId'].indexOf('tweet') != -1) {
-                        // Extracting tweet
-                        const tweet = entry['content']['itemContent']['tweet_results']['result'];
-
-                        // Adding the follower ID to list of IDs
-                        tweets.push(new Tweet().deserialize({
-                            rest_id: tweet['rest_id'],
-                            ...tweet['legacy']
-                        }));
+                        // Adding the tweet to list of liked tweets
+                        tweets.push(new Tweet().deserialize(findJSONKey(entry, 'result')));
                     }
                     // If entry is of type bottom cursor
                     else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
@@ -198,7 +180,7 @@ export class UserAccountService extends FetcherService {
                          * Template string does not(apparently) implicitly replace characters with their url encodings.
                          * Therefore not explicitly replacing casuses bad request
                          */
-                        next = entry['content']['value'].replace('|', '%7C');
+                        next = findJSONKey(entry, 'value').replace('|', '%7C');
                     }
                 }
 

@@ -52,22 +52,28 @@ class TweetEntities implements Deserializable {
     // Method to deserialize input data into this object
     deserialize(data: any): this {
         // Extracting user mentions
-        for(const user of data['user_mentions']) {
-            this.mentionedUsers.push(new UserID().deserialize({
-                id: user['id_str'],
-                userName: user['screen_name'],
-                fullName: user['name']
-            }));
+        if(data['user_mentions']) {
+            for(var user of data['user_mentions']) {
+                this.mentionedUsers.push(new UserID().deserialize({
+                    id: user['id_str'],
+                    userName: user['screen_name'],
+                    fullName: user['name']
+                }));
+            }
         }
 
         // Extracting urls
-        for(const url of data['urls']) {
-            this.urls.push(url.expanded_url);
+        if(data['urls']) {
+            for(var url of data['urls']) {
+                this.urls.push(url.expanded_url);
+            }
         }
         
         // Extracting hashtags
-        for(const hashtag of data['hashtags']) {
-            this.hastags.push(hashtag.text);
+        if(data['hashtags']) {
+            for(var hashtag of data['hashtags']) {
+                this.hastags.push(hashtag.text);
+            }
         }
 
         // Extracting media urls (if any)
@@ -100,16 +106,16 @@ export class Tweet implements Deserializable {
     // Method to deserialize input data into this object
     deserialize(data: any): this {
         this.id = data['rest_id'];
-        this.createdAt = data['created_at'];
-        this.tweetBy = data['user_id_str'];
-        this.entities = new TweetEntities().deserialize(data['entities']);
-        this.quoted = data['quoted_status_id_str'];
-        this.fullText = data['full_text'];
-        this.replyTo = data['in_reply_to_status_id_str'];
-        this.lang = data['lang'];
-        this.quoteCount = data['quote_count'];
-        this.replyCount = data['reply_count'];
-        this.retweetCount = data['retweet_count'];
+        this.createdAt = data['legacy']['created_at'];
+        this.tweetBy = data['legacy']['user_id_str'];
+        this.entities = new TweetEntities().deserialize(data['legacy']['entities']);
+        this.quoted = data['legacy']['quoted_status_id_str'];
+        this.fullText = data['legacy']['full_text'];
+        this.replyTo = data['legacy']['in_reply_to_status_id_str'];
+        this.lang = data['legacy']['lang'];
+        this.quoteCount = data['legacy']['quote_count'];
+        this.replyCount = data['legacy']['reply_count'];
+        this.retweetCount = data['legacy']['retweet_count'];
 
         return this;
     }
