@@ -55,6 +55,8 @@ export class TweetService extends FetcherService {
                 // Getting the raw list of tweets from response
                 res = findJSONKey(res, 'tweets');
 
+                console.log(res);
+
                 // Checking if empty tweet list returned
                 // If empty, returning
                 if (Object.keys(res).length == 0) {
@@ -68,11 +70,8 @@ export class TweetService extends FetcherService {
                 else {
                     // Iterating through the json array of tweets
                     for (var key of Object.keys(res)) {
-                        // Adding the tweets to the Tweet[] list
-                        tweets.push(new Tweet().deserialize({
-                            'rest_id': res[key]['id_str'],
-                            ...res[key]
-                        }));
+                        // Adding the tweets to the tweets list
+                        tweets.push(new Tweet().deserialize({ rest_id: res[key]['rest_id'], legacy: res[key] }));
                     }
 
                     return new Response<{ tweets: Tweet[], next: string }>(
@@ -101,14 +100,11 @@ export class TweetService extends FetcherService {
                 // Extracting raw list of tweets from response
                 res = findJSONKey(res, 'entries');
 
-                // Extracting required tweet from response
+                // Extracting required raw tweet from response
                 res = findJSONKey(res.filter((item: any) => item['entryId'].indexOf(tweetId) != -1)[0], 'result');
 
                 // Storing the tweet in a tweet object
-                tweet = new Tweet().deserialize({
-                    'rest_id': res['rest_id'],
-                    ...res['legacy']
-                });
+                tweet = new Tweet().deserialize(res);
 
                 return new Response<Tweet>(
                     true,
@@ -140,19 +136,16 @@ export class TweetService extends FetcherService {
                 // Extracting raw likes list from response
                 res = findJSONKey(res, 'entries');
 
-                // Iterating over the raw list of likes
+                // Iterating over the raw list of likers
                 for (var entry of res) {
                     // Checking if entry is of type user
-                    if (entry['entryId'].indexOf('user') != -1) {
-                        // Extracting user from the entry
-                        var user = entry['content']['itemContent']['user_results']['result'];
-
-                        // Inserting user into list of likes
-                        likers.push(new User().deserialize(user));
+                    if(entry['entryId'].indexOf('user') != -1) {
+                        // Adding the user to list of likers
+                        likers.push(new User().deserialize(findJSONKey(entry, 'result')));
                     }
                     // If entry is of type bottom cursor
-                    else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
-                        next = entry['content']['value'];
+                    else if(entry['entryId'].indexOf('cursor-bottom') != -1) {
+                        next = findJSONKey(entry, 'value');
                     }
                 }
 
@@ -189,16 +182,13 @@ export class TweetService extends FetcherService {
                 // Iterating over the raw list of likes
                 for (var entry of res) {
                     // Checking if entry is of type user
-                    if (entry['entryId'].indexOf('user') != -1) {
-                        // Extracting user from the entry
-                        var user = findJSONKey(entry, 'result');
-
-                        // Inserting user into list of likes
-                        retweeters.push(new User().deserialize(user));
+                    if(entry['entryId'].indexOf('user') != -1) {
+                        // Adding the user to list of retweeters
+                        retweeters.push(new User().deserialize(findJSONKey(entry, 'result')));
                     }
                     // If entry is of type bottom cursor
-                    else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
-                        next = entry['content']['value'];
+                    else if(entry['entryId'].indexOf('cursor-bottom') != -1) {
+                        next = findJSONKey(entry, 'value');
                     }
                 }
 
@@ -226,24 +216,21 @@ export class TweetService extends FetcherService {
         return this.fetchData(tweetRepliesUrl(tweetId, cursor))
             .then(res => {
                 var replies: Tweet[] = [];
-                var next = '';
+                var next: string = '';
 
                 // Extracting raw tweet data from response
                 res = findJSONKey(res, 'entries');
 
+                // Iterating over raw list of replies
                 for (var entry of res) {
                     // Checking if entry is of type reply
                     if (entry['entryId'].indexOf('conversationthread') != -1) {
-                        var reply = findJSONKey(entry, 'result');
-
-                        replies.push(new Tweet().deserialize({
-                            rest_id: reply['rest_id'],
-                            ...reply['legacy']
-                        }));
+                        // Adding the reply to list of replies
+                        replies.push(new Tweet().deserialize(findJSONKey(entry, 'result')));
                     }
                     // If entry is of type bottom cursor
-                    else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
-                        next = entry['content']['itemContent']['value'];
+                    else if(entry['entryId'].indexOf('cursor-bottom') != -1) {
+                        next = findJSONKey(entry, 'value');
                     }
                 }
 

@@ -26,6 +26,15 @@ app.listen(config['server']['port'], () => {
         config['twitter']['auth']['cookie']
     );
 
-    service.getTweetById('1494559537604358145')
+    service.getTweets(new TweetFilter({
+        words: [],
+        fromUsers: ['negmatico'],
+        toUsers: [],
+        mentions: [],
+        hashtags: [],
+        startDate: '',
+        endDate: '',
+        count: 10
+    }), '')
     .then(res => console.log(res.data));
 });
