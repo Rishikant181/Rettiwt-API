@@ -69,13 +69,9 @@ export class UserAccountService extends FetcherService {
                 // Iterating over the raw list of following
                 for (var entry of res) {
                     // Checking if the entry is of type user
-                    // If entry is of user type
                     if (entry['entryId'].indexOf('user') != -1) {
-                        // Extracting user details
-                        const user = findJSONKey(entry, 'result');
-
-                        // Adding the followed user ID to list of IDs
-                        following.push(new User().deserialize(user));
+                        // Adding the followed users to list of users
+                        following.push(new User().deserialize(findJSONKey(entry, 'result')));
                     }
                     // If entry is of type bottom cursor
                     else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
@@ -85,7 +81,7 @@ export class UserAccountService extends FetcherService {
                          * Template string does not(apparently) implicitly replace characters with their url encodings.
                          * Therefore not explicitly replacing casuses bad request
                          */
-                        next = entry['content']['value'].replace('|', '%7C');
+                        next = findJSONKey(entry, 'value').replace('|', '%7C');
                     }
                 }
 
@@ -122,13 +118,9 @@ export class UserAccountService extends FetcherService {
                 // Itearating over the raw list of following
                 for (var entry of res) {
                     // Checking if the entry is of type user
-                    // If entry is of user type
                     if (entry['entryId'].indexOf('user') != -1) {
-                        // Extracting user details
-                        const user = findJSONKey(entry, 'result');
-
-                        // Adding the follower ID to list of IDs
-                        followers.push(new User().deserialize(user));
+                        // Adding the follower to list of followers
+                        followers.push(new User().deserialize(findJSONKey(entry, 'result')));
                     }
                     // If entry is of type bottom cursor
                     else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
@@ -138,7 +130,7 @@ export class UserAccountService extends FetcherService {
                          * Template string does not(apparently) implicitly replace characters with their url encodings.
                          * Therefore not explicitly replacing casuses bad request
                          */
-                        next = entry['content']['value'].replace('|', '%7C');
+                        next = findJSONKey(entry, 'value').replace('|', '%7C');
                     }
                 }
 
@@ -176,16 +168,9 @@ export class UserAccountService extends FetcherService {
                 // Itearating over the raw list of following
                 for (var entry of res) {
                     // Checking if the entry is of type user
-                    // If entry is of tweet type
                     if (entry['entryId'].indexOf('tweet') != -1) {
-                        // Extracting tweet
-                        const tweet = findJSONKey(entry, 'result');
-
-                        // Adding the follower ID to list of IDs
-                        tweets.push(new Tweet().deserialize({
-                            rest_id: tweet['rest_id'],
-                            ...tweet['legacy']
-                        }));
+                        // Adding the tweet to list of liked tweets
+                        tweets.push(new Tweet().deserialize(findJSONKey(entry, 'result')));
                     }
                     // If entry is of type bottom cursor
                     else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
@@ -195,7 +180,7 @@ export class UserAccountService extends FetcherService {
                          * Template string does not(apparently) implicitly replace characters with their url encodings.
                          * Therefore not explicitly replacing casuses bad request
                          */
-                        next = entry['content']['value'].replace('|', '%7C');
+                        next = findJSONKey(entry, 'value').replace('|', '%7C');
                     }
                 }
 
