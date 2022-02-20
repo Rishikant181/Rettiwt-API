@@ -55,8 +55,6 @@ export class TweetService extends FetcherService {
                 // Getting the raw list of tweets from response
                 res = findJSONKey(res, 'tweets');
 
-                console.log(res);
-
                 // Checking if empty tweet list returned
                 // If empty, returning
                 if (Object.keys(res).length == 0) {
