@@ -28,13 +28,13 @@ export class UserID implements Deserializable {
 // Object to hold the details about a user
 export class User implements Deserializable {
     // MEMBER DATA
-    user: UserID;                                                             // To store the internal rest id of user account
+    user: UserID;                                                           // To store the internal rest id of user account
     createdAt: string;                                                      // To store the time when the account was created
     description: string;                                                    // To store the account description
     isVerified: boolean ;                                                   // To store whether this is a verified account or not
     favouritesCount: number;                                                // To store the number of favourites
     followersCount: number;                                                 // To store the number of followers
-    friendsCount: number;                                                   // To store the number of friends
+    followingsCount: number;                                                // To store the number of people followed by this user
     statusesCount: number;                                                  // To store the number of status posted by user
     location: string;                                                       // To store the user's location
     pinnedTweets: string[];                                                 // To store the ids of tweets that are pinned in the account
@@ -59,7 +59,7 @@ export class User implements Deserializable {
         this.isVerified = data['legacy']['verified'];
         this.favouritesCount = data['legacy']['favourites_count'];
         this.followersCount = data['legacy']['followers_count'];
-        this.friendsCount = data['legacy']['friends_count'];
+        this.followingsCount = data['legacy']['friends_count'];
         this.statusesCount = data['legacy']['statuses_count'];
         this.location = data['legacy']['location'];
         this.pinnedTweets = data['legacy']['pinned_tweet_ids_str'];
