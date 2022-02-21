@@ -38,9 +38,9 @@ export class UserAccountService extends FetcherService {
         return this.fetchData(userAccountUrl(screenName))
             .then(res => {
                 // If user does not exist
-                if(!Object.keys(res['data']).length) {
+                if (!Object.keys(res['data']).length) {
                     return new Response<User>(
-                        true,
+                        false,
                         new Error(Errors.UserNotFound),
                         new User(),
                     );
@@ -54,11 +54,11 @@ export class UserAccountService extends FetcherService {
                     );
                 }
             })
-            // If error parsing data
+            // If other run-time errors
             .catch(err => {
                 return new Response<User>(
                     false,
-                    new Error(err),
+                    new Error(Errors.FatalError),
                     new User(),
                 );
             });
@@ -72,35 +72,46 @@ export class UserAccountService extends FetcherService {
     ): Promise<Response<{ following: User[], next: string }>> {
         return this.fetchData(userFollowingUrl(userId, count, cursor))
             .then(res => {
-                var following: User[] = [];
-                var next: string = '';
-
-                // Extracting the raw list of following
-                res = findJSONKey(res, 'entries');
-
-                // Extracting cursor to next batch
-                next = filterJSON(res, { "cursorType": "Bottom" })['value'].replace('|', '%7C');
-
-                // Iterating over the raw list of following
-                for (var entry of res) {
-                    // Checking if the entry is of type user
-                    if (entry['entryId'].indexOf('user') != -1) {
-                        // Adding the followed users to list of users
-                        following.push(new User().deserialize(findJSONKey(entry, 'result')));
-                    }
+                // If user does not exists
+                if (!Object.keys(res['data']['user']).length) {
+                    return new Response<{ following: User[], next: string }>(
+                        false,
+                        new Error(Errors.UserNotFound),
+                        { following: [], next: '' }
+                    );
                 }
+                // If user exists
+                else {
+                    var following: User[] = [];
+                    var next: string = '';
 
-                return new Response<{ following: User[], next: string }>(
-                    true,
-                    new Error(Errors.NoError),
-                    { following: following, next: next }
-                );
+                    // Extracting the raw list of following
+                    res = findJSONKey(res, 'entries');
+
+                    // Extracting cursor to next batch
+                    next = filterJSON(res, { "cursorType": "Bottom" })['value'].replace('|', '%7C');
+
+                    // Iterating over the raw list of following
+                    for (var entry of res) {
+                        // Checking if the entry is of type user
+                        if (entry['entryId'].indexOf('user') != -1) {
+                            // Adding the followed users to list of users
+                            following.push(new User().deserialize(findJSONKey(entry, 'result')));
+                        }
+                    }
+
+                    return new Response<{ following: User[], next: string }>(
+                        true,
+                        new Error(Errors.NoError),
+                        { following: following, next: next }
+                    );
+                }
             })
-            // If error parsing json
+            // If other run-time error
             .catch(err => {
                 return new Response<{ following: User[], next: string }>(
                     false,
-                    new Error(err),
+                    new Error(Errors.FatalError),
                     { following: [], next: '' }
                 )
             });
@@ -114,31 +125,42 @@ export class UserAccountService extends FetcherService {
     ): Promise<Response<{ followers: User[], next: string }>> {
         return this.fetchData(userFollowersUrl(userId, count, cursor))
             .then(res => {
-                var followers: User[] = [];
-                var next: string = '';
-
-                // Extracting the raw list of followers
-                res = findJSONKey(res, 'entries');
-
-                // Extracting cursor to next batch
-                next = filterJSON(res, { "cursorType": "Bottom" })['value'].replace('|', '%7C');
-
-                // Itearating over the raw list of following
-                for (var entry of res) {
-                    // Checking if the entry is of type user
-                    if (entry['entryId'].indexOf('user') != -1) {
-                        // Adding the follower to list of followers
-                        followers.push(new User().deserialize(findJSONKey(entry, 'result')));
-                    }
+                // If user does not exist
+                if (!Object.keys(res['data']['user']).length) {
+                    return new Response<{ followers: User[], next: string }>(
+                        false,
+                        new Error(Errors.UserNotFound),
+                        { followers: [], next: [] }
+                    );
                 }
+                // If user exists
+                else {
+                    var followers: User[] = [];
+                    var next: string = '';
 
-                return new Response<{ followers: User[], next: string }>(
-                    true,
-                    new Error(Errors.NoError),
-                    { followers: followers, next: next }
-                );
+                    // Extracting the raw list of followers
+                    res = findJSONKey(res, 'entries');
+
+                    // Extracting cursor to next batch
+                    next = filterJSON(res, { "cursorType": "Bottom" })['value'].replace('|', '%7C');
+
+                    // Itearating over the raw list of following
+                    for (var entry of res) {
+                        // Checking if the entry is of type user
+                        if (entry['entryId'].indexOf('user') != -1) {
+                            // Adding the follower to list of followers
+                            followers.push(new User().deserialize(findJSONKey(entry, 'result')));
+                        }
+                    }
+
+                    return new Response<{ followers: User[], next: string }>(
+                        true,
+                        new Error(Errors.NoError),
+                        { followers: followers, next: next }
+                    );
+                }
             })
-            // If error parsing json
+            // If other run-time error
             .catch(err => {
                 return new Response<{ followers: User[], next: string }>(
                     false,
@@ -156,29 +178,40 @@ export class UserAccountService extends FetcherService {
     ): Promise<Response<{ tweets: Tweet[], next: string }>> {
         return this.fetchData(userLikesUrl(userId, count, cursor))
             .then(res => {
-                var tweets: Tweet[] = [];
-                var next: string = '';
-
-                // Extracting the raw list of followers
-                res = findJSONKey(res, 'entries');
-
-                // Extracting cursor to next batch
-                next = filterJSON(res, { "cursorType": "Bottom" })['value'].replace('|', '%7C');
-
-                // Itearating over the raw list of following
-                for (var entry of res) {
-                    // Checking if the entry is of type user
-                    if (entry['entryId'].indexOf('tweet') != -1) {
-                        // Adding the tweet to list of liked tweets
-                        tweets.push(new Tweet().deserialize(findJSONKey(entry, 'result')));
-                    }
+                // If user not found
+                if (!Object.keys(res['data']['user']).length) {
+                    return new Response<{ tweets: Tweet[], next: string }>(
+                        false,
+                        new Error(Errors.UserNotFound),
+                        { tweets: [], next: '' }
+                    );
                 }
+                // If user found
+                else {
+                    var tweets: Tweet[] = [];
+                    var next: string = '';
 
-                return new Response<{ tweets: Tweet[], next: string }>(
-                    true,
-                    new Error(Errors.NoError),
-                    { tweets: tweets, next: next }
-                );
+                    // Extracting the raw list of followers
+                    res = findJSONKey(res, 'entries');
+
+                    // Extracting cursor to next batch
+                    next = filterJSON(res, { "cursorType": "Bottom" })['value'].replace('|', '%7C');
+
+                    // Itearating over the raw list of following
+                    for (var entry of res) {
+                        // Checking if the entry is of type user
+                        if (entry['entryId'].indexOf('tweet') != -1) {
+                            // Adding the tweet to list of liked tweets
+                            tweets.push(new Tweet().deserialize(findJSONKey(entry, 'result')));
+                        }
+                    }
+
+                    return new Response<{ tweets: Tweet[], next: string }>(
+                        true,
+                        new Error(Errors.NoError),
+                        { tweets: tweets, next: next }
+                    );
+                }
             })
             // If error parsing json
             .catch(err => {

@@ -4,7 +4,7 @@
 
 // Enum to hold all different types of error messages
 export enum Errors {
-    UserNotFound = "An account with given username was not found",
+    UserNotFound = "An account with given username/id was not found",
     FatalError = "A run-time error occured",
     NoError = ""
 }
@@ -12,7 +12,7 @@ export enum Errors {
 // Object to hold error data for http communication
 export class Error {
     // MEMBER DATA
-    message: string;                                                            // To store actual error message
+    message: string;                                                        // To store actual error message
 
     // MEMBER METHODS
     constructor(err: Errors) {

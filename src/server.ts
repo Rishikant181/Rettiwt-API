@@ -26,9 +26,7 @@ app.listen(config['server']['port'], () => {
         config['twitter']['auth']['csrfToken'],
         config['twitter']['auth']['cookie']
     )
-    .getUserAccountDetails('anauiwedgh')
-        .then(res => {
-            console.log(res);
-        })
+    .getUserLikes('49684654654', 10, '')
+        .then(res => console.log(res));
     /* TESTING ENDS*/
 });
