@@ -26,7 +26,7 @@ import {
     tweetRetweetUrl
 } from '../helper/Requests';
 
-import { findJSONKey } from "../helper/Parser";
+import { filterJSON, findJSONKey } from "../helper/Parser";
 
 export class TweetService extends FetcherService {
     // MEMBER METHODS
@@ -50,7 +50,7 @@ export class TweetService extends FetcherService {
                 var next: '';
 
                 // Extracting the cursor to next batch
-                next = findJSONKey(res, 'operation', true)['cursor']['value'];
+                next = filterJSON(res, { "cursorType": "Bottom" })['value'];
 
                 // Getting the raw list of tweets from response
                 res = findJSONKey(res, 'tweets');
@@ -69,7 +69,7 @@ export class TweetService extends FetcherService {
                     // Iterating through the json array of tweets
                     for (var key of Object.keys(res)) {
                         // Adding the tweets to the tweets list
-                        tweets.push(new Tweet().deserialize({ rest_id: res[key]['rest_id'], legacy: res[key] }));
+                        tweets.push(new Tweet().deserialize({ rest_id: res[key]['id_str'], legacy: res[key] }));
                     }
 
                     return new Response<{ tweets: Tweet[], next: string }>(
@@ -134,16 +134,15 @@ export class TweetService extends FetcherService {
                 // Extracting raw likes list from response
                 res = findJSONKey(res, 'entries');
 
+                // Extracting cursor to next batch
+                next = filterJSON(res, { "cursorType": "Bottom" })['value'];
+
                 // Iterating over the raw list of likers
                 for (var entry of res) {
                     // Checking if entry is of type user
                     if(entry['entryId'].indexOf('user') != -1) {
                         // Adding the user to list of likers
                         likers.push(new User().deserialize(findJSONKey(entry, 'result')));
-                    }
-                    // If entry is of type bottom cursor
-                    else if(entry['entryId'].indexOf('cursor-bottom') != -1) {
-                        next = findJSONKey(entry, 'value');
                     }
                 }
 
@@ -177,16 +176,15 @@ export class TweetService extends FetcherService {
                 // Extracting raw retweeters list from response
                 res = findJSONKey(res, 'entries');
 
+                // Extracting cursor to next batch
+                next = filterJSON(res, { "cursorType": "Bottom" })['value'];
+
                 // Iterating over the raw list of likes
                 for (var entry of res) {
                     // Checking if entry is of type user
                     if(entry['entryId'].indexOf('user') != -1) {
                         // Adding the user to list of retweeters
                         retweeters.push(new User().deserialize(findJSONKey(entry, 'result')));
-                    }
-                    // If entry is of type bottom cursor
-                    else if(entry['entryId'].indexOf('cursor-bottom') != -1) {
-                        next = findJSONKey(entry, 'value');
                     }
                 }
 
@@ -219,16 +217,15 @@ export class TweetService extends FetcherService {
                 // Extracting raw tweet data from response
                 res = findJSONKey(res, 'entries');
 
+                // Extracting cursor to next batch
+                next = filterJSON(res, { "cursorType": "Bottom" })['value'];
+
                 // Iterating over raw list of replies
                 for (var entry of res) {
                     // Checking if entry is of type reply
                     if (entry['entryId'].indexOf('conversationthread') != -1) {
                         // Adding the reply to list of replies
                         replies.push(new Tweet().deserialize(findJSONKey(entry, 'result')));
-                    }
-                    // If entry is of type bottom cursor
-                    else if(entry['entryId'].indexOf('cursor-bottom') != -1) {
-                        next = findJSONKey(entry, 'value');
                     }
                 }
 
