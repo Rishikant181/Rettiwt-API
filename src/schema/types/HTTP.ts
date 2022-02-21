@@ -5,6 +5,7 @@
 // Enum to hold all different types of error messages
 export enum Errors {
     UserNotFound = "An account with given username was not found",
+    FatalError = "A run-time error occured",
     NoError = ""
 }
 

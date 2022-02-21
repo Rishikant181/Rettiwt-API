@@ -5,6 +5,7 @@
 import { FetcherService } from '../FetcherService';
 
 import {
+    Errors,
     Error,
     Response
 } from '../../schema/types/HTTP'
@@ -36,11 +37,22 @@ export class UserAccountService extends FetcherService {
     getUserAccountDetails(screenName: string): Promise<Response<User>> {
         return this.fetchData(userAccountUrl(screenName))
             .then(res => {
-                return new Response<User>(
-                    true,
-                    new Error(null),
-                    new User().deserialize(findJSONKey(res, 'result')),
-                );
+                // If user does not exist
+                if(!Object.keys(res['data']).length) {
+                    return new Response<User>(
+                        true,
+                        new Error(Errors.UserNotFound),
+                        new User(),
+                    );
+                }
+                // If user exists
+                else {
+                    return new Response<User>(
+                        true,
+                        new Error(Errors.NoError),
+                        new User().deserialize(findJSONKey(res, 'result')),
+                    );
+                }
             })
             // If error parsing data
             .catch(err => {
@@ -80,7 +92,7 @@ export class UserAccountService extends FetcherService {
 
                 return new Response<{ following: User[], next: string }>(
                     true,
-                    new Error(null),
+                    new Error(Errors.NoError),
                     { following: following, next: next }
                 );
             })
@@ -122,7 +134,7 @@ export class UserAccountService extends FetcherService {
 
                 return new Response<{ followers: User[], next: string }>(
                     true,
-                    new Error(null),
+                    new Error(Errors.NoError),
                     { followers: followers, next: next }
                 );
             })
@@ -164,7 +176,7 @@ export class UserAccountService extends FetcherService {
 
                 return new Response<{ tweets: Tweet[], next: string }>(
                     true,
-                    new Error(null),
+                    new Error(Errors.NoError),
                     { tweets: tweets, next: next }
                 );
             })
