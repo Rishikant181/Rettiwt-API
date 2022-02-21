@@ -19,4 +19,12 @@ app.use('/', (req, res) => {
 // Setting up express server
 app.listen(config['server']['port'], () => {
     console.log(`Listening on port ${config['server']['port']}`);
+
+    new UserAccountService(
+        config['twitter']['auth']['authToken'],
+        config['twitter']['auth']['csrfToken'],
+        config['twitter']['auth']['cookie']
+    )
+    .getUserAccountDetails('negmatico')
+        .then(res => console.log(res));
 });

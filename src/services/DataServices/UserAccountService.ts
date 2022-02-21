@@ -19,7 +19,7 @@ import {
     userLikesUrl
 } from '../helper/Requests';
 
-import { findJSONKey } from '../helper/Parser';
+import { filterJSON, findJSONKey } from '../helper/Parser';
 
 export class UserAccountService extends FetcherService {
     // MEMBER METHODS
