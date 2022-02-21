@@ -5,6 +5,8 @@
 // Enum to hold all different types of error messages
 export enum Errors {
     UserNotFound = "An account with given username/id was not found",
+    TweetNotFound = "A tweet with the given id was not found",
+    NoTweetsFound = "No tweets matching the given criteria found",
     FatalError = "A run-time error occured",
     NoError = ""
 }

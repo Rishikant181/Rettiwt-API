@@ -42,7 +42,7 @@ export class UserAccountService extends FetcherService {
                     return new Response<User>(
                         false,
                         new Error(Errors.UserNotFound),
-                        new User(),
+                        {},
                     );
                 }
                 // If user exists
@@ -59,7 +59,7 @@ export class UserAccountService extends FetcherService {
                 return new Response<User>(
                     false,
                     new Error(Errors.FatalError),
-                    new User(),
+                    {},
                 );
             });
     }
