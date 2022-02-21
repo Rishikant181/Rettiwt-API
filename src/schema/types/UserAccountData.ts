@@ -34,7 +34,7 @@ export class User implements Deserializable {
     isVerified: boolean ;                                                   // To store whether this is a verified account or not
     favouritesCount: number;                                                // To store the number of favourites
     followersCount: number;                                                 // To store the number of followers
-    friendsCount: number;                                                   // To store the number of friends
+    followingsCount: number;                                                   // To store the number of friends
     statusesCount: number;                                                  // To store the number of status posted by user
     location: string;                                                       // To store the user's location
     pinnedTweets: string[];                                                 // To store the ids of tweets that are pinned in the account
@@ -59,7 +59,7 @@ export class User implements Deserializable {
         this.isVerified = data['legacy']['verified'];
         this.favouritesCount = data['legacy']['favourites_count'];
         this.followersCount = data['legacy']['followers_count'];
-        this.friendsCount = data['legacy']['friends_count'];
+        this.followingsCount = data['legacy']['friends_count'];
         this.statusesCount = data['legacy']['statuses_count'];
         this.location = data['legacy']['location'];
         this.pinnedTweets = data['legacy']['pinned_tweet_ids_str'];
