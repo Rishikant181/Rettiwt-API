@@ -15,13 +15,13 @@ export function findJSONKey(data: any, key: string, last: boolean = false): any 
     var start: number = !last ? (jsonStr.indexOf(`"${key}"`) + `"${key}":`.length) : (jsonStr.lastIndexOf(`"${key}"`) + `"${key}":`.length);
 
     // If value to be extracted is not a JSON
-    if(jsonStr[start] != '[' && jsonStr[start] != '{') {
-        for(var i = start; i < len; i++) {
+    if (jsonStr[start] != '[' && jsonStr[start] != '{') {
+        for (var i = start; i < len; i++) {
             // Getting each character
             var char: string = jsonStr[i];
-            
+
             // If not ending of value
-            if(char != ',' && char != '\n') {
+            if (char != ',' && char != '\n') {
                 extStr += char;
             }
             // If ending of value
@@ -44,26 +44,26 @@ export function findJSONKey(data: any, key: string, last: boolean = false): any 
         for (var i = start; i < len; i++) {
             // Getting each character
             var char: string = jsonStr[i];
-    
+
             // Appending the character to extracted string
             extStr += char;
-            
-            if(char == '[' || char == '{') {
+
+            if (char == '[' || char == '{') {
                 braceStack.push(char);
             }
-            else if(char == ']' || char == '}') {
+            else if (char == ']' || char == '}') {
                 braceStack.pop();
-    
+
                 // If stack is now empty, this means data extraction complete
-                if(braceStack.length == 0) {
+                if (braceStack.length == 0) {
                     break;
                 }
             }
         }
-    
+
         // Extracting the required data
         reqData = JSON.parse(extStr);
-    
+
         return reqData;
     }
 }
@@ -83,46 +83,53 @@ export function filterJSON(data: any, query: any): any {
     // Getting position of the key-value pair
     atPos = jsonStr.indexOf(query);
 
-    // Getting starting position of parent JSON
-    for(var i = atPos; i >= 0; i--) {
-        var char: string = jsonStr[i];
-        if(char === '}') {
-            braceStack.push(char)
-        }
-        else if(char === '{') {
-            // If parent JSON start
-            if(braceStack.length == 0) {
-                start = i;
-                break;
+    // If key-value pair found
+    if (atPos != -1) {
+        // Getting starting position of parent JSON
+        for (var i = atPos; i >= 0; i--) {
+            var char: string = jsonStr[i];
+            if (char === '}') {
+                braceStack.push(char)
             }
-            else {
-                braceStack.pop();
+            else if (char === '{') {
+                // If parent JSON start
+                if (braceStack.length == 0) {
+                    start = i;
+                    break;
+                }
+                else {
+                    braceStack.pop();
+                }
             }
         }
+
+        // Resetting braceStack to prepare it for getting ending position
+        braceStack = [];
+
+        // Getting ending position of parent JSON
+        for (var i = atPos; i < jsonStr.length; i++) {
+            var char: string = jsonStr[i];
+            if (char === '{') {
+                braceStack.push(char)
+            }
+            else if (char === '}') {
+                // If parent JSON start
+                if (braceStack.length == 0) {
+                    end = i;
+                    break;
+                }
+                else {
+                    braceStack.pop();
+                }
+            }
+        }
+
+        subJSON = JSON.parse(jsonStr.substring(start, end + 1));
+    }
+    // If not found
+    else {
+        subJSON = undefined;
     }
 
-    // Resetting braceStack to prepare it for getting ending position
-    braceStack = [];
-
-    // Getting ending position of parent JSON
-    for(var i = atPos; i < jsonStr.length; i++) {
-        var char: string = jsonStr[i];
-        if(char === '{') {
-            braceStack.push(char)
-        }
-        else if(char === '}') {
-            // If parent JSON start
-            if(braceStack.length == 0) {
-                end = i;
-                break;
-            }
-            else {
-                braceStack.pop();
-            }
-        }
-    }
-
-    subJSON = JSON.parse(jsonStr.substring(start, end + 1));
-    
     return subJSON;
 }
