@@ -66,22 +66,15 @@ export class UserAccountService extends FetcherService {
                 // Extracting the raw list of following
                 res = findJSONKey(res, 'entries');
 
+                // Extracting cursor to next batch
+                next = filterJSON(res, { "cursorType": "Bottom" })['value'].replace('|', '%7C');
+
                 // Iterating over the raw list of following
                 for (var entry of res) {
                     // Checking if the entry is of type user
                     if (entry['entryId'].indexOf('user') != -1) {
                         // Adding the followed users to list of users
                         following.push(new User().deserialize(findJSONKey(entry, 'result')));
-                    }
-                    // If entry is of type bottom cursor
-                    else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
-                        // Storing the cursor to next batch
-                        /**
-                         * Replacing '|' with '%7C'
-                         * Template string does not(apparently) implicitly replace characters with their url encodings.
-                         * Therefore not explicitly replacing casuses bad request
-                         */
-                        next = findJSONKey(entry, 'value').replace('|', '%7C');
                     }
                 }
 
@@ -115,22 +108,15 @@ export class UserAccountService extends FetcherService {
                 // Extracting the raw list of followers
                 res = findJSONKey(res, 'entries');
 
+                // Extracting cursor to next batch
+                next = filterJSON(res, { "cursorType": "Bottom" })['value'].replace('|', '%7C');
+
                 // Itearating over the raw list of following
                 for (var entry of res) {
                     // Checking if the entry is of type user
                     if (entry['entryId'].indexOf('user') != -1) {
                         // Adding the follower to list of followers
                         followers.push(new User().deserialize(findJSONKey(entry, 'result')));
-                    }
-                    // If entry is of type bottom cursor
-                    else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
-                        // Storing the cursor to next batch
-                        /**
-                         * Replacing '|' with '%7C'
-                         * Template string does not(apparently) implicitly replace characters with their url encodings.
-                         * Therefore not explicitly replacing casuses bad request
-                         */
-                        next = findJSONKey(entry, 'value').replace('|', '%7C');
                     }
                 }
 
@@ -162,8 +148,10 @@ export class UserAccountService extends FetcherService {
                 var next: string = '';
 
                 // Extracting the raw list of followers
-                //@ts-ignore
                 res = findJSONKey(res, 'entries');
+
+                // Extracting cursor to next batch
+                next = filterJSON(res, { "cursorType": "Bottom" })['value'].replace('|', '%7C');
 
                 // Itearating over the raw list of following
                 for (var entry of res) {
@@ -171,16 +159,6 @@ export class UserAccountService extends FetcherService {
                     if (entry['entryId'].indexOf('tweet') != -1) {
                         // Adding the tweet to list of liked tweets
                         tweets.push(new Tweet().deserialize(findJSONKey(entry, 'result')));
-                    }
-                    // If entry is of type bottom cursor
-                    else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
-                        // Storing the cursor to next batch
-                        /**
-                         * Replacing '|' with '%7C'
-                         * Template string does not(apparently) implicitly replace characters with their url encodings.
-                         * Therefore not explicitly replacing casuses bad request
-                         */
-                        next = findJSONKey(entry, 'value').replace('|', '%7C');
                     }
                 }
 
