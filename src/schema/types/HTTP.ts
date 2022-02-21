@@ -2,24 +2,20 @@
 
 // TODO: Evaluate the error message and generate different error objects for different errors
 
+// Enum to hold all different types of error messages
+export enum Errors {
+    UserNotFound = "An account with given username was not found",
+    NoError = ""
+}
+
 // Object to hold error data for http communication
 export class Error {
     // MEMBER DATA
-    name: string;                                                               // To store the type of error
     message: string;                                                            // To store actual error message
 
     // MEMBER METHODS
-    constructor(err: any) {
-        // If no error
-        if(!err) {
-            this.name = '';
-            this.message = '';
-        }
-        // If error
-        else {
-            this.name = err.name;
-            this.message = err.message;
-        }
+    constructor(err: Errors) {
+        this.message = err;
     }
 }
 
