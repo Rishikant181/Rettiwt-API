@@ -29,14 +29,14 @@ import {
 } from '../helper/Extractors';
 
 /**
- * A *service* that deals with **fetching** of data related to **user** account
+ * A service that deals with fetching of data related to user account
  */
 export class UserAccountService extends FetcherService {
     // MEMBER METHODS
     /**
-     * @param authToken The **authetication token** received from TwitterAPI
-     * @param csrfToken The **csrf token** received from TwitterAPI
-     * @param cookie The **cookie** for the **logged in user account** received from TwitterAPI
+     * @param authToken The authetication token received from TwitterAPI
+     * @param csrfToken The csrf token received from TwitterAPI
+     * @param cookie The cookie for the logged in user account received from TwitterAPI
      */
     constructor(
         authToken: string,
@@ -47,8 +47,8 @@ export class UserAccountService extends FetcherService {
     }
 
     /**
-     * **Fetches** account **details** of the user with the given **screen name**
-     * @param screenName The screen name of the **target** user. Example: "1canw1n"
+     * Fetches account details of the user with the given screen name
+     * @param screenName The screen name of the target user. Example: "1canw1n"
      */
     getUserAccountDetails(screenName: string): Promise<Response<User>> {
         return this.fetchData(userAccountUrl(screenName))
@@ -82,10 +82,10 @@ export class UserAccountService extends FetcherService {
     }
 
     /**
-     * **Fetches** the list of **users followed by** the target user
-     * @param userId The **rest id** of the **target** user
-     * @param count The **batch size** of the list
-     * @param cursor The **cursor** to **next** batch. If blank, **first** batch is fetched
+     * Fetches the list of users followed by the target user
+     * @param userId The rest id of the target user
+     * @param count The batch size of the list
+     * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
     getUserFollowing(
         userId: string,
@@ -123,10 +123,10 @@ export class UserAccountService extends FetcherService {
     }
 
     /**
-     * **Fetches** the list of **users following** the target user
-     * @param userId The **rest id** of the **target** user
-     * @param count The **batch size** of the list
-     * @param cursor The **cursor** to **next** batch. If blank, **first** batch is fetched
+     * Fetches the list of users following the target user
+     * @param userId The rest id of the target user
+     * @param count The batch size of the list
+     * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
     getUserFollowers(
         userId: string,
@@ -164,10 +164,10 @@ export class UserAccountService extends FetcherService {
     }
 
     /**
-     * **Fetches** the list of **tweets liked** by the target user
-     * @param userId The **rest id** of the **target** user
-     * @param count The **batch size** of the list
-     * @param cursor The **cursor** to **next** batch. If blank, **first** batch is fetched
+     * Fetches the list of tweets liked by the target user
+     * @param userId The rest id of the target user
+     * @param count The batch size of the list
+     * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
     getUserLikes(
         userId: string,
