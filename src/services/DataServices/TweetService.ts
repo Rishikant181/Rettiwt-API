@@ -1,10 +1,11 @@
 // This file contains the serivce that handles fetching of various tweets and other similar content from official API
 
 // CUSTOM LIBS
-
 import { FetcherService } from "../FetcherService";
 
+/* TYPES */
 import {
+    Errors,
     Error,
     Response
 } from '../../schema/types/HTTP'
@@ -18,6 +19,7 @@ import {
     User
 } from "../../schema/types/UserAccountData";
 
+/* HELPERS */
 import {
     tweetsUrl,
     tweetDetailsUrl,
@@ -26,10 +28,24 @@ import {
     tweetRetweetUrl
 } from '../helper/Requests';
 
-import { findJSONKey } from "../helper/Parser";
+import {
+    extractTweet,
+    extractTweetLikers,
+    extractTweetReplies,
+    extractTweetRetweeters,
+    extractTweets
+} from "../helper/Extractors";
 
+/**
+ * A *Service* that deals with **fetching** of data related to **tweets**
+ */
 export class TweetService extends FetcherService {
     // MEMBER METHODS
+    /**
+     * @param authToken The **authetication token** received from TwitterAPI
+     * @param csrfToken The **csrf token** received from TwitterAPI
+     * @param cookie The **cookie** for the **logged in user account** received from TwitterAPI
+     */
     constructor(
         authToken: string,
         csrfToken: string,
@@ -38,89 +54,76 @@ export class TweetService extends FetcherService {
         super(authToken, csrfToken, cookie);
     }
 
-    // Method to fetch tweets filtered by the supplied filter
     // TODO: Make this method also fetch the retweets made by the user
+    /**
+     * **Fetches** a **list** of **tweets** that match the given **filter**
+     * @param filter The **filter** be used for **searching** the tweets
+     * @param cursor The **cursor** to the **next batch** of tweets. If blank, **first batch** is fetched
+     */
     getTweets(
         filter: TweetFilter,
         cursor: string
     ): Promise<Response<{ tweets: Tweet[], next: string }>> {
         return this.fetchData(tweetsUrl(filter, cursor))
             .then(res => {
-                var tweets: Tweet[] = [];
-                var next: '';
-
-                // Extracting the cursor to next batch
-                next = findJSONKey(res, 'operation', true)['cursor']['value'];
-
-                // Getting the raw list of tweets from response
-                res = findJSONKey(res, 'tweets');
-
-                // Checking if empty tweet list returned
-                // If empty, returning
-                if (Object.keys(res).length == 0) {
-                    return new Response<{ tweets: Tweet[], next: string }>(
-                        false,
-                        new Error(null),
-                        { tweets: [], next: '' }
-                    );
-                }
-                // If not empty, extracting tweets
-                else {
-                    // Iterating through the json array of tweets
-                    for (var key of Object.keys(res)) {
-                        // Adding the tweets to the tweets list
-                        tweets.push(new Tweet().deserialize({ rest_id: res[key]['rest_id'], legacy: res[key] }));
-                    }
-
-                    return new Response<{ tweets: Tweet[], next: string }>(
-                        true,
-                        new Error(null),
-                        { tweets: tweets, next: next }
-                    );
-                }
+                var data = extractTweets(res);                
+                return new Response<{ tweets: Tweet[], next: string }>(
+                    data.tweets.length ? true : false,                          // Setting true or false based on tweets found or not
+                    new Error(Errors.NoError),
+                    { tweets: data.tweets, next: data.next }
+                );
             })
-            // If error parsing json
+            // If other run-time error occured
             .catch(err => {
                 return new Response<{ tweets: Tweet[], next: string }>(
                     false,
-                    new Error(err),
+                    new Error(Errors.FatalError),
                     { tweets: [], next: '' }
                 );
             });
     }
 
-    // Method to fetch a tweet using it's id
+    /**
+     * **Fetches** the **details** of a single tweet wiht the **given tweet id**
+     * @param tweetId The **rest id** of the target tweet
+     */
     getTweetById(tweetId: string): Promise<Response<Tweet>> {
         return this.fetchData(tweetDetailsUrl(tweetId))
             .then(res => {
-                var tweet: Tweet;
-
-                // Extracting raw list of tweets from response
-                res = findJSONKey(res, 'entries');
-
-                // Extracting required raw tweet from response
-                res = findJSONKey(res.filter((item: any) => item['entryId'].indexOf(tweetId) != -1)[0], 'result');
-
-                // Storing the tweet in a tweet object
-                tweet = new Tweet().deserialize(res);
-
-                return new Response<Tweet>(
-                    true,
-                    new Error(null),
-                    tweet
-                );
+                // If tweet does not exist
+                if (!Object.keys(res['data']).length) {
+                    return new Response<Tweet>(
+                        false,
+                        new Error(Errors.TweetNotFound),
+                        {}
+                    );
+                }
+                // If tweet exists
+                else {
+                    var data = extractTweet(res ,tweetId);
+                    return new Response<Tweet>(
+                        true,
+                        new Error(Errors.NoError),
+                        data
+                    );
+                }
             })
-            // If error parsing json
+            // If other run-time error occured
             .catch(err => {
                 return new Response<Tweet>(
                     false,
-                    new Error(err),
+                    new Error(Errors.FatalError),
                     {}
                 );
             });
     }
 
-    // Method to fetch tweet likes using tweet id
+    /**
+     * **Fetches** the **list of users** who **liked** the given tweet
+     * @param tweetId The **rest id** of the target tweet
+     * @param count The **batch size** of the list
+     * @param cursor The **cursor** to the **next batch** of users. If blank, **first** batch is fetched
+     */
     getTweetLikers(
         tweetId: string,
         count: number,
@@ -128,42 +131,41 @@ export class TweetService extends FetcherService {
     ): Promise<Response<{ likers: User[], next: string }>> {
         return this.fetchData(tweetLikesUrl(tweetId, count, cursor))
             .then(res => {
-                var likers: User[] = [];
-                var next: string = '';
-                
-                // Extracting raw likes list from response
-                res = findJSONKey(res, 'entries');
-
-                // Iterating over the raw list of likers
-                for (var entry of res) {
-                    // Checking if entry is of type user
-                    if(entry['entryId'].indexOf('user') != -1) {
-                        // Adding the user to list of likers
-                        likers.push(new User().deserialize(findJSONKey(entry, 'result')));
-                    }
-                    // If entry is of type bottom cursor
-                    else if(entry['entryId'].indexOf('cursor-bottom') != -1) {
-                        next = findJSONKey(entry, 'value');
-                    }
+                // If tweet exists
+                if (!Object.keys(res['data']['favoriters_timeline']).length) {
+                    return new Response<{ likers: User[], next: string }>(
+                        false,
+                        new Error(Errors.TweetNotFound),
+                        { likers: [], next: '' }
+                    );
                 }
-
-                return new Response<{ likers: User[], next: string }>(
-                    true,
-                    new Error(null),
-                    { likers: likers, next: next }
-                );
+                // If likers found
+                else {
+                    var data = extractTweetLikers(res);
+                    return new Response<{ likers: User[], next: string }>(
+                        true,
+                        new Error(Errors.NoError),
+                        { likers: data.likers, next: data.next }
+                    );
+                }
             })
-            // If error parsing json
+            // If other run-time error occured
             .catch(err => {
+                console.log(err);
                 return new Response<{ likers: User[], next: string }>(
                     false,
-                    new Error(err),
+                    new Error(Errors.FatalError),
                     { likers: [], next: '' }
                 );
             });
     }
 
-    // Method to fetch tweet retweeters using tweet id
+    /**
+     * **Fetches** the **list of users** who **retweeted** the given tweet
+     * @param tweetId The **rest id** of the target tweet
+     * @param count The **batch size** of the list
+     * @param cursor The **cursor** to the **next batch** of users. If blank, **first** batch is fetched
+     */
     getTweetRetweeters(
         tweetId: string,
         count: number,
@@ -171,78 +173,68 @@ export class TweetService extends FetcherService {
     ): Promise<Response<{ retweeters: User[], next: string }>> {
         return this.fetchData(tweetRetweetUrl(tweetId, count, cursor))
             .then(res => {
-                var retweeters: User[] = [];
-                var next: string = '';
-
-                // Extracting raw retweeters list from response
-                res = findJSONKey(res, 'entries');
-
-                // Iterating over the raw list of likes
-                for (var entry of res) {
-                    // Checking if entry is of type user
-                    if(entry['entryId'].indexOf('user') != -1) {
-                        // Adding the user to list of retweeters
-                        retweeters.push(new User().deserialize(findJSONKey(entry, 'result')));
-                    }
-                    // If entry is of type bottom cursor
-                    else if(entry['entryId'].indexOf('cursor-bottom') != -1) {
-                        next = findJSONKey(entry, 'value');
-                    }
+                // If tweet does not exist
+                if (!Object.keys(res['data']['retweeters_timeline']).length) {
+                    return new Response<{ retweeters: User[], next: string }>(
+                        false,
+                        new Error(Errors.TweetNotFound),
+                        { retweeters: [], next: '' }
+                    );
                 }
-
-                return new Response<{ retweeters: User[], next: string }>(
-                    true,
-                    new Error(null),
-                    { retweeters: retweeters, next: next }
-                );
+                // If retweeters found
+                else {
+                    var data = extractTweetRetweeters(res);
+                    return new Response<{ retweeters: User[], next: string }>(
+                        true,
+                        new Error(Errors.NoError),
+                        { retweeters: data.retweeters, next: data.next }
+                    );
+                }
             })
-            // If error parsing json
+            // If other run-time error occured
             .catch(err => {
                 return new Response<{ retweeters: User[], next: string }>(
                     false,
-                    new Error(err),
+                    new Error(Errors.FatalError),
                     { retweeters: [], next: '' }
                 );
             });
     }
 
-    // Method to fetch tweet replies using tweet id
+    /**
+     * **Fetches** the **list of replies** to the given tweet
+     * @param tweetId The **rest id** of the target tweet
+     * @param cursor The **cursor** to the **next batch** of replies. If blank, **first** batch is fetched
+     */
     getTweetReplies(
         tweetId: string,
         cursor: string
     ): Promise<Response<{ replies: Tweet[], next: string }>> {
         return this.fetchData(tweetRepliesUrl(tweetId, cursor))
             .then(res => {
-                var replies: Tweet[] = [];
-                var next: string = '';
-
-                // Extracting raw tweet data from response
-                res = findJSONKey(res, 'entries');
-
-                // Iterating over raw list of replies
-                for (var entry of res) {
-                    // Checking if entry is of type reply
-                    if (entry['entryId'].indexOf('conversationthread') != -1) {
-                        // Adding the reply to list of replies
-                        replies.push(new Tweet().deserialize(findJSONKey(entry, 'result')));
-                    }
-                    // If entry is of type bottom cursor
-                    else if(entry['entryId'].indexOf('cursor-bottom') != -1) {
-                        next = findJSONKey(entry, 'value');
-                    }
+                // If tweet does not exist
+                if (!Object.keys(res['data']).length) {
+                    return new Response<{ replies: Tweet[], next: string }>(
+                        false,
+                        new Error(Errors.TweetNotFound),
+                        { replies: [], next: '' }
+                    );
                 }
-
-                return new Response<{ replies: Tweet[], next: string }>(
-                    true,
-                    new Error(null),
-                    { replies: replies, next: next }
-                );
+                // If tweet exists
+                else {
+                    var data = extractTweetReplies(res);
+                    return new Response<{ replies: Tweet[], next: string }>(
+                        true,
+                        new Error(Errors.NoError),
+                        { replies: data.replies, next: data.next }
+                    );
+                }
             })
-            // If error parsing json
+            // If other run-time error occured
             .catch(err => {
                 return new Response<{ replies: Tweet[], next: string }>(
                     false,
-                    new Error(err),
+                    new Error(Errors.FatalError),
                     { replies: [], next: '' }
                 );
             });

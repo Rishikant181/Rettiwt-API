@@ -1,10 +1,11 @@
 // This file contains the service that handles getting and posting User account data to and from official TwitterAPI
 
-// Custom libs
-
+// CUSTOM LIBS
 import { FetcherService } from '../FetcherService';
 
+/* TYPES */
 import {
+    Errors,
     Error,
     Response
 } from '../../schema/types/HTTP'
@@ -12,6 +13,7 @@ import {
 import { User } from '../../schema/types/UserAccountData';
 import { Tweet } from '../../schema/types/TweetData';
 
+/* HELPERS */
 import {
     userAccountUrl,
     userFollowingUrl,
@@ -19,11 +21,23 @@ import {
     userLikesUrl
 } from '../helper/Requests';
 
-import { findJSONKey } from '../helper/Parser';
+import {
+    extractUserAccountDetails,
+    extractUserFollowing,
+    extractUserFollowers,
+    extractUserLikes
+} from '../helper/Extractors';
 
+/**
+ * A *service* that deals with **fetching** of data related to **user** account
+ */
 export class UserAccountService extends FetcherService {
     // MEMBER METHODS
-    // The constructor
+    /**
+     * @param authToken The **authetication token** received from TwitterAPI
+     * @param csrfToken The **csrf token** received from TwitterAPI
+     * @param cookie The **cookie** for the **logged in user account** received from TwitterAPI
+     */
     constructor(
         authToken: string,
         csrfToken: string,
@@ -32,27 +46,47 @@ export class UserAccountService extends FetcherService {
         super(authToken, csrfToken, cookie);
     }
 
-    // Method to fetch the user account details using screen name
+    /**
+     * **Fetches** account **details** of the user with the given **screen name**
+     * @param screenName The screen name of the **target** user. Example: "1canw1n"
+     */
     getUserAccountDetails(screenName: string): Promise<Response<User>> {
         return this.fetchData(userAccountUrl(screenName))
             .then(res => {
-                return new Response<User>(
-                    true,
-                    new Error(null),
-                    new User().deserialize(findJSONKey(res, 'result')),
-                );
+                // If user does not exist
+                if (!Object.keys(res['data']).length) {
+                    return new Response<User>(
+                        false,
+                        new Error(Errors.UserNotFound),
+                        {},
+                    );
+                }
+                // If user exists
+                else {
+                    var data = extractUserAccountDetails(res);
+                    return new Response<User>(
+                        true,
+                        new Error(Errors.NoError),
+                        new User().deserialize(data),
+                    );
+                }
             })
-            // If error parsing data
+            // If other run-time errors
             .catch(err => {
                 return new Response<User>(
                     false,
-                    new Error(err),
-                    new User(),
+                    new Error(Errors.FatalError),
+                    {},
                 );
             });
     }
 
-    // Method to fetch the list of users followed by given user
+    /**
+     * **Fetches** the list of **users followed by** the target user
+     * @param userId The **rest id** of the **target** user
+     * @param count The **batch size** of the list
+     * @param cursor The **cursor** to **next** batch. If blank, **first** batch is fetched
+     */
     getUserFollowing(
         userId: string,
         count: number,
@@ -60,48 +94,40 @@ export class UserAccountService extends FetcherService {
     ): Promise<Response<{ following: User[], next: string }>> {
         return this.fetchData(userFollowingUrl(userId, count, cursor))
             .then(res => {
-                var following: User[] = [];
-                var next: string = '';
-
-                // Extracting the raw list of following
-                res = findJSONKey(res, 'entries');
-
-                // Iterating over the raw list of following
-                for (var entry of res) {
-                    // Checking if the entry is of type user
-                    if (entry['entryId'].indexOf('user') != -1) {
-                        // Adding the followed users to list of users
-                        following.push(new User().deserialize(findJSONKey(entry, 'result')));
-                    }
-                    // If entry is of type bottom cursor
-                    else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
-                        // Storing the cursor to next batch
-                        /**
-                         * Replacing '|' with '%7C'
-                         * Template string does not(apparently) implicitly replace characters with their url encodings.
-                         * Therefore not explicitly replacing casuses bad request
-                         */
-                        next = findJSONKey(entry, 'value').replace('|', '%7C');
-                    }
+                // If user does not exists
+                if (!Object.keys(res['data']['user']).length) {
+                    return new Response<{ following: User[], next: string }>(
+                        false,
+                        new Error(Errors.UserNotFound),
+                        { following: [], next: '' }
+                    );
                 }
-
-                return new Response<{ following: User[], next: string }>(
-                    true,
-                    new Error(null),
-                    { following: following, next: next }
-                );
+                // If user exists
+                else {
+                    var data = extractUserFollowing(res);
+                    return new Response<{ following: User[], next: string }>(
+                        true,
+                        new Error(Errors.NoError),
+                        { following: data.following, next: data.next }
+                    );
+                }
             })
-            // If error parsing json
+            // If other run-time error
             .catch(err => {
                 return new Response<{ following: User[], next: string }>(
                     false,
-                    new Error(err),
+                    new Error(Errors.FatalError),
                     { following: [], next: '' }
                 )
             });
     }
 
-    // Method to fetch a list of followers of the given user
+    /**
+     * **Fetches** the list of **users following** the target user
+     * @param userId The **rest id** of the **target** user
+     * @param count The **batch size** of the list
+     * @param cursor The **cursor** to **next** batch. If blank, **first** batch is fetched
+     */
     getUserFollowers(
         userId: string,
         count: number,
@@ -109,38 +135,25 @@ export class UserAccountService extends FetcherService {
     ): Promise<Response<{ followers: User[], next: string }>> {
         return this.fetchData(userFollowersUrl(userId, count, cursor))
             .then(res => {
-                var followers: User[] = [];
-                var next: string = '';
-
-                // Extracting the raw list of followers
-                res = findJSONKey(res, 'entries');
-
-                // Itearating over the raw list of following
-                for (var entry of res) {
-                    // Checking if the entry is of type user
-                    if (entry['entryId'].indexOf('user') != -1) {
-                        // Adding the follower to list of followers
-                        followers.push(new User().deserialize(findJSONKey(entry, 'result')));
-                    }
-                    // If entry is of type bottom cursor
-                    else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
-                        // Storing the cursor to next batch
-                        /**
-                         * Replacing '|' with '%7C'
-                         * Template string does not(apparently) implicitly replace characters with their url encodings.
-                         * Therefore not explicitly replacing casuses bad request
-                         */
-                        next = findJSONKey(entry, 'value').replace('|', '%7C');
-                    }
+                // If user does not exist
+                if (!Object.keys(res['data']['user']).length) {
+                    return new Response<{ followers: User[], next: string }>(
+                        false,
+                        new Error(Errors.UserNotFound),
+                        { followers: [], next: [] }
+                    );
                 }
-
-                return new Response<{ followers: User[], next: string }>(
-                    true,
-                    new Error(null),
-                    { followers: followers, next: next }
-                );
+                // If user exists
+                else {
+                    var data = extractUserFollowers(res);
+                    return new Response<{ followers: User[], next: string }>(
+                        true,
+                        new Error(Errors.NoError),
+                        { followers: data.followers, next: data.next }
+                    );
+                }
             })
-            // If error parsing json
+            // If other run-time error
             .catch(err => {
                 return new Response<{ followers: User[], next: string }>(
                     false,
@@ -150,7 +163,12 @@ export class UserAccountService extends FetcherService {
             });
     }
 
-    // Method to fetch the list of tweets liked by the user
+    /**
+     * **Fetches** the list of **tweets liked** by the target user
+     * @param userId The **rest id** of the **target** user
+     * @param count The **batch size** of the list
+     * @param cursor The **cursor** to **next** batch. If blank, **first** batch is fetched
+     */
     getUserLikes(
         userId: string,
         count: number,
@@ -158,37 +176,23 @@ export class UserAccountService extends FetcherService {
     ): Promise<Response<{ tweets: Tweet[], next: string }>> {
         return this.fetchData(userLikesUrl(userId, count, cursor))
             .then(res => {
-                var tweets: Tweet[] = [];
-                var next: string = '';
-
-                // Extracting the raw list of followers
-                //@ts-ignore
-                res = findJSONKey(res, 'entries');
-
-                // Itearating over the raw list of following
-                for (var entry of res) {
-                    // Checking if the entry is of type user
-                    if (entry['entryId'].indexOf('tweet') != -1) {
-                        // Adding the tweet to list of liked tweets
-                        tweets.push(new Tweet().deserialize(findJSONKey(entry, 'result')));
-                    }
-                    // If entry is of type bottom cursor
-                    else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
-                        // Storing the cursor to next batch
-                        /**
-                         * Replacing '|' with '%7C'
-                         * Template string does not(apparently) implicitly replace characters with their url encodings.
-                         * Therefore not explicitly replacing casuses bad request
-                         */
-                        next = findJSONKey(entry, 'value').replace('|', '%7C');
-                    }
+                // If user not found
+                if (!Object.keys(res['data']['user']).length) {
+                    return new Response<{ tweets: Tweet[], next: string }>(
+                        false,
+                        new Error(Errors.UserNotFound),
+                        { tweets: [], next: '' }
+                    );
                 }
-
-                return new Response<{ tweets: Tweet[], next: string }>(
-                    true,
-                    new Error(null),
-                    { tweets: tweets, next: next }
-                );
+                // If user found
+                else {
+                    var data = extractUserLikes(res);
+                    return new Response<{ tweets: Tweet[], next: string }>(
+                        true,
+                        new Error(Errors.NoError),
+                        { tweets: data.tweets, next: data.next }
+                    );
+                }
             })
             // If error parsing json
             .catch(err => {
