@@ -1,9 +1,9 @@
 // This file contains various interfaces that make handling custom data types easier
 
 /**
- * This is a **Deserializable** *interface*
+ * This is a *Deserializable* *interface*
  * 
- * Any class that implements **Deserializable** means that the class can be used to **store data**.
+ * Any class that implements *Deserializable* means that the class can be used to **store data**.
  * Data is stored in the class by using the **deserialize()** method by passing in the data to store.
  * 
  * **NOTE**: Exactly how the data is parsed and stored is **handled by the class**
