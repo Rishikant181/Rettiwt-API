@@ -1,6 +1,11 @@
 // This file contains various methods for extracting data from incoming JSON
 
-// Method to search for a value from a given JSON, when the key is supplied
+/**
+ * **Finds** the **value** associated with the **given** key inside the given *json*
+ * @param data The *json* data withing which to **search** for the **value**
+ * @param key The **key** to **search for**
+ * @param last Whether to begin **searchin** from the **end**
+ */
 export function findJSONKey(data: any, key: string, last: boolean = false): any {
     var jsonStr: string = JSON.stringify(data);                                 // To store the input data as string
     var extStr: string = '';                                                    // To store the extracted string
@@ -68,7 +73,11 @@ export function findJSONKey(data: any, key: string, last: boolean = false): any 
     }
 }
 
-// Method to return a sub object, containing the given key-value pair, in a nested json
+/**
+ * **Extracts** the **parent object** within which the given **key-value** pair **exists**
+ * @param data The *json* data within which to **search**
+ * @param query The **key-value** pair to **search for**, **format**: { "key": "value" }
+ */
 export function filterJSON(data: any, query: any): any {
     var jsonStr: string = JSON.stringify(data);                             // To store the input JSON as a string
     var atPos: number = 0                                                   // To store the index of the key-value pair
