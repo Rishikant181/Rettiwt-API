@@ -1,9 +1,9 @@
 // This file contains the service that handles getting and posting User account data to and from official TwitterAPI
 
-// Custom libs
-
+// CUSTOM LIBS
 import { FetcherService } from '../FetcherService';
 
+/* TYPES */
 import {
     Errors,
     Error,
@@ -13,6 +13,7 @@ import {
 import { User } from '../../schema/types/UserAccountData';
 import { Tweet } from '../../schema/types/TweetData';
 
+/* HELPERS */
 import {
     userAccountUrl,
     userFollowingUrl,

@@ -1,9 +1,9 @@
 // This file contains the serivce that handles fetching of various tweets and other similar content from official API
 
 // CUSTOM LIBS
-
 import { FetcherService } from "../FetcherService";
 
+/* TYPES */
 import {
     Errors,
     Error,
@@ -19,6 +19,7 @@ import {
     User
 } from "../../schema/types/UserAccountData";
 
+/* HELPERS */
 import {
     tweetsUrl,
     tweetDetailsUrl,
@@ -27,7 +28,13 @@ import {
     tweetRetweetUrl
 } from '../helper/Requests';
 
-import { filterJSON, findJSONKey } from "../helper/Parser";
+import {
+    extractTweet,
+    extractTweetLikers,
+    extractTweetReplies,
+    extractTweetRetweeters,
+    extractTweets
+} from "../helper/Extractors";
 
 export class TweetService extends FetcherService {
     // MEMBER METHODS
@@ -47,38 +54,12 @@ export class TweetService extends FetcherService {
     ): Promise<Response<{ tweets: Tweet[], next: string }>> {
         return this.fetchData(tweetsUrl(filter, cursor))
             .then(res => {
-                var tweets: Tweet[] = [];
-                var next: '';
-
-                // Extracting the cursor to next batch
-                next = filterJSON(res, { "cursorType": "Bottom" })['value'];
-
-                // Getting the raw list of tweets from response
-                res = findJSONKey(res, 'tweets');
-
-                // Checking if empty tweet list returned
-                // If empty, returning
-                if (Object.keys(res).length == 0) {
-                    return new Response<{ tweets: Tweet[], next: string }>(
-                        false,
-                        new Error(Errors.NoTweetsFound),
-                        { tweets: [], next: '' }
-                    );
-                }
-                // If not empty, extracting tweets
-                else {
-                    // Iterating through the json array of tweets
-                    for (var key of Object.keys(res)) {
-                        // Adding the tweets to the tweets list
-                        tweets.push(new Tweet().deserialize({ rest_id: res[key]['id_str'], legacy: res[key] }));
-                    }
-
-                    return new Response<{ tweets: Tweet[], next: string }>(
-                        true,
-                        new Error(Errors.NoError),
-                        { tweets: tweets, next: next }
-                    );
-                }
+                var data = extractTweets(res);                
+                return new Response<{ tweets: Tweet[], next: string }>(
+                    data.tweets.length ? true : false,                          // Setting true or false based on tweets found or not
+                    new Error(Errors.NoError),
+                    { tweets: data.tweets, next: data.next }
+                );
             })
             // If other run-time error occured
             .catch(err => {
@@ -104,21 +85,11 @@ export class TweetService extends FetcherService {
                 }
                 // If tweet exists
                 else {
-                    var tweet: Tweet;
-
-                    // Extracting raw list of tweets from response
-                    res = findJSONKey(res, 'entries');
-
-                    // Extracting required raw tweet from response
-                    res = findJSONKey(res.filter((item: any) => item['entryId'].indexOf(tweetId) != -1)[0], 'result');
-
-                    // Storing the tweet in a tweet object
-                    tweet = new Tweet().deserialize(res);
-
+                    var data = extractTweet(res ,tweetId);
                     return new Response<Tweet>(
                         true,
                         new Error(Errors.NoError),
-                        tweet
+                        data
                     );
                 }
             })
@@ -150,28 +121,11 @@ export class TweetService extends FetcherService {
                 }
                 // If likers found
                 else {
-                    var likers: User[] = [];
-                    var next: string = '';
-
-                    // Extracting raw likes list from response
-                    res = findJSONKey(res, 'entries');
-
-                    // Extracting cursor to next batch
-                    next = filterJSON(res, { "cursorType": "Bottom" })['value'];
-
-                    // Iterating over the raw list of likers
-                    for (var entry of res) {
-                        // Checking if entry is of type user
-                        if (entry['entryId'].indexOf('user') != -1) {
-                            // Adding the user to list of likers
-                            likers.push(new User().deserialize(findJSONKey(entry, 'result')));
-                        }
-                    }
-
+                    var data = extractTweetLikers(res);
                     return new Response<{ likers: User[], next: string }>(
                         true,
                         new Error(Errors.NoError),
-                        { likers: likers, next: next }
+                        { likers: data.likers, next: data.next }
                     );
                 }
             })
@@ -204,28 +158,11 @@ export class TweetService extends FetcherService {
                 }
                 // If retweeters found
                 else {
-                    var retweeters: User[] = [];
-                    var next: string = '';
-
-                    // Extracting raw retweeters list from response
-                    res = findJSONKey(res, 'entries');
-
-                    // Extracting cursor to next batch
-                    next = filterJSON(res, { "cursorType": "Bottom" })['value'];
-
-                    // Iterating over the raw list of likes
-                    for (var entry of res) {
-                        // Checking if entry is of type user
-                        if (entry['entryId'].indexOf('user') != -1) {
-                            // Adding the user to list of retweeters
-                            retweeters.push(new User().deserialize(findJSONKey(entry, 'result')));
-                        }
-                    }
-
+                    var data = extractTweetRetweeters(res);
                     return new Response<{ retweeters: User[], next: string }>(
                         true,
                         new Error(Errors.NoError),
-                        { retweeters: retweeters, next: next }
+                        { retweeters: data.retweeters, next: data.next }
                     );
                 }
             })
@@ -256,28 +193,11 @@ export class TweetService extends FetcherService {
                 }
                 // If tweet exists
                 else {
-                    var replies: Tweet[] = [];
-                    var next: string = '';
-
-                    // Extracting raw tweet data from response
-                    res = findJSONKey(res, 'entries');
-
-                    // Extracting cursor to next batch
-                    next = filterJSON(res, { "cursorType": "Bottom" })['value'];
-
-                    // Iterating over raw list of replies
-                    for (var entry of res) {
-                        // Checking if entry is of type reply
-                        if (entry['entryId'].indexOf('conversationthread') != -1) {
-                            // Adding the reply to list of replies
-                            replies.push(new Tweet().deserialize(findJSONKey(entry, 'result')));
-                        }
-                    }
-
+                    var data = extractTweetReplies(res);
                     return new Response<{ replies: Tweet[], next: string }>(
                         true,
                         new Error(Errors.NoError),
-                        { replies: replies, next: next }
+                        { replies: data.replies, next: data.next }
                     );
                 }
             })
