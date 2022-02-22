@@ -19,7 +19,10 @@ export function extractUserAccountDetails(res: any): User {
     return findJSONKey(res, 'result');
 }
 
-// Method to extract the following list of the user from response
+/**
+ * Extracts the raw list of following of the target user from raw response data.
+ * @param res The raw response received from TwitterAPI
+ */
 export function extractUserFollowing(res: any): { following: User[], next: string } {
     var following: User[] = [];
     var next: string = '';
@@ -45,7 +48,10 @@ export function extractUserFollowing(res: any): { following: User[], next: strin
     };
 }
 
-// Method to extract the followers list of the user from response
+/**
+ * Extracts the raw list of followers of the target user from raw response data.
+ * @param res The raw response received from TwitterAPI
+ */
 export function extractUserFollowers(res: any): { followers: User[], next: string } {
     var followers: User[] = [];
     var next: string = '';
@@ -71,7 +77,10 @@ export function extractUserFollowers(res: any): { followers: User[], next: strin
     };
 }
 
-// Method to extract the list of tweets liked by the user from response
+/**
+ * Extracts the raw list of tweets liked by the target user from raw response data.
+ * @param res The raw response received from TwitterAPI
+ */
 export function extractUserLikes(res: any): { tweets: Tweet[], next: string } {
     var tweets: Tweet[] = [];
     var next: string = '';
@@ -99,7 +108,10 @@ export function extractUserLikes(res: any): { tweets: Tweet[], next: string } {
 
 /* TWEETS */
 
-// Method to extract tweets from response
+/**
+ * Extracts the raw list of tweets matching the given filter from raw response data.
+ * @param res The raw response received from TwitterAPI
+ */
 export function extractTweets(res: any) {
     var tweets: Tweet[] = [];
     var next: '';
@@ -125,7 +137,11 @@ export function extractTweets(res: any) {
     };
 }
 
-// Method to extract a tweet from response by id
+/**
+ * Extracts the required tweet from raw response data.
+ * @param res The raw response received from TwitterAPI
+ * @param tweetId The rest id of the tweet to fetch
+ */
 export function extractTweet(res: any, tweetId: string): Tweet {
     var tweet: Tweet;
 
@@ -141,7 +157,10 @@ export function extractTweet(res: any, tweetId: string): Tweet {
     return tweet;
 }
 
-// Method to extract the list of users who liked a tweet
+/**
+ * Extracts the raw list of likers of the target tweet from raw response data.
+ * @param res The raw response received from TwitterAPI
+ */
 export function extractTweetLikers(res: any): { likers: User[], next: string } {
     var likers: User[] = [];
     var next: string = '';
@@ -167,7 +186,10 @@ export function extractTweetLikers(res: any): { likers: User[], next: string } {
     };
 }
 
-// Method to extract list of retweeters of a tweet
+/**
+ * Extracts the raw list of retweeters of the target tweet from raw response data.
+ * @param res The raw response received from TwitterAPI
+ */
 export function extractTweetRetweeters(res: any): { retweeters: User[], next: string } {
     var retweeters: User[] = [];
     var next: string = '';
@@ -193,7 +215,10 @@ export function extractTweetRetweeters(res: any): { retweeters: User[], next: st
     };
 }
 
-// Method to extract list of replies to a tweet
+/**
+ * Extracts the raw list of replies to a target tweet from raw response data.
+ * @param res The raw response received from TwitterAPI
+ */
 export function extractTweetReplies(res: any): { replies: Tweet[], next: string } {
     var replies: Tweet[] = [];
     var next: string = '';

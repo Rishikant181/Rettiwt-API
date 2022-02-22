@@ -3,12 +3,21 @@
 import { TweetFilter } from "../../schema/types/TweetData";
 
 // URLS
-// Method to return the url for fetching user account details from screen name
+
+/**
+ * Creates the url for fetching user account details.
+ * @param screenName The screen name of the target user
+ */
 export function userAccountUrl(screenName: string): string {
     return `https://twitter.com/i/api/graphql/7mjxD3-C6BxitPMVQ6w0-Q/UserByScreenName?variables=%7B%22screen_name%22%3A%22${screenName}%22%2C%22withSafetyModeUserFields%22%3Atrue%2C%22withSuperFollowsUserFields%22%3Atrue%7D`
 }
 
-// Method to return the url for fetching the followers of the given user
+/**
+ * Creates the url for fetching the list of users followed bu target user.
+ * @param userId The rest id of the target user
+ * @param count The batch size of the list of following
+ * @param cursor The cursor to next batch
+ */
 export function userFollowingUrl(
     userId: string,
     count: number,
@@ -28,7 +37,12 @@ export function userFollowingUrl(
     return  url;
 }
 
-// Method to return the url for fetching the list of followers of the given user
+/**
+ * Creates the url for fetching the list of followers of the target user
+ * @param userId The rest id of the target user
+ * @param count The batch size for the list of followers
+ * @param cursor The cusor to next batch
+ */
 export function userFollowersUrl(
     userId: string,
     count: number,
@@ -48,7 +62,12 @@ export function userFollowersUrl(
     return url;
 }
 
-// Method to return the url for fetching the list of tweets like by the user
+/**
+ * Creates the url for fetching the list of tweets liked by the target user
+ * @param userId The rest id of the target user
+ * @param count The batch size for the list of tweets
+ * @param cursor The cusor to next batch
+ */
 export function userLikesUrl(
     userId: string,
     count: number,
@@ -68,7 +87,11 @@ export function userLikesUrl(
     return url;
 }
 
-// Method to return the url for fetching tweets using a given filter
+/**
+ * Creates the url for fetching the list of tweets matching the given filter
+ * @param filter The filter to be used for searching tweets
+ * @param cursor The cusor to next batch
+ */
 export function tweetsUrl(
     filter: TweetFilter,
     cursor: string
@@ -100,7 +123,10 @@ export function tweetsUrl(
     return url;
 }
 
-// Method to return the url for fetching the details of a single tweet
+/**
+ * Creates the url for fetching the details of a given tweet
+ * @param tweetId The rest id of the target tweet
+ */
 export function tweetDetailsUrl(
     tweetId: string
 ): string {
@@ -112,7 +138,11 @@ export function tweetDetailsUrl(
     return url;
 }
 
-// Method to return the url for fetching the replies to a tweet
+/**
+ * Created the url for fetching the list of replies to a given tweet
+ * @param tweetId The rest of the target tweet
+ * @param cursor The curor to next batch
+ */
 export function tweetRepliesUrl(
     tweetId: string,
     cursor: string
@@ -131,7 +161,12 @@ export function tweetRepliesUrl(
     return url;
 }
 
-// Method to return url for fetching the list of users who liked the given tweet
+/**
+ * Created the url for fetching the list of users who liked a given tweet
+ * @param tweetId The rest id of the target tweet
+ * @param count The batch size of the list of users
+ * @param cursor The curor to next batch
+ */
 export function tweetLikesUrl(
     tweetId: string,
     count: number,
@@ -151,7 +186,12 @@ export function tweetLikesUrl(
     return url;
 }
 
-// Method to return the url for fetching the details of a single tweet
+/**
+ * Created the url for fetching the list of user who retweeted the given tweet
+ * @param tweetId The rest id of the target tweet
+ * @param count The batch size of the list of users
+ * @param cursor The curor to next batch
+ */
 export function tweetRetweetUrl(
     tweetId: string,
     count: number,
@@ -172,7 +212,12 @@ export function tweetRetweetUrl(
 }
 
 // HEADERS
-// Method to return a header for unauthorized guest users
+/**
+ * Creates the header required for making authorized HTTP requests
+ * @param authToken The authentication token received from Twitter
+ * @param csrfToken The csrf token received from Twitter
+ * @param cookie The cookie associated with the logged in account
+ */
 export function authorizedHeader(
     authToken: string,
     csrfToken: string,

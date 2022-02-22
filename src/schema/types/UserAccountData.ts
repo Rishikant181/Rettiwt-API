@@ -4,7 +4,7 @@
 import { Deserializable } from "./Data";
 
 /**
- * *Object* to **store** the **UID** of a **user**
+ * Object to store the UID of a user
  */
 export class UserID implements Deserializable {
     // MEMBER DATA
@@ -14,12 +14,11 @@ export class UserID implements Deserializable {
 
     // MEMEBER METHODS
     /**
-     * **Stores** the id of the user in *this* *Object*
+     * Stores the id of the user in this object
      * @param data Has the following params:
-     * @param id The **id/rest_id** of the user
-     * @param userName The **screen_name** of the user
-     * @param fullName The **full name** of the user
-     * @returns A *UserID* object containing the **id** of the **user**
+     * @param id The rest id of the user
+     * @param userName The screen name of the user
+     * @param fullName The full name of the user
      */
     deserialize(data: {
         id: string,
@@ -35,7 +34,7 @@ export class UserID implements Deserializable {
 }
 
 /**
- * *Object* to **store** the complete **details** of the given **user's account**
+ * Object to store the complete details of the given user's account
  */
 export class User implements Deserializable {
     // MEMBER DATA
@@ -54,9 +53,8 @@ export class User implements Deserializable {
 
     // MEMBER METHODS
     /**
-     * **Stores** the **raw** user data from the response **received** from **TwitterAPI**
-     * @param data The **raw** *json* data
-     * @returns A *User* *Object* containing the **user account details**
+     * Stores the raw user data from the response received from TwitterAPI
+     * @param data The raw json data
      */
     deserialize(data: any): this {
         this.user = new UserID().deserialize({
