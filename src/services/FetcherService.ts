@@ -8,6 +8,9 @@ import {
     authorizedHeader
 } from './helper/Requests'
 
+/**
+ * The **base serivice** from which all other **data services** derive their **behaviour**
+ */
 export class FetcherService {
     // MEMBER DATA
     protected authToken: string;                                                   // To store the authentication token
