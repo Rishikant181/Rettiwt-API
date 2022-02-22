@@ -49,7 +49,6 @@ export class UserAccountService extends FetcherService {
     /**
      * **Fetches** account **details** of the user with the given **screen name**
      * @param screenName The screen name of the **target** user. Example: "1canw1n"
-     * @returns A *Promise* of type *Response* of type *User* containing the user account details
      */
     getUserAccountDetails(screenName: string): Promise<Response<User>> {
         return this.fetchData(userAccountUrl(screenName))
@@ -87,7 +86,6 @@ export class UserAccountService extends FetcherService {
      * @param userId The **rest id** of the **target** user
      * @param count The **batch size** of the list
      * @param cursor The **cursor** to **next** batch. If blank, **first** batch is fetched
-     * @returns A *Promise* of type *Response* that **supplies** the list of *User[]*
      */
     getUserFollowing(
         userId: string,
@@ -129,7 +127,6 @@ export class UserAccountService extends FetcherService {
      * @param userId The **rest id** of the **target** user
      * @param count The **batch size** of the list
      * @param cursor The **cursor** to **next** batch. If blank, **first** batch is fetched
-     * @returns A *Promise* of type *Response* that **supplies** the list of *User[]*
      */
     getUserFollowers(
         userId: string,
@@ -171,7 +168,6 @@ export class UserAccountService extends FetcherService {
      * @param userId The **rest id** of the **target** user
      * @param count The **batch size** of the list
      * @param cursor The **cursor** to **next** batch. If blank, **first** batch is fetched
-     * @returns A *Promise* of type *Response* that **supplies** the list of *Tweet[]*
      */
     getUserLikes(
         userId: string,

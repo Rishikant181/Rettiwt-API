@@ -36,8 +36,16 @@ import {
     extractTweets
 } from "../helper/Extractors";
 
+/**
+ * A *Service* that deals with **fetching** of data related to **tweets**
+ */
 export class TweetService extends FetcherService {
     // MEMBER METHODS
+    /**
+     * @param authToken The authetication token received from TwitterAPI
+     * @param csrfToken The csrf token received from TwitterAPI
+     * @param cookie The cookie for the logged in user account received from TwitterAPI
+     */
     constructor(
         authToken: string,
         csrfToken: string,
@@ -46,8 +54,12 @@ export class TweetService extends FetcherService {
         super(authToken, csrfToken, cookie);
     }
 
-    // Method to fetch tweets filtered by the supplied filter
     // TODO: Make this method also fetch the retweets made by the user
+    /**
+     * **Fetches** a **list** of **tweets** that match the given **filter**
+     * @param filter The **filter** be used for **searching** the tweets
+     * @param cursor The **cursor** to the **next batch** of tweets. If blank, **first batch** is fetched
+     */
     getTweets(
         filter: TweetFilter,
         cursor: string
@@ -71,7 +83,10 @@ export class TweetService extends FetcherService {
             });
     }
 
-    // Method to fetch a tweet using it's id
+    /**
+     * **Fetches** the **details** of a single tweet wiht the **given tweet id**
+     * @param tweetId The **rest id** of the target tweet
+     */
     getTweetById(tweetId: string): Promise<Response<Tweet>> {
         return this.fetchData(tweetDetailsUrl(tweetId))
             .then(res => {
@@ -103,7 +118,12 @@ export class TweetService extends FetcherService {
             });
     }
 
-    // Method to fetch tweet likes using tweet id
+    /**
+     * **Fetches** the **list of users** who **liked** the given tweet
+     * @param tweetId The **rest id** of the target tweet
+     * @param count The **batch size** of the list
+     * @param cursor The **cursor** to the **next batch** of users. If blank, **first** batch is fetched
+     */
     getTweetLikers(
         tweetId: string,
         count: number,
@@ -140,7 +160,12 @@ export class TweetService extends FetcherService {
             });
     }
 
-    // Method to fetch tweet retweeters using tweet id
+    /**
+     * **Fetches** the **list of users** who **retweeted** the given tweet
+     * @param tweetId The **rest id** of the target tweet
+     * @param count The **batch size** of the list
+     * @param cursor The **cursor** to the **next batch** of users. If blank, **first** batch is fetched
+     */
     getTweetRetweeters(
         tweetId: string,
         count: number,
@@ -176,7 +201,11 @@ export class TweetService extends FetcherService {
             });
     }
 
-    // Method to fetch tweet replies using tweet id
+    /**
+     * **Fetches** the **list of replies** to the given tweet
+     * @param tweetId The **rest id** of the target tweet
+     * @param cursor The **cursor** to the **next batch** of replies. If blank, **first** batch is fetched
+     */
     getTweetReplies(
         tweetId: string,
         cursor: string
