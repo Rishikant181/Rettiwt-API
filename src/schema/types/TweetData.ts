@@ -4,7 +4,9 @@
 import { Deserializable } from "./Data";
 import { UserID } from './UserAccountData';
 
-// Object to hold filters for Tweets
+/**
+ * Object to store the **filter** to be used for **fetching tweets** from TwitterAPI
+ */
 export class TweetFilter {
     // MEMBER DATA
     words: string[];                                                            // To store the list of words to search
@@ -17,7 +19,9 @@ export class TweetFilter {
     count: number;                                                              // To store the number of tweets to fetch
 
     // MEMBER METHODS
-    // The constructor
+    /**
+     * @param filter A *json* *Object* containing the different type of filters to use
+     */
     constructor(filter: {
         words: string[],
         hashtags: string[],
@@ -32,7 +36,9 @@ export class TweetFilter {
     }
 }
 
-// Object to hold additional tweet entites
+/**
+ * *Object* to **store** the different types of *Tweet* elements like **urls**, **media**, **mentions**, **hashtags**, etc
+ */
 class TweetEntities implements Deserializable {
     // MEMBER DATA
     hastags: string[];                                                          // To store a list of hastags used
@@ -41,7 +47,6 @@ class TweetEntities implements Deserializable {
     media: string[];                                                            // To store urls to various media files
 
     // MEMBER METHODS
-    // The constructor
     constructor() {
         this.hastags = [];
         this.urls = [];
@@ -49,7 +54,11 @@ class TweetEntities implements Deserializable {
         this.media = [];
     }
 
-    // Method to deserialize input data into this object
+    /**
+     * **Stores** the **input data** in this *Object*
+     * @param data The **raw** tweet entities **data** from the response **received** from **TwitterAPI**
+     * @returns A *TweetEntities* *Object* containing the **tweet elements**
+     */
     deserialize(data: any): this {
         // Extracting user mentions
         if(data['user_mentions']) {
@@ -87,7 +96,9 @@ class TweetEntities implements Deserializable {
     }
 }
 
-// Object to hold the actual tweet
+/**
+ * *Object* to **store** a **single tweet**
+ */
 export class Tweet implements Deserializable {
     // MEMBER DATA
     id: string;                                                             // To store the conversation id
@@ -103,7 +114,11 @@ export class Tweet implements Deserializable {
     retweetCount: number;                                                   // To store the number of retweets
 
     // MEMBER METHODS
-    // Method to deserialize input data into this object
+    /**
+     * **Stores** the **input data** in *this* *Object*
+     * @param data The **raw** tweet **data** from the response **received** from **TwitterAPI**
+     * @returns A *Tweet* *Object* containing the **tweet data**
+     */
     deserialize(data: any): this {
         this.id = data['rest_id'];
         this.createdAt = data['legacy']['created_at'];

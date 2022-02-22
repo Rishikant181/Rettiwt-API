@@ -3,7 +3,9 @@
 // CUSTOM LIBS
 import { Deserializable } from "./Data";
 
-// Object to store a user's identification
+/**
+ * *Object* to **store** the **UID** of a **user**
+ */
 export class UserID implements Deserializable {
     // MEMBER DATA
     id: string;                                                             // To store the internal rest id of user account
@@ -11,7 +13,14 @@ export class UserID implements Deserializable {
     fullName: string;                                                       // To store the actual name of the user
 
     // MEMEBER METHODS
-    // Method to deserialize input data into this object
+    /**
+     * **Stores** the id of the user in *this* *Object*
+     * @param data Has the following params:
+     * @param id The **id/rest_id** of the user
+     * @param userName The **screen_name** of the user
+     * @param fullName The **full name** of the user
+     * @returns A *UserID* object containing the **id** of the **user**
+     */
     deserialize(data: {
         id: string,
         userName: string,
@@ -25,7 +34,9 @@ export class UserID implements Deserializable {
     }
 }
 
-// Object to hold the details about a user
+/**
+ * *Object* to **store** the complete **details** of the given **user's account**
+ */
 export class User implements Deserializable {
     // MEMBER DATA
     user: UserID;                                                           // To store the internal rest id of user account
@@ -42,12 +53,11 @@ export class User implements Deserializable {
     profileImage: string;                                                   // To store the url to the profile's image
 
     // MEMBER METHODS
-    // Method to deserialize input data into current object
-    /*
-    For now, this take in input data of 'any' format, then removes unnecessary, non-required fields,
-    then copies required fields from input data
-    NOTE: There might be a more elegant and faster method to do this
-    */
+    /**
+     * **Stores** the **raw** user data from the response **received** from **TwitterAPI**
+     * @param data The **raw** *json* data
+     * @returns A *User* *Object* containing the **user account details**
+     */
     deserialize(data: any): this {
         this.user = new UserID().deserialize({
             id: data['rest_id'],
