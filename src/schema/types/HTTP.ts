@@ -3,9 +3,7 @@
 // TODO: Evaluate the error message and generate different error objects for different errors
 
 /**
- * An *enum* containing all the different type of **error messages** that are used throughout the app
- * 
- * **NOTE**: These error messages are of **internal purposes** only and should not used for communication over HTTP
+ * An enum containing all the different type of error messages that are used throughout the app
  */
 export enum Errors {
     UserNotFound = "An account with given username/id was not found",
@@ -16,9 +14,7 @@ export enum Errors {
 }
 
 /**
- * Object used to store any **error data**
- * 
- * **NOTE**: This object is only used for **internal purposes** only
+ * Object used to store any error data
  */
 export class Error {
     // MEMBER DATA
@@ -28,7 +24,6 @@ export class Error {
     // The constructor
     /**
      * @param err The error message to store.
-     * @returns An **Error** *Object* containing the error data
      */
     constructor(err: Errors) {
         this.message = err;
@@ -36,9 +31,8 @@ export class Error {
 }
 
 /**
- * Object used to store the **response** as returned by the **services**
- * 
- * **NOTE**: This object is only used for **internal purposes**
+ * Object used to store the response as returned by the services.
+ * This is a generic class and the type supplied is the type of data that this reponse object stores in it's data field
  */
 export class Response<Type> {
     // MEMBER DATA
@@ -49,9 +43,8 @@ export class Response<Type> {
     // MEMBER METHODS
     /**
      * @param success Whether the action was successful or not
-     * @param error Stores *Error*, if any
+     * @param error Stores error, if any
      * @param data Any response data that is to be included in the response
-     * @returns A *Response* *Object* containing the response data
      */
     constructor(success: boolean, error: Error, data: any) {
         this.success = success;

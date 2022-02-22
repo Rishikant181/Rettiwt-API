@@ -37,14 +37,14 @@ import {
 } from "../helper/Extractors";
 
 /**
- * A *Service* that deals with **fetching** of data related to **tweets**
+ * A service that deals with fetching of data related to tweets
  */
 export class TweetService extends FetcherService {
     // MEMBER METHODS
     /**
-     * @param authToken The **authetication token** received from TwitterAPI
-     * @param csrfToken The **csrf token** received from TwitterAPI
-     * @param cookie The **cookie** for the **logged in user account** received from TwitterAPI
+     * @param authToken The authetication token received from TwitterAPI
+     * @param csrfToken The csrf token received from TwitterAPI
+     * @param cookie The cookie for the logged in user account received from TwitterAPI
      */
     constructor(
         authToken: string,
@@ -56,9 +56,9 @@ export class TweetService extends FetcherService {
 
     // TODO: Make this method also fetch the retweets made by the user
     /**
-     * **Fetches** a **list** of **tweets** that match the given **filter**
-     * @param filter The **filter** be used for **searching** the tweets
-     * @param cursor The **cursor** to the **next batch** of tweets. If blank, **first batch** is fetched
+     * Fetches a list of tweets that match the given filter
+     * @param filter The filter be used for searching the tweets
+     * @param cursor The cursor to the next batch of tweets. If blank, first batch is fetched
      */
     getTweets(
         filter: TweetFilter,
@@ -84,8 +84,8 @@ export class TweetService extends FetcherService {
     }
 
     /**
-     * **Fetches** the **details** of a single tweet wiht the **given tweet id**
-     * @param tweetId The **rest id** of the target tweet
+     * Fetches the details of a single tweet wiht the given tweet id
+     * @param tweetId The rest id of the target tweet
      */
     getTweetById(tweetId: string): Promise<Response<Tweet>> {
         return this.fetchData(tweetDetailsUrl(tweetId))
@@ -119,10 +119,10 @@ export class TweetService extends FetcherService {
     }
 
     /**
-     * **Fetches** the **list of users** who **liked** the given tweet
-     * @param tweetId The **rest id** of the target tweet
-     * @param count The **batch size** of the list
-     * @param cursor The **cursor** to the **next batch** of users. If blank, **first** batch is fetched
+     * Fetches the list of users who liked the given tweet
+     * @param tweetId The rest id of the target tweet
+     * @param count The batch size of the list
+     * @param cursor The cursor to the next batch of users. If blank, first batch is fetched
      */
     getTweetLikers(
         tweetId: string,
@@ -161,10 +161,10 @@ export class TweetService extends FetcherService {
     }
 
     /**
-     * **Fetches** the **list of users** who **retweeted** the given tweet
-     * @param tweetId The **rest id** of the target tweet
-     * @param count The **batch size** of the list
-     * @param cursor The **cursor** to the **next batch** of users. If blank, **first** batch is fetched
+     * Fetches the list of users who retweeted the given tweet
+     * @param tweetId The rest id of the target tweet
+     * @param count The batch size of the list
+     * @param cursor The cursor to the next batch of users. If blank, first batch is fetched
      */
     getTweetRetweeters(
         tweetId: string,
@@ -202,9 +202,9 @@ export class TweetService extends FetcherService {
     }
 
     /**
-     * **Fetches** the **list of replies** to the given tweet
-     * @param tweetId The **rest id** of the target tweet
-     * @param cursor The **cursor** to the **next batch** of replies. If blank, **first** batch is fetched
+     * Fetches the list of replies to the given tweet
+     * @param tweetId The rest id of the target tweet
+     * @param cursor The cursor to the next batch of replies. If blank, first batch is fetched
      */
     getTweetReplies(
         tweetId: string,

@@ -9,7 +9,7 @@ import {
 } from './helper/Requests'
 
 /**
- * The **base serivice** from which all other **data services** derive their **behaviour**
+ * The base serivice from which all other data services derive their behaviour
  */
 export class FetcherService {
     // MEMBER DATA
@@ -19,9 +19,9 @@ export class FetcherService {
 
     // MEMBER METHODS
     /**
-     * @param authToken The **authetication token** received from TwitterAPI
-     * @param csrfToken The **csrf token** received from TwitterAPI
-     * @param cookie The **cookie** for the **logged in user account** received from TwitterAPI
+     * @param authToken The authetication token received from TwitterAPI
+     * @param csrfToken The csrf token received from TwitterAPI
+     * @param cookie The cookie for the logged in user account received from TwitterAPI
      */
     constructor(
         authToken: string,
@@ -35,8 +35,8 @@ export class FetcherService {
     }
 
     /**
-     * **Fetches** the absolute **raw** *json* data from give url
-     * @param url The **url** to fetch data
+     * Fetches the absolute raw json data from give url
+     * @param url The url to fetch data from
      */
     protected fetchData(url: string): Promise<any> {
         return fetch(url, {

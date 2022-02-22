@@ -5,7 +5,7 @@ import { Deserializable } from "./Data";
 import { UserID } from './UserAccountData';
 
 /**
- * Object to store the **filter** to be used for **fetching tweets** from TwitterAPI
+ * Object to store the filter to be used for fetching tweets from TwitterAPI
  */
 export class TweetFilter {
     // MEMBER DATA
@@ -20,7 +20,7 @@ export class TweetFilter {
 
     // MEMBER METHODS
     /**
-     * @param filter A *json* *Object* containing the different type of filters to use
+     * @param filter A json object containing the different type of filters to use
      */
     constructor(filter: {
         words: string[],
@@ -37,7 +37,7 @@ export class TweetFilter {
 }
 
 /**
- * *Object* to **store** the different types of *Tweet* elements like **urls**, **media**, **mentions**, **hashtags**, etc
+ * Object to store the different types of tweet elements like urls, media, mentions, hashtags, etc
  */
 class TweetEntities implements Deserializable {
     // MEMBER DATA
@@ -55,9 +55,8 @@ class TweetEntities implements Deserializable {
     }
 
     /**
-     * **Stores** the **input data** in this *Object*
-     * @param data The **raw** tweet entities **data** from the response **received** from **TwitterAPI**
-     * @returns A *TweetEntities* *Object* containing the **tweet elements**
+     * Stores the input data in this object
+     * @param data The raw tweet entities data from the response received from TwitterAPI
      */
     deserialize(data: any): this {
         // Extracting user mentions
@@ -97,7 +96,7 @@ class TweetEntities implements Deserializable {
 }
 
 /**
- * *Object* to **store** a **single tweet**
+ * Object to store a single tweet
  */
 export class Tweet implements Deserializable {
     // MEMBER DATA
@@ -115,9 +114,9 @@ export class Tweet implements Deserializable {
 
     // MEMBER METHODS
     /**
-     * **Stores** the **input data** in *this* *Object*
-     * @param data The **raw** tweet **data** from the response **received** from **TwitterAPI**
-     * @returns A *Tweet* *Object* containing the **tweet data**
+     * Stores the input data in this object
+     * @param data The raw tweet data from the response received from TwitterAPI
+     * @returns A tweet object containing the tweet data
      */
     deserialize(data: any): this {
         this.id = data['rest_id'];
