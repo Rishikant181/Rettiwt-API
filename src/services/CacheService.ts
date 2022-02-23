@@ -64,11 +64,11 @@ export class CacheService {
         if (await this.connectDB()) {
             // If list of data to be cached
             if (Array.isArray(data) && data.length) {
-                return await (await this.client.db(this.dbName).collection(data[0].constructor.name).insertMany(data)).acknowledged;
+                return (await this.client.db(this.dbName).collection(data[0].constructor.name).insertMany(data)).acknowledged;
             }
             // If single data to be cached
             else {
-                return await (await this.client.db(this.dbName).collection(data.constructor.name).insertOne(data)).acknowledged;
+                return (await this.client.db(this.dbName).collection(data.constructor.name).insertOne(data)).acknowledged;
             }
         }
         // If connection to database failed
