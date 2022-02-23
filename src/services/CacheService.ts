@@ -1,10 +1,5 @@
 // PACKAGE LIBS
-import {
-    MongoClient,
-    Document,
-    InsertOneResult,
-    InsertManyResult
-} from "mongodb";
+import { MongoClient } from "mongodb";
 
 // CUSTOM LIBS
 import { config } from '../config/env';
@@ -61,10 +56,10 @@ export class CacheService {
 
     /**
      * Indexes the data inserted into the cache by mapping their id/rest id to their internal Object id and collection name
-     * @param res The result object of mongodb insert operation
+     * @param objectId The ObjectID(s) of the document(s) inserted into db
      * @param data The data to be indexed
      */
-    private index(res: InsertManyResult<Document> | InsertOneResult<Document>, data: any): void {
+    private async index(objectId: string[], data: any[]): Promise<void> {
         
     }
 
