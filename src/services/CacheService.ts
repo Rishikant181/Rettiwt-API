@@ -3,8 +3,9 @@ import { MongoClient } from "mongodb";
 
 // CUSTOM LIBS
 import { config } from '../config/env';
-import { User } from "../schema/types/UserAccountData";
-import { Tweet } from "../schema/types/TweetData";
+import { User } from '../schema/types/UserAccountData';
+import { Tweet } from '../schema/types/TweetData';
+import { dataToList } from './helper/Parser';
 
 /**
  * This service handles reading and writing of data from and to cache
@@ -70,16 +71,12 @@ export class CacheService {
      * @returns Whether writing to cache was successful or not
      */
     async write(data: User | User[] | Tweet | Tweet[]): Promise<boolean> {
+        // Converting the data to a list of data
+        data = dataToList(data);
+        
         // If connection to database successful
         if (await this.connectDB()) {
-            // If list of data to be cached
-            if (Array.isArray(data) && data.length) {
-                return (await this.client.db(this.dbName).collection(data[0].constructor.name).insertMany(data)).acknowledged;
-            }
-            // If single data to be cached
-            else {
-                return (await this.client.db(this.dbName).collection(data.constructor.name).insertOne(data)).acknowledged;
-            }
+            return (await this.client.db(this.dbName).collection(data[0].constructor.name).insertMany(data)).acknowledged;
         }
         // If connection to database failed
         else {
