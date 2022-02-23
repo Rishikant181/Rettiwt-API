@@ -58,6 +58,7 @@ export class CacheService {
      * Stores the input data into the cache.
      * Each type of data is stored in it's respective collection in the database
      * @param data The input data to store
+     * @returns Whether writing to cache was successful or not
      */
     async write(data: User | User[] | Tweet | Tweet[]): Promise<boolean> {
         // If connection to database successful
