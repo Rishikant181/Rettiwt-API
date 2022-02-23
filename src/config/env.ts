@@ -5,10 +5,11 @@ export const config = {
             "host": "mongodb://127.0.0.1",
             "port": 27017,
             "databases": {
-                "cache": {
-                    "name": "cache",
+                "ai-cache": {
+                    "name": "ai-cache",
                     "collections": {
-                        "ai": "ai"
+                        "users": "users",
+                        "tweets": "tweets"
                     }
                 }
             }
