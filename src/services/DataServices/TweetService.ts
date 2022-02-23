@@ -1,5 +1,3 @@
-// This file contains the serivce that handles fetching of various tweets and other similar content from official API
-
 // CUSTOM LIBS
 import { FetcherService } from "../FetcherService";
 

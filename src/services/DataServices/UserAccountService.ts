@@ -1,5 +1,3 @@
-// This file contains the service that handles getting and posting User account data to and from official TwitterAPI
-
 // CUSTOM LIBS
 import { FetcherService } from '../FetcherService';
 
