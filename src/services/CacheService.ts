@@ -14,18 +14,14 @@ export class CacheService {
     private client: MongoClient;                                        // To store the connection to mongodb database
     private connUrl: string;                                            // To store the connection url
     private dbName: string;                                             // To store the name of database
-    private userCol: string;                                            // To store the name of user collection
-    private tweetCol: string;                                           // To store the name of tweet collection
 
     // MEMBER METHODS
     constructor() {
         // Initialising the connection url to database server
         this.connUrl = `${config['server']['db']['host']}:${config['server']['db']['port']}`;
 
-        // Initialising database and collection names
-        this.dbName = config['server']['db']['databases']['ai-cache']['name'];
-        this.userCol = config['server']['db']['databases']['ai-cache']['collections']['users'];
-        this.tweetCol = config['server']['db']['databases']['ai-cache']['collections']['tweets'];
+        // Initialising database name
+        this.dbName = config['server']['db']['databases']['ai-cache'];
 
         // Creating connection to database
         this.client = new MongoClient(this.connUrl);
@@ -61,10 +57,22 @@ export class CacheService {
     }
 
     /**
-     * Stores the input data into the cache
+     * Stores the input data into the cache.
+     * Each type of data is stored in it's respective collection in the database
      * @param data The input data to store
      */
-    write(data: User | Tweet): Promise<boolean> {
-        
+    async write(data: User | User[] | Tweet | Tweet[]): Promise<boolean> {
+        var result;                                                             // To store result of db operation
+
+        // If list of data to be cached
+        if(Array.isArray(data)) {
+            result = await this.client.db(this.dbName).collection(typeof data).insertMany(data);
+        }
+        // If single data to be cached
+        else {
+            result = await this.client.db(this.dbName).collection(typeof data).insertOne(data);
+        }
+
+        return Promise.resolve(result.acknowledged);
     }
 }
