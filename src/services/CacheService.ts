@@ -33,7 +33,7 @@ export class CacheService {
      */
     private async connectDB(): Promise<boolean> {
         var success: boolean = false;                                           // To store whether connection to db successful or not
-        
+
         // Trying to connect to database
         try {
             // Connecting to db
@@ -42,12 +42,10 @@ export class CacheService {
             // Verifying connection
             await this.client.db(this.dbName).command({ ping: 1 });
 
-            console.log("Connected to caching server successfully!");
-
             success = true;
         }
         // If connecting to database failed
-        catch(err) {
+        catch (err) {
             console.log("Failed to connect to caching server");
             console.log(err);
         }
@@ -62,17 +60,20 @@ export class CacheService {
      * @param data The input data to store
      */
     async write(data: User | User[] | Tweet | Tweet[]): Promise<boolean> {
-        var result;                                                             // To store result of db operation
-
-        // If list of data to be cached
-        if(Array.isArray(data)) {
-            result = await this.client.db(this.dbName).collection(typeof data).insertMany(data);
+        // If connection to database successful
+        if (await this.connectDB()) {
+            // If list of data to be cached
+            if (Array.isArray(data) && data.length) {
+                return await (await this.client.db(this.dbName).collection(data[0].constructor.name).insertMany(data)).acknowledged;
+            }
+            // If single data to be cached
+            else {
+                return await (await this.client.db(this.dbName).collection(data.constructor.name).insertOne(data)).acknowledged;
+            }
         }
-        // If single data to be cached
+        // If connection to database failed
         else {
-            result = await this.client.db(this.dbName).collection(typeof data).insertOne(data);
+            return Promise.resolve(false);
         }
-
-        return Promise.resolve(result.acknowledged);
     }
 }
