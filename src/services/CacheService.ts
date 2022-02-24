@@ -95,6 +95,17 @@ export class CacheService {
         // Inserting the index into index collection
         await this.client.db(this.dbName).collection(this.dbIndex).insertMany(index);
     }
+    
+    /**
+     * Checks if the given data item is already cached or not
+     * @param data The data item to be checked
+     */
+    private async isCached(data: any): Promise<boolean> {
+        // Finding a matching data from cache
+        var res = await this.client.db(this.dbName).collection(this.dbIndex).findOne({"id": findJSONKey(data, 'id')})
+
+        return res ? true : false;
+    }
 
     /**
      * Stores the input data into the cache.
@@ -108,6 +119,11 @@ export class CacheService {
         
         // If connection to database successful
         if (await this.connectDB()) {
+            // If data already exists in cache, skip
+            if(await this.isCached(data)) {
+                return true;
+            }
+            
             // Writing data to cache
             var res = await this.client.db(this.dbName).collection(data[0].constructor.name).insertMany(data);
 
@@ -118,7 +134,7 @@ export class CacheService {
         }
         // If connection to database failed
         else {
-            return Promise.resolve(false);
+            return false;
         }
     }
 }
