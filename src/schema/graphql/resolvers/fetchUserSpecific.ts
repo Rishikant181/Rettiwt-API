@@ -9,74 +9,134 @@ var getUser = new UserAccountService(
 );
 
 
+
 function getFollowersUIDList(screenName:string,count:number):Array<string>{
     
-    let FollowerList: Array<string>=[];
-
+    //SECTION: Initialisation
+    let FollowersList: Array<string>=[];
     let cursor='';
-    let PromiseFL=getUser.getUserFollowers(screenName,20,cursor);
+    let res:any
     let PromiseValidity:string
+    let Promisres:any;
+	//!SECTION: Initialisation
+    async ()=>{
+
+        Promisres=await getUser.getUserFollowers(screenName,20,cursor);//getRes from the user
+        res={"data":Promisres.data,
+            "succcss":Promisres.success,
+            "error":Promisres.error
+        }
+        
+    }
+    
+
     while(count>=0){
         //Iterating withing the current batch of User List to filter out UserID only and add it to our client side FollowerList
-        PromiseFL.then(res=>{
-            res.data.followers.forEach(({user})=>FollowerList.push(user.userName));
-
-        })
-        if(count%20<20){
-            PromiseFL.then(res=>{cursor=res.data.next});
-            count=count%20;
-            PromiseFL=getUser.getUserFollowers(screenName,count,cursor);
+       
+        //Adding Data to the set
+        for(let Follower of res.data.followers)   
+        {
+            FollowersList.push(Follower.user.userName)
         }
+        
+        
+        if(count%20<20){//Resolving Promises
+            cursor=res.data.next;
+            count=count%20;
+            async ()=>{
+
+                Promisres=await getUser.getUserFollowers(screenName,20,cursor);//getRes from the user
+                res={"data":Promisres.data,
+                    "succcss":Promisres.success,
+                    "error":Promisres.error}
+                    
+                }
+                
+    }
         else{
-            PromiseFL.then(res=>{cursor=res.data.next});
+            cursor=res.data.next;
             count-=20;
-            PromiseFL=getUser.getUserFollowers(screenName,20,cursor);
+            async ()=>{
+
+                Promisres=await getUser.getUserFollowers(screenName,20,cursor);//getRes from the user
+                res={"data":Promisres.data,
+                    "succcss":Promisres.success,
+                    "error":Promisres.error
+            }
+            
         }}
-    
-    return FollowerList;
+    }
+    return FollowersList;
 
 }
-async function getFollowingUIDList(screenName:string,count:number):Promise<User[]>{
+function getFollowingsUIDList(screenName:string,count:number):Array<string>{
     
-    let FollowingList: Array<string>=[];
-
+    //SECTION: Initialisation
+    let FollowingsList: Array<string>=[];
     let cursor='';
-    let PromiseFL=getUser.getUserFollowing(screenName,20,cursor);
-    let PromiseRes:any;
-    PromiseFL.then(res=>{
-        PromiseRes=res.data;
-   })
+    let res:any
     let PromiseValidity:string
+    let Promisres:any;
+	//!SECTION: Initialisation
+    async ()=>{
+		
+        Promisres=await getUser.getUserFollowing(screenName,20,cursor);//getRes from the user
+        res={"data":Promisres.data,
+            "succcss":Promisres.success,
+            "error":Promisres.error}
+        
+    }
+    
+
     while(count>=0){
         //Iterating withing the current batch of User List to filter out UserID only and add it to our client side FollowerList
-        // PromiseFL.then(res=>{
-        //     res.data.following.forEach(({user})=>FollowingList.push(user.userName));
-
-        // })
-        // PromiseRes.data.following.forEach(({user})=>FollowingList.push(user.userName)
-        for(let Following of PromiseRes.following){FollowingList.push(Following)}
-
-        if(count%20<20){
-            PromiseFL.then(res=>{cursor=res.data.next});
-            count=count%20;
-            PromiseFL=getUser.getUserFollowing(screenName,count,cursor);
+       
+        //Adding Data to the set
+        for(let Follower of res.data.followers)   
+        {
+            FollowingsList.push(Follower.user.userName)
         }
+        
+        
+        if(count%20<20){//Resolving Promises
+            cursor=res.data.next;
+            count=count%20;
+            async ()=>{
+
+                Promisres=await getUser.getUserFollowing(screenName,20,cursor);//getRes from the user
+                res={"data":Promisres.data,
+                    "succcss":Promisres.success,
+                    "error":Promisres.error}
+                    
+                }
+                
+    }
         else{
-            PromiseFL.then(res=>{cursor=res.data.next});
+            cursor=res.data.next;
             count-=20;
-            PromiseFL=getUser.getUserFollowing(screenName,20,cursor);
+            async ()=>{
+
+                Promisres=await getUser.getUserFollowing(screenName,20,cursor);//getRes from the user
+                res={"data":Promisres.data,
+                    "succcss":Promisres.success,
+                    "error":Promisres.error
+            }
+            
         }}
-    
-    return FollowingList;
+    }
+    return FollowingsList;
 
 }
 
 
 
+
+//ANCHOR: main entry Point 
 export const parseUserDetails:any=(screenName:string)=>{
 
     
     getUser.getUserAccountDetails(screenName).then(res =>{
+        var followerUIDList:Array<String>=getFollowersUIDList(screenName,res.data.followersCount)
         var JSONUserObject={
             'UID':{
                 'screen_name':screenName,
@@ -84,7 +144,7 @@ export const parseUserDetails:any=(screenName:string)=>{
                 // 'restID':res.data.private.restID // TODO: RISHIKANT add rest id    
             },
             'followers':getFollowersUIDList(screenName,res.data.followersCount),
-            'following':getFollowingUIDList(screenName,res.data.followersCount),
+            'following':getFollowingsUIDList(screenName,res.data.followersCount),
             'Meta':{
                 'fullname':res.data.user.fullName,
                 'Profile image':res.data.profileImage,
