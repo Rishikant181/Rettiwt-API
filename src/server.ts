@@ -1,13 +1,18 @@
-// PACKAGE LIBS
+//ANCHOR: PACKAGE LIBS
 import express from 'express';
 
-// CUSTOM LIBS
+//ANCHOR: CUSTOM LIBS
 import { config } from './config/env';
 import { TweetFilter } from './schema/types/TweetData';
 import { CacheService } from './services/CacheService';
 import { TweetService } from './services/DataServices/TweetService';
 import { UserAccountService } from './services/DataServices/UserAccountService';
 
+
+//ANCHOR: GraphQL test import
+import GraphiQL from 'graphiql';
+import {buildSchema} from 'graphql'
+import {Graph}
 // Initialising express instance
 const app = express();
 
