@@ -6,17 +6,11 @@
 import { Tweet } from '../../schema/types/TweetData';
 import { User } from '../../schema/types/UserAccountData';
 
-// HELPERS
-import {
-    filterJSON,
-    findJSONKey
-} from '../helper/Parser';
-
 /* USERS */
 
 // Method to extract the user account details from response
 export function extractUserAccountDetails(res: any): User {
-    return findJSONKey(res, 'result');
+    return res['data']['user']['result']['legacy'];
 }
 
 /**
@@ -28,17 +22,19 @@ export function extractUserFollowing(res: any): { following: User[], next: strin
     var next: string = '';
 
     // Extracting the raw list of following
-    res = findJSONKey(res, 'entries');
+    //@ts-ignore
+    res = data['user']['result']['timeline']['timeline']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'];
 
     // Extracting cursor to next batch
-    next = filterJSON(res, { "cursorType": "Bottom" })['value'].replace('|', '%7C');
+    //@ts-ignore
+    next = res.filter(item => item['entryId'].indexOf('cursor-bottom') != -1)[0]['content']['value'].replace('|', '%7C');
 
     // Iterating over the raw list of following
     for (var entry of res) {
         // Checking if the entry is of type user
         if (entry['entryId'].indexOf('user') != -1) {
             // Adding the followed users to list of users
-            following.push(new User().deserialize(findJSONKey(entry, 'result')));
+            following.push(new User().deserialize(entry['content']['itemContent']['user_results']['result']));
         }
     }
 
@@ -57,17 +53,19 @@ export function extractUserFollowers(res: any): { followers: User[], next: strin
     var next: string = '';
 
     // Extracting the raw list of followers
-    res = findJSONKey(res, 'entries');
+    //@ts-ignore
+    res = data['user']['result']['timeline']['timeline']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'];
 
     // Extracting cursor to next batch
-    next = filterJSON(res, { "cursorType": "Bottom" })['value'].replace('|', '%7C');
+    //@ts-ignore
+    next = res.filter(item => item['entryId'].indexOf('cursor-bottom') != -1)[0]['content']['value'].replace('|', '%7C');
 
     // Itearating over the raw list of following
     for (var entry of res) {
         // Checking if the entry is of type user
         if (entry['entryId'].indexOf('user') != -1) {
             // Adding the follower to list of followers
-            followers.push(new User().deserialize(findJSONKey(entry, 'result')));
+            followers.push(new User().deserialize(entry['content']['itemContent']['user_results']['result']));
         }
     }
 
@@ -86,17 +84,19 @@ export function extractUserLikes(res: any): { tweets: Tweet[], next: string } {
     var next: string = '';
 
     // Extracting the raw list of followers
-    res = findJSONKey(res, 'entries');
+    //@ts-ignore
+    res = data['user']['result']['timeline_v2']['timeline']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'];
 
     // Extracting cursor to next batch
-    next = filterJSON(res, { "cursorType": "Bottom" })['value'].replace('|', '%7C');
+    //@ts-ignore
+    next = res.filter(item => item['entryId'].indexOf('cursor-bottom') != -1)[0]['content']['value'];
 
     // Itearating over the raw list of following
     for (var entry of res) {
         // Checking if the entry is of type user
         if (entry['entryId'].indexOf('tweet') != -1) {
             // Adding the tweet to list of liked tweets
-            tweets.push(new Tweet().deserialize(findJSONKey(entry, 'result')));
+            tweets.push(new Tweet().deserialize(entry['content']['itemContent']['tweet_results']['result']));
         }
     }
 
@@ -117,10 +117,18 @@ export function extractTweets(res: any) {
     var next: '';
 
     // Extracting the cursor to next batch
-    next = filterJSON(res, { "cursorType": "Bottom" })['value'];
+    // If not first batch
+    if(res['timeline']['instructions'].length > 1) {
+        next = res['timeline']['instructions'][2]['replaceEntry']['entry']['content']['operation']['cursor']['value'];
+    }
+    // If first batch
+    else {
+        //@ts-ignore
+        next = res['timeline']['instructions'][0]['addEntries']['entries'].filter(item => item['entryId'].indexOf('cursor-bottom') != -1)[0]['content']['operation']['cursor']['value'];
+    }
 
     // Getting the raw list of tweets from response
-    res = findJSONKey(res, 'tweets');
+    res = res['globalObjects']['tweets'];
 
     // If not empty, extracting tweets
     if (Object.keys(res).length != 0) {
@@ -145,12 +153,10 @@ export function extractTweets(res: any) {
 export function extractTweet(res: any, tweetId: string): Tweet {
     var tweet: Tweet;
 
-    // Extracting raw list of tweets from response
-    res = findJSONKey(res, 'entries');
-
     // Extracting required raw tweet from response
-    res = findJSONKey(res.filter((item: any) => item['entryId'].indexOf(tweetId) != -1)[0], 'result');
-
+    //@ts-ignore
+    res = res['data']['threaded_conversation_with_injections']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'].filter(item => item['entryId'].indexOf(tweetId) != -1)[0]['content']['itemContent']['tweet_results']['result'];
+    
     // Storing the tweet in a tweet object
     tweet = new Tweet().deserialize(res);
 
@@ -166,17 +172,19 @@ export function extractTweetLikers(res: any): { likers: User[], next: string } {
     var next: string = '';
 
     // Extracting raw likes list from response
-    res = findJSONKey(res, 'entries');
+    //@ts-ignore
+    res = res['data']['favoriters_timeline']['timeline']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'];
 
     // Extracting cursor to next batch
-    next = filterJSON(res, { "cursorType": "Bottom" })['value'];
+    //@ts-ignore
+    next = res.filter(item => item['entryId'].indexOf('cursor-bottom') != -1)[0]['content']['value'];
 
     // Iterating over the raw list of likers
     for (var entry of res) {
         // Checking if entry is of type user
         if (entry['entryId'].indexOf('user') != -1) {
             // Adding the user to list of likers
-            likers.push(new User().deserialize(findJSONKey(entry, 'result')));
+            likers.push(new User().deserialize(entry['content']['itemContent']['user_results']['result']));
         }
     }
 
@@ -195,17 +203,19 @@ export function extractTweetRetweeters(res: any): { retweeters: User[], next: st
     var next: string = '';
 
     // Extracting raw retweeters list from response
-    res = findJSONKey(res, 'entries');
+    //@ts-ignore
+    res = res['data']['retweeters_timeline']['timeline']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'];
 
     // Extracting cursor to next batch
-    next = filterJSON(res, { "cursorType": "Bottom" })['value'];
+    //@ts-ignore
+    next = res.filter(item => item['entryId'].indexOf('cursor-bottom') != -1)[0]['content']['value'];
 
     // Iterating over the raw list of likes
     for (var entry of res) {
         // Checking if entry is of type user
         if (entry['entryId'].indexOf('user') != -1) {
             // Adding the user to list of retweeters
-            retweeters.push(new User().deserialize(findJSONKey(entry, 'result')));
+            retweeters.push(new User().deserialize(entry['content']['itemContent']['user_results']['result']));
         }
     }
 
@@ -223,18 +233,25 @@ export function extractTweetReplies(res: any): { replies: Tweet[], next: string 
     var replies: Tweet[] = [];
     var next: string = '';
 
-    // Extracting raw tweet data from response
-    res = findJSONKey(res, 'entries');
+    // Extracting raw reply list
+    //@ts-ignore
+    res = res['data']['threaded_conversation_with_injections']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'].filter(item => item['entryId'].indexOf(tweetId) == -1);
 
     // Extracting cursor to next batch
-    next = filterJSON(res, { "cursorType": "Bottom" })['value'];
+    //@ts-ignore
+    next = res.filter(item => item['entryId'].indexOf('cursor-bottom') != -1)[0]['content']['itemContent']['value'];
 
     // Iterating over raw list of replies
     for (var entry of res) {
-        // Checking if entry is of type reply
+        // Checking if entry is of type conversation
         if (entry['entryId'].indexOf('conversationthread') != -1) {
             // Adding the reply to list of replies
-            replies.push(new Tweet().deserialize(findJSONKey(entry, 'result')));
+            replies.push(new Tweet().deserialize(entry['content']['items'][0]['item']['itemContent']['tweet_results']['result']));
+        }
+        // Checking if entry is of type tweet
+        else if (entry['entryId'].indexOf('tweet') != -1) {
+            // Adding the reply to list of replies
+            replies.push(new Tweet().deserialize(entry['content']['itemContent']['tweet_results']['result']));
         }
     }
 
