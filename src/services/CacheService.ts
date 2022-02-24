@@ -15,7 +15,9 @@ import {
 } from './helper/Parser';
 
 /**
- * This service handles reading and writing of data from and to cache
+ * This service handles reading and writing of data from and to cache.
+ * 
+ * **Note**: To be able to CacheService, the data to be cached must of a unique "id" field.
  */
 export class CacheService {
     // MEMBER DATA
