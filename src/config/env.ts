@@ -1,6 +1,16 @@
 export const config = {
     "server": {
-        "port": 3000
+        "port": 3000,
+        "db": {
+            "host": "mongodb://127.0.0.1",
+            "port": 27017,
+            "databases": {
+                "ai-cache": {
+                    "name": "ai-cache",
+                    "index": "index"
+                }
+            }
+        }
     },
     "twitter": {
         "root_url": "https://twitter.com/",

@@ -142,3 +142,19 @@ export function filterJSON(data: any, query: any): any {
 
     return subJSON;
 }
+
+/**
+ * Converts a singleton data to a list of data having one item.
+ * If data is already a list, returns is as is
+ * @param data The data to be converted to a list
+ */
+export function dataToList(data: any | any[]): any[] {
+    // If data is already a list
+    if(Array.isArray(data)) {
+        return data;
+    }
+    // If data is not array
+    else {
+        return [data];
+    }
+}
