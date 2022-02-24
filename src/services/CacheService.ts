@@ -1,5 +1,9 @@
 // PACKAGE LIBS
-import { MongoClient } from "mongodb";
+import {
+    MongoClient,
+    InsertManyResult,
+    ObjectId
+} from "mongodb";
 
 // CUSTOM LIBS
 import { config } from '../config/env';
@@ -62,21 +66,34 @@ export class CacheService {
 
     /**
      * Indexes the data inserted into the cache by mapping their id/rest id to their internal Object id and collection name
-     * @param objectId The ObjectID(s) of the document(s) inserted into db
+     * @param res The InsertManyResult from the write operation
      * @param data The data to be indexed
      */
-    private async index(objectId: string[], data: any[]): Promise<void> {
-        // Preparing the indexes to insert
-        for(var i = 0; i < objectId.length; i++) {
-            data[i] = {
-                "_id": findJSONKey(data[i], 'id'),
-                "objectId": objectId[i],
+    private async index(res: InsertManyResult<Document>, data: any[]): Promise<void> {
+        var index = [];
+
+        // If data insertion failed, skipping indexing
+        if(!res.acknowledged) {
+            return;
+        }
+        
+        // Inserting each data item id to index
+        for(var i = 0; i < res.insertedCount; i++) {
+            // Getting the object id of data
+            var objectId = res.insertedIds[i].toHexString();
+
+            // Preparing the index to be inserted
+            var indexItem = {
+                "id": findJSONKey(data[i], 'id'),
+                "_id": new ObjectId(objectId),
                 "collection": data[i].constructor.name
             }
-        };
 
-        // Inserting the indexes
-        await this.client.db(this.dbName).collection(this.dbIndex).insertMany(data);
+            index.push(indexItem);
+        }
+
+        // Inserting the index into index collection
+        await this.client.db(this.dbName).collection(this.dbIndex).insertMany(index);
     }
 
     /**
@@ -91,7 +108,13 @@ export class CacheService {
         
         // If connection to database successful
         if (await this.connectDB()) {
-            return (await this.client.db(this.dbName).collection(data[0].constructor.name).insertMany(data)).acknowledged;
+            // Writing data to cache
+            var res = await this.client.db(this.dbName).collection(data[0].constructor.name).insertMany(data);
+
+            // Indexing the data
+            this.index(res, data);
+
+            return res.acknowledged;
         }
         // If connection to database failed
         else {

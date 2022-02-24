@@ -30,5 +30,6 @@ app.listen(config['server']['port'], () => {
     .getUserAccountDetails('negmatico')
     .then(res => {
         console.log(res.data);
+        cache.write(res.data);
     })
 });
