@@ -73,12 +73,12 @@ export class CacheService {
         var index = [];
 
         // If data insertion failed, skipping indexing
-        if(!res.acknowledged) {
+        if (!res.acknowledged) {
             return;
         }
-        
+
         // Inserting each data item id to index
-        for(var i = 0; i < res.insertedCount; i++) {
+        for (var i = 0; i < res.insertedCount; i++) {
             // Getting the object id of data
             var objectId = res.insertedIds[i].toHexString();
 
@@ -95,14 +95,14 @@ export class CacheService {
         // Inserting the index into index collection
         await this.client.db(this.dbName).collection(this.dbIndex).insertMany(index);
     }
-    
+
     /**
      * Checks if the given data item is already cached or not
-     * @param data The data item to be checked
+     * @param id The id/rest id of the data item to be checked
      */
-    private async isCached(data: any): Promise<boolean> {
+    private async isCached(id: string): Promise<boolean> {
         // Finding a matching data from cache
-        var res = await this.client.db(this.dbName).collection(this.dbIndex).findOne({"id": findJSONKey(data, 'id')})
+        var res = await this.client.db(this.dbName).collection(this.dbIndex).findOne({ "id": id })
 
         return res ? true : false;
     }
@@ -116,14 +116,14 @@ export class CacheService {
     async write(data: User | User[] | Tweet | Tweet[]): Promise<boolean> {
         // Converting the data to a list of data
         data = dataToList(data);
-        
+
         // If connection to database successful
         if (await this.connectDB()) {
             // If data already exists in cache, skip
-            if(await this.isCached(data)) {
+            if (await this.isCached(findJSONKey(data, 'id'))) {
                 return true;
             }
-            
+
             // Writing data to cache
             var res = await this.client.db(this.dbName).collection(data[0].constructor.name).insertMany(data);
 
@@ -135,6 +135,31 @@ export class CacheService {
         // If connection to database failed
         else {
             return false;
+        }
+    }
+
+    /**
+     * Fetches the data with the given id/rest id from cache
+     * @param id The id/rest id of the data to be fetched from cache
+     */
+    async read(id: string): Promise<any> {
+        // If connection to database successful
+        if (await this.connectDB()) {
+            // Getting data from cache
+            var res = await this.client.db(this.dbName).collection(this.dbIndex).findOne({ "id": id });
+
+            // If data exists in cache
+            if (res) {
+                // Getting object id and table name of data from index
+                var objectId = res['_id'];
+                var collection = res['collection'];
+
+                // Getting the actual data
+                return await this.client.db(this.dbName).collection(collection).findOne({ "_id": new ObjectId(objectId) });
+            }
+        }
+        else {
+            return null;
         }
     }
 }
