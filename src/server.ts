@@ -20,7 +20,6 @@ app.listen(config['server']['port'], async () => {
     console.log(`Listening on port ${config['server']['port']}`);
 
     /* TEST CODE */
-    /*
     var next;
     var count = 0;
 
@@ -36,11 +35,11 @@ app.listen(config['server']['port'], async () => {
         var res = await service.getTweets(new TweetFilter({
             words: [],
             hashtags: [],
-            fromUsers: ['@1canw1n'],
+            fromUsers: ['@elonmusk'],
             toUsers: [],
             mentions: [],
             startDate: '',
-            endDate: '',
+            endDate: '2021-06-03',
             count: 20
         }), next);
 
@@ -55,6 +54,5 @@ app.listen(config['server']['port'], async () => {
             break;
         }
     }
-    */
     /* TEST CODE END */
 });

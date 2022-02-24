@@ -73,6 +73,7 @@ export class TweetService extends FetcherService {
             })
             // If other run-time error occured
             .catch(err => {
+                console.log(err);
                 return new Response<{ tweets: Tweet[], next: string }>(
                     false,
                     new Error(Errors.FatalError),

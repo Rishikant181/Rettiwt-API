@@ -44,8 +44,12 @@ export function findJSONKey(data: any, key: string, last: boolean = false): any 
 
         return extStr;
     }
-    // If value to be extracted is a JSON
-    else {
+    // If value to be extracted is a JSON or list
+    else if(jsonStr[start] == '{' || jsonStr[start] == '[') {
+        // Storing the type of opening brace
+        var brace = jsonStr[start];
+
+        // Getting the value of the key
         for (var i = start; i < len; i++) {
             // Getting each character
             var char: string = jsonStr[i];
@@ -53,10 +57,15 @@ export function findJSONKey(data: any, key: string, last: boolean = false): any 
             // Appending the character to extracted string
             extStr += char;
 
-            if (char == '[' || char == '{') {
+            // If this char has the same ASCII value as the opening brace
+            if (char.charCodeAt(0) == brace.charCodeAt(0)) {
                 braceStack.push(char);
             }
-            else if (char == ']' || char == '}') {
+            // If this char has the same ASCII value of closing brace
+            /**
+             * Note: Closing brace ASCII = opening brace ASCII + 2
+             */
+            else if (char.charCodeAt(0) == brace.charCodeAt(0) + 2) {
                 braceStack.pop();
 
                 // If stack is now empty, this means data extraction complete
