@@ -3,6 +3,9 @@ import express from 'express';
 
 // CUSTOM LIBS
 import { config } from './config/env';
+import { TweetFilter } from './schema/types/TweetData';
+import { CacheService } from './services/CacheService';
+import { TweetService } from './services/DataServices/TweetService';
 
 // Initialising express instance
 const app = express();
@@ -13,6 +16,6 @@ app.use('/', (req, res) => {
 })
 
 // Setting up express server
-app.listen(config['server']['port'], () => {
+app.listen(config['server']['port'], async () => {
     console.log(`Listening on port ${config['server']['port']}`);
 });
