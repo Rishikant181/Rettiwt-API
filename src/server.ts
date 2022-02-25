@@ -16,6 +16,6 @@ app.use('/', (req, res) => {
 })
 
 // Setting up express server
-app.listen(config['server']['port'], async () => {
+app.listen(config['server']['port'], () => {
     console.log(`Listening on port ${config['server']['port']}`);
 });
