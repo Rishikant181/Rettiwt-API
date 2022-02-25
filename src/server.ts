@@ -19,4 +19,23 @@ app.use('/', (req, res) => {
 // Setting up express server
 app.listen(config['server']['port'], () => {
     console.log(`Listening on port ${config['server']['port']}`);
+
+    // new TweetService(
+    //     config['twitter']['auth']['authToken'],
+    //     config['twitter']['auth']['csrfToken'],
+    //     config['twitter']['auth']['cookie']
+    // )
+    // .getTweets(new TweetFilter({
+    //     words: [],
+    //     hashtags: [],
+    //     fromUsers: ['@1canw1n'],
+    //     toUsers: [],
+    //     mentions: [],
+    //     startDate: '',
+    //     endDate: '',
+    //     count: 5
+    // }), '')
+    // .then(res => {
+    //     new CacheService().write(res.data.tweets);
+    // })
 });
