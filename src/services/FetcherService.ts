@@ -1,5 +1,3 @@
-// This file contains the base class for various fetcher services
-
 // PACKAGE LIBS
 import fetch from "node-fetch";
 
@@ -8,6 +6,9 @@ import {
     authorizedHeader
 } from './helper/Requests'
 
+/**
+ * The base serivice from which all other data services derive their behaviour
+ */
 export class FetcherService {
     // MEMBER DATA
     protected authToken: string;                                                   // To store the authentication token
@@ -15,7 +16,11 @@ export class FetcherService {
     protected cookie: string;                                                      // To store the cookie
 
     // MEMBER METHODS
-    // The constructor
+    /**
+     * @param authToken The authetication token received from TwitterAPI
+     * @param csrfToken The csrf token received from TwitterAPI
+     * @param cookie The cookie for the logged in user account received from TwitterAPI
+     */
     constructor(
         authToken: string,
         csrfToken: string,
@@ -27,7 +32,10 @@ export class FetcherService {
         this.cookie = cookie;
     }
 
-    // Method to fetch data using an http reqiest
+    /**
+     * Fetches the absolute raw json data from give url
+     * @param url The url to fetch data from
+     */
     protected fetchData(url: string): Promise<any> {
         return fetch(url, {
             headers: authorizedHeader(
