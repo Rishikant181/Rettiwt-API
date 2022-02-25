@@ -6,6 +6,7 @@ import { config } from './config/env';
 import { TweetFilter } from './schema/types/TweetData';
 import { CacheService } from './services/CacheService';
 import { TweetService } from './services/DataServices/TweetService';
+import { UserAccountService } from './services/DataServices/UserAccountService';
 
 // Initialising express instance
 const app = express();
