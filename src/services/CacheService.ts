@@ -107,9 +107,10 @@ export class CacheService {
      * Stores the input data into the cache.
      * Each type of data is stored in it's respective collection in the database
      * @param data The input data to store
+     * @param update Whether to update the store data or not
      * @returns Whether writing to cache was successful or not
      */
-    async write(data: User | User[] | Tweet | Tweet[]): Promise<boolean> {
+    async write(data: User | User[] | Tweet | Tweet[], update = false): Promise<boolean> {
         // Converting the data to a list of data
         data = dataToList(data);
 
@@ -117,17 +118,29 @@ export class CacheService {
         if (await this.connectDB()) {
             // Iterating over the list of data
             for (var item of data) {
+                // Storing whether data is already cached or not
+                var cached = await this.isCached(findJSONKey(item, 'id'));
 
-                // If data already exists in cache, skip
-                if (await this.isCached(findJSONKey(item, 'id'))) {
+                // If data already exists in cache and no update required, skip
+                if (cached && update == false) {
                     continue;
                 }
+                // If data already exists in cache and update required
+                else if (cached && update) {
+                    // Getting the object id of data from index
+                    var objectId = (await this.client.db(this.dbName).collection(this.dbIndex).findOne({ "id": findJSONKey(item, "id") }))?._id.toHexString();
+                    
+                    // Updating data in cache
+                    await this.client.db(this.dbName).collection(data[0].constructor.name).updateOne({ "_id": new ObjectId(objectId) }, { $set: item });
+                }
+                // If new data to be added
+                else {
+                    // Writing data to cache
+                    var res = await this.client.db(this.dbName).collection(data[0].constructor.name).insertOne(item);
 
-                // Writing data to cache
-                var res = await this.client.db(this.dbName).collection(data[0].constructor.name).insertOne(item);
-
-                // Indexing the data
-                this.index(res, item);
+                    // Indexing the data
+                    this.index(res, item);
+                }
             }
 
             return true;
