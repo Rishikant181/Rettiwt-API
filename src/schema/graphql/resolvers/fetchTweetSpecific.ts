@@ -2,6 +2,7 @@ import {TweetService} from "../../../services/DataServices/TweetService"
 import { UID } from "../types/uidModel"
 import { config } from "../../../config/env";
 import { Tweet,TweetFilter} from "src/schema/types/TweetData";
+import { BooleanValueNode } from "graphql";
 
 
 
@@ -17,20 +18,53 @@ export const parseTweetDetails:any=(screenName:string)=>{
     
 
 }
-function FetchTweetViaFilter(){
-    
+
+function fetchRetweet(tweetID:string,Count:number){
+    var RetweetList:string[];
+    var 
 }
 
-function fetchTweetViaScreenName(screenName:string,Count:number):Tweet[]{
+
+function fetchTweetViaScreenName(screenName:string,Count?:number){
+    
+    Count=Count??-1;
     var screenNameOnlyFilter= new TweetFilter(
         {count:Count,
-        fromUsers:[screenName]}
-        )
+        fromUsers:[screenName]
+    });
 
+    var JSONTweetObject:any;
     var cursor='';
+
+    let promiseValidity:boolean;
+    async()=>{
+        await fetchTweets.getTweets(screenNameOnlyFilter,cursor).then(res=>{
+            if(res.success===true&&res.error.message!=="")
+            {promiseValidity=true}
+            for(let tweetEntry of res.data.tweets){
+                JSONTweetObject={
+                    'id':{
+                        'rest_id':tweetEntry.id,
+                        'tweet_by':tweetEntry.tweetBy,
+                        'content':{
+                            'media':tweetEntry.entities.media,
+                            'rawText': tweetEntry.fullText,
+                            'filter': {
+                                'mentions': tweetEntry.entities.mentionedUsers,
+                                'urls':tweetEntry.entities.urls,
+                                'hashtags':tweetEntry.entities.hastags
+                            }
+                        },
+                        'retweets':tweetEntry..
+                    }
+                }
+            }
+        })
+    }
     
+    while(Count!=0 && promiseValidity ){
     
-    
+    }
     async()=>{
         await fetchTweets.getTweets(screenNameOnlyFilter,cursor).then(res=>{
 
