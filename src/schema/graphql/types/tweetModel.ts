@@ -9,12 +9,13 @@ export const Tweet = new GraphQLObjectType(
         fields:()=>({   
             
             id:{type:UID},
+            tweet_by:{type:UID},
             content:{type:Content},
             retweets:{type:new GraphQLList(UID)},
             likes:{type:new GraphQLList(UID)},
             comments:{type:new GraphQLList(UID)},
             Type:{type:GraphQLInt},
-            meta:{type:Meta,
+            meta:{type:Meta
             }
 
             
