@@ -67,8 +67,9 @@ function getFollowersUIDList(screenName:string,count:number):Array<string>{
         }}
     }
     return FollowersList;
+}                    
 
-}
+                   
 function getFollowingsUIDList(screenName:string,count:number):Array<string>{
     
     //SECTION: Initialisation
@@ -134,10 +135,11 @@ function getFollowingsUIDList(screenName:string,count:number):Array<string>{
 //ANCHOR: main entry Point 
 export const parseUserDetails:any=(screenName:string)=>{
 
-    
-    getUser.getUserAccountDetails(screenName).then(res =>{
-        var followerUIDList:Array<String>=getFollowersUIDList(screenName,res.data.followersCount)
-        var JSONUserObject={
+    var JSONUserObject:any
+    async ()=>{
+	await getUser.getUserAccountDetails(screenName).then(res =>{
+        
+    	JSONUserObject={
             'UID':{
                 'screen_name':screenName,
                 'type':"UserID",
@@ -156,13 +158,7 @@ export const parseUserDetails:any=(screenName:string)=>{
                 'follower Count':res.data.followersCount,
                 'favourite count':res.data.favouritesCount,
                 'following count':res.data.followingsCount
-
-
-            }
-
-
-        }
-
-       
-    })
+			}}
+		}	)}
+		return JSONUserObject
 }

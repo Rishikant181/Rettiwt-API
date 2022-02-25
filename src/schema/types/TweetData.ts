@@ -13,8 +13,8 @@ export class TweetFilter {
     hashtags: string[];                                                         // To store the list of hashtags to seach
     fromUsers: string[];                                                        // To store the list of users who made the tweet
     toUsers: string[];                                                          // To store the list of users to whom the tweet was meant for
-    mentions: string[];                                                         // To store the list of mentioned users
-    startDate: string;                                                          // To store the beginning date to search tweets
+    mentions: string[];                                                         // To store the beginning date to search tweets
+    startDate: string;                                                          // To store the starting date to search tweets
     endDate: string;                                                            // To store the ending date to search tweets
     count: number;                                                              // To store the number of tweets to fetch
 
@@ -23,17 +23,25 @@ export class TweetFilter {
      * @param filter A json object containing the different type of filters to use
      */
     constructor(filter: {
-        words: string[],
-        hashtags: string[],
-        fromUsers: string[],
-        toUsers: string[],
-        mentions: string[],
-        startDate: string,
-        endDate: string,
-        count: number
+        words?: string[],
+        hashtags?: string[],
+        fromUsers?: string[],
+        toUsers?: string[],
+        mentions?: string[],
+        startDate?: string,
+        endDate?: string,
+        count?: number
     }) {
-        Object.assign(this, filter);
+        this.words = filter.words ?? [];
+        this.hashtags = filter.hashtags ?? [];
+        this.fromUsers = filter.fromUsers ?? [];
+        this.toUsers = filter.toUsers ?? [];
+        this.mentions = filter.mentions ?? [];
+        this.startDate = filter.startDate ?? '';
+        this.endDate = filter.endDate ?? '';
+        this.count = filter.count ?? 20;
     }
+    
 }
 
 /**
