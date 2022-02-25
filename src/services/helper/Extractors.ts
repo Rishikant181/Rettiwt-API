@@ -10,7 +10,7 @@ import { User } from '../../schema/types/UserAccountData';
 
 // Method to extract the user account details from response
 export function extractUserAccountDetails(res: any): User {
-    return res['data']['user']['result']['legacy'];
+    return res['data']['user']['result'];
 }
 
 /**

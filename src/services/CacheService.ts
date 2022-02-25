@@ -164,4 +164,20 @@ export class CacheService {
             return null;
         }
     }
+
+    /**
+     * Clears the cache completely, including all indexes
+     */
+    async clear(): Promise<boolean> {
+        // If connection to database successful
+        if(await this.connectDB()) {
+            // Clearing the cache
+            this.client.db(this.dbName).dropDatabase();
+
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }
