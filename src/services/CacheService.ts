@@ -1,7 +1,7 @@
 // PACKAGE LIBS
 import {
     MongoClient,
-    InsertManyResult,
+    InsertOneResult,
     ObjectId
 } from "mongodb";
 
@@ -71,7 +71,7 @@ export class CacheService {
      * @param res The InsertManyResult from the write operation
      * @param data The data to be indexed
      */
-    private async index(res: InsertManyResult<Document>, data: any[]): Promise<void> {
+    private async index(res: InsertOneResult<Document>, data: any): Promise<void> {
         var index = [];
 
         // If data insertion failed, skipping indexing
@@ -79,20 +79,14 @@ export class CacheService {
             return;
         }
 
-        // Inserting each data item id to index
-        for (var i = 0; i < res.insertedCount; i++) {
-            // Getting the object id of data
-            var objectId = res.insertedIds[i].toHexString();
-
-            // Preparing the index to be inserted
-            var indexItem = {
-                "id": findJSONKey(data[i], 'id'),
-                "_id": new ObjectId(objectId),
-                "collection": data[i].constructor.name
-            }
-
-            index.push(indexItem);
+        // Preparing the index to be inserted
+        var indexItem = {
+            "id": findJSONKey(data, 'id'),
+            "_id": new ObjectId(res.insertedId.toHexString()),
+            "collection": data.constructor.name
         }
+
+        index.push(indexItem);
 
         // Inserting the index into index collection
         await this.client.db(this.dbName).collection(this.dbIndex).insertMany(index);
@@ -113,26 +107,43 @@ export class CacheService {
      * Stores the input data into the cache.
      * Each type of data is stored in it's respective collection in the database
      * @param data The input data to store
+     * @param update Whether to update the store data or not
      * @returns Whether writing to cache was successful or not
      */
-    async write(data: User | User[] | Tweet | Tweet[]): Promise<boolean> {
+    async write(data: User | User[] | Tweet | Tweet[], update = false): Promise<boolean> {
         // Converting the data to a list of data
         data = dataToList(data);
 
         // If connection to database successful
         if (await this.connectDB()) {
-            // If data already exists in cache, skip
-            if (await this.isCached(findJSONKey(data, 'id'))) {
-                return true;
+            // Iterating over the list of data
+            for (var item of data) {
+                // Storing whether data is already cached or not
+                var cached = await this.isCached(findJSONKey(item, 'id'));
+
+                // If data already exists in cache and no update required, skip
+                if (cached && update == false) {
+                    continue;
+                }
+                // If data already exists in cache and update required
+                else if (cached && update) {
+                    // Getting the object id of data from index
+                    var objectId = (await this.client.db(this.dbName).collection(this.dbIndex).findOne({ "id": findJSONKey(item, "id") }))?._id.toHexString();
+                    
+                    // Updating data in cache
+                    await this.client.db(this.dbName).collection(data[0].constructor.name).updateOne({ "_id": new ObjectId(objectId) }, { $set: item });
+                }
+                // If new data to be added
+                else {
+                    // Writing data to cache
+                    var res = await this.client.db(this.dbName).collection(data[0].constructor.name).insertOne(item);
+
+                    // Indexing the data
+                    this.index(res, item);
+                }
             }
 
-            // Writing data to cache
-            var res = await this.client.db(this.dbName).collection(data[0].constructor.name).insertMany(data);
-
-            // Indexing the data
-            this.index(res, data);
-
-            return res.acknowledged;
+            return true;
         }
         // If connection to database failed
         else {
@@ -170,7 +181,7 @@ export class CacheService {
      */
     async clear(): Promise<boolean> {
         // If connection to database successful
-        if(await this.connectDB()) {
+        if (await this.connectDB()) {
             // Clearing the cache
             return await this.client.db(this.dbName).dropDatabase();
         }
