@@ -172,7 +172,7 @@ export class CacheService {
         // If connection to database successful
         if(await this.connectDB()) {
             // Clearing the cache
-            this.client.db(this.dbName).dropDatabase();
+            await this.client.db(this.dbName).dropDatabase();
 
             return true;
         }
