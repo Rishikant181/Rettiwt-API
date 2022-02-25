@@ -7,12 +7,12 @@ import { TweetFilter } from './schema/types/TweetData';
 import { AuthService } from './services/DataServices/AuthService';
 import { TweetService } from './services/DataServices/TweetService';
 import { UserAccountService } from './services/DataServices/UserAccountService';
-
+import {TwitterUser} from '../src/schema/graphql/queries/RootQuery'
 
 //ANCHOR: GraphQL test import
 import GraphiQL from 'graphiql';
 import {buildSchema} from 'graphql'
-import {Graph}
+import {graphqlHTTP} from 'express-graphql'
 // Initialising express instance
 const app = express();
 
@@ -20,6 +20,11 @@ const app = express();
 app.use('/', (req, res) => {
     res.send("Hello World");    
 })
+app.use('/graphql', graphqlHTTP({
+    schema: RootQuery,
+    rootValue: root,
+    graphiql: true,
+  }));
 
 // Setting up express server
 app.listen(config['server']['port'], () => {
