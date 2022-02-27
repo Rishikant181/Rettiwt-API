@@ -2,163 +2,154 @@ import {UserAccountService} from "../../../services/DataServices/UserAccountServ
 import { UID } from "../types/uidModel"
 import { config } from "../../../config/env";
 import { User } from "src/schema/types/UserAccountData";
+import { UIDTYPE } from "src/schema/graphql/resolvers/helpers/internalObjectTypes/UID";
+import { type } from "os";
+import { Response } from "src/schema/types/HTTP";
 var getUser = new UserAccountService(
     config['twitter']['auth']['authToken'],
     config['twitter']['auth']['csrfToken'],
     config['twitter']['auth']['cookie']
 );
 
+export type JSONUserObject={
+    UID:{
+        screenName:string,
+        restID:string,
+        TYPE:UIDTYPE
+    },
+    followers:{
+        screenName:string,
+        restID:string,
+        TYPE:UIDTYPE
+    }[],
+    followings:{
+        screenName:string,
+        restID:string,
+        TYPE:UIDTYPE
+    }[],
+    Meta:{
+        fullName:string,
+        profileImage:string,
+        bannerImage:string,
+        accountCreationDate:string,
+        statusCount:number,
+        bio:string,
+        isVerified:boolean,
+        followerCount:number,
+        favouriteCount:number,
+        followingCount:number,
 
+    }
 
-function getFollowersUIDList(screenName:string,count:number):Array<string>{
+}
+
+export function getFollowersUIDList(screenName:string,count:number):Array<{screenName:string,restID:string,TYPE:UIDTYPE}>{
     
     //SECTION: Initialisation
-    let FollowersList: Array<string>=[];
+    let followersList:{
+        screenName:string,
+        restID:string,
+        TYPE:UIDTYPE
+    }[]=[];
     let cursor='';
-    let res:any
-    let PromiseValidity:string
-    let Promisres:any;
+    let resolved:Response<{ followers: User[], next: string }>;//Stores pre-proccessed data from tweetFetch service 
+    
 	//!SECTION: Initialisation
-    async ()=>{
+    
+    for(
+        async()=>{getUser.getUserFollowers(screenName,20,cursor).then(res=>{resolved=res;});};
+        //@ts-ignore
+        resolved.success&&resolved.error.message==='';//Checking if incoming data is valid or not
+        async()=>{getUser.getUserFollowers(screenName,20,resolved.data.next).then(res=>{resolved=res;});}//Updating check for next batch
 
-        Promisres=await getUser.getUserFollowers(screenName,20,cursor);//getRes from the user
-        res={"data":Promisres.data,
-            "succcss":Promisres.success,
-            "error":Promisres.error
+    )
+    {
+        //@ts-ignore
+        for(let Followers of resolved.data.followers)
+        {
+            followersList.push(
+                {
+                    screenName:Followers.user.userName,
+                    restID:Followers.user.id,
+                    TYPE:UIDTYPE.USER});
         }
-        
     }
     
-
-    while(count>=0){
-        //Iterating withing the current batch of User List to filter out UserID only and add it to our client side FollowerList
-       
-        //Adding Data to the set
-        for(let Follower of res.data.followers)   
-        {
-            FollowersList.push(Follower.user.userName)
-        }
-        
-        
-        if(count%20<20){//Resolving Promises
-            cursor=res.data.next;
-            count=count%20;
-            async ()=>{
-
-                Promisres=await getUser.getUserFollowers(screenName,20,cursor);//getRes from the user
-                res={"data":Promisres.data,
-                    "succcss":Promisres.success,
-                    "error":Promisres.error}
-                    
-                }
-                
-    }
-        else{
-            cursor=res.data.next;
-            count-=20;
-            async ()=>{
-
-                Promisres=await getUser.getUserFollowers(screenName,20,cursor);//getRes from the user
-                res={"data":Promisres.data,
-                    "succcss":Promisres.success,
-                    "error":Promisres.error
-            }
-            
-        }}
-    }
-    return FollowersList;
+    return followersList;
 }                    
 
                    
-function getFollowingsUIDList(screenName:string,count:number):Array<string>{
+export function getFollowingsUIDList(screenName:string,count:number):Array<{screenName:string,restID:string,TYPE:UIDTYPE}>{
     
     //SECTION: Initialisation
-    let FollowingsList: Array<string>=[];
+    let followingsList:{
+        restID:string,
+        screenName:string,
+        TYPE:UIDTYPE
+    }[]=[];
     let cursor='';
-    let res:any
-    let PromiseValidity:string
-    let Promisres:any;
+    let resolved:Response<{ followers: User[], next: string }>;
+    
 	//!SECTION: Initialisation
-    async ()=>{
-		
-        Promisres=await getUser.getUserFollowing(screenName,20,cursor);//getRes from the user
-        res={"data":Promisres.data,
-            "succcss":Promisres.success,
-            "error":Promisres.error}
-        
+    
+    for(
+        //@ts-ignore
+        async()=>{getUser.getUserFollowings(screenName,20,cursor).then(res=>{resolved=res;});};
+        //@ts-ignore
+        resolved.success&&resolved.error.message==='';//Checking if incoming data is valid or not
+        //@ts-ignore
+        async()=>{getUser.getUserFollowings(screenName,20,resolved.data.next).then(res=>{resolved=res;});}//Updating check for next batch
+
+    )
+    {
+        //@ts-ignore
+        for(let Followings of resolved.data.followers)
+        {
+            followingsList.push(
+                {
+                    screenName:Followings.user.userName,
+                    restID:Followings.user.id,
+                    TYPE:UIDTYPE.USER});
+        }
     }
     
+    return followingsList;
+}           
+    
 
-    while(count>=0){
-        //Iterating withing the current batch of User List to filter out UserID only and add it to our client side FollowerList
-       
-        //Adding Data to the set
-        for(let Follower of res.data.followers)   
-        {
-            FollowingsList.push(Follower.user.userName)
-        }
-        
-        
-        if(count%20<20){//Resolving Promises
-            cursor=res.data.next;
-            count=count%20;
-            async ()=>{
-
-                Promisres=await getUser.getUserFollowing(screenName,20,cursor);//getRes from the user
-                res={"data":Promisres.data,
-                    "succcss":Promisres.success,
-                    "error":Promisres.error}
-                    
-                }
-                
-    }
-        else{
-            cursor=res.data.next;
-            count-=20;
-            async ()=>{
-
-                Promisres=await getUser.getUserFollowing(screenName,20,cursor);//getRes from the user
-                res={"data":Promisres.data,
-                    "succcss":Promisres.success,
-                    "error":Promisres.error
-            }
-            
-        }}
-    }
-    return FollowingsList;
-
-}
+    
 
 
 
 
 //ANCHOR: main entry Point 
-export const parseUserDetails:any=(screenName:string)=>{
+export const parseUserDetails=(screenName:string):JSONUserObject=>{
 
-    var JSONUserObject:any
+    var userInstance:JSONUserObject;
     async ()=>{
 	await getUser.getUserAccountDetails(screenName).then(res =>{
         
-    	JSONUserObject={
+    	userInstance={
             'UID':{
-                'screen_name':screenName,
-                'type':"UserID",
-                // 'restID':res.data.private.restID // TODO: RISHIKANT add rest id    
+                'screenName':screenName,
+                'restID':res.data.user.id,    
+                'TYPE':0
             },
             'followers':getFollowersUIDList(screenName,res.data.followersCount),
-            'following':getFollowingsUIDList(screenName,res.data.followersCount),
+            'followings':getFollowingsUIDList(screenName,res.data.followersCount),
             'Meta':{
-                'fullname':res.data.user.fullName,
-                'Profile image':res.data.profileImage,
-                'Banner image':res.data.profileBanner,
-                'Account creation date':res.data.createdAt,
-                'Status count':res.data.statusesCount,
+                'fullName':res.data.user.fullName,
+                'profileImage':res.data.profileImage,
+                'bannerImage':res.data.profileBanner,
+                'accountCreationDate':res.data.createdAt,
+                'statusCount':res.data.statusesCount,
                 'bio':res.data.description,
-                'Is verified':res.data.isVerified,
-                'follower Count':res.data.followersCount,
-                'favourite count':res.data.favouritesCount,
-                'following count':res.data.followingsCount
+                'isVerified':res.data.isVerified,
+                'followerCount':res.data.followersCount,
+                'favouriteCount':res.data.favouritesCount,
+                'followingCount':res.data.followingsCount
 			}}
 		}	)}
-		return JSONUserObject
+        //@ts-ignore
+		return userInstance
 }
