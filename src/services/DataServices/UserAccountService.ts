@@ -26,15 +26,10 @@ import {
     extractUserLikes
 } from '../helper/Extractors';
 
-<<<<<<< HEAD
-export class UserAccountService extends FetcherService 
-{   
-=======
 /**
  * A service that deals with fetching of data related to user account
  */
 export class UserAccountService extends FetcherService {
->>>>>>> dev
     // MEMBER METHODS
     /**
      * @param authToken The authetication token received from TwitterAPI
@@ -90,7 +85,7 @@ export class UserAccountService extends FetcherService {
      * @param count The batch size of the list
      * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
-    getUserFollowing(
+    getUserFollowings(
         userId: string,
         count: number,
         cursor: string 

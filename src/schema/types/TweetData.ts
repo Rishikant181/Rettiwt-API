@@ -139,3 +139,4 @@ export class Tweet implements Deserializable {
         return this;
     }
 }
+

@@ -1,9 +1,12 @@
 import {GraphQLEnumType, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString, } from 'graphql'
+import { tweetDetailsUrl } from 'src/services/helper/Requests'
+import { JSONUserObject } from '../resolvers/fetchUserSpecific'
 import {UID} from './uidModel'
 
 //SECTION Base Level:Base
 export const Tweet = new GraphQLObjectType(
     {
+        
         name:"Tweet",
         description:"Basic Tweet object model That stores all basics of a tweet",
         fields:()=>({   
@@ -15,8 +18,7 @@ export const Tweet = new GraphQLObjectType(
             likes:{type:new GraphQLList(UID)},
             comments:{type:new GraphQLList(UID)},
             Type:{type:GraphQLInt},
-            meta:{type:Meta
-            }
+            meta:{type:Meta}
 
             
         })
