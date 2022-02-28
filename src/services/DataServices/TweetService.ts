@@ -52,6 +52,14 @@ export class TweetService extends FetcherService {
         super(authToken, csrfToken, cookie);
     }
 
+    /**
+     * Fetches the top 30 trending in a region
+     * @param country The name of of country to fetch trending for
+     */
+    getTrending(countryId: string): any {
+        
+    }
+
     // TODO: Make this method also fetch the retweets made by the user
     /**
      * Fetches a list of tweets that match the given filter
