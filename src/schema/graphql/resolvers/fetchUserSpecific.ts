@@ -2,45 +2,15 @@ import {UserAccountService} from "../../../services/DataServices/UserAccountServ
 import { config } from "../../../config/env";
 import { User } from "src/schema/types/UserAccountData";
 import { UID, UIDTYPE } from "src/schema/graphql/resolvers/helpers/internalObjectTypes/UID";
-import { type } from "os";
+import { JSONUserObject } from "./helpers/internalObjectTypes/UserObject";
 import { Response } from "src/schema/types/HTTP";
+import { restructureUserObject } from "./helpers/restructuring";
 var getUser = new UserAccountService(
     config['twitter']['auth']['authToken'],
     config['twitter']['auth']['csrfToken'],
     config['twitter']['auth']['cookie']
 );
 
-export type JSONUserObject={
-    UID:{
-        screenName:string,
-        restID:string,
-        TYPE:UIDTYPE
-    },
-    followers:{
-        screenName:string,
-        restID:string,
-        TYPE:UIDTYPE
-    }[],
-    followings:{
-        screenName:string,
-        restID:string,
-        TYPE:UIDTYPE
-    }[],
-    Meta:{
-        fullName:string,
-        profileImage:string,
-        bannerImage:string,
-        accountCreationDate:string,
-        statusCount:number,
-        bio:string,
-        isVerified:boolean,
-        followerCount:number,
-        favouriteCount:number,
-        followingCount:number,
-
-    }
-
-}
 
 export function getFollowersUIDList(screenName:string):Array<{screenName:string,restID:string,TYPE:UIDTYPE}>{
     
@@ -77,11 +47,7 @@ export function getFollowersUIDList(screenName:string):Array<{screenName:string,
 export function getFollowingsUIDList(screenName:string):Array<{screenName:string,restID:string,TYPE:UIDTYPE}>{
     
     //SECTION: Initialisation
-    let followingsList:{
-        restID:string,
-        screenName:string,
-        TYPE:UIDTYPE
-    }[]=[];
+    let followingsList:UID[]=[];
     let cursor='';
     let resolved:Response<{ followers: User[], next: string }>;
     
@@ -123,28 +89,8 @@ export const parseUserDetails=(screenName:string):JSONUserObject=>{
     var userInstance:JSONUserObject;
     async ()=>{
 	await getUser.getUserAccountDetails(screenName).then(res =>{
-        
-    	userInstance={
-            'UID':{
-                'screenName':screenName,
-                'restID':res.data.user.id,    
-                'TYPE':0
-            },
-            'followers':getFollowersUIDList(screenName),
-            'followings':getFollowingsUIDList(screenName),
-            'Meta':{
-                'fullName':res.data.user.fullName,
-                'profileImage':res.data.profileImage,
-                'bannerImage':res.data.profileBanner,
-                'accountCreationDate':res.data.createdAt,
-                'statusCount':res.data.statusesCount,
-                'bio':res.data.description,
-                'isVerified':res.data.isVerified,
-                'followerCount':res.data.followersCount,
-                'favouriteCount':res.data.favouritesCount,
-                'followingCount':res.data.followingsCount
-			}}
-		}	)}
-        //@ts-ignore
-		return userInstance
+    	userInstance=restructureUserObject(res)})
+    }
+    //@ts-ignore
+    return userInstance;
 }
