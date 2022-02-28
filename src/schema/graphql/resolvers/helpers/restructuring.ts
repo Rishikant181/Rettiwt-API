@@ -1,10 +1,21 @@
 import { GraphQLObjectType } from "graphql";
-import { User } from "src/schema/types/UserAccountData";
+import { User,UserID } from "src/schema/types/UserAccountData";
 import { Response } from "src/schema/types/HTTP";
 import { getFollowersUIDList,getFollowingsUIDList } from "../fetchUserSpecific";
-import { UIDTYPE } from "./internalObjectTypes/UID";
+import { UIDTYPE,UID } from "./internalObjectTypes/UID";
+import { Tweet } from "src/schema/types/TweetData";
+import { fetchRetweets,fetchlikes, fetchReplies} from "../fetchTweetSpecific";
 
 
+export const expandUserList=(users:UserID[])=>{
+    var mentionList:UID[]=[]
+    for(let user of users){
+        mentionList.push({restID:user.id,
+                         screenName:user.userName,
+                         TYPE:UIDTYPE.USER})
+    }
+    return mentionList;
+}
 
 //returns Restructured User Object 
 export const restructureUserObject=(res:Response<User>)=>({
@@ -13,8 +24,8 @@ export const restructureUserObject=(res:Response<User>)=>({
         'restID':res.data.user.id,    
         'TYPE':UIDTYPE.USER
     },
-    'followers':getFollowersUIDList(res.data.user.userName,res.data.followersCount),
-    'followings':getFollowingsUIDList(res.data.user.userName,res.data.followersCount),
+    'followers':getFollowersUIDList(res.data.user.userName),
+    'followings':getFollowingsUIDList(res.data.user.userName),
     'Meta':{
         'fullName':res.data.user.fullName,
         'profileImage':res.data.profileImage,
@@ -28,7 +39,30 @@ export const restructureUserObject=(res:Response<User>)=>({
         'followingCount':res.data.followingsCount
     }
 })
-export const restructureTweetObject=(res:Response<>)
+export const restructureTweetObject=(res:Tweet)=>({
+    id:{
+        restID:res.id,
+        screenName:'',
+        TYPE:UIDTYPE.TWEET
+    },
+    tweetBy:{
+        restID:'',
+        screenName:res.tweetBy,
+        TYPE:UIDTYPE.USER
+    },
+    content:{
+        media:res.entities.media,
+        rawText:res.fullText,
+        filters:{
+            mentions:expandUserList(res.entities.mentionedUsers),
+            urls:res.entities.urls,
+            hashtags:res.entities.hastags
+        }
+    },
+    retweets:fetchRetweets(res.id),
+    likes:fetchlikes(res.id),
+    comments:fetchReplies(res.id)
+})
 
 
 
