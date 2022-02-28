@@ -1,8 +1,7 @@
 import {UserAccountService} from "../../../services/DataServices/UserAccountService"
-import { UID } from "../types/uidModel"
 import { config } from "../../../config/env";
 import { User } from "src/schema/types/UserAccountData";
-import { UIDTYPE } from "src/schema/graphql/resolvers/helpers/internalObjectTypes/UID";
+import { UID, UIDTYPE } from "src/schema/graphql/resolvers/helpers/internalObjectTypes/UID";
 import { type } from "os";
 import { Response } from "src/schema/types/HTTP";
 var getUser = new UserAccountService(
@@ -43,24 +42,20 @@ export type JSONUserObject={
 
 }
 
-export function getFollowersUIDList(screenName:string,count:number):Array<{screenName:string,restID:string,TYPE:UIDTYPE}>{
+export function getFollowersUIDList(screenName:string):Array<{screenName:string,restID:string,TYPE:UIDTYPE}>{
     
     //SECTION: Initialisation
-    let followersList:{
-        screenName:string,
-        restID:string,
-        TYPE:UIDTYPE
-    }[]=[];
+    let followersList:UID[]=[];
     let cursor='';
     let resolved:Response<{ followers: User[], next: string }>;//Stores pre-proccessed data from tweetFetch service 
     
 	//!SECTION: Initialisation
     
     for(
-        async()=>{getUser.getUserFollowers(screenName,20,cursor).then(res=>{resolved=res;});};
+        async()=>{await getUser.getUserFollowers(screenName,20,cursor).then(res=>{resolved=res;});};
         //@ts-ignore
         resolved.success&&resolved.error.message==='';//Checking if incoming data is valid or not
-        async()=>{getUser.getUserFollowers(screenName,20,resolved.data.next).then(res=>{resolved=res;});}//Updating check for next batch
+        async()=>{await getUser.getUserFollowers(screenName,20,resolved.data.next).then(res=>{resolved=res;});}//Updating check for next batch
 
     )
     {
@@ -79,7 +74,7 @@ export function getFollowersUIDList(screenName:string,count:number):Array<{scree
 }                    
 
                    
-export function getFollowingsUIDList(screenName:string,count:number):Array<{screenName:string,restID:string,TYPE:UIDTYPE}>{
+export function getFollowingsUIDList(screenName:string):Array<{screenName:string,restID:string,TYPE:UIDTYPE}>{
     
     //SECTION: Initialisation
     let followingsList:{
@@ -94,11 +89,11 @@ export function getFollowingsUIDList(screenName:string,count:number):Array<{scre
     
     for(
         //@ts-ignore
-        async()=>{getUser.getUserFollowings(screenName,20,cursor).then(res=>{resolved=res;});};
+        async()=>{await getUser.getUserFollowings(screenName,20,cursor).then(res=>{resolved=res;});};
         //@ts-ignore
         resolved.success&&resolved.error.message==='';//Checking if incoming data is valid or not
         //@ts-ignore
-        async()=>{getUser.getUserFollowings(screenName,20,resolved.data.next).then(res=>{resolved=res;});}//Updating check for next batch
+        async()=>{await getUser.getUserFollowings(screenName,20,resolved.data.next).then(res=>{resolved=res;});}//Updating check for next batch
 
     )
     {
@@ -135,8 +130,8 @@ export const parseUserDetails=(screenName:string):JSONUserObject=>{
                 'restID':res.data.user.id,    
                 'TYPE':0
             },
-            'followers':getFollowersUIDList(screenName,res.data.followersCount),
-            'followings':getFollowingsUIDList(screenName,res.data.followersCount),
+            'followers':getFollowersUIDList(screenName),
+            'followings':getFollowingsUIDList(screenName),
             'Meta':{
                 'fullName':res.data.user.fullName,
                 'profileImage':res.data.profileImage,
