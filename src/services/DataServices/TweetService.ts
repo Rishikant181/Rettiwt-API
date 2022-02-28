@@ -1,5 +1,8 @@
 // CUSTOM LIBS
-import { FetcherService } from "../FetcherService";
+import {
+    HttpMethods,
+    FetcherService
+} from "../FetcherService";
 
 /* TYPES */
 import {
@@ -19,6 +22,7 @@ import {
 
 /* HELPERS */
 import {
+    setCountryUrl,
     tweetsUrl,
     tweetDetailsUrl,
     tweetRepliesUrl,
@@ -50,6 +54,14 @@ export class TweetService extends FetcherService {
         cookie: string
     ) {
         super(authToken, csrfToken, cookie);
+    }
+
+    /**
+     * Sets the current country such that content relevant to that country is fetched
+     * @param countryId The internal/rest id of the target country
+     */
+    private setLocation(countryId: string): void {
+        this.fetchData(setCountryUrl())
     }
 
     /**

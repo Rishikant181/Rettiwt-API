@@ -88,9 +88,16 @@ export function userLikesUrl(
 }
 
 /**
- * Creates the url for fetching the list of tweets matching the given filter
+ * @returns The url used to set the current country for fetching trends
+ */
+export function setCountryUrl(): string {
+    return 'https://twitter.com/i/api/2/guide/set_explore_settings.json';
+}
+
+/**
  * @param filter The filter to be used for searching tweets
  * @param cursor The cusor to next batch
+ * @returns The url for fetching the list of tweets matching the given filter
  */
 export function tweetsUrl(
     filter: TweetFilter,
@@ -124,8 +131,8 @@ export function tweetsUrl(
 }
 
 /**
- * Creates the url for fetching the details of a given tweet
  * @param tweetId The rest id of the target tweet
+ * @returns The url for fetching the details of a given tweet
  */
 export function tweetDetailsUrl(
     tweetId: string
@@ -139,9 +146,9 @@ export function tweetDetailsUrl(
 }
 
 /**
- * Created the url for fetching the list of replies to a given tweet
  * @param tweetId The rest of the target tweet
  * @param cursor The curor to next batch
+ * @returns The url for fetching the list of replies to a given tweet
  */
 export function tweetRepliesUrl(
     tweetId: string,
@@ -162,10 +169,10 @@ export function tweetRepliesUrl(
 }
 
 /**
- * Created the url for fetching the list of users who liked a given tweet
  * @param tweetId The rest id of the target tweet
  * @param count The batch size of the list of users
  * @param cursor The curor to next batch
+ * @returns The url for fetching the list of users who liked a given tweet
  */
 export function tweetLikesUrl(
     tweetId: string,
@@ -187,10 +194,10 @@ export function tweetLikesUrl(
 }
 
 /**
- * Created the url for fetching the list of user who retweeted the given tweet
  * @param tweetId The rest id of the target tweet
  * @param count The batch size of the list of users
  * @param cursor The curor to next batch
+ * @returns The url for fetching the list of user who retweeted the given tweet
  */
 export function tweetRetweetUrl(
     tweetId: string,
@@ -214,9 +221,9 @@ export function tweetRetweetUrl(
 // HEADERS
 
 /**
- * Creates the header used for making unauthorized HTTP requests
  * @param authToken The authentication token received from Twitter
  * @param csrfToken The csrf token received from Twitter
+ * @returns The header used for making unauthorized HTTP requests
  */
 export function unauthorizedHeader(
     authToken: string,
@@ -236,10 +243,10 @@ export function unauthorizedHeader(
 }
 
 /**
- * Creates the header required for making authorized HTTP requests
  * @param authToken The authentication token received from Twitter
  * @param csrfToken The csrf token received from Twitter
  * @param cookie The cookie associated with the logged in account
+ * @returns The header required for making authorized HTTP requests
  */
 export function authorizedHeader(
     authToken: string,
