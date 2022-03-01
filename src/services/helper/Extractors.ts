@@ -124,7 +124,7 @@ export function extractTrending(res: any) {
 
     // Parsing the raw list to string list
     for(var item of res) {
-        trending.push(item['entryId'].substring(item['entryId'].indexOf('trends-') + 'trends-'.length));
+        trending.push(decodeURIComponent(item['entryId'].substring(item['entryId'].indexOf('trends-') + 'trends-'.length)).replace(/\+/g, ' ',));
     }
 
     return trending;
