@@ -48,7 +48,7 @@ export class UserAccountService extends FetcherService {
      * Fetches account details of the user with the given screen name
      * @param screenName The screen name of the target user. Example: "1canw1n"
      */
-    getUserAccountDetails(screenName: string): Promise<Response<User>> {
+    async getUserAccountDetails(screenName: string): Promise<Response<User>> {
         return this.fetchData(userAccountUrl(screenName))
             .then(res => {
                 // If user does not exist
@@ -85,7 +85,7 @@ export class UserAccountService extends FetcherService {
      * @param count The batch size of the list
      * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
-    getUserFollowing(
+    async getUserFollowing(
         userId: string,
         count: number,
         cursor: string
@@ -126,7 +126,7 @@ export class UserAccountService extends FetcherService {
      * @param count The batch size of the list
      * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
-    getUserFollowers(
+    async getUserFollowers(
         userId: string,
         count: number,
         cursor: string
@@ -167,7 +167,7 @@ export class UserAccountService extends FetcherService {
      * @param count The batch size of the list
      * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
-    getUserLikes(
+    async getUserLikes(
         userId: string,
         count: number,
         cursor: string

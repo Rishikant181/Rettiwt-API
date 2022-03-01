@@ -8,14 +8,17 @@ import { User } from '../../schema/types/UserAccountData';
 
 /* USERS */
 
-// Method to extract the user account details from response
+/**
+ * @param res The raw response received from Twitter
+ * @returns The raw user account details
+ */
 export function extractUserAccountDetails(res: any): User {
     return res['data']['user']['result'];
 }
 
 /**
- * Extracts the raw list of following of the target user from raw response data.
  * @param res The raw response received from TwitterAPI
+ * @returns The raw list of following of the target user from raw response data.
  */
 export function extractUserFollowing(res: any): { following: User[], next: string } {
     var following: User[] = [];
@@ -45,8 +48,8 @@ export function extractUserFollowing(res: any): { following: User[], next: strin
 }
 
 /**
- * Extracts the raw list of followers of the target user from raw response data.
  * @param res The raw response received from TwitterAPI
+ * @returns The raw list of followers of the target user from raw response data.
  */
 export function extractUserFollowers(res: any): { followers: User[], next: string } {
     var followers: User[] = [];
@@ -76,8 +79,8 @@ export function extractUserFollowers(res: any): { followers: User[], next: strin
 }
 
 /**
- * Extracts the raw list of tweets liked by the target user from raw response data.
  * @param res The raw response received from TwitterAPI
+ * @returns The raw list of tweets liked by the target user from raw response data.
  */
 export function extractUserLikes(res: any): { tweets: Tweet[], next: string } {
     var tweets: Tweet[] = [];
@@ -109,8 +112,27 @@ export function extractUserLikes(res: any): { tweets: Tweet[], next: string } {
 /* TWEETS */
 
 /**
- * Extracts the raw list of tweets matching the given filter from raw response data.
  * @param res The raw response received from TwitterAPI
+ * @returns The list of trending
+ */
+export function extractTrending(res: any) {
+    var trending: string[] = [];
+
+    // Extracting raw list of trending from response
+    //@ts-ignore
+    res = res['timeline']['instructions'][1]['addEntries']['entries'].filter(item => item['entryId'] === 'trends')[0]['content']['timelineModule']['items'];
+
+    // Parsing the raw list to string list
+    for(var item of res) {
+        trending.push(item['entryId'].substring(item['entryId'].indexOf('trends-') + 'trends-'.length));
+    }
+
+    return trending;
+}
+
+/**
+ * @param res The raw response received from TwitterAPI
+ * @returns The raw list of tweets matching the given filter from raw response data.
  */
 export function extractTweets(res: any) {
     var tweets: Tweet[] = [];
@@ -146,9 +168,9 @@ export function extractTweets(res: any) {
 }
 
 /**
- * Extracts the required tweet from raw response data.
  * @param res The raw response received from TwitterAPI
  * @param tweetId The rest id of the tweet to fetch
+ * @returns The required tweet from raw response data.
  */
 export function extractTweet(res: any, tweetId: string): Tweet {
     var tweet: Tweet;
@@ -164,8 +186,8 @@ export function extractTweet(res: any, tweetId: string): Tweet {
 }
 
 /**
- * Extracts the raw list of likers of the target tweet from raw response data.
  * @param res The raw response received from TwitterAPI
+ * @returns The raw list of likers of the target tweet from raw response data.
  */
 export function extractTweetLikers(res: any): { likers: User[], next: string } {
     var likers: User[] = [];
@@ -195,8 +217,8 @@ export function extractTweetLikers(res: any): { likers: User[], next: string } {
 }
 
 /**
- * Extracts the raw list of retweeters of the target tweet from raw response data.
  * @param res The raw response received from TwitterAPI
+ * @returns The raw list of retweeters of the target tweet from raw response data.
  */
 export function extractTweetRetweeters(res: any): { retweeters: User[], next: string } {
     var retweeters: User[] = [];
@@ -226,8 +248,8 @@ export function extractTweetRetweeters(res: any): { retweeters: User[], next: st
 }
 
 /**
- * Extracts the raw list of replies to a target tweet from raw response data.
  * @param res The raw response received from TwitterAPI
+ * @returns The raw list of replies to a target tweet from raw response data.
  */
 export function extractTweetReplies(res: any): { replies: Tweet[], next: string } {
     var replies: Tweet[] = [];

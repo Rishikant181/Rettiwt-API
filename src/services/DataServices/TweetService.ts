@@ -27,10 +27,12 @@ import {
     tweetDetailsUrl,
     tweetRepliesUrl,
     tweetLikesUrl,
-    tweetRetweetUrl
+    tweetRetweetUrl,
+    trendingUrl
 } from '../helper/Requests';
 
 import {
+    extractTrending,
     extractTweet,
     extractTweetLikers,
     extractTweetReplies,
@@ -68,8 +70,15 @@ export class TweetService extends FetcherService {
      * Fetches the top 30 trending in a region
      * @param country The name of of country to fetch trending for
      */
-    getTrending(countryId: string): any {
-        
+    async getTrending(countryId: string): Promise<any> {
+        // Setting the current region
+        await this.fetchData(setCountryUrl(), HttpMethods.POST, `places=${countryId}`)
+
+        // Getting the list of trending
+        this.fetchData(trendingUrl())
+            .then(res => {
+                console.log(extractTrending(res));
+            });
     }
 
     // TODO: Make this method also fetch the retweets made by the user
@@ -78,7 +87,7 @@ export class TweetService extends FetcherService {
      * @param filter The filter be used for searching the tweets
      * @param cursor The cursor to the next batch of tweets. If blank, first batch is fetched
      */
-    getTweets(
+    async getTweets(
         filter: TweetFilter,
         cursor: string
     ): Promise<Response<{ tweets: Tweet[], next: string }>> {
@@ -106,7 +115,7 @@ export class TweetService extends FetcherService {
      * Fetches the details of a single tweet wiht the given tweet id
      * @param tweetId The rest id of the target tweet
      */
-    getTweetById(tweetId: string): Promise<Response<Tweet>> {
+    async getTweetById(tweetId: string): Promise<Response<Tweet>> {
         return this.fetchData(tweetDetailsUrl(tweetId))
             .then(res => {
                 // If tweet does not exist
@@ -143,7 +152,7 @@ export class TweetService extends FetcherService {
      * @param count The batch size of the list
      * @param cursor The cursor to the next batch of users. If blank, first batch is fetched
      */
-    getTweetLikers(
+    async getTweetLikers(
         tweetId: string,
         count: number,
         cursor: string
@@ -185,7 +194,7 @@ export class TweetService extends FetcherService {
      * @param count The batch size of the list
      * @param cursor The cursor to the next batch of users. If blank, first batch is fetched
      */
-    getTweetRetweeters(
+    async getTweetRetweeters(
         tweetId: string,
         count: number,
         cursor: string
@@ -225,7 +234,7 @@ export class TweetService extends FetcherService {
      * @param tweetId The rest id of the target tweet
      * @param cursor The cursor to the next batch of replies. If blank, first batch is fetched
      */
-    getTweetReplies(
+    async getTweetReplies(
         tweetId: string,
         cursor: string
     ): Promise<Response<{ replies: Tweet[], next: string }>> {
