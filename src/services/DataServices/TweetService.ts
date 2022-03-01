@@ -62,22 +62,35 @@ export class TweetService extends FetcherService {
      * Sets the current country such that content relevant to that country is fetched
      * @param countryId The internal/rest id of the target country
      */
-    private setLocation(countryId: string): void {
-        this.fetchData(setCountryUrl())
+    private async setLocation(countryId: string): Promise<void> {
+        this.fetchData(setCountryUrl(), HttpMethods.POST, `places=${countryId}`)
     }
 
     /**
      * Fetches the top 30 trending in a region
      * @param country The name of of country to fetch trending for
      */
-    async getTrending(countryId: string): Promise<any> {
+    async getTrending(countryId: string): Promise<Response<string[]>> {
         // Setting the current region
-        await this.fetchData(setCountryUrl(), HttpMethods.POST, `places=${countryId}`)
+        await this.setLocation(countryId);
 
         // Getting the list of trending
-        this.fetchData(trendingUrl())
+        return this.fetchData(trendingUrl())
             .then(res => {
-                console.log(extractTrending(res));
+                return new Response<string[]>(
+                    true,
+                    new Error(Errors.NoError),
+                    extractTrending(res)
+                );
+            })
+            // If other run-time error occured
+            .catch(err => {
+                console.log(err);
+                return new Response<string[]>(
+                    false,
+                    new Error(Errors.FatalError),
+                    []
+                );
             });
     }
 

@@ -25,5 +25,6 @@ app.listen(config['server']['port'], () => {
         config['twitter']['auth']['csrfToken'],
         config['twitter']['auth']['cookie']
     )
-    .getTrending('-5165415742961667872');
+    .getTrending('-5165415742961667872')
+        .then(res => console.log(res));
 });
