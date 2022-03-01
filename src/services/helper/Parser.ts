@@ -1,7 +1,7 @@
 // This file contains various methods for extracting data from incoming JSON
 
 /**
- * Finds the value associated with the given key inside the given json
+ * @returns The value associated with the given key inside the given json
  * @param data The json data within which to search for the value
  * @param key The key to search for
  * @param last Whether to begin searching from the end
@@ -42,8 +42,7 @@ export function findJSONKey(data: any, key: string, last: boolean = false): any 
 }
 
 /**
- * Converts a singleton data to a list of data having one item.
- * If data is already a list, returns is as is
+ * @returns A list of data from a singleton data
  * @param data The data to be converted to a list
  */
 export function dataToList(data: any | any[]): any[] {

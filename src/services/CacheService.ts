@@ -15,7 +15,7 @@ import {
 } from './helper/Parser';
 
 /**
- * This service handles reading and writing of data from and to cache.
+ * @summary Handles reading and writing of data from and to cache.
  * 
  * **Note**: To be able to CacheService, the data to be cached must of a unique "id" field.
  */
@@ -40,7 +40,7 @@ export class CacheService {
     }
 
     /**
-     * Tries to connect to the database
+     * @summary Connects to the database
      * @returns Whether connection was successful or not
      */
     private async connectDB(): Promise<boolean> {
@@ -67,7 +67,7 @@ export class CacheService {
     }
 
     /**
-     * Indexes the data inserted into the cache by mapping their id/rest id to their internal Object id and collection name
+     * @summary Indexes the data inserted into the cache by mapping their id/rest id to their internal Object id and collection name
      * @param res The InsertManyResult from the write operation
      * @param data The data to be indexed
      */
@@ -93,7 +93,7 @@ export class CacheService {
     }
 
     /**
-     * Checks if the given data item is already cached or not
+     * @returns If the given data item is already cached or not
      * @param id The id/rest id of the data item to be checked
      */
     private async isCached(id: string): Promise<boolean> {
@@ -104,11 +104,10 @@ export class CacheService {
     }
 
     /**
-     * Stores the input data into the cache.
-     * Each type of data is stored in it's respective collection in the database
+     * @summary Stores the input data into the cache.
+     * @returns Whether writing to cache was successful or not
      * @param data The input data to store
      * @param update Whether to update the store data or not
-     * @returns Whether writing to cache was successful or not
      */
     async write(data: User | User[] | Tweet | Tweet[], update = false): Promise<boolean> {
         // Converting the data to a list of data
@@ -152,7 +151,7 @@ export class CacheService {
     }
 
     /**
-     * Fetches the data with the given id/rest id from cache
+     * @returns The data with the given id/rest id from cache
      * @param id The id/rest id of the data to be fetched from cache
      */
     async read(id: string): Promise<any> {
@@ -177,7 +176,8 @@ export class CacheService {
     }
 
     /**
-     * Clears the cache completely, including all indexes
+     * @summary Clears the cache completely, including all indexes
+     * @returns Whether clearing was successful or not
      */
     async clear(): Promise<boolean> {
         // If connection to database successful

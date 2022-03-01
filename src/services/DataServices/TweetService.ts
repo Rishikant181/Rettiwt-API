@@ -59,7 +59,7 @@ export class TweetService extends FetcherService {
     }
 
     /**
-     * Sets the current country such that content relevant to that country is fetched
+     * @summary Sets the current country such that content relevant to that country is fetched
      * @param countryId The internal/rest id of the target country
      */
     private async setLocation(countryId: string): Promise<void> {
@@ -67,7 +67,7 @@ export class TweetService extends FetcherService {
     }
 
     /**
-     * Fetches the top 30 trending in a region
+     * @returns The top 30 trending in a region
      * @param country The name of of country to fetch trending for
      */
     async getTrending(countryId: string): Promise<Response<string[]>> {
@@ -96,7 +96,7 @@ export class TweetService extends FetcherService {
 
     // TODO: Make this method also fetch the retweets made by the user
     /**
-     * Fetches a list of tweets that match the given filter
+     * @returns The list of tweets that match the given filter
      * @param filter The filter be used for searching the tweets
      * @param cursor The cursor to the next batch of tweets. If blank, first batch is fetched
      */
@@ -125,7 +125,7 @@ export class TweetService extends FetcherService {
     }
 
     /**
-     * Fetches the details of a single tweet wiht the given tweet id
+     * @returns The details of a single tweet with the given tweet id
      * @param tweetId The rest id of the target tweet
      */
     async getTweetById(tweetId: string): Promise<Response<Tweet>> {
@@ -160,7 +160,7 @@ export class TweetService extends FetcherService {
     }
 
     /**
-     * Fetches the list of users who liked the given tweet
+     * @returns The list of users who liked the given tweet
      * @param tweetId The rest id of the target tweet
      * @param count The batch size of the list
      * @param cursor The cursor to the next batch of users. If blank, first batch is fetched
@@ -202,7 +202,7 @@ export class TweetService extends FetcherService {
     }
 
     /**
-     * Fetches the list of users who retweeted the given tweet
+     * @returns The list of users who retweeted the given tweet     
      * @param tweetId The rest id of the target tweet
      * @param count The batch size of the list
      * @param cursor The cursor to the next batch of users. If blank, first batch is fetched
@@ -243,7 +243,7 @@ export class TweetService extends FetcherService {
     }
 
     /**
-     * Fetches the list of replies to the given tweet
+     * @returns The list of replies to the given tweet
      * @param tweetId The rest id of the target tweet
      * @param cursor The cursor to the next batch of replies. If blank, first batch is fetched
      */

@@ -45,8 +45,8 @@ export class UserAccountService extends FetcherService {
     }
 
     /**
-     * Fetches account details of the user with the given screen name
-     * @param screenName The screen name of the target user. Example: "1canw1n"
+     * @returns The user account details of the given user
+     * @param screenName The screen name of the target user.
      */
     async getUserAccountDetails(screenName: string): Promise<Response<User>> {
         return this.fetchData(userAccountUrl(screenName))
@@ -61,11 +61,10 @@ export class UserAccountService extends FetcherService {
                 }
                 // If user exists
                 else {
-                    var data = extractUserAccountDetails(res);
                     return new Response<User>(
                         true,
                         new Error(Errors.NoError),
-                        new User().deserialize(data),
+                        extractUserAccountDetails(res)
                     );
                 }
             })
@@ -80,7 +79,7 @@ export class UserAccountService extends FetcherService {
     }
 
     /**
-     * Fetches the list of users followed by the target user
+     * @returns The list of users followed by the target user
      * @param userId The rest id of the target user
      * @param count The batch size of the list
      * @param cursor The cursor to next batch. If blank, first batch is fetched
@@ -121,7 +120,7 @@ export class UserAccountService extends FetcherService {
     }
 
     /**
-     * Fetches the list of users following the target user
+     * @returns The list of users following the target user
      * @param userId The rest id of the target user
      * @param count The batch size of the list
      * @param cursor The cursor to next batch. If blank, first batch is fetched
@@ -162,7 +161,7 @@ export class UserAccountService extends FetcherService {
     }
 
     /**
-     * Fetches the list of tweets liked by the target user
+     * @returns The list of tweets liked by the target user
      * @param userId The rest id of the target user
      * @param count The batch size of the list
      * @param cursor The cursor to next batch. If blank, first batch is fetched

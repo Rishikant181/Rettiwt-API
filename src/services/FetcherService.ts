@@ -7,7 +7,7 @@ import {
 } from './helper/Requests'
 
 /**
- * The enum which has all the different type of http requests
+ * @summary Stores all the different type of http requests
  */
 export enum HttpMethods {
     POST = "POST",
@@ -15,7 +15,7 @@ export enum HttpMethods {
 };
 
 /**
- * The base serivice from which all other data services derive their behaviour
+ * @service The base serivice from which all other data services derive their behaviour
  */
 export class FetcherService {
     // MEMBER DATA
@@ -41,7 +41,7 @@ export class FetcherService {
     }
 
     /**
-     * Fetches the absolute raw json data from give url
+     * @returns The absolute raw json data from give url
      * @param url The url to fetch data from
      * @param method The type of HTTP request being made. Default is GET
      * @param body The content to be sent in the body of the response
