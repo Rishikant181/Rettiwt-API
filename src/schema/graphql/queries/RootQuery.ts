@@ -1,23 +1,41 @@
 import GraphiQL from "graphiql";
-import { GraphQLObjectType, GraphQLString } from "graphql";
-import { User } from "src/schema/graphql/types/userModel";
+import { GraphQLInt, GraphQLObjectType, GraphQLSchema, GraphQLString } from "graphql";
+
+//importing dependancy Graphql schemas
 import { UID } from "../types/uidModel";
+import { User } from "../types/userModel";
+import { Tweet } from "../types/tweetModel";
 
 //Importing resolver function
+import {fetchTweetsViaScreenName} from "../resolvers/fetchTweetSpecific"
 import { parseUserDetails } from "../resolvers/fetchUserSpecific";
-import { UserID } from "src/schema/types/UserAccountData";
 
 
-export const TwitterUser = new GraphQLObjectType({
-    name:'RootUserQuery',
-    description: '',
+
+
+const fetchTwitterData = new GraphQLObjectType({
+    name:'rootQuery',
+    
+    
     fields:()=>({
         targetUser:{
             type:User,
             args:{UserID:{type:GraphQLString!}},
             resolve(parent,args){
-                return parseUserDetails(args.UserID)
+                return parseUserDetails(args.UserID);
+            }
+        },
+        targetTweet:{
+            type:Tweet,
+            args:{UserID:{type:GraphQLString!},
+                  Count:{type:GraphQLInt}
+                },
+            resolve(parent,args){
+                return fetchTweetsViaScreenName(args.UserID,args.Count);
             }
         }
     })
+})
+module.exports=new GraphQLSchema({
+    query:fetchTwitterData
 })

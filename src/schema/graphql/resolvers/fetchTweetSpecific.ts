@@ -1,10 +1,10 @@
 import {TweetService} from "../../../services/DataServices/TweetService"
 import { config } from "../../../config/env";
-import { Tweet,TweetFilter} from "src/schema/types/TweetData";
+import { Tweet,TweetFilter} from "../../types/TweetData";
 import { BooleanValueNode, GraphQLList } from "graphql";
-import { UID, UIDTYPE } from "src/schema/graphql/resolvers/helpers/internalObjectTypes/UID";
-import { Response } from "src/schema/types/HTTP";
-import { User } from "src/schema/types/UserAccountData";
+import { UID, UIDTYPE } from "../../../schema/graphql/resolvers/helpers/internalObjectTypes/UID";
+import { Response } from "../../../schema/types/HTTP";
+import { User } from "../../../schema/types/UserAccountData";
 import { restructureTweetObject } from "./helpers/restructuring";
 import { JSONTweetObject } from "./helpers/internalObjectTypes/tweetObject";
 
@@ -12,8 +12,7 @@ import { JSONTweetObject } from "./helpers/internalObjectTypes/tweetObject";
 var fetchTweets=new TweetService(
     config['twitter']['auth']['authToken'],
     config['twitter']['auth']['csrfToken'],
-    config['twitter']['auth']['cookie'])
-
+    config['twitter']['auth']['cookie']);
 
 
 
@@ -96,8 +95,10 @@ export function fetchReplies(tweetID:string){
     return repliesList;
 }
 
-
-export function fetchTweetViaScreenName(screenName:string,Count?:number){
+export function parseTweetsDetails(url:string){
+    var id=RegExp
+}
+export function fetchTweetsViaScreenName(screenName:string,Count?:number){
     
     Count=Count??-1;
     var screenNameOnlyFilter= new TweetFilter(
@@ -108,11 +109,11 @@ export function fetchTweetViaScreenName(screenName:string,Count?:number){
     var tweetList:JSONTweetObject[]=[];
     var cursor='';
 
-    let promiseValidity:boolean;
 
 
     for(
         async()=>{
+            
             await fetchTweets.getTweets(screenNameOnlyFilter,cursor).then(res=>{
                 //@ts-ignore
                 resolved=res;});};
@@ -123,7 +124,12 @@ export function fetchTweetViaScreenName(screenName:string,Count?:number){
                 //@ts-ignore
                 resolved=res;});}           
     )//@ts-ignore
-        for(let eachTweet of resolved.data.tweets)
-            tweetList.push(restructureTweetObject(eachTweet));
+    for(let eachTweet of resolved.data.tweets)
+        tweetList.push(restructureTweetObject(eachTweet));
+    
+    return tweetList.slice(0,Count??tweetList.length-1);
+    
+    
 }
+
 
