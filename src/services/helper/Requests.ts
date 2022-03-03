@@ -88,9 +88,9 @@ export function userLikesUrl(
 }
 
 /**
- * @returns The url used to set the current country for fetching trends
+ * @returns The url used to set the current location for fetching trends
  */
-export function setCountryUrl(): string {
+export function setLocationUrl(): string {
     return 'https://twitter.com/i/api/2/guide/set_explore_settings.json';
 }
 

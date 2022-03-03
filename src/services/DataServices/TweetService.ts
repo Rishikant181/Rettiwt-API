@@ -22,7 +22,7 @@ import {
 
 /* HELPERS */
 import {
-    setCountryUrl,
+    setLocationUrl,
     tweetsUrl,
     tweetDetailsUrl,
     tweetRepliesUrl,
@@ -59,20 +59,20 @@ export class TweetService extends FetcherService {
     }
 
     /**
-     * @summary Sets the current country such that content relevant to that country is fetched
-     * @param countryId The internal/rest id of the target country
+     * @summary Sets the current location such that content relevant to that location is fetched
+     * @param locationId The internal/rest id of the target location
      */
-    private async setLocation(countryId: string): Promise<void> {
-        this.fetchData(setCountryUrl(), HttpMethods.POST, `places=${countryId}`)
+    private async setLocation(locationId: string): Promise<void> {
+        this.fetchData(setLocationUrl(), HttpMethods.POST, `places=${locationId}`)
     }
 
     /**
-     * @returns The top 30 trending in a region
-     * @param country The name of of country to fetch trending for
+     * @returns The top 30 trending in the given location
+     * @param location The id of the location to fetch trending for
      */
-    async getTrending(countryId: string): Promise<Response<string[]>> {
+    async getTrending(locationId: string): Promise<Response<string[]>> {
         // Setting the current region
-        await this.setLocation(countryId);
+        await this.setLocation(locationId);
 
         // Getting the list of trending
         return this.fetchData(trendingUrl())
