@@ -1,9 +1,9 @@
 import {UserAccountService} from "../../../services/DataServices/UserAccountService"
 import { config } from "../../../config/env";
-import { User } from "src/schema/types/UserAccountData";
-import { UID, UIDTYPE } from "src/schema/graphql/resolvers/helpers/internalObjectTypes/UID";
+import { User } from "../../types/UserAccountData";
+import { UID, UIDTYPE } from "../../graphql/resolvers/helpers/internalObjectTypes/UID";
 import { JSONUserObject } from "./helpers/internalObjectTypes/UserObject";
-import { Response } from "src/schema/types/HTTP";
+import { Response } from "../../types/HTTP";
 import { restructureUserObject } from "./helpers/restructuring";
 var getUser = new UserAccountService(
     config['twitter']['auth']['authToken'],

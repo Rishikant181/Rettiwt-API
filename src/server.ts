@@ -21,9 +21,10 @@ const app = express();
 app.use('/', (req, res) => {
     res.send("Hello World");    
 })
-app.use('/graphql',graphqlHTTP({
+app.use('/graphiql',graphqlHTTP({
     schema:schema,
     graphiql:true
+    
 
 }));
 
