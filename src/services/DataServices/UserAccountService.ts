@@ -84,10 +84,11 @@ export class UserAccountService extends FetcherService {
      * @param count The batch size of the list
      * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
-    async getUserFollowing(
+    getUserFollowings(
         userId: string,
         count: number,
-        cursor: string
+        cursor: string 
+        //TODO: Add default value to cursor
     ): Promise<Response<{ following: User[], next: string }>> {
         return this.fetchData(userFollowingUrl(userId, count, cursor))
             .then(res => {

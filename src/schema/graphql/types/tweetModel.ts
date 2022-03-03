@@ -4,18 +4,19 @@ import {UID} from './uidModel'
 //SECTION Base Level:Base
 export const Tweet = new GraphQLObjectType(
     {
+        
         name:"Tweet",
         description:"Basic Tweet object model That stores all basics of a tweet",
         fields:()=>({   
             
             id:{type:UID},
+            tweet_by:{type:UID},
             content:{type:Content},
             retweets:{type:new GraphQLList(UID)},
             likes:{type:new GraphQLList(UID)},
             comments:{type:new GraphQLList(UID)},
             Type:{type:GraphQLInt},
-            meta:{type:Meta,
-            }
+            meta:{type:Meta}
 
             
         })
@@ -64,5 +65,11 @@ const Filter = new GraphQLObjectType(
     
     
     })
-    //SECTION Base Level:3
-//SECTION Base Level:Base
+    //!SECTION Base Level:3
+//!SECTION Base Level:Base
+
+
+
+
+
+
