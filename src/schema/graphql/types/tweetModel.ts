@@ -1,6 +1,4 @@
 import {GraphQLEnumType, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString, } from 'graphql'
-import { tweetDetailsUrl } from 'src/services/helper/Requests'
-import { JSONUserObject } from '../resolvers/fetchUserSpecific'
 import {UID} from './uidModel'
 
 //SECTION Base Level:Base

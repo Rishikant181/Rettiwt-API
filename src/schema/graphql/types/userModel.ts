@@ -1,6 +1,6 @@
 
 import {GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString, } from 'graphql'
-import internal from 'stream'
+
 import { UID } from './uidModel'
 
 export const User = new GraphQLObjectType(

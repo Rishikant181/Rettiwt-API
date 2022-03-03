@@ -28,7 +28,8 @@
     "graphiql": "^1.5.19",
     "graphql": "^16.3.0",
     "mongodb": "^4.4.0",
-    "node-fetch": "^3.2.0"
+    "node-fetch": "^3.2.0",
+    "tsc": "^2.0.4"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
