@@ -5,7 +5,7 @@ import { Deserializable } from "./Data";
 import { UserID } from './UserAccountData';
 
 /**
- * Object to store the filter to be used for fetching tweets from TwitterAPI
+ * @summary Stores the filter to be used for fetching tweets from TwitterAPI
  */
 export class TweetFilter {
     // MEMBER DATA
@@ -42,7 +42,7 @@ export class TweetFilter {
 }
 
 /**
- * Object to store the different types of tweet elements like urls, media, mentions, hashtags, etc
+ * @summary Stores the different types of tweet elements like urls, media, mentions, hashtags, etc
  */
 class TweetEntities implements Deserializable {
     // MEMBER DATA
@@ -60,7 +60,8 @@ class TweetEntities implements Deserializable {
     }
 
     /**
-     * Stores the input data in this object
+     * @summary Stores the input data in this object
+     * @returns A TweetEntities object containing the various tweet entities
      * @param data The raw tweet entities data from the response received from TwitterAPI
      */
     deserialize(data: any): this {
@@ -101,7 +102,7 @@ class TweetEntities implements Deserializable {
 }
 
 /**
- * Object to store a single tweet
+ * @summary Stores a single tweet
  */
 export class Tweet implements Deserializable {
     // MEMBER DATA
@@ -119,9 +120,9 @@ export class Tweet implements Deserializable {
 
     // MEMBER METHODS
     /**
-     * Stores the input data in this object
+     * @summary Stores the input data in this object
+     * @returns A Tweet object containing the tweet data
      * @param data The raw tweet data from the response received from TwitterAPI
-     * @returns A tweet object containing the tweet data
      */
     deserialize(data: any): this {
         this.id = data['rest_id'];

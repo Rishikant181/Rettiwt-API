@@ -5,7 +5,7 @@ import { TweetFilter } from "../../schema/types/TweetData";
 // URLS
 
 /**
- * Creates the url for fetching user account details.
+ * @returns The url for fetching user account details.
  * @param screenName The screen name of the target user
  */
 export function userAccountUrl(screenName: string): string {
@@ -13,7 +13,7 @@ export function userAccountUrl(screenName: string): string {
 }
 
 /**
- * Creates the url for fetching the list of users followed bu target user.
+ * @returns The url for fetching the list of users followed bu target user.
  * @param userId The rest id of the target user
  * @param count The batch size of the list of following
  * @param cursor The cursor to next batch
@@ -26,19 +26,19 @@ export function userFollowingUrl(
     var url = '';
 
     // If a cursor is provided
-    if(cursor) {
+    if (cursor) {
         url = `https://twitter.com/i/api/graphql/RL_g7COnuCi8Rwr8X4Gm0w/Following?variables=%7B%22userId%22%3A%2244196397%22%2C%22count%22%3A${count}%2C%22cursor%22%3A%22${cursor}%22%2C%22includePromotedContent%22%3Afalse%2C%22withSuperFollowsUserFields%22%3Atrue%2C%22withDownvotePerspective%22%3Afalse%2C%22withReactionsMetadata%22%3Afalse%2C%22withReactionsPerspective%22%3Afalse%2C%22withSuperFollowsTweetFields%22%3Atrue%2C%22__fs_responsive_web_uc_gql_enabled%22%3Afalse%2C%22__fs_dont_mention_me_view_api_enabled%22%3Afalse%2C%22__fs_interactive_text%22%3Afalse%7D`;
     }
     // If no cursor if provided
     else {
         url = `https://twitter.com/i/api/graphql/RL_g7COnuCi8Rwr8X4Gm0w/Following?variables=%7B%22userId%22%3A%22${userId}%22%2C%22count%22%3A${count}%2C%22includePromotedContent%22%3Afalse%2C%22withSuperFollowsUserFields%22%3Atrue%2C%22withDownvotePerspective%22%3Afalse%2C%22withReactionsMetadata%22%3Afalse%2C%22withReactionsPerspective%22%3Afalse%2C%22withSuperFollowsTweetFields%22%3Atrue%2C%22__fs_responsive_web_uc_gql_enabled%22%3Afalse%2C%22__fs_dont_mention_me_view_api_enabled%22%3Afalse%2C%22__fs_interactive_text%22%3Afalse%7D`;
     }
-    
-    return  url;
+
+    return url;
 }
 
 /**
- * Creates the url for fetching the list of followers of the target user
+ * @return The url for fetching the list of followers of the target user
  * @param userId The rest id of the target user
  * @param count The batch size for the list of followers
  * @param cursor The cusor to next batch
@@ -51,7 +51,7 @@ export function userFollowersUrl(
     var url = '';
 
     // If a cursor if supplied
-    if(cursor) {
+    if (cursor) {
         url = `https://twitter.com/i/api/graphql/ApPIkCxgE55eeRqH6829GA/Followers?variables=%7B%22userId%22%3A%22${userId}%22%2C%22count%22%3A${count}%2C%22cursor%22%3A%22${cursor}%22%2C%22includePromotedContent%22%3Afalse%2C%22withSuperFollowsUserFields%22%3Atrue%2C%22withDownvotePerspective%22%3Afalse%2C%22withReactionsMetadata%22%3Afalse%2C%22withReactionsPerspective%22%3Afalse%2C%22withSuperFollowsTweetFields%22%3Atrue%2C%22__fs_responsive_web_uc_gql_enabled%22%3Afalse%2C%22__fs_dont_mention_me_view_api_enabled%22%3Afalse%2C%22__fs_interactive_text%22%3Afalse%7D`;
     }
     // If no cursor has been supplied
@@ -63,7 +63,7 @@ export function userFollowersUrl(
 }
 
 /**
- * Creates the url for fetching the list of tweets liked by the target user
+ * @returns The url for fetching the list of tweets liked by the target user
  * @param userId The rest id of the target user
  * @param count The batch size for the list of tweets
  * @param cursor The cusor to next batch
@@ -76,7 +76,7 @@ export function userLikesUrl(
     var url: string = '';
 
     // If cursor is supplied
-    if(cursor) {
+    if (cursor) {
         url = `https://twitter.com/i/api/graphql/rosCAWUCmDmwRD3gy7oWPw/Likes?variables=%7B%22userId%22%3A%22${userId}%22%2C%22count%22%3A${count}%2C%22cursor%22%3A%22${cursor}%22%2C%22includePromotedContent%22%3Afalse%2C%22withSuperFollowsUserFields%22%3Afalse%2C%22withDownvotePerspective%22%3Afalse%2C%22withReactionsMetadata%22%3Afalse%2C%22withReactionsPerspective%22%3Afalse%2C%22withSuperFollowsTweetFields%22%3Afalse%2C%22withClientEventToken%22%3Afalse%2C%22withBirdwatchNotes%22%3Afalse%2C%22withVoice%22%3Afalse%2C%22withV2Timeline%22%3Atrue%2C%22__fs_dont_mention_me_view_api_enabled%22%3Afalse%2C%22__fs_interactive_text_enabled%22%3Afalse%2C%22__fs_responsive_web_uc_gql_enabled%22%3Afalse%7D`
     }
     // If no cursor if supplied
@@ -88,9 +88,23 @@ export function userLikesUrl(
 }
 
 /**
- * Creates the url for fetching the list of tweets matching the given filter
+ * @returns The url used to set the current location for fetching trends
+ */
+export function setLocationUrl(): string {
+    return 'https://twitter.com/i/api/2/guide/set_explore_settings.json';
+}
+
+/**
+ * @returns The url from which the list of trending is fetched
+ */
+export function trendingUrl() {
+    return 'https://twitter.com/i/api/2/guide.json?include_profile_interstitial_type=1&include_blocking=1&include_blocked_by=1&include_followed_by=1&include_want_retweets=1&include_mute_edge=1&include_can_dm=1&include_can_media_tag=1&include_ext_has_nft_avatar=1&skip_status=1&cards_platform=Web-12&include_cards=1&include_ext_alt_text=true&include_quote_count=true&include_reply_count=1&tweet_mode=extended&include_entities=true&include_user_entities=true&include_ext_media_color=true&include_ext_media_availability=true&include_ext_sensitive_media_warning=true&include_ext_trusted_friends_metadata=true&send_error_codes=true&simple_quoted_tweet=true&count=20&include_page_configuration=true&initial_tab_id=trending&entity_tokens=false&ext=mediaStats%2ChighlightedLabel%2ChasNftAvatar%2CvoiceInfo%2CsuperFollowMetadata';
+}
+
+/**
+ * @returns The url for fetching the list of tweets matching the given filter
  * @param filter The filter to be used for searching tweets
- * @param cursor The cusor to next batch
+ * @param cursor The cusor to next batch * 
  */
 export function tweetsUrl(
     filter: TweetFilter,
@@ -112,7 +126,7 @@ export function tweetsUrl(
     var url = '';
 
     // If a cursor has been supplied
-    if(cursor) {
+    if (cursor) {
         url = `https://twitter.com/i/api/2/search/adaptive.json?include_profile_interstitial_type=1&include_blocking=1&include_blocked_by=1&include_followed_by=1&include_want_retweets=1&include_mute_edge=1&include_can_dm=1&include_can_media_tag=1&include_ext_has_nft_avatar=1&skip_status=1&cards_platform=Web-12&include_cards=1&include_ext_alt_text=true&include_quote_count=true&include_reply_count=1&tweet_mode=extended&include_entities=true&include_user_entities=true&include_ext_media_color=true&include_ext_media_availability=true&include_ext_sensitive_media_warning=true&send_error_codes=true&simple_quoted_tweet=true&q=${query}&tweet_search_mode=live&count=${filter.count}&query_source=typed_query&cursor=${cursor}&pc=1&spelling_corrections=1&ext=mediaStats%2ChighlightedLabel%2ChasNftAvatar%2CvoiceInfo%2CsuperFollowMetadata`
     }
     // If no cursor has been supplied
@@ -124,7 +138,7 @@ export function tweetsUrl(
 }
 
 /**
- * Creates the url for fetching the details of a given tweet
+ * @returns The url for fetching the details of a given tweet
  * @param tweetId The rest id of the target tweet
  */
 export function tweetDetailsUrl(
@@ -139,7 +153,7 @@ export function tweetDetailsUrl(
 }
 
 /**
- * Created the url for fetching the list of replies to a given tweet
+ * @returns The url for fetching the list of replies to a given tweet
  * @param tweetId The rest of the target tweet
  * @param cursor The curor to next batch
  */
@@ -150,7 +164,7 @@ export function tweetRepliesUrl(
     var url = '';
 
     // If a cursor is provided
-    if(cursor) {
+    if (cursor) {
         url = `https://twitter.com/i/api/graphql/_wm_hv4oOe3Y8aSlObbnDw/TweetDetail?variables=%7B%22focalTweetId%22%3A%22${tweetId}%22%2C%22cursor%22%3A%22${cursor}%22%2C%22referrer%22%3A%22tweet%22%2C%22controller_data%22%3A%22DAACDAABDAABCgABAAAAAJAAAAEKAAIAAAAAAQNACAMACAsKAAmpSxR7chHSNA8ADAMAAAAMAQAAkAAAAAAIQAMBAAAAAA%3D%3D%22%2C%22with_rux_injections%22%3Afalse%2C%22includePromotedContent%22%3Afalse%2C%22withCommunity%22%3Afalse%2C%22withQuickPromoteEligibilityTweetFields%22%3Afalse%2C%22withBirdwatchNotes%22%3Afalse%2C%22withSuperFollowsUserFields%22%3Afalse%2C%22withDownvotePerspective%22%3Afalse%2C%22withReactionsMetadata%22%3Afalse%2C%22withReactionsPerspective%22%3Afalse%2C%22withSuperFollowsTweetFields%22%3Afalse%2C%22withVoice%22%3Afalse%2C%22withV2Timeline%22%3Afalse%2C%22__fs_responsive_web_uc_gql_enabled%22%3Afalse%2C%22__fs_dont_mention_me_view_api_enabled%22%3Afalse%2C%22__fs_interactive_text%22%3Afalse%7D`;
     }
     // If no cursor if provided
@@ -162,7 +176,7 @@ export function tweetRepliesUrl(
 }
 
 /**
- * Created the url for fetching the list of users who liked a given tweet
+ * @returns The url for fetching the list of users who liked a given tweet
  * @param tweetId The rest id of the target tweet
  * @param count The batch size of the list of users
  * @param cursor The curor to next batch
@@ -175,7 +189,7 @@ export function tweetLikesUrl(
     var url = '';
 
     // If a cursor if provided
-    if(cursor) {
+    if (cursor) {
         url = `https://twitter.com/i/api/graphql/b6wPMcDnykulPTxt939GGw/Favoriters?variables=%7B%22tweetId%22%3A%22${tweetId}%22%2C%22count%22%3A${count}%2C%22cursor%22%3A%22${cursor}%22%2C%22includePromotedContent%22%3Afalse%2C%22withSuperFollowsUserFields%22%3Afalse%2C%22withDownvotePerspective%22%3Afalse%2C%22withReactionsMetadata%22%3Afalse%2C%22withReactionsPerspective%22%3Afalse%2C%22withSuperFollowsTweetFields%22%3Afalse%2C%22__fs_dont_mention_me_view_api_enabled%22%3Afalse%2C%22__fs_interactive_text%22%3Afalse%2C%22__fs_responsive_web_uc_gql_enabled%22%3Afalse%7D`;
     }
     // If no cursor is provided
@@ -187,7 +201,7 @@ export function tweetLikesUrl(
 }
 
 /**
- * Created the url for fetching the list of user who retweeted the given tweet
+ * @returns The url for fetching the list of user who retweeted the given tweet
  * @param tweetId The rest id of the target tweet
  * @param count The batch size of the list of users
  * @param cursor The curor to next batch
@@ -200,7 +214,7 @@ export function tweetRetweetUrl(
     var url = '';
 
     // If a cursor is provided
-    if(cursor) {
+    if (cursor) {
         url = `https://twitter.com/i/api/graphql/vj-x0V5P9wItF63wXbA6uQ/Retweeters?variables=%7B%22tweetId%22%3A%22${tweetId}%22%2C%22count%22%3A${count}%2C%22cursor%22%3A%22${cursor}%22%2C%22includePromotedContent%22%3Afalse%2C%22withSuperFollowsUserFields%22%3Afalse%2C%22withDownvotePerspective%22%3Afalse%2C%22withReactionsMetadata%22%3Afalse%2C%22withReactionsPerspective%22%3Afalse%2C%22withSuperFollowsTweetFields%22%3Afalse%2C%22__fs_dont_mention_me_view_api_enabled%22%3Afalse%2C%22__fs_interactive_text%22%3Afalse%2C%22__fs_responsive_web_uc_gql_enabled%22%3Afalse%7D`;
     }
     // If no cursor if provided
@@ -212,8 +226,31 @@ export function tweetRetweetUrl(
 }
 
 // HEADERS
+
 /**
- * Creates the header required for making authorized HTTP requests
+ * @returns The header used for making unauthorized HTTP requests
+ * @param authToken The authentication token received from Twitter
+ * @param csrfToken The csrf token received from Twitter
+ */
+export function unauthorizedHeader(
+    authToken: string,
+    csrfToken: string
+): any {
+    return {
+        "authorization": `Bearer ${authToken}`,
+        "content-type": "application/x-www-form-urlencoded",
+        "sec-ch-ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"98\", \"Microsoft Edge\";v=\"98\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "x-csrf-token": `${csrfToken}`,
+        "x-twitter-active-user": "yes",
+        "x-twitter-auth-type": "OAuth2Session",
+        "x-twitter-client-language": "en"
+    };
+}
+
+/**
+ * @returns The header required for making authorized HTTP requests
  * @param authToken The authentication token received from Twitter
  * @param csrfToken The csrf token received from Twitter
  * @param cookie The cookie associated with the logged in account
@@ -222,7 +259,7 @@ export function authorizedHeader(
     authToken: string,
     csrfToken: string,
     cookie: string
-) {
+): any {
     return {
         "accept": "*/*",
         "accept-language": "en-US,en;q=0.9",

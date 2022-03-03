@@ -1,5 +1,8 @@
 // CUSTOM LIBS
-import { FetcherService } from "../FetcherService";
+import {
+    HttpMethods,
+    FetcherService
+} from "../FetcherService";
 
 /* TYPES */
 import {
@@ -19,14 +22,17 @@ import {
 
 /* HELPERS */
 import {
+    setLocationUrl,
     tweetsUrl,
     tweetDetailsUrl,
     tweetRepliesUrl,
     tweetLikesUrl,
-    tweetRetweetUrl
+    tweetRetweetUrl,
+    trendingUrl
 } from '../helper/Requests';
 
 import {
+    extractTrending,
     extractTweet,
     extractTweetLikers,
     extractTweetReplies,
@@ -52,13 +58,49 @@ export class TweetService extends FetcherService {
         super(authToken, csrfToken, cookie);
     }
 
+    /**
+     * @summary Sets the current location such that content relevant to that location is fetched
+     * @param locationId The internal/rest id of the target location
+     */
+    private async setLocation(locationId: string): Promise<void> {
+        this.fetchData(setLocationUrl(), HttpMethods.POST, `places=${locationId}`)
+    }
+
+    /**
+     * @returns The top 30 trending in the given location
+     * @param location The id of the location to fetch trending for
+     */
+    async getTrending(locationId: string): Promise<Response<string[]>> {
+        // Setting the current region
+        await this.setLocation(locationId);
+
+        // Getting the list of trending
+        return this.fetchData(trendingUrl())
+            .then(res => {
+                return new Response<string[]>(
+                    true,
+                    new Error(Errors.NoError),
+                    extractTrending(res)
+                );
+            })
+            // If other run-time error occured
+            .catch(err => {
+                console.log(err);
+                return new Response<string[]>(
+                    false,
+                    new Error(Errors.FatalError),
+                    []
+                );
+            });
+    }
+
     // TODO: Make this method also fetch the retweets made by the user
     /**
-     * Fetches a list of tweets that match the given filter
+     * @returns The list of tweets that match the given filter
      * @param filter The filter be used for searching the tweets
      * @param cursor The cursor to the next batch of tweets. If blank, first batch is fetched
      */
-    getTweets(
+    async getTweets(
         filter: TweetFilter,
         cursor: string
     ): Promise<Response<{ tweets: Tweet[], next: string }>> {
@@ -83,10 +125,10 @@ export class TweetService extends FetcherService {
     }
 
     /**
-     * Fetches the details of a single tweet wiht the given tweet id
+     * @returns The details of a single tweet with the given tweet id
      * @param tweetId The rest id of the target tweet
      */
-    getTweetById(tweetId: string): Promise<Response<Tweet>> {
+    async getTweetById(tweetId: string): Promise<Response<Tweet>> {
         return this.fetchData(tweetDetailsUrl(tweetId))
             .then(res => {
                 // If tweet does not exist
@@ -118,12 +160,12 @@ export class TweetService extends FetcherService {
     }
 
     /**
-     * Fetches the list of users who liked the given tweet
+     * @returns The list of users who liked the given tweet
      * @param tweetId The rest id of the target tweet
      * @param count The batch size of the list
      * @param cursor The cursor to the next batch of users. If blank, first batch is fetched
      */
-    getTweetLikers(
+    async getTweetLikers(
         tweetId: string,
         count: number,
         cursor: string
@@ -160,12 +202,12 @@ export class TweetService extends FetcherService {
     }
 
     /**
-     * Fetches the list of users who retweeted the given tweet
+     * @returns The list of users who retweeted the given tweet     
      * @param tweetId The rest id of the target tweet
      * @param count The batch size of the list
      * @param cursor The cursor to the next batch of users. If blank, first batch is fetched
      */
-    getTweetRetweeters(
+    async getTweetRetweeters(
         tweetId: string,
         count: number,
         cursor: string
@@ -201,11 +243,11 @@ export class TweetService extends FetcherService {
     }
 
     /**
-     * Fetches the list of replies to the given tweet
+     * @returns The list of replies to the given tweet
      * @param tweetId The rest id of the target tweet
      * @param cursor The cursor to the next batch of replies. If blank, first batch is fetched
      */
-    getTweetReplies(
+    async getTweetReplies(
         tweetId: string,
         cursor: string
     ): Promise<Response<{ replies: Tweet[], next: string }>> {

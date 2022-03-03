@@ -3,7 +3,7 @@
 // TODO: Evaluate the error message and generate different error objects for different errors
 
 /**
- * An enum containing all the different type of error messages that are used throughout the app
+ * @summary Stores all the different type of error messages that are used throughout the app
  */
 export enum Errors {
     UserNotFound = "An account with given username/id was not found",
@@ -14,7 +14,7 @@ export enum Errors {
 }
 
 /**
- * Object used to store any error data
+ * @summary Stores any error data
  */
 export class Error {
     // MEMBER DATA
@@ -31,7 +31,7 @@ export class Error {
 }
 
 /**
- * Object used to store the response as returned by the services.
+ * @summary Stores the response as returned by the services.
  * This is a generic class and the type supplied is the type of data that this reponse object stores in it's data field
  */
 export class Response<Type> {

@@ -1,7 +1,7 @@
 // PACKAGE LIBS
 import {
     MongoClient,
-    InsertManyResult,
+    InsertOneResult,
     ObjectId
 } from "mongodb";
 
@@ -15,7 +15,7 @@ import {
 } from './helper/Parser';
 
 /**
- * This service handles reading and writing of data from and to cache.
+ * @summary Handles reading and writing of data from and to cache.
  * 
  * **Note**: To be able to CacheService, the data to be cached must of a unique "id" field.
  */
@@ -40,7 +40,7 @@ export class CacheService {
     }
 
     /**
-     * Tries to connect to the database
+     * @summary Connects to the database
      * @returns Whether connection was successful or not
      */
     private async connectDB(): Promise<boolean> {
@@ -67,11 +67,11 @@ export class CacheService {
     }
 
     /**
-     * Indexes the data inserted into the cache by mapping their id/rest id to their internal Object id and collection name
+     * @summary Indexes the data inserted into the cache by mapping their id/rest id to their internal Object id and collection name
      * @param res The InsertManyResult from the write operation
      * @param data The data to be indexed
      */
-    private async index(res: InsertManyResult<Document>, data: any[]): Promise<void> {
+    private async index(res: InsertOneResult<Document>, data: any): Promise<void> {
         var index = [];
 
         // If data insertion failed, skipping indexing
@@ -79,27 +79,21 @@ export class CacheService {
             return;
         }
 
-        // Inserting each data item id to index
-        for (var i = 0; i < res.insertedCount; i++) {
-            // Getting the object id of data
-            var objectId = res.insertedIds[i].toHexString();
-
-            // Preparing the index to be inserted
-            var indexItem = {
-                "id": findJSONKey(data[i], 'id'),
-                "_id": new ObjectId(objectId),
-                "collection": data[i].constructor.name
-            }
-
-            index.push(indexItem);
+        // Preparing the index to be inserted
+        var indexItem = {
+            "id": findJSONKey(data, 'id'),
+            "_id": new ObjectId(res.insertedId.toHexString()),
+            "collection": data.constructor.name
         }
+
+        index.push(indexItem);
 
         // Inserting the index into index collection
         await this.client.db(this.dbName).collection(this.dbIndex).insertMany(index);
     }
 
     /**
-     * Checks if the given data item is already cached or not
+     * @returns If the given data item is already cached or not
      * @param id The id/rest id of the data item to be checked
      */
     private async isCached(id: string): Promise<boolean> {
@@ -110,29 +104,45 @@ export class CacheService {
     }
 
     /**
-     * Stores the input data into the cache.
-     * Each type of data is stored in it's respective collection in the database
-     * @param data The input data to store
+     * @summary Stores the input data into the cache.
      * @returns Whether writing to cache was successful or not
+     * @param data The input data to store
+     * @param update Whether to update the store data or not
      */
-    async write(data: User | User[] | Tweet | Tweet[]): Promise<boolean> {
+    async write(data: User | User[] | Tweet | Tweet[], update = false): Promise<boolean> {
         // Converting the data to a list of data
         data = dataToList(data);
 
         // If connection to database successful
         if (await this.connectDB()) {
-            // If data already exists in cache, skip
-            if (await this.isCached(findJSONKey(data, 'id'))) {
-                return true;
+            // Iterating over the list of data
+            for (var item of data) {
+                // Storing whether data is already cached or not
+                var cached = await this.isCached(findJSONKey(item, 'id'));
+
+                // If data already exists in cache and no update required, skip
+                if (cached && update == false) {
+                    continue;
+                }
+                // If data already exists in cache and update required
+                else if (cached && update) {
+                    // Getting the object id of data from index
+                    var objectId = (await this.client.db(this.dbName).collection(this.dbIndex).findOne({ "id": findJSONKey(item, "id") }))?._id.toHexString();
+                    
+                    // Updating data in cache
+                    await this.client.db(this.dbName).collection(data[0].constructor.name).updateOne({ "_id": new ObjectId(objectId) }, { $set: item });
+                }
+                // If new data to be added
+                else {
+                    // Writing data to cache
+                    var res = await this.client.db(this.dbName).collection(data[0].constructor.name).insertOne(item);
+
+                    // Indexing the data
+                    this.index(res, item);
+                }
             }
 
-            // Writing data to cache
-            var res = await this.client.db(this.dbName).collection(data[0].constructor.name).insertMany(data);
-
-            // Indexing the data
-            this.index(res, data);
-
-            return res.acknowledged;
+            return true;
         }
         // If connection to database failed
         else {
@@ -141,7 +151,7 @@ export class CacheService {
     }
 
     /**
-     * Fetches the data with the given id/rest id from cache
+     * @returns The data with the given id/rest id from cache
      * @param id The id/rest id of the data to be fetched from cache
      */
     async read(id: string): Promise<any> {
@@ -166,11 +176,12 @@ export class CacheService {
     }
 
     /**
-     * Clears the cache completely, including all indexes
+     * @summary Clears the cache completely, including all indexes
+     * @returns Whether clearing was successful or not
      */
     async clear(): Promise<boolean> {
         // If connection to database successful
-        if(await this.connectDB()) {
+        if (await this.connectDB()) {
             // Clearing the cache
             return await this.client.db(this.dbName).dropDatabase();
         }
