@@ -27,23 +27,30 @@ export async function resolveTweets(filter: any): Promise<any> {
 
     // If required count less than batch size, setting batch size to required count
     batchSize = (tweetFilter.count < batchSize) ? tweetFilter.count : batchSize;
-    
+
     // Repeatedly fetching data as long as total data fetched is less than requried
-    while(total < tweetFilter.count) {
+    while (total < tweetFilter.count) {
         // If this is the last batch, change batch size to number of remaining tweets
         batchSize = ((tweetFilter.count - total) < batchSize) ? (tweetFilter.count - total) : batchSize;
 
         // Getting the data
         const res = (await tweetService.getTweets(tweetFilter, next)).data;
 
-        // Adding fetched tweets to list of tweets
-        tweets = tweets.concat(res.tweets);
+        // If data is available
+        if (res.tweets.length) {
+            // Adding fetched tweets to list of tweets
+            tweets = tweets.concat(res.tweets);
 
-        // Updating total tweets fetched
-        total += res.tweets.length;
+            // Updating total tweets fetched
+            total += res.tweets.length;
 
-        // Getting cursor to next batch
-        next = res.next
+            // Getting cursor to next batch
+            next = res.next
+        }
+        // If no more data is available
+        else {
+            break;
+        }
     }
 
     return tweets;
