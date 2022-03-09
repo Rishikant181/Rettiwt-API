@@ -1,5 +1,7 @@
 // PACKAGE LIBS
 import {
+    GraphQLInt,
+    GraphQLList,
     GraphQLObjectType,
     GraphQLString
 } from 'graphql'
@@ -8,9 +10,11 @@ import {
 
 // TYPES
 import { User } from '../types/UserTypes'
+import { Tweet } from '../types/TweetTypes';
 
 // RESOLVERS
 import { resolveUserDetails } from '../resolvers/UserSpecific';
+import { resolveTweets } from '../resolvers/TweetSpecific';
 
 export const rootQuery = new GraphQLObjectType({
     name: 'Root',
@@ -26,6 +30,21 @@ export const rootQuery = new GraphQLObjectType({
                 userName!: { type: GraphQLString }
             },
             resolve: (parent, args) => resolveUserDetails(args.userName)
+        },
+        Tweets: {
+            type: new GraphQLList(Tweet),
+            description: "Returns the list of tweets matching the given criteria",
+            args: {
+                fromUsers: { type: new GraphQLList(GraphQLString) },
+                toUsers: { type: new GraphQLList(GraphQLString) },
+                mentions: { type: new GraphQLList(GraphQLString) },
+                hashtags: { type: new GraphQLList(GraphQLString) },
+                words: { type: new GraphQLList(GraphQLString) },
+                startDate: { type: GraphQLString },
+                endDate: { type: GraphQLString },
+                count: { type: GraphQLInt, defaultValue: 20 }
+            },
+            resolve: (parent, args) => resolveTweets(args)
         }
     }
 })
