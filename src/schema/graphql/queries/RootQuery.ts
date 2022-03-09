@@ -1,15 +1,16 @@
 // PACKAGE LIBS
 import {
-    GraphQLObjectType, GraphQLString
+    GraphQLObjectType,
+    GraphQLString
 } from 'graphql'
 
 // CUSTOM LIBS
 
-// QUERIES
+// TYPES
+import { User } from '../types/UserTypes'
 
-import {
-    UserDetails
-} from './UserQueries';
+// RESOLVERS
+import { resolveUserDetails } from '../resolvers/UserSpecific';
 
 export const rootQuery = new GraphQLObjectType({
     name: 'Root',
@@ -18,6 +19,13 @@ export const rootQuery = new GraphQLObjectType({
             type: GraphQLString,
             resolve: () => "GraphQL Works!"
         },
-        UserDetails: UserDetails
+        UserDetails: {
+            type: User,
+            description: "Returns the details of the twitter user with given user name",
+            args: {
+                userName!: { type: GraphQLString }
+            },
+            resolve: (parent, args) => resolveUserDetails(args.userName)
+        }
     }
 })

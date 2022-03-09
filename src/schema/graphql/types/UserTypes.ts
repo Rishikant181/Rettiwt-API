@@ -12,7 +12,7 @@ export const UserID = new GraphQLObjectType({
     name: 'UserID',
     description: 'The identification details of a single target twitter user',
     fields: {
-        restId: { type: GraphQLString },
+        id: { type: GraphQLString },
         userName: { type: GraphQLString },
         fullName: { type: GraphQLString }
     }
@@ -22,7 +22,7 @@ export const User = new GraphQLObjectType({
     name: 'User',
     description: 'The details of a single target twitter user',
     fields: {
-        id: { type: UserID },
+        user: { type: UserID },
         createdAt: { type: GraphQLString },
         description: { type: GraphQLString },
         isVerified: { type: GraphQLBoolean },
