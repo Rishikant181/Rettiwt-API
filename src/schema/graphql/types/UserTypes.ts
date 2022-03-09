@@ -35,4 +35,4 @@ export const User = new GraphQLObjectType({
         profileBanner: { type: GraphQLString },
         profileImage: { type: GraphQLString },
     }
-})
+});
