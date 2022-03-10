@@ -14,7 +14,10 @@ import { Tweet } from '../types/TweetTypes';
 
 // RESOLVERS
 import { resolveUserDetails } from '../resolvers/UserSpecific';
-import { resolveTweets } from '../resolvers/TweetSpecific';
+import {
+    resolveTweet,
+    resolveTweets
+} from '../resolvers/TweetSpecific';
 
 export const rootQuery = new GraphQLObjectType({
     name: 'Root',
@@ -30,6 +33,14 @@ export const rootQuery = new GraphQLObjectType({
                 userName!: { type: GraphQLString }
             },
             resolve: (parent, args) => resolveUserDetails(args.userName)
+        },
+        Tweet: {
+            type: Tweet,
+            description: "Returns a single tweet given it's id",
+            args: {
+                id!: { type: GraphQLString }
+            },
+            resolve: (parent, args) => resolveTweet(args.id)
         },
         Tweets: {
             type: new GraphQLList(Tweet),

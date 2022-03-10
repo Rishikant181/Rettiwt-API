@@ -13,10 +13,21 @@ var tweetService = new TweetService(
 );
 
 /**
+ * @returns The details of the tweet with the given id
+ * @param id The id of the tweet which is to be fetched
+ */
+export async function resolveTweet(id: string): Promise<any> {
+    // Getting the data
+    var res = (await tweetService.getTweetById(id)).data;
+
+    return res;
+}
+
+/**
  * @returns The list of tweets matchin the given filter
  * @param filter The filter to be used for fetching matching tweets
  */
-export async function resolveTweets(filter: any): Promise<any> {
+export async function resolveTweets(filter: any): Promise<any[]> {
     var tweets: any[] = [];                                                     // To store the list of tweets
     var next: string = '';                                                      // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of tweets fetched
