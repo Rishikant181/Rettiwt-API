@@ -263,7 +263,7 @@ export class TweetService extends FetcherService {
                 }
                 // If tweet exists
                 else {
-                    var data = extractTweetReplies(res);
+                    var data = extractTweetReplies(res, tweetId);
                     return new Response<{ replies: Tweet[], next: string }>(
                         true,
                         new Error(Errors.NoError),
@@ -273,6 +273,7 @@ export class TweetService extends FetcherService {
             })
             // If other run-time error occured
             .catch(err => {
+                console.log(err);
                 return new Response<{ replies: Tweet[], next: string }>(
                     false,
                     new Error(Errors.FatalError),

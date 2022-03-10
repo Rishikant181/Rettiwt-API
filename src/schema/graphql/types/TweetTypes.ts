@@ -18,7 +18,9 @@ import {
 
 // RESOLVERS
 import {
-    resolveTweetLikers
+    resolveTweetLikers,
+    resolveTweetReplies,
+    resolveTweetRetweeters
 } from '../resolvers/TweetSpecific';
 
 
@@ -33,6 +35,7 @@ export const TweetTokens = new GraphQLObjectType({
     })
 });
 
+//@ts-ignore
 export const Tweet = new GraphQLObjectType({
     name: 'Tweet',
     description: 'The details of single tweet',
@@ -58,6 +61,28 @@ export const Tweet = new GraphQLObjectType({
                 }
             },
             resolve: (parent, args) => resolveTweetLikers(parent.id, args.count)
+        },
+        retweeters: {
+            type: new GraphQLList(User),
+            args: {
+                count: {
+                    type: GraphQLInt,
+                    description: "The number of retweeters to fetch",
+                    defaultValue: 10
+                }
+            },
+            resolve: (parent, args) => resolveTweetRetweeters(parent.id, args.count)
+        },
+        replies: {
+            type: new GraphQLList(Tweet),
+            args: {
+                count: {
+                    type: GraphQLInt,
+                    description: "The number of replies to fetch",
+                    defaultValue: 10
+                }
+            },
+            resolve: (parent, args) => resolveTweetReplies(parent.id, args.count)
         }
     })
 })

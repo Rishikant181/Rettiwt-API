@@ -13,8 +13,8 @@ var tweetService = new TweetService(
 );
 
 /**
- * @param filter The filter to be used for fetching matching tweets
  * @returns The list of tweets matchin the given filter
+ * @param filter The filter to be used for fetching matching tweets
  */
 export async function resolveTweets(filter: any): Promise<any> {
     var tweets: any[] = [];                                                     // To store the list of tweets
@@ -57,9 +57,9 @@ export async function resolveTweets(filter: any): Promise<any> {
 }
 
 /**
+ * @returns The list of likers of the given tweet
  * @param id The id of the tweet whose likers are to be fetched
  * @param count The total number of likers to fetch
- * @returns The list of likers of the given tweet
  */
 export async function resolveTweetLikers(id: string, count: number): Promise<any[]> {
     var likers: any[] = [];                                                     // To store the list of likers
@@ -96,4 +96,81 @@ export async function resolveTweetLikers(id: string, count: number): Promise<any
     }
 
     return likers;
+}
+
+/**
+ * @returns The list of retweeters of the given tweet
+ * @param id The id of the tweet whose retweeters are to be fetched
+ * @param count The total number of retweeters to fetch
+ */
+ export async function resolveTweetRetweeters(id: string, count: number): Promise<any[]> {
+    var retweeters: any[] = [];                                                 // To store the list of retweeters
+    var next: string = '';                                                      // To store cursor to next batch
+    var total: number = 0;                                                      // To store the total number of retweeters fetched
+    var batchSize: number = 20;                                                 // To store the batchsize to use
+
+    // If required count less than batch size, setting batch size to required count
+    batchSize = (count < batchSize) ? count : batchSize;
+
+    // Repeatedly fetching data as long as total data fetched is less than requried
+    while (total < count) {
+        // If this is the last batch, change batch size to number of remaining retweeters
+        batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
+
+        // Getting the data
+        const res = (await tweetService.getTweetRetweeters(id, count, next)).data;
+
+        // If data is available
+        if (res.retweeters.length) {
+            // Adding fetched retweeters to list of retweeters
+            retweeters = retweeters.concat(res.retweeters);
+
+            // Updating total retweeters fetched
+            total += res.retweeters.length;
+
+            // Getting cursor to next batch
+            next = res.next
+        }
+        // If no more data is available
+        else {
+            break;
+        }
+    }
+
+    return retweeters;
+}
+
+/**
+ * @returns The list of replies of the given tweet
+ * @param id The id of the tweet whose replies are to be fetched
+ * @param count The total number of replies to fetch
+ */
+ export async function resolveTweetReplies(id: string, count: number): Promise<any[]> {
+    var replies: any[] = [];                                                    // To store the list of replies
+    var next: string = '';                                                      // To store cursor to next batch
+    var total: number = 0;                                                      // To store the total number of replies fetched
+
+    // Repeatedly fetching data as long as total data fetched is less than requried
+    while (total < count) {
+        // Getting the data
+        const res = (await tweetService.getTweetReplies(id, next)).data;
+
+        // If data is available
+        if (res.replies.length) {
+            // Adding fetched replies to list of replies
+            replies = replies.concat(res.replies);
+
+            // Updating total replies fetched
+            total += res.replies.length;
+
+            // Getting cursor to next batch
+            next = res.next
+        }
+        // If no more data is available
+        else {
+            break;
+        }
+    }
+
+    return replies;
 }

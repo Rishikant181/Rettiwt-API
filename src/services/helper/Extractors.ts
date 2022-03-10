@@ -250,8 +250,9 @@ export function extractTweetRetweeters(res: any): { retweeters: User[], next: st
 /**
  * @returns The raw list of replies to a target tweet from raw response data.
  * @param res The raw response received from TwitterAPI
+ * @param tweetId The id of the tweet whose replies must be extracted
  */
-export function extractTweetReplies(res: any): { replies: Tweet[], next: string } {
+export function extractTweetReplies(res: any, tweetId: string): { replies: Tweet[], next: string } {
     var replies: Tweet[] = [];
     var next: string = '';
 
