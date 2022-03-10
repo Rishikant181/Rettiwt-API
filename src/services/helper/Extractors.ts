@@ -266,15 +266,23 @@ export function extractTweetReplies(res: any, tweetId: string): { replies: Tweet
 
     // Iterating over raw list of replies
     for (var entry of res) {
+        var tweet: any;
+        
         // Checking if entry is of type conversation
         if (entry['entryId'].indexOf('conversationthread') != -1) {
-            // Adding the reply to list of replies
-            replies.push(new Tweet().deserialize(entry['content']['items'][0]['item']['itemContent']['tweet_results']['result']));
+            // Getting the tweet
+            tweet = entry['content']['items'][0]['item']['itemContent']['tweet_results']['result'];
         }
         // Checking if entry is of type tweet
         else if (entry['entryId'].indexOf('tweet') != -1) {
+            // Getting the tweet
+            tweet = entry['content']['itemContent']['tweet_results']['result'];
+        }
+
+        // Checking if the reply is actually a reply to target tweet
+        if(tweet['legacy']['in_reply_to_status_id_str'] === tweetId) {
             // Adding the reply to list of replies
-            replies.push(new Tweet().deserialize(entry['content']['itemContent']['tweet_results']['result']));
+            replies.push(new Tweet().deserialize(tweet));
         }
     }
 
