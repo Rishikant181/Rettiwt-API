@@ -12,8 +12,14 @@ import {
 
 // TYPES
 import {
+    User,
     UserID
 } from './UserTypes';
+
+// RESOLVERS
+import {
+    resolveTweetLikers
+} from '../resolvers/TweetSpecific';
 
 
 export const TweetTokens = new GraphQLObjectType({
@@ -42,5 +48,16 @@ export const Tweet = new GraphQLObjectType({
         quoteCount: { type: GraphQLInt },
         replyCount: { type: GraphQLInt },
         retweetCount: { type: GraphQLInt },
+        likers: {
+            type: new GraphQLList(User),
+            args: {
+                count: {
+                    type: GraphQLInt,
+                    description: "The number of likers to fetch",
+                    defaultValue: 10
+                }
+            },
+            resolve: (parent, args) => resolveTweetLikers(parent.id, args.count)
+        }
     })
 })

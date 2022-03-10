@@ -55,3 +55,45 @@ export async function resolveTweets(filter: any): Promise<any> {
 
     return tweets;
 }
+
+/**
+ * @param id The id of the tweet whose likers are to be fetched
+ * @param count The total number of likers to fetch
+ * @returns The list of likers of the given tweet
+ */
+export async function resolveTweetLikers(id: string, count: number): Promise<any[]> {
+    var likers: any[] = [];                                                     // To store the list of likers
+    var next: string = '';                                                      // To store cursor to next batch
+    var total: number = 0;                                                      // To store the total number of likers fetched
+    var batchSize: number = 20;                                                 // To store the batchsize to use
+
+    // If required count less than batch size, setting batch size to required count
+    batchSize = (count < batchSize) ? count : batchSize;
+
+    // Repeatedly fetching data as long as total data fetched is less than requried
+    while (total < count) {
+        // If this is the last batch, change batch size to number of remaining likers
+        batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
+
+        // Getting the data
+        const res = (await tweetService.getTweetLikers(id, count, next)).data;
+
+        // If data is available
+        if (res.likers.length) {
+            // Adding fetched likers to list of likers
+            likers = likers.concat(res.likers);
+
+            // Updating total likers fetched
+            total += res.likers.length;
+
+            // Getting cursor to next batch
+            next = res.next
+        }
+        // If no more data is available
+        else {
+            break;
+        }
+    }
+
+    return likers;
+}
