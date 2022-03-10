@@ -123,7 +123,7 @@ export function extractTrending(res: any) {
     res = res['timeline']['instructions'][1]['addEntries']['entries'].filter(item => item['entryId'] === 'trends')[0]['content']['timelineModule']['items'];
 
     // Parsing the raw list to string list
-    for(var item of res) {
+    for (var item of res) {
         trending.push(decodeURIComponent(item['entryId'].substring(item['entryId'].indexOf('trends-') + 'trends-'.length)).replace(/\+/g, ' ',));
     }
 
@@ -140,7 +140,7 @@ export function extractTweets(res: any) {
 
     // Extracting the cursor to next batch
     // If not first batch
-    if(res['timeline']['instructions'].length > 1) {
+    if (res['timeline']['instructions'].length > 1) {
         next = res['timeline']['instructions'][2]['replaceEntry']['entry']['content']['operation']['cursor']['value'];
     }
     // If first batch
@@ -178,7 +178,7 @@ export function extractTweet(res: any, tweetId: string): Tweet {
     // Extracting required raw tweet from response
     //@ts-ignore
     res = res['data']['threaded_conversation_with_injections']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'].filter(item => item['entryId'].indexOf(tweetId) != -1)[0]['content']['itemContent']['tweet_results']['result'];
-    
+
     // Storing the tweet in a tweet object
     tweet = new Tweet().deserialize(res);
 
@@ -264,25 +264,20 @@ export function extractTweetReplies(res: any, tweetId: string): { replies: Tweet
     //@ts-ignore
     next = res.filter(item => item['entryId'].indexOf('cursor-bottom') != -1)[0]['content']['itemContent']['value'];
 
-    // Iterating over raw list of replies
+    // Iterating over raw list of tweets
     for (var entry of res) {
         var tweet: any;
-        
-        // Checking if entry is of type conversation
+
+        // Checking if entry is of type reply
         if (entry['entryId'].indexOf('conversationthread') != -1) {
             // Getting the tweet
             tweet = entry['content']['items'][0]['item']['itemContent']['tweet_results']['result'];
-        }
-        // Checking if entry is of type tweet
-        else if (entry['entryId'].indexOf('tweet') != -1) {
-            // Getting the tweet
-            tweet = entry['content']['itemContent']['tweet_results']['result'];
-        }
 
-        // Checking if the reply is actually a reply to target tweet
-        if(tweet['legacy']['in_reply_to_status_id_str'] === tweetId) {
-            // Adding the reply to list of replies
-            replies.push(new Tweet().deserialize(tweet));
+            // Checking if the reply is actually a reply to target tweet
+            if (tweet['legacy']['in_reply_to_status_id_str'] === tweetId) {
+                // Adding the reply to list of replies
+                replies.push(new Tweet().deserialize(tweet));
+            }
         }
     }
 
