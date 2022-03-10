@@ -85,4 +85,4 @@ export const Tweet = new GraphQLObjectType({
             resolve: (parent, args) => resolveTweetReplies(parent.id, args.count)
         }
     })
-})
+});
