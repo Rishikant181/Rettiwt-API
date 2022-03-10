@@ -114,7 +114,7 @@ export async function resolveTweetLikers(id: string, count: number): Promise<any
  * @param id The id of the tweet whose retweeters are to be fetched
  * @param count The total number of retweeters to fetch
  */
- export async function resolveTweetRetweeters(id: string, count: number): Promise<any[]> {
+export async function resolveTweetRetweeters(id: string, count: number): Promise<any[]> {
     var retweeters: any[] = [];                                                 // To store the list of retweeters
     var next: string = '';                                                      // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of retweeters fetched
@@ -156,7 +156,7 @@ export async function resolveTweetLikers(id: string, count: number): Promise<any
  * @param id The id of the tweet whose replies are to be fetched
  * @param count The total number of replies to fetch
  */
- export async function resolveTweetReplies(id: string, count: number): Promise<any[]> {
+export async function resolveTweetReplies(id: string, count: number): Promise<any[]> {
     var replies: any[] = [];                                                    // To store the list of replies
     var next: string = '';                                                      // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of replies fetched
