@@ -22,12 +22,4 @@ app.use('/graphql', graphqlHTTP({
 // Setting up express server
 app.listen(config['server']['port'], () => {
     console.log(`Listening on port ${config['server']['port']}`);
-
-    new UserAccountService(
-        config['twitter']['auth']['authToken'],
-        config['twitter']['auth']['csrfToken'],
-        config['twitter']['auth']['cookie']
-    )
-    .getUserAccountDetailsById('44196397')
-    .then(res => console.log(res));
 });

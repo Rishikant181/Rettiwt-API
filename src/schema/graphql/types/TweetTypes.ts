@@ -18,6 +18,7 @@ import {
 
 // RESOLVERS
 import {
+    resolveTweet,
     resolveTweetLikers,
     resolveTweetReplies,
     resolveTweetRetweeters
@@ -46,7 +47,10 @@ export const Tweet = new GraphQLObjectType({
         entities: { type: TweetTokens },
         quoted: { type: GraphQLString },
         fullText: { type: GraphQLString },
-        replyTo: { type: GraphQLString },
+        replyTo: {
+            type: Tweet,
+            resolve: (parent, args) => resolveTweet(parent.replyTo)
+        },
         lang: { type: GraphQLString },
         quoteCount: { type: GraphQLInt },
         replyCount: { type: GraphQLInt },
