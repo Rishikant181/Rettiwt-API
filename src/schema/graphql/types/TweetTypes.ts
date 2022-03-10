@@ -19,18 +19,18 @@ import {
 export const TweetTokens = new GraphQLObjectType({
     name: 'TweetTokens',
     description: 'Additional extracted tokens from the tweet like mentions, hashtags, etc',
-    fields: {
+    fields: () => ({
         hashtags: { type: new GraphQLList(GraphQLString) },
         urls: { type: new GraphQLList(GraphQLString) },
         mentionedUsers: { type: new GraphQLList(UserID) },
         media: { type: new GraphQLList(GraphQLString) },
-    }
+    })
 });
 
 export const Tweet = new GraphQLObjectType({
     name: 'Tweet',
     description: 'The details of single tweet',
-    fields: {
+    fields: () => ({
         id: { type: GraphQLString },
         tweetBy: { type: GraphQLString },
         createdAt: { type: GraphQLString },
@@ -42,5 +42,5 @@ export const Tweet = new GraphQLObjectType({
         quoteCount: { type: GraphQLInt },
         replyCount: { type: GraphQLInt },
         retweetCount: { type: GraphQLInt },
-    }
+    })
 })

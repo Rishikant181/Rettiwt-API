@@ -11,20 +11,24 @@ import {
 
 // CUSTOM LIBS
 
+// TYPES
+import { Tweet } from './TweetTypes'
+
 // RESOLVERS
 import {
     resolveUserFollowers,
     resolveUserFollowing
 } from '../resolvers/UserSpecific';
+import { resolveTweets } from '../resolvers/TweetSpecific';
 
 export const UserID = new GraphQLObjectType({
     name: 'UserID',
     description: 'The identification details of a single target twitter user',
-    fields: {
+    fields: () => ({
         id: { type: GraphQLString },
         userName: { type: GraphQLString },
         fullName: { type: GraphQLString }
-    }
+    })
 });
 
 //@ts-ignore
@@ -53,8 +57,8 @@ export const User = new GraphQLObjectType({
             type: new GraphQLList(User),
             args: {
                 count: {
+                    type: GraphQLInt,
                     description: "The number of followings to fetch",
-                    type: GraphQLInt
                 }
             },
             resolve: (parent, args) => resolveUserFollowing(parent.user.id, args.count)
@@ -63,6 +67,17 @@ export const User = new GraphQLObjectType({
         location: { type: GraphQLString },
         pinnedTweets: { type: GraphQLString },
         profileBanner: { type: GraphQLString },
+        tweets: {
+            type: new GraphQLList(Tweet),
+            args: {
+                count: {
+                    type: GraphQLInt,
+                    description: "The number of tweets to fetch",
+                    defaultValue: 1
+                }
+            },
+            resolve: (parent, args) => resolveTweets({ fromUsers: [parent.user.userName], ...args })
+        },
         profileImage: { type: GraphQLString },
     })
 });
