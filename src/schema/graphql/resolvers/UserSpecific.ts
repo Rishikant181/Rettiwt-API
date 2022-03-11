@@ -14,23 +14,30 @@ var userService = new UserAccountService(
 /**
  * @returns The details of the target twitter user
  * @param userName The user name of the target twitter user
+ * @param id The id of the target twitter user
  */
-export async function resolveUserDetails(userName: string): Promise<any> {
-    // Getting the data
-    var res = (await userService.getUserAccountDetails(userName)).data;
+export async function resolveUserDetails(userName?: string, id?: string): Promise<any> {
+    var res: any;                                                               // To store response data
+    
+    // If user name is supplied
+    if(userName) {
+        // Getting the data
+        res = await userService.getUserAccountDetails(userName);
+    }
+    // If id is supplied
+    else if(id) {
+        res = await userService.getUserAccountDetailsById(id);
+    }
 
-    return res;
-}
-
-/**
- * @returns The details of the target twitter user
- * @param userName The id of the target twitter user
- */
- export async function resolveUserDetailsById(id: string): Promise<any> {
-    // Getting the data
-    var res = (await userService.getUserAccountDetailsById(id)).data;
-
-    return res;
+    // Evaluating response
+    // If user is found
+    if(res.success) {
+        return res.data;
+    }
+    // If user not found or any other error
+    else {
+        throw new Error(res.error.message);
+    }
 }
 
 /**
