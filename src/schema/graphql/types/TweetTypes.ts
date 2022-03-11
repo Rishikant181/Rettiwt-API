@@ -24,6 +24,10 @@ import {
     resolveTweetRetweeters
 } from '../resolvers/TweetSpecific';
 
+import {
+    resolveUserDetailsById
+} from "../resolvers/UserSpecific";
+
 
 export const TweetTokens = new GraphQLObjectType({
     name: 'TweetTokens',
@@ -42,7 +46,10 @@ export const Tweet = new GraphQLObjectType({
     description: 'The details of single tweet',
     fields: () => ({
         id: { type: GraphQLString },
-        tweetBy: { type: GraphQLString },
+        tweetBy: {
+            type: User,
+            resolve: (parent, args) => resolveUserDetailsById(parent.tweetBy)
+        },
         createdAt: { type: GraphQLString },
         entities: { type: TweetTokens },
         quoted: { type: GraphQLString },
