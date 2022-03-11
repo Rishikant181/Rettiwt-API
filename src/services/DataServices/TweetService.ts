@@ -7,7 +7,6 @@ import {
 /* TYPES */
 import {
     Errors,
-    Error,
     Response
 } from '../../schema/types/HTTP'
 

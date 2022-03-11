@@ -6,7 +6,7 @@
  */
 export function isJSONEmpty(data: any): boolean {
     // If the JSON has any keys, it's not empty
-    if(Object.keys(data).length) {
+    if(Object.keys(data).length == 0) {
         return true;
     }
     // Else, it's empty

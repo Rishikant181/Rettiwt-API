@@ -5,6 +5,10 @@
 // TYPES
 import { Tweet } from '../../schema/types/TweetData';
 import { User } from '../../schema/types/UserAccountData';
+import { Errors } from '../../schema/types/HTTP';
+
+// HELPERS
+import { isJSONEmpty } from './Parser';
 
 /* USERS */
 
@@ -13,8 +17,13 @@ import { User } from '../../schema/types/UserAccountData';
  * @param res The raw response received from Twitter
  */
 export function extractUserAccountDetails(res: any): User {
-    
-    
+    // ERROR HANDLING    
+    // If user not found
+    if(isJSONEmpty(res['data']) || isJSONEmpty(res['data']['user'])) {
+        throw new Error(Errors.UserNotFound);
+    }
+
+    // DATA EXTRACTION    
     return new User().deserialize(res['data']['user']['result']);
 }
 

@@ -4,7 +4,6 @@ import { FetcherService } from '../FetcherService';
 /* TYPES */
 import {
     Errors,
-    Error,
     Response
 } from '../../schema/types/HTTP'
 
@@ -62,7 +61,7 @@ export class UserAccountService extends FetcherService {
             .catch(err => {
                 return new Response<User>(
                     false,
-                    new Error(Errors.FatalError),
+                    err,
                     {},
                 );
             });
@@ -75,25 +74,15 @@ export class UserAccountService extends FetcherService {
     async getUserAccountDetailsById(restId: string): Promise<Response<User>> {
         return this.fetchData(userAccountByIdUrl(restId))
             .then(res => {
-                // If user does not exist
-                if (!Object.keys(res['data']['user']).length) {
-                    return new Response<User>(
-                        false,
-                        new Error(Errors.UserNotFound),
-                        {},
-                    );
-                }
-                // If user exists
-                else {
-                    return new Response<User>(
-                        true,
-                        new Error(Errors.NoError),
-                        extractUserAccountDetails(res)
-                    );
-                }
+                return new Response<User>(
+                    true,
+                    new Error(Errors.NoError),
+                    extractUserAccountDetails(res)
+                );
             })
             // If other run-time errors
             .catch(err => {
+                console.log(err);
                 return new Response<User>(
                     false,
                     new Error(Errors.FatalError),
