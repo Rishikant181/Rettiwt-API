@@ -94,7 +94,6 @@ export class TweetService extends FetcherService {
             });
     }
 
-    // TODO: Make this method also fetch the retweets made by the user
     /**
      * @returns The list of tweets that match the given filter
      * @param filter The filter be used for searching the tweets

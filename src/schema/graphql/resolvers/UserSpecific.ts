@@ -77,8 +77,6 @@ export async function resolveUserFollowers(id: string, count: number): Promise<a
         else {
             break;
         }
-
-        console.log(res.data.followers.length)
     }
 
     return followers;

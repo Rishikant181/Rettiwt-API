@@ -136,24 +136,14 @@ export class UserAccountService extends FetcherService {
                 }
                 // If user exists
                 else {
+                    // Extracting data
                     var data = extractUserFollowing(res);
 
-                    // If end of following list
-                    if (!data.following.length) {
-                        return new Response<{ following: User[], next: string }>(
-                            false,
-                            new Error(Errors.NoError),
-                            { following: [], next: '' }
-                        );
-                    }
-                    // If more following
-                    else {
-                        return new Response<{ following: User[], next: string }>(
-                            true,
-                            new Error(Errors.NoError),
-                            { following: data.following, next: data.next }
-                        );
-                    }
+                    return new Response<{ following: User[], next: string }>(
+                        data.following.length ? true : false,
+                        new Error(Errors.NoError),
+                        { following: data.following, next: data.next }
+                    );
                 }
             })
             // If other run-time error
@@ -189,24 +179,14 @@ export class UserAccountService extends FetcherService {
                 }
                 // If user exists
                 else {
+                    // Extracting data
                     var data = extractUserFollowers(res);
 
-                    // If end of followers list
-                    if (!data.followers.length) {
-                        return new Response<{ followers: User[], next: string }>(
-                            false,
-                            new Error(Errors.NoError),
-                            { followers: [], next: '' }
-                        );
-                    }
-                    // If more followers
-                    else {
-                        return new Response<{ followers: User[], next: string }>(
-                            true,
-                            new Error(Errors.NoError),
-                            { followers: data.followers, next: data.next }
-                        );
-                    }
+                    return new Response<{ followers: User[], next: string }>(
+                        data.followers.length ? true : false,
+                        new Error(Errors.NoError),
+                        { followers: data.followers, next: data.next }
+                    );
                 }
             })
             // If other run-time error
