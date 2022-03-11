@@ -183,7 +183,7 @@ export class TweetService extends FetcherService {
                 else {
                     var data = extractTweetLikers(res);
                     return new Response<{ likers: User[], next: string }>(
-                        true,
+                        data.likers.length ? true : false,
                         new Error(Errors.NoError),
                         { likers: data.likers, next: data.next }
                     );
@@ -191,7 +191,6 @@ export class TweetService extends FetcherService {
             })
             // If other run-time error occured
             .catch(err => {
-                console.log(err);
                 return new Response<{ likers: User[], next: string }>(
                     false,
                     new Error(Errors.FatalError),
@@ -221,11 +220,11 @@ export class TweetService extends FetcherService {
                         { retweeters: [], next: '' }
                     );
                 }
-                // If retweeters found
+                // If tweet exists
                 else {
                     var data = extractTweetRetweeters(res);
                     return new Response<{ retweeters: User[], next: string }>(
-                        true,
+                        data.retweeters.length ? true : false,
                         new Error(Errors.NoError),
                         { retweeters: data.retweeters, next: data.next }
                     );
@@ -264,7 +263,7 @@ export class TweetService extends FetcherService {
                 else {
                     var data = extractTweetReplies(res, tweetId);
                     return new Response<{ replies: Tweet[], next: string }>(
-                        true,
+                        data.replies.length ? true : false,
                         new Error(Errors.NoError),
                         { replies: data.replies, next: data.next }
                     );

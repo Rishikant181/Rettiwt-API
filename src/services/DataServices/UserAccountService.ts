@@ -136,9 +136,7 @@ export class UserAccountService extends FetcherService {
                 }
                 // If user exists
                 else {
-                    // Extracting data
                     var data = extractUserFollowing(res);
-
                     return new Response<{ following: User[], next: string }>(
                         data.following.length ? true : false,
                         new Error(Errors.NoError),
@@ -179,9 +177,7 @@ export class UserAccountService extends FetcherService {
                 }
                 // If user exists
                 else {
-                    // Extracting data
                     var data = extractUserFollowers(res);
-
                     return new Response<{ followers: User[], next: string }>(
                         data.followers.length ? true : false,
                         new Error(Errors.NoError),

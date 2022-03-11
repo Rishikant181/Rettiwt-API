@@ -45,18 +45,18 @@ export async function resolveTweets(filter: any): Promise<any[]> {
         batchSize = ((tweetFilter.count - total) < batchSize) ? (tweetFilter.count - total) : batchSize;
 
         // Getting the data
-        const res = (await tweetService.getTweets(tweetFilter, next)).data;
+        const res = await tweetService.getTweets(tweetFilter, next);
 
         // If data is available
-        if (res.tweets.length) {
+        if (res.success) {
             // Adding fetched tweets to list of tweets
-            tweets = tweets.concat(res.tweets);
+            tweets = tweets.concat(res.data.tweets);
 
             // Updating total tweets fetched
-            total += res.tweets.length;
+            total += res.data.tweets.length;
 
             // Getting cursor to next batch
-            next = res.next
+            next = res.data.next
         }
         // If no more data is available
         else {
@@ -87,18 +87,18 @@ export async function resolveTweetLikers(id: string, count: number): Promise<any
         batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
 
         // Getting the data
-        const res = (await tweetService.getTweetLikers(id, count, next)).data;
+        const res = await tweetService.getTweetLikers(id, count, next);
 
         // If data is available
-        if (res.likers.length) {
+        if (res.success) {
             // Adding fetched likers to list of likers
-            likers = likers.concat(res.likers);
+            likers = likers.concat(res.data.likers);
 
             // Updating total likers fetched
-            total += res.likers.length;
+            total += res.data.likers.length;
 
             // Getting cursor to next batch
-            next = res.next
+            next = res.data.next
         }
         // If no more data is available
         else {
@@ -129,18 +129,18 @@ export async function resolveTweetRetweeters(id: string, count: number): Promise
         batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
 
         // Getting the data
-        const res = (await tweetService.getTweetRetweeters(id, count, next)).data;
+        const res = await tweetService.getTweetRetweeters(id, count, next);
 
         // If data is available
-        if (res.retweeters.length) {
+        if (res.success) {
             // Adding fetched retweeters to list of retweeters
-            retweeters = retweeters.concat(res.retweeters);
+            retweeters = retweeters.concat(res.data.retweeters);
 
             // Updating total retweeters fetched
-            total += res.retweeters.length;
+            total += res.data.retweeters.length;
 
             // Getting cursor to next batch
-            next = res.next
+            next = res.data.next
         }
         // If no more data is available
         else {
@@ -164,18 +164,18 @@ export async function resolveTweetReplies(id: string, count: number): Promise<an
     // Repeatedly fetching data as long as total data fetched is less than requried
     while (total < count) {
         // Getting the data
-        const res = (await tweetService.getTweetReplies(id, next)).data;
+        const res = await tweetService.getTweetReplies(id, next);
 
         // If data is available
-        if (res.replies.length) {
+        if (res.success) {
             // Adding fetched replies to list of replies
-            replies = replies.concat(res.replies);
+            replies = replies.concat(res.data.replies);
 
             // Updating total replies fetched
-            total += res.replies.length;
+            total += res.data.replies.length;
 
             // Getting cursor to next batch
-            next = res.next
+            next = res.data.next
         }
         // If no more data is available
         else {
