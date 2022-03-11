@@ -9,12 +9,11 @@ import { TweetFilter } from './schema/types/TweetData';
 import { CacheService } from './services/CacheService';
 import { TweetService } from './services/DataServices/TweetService';
 import { UserAccountService } from './services/DataServices/UserAccountService';
-import {schema} from './schema/graphql/queries/RootQuery'
+
 
 //ANCHOR: GraphQL test import
 import GraphiQL from 'graphiql';
 import {buildSchema, GraphQLSchema} from 'graphql'
-import {graphqlHTTP} from 'express-graphql'
 
 // Initialising express instance
 const app = express();
