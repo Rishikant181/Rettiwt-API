@@ -52,22 +52,11 @@ export class UserAccountService extends FetcherService {
     async getUserAccountDetails(screenName: string): Promise<Response<User>> {
         return this.fetchData(userAccountUrl(screenName))
             .then(res => {
-                // If user does not exist
-                if (!Object.keys(res['data']).length) {
-                    return new Response<User>(
-                        false,
-                        new Error(Errors.UserNotFound),
-                        {},
-                    );
-                }
-                // If user exists
-                else {
-                    return new Response<User>(
-                        true,
-                        new Error(Errors.NoError),
-                        extractUserAccountDetails(res)
-                    );
-                }
+                return new Response<User>(
+                    true,
+                    new Error(Errors.NoError),
+                    extractUserAccountDetails(res)
+                );
             })
             // If other run-time errors
             .catch(err => {

@@ -1,6 +1,21 @@
 // This file contains various methods for extracting data from incoming JSON
 
 /**
+ * @returns Whether the given json object is empty or not
+ * @param data The input JSON object which needs to be checked
+ */
+export function isJSONEmpty(data: any): boolean {
+    // If the JSON has any keys, it's not empty
+    if(Object.keys(data).length) {
+        return true;
+    }
+    // Else, it's empty
+    else {
+        return false;
+    }
+}
+
+/**
  * @returns The value associated with the given key inside the given json
  * @param data The json data within which to search for the value
  * @param key The key to search for

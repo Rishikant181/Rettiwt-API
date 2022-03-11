@@ -13,6 +13,8 @@ import { User } from '../../schema/types/UserAccountData';
  * @param res The raw response received from Twitter
  */
 export function extractUserAccountDetails(res: any): User {
+    
+    
     return new User().deserialize(res['data']['user']['result']);
 }
 
