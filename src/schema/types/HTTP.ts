@@ -2,28 +2,38 @@
 
 // TODO: Evaluate the error message and generate different error objects for different errors
 
-// Object to hold error data for http communication
+/**
+ * @summary Stores all the different type of error messages that are used throughout the app
+ */
+export enum Errors {
+    UserNotFound = "An account with given username/id was not found",
+    TweetNotFound = "A tweet with the given id was not found",
+    NoTweetsFound = "No tweets matching the given criteria found",
+    FatalError = "A run-time error occured",
+    NoError = ""
+}
+
+/**
+ * @summary Stores any error data
+ */
 export class Error {
     // MEMBER DATA
-    name: string;                                                               // To store the type of error
-    message: string;                                                            // To store actual error message
+    message: string;                                                        // To store actual error message
 
     // MEMBER METHODS
-    constructor(err: any) {
-        // If no error
-        if(!err) {
-            this.name = '';
-            this.message = '';
-        }
-        // If error
-        else {
-            this.name = err.name;
-            this.message = err.message;
-        }
+    // The constructor
+    /**
+     * @param err The error message to store.
+     */
+    constructor(err: Errors) {
+        this.message = err;
     }
 }
 
-// Object to hold data received from fetch request
+/**
+ * @summary Stores the response as returned by the services.
+ * This is a generic class and the type supplied is the type of data that this reponse object stores in it's data field
+ */
 export class Response<Type> {
     // MEMBER DATA
     success: boolean;                                                       // To store whether success or failure
@@ -31,6 +41,11 @@ export class Response<Type> {
     data: Type;                                                             // To store the data received
 
     // MEMBER METHODS
+    /**
+     * @param success Whether the action was successful or not
+     * @param error Stores error, if any
+     * @param data Any response data that is to be included in the response
+     */
     constructor(success: boolean, error: Error, data: any) {
         this.success = success;
         this.error = error;

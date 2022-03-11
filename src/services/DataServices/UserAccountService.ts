@@ -1,18 +1,17 @@
-// This file contains the service that handles getting and posting User account data to and from official TwitterAPI
-
-// Custom libs
-
+// CUSTOM LIBS
 import { FetcherService } from '../FetcherService';
 
+/* TYPES */
 import {
+    Errors,
     Error,
     Response
 } from '../../schema/types/HTTP'
 
-import {
-    User
-} from '../../schema/types/UserAccountData';
+import { User } from '../../schema/types/UserAccountData';
+import { Tweet } from '../../schema/types/TweetData';
 
+/* HELPERS */
 import {
     userAccountUrl,
     userFollowingUrl,
@@ -20,11 +19,23 @@ import {
     userLikesUrl
 } from '../helper/Requests';
 
-import { Tweet } from '../../schema/types/TweetData';
+import {
+    extractUserAccountDetails,
+    extractUserFollowing,
+    extractUserFollowers,
+    extractUserLikes
+} from '../helper/Extractors';
 
+/**
+ * A service that deals with fetching of data related to user account
+ */
 export class UserAccountService extends FetcherService {
     // MEMBER METHODS
-    // The constructor
+    /**
+     * @param authToken The authetication token received from TwitterAPI
+     * @param csrfToken The csrf token received from TwitterAPI
+     * @param cookie The cookie for the logged in user account received from TwitterAPI
+     */
     constructor(
         authToken: string,
         csrfToken: string,
@@ -33,125 +44,113 @@ export class UserAccountService extends FetcherService {
         super(authToken, csrfToken, cookie);
     }
 
-    // Method to fetch the user account details using screen name
-    getUserAccountDetails(screenName: string): Promise<Response<User>> {
+    /**
+     * @returns The user account details of the given user
+     * @param screenName The screen name of the target user.
+     */
+    async getUserAccountDetails(screenName: string): Promise<Response<User>> {
         return this.fetchData(userAccountUrl(screenName))
             .then(res => {
-                return new Response<User>(
-                    true,
-                    new Error(null),
-                    new User().deserialize(res['data']['user']['result']),
-                );
+                // If user does not exist
+                if (!Object.keys(res['data']).length) {
+                    return new Response<User>(
+                        false,
+                        new Error(Errors.UserNotFound),
+                        {},
+                    );
+                }
+                // If user exists
+                else {
+                    return new Response<User>(
+                        true,
+                        new Error(Errors.NoError),
+                        extractUserAccountDetails(res)
+                    );
+                }
             })
-            // If error parsing data
+            // If other run-time errors
             .catch(err => {
                 return new Response<User>(
                     false,
-                    new Error(err),
-                    new User(),
+                    new Error(Errors.FatalError),
+                    {},
                 );
             });
     }
 
-    // Method to fetch the list of users followed by given user
-    getUserFollowing(
+    /**
+     * @returns The list of users followed by the target user
+     * @param userId The rest id of the target user
+     * @param count The batch size of the list
+     * @param cursor The cursor to next batch. If blank, first batch is fetched
+     */
+    async getUserFollowing(
         userId: string,
         count: number,
         cursor: string
     ): Promise<Response<{ following: User[], next: string }>> {
         return this.fetchData(userFollowingUrl(userId, count, cursor))
             .then(res => {
-                var following: User[] = [];
-                var next: string = '';
-
-                // Extracting the raw list of following
-                //@ts-ignore
-                res = res['data']['user']['result']['timeline']['timeline']['instructions'].filter(entry => entry['type'] === 'TimelineAddEntries')[0]['entries']
-
-                // Iterating over the raw list of following
-                for (var entry of res) {
-                    // Checking if the entry is of type user
-                    // If entry is of user type
-                    if (entry['entryId'].indexOf('user') != -1) {
-                        // Extracting user details
-                        const user = entry['content']['itemContent']['user_results']['result'];
-
-                        // Adding the followed user ID to list of IDs
-                        following.push(new User().deserialize(user));
-                    }
-                    // If entry is of type bottom cursor
-                    else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
-                        // Storing the cursor to next batch
-                        /**
-                         * Replacing '|' with '%7C'
-                         * Template string does not(apparently) implicitly replace characters with their url encodings.
-                         * Therefore not explicitly replacing casuses bad request
-                         */
-                        next = entry['content']['value'].replace('|', '%7C');
-                    }
+                // If user does not exists
+                if (!Object.keys(res['data']['user']).length) {
+                    return new Response<{ following: User[], next: string }>(
+                        false,
+                        new Error(Errors.UserNotFound),
+                        { following: [], next: '' }
+                    );
                 }
-
-                return new Response<{ following: User[], next: string }>(
-                    true,
-                    new Error(null),
-                    { following: following, next: next }
-                );
+                // If user exists
+                else {
+                    var data = extractUserFollowing(res);
+                    return new Response<{ following: User[], next: string }>(
+                        true,
+                        new Error(Errors.NoError),
+                        { following: data.following, next: data.next }
+                    );
+                }
             })
-            // If error parsing json
+            // If other run-time error
             .catch(err => {
                 return new Response<{ following: User[], next: string }>(
                     false,
-                    new Error(err),
+                    new Error(Errors.FatalError),
                     { following: [], next: '' }
                 )
             });
     }
 
-    // Method to fetch a list of followers of the given user
-    getUserFollowers(
+    /**
+     * @returns The list of users following the target user
+     * @param userId The rest id of the target user
+     * @param count The batch size of the list
+     * @param cursor The cursor to next batch. If blank, first batch is fetched
+     */
+    async getUserFollowers(
         userId: string,
         count: number,
         cursor: string
     ): Promise<Response<{ followers: User[], next: string }>> {
         return this.fetchData(userFollowersUrl(userId, count, cursor))
             .then(res => {
-                var followers: User[] = [];
-                var next: string = '';
-
-                // Extracting the raw list of followers
-                //@ts-ignore
-                res = res['data']['user']['result']['timeline']['timeline']['instructions'].filter(entry => entry['type'] === 'TimelineAddEntries')[0]['entries']
-
-                // Itearating over the raw list of following
-                for (var entry of res) {
-                    // Checking if the entry is of type user
-                    // If entry is of user type
-                    if (entry['entryId'].indexOf('user') != -1) {
-                        // Extracting user details
-                        const user = entry['content']['itemContent']['user_results']['result'];
-
-                        // Adding the follower ID to list of IDs
-                        followers.push(new User().deserialize(user));
-                    }
-                    // If entry is of type bottom cursor
-                    else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
-                        // Storing the cursor to next batch
-                        /**
-                         * Replacing '|' with '%7C'
-                         * Template string does not(apparently) implicitly replace characters with their url encodings.
-                         * Therefore not explicitly replacing casuses bad request
-                         */
-                        next = entry['content']['value'].replace('|', '%7C');
-                    }
+                // If user does not exist
+                if (!Object.keys(res['data']['user']).length) {
+                    return new Response<{ followers: User[], next: string }>(
+                        false,
+                        new Error(Errors.UserNotFound),
+                        { followers: [], next: [] }
+                    );
                 }
-
-                return new Response<{ followers: User[], next: string }>(
-                    true,
-                    new Error(null),
-                    { followers: followers, next: next }
-                );
+                // If user exists
+                else {
+                    var data = extractUserFollowers(res);
+                    return new Response<{ followers: User[], next: string }>(
+                        true,
+                        new Error(Errors.NoError),
+                        { followers: data.followers, next: data.next }
+                    );
+                }
             })
-            // If error parsing json
+            // If other run-time error
             .catch(err => {
                 return new Response<{ followers: User[], next: string }>(
                     false,
@@ -161,52 +160,36 @@ export class UserAccountService extends FetcherService {
             });
     }
 
-    // Method to fetch the list of tweets liked by the user
-    getUserLikes(
+    /**
+     * @returns The list of tweets liked by the target user
+     * @param userId The rest id of the target user
+     * @param count The batch size of the list
+     * @param cursor The cursor to next batch. If blank, first batch is fetched
+     */
+    async getUserLikes(
         userId: string,
         count: number,
         cursor: string
     ): Promise<Response<{ tweets: Tweet[], next: string }>> {
         return this.fetchData(userLikesUrl(userId, count, cursor))
             .then(res => {
-                var tweets: Tweet[] = [];
-                var next: string = '';
-
-                // Extracting the raw list of followers
-                //@ts-ignore
-                res = res['data']['user']['result']['timeline_v2']['timeline']['instructions'].filter(entry => entry['type'] === 'TimelineAddEntries')[0]['entries']
-
-                // Itearating over the raw list of following
-                for (var entry of res) {
-                    // Checking if the entry is of type user
-                    // If entry is of tweet type
-                    if (entry['entryId'].indexOf('tweet') != -1) {
-                        // Extracting tweet
-                        const tweet = entry['content']['itemContent']['tweet_results']['result'];
-
-                        // Adding the follower ID to list of IDs
-                        tweets.push(new Tweet().deserialize({
-                            rest_id: tweet['rest_id'],
-                            ...tweet['legacy']
-                        }));
-                    }
-                    // If entry is of type bottom cursor
-                    else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
-                        // Storing the cursor to next batch
-                        /**
-                         * Replacing '|' with '%7C'
-                         * Template string does not(apparently) implicitly replace characters with their url encodings.
-                         * Therefore not explicitly replacing casuses bad request
-                         */
-                        next = entry['content']['value'].replace('|', '%7C');
-                    }
+                // If user not found
+                if (!Object.keys(res['data']['user']).length) {
+                    return new Response<{ tweets: Tweet[], next: string }>(
+                        false,
+                        new Error(Errors.UserNotFound),
+                        { tweets: [], next: '' }
+                    );
                 }
-
-                return new Response<{ tweets: Tweet[], next: string }>(
-                    true,
-                    new Error(null),
-                    { tweets: tweets, next: next }
-                );
+                // If user found
+                else {
+                    var data = extractUserLikes(res);
+                    return new Response<{ tweets: Tweet[], next: string }>(
+                        true,
+                        new Error(Errors.NoError),
+                        { tweets: data.tweets, next: data.next }
+                    );
+                }
             })
             // If error parsing json
             .catch(err => {

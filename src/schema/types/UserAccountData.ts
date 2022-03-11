@@ -3,7 +3,9 @@
 // CUSTOM LIBS
 import { Deserializable } from "./Data";
 
-// Object to store a user's identification
+/**
+ * @summary Stores the UID of a user
+ */
 export class UserID implements Deserializable {
     // MEMBER DATA
     id: string;                                                             // To store the internal rest id of user account
@@ -11,7 +13,14 @@ export class UserID implements Deserializable {
     fullName: string;                                                       // To store the actual name of the user
 
     // MEMEBER METHODS
-    // Method to deserialize input data into this object
+    /**
+     * @summary Stores the id of the user in this object
+     * @returns UserID object containing the id details of the user
+     * @param data Has the following params:
+     * @param id The rest id of the user
+     * @param userName The screen name of the user
+     * @param fullName The full name of the user
+     */
     deserialize(data: {
         id: string,
         userName: string,
@@ -25,16 +34,18 @@ export class UserID implements Deserializable {
     }
 }
 
-// Object to hold the details about a user
+/**
+ * @summary Stores the complete details of the given user's account
+ */
 export class User implements Deserializable {
     // MEMBER DATA
-    user: UserID;                                                             // To store the internal rest id of user account
+    user: UserID;                                                           // To store the internal rest id of user account
     createdAt: string;                                                      // To store the time when the account was created
     description: string;                                                    // To store the account description
     isVerified: boolean ;                                                   // To store whether this is a verified account or not
     favouritesCount: number;                                                // To store the number of favourites
     followersCount: number;                                                 // To store the number of followers
-    friendsCount: number;                                                   // To store the number of friends
+    followingsCount: number;                                                // To store the number of people followed by this user
     statusesCount: number;                                                  // To store the number of status posted by user
     location: string;                                                       // To store the user's location
     pinnedTweets: string[];                                                 // To store the ids of tweets that are pinned in the account
@@ -42,12 +53,11 @@ export class User implements Deserializable {
     profileImage: string;                                                   // To store the url to the profile's image
 
     // MEMBER METHODS
-    // Method to deserialize input data into current object
-    /*
-    For now, this take in input data of 'any' format, then removes unnecessary, non-required fields,
-    then copies required fields from input data
-    NOTE: There might be a more elegant and faster method to do this
-    */
+    /**
+     * @summary Stores the raw user data from the response received from TwitterAPI
+     * @returns A User object containing the user details
+     * @param data The raw json data
+     */
     deserialize(data: any): this {
         this.user = new UserID().deserialize({
             id: data['rest_id'],
@@ -59,7 +69,7 @@ export class User implements Deserializable {
         this.isVerified = data['legacy']['verified'];
         this.favouritesCount = data['legacy']['favourites_count'];
         this.followersCount = data['legacy']['followers_count'];
-        this.friendsCount = data['legacy']['friends_count'];
+        this.followingsCount = data['legacy']['friends_count'];
         this.statusesCount = data['legacy']['statuses_count'];
         this.location = data['legacy']['location'];
         this.pinnedTweets = data['legacy']['pinned_tweet_ids_str'];
