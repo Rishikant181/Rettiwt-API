@@ -13,6 +13,14 @@ export function userAccountUrl(screenName: string): string {
 }
 
 /**
+ * @returns The url for fetching user account details.
+ * @param restid The restId of the target user
+ */
+export function userAccountByIdUrl(restId: string): string {
+    return `https://twitter.com/i/api/graphql/I5nvpI91ljifos1Y3Lltyg/UserByRestId?variables=%7B%22userId%22%3A%22${restId}%22%2C%22withSafetyModeUserFields%22%3Atrue%2C%22withSuperFollowsUserFields%22%3Atrue%7D`
+}
+
+/**
  * @returns The url for fetching the list of users followed bu target user.
  * @param userId The rest id of the target user
  * @param count The batch size of the list of following

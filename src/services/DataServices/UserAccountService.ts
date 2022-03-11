@@ -14,6 +14,7 @@ import { Tweet } from '../../schema/types/TweetData';
 /* HELPERS */
 import {
     userAccountUrl,
+    userAccountByIdUrl,
     userFollowingUrl,
     userFollowersUrl,
     userLikesUrl
@@ -79,6 +80,40 @@ export class UserAccountService extends FetcherService {
     }
 
     /**
+     * @returns The user account details of the user with given rest id
+     * @param restId The screen name of the target user.
+     */
+    async getUserAccountDetailsById(restId: string): Promise<Response<User>> {
+        return this.fetchData(userAccountByIdUrl(restId))
+            .then(res => {
+                // If user does not exist
+                if (!Object.keys(res['data']['user']).length) {
+                    return new Response<User>(
+                        false,
+                        new Error(Errors.UserNotFound),
+                        {},
+                    );
+                }
+                // If user exists
+                else {
+                    return new Response<User>(
+                        true,
+                        new Error(Errors.NoError),
+                        extractUserAccountDetails(res)
+                    );
+                }
+            })
+            // If other run-time errors
+            .catch(err => {
+                return new Response<User>(
+                    false,
+                    new Error(Errors.FatalError),
+                    {},
+                );
+            });
+    }
+
+    /**
      * @returns The list of users followed by the target user
      * @param userId The rest id of the target user
      * @param count The batch size of the list
@@ -103,7 +138,7 @@ export class UserAccountService extends FetcherService {
                 else {
                     var data = extractUserFollowing(res);
                     return new Response<{ following: User[], next: string }>(
-                        true,
+                        data.following.length ? true : false,
                         new Error(Errors.NoError),
                         { following: data.following, next: data.next }
                     );
@@ -144,7 +179,7 @@ export class UserAccountService extends FetcherService {
                 else {
                     var data = extractUserFollowers(res);
                     return new Response<{ followers: User[], next: string }>(
-                        true,
+                        data.followers.length ? true : false,
                         new Error(Errors.NoError),
                         { followers: data.followers, next: data.next }
                     );
