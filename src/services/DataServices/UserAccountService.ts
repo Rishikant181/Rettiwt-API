@@ -83,11 +83,11 @@ export class UserAccountService extends FetcherService {
      * @returns The user account details of the user with given rest id
      * @param restId The screen name of the target user.
      */
-     async getUserAccountDetailsById(restId: string): Promise<Response<User>> {
+    async getUserAccountDetailsById(restId: string): Promise<Response<User>> {
         return this.fetchData(userAccountByIdUrl(restId))
             .then(res => {
                 // If user does not exist
-                if (!Object.keys(res['data']).length) {
+                if (!Object.keys(res['data']['user']).length) {
                     return new Response<User>(
                         false,
                         new Error(Errors.UserNotFound),
@@ -137,11 +137,23 @@ export class UserAccountService extends FetcherService {
                 // If user exists
                 else {
                     var data = extractUserFollowing(res);
-                    return new Response<{ following: User[], next: string }>(
-                        true,
-                        new Error(Errors.NoError),
-                        { following: data.following, next: data.next }
-                    );
+
+                    // If end of following list
+                    if (!data.following.length) {
+                        return new Response<{ following: User[], next: string }>(
+                            false,
+                            new Error(Errors.NoError),
+                            { following: [], next: '' }
+                        );
+                    }
+                    // If more following
+                    else {
+                        return new Response<{ following: User[], next: string }>(
+                            true,
+                            new Error(Errors.NoError),
+                            { following: data.following, next: data.next }
+                        );
+                    }
                 }
             })
             // If other run-time error
@@ -178,11 +190,23 @@ export class UserAccountService extends FetcherService {
                 // If user exists
                 else {
                     var data = extractUserFollowers(res);
-                    return new Response<{ followers: User[], next: string }>(
-                        true,
-                        new Error(Errors.NoError),
-                        { followers: data.followers, next: data.next }
-                    );
+
+                    // If end of followers list
+                    if (!data.followers.length) {
+                        return new Response<{ followers: User[], next: string }>(
+                            false,
+                            new Error(Errors.NoError),
+                            { followers: [], next: '' }
+                        );
+                    }
+                    // If more followers
+                    else {
+                        return new Response<{ followers: User[], next: string }>(
+                            true,
+                            new Error(Errors.NoError),
+                            { followers: data.followers, next: data.next }
+                        );
+                    }
                 }
             })
             // If other run-time error

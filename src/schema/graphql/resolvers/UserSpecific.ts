@@ -60,23 +60,25 @@ export async function resolveUserFollowers(id: string, count: number): Promise<a
         batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
 
         // Getting the data
-        const res = (await userService.getUserFollowers(id, count, next)).data;
+        const res = await userService.getUserFollowers(id, count, next);
 
         // If data is available
-        if (res.followers.length) {
+        if (res.success) {
             // Adding fetched followers to list of followers
-            followers = followers.concat(res.followers);
+            followers = followers.concat(res.data.followers);
 
             // Updating total followers fetched
-            total += res.followers.length;
+            total += res.data.followers.length;
 
             // Getting cursor to next batch
-            next = res.next
+            next = res.data.next
         }
         // If no more data is available
         else {
             break;
         }
+
+        console.log(res.data.followers.length)
     }
 
     return followers;
@@ -102,18 +104,18 @@ export async function resolveUserFollowers(id: string, count: number): Promise<a
         batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
 
         // Getting the data
-        const res = (await userService.getUserFollowing(id, count, next)).data;
+        const res = await userService.getUserFollowing(id, count, next);
 
         // If data is available
-        if (res.following.length) {
+        if (res.success) {
             // Adding fetched following to list of following
-            following = following.concat(res.following);
+            following = following.concat(res.data.following);
 
             // Updating total following fetched
-            total += res.following.length;
+            total += res.data.following.length;
 
             // Getting cursor to next batch
-            next = res.next
+            next = res.data.next
         }
         // If no more data is available
         else {
