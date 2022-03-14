@@ -107,6 +107,11 @@ export function extractUserLikes(res: any): { tweets: Tweet[], next: string } {
     var tweets: Tweet[] = [];
     var next: string = '';
 
+    // If user does not exist
+    if(isJSONEmpty(res['data']['user'])) {
+        throw new Error(Errors.UserNotFound);
+    }
+
     // Extracting the raw list of followers
     //@ts-ignore
     res = res['data']['user']['result']['timeline_v2']['timeline']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'];
