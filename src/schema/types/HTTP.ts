@@ -14,23 +14,6 @@ export enum Errors {
 }
 
 /**
- * @summary Stores any error data
- */
-export class Error {
-    // MEMBER DATA
-    message: string;                                                        // To store actual error message
-
-    // MEMBER METHODS
-    // The constructor
-    /**
-     * @param err The error message to store.
-     */
-    constructor(err: Errors) {
-        this.message = err;
-    }
-}
-
-/**
  * @summary Stores the response as returned by the services.
  * This is a generic class and the type supplied is the type of data that this reponse object stores in it's data field
  */

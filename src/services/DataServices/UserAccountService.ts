@@ -4,7 +4,6 @@ import { FetcherService } from '../FetcherService';
 /* TYPES */
 import {
     Errors,
-    Error,
     Response
 } from '../../schema/types/HTTP'
 
@@ -52,28 +51,17 @@ export class UserAccountService extends FetcherService {
     async getUserAccountDetails(screenName: string): Promise<Response<User>> {
         return this.fetchData(userAccountUrl(screenName))
             .then(res => {
-                // If user does not exist
-                if (!Object.keys(res['data']).length) {
-                    return new Response<User>(
-                        false,
-                        new Error(Errors.UserNotFound),
-                        {},
-                    );
-                }
-                // If user exists
-                else {
-                    return new Response<User>(
-                        true,
-                        new Error(Errors.NoError),
-                        extractUserAccountDetails(res)
-                    );
-                }
+                return new Response<User>(
+                    true,
+                    new Error(Errors.NoError),
+                    extractUserAccountDetails(res)
+                );
             })
-            // If other run-time errors
+            // If error
             .catch(err => {
                 return new Response<User>(
                     false,
-                    new Error(Errors.FatalError),
+                    err,
                     {},
                 );
             });
@@ -86,28 +74,17 @@ export class UserAccountService extends FetcherService {
     async getUserAccountDetailsById(restId: string): Promise<Response<User>> {
         return this.fetchData(userAccountByIdUrl(restId))
             .then(res => {
-                // If user does not exist
-                if (!Object.keys(res['data']['user']).length) {
-                    return new Response<User>(
-                        false,
-                        new Error(Errors.UserNotFound),
-                        {},
-                    );
-                }
-                // If user exists
-                else {
-                    return new Response<User>(
-                        true,
-                        new Error(Errors.NoError),
-                        extractUserAccountDetails(res)
-                    );
-                }
+                return new Response<User>(
+                    true,
+                    new Error(Errors.NoError),
+                    extractUserAccountDetails(res)
+                );
             })
-            // If other run-time errors
+            // If error
             .catch(err => {
                 return new Response<User>(
                     false,
-                    new Error(Errors.FatalError),
+                    err,
                     {},
                 );
             });
@@ -126,29 +103,18 @@ export class UserAccountService extends FetcherService {
     ): Promise<Response<{ following: User[], next: string }>> {
         return this.fetchData(userFollowingUrl(userId, count, cursor))
             .then(res => {
-                // If user does not exists
-                if (!Object.keys(res['data']['user']).length) {
-                    return new Response<{ following: User[], next: string }>(
-                        false,
-                        new Error(Errors.UserNotFound),
-                        { following: [], next: '' }
-                    );
-                }
-                // If user exists
-                else {
-                    var data = extractUserFollowing(res);
-                    return new Response<{ following: User[], next: string }>(
-                        data.following.length ? true : false,
-                        new Error(Errors.NoError),
-                        { following: data.following, next: data.next }
-                    );
-                }
+                var data = extractUserFollowing(res);
+                return new Response<{ following: User[], next: string }>(
+                    data.following.length ? true : false,
+                    new Error(Errors.NoError),
+                    { following: data.following, next: data.next }
+                );
             })
-            // If other run-time error
+            // If error
             .catch(err => {
                 return new Response<{ following: User[], next: string }>(
                     false,
-                    new Error(Errors.FatalError),
+                    err,
                     { following: [], next: '' }
                 )
             });
@@ -167,29 +133,18 @@ export class UserAccountService extends FetcherService {
     ): Promise<Response<{ followers: User[], next: string }>> {
         return this.fetchData(userFollowersUrl(userId, count, cursor))
             .then(res => {
-                // If user does not exist
-                if (!Object.keys(res['data']['user']).length) {
-                    return new Response<{ followers: User[], next: string }>(
-                        false,
-                        new Error(Errors.UserNotFound),
-                        { followers: [], next: [] }
-                    );
-                }
-                // If user exists
-                else {
-                    var data = extractUserFollowers(res);
-                    return new Response<{ followers: User[], next: string }>(
-                        data.followers.length ? true : false,
-                        new Error(Errors.NoError),
-                        { followers: data.followers, next: data.next }
-                    );
-                }
+                var data = extractUserFollowers(res);
+                return new Response<{ followers: User[], next: string }>(
+                    data.followers.length ? true : false,
+                    new Error(Errors.NoError),
+                    { followers: data.followers, next: data.next }
+                );
             })
             // If other run-time error
             .catch(err => {
                 return new Response<{ followers: User[], next: string }>(
                     false,
-                    new Error(err),
+                    err,
                     { followers: [], next: '' }
                 );
             });
