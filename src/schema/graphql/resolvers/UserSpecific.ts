@@ -41,6 +41,15 @@ export async function resolveUserDetails(userName?: string, id?: string): Promis
 }
 
 /**
+ * @returns The list of tweets liked by the given user
+ * @param id The id of the user whose likes are to be fetched
+ * @param count The number of likes to fetch
+ */
+export async function resolveUserLikes(id: string, count: number): Promise<any> {
+    return [{ id: "Hello World" }];
+}
+
+/**
  * @returns The list of followers of the given twiiter user
  * @param id The id of the user whose followers are to be fetched
  * @param count The number of followers to fetch
