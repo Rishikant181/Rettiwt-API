@@ -36,7 +36,7 @@ export async function resolveUserDetails(userName?: string, id?: string): Promis
     }
     // If user not found or any other error
     else {
-        throw new Error(res.error.message);
+        throw res.error;
     }
 }
 

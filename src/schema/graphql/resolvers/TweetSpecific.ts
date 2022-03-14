@@ -18,9 +18,17 @@ var tweetService = new TweetService(
  */
 export async function resolveTweet(id: string): Promise<any> {
     // Getting the data
-    var res = (await tweetService.getTweetById(id)).data;
+    var res = (await tweetService.getTweetById(id));
 
-    return res;
+    // Evaluating response
+    // If tweet found
+    if(res.success) {
+        return res.data;
+    }
+    // If tweet not found or any error
+    else {
+        throw res.error;
+    }
 }
 
 /**

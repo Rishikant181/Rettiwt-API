@@ -104,19 +104,19 @@ export class TweetService extends FetcherService {
     ): Promise<Response<{ tweets: Tweet[], next: string }>> {
         return this.fetchData(tweetsUrl(filter, cursor))
             .then(res => {
-                var data = extractTweets(res);                
+                var data = extractTweets(res);
                 return new Response<{ tweets: Tweet[], next: string }>(
                     data.tweets.length ? true : false,                          // Setting true or false based on tweets found or not
                     new Error(Errors.NoError),
                     { tweets: data.tweets, next: data.next }
                 );
             })
-            // If other run-time error occured
+            // If error
             .catch(err => {
                 console.log(err);
                 return new Response<{ tweets: Tweet[], next: string }>(
                     false,
-                    new Error(Errors.FatalError),
+                    err,
                     { tweets: [], next: '' }
                 );
             });
@@ -129,29 +129,18 @@ export class TweetService extends FetcherService {
     async getTweetById(tweetId: string): Promise<Response<Tweet>> {
         return this.fetchData(tweetDetailsUrl(tweetId))
             .then(res => {
-                // If tweet does not exist
-                if (!Object.keys(res['data']).length) {
-                    return new Response<Tweet>(
-                        false,
-                        new Error(Errors.TweetNotFound),
-                        {}
-                    );
-                }
-                // If tweet exists
-                else {
-                    var data = extractTweet(res ,tweetId);
-                    return new Response<Tweet>(
-                        true,
-                        new Error(Errors.NoError),
-                        data
-                    );
-                }
+                var data = extractTweet(res, tweetId);
+                return new Response<Tweet>(
+                    true,
+                    new Error(Errors.NoError),
+                    data
+                );
             })
-            // If other run-time error occured
+            // If error
             .catch(err => {
                 return new Response<Tweet>(
                     false,
-                    new Error(Errors.FatalError),
+                    err,
                     {}
                 );
             });
@@ -170,29 +159,18 @@ export class TweetService extends FetcherService {
     ): Promise<Response<{ likers: User[], next: string }>> {
         return this.fetchData(tweetLikesUrl(tweetId, count, cursor))
             .then(res => {
-                // If tweet exists
-                if (!Object.keys(res['data']['favoriters_timeline']).length) {
-                    return new Response<{ likers: User[], next: string }>(
-                        false,
-                        new Error(Errors.TweetNotFound),
-                        { likers: [], next: '' }
-                    );
-                }
-                // If likers found
-                else {
-                    var data = extractTweetLikers(res);
-                    return new Response<{ likers: User[], next: string }>(
-                        data.likers.length ? true : false,
-                        new Error(Errors.NoError),
-                        { likers: data.likers, next: data.next }
-                    );
-                }
+                var data = extractTweetLikers(res);
+                return new Response<{ likers: User[], next: string }>(
+                    data.likers.length ? true : false,
+                    new Error(Errors.NoError),
+                    { likers: data.likers, next: data.next }
+                );
             })
             // If other run-time error occured
             .catch(err => {
                 return new Response<{ likers: User[], next: string }>(
                     false,
-                    new Error(Errors.FatalError),
+                    err,
                     { likers: [], next: '' }
                 );
             });
@@ -211,29 +189,18 @@ export class TweetService extends FetcherService {
     ): Promise<Response<{ retweeters: User[], next: string }>> {
         return this.fetchData(tweetRetweetUrl(tweetId, count, cursor))
             .then(res => {
-                // If tweet does not exist
-                if (!Object.keys(res['data']['retweeters_timeline']).length) {
-                    return new Response<{ retweeters: User[], next: string }>(
-                        false,
-                        new Error(Errors.TweetNotFound),
-                        { retweeters: [], next: '' }
-                    );
-                }
-                // If tweet exists
-                else {
-                    var data = extractTweetRetweeters(res);
-                    return new Response<{ retweeters: User[], next: string }>(
-                        data.retweeters.length ? true : false,
-                        new Error(Errors.NoError),
-                        { retweeters: data.retweeters, next: data.next }
-                    );
-                }
+                var data = extractTweetRetweeters(res);
+                return new Response<{ retweeters: User[], next: string }>(
+                    data.retweeters.length ? true : false,
+                    new Error(Errors.NoError),
+                    { retweeters: data.retweeters, next: data.next }
+                );
             })
             // If other run-time error occured
             .catch(err => {
                 return new Response<{ retweeters: User[], next: string }>(
                     false,
-                    new Error(Errors.FatalError),
+                    err,
                     { retweeters: [], next: '' }
                 );
             });
@@ -250,30 +217,18 @@ export class TweetService extends FetcherService {
     ): Promise<Response<{ replies: Tweet[], next: string }>> {
         return this.fetchData(tweetRepliesUrl(tweetId, cursor))
             .then(res => {
-                // If tweet does not exist
-                if (!Object.keys(res['data']).length) {
-                    return new Response<{ replies: Tweet[], next: string }>(
-                        false,
-                        new Error(Errors.TweetNotFound),
-                        { replies: [], next: '' }
-                    );
-                }
-                // If tweet exists
-                else {
-                    var data = extractTweetReplies(res, tweetId);
-                    return new Response<{ replies: Tweet[], next: string }>(
-                        data.replies.length ? true : false,
-                        new Error(Errors.NoError),
-                        { replies: data.replies, next: data.next }
-                    );
-                }
+                var data = extractTweetReplies(res, tweetId);
+                return new Response<{ replies: Tweet[], next: string }>(
+                    data.replies.length ? true : false,
+                    new Error(Errors.NoError),
+                    { replies: data.replies, next: data.next }
+                );
             })
             // If other run-time error occured
             .catch(err => {
-                console.log(err);
                 return new Response<{ replies: Tweet[], next: string }>(
                     false,
-                    new Error(Errors.FatalError),
+                    err,
                     { replies: [], next: '' }
                 );
             });
