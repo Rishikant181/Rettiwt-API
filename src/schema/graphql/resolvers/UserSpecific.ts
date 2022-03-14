@@ -18,20 +18,20 @@ var userService = new UserAccountService(
  */
 export async function resolveUserDetails(userName?: string, id?: string): Promise<any> {
     var res: any;                                                               // To store response data
-    
+
     // If user name is supplied
-    if(userName) {
+    if (userName) {
         // Getting the data
         res = await userService.getUserAccountDetails(userName);
     }
     // If id is supplied
-    else if(id) {
+    else if (id) {
         res = await userService.getUserAccountDetailsById(id);
     }
 
     // Evaluating response
     // If user is found
-    if(res.success) {
+    if (res.success) {
         return res.data;
     }
     // If user not found or any other error
@@ -46,7 +46,40 @@ export async function resolveUserDetails(userName?: string, id?: string): Promis
  * @param count The number of likes to fetch
  */
 export async function resolveUserLikes(id: string, count: number): Promise<any> {
-    return [{ id: "Hello World" }];
+    var likes: any[] = [];                                                      // To store the list of liked tweets
+    var next: string = '';                                                      // To store cursor to next batch
+    var total: number = 0;                                                      // To store the total number of liked twets fetched
+    var batchSize: number = 20;                                                 // To store the batchsize to use
+
+    // If required count less than batch size, setting batch size to required count
+    batchSize = (count < batchSize) ? count : batchSize;
+
+    // Repeatedly fetching data as long as total data fetched is less than requried
+    while (total < count) {
+        // If this is the last batch, change batch size to number of remaining tweets
+        batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
+
+        // Getting the data
+        const res = await userService.getUserLikes(id, count, next);
+
+        // If data is available
+        if (res.success) {
+            // Adding fetched followers to list of followers
+            likes = likes.concat(res.data.tweets);
+
+            // Updating total followers fetched
+            total += res.data.tweets.length;
+
+            // Getting cursor to next batch
+            next = res.data.next
+        }
+        // If no more data is available
+        else {
+            break;
+        }
+    }
+
+    return likes;
 }
 
 /**
@@ -96,7 +129,7 @@ export async function resolveUserFollowers(id: string, count: number): Promise<a
  * @param id The id of the user whose followings are to be fetched
  * @param count The number of following to fetch
  */
- export async function resolveUserFollowing(id: string, count: number): Promise<any> {
+export async function resolveUserFollowing(id: string, count: number): Promise<any> {
     var following: any[] = [];                                                  // To store the list of following
     var next: string = '';                                                      // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of following fetched
