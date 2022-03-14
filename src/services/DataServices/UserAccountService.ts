@@ -163,29 +163,18 @@ export class UserAccountService extends FetcherService {
     ): Promise<Response<{ tweets: Tweet[], next: string }>> {
         return this.fetchData(userLikesUrl(userId, count, cursor))
             .then(res => {
-                // If user not found
-                if (!Object.keys(res['data']['user']).length) {
-                    return new Response<{ tweets: Tweet[], next: string }>(
-                        false,
-                        new Error(Errors.UserNotFound),
-                        { tweets: [], next: '' }
-                    );
-                }
-                // If user found
-                else {
-                    var data = extractUserLikes(res);
-                    return new Response<{ tweets: Tweet[], next: string }>(
-                        true,
-                        new Error(Errors.NoError),
-                        { tweets: data.tweets, next: data.next }
-                    );
-                }
+                var data = extractUserLikes(res);
+                return new Response<{ tweets: Tweet[], next: string }>(
+                    data.tweets.length ? true : false,
+                    new Error(Errors.NoError),
+                    { tweets: data.tweets, next: data.next }
+                );
             })
-            // If error parsing json
+            // If error
             .catch(err => {
                 return new Response<{ tweets: Tweet[], next: string }>(
                     false,
-                    new Error(err),
+                    err,
                     { tweets: [], next: '' }
                 );
             });

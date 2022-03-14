@@ -16,6 +16,7 @@ import { Tweet } from './TweetTypes'
 
 // RESOLVERS
 import {
+    resolveUserLikes,
     resolveUserFollowers,
     resolveUserFollowing
 } from '../resolvers/UserSpecific';
@@ -40,7 +41,21 @@ export const User = new GraphQLObjectType({
         createdAt: { type: GraphQLString },
         description: { type: GraphQLString },
         isVerified: { type: GraphQLBoolean },
+        location: { type: GraphQLString },
+        pinnedTweets: { type: GraphQLString },
+        profileBanner: { type: GraphQLString },
+        profileImage: { type: GraphQLString },
         favouritesCount: { type: GraphQLInt },
+        likes: {
+            type: new GraphQLList(Tweet),
+            args: {
+                count: {
+                    description: "The number of liked tweets to fetch",
+                    type: GraphQLInt
+                }
+            },
+            resolve: (parent, args) => resolveUserLikes(parent.user.id, args.count)
+        },
         followersCount: { type: GraphQLInt },
         followers: {
             type: new GraphQLList(User),
@@ -64,9 +79,6 @@ export const User = new GraphQLObjectType({
             resolve: (parent, args) => resolveUserFollowing(parent.user.id, args.count)
         },
         statusesCount: { type: GraphQLInt },
-        location: { type: GraphQLString },
-        pinnedTweets: { type: GraphQLString },
-        profileBanner: { type: GraphQLString },
         tweets: {
             type: new GraphQLList(Tweet),
             args: {
@@ -77,7 +89,6 @@ export const User = new GraphQLObjectType({
                 }
             },
             resolve: (parent, args) => resolveTweets({ fromUsers: [parent.user.userName], ...args })
-        },
-        profileImage: { type: GraphQLString },
+        }
     })
 });
