@@ -60,11 +60,20 @@ export class FetcherService {
             method: method ? method : HttpMethods.GET,
             body: body
         })
+        // Checking http status
+        .then(res => {
+            // If error
+            if(res.status != 200) {
+                throw new Error("HTTP Error");
+            }
+
+            return res;
+        })
         // Parsing data to json
         .then(res => res.json())
-        // If error connecting and parsing data
+        // If domain error
         .catch((err) => {
-            throw err;
+            throw new Error("Connection Failed");
         })
     }
 }
