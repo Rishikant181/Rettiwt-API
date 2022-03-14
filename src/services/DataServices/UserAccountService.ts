@@ -57,7 +57,7 @@ export class UserAccountService extends FetcherService {
                     extractUserAccountDetails(res)
                 );
             })
-            // If other run-time errors
+            // If error
             .catch(err => {
                 return new Response<User>(
                     false,
@@ -80,12 +80,11 @@ export class UserAccountService extends FetcherService {
                     extractUserAccountDetails(res)
                 );
             })
-            // If other run-time errors
+            // If error
             .catch(err => {
-                console.log(err);
                 return new Response<User>(
                     false,
-                    new Error(Errors.FatalError),
+                    err,
                     {},
                 );
             });

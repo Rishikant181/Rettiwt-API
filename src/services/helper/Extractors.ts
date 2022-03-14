@@ -18,8 +18,8 @@ import { isJSONEmpty } from './Parser';
  */
 export function extractUserAccountDetails(res: any): User {
     // ERROR HANDLING    
-    // If user not found
-    if(isJSONEmpty(res['data']) || isJSONEmpty(res['data']['user'])) {
+    // If user not found or account suspended
+    if(isJSONEmpty(res['data']) || isJSONEmpty(res['data']['user']) || res['data']['user']['result']['__typename'] === 'UserUnavailable') {
         throw new Error(Errors.UserNotFound);
     }
 
