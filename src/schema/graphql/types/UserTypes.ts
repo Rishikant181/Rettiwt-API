@@ -51,10 +51,16 @@ export const User = new GraphQLObjectType({
             args: {
                 count: {
                     description: "The number of liked tweets to fetch",
-                    type: GraphQLInt
+                    type: GraphQLInt,
+                    defaultValue: 10
+                },
+                all: {
+                    description: "Whether to fetch all tweets liked by user",
+                    type: GraphQLBoolean,
+                    defaultValue: false
                 }
             },
-            resolve: (parent, args) => resolveUserLikes(parent.user.id, args.count)
+            resolve: (parent, args) => resolveUserLikes(parent.user.id, args.count, args.all, parent.favouritesCount)
         },
         followersCount: { type: GraphQLInt },
         followers: {
@@ -62,10 +68,16 @@ export const User = new GraphQLObjectType({
             args: {
                 count: {
                     description: "The number of followers to fetch",
-                    type: GraphQLInt
+                    type: GraphQLInt,
+                    defaultValue: 10
+                },
+                all: {
+                    description: "Whether to fetch all followers list",
+                    type: GraphQLBoolean,
+                    defaultValue: false
                 }
             },
-            resolve: (parent, args) => resolveUserFollowers(parent.user.id, args.count)
+            resolve: (parent, args) => resolveUserFollowers(parent.user.id, args.count, args.all, parent.followersCount)
         },
         followingsCount: { type: GraphQLInt },
         following: {
@@ -74,9 +86,15 @@ export const User = new GraphQLObjectType({
                 count: {
                     type: GraphQLInt,
                     description: "The number of followings to fetch",
+                    defaultValue: 10
+                },
+                all: {
+                    description: "Whether to fetch all followings list",
+                    type: GraphQLBoolean,
+                    defaultValue: false
                 }
             },
-            resolve: (parent, args) => resolveUserFollowing(parent.user.id, args.count)
+            resolve: (parent, args) => resolveUserFollowing(parent.user.id, args.count, args.all, parent.followingsCount)
         },
         statusesCount: { type: GraphQLInt },
         tweets: {
