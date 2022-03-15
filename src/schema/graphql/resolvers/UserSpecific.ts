@@ -44,12 +44,22 @@ export async function resolveUserDetails(userName?: string, id?: string): Promis
  * @returns The list of tweets liked by the given user
  * @param id The id of the user whose likes are to be fetched
  * @param count The number of likes to fetch
+ * @param all Whether to fetch list of all tweets liked by user
+ * @param favouritesCount The total number of tweets liked by target user
  */
-export async function resolveUserLikes(id: string, count: number): Promise<any> {
+export async function resolveUserLikes(
+    id: string,
+    count: number,
+    all: boolean,
+    favouritesCount: number
+): Promise<any> {
     var likes: any[] = [];                                                      // To store the list of liked tweets
     var next: string = '';                                                      // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of liked twets fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use
+
+    // If all liked tweets are to be fetched
+    count = all ? favouritesCount : count;
 
     // If required count less than batch size, setting batch size to required count
     batchSize = (count < batchSize) ? count : batchSize;
@@ -86,12 +96,22 @@ export async function resolveUserLikes(id: string, count: number): Promise<any> 
  * @returns The list of followers of the given twiiter user
  * @param id The id of the user whose followers are to be fetched
  * @param count The number of followers to fetch
+ * @param all Whether to fetch all followers list
+ * @param followerCount The total number of followers of the target user
  */
-export async function resolveUserFollowers(id: string, count: number): Promise<any> {
+export async function resolveUserFollowers(
+    id: string,
+    count: number,
+    all: boolean,
+    followersCount: number
+): Promise<any> {
     var followers: any[] = [];                                                  // To store the list of followers
     var next: string = '';                                                      // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of followers fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use
+
+    // If all followers are to be fetched
+    count = all ? followersCount : count;
 
     // If required count less than batch size, setting batch size to required count
     batchSize = (count < batchSize) ? count : batchSize;
@@ -128,12 +148,22 @@ export async function resolveUserFollowers(id: string, count: number): Promise<a
  * @returns The list of following of the given twiiter user
  * @param id The id of the user whose followings are to be fetched
  * @param count The number of following to fetch
+ * @param all Whether to fetch list of all followings
+ * @param followingsCount The total number of followings of the target user
  */
-export async function resolveUserFollowing(id: string, count: number): Promise<any> {
+export async function resolveUserFollowing(
+    id: string,
+    count: number,
+    all: boolean,
+    followingsCount: number
+): Promise<any> {
     var following: any[] = [];                                                  // To store the list of following
     var next: string = '';                                                      // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of following fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use
+
+    // If all followings are to be fetched
+    count = all ? followingsCount : count;
 
     // If required count less than batch size, setting batch size to required count
     batchSize = (count < batchSize) ? count : batchSize;
