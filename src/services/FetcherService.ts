@@ -76,14 +76,14 @@ export class FetcherService {
             method: method ? method : HttpMethods.GET,
             body: body
         })
-        // Checking http status
-        .then(res => this.handleHTTPError(res))
-        // Parsing data to json
-        .then(res => res.json())
-        // If domain error
-        .catch((err) => {
-            throw err;
-        });
+            // Checking http status
+            .then(res => this.handleHTTPError(res))
+            // Parsing data to json
+            .then(res => res.json())
+            // If other unknown error
+            .catch((err) => {
+                throw err;
+            });
     }
 
     /**
@@ -91,8 +91,8 @@ export class FetcherService {
      * @param res The response object received from http communication
      */
     private handleHTTPError(res: Response): Response {
-        if (res.status != 200) {
-            throw new Error(res.statusText);
+        if (res.status != 200 && res.status in HttpStatus) {
+            throw new Error(HttpStatus[res.status])
         }
 
         return res;
