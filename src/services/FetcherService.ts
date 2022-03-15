@@ -1,5 +1,5 @@
 // PACKAGE LIBS
-import fetch from "node-fetch";
+import fetch, { Response } from "node-fetch";
 
 // CUSTOM LIBS
 import {
@@ -12,6 +12,22 @@ import {
 export enum HttpMethods {
     POST = "POST",
     GET = "GET"
+};
+
+/**
+ * @summary Stores the different types of http status codes
+ */
+enum HttpStatus {
+    BadRequest = 400,
+    Unauthorized = 401,
+    Forbidden = 403,
+    NotFound = 404,
+    MethodNotAllowed = 405,
+    RequestTimeout = 408,
+    TooManyRequests = 429,
+    InternalServerError = 500,
+    BadGateway = 502,
+    ServiceUnavailable = 503
 };
 
 /**
@@ -61,19 +77,24 @@ export class FetcherService {
             body: body
         })
         // Checking http status
-        .then(res => {
-            // If error
-            if(res.status != 200) {
-                throw new Error("HTTP Error");
-            }
-
-            return res;
-        })
+        .then(res => this.handleHTTPError(res))
         // Parsing data to json
         .then(res => res.json())
         // If domain error
         .catch((err) => {
-            throw new Error("Connection Failed");
-        })
+            throw err;
+        });
+    }
+
+    /**
+     * @summary Throws the appropriate http error after evaluation of the status code of reponse
+     * @param res The response object received from http communication
+     */
+    private handleHTTPError(res: Response): Response {
+        if (res.status != 200) {
+            throw new Error(res.statusText);
+        }
+
+        return res;
     }
 }
