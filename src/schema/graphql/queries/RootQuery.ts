@@ -26,13 +26,14 @@ export const rootQuery = new GraphQLObjectType({
             type: GraphQLString,
             resolve: () => "GraphQL Works!"
         },
-        UserDetails: {
+        User: {
             type: User,
             description: "Returns the details of the twitter user with given user name",
             args: {
-                userName!: { type: GraphQLString }
+                userName: { type: GraphQLString },
+                id: { type: GraphQLString }
             },
-            resolve: (parent, args) => resolveUserDetails(args.userName)
+            resolve: (parent, args) => resolveUserDetails(args.userName, args.id)
         },
         Tweet: {
             type: Tweet,

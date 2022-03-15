@@ -5,6 +5,10 @@
 // TYPES
 import { Tweet } from '../../schema/types/TweetData';
 import { User } from '../../schema/types/UserAccountData';
+import { Errors } from '../../schema/types/HTTP';
+
+// HELPERS
+import { isJSONEmpty } from './Parser';
 
 /* USERS */
 
@@ -13,6 +17,13 @@ import { User } from '../../schema/types/UserAccountData';
  * @param res The raw response received from Twitter
  */
 export function extractUserAccountDetails(res: any): User {
+    // ERROR HANDLING    
+    // If user not found or account suspended
+    if(isJSONEmpty(res['data']) || isJSONEmpty(res['data']['user']) || res['data']['user']['result']['__typename'] === 'UserUnavailable') {
+        throw new Error(Errors.UserNotFound);
+    }
+
+    // DATA EXTRACTION    
     return new User().deserialize(res['data']['user']['result']);
 }
 
@@ -23,6 +34,11 @@ export function extractUserAccountDetails(res: any): User {
 export function extractUserFollowing(res: any): { following: User[], next: string } {
     var following: User[] = [];
     var next: string = '';
+
+    // If user does not exist
+    if(isJSONEmpty(res['data']['user'])) {
+        throw new Error(Errors.UserNotFound);
+    }
 
     // Extracting the raw list of following
     //@ts-ignore
@@ -55,6 +71,11 @@ export function extractUserFollowers(res: any): { followers: User[], next: strin
     var followers: User[] = [];
     var next: string = '';
 
+    // If user does not exist
+    if(isJSONEmpty(res['data']['user'])) {
+        throw new Error(Errors.UserNotFound);
+    }
+    
     // Extracting the raw list of followers
     //@ts-ignore
     res = res['data']['user']['result']['timeline']['timeline']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'];
@@ -85,6 +106,11 @@ export function extractUserFollowers(res: any): { followers: User[], next: strin
 export function extractUserLikes(res: any): { tweets: Tweet[], next: string } {
     var tweets: Tweet[] = [];
     var next: string = '';
+
+    // If user does not exist
+    if(isJSONEmpty(res['data']['user'])) {
+        throw new Error(Errors.UserNotFound);
+    }
 
     // Extracting the raw list of followers
     //@ts-ignore
@@ -153,7 +179,7 @@ export function extractTweets(res: any) {
     res = res['globalObjects']['tweets'];
 
     // If not empty, extracting tweets
-    if (Object.keys(res).length != 0) {
+    if (!isJSONEmpty(res)) {
         // Iterating through the json array of tweets
         for (var key of Object.keys(res)) {
             // Adding the tweets to the tweets list
@@ -175,6 +201,11 @@ export function extractTweets(res: any) {
 export function extractTweet(res: any, tweetId: string): Tweet {
     var tweet: Tweet;
 
+    // If tweet does not exist
+    if(isJSONEmpty(res['data'])) {
+        throw new Error(Errors.TweetNotFound);
+    }
+
     // Extracting required raw tweet from response
     //@ts-ignore
     res = res['data']['threaded_conversation_with_injections']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'].filter(item => item['entryId'].indexOf(tweetId) != -1)[0]['content']['itemContent']['tweet_results']['result'];
@@ -193,6 +224,11 @@ export function extractTweetLikers(res: any): { likers: User[], next: string } {
     var likers: User[] = [];
     var next: string = '';
 
+    // If tweet does not exist
+    if(isJSONEmpty(res['data']['favoriters_timeline'])) {
+        throw new Error(Errors.TweetNotFound);
+    }
+    
     // Extracting raw likes list from response
     //@ts-ignore
     res = res['data']['favoriters_timeline']['timeline']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'];
@@ -223,6 +259,11 @@ export function extractTweetLikers(res: any): { likers: User[], next: string } {
 export function extractTweetRetweeters(res: any): { retweeters: User[], next: string } {
     var retweeters: User[] = [];
     var next: string = '';
+
+    // If tweet does not exist
+    if(isJSONEmpty(res['data']['retweeters_timeline'])) {
+        throw new Error(Errors.TweetNotFound);
+    }
 
     // Extracting raw retweeters list from response
     //@ts-ignore
@@ -255,6 +296,11 @@ export function extractTweetRetweeters(res: any): { retweeters: User[], next: st
 export function extractTweetReplies(res: any, tweetId: string): { replies: Tweet[], next: string } {
     var replies: Tweet[] = [];
     var next: string = '';
+
+    // If tweet does not exist
+    if(isJSONEmpty(res['data'])) {
+        throw new Error(Errors.TweetNotFound);
+    }
 
     // Extracting raw reply list
     //@ts-ignore
