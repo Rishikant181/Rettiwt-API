@@ -76,14 +76,14 @@ export class FetcherService {
             method: method ? method : HttpMethods.GET,
             body: body
         })
-            // Checking http status
-            .then(res => this.handleHTTPError(res))
-            // Parsing data to json
-            .then(res => res.json())
-            // If other unknown error
-            .catch((err) => {
-                throw err;
-            });
+        // Checking http status
+        .then(res => this.handleHTTPError(res))
+        // Parsing data to json
+        .then(res => res.json())
+        // If other unknown error
+        .catch((err) => {
+            throw err;
+        });
     }
 
     /**
