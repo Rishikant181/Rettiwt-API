@@ -19,8 +19,8 @@ export class AuthService {
         // Initializing member data
         this.requestCount = 0;
 
-        // Initializing authentication credentials
-        this.authCredentials = config['twitter']['auth'];
+        // Initializing authentication credentials to the first available one
+        this.authCredentials = config['twitter']['auth'][0];
     }
 
     /**
