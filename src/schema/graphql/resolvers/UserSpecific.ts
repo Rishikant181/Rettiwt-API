@@ -2,14 +2,9 @@
 
 // CUSTOM LIBS
 import { UserAccountService } from "../../../services/DataServices/UserAccountService";
-import { config } from '../../../config/env'
 
 // Initialsing the service to fetch user details
-var userService = new UserAccountService(
-    config['twitter']['auth']['authToken'],
-    config['twitter']['auth']['csrfToken'],
-    config['twitter']['auth']['cookie']
-);
+var userService = new UserAccountService();
 
 /**
  * @returns The details of the target twitter user

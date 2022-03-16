@@ -2,15 +2,10 @@
 
 // CUSTOM LIBS
 import { TweetService } from '../../../services/DataServices/TweetService';
-import { config } from '../../../config/env'
 import { TweetFilter } from '../../types/TweetData';
 
 // Initialsing the service to fetch user details
-var tweetService = new TweetService(
-    config['twitter']['auth']['authToken'],
-    config['twitter']['auth']['csrfToken'],
-    config['twitter']['auth']['cookie']
-);
+var tweetService = new TweetService();
 
 /**
  * @returns The details of the tweet with the given id

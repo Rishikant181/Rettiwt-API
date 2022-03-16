@@ -45,19 +45,6 @@ import {
 export class TweetService extends FetcherService {
     // MEMBER METHODS
     /**
-     * @param authToken The authetication token received from TwitterAPI
-     * @param csrfToken The csrf token received from TwitterAPI
-     * @param cookie The cookie for the logged in user account received from TwitterAPI
-     */
-    constructor(
-        authToken: string,
-        csrfToken: string,
-        cookie: string
-    ) {
-        super(authToken, csrfToken, cookie);
-    }
-
-    /**
      * @summary Sets the current location such that content relevant to that location is fetched
      * @param locationId The internal/rest id of the target location
      */

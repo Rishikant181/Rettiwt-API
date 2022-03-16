@@ -32,19 +32,6 @@ import {
 export class UserAccountService extends FetcherService {
     // MEMBER METHODS
     /**
-     * @param authToken The authetication token received from TwitterAPI
-     * @param csrfToken The csrf token received from TwitterAPI
-     * @param cookie The cookie for the logged in user account received from TwitterAPI
-     */
-    constructor(
-        authToken: string,
-        csrfToken: string,
-        cookie: string
-    ) {
-        super(authToken, csrfToken, cookie);
-    }
-
-    /**
      * @returns The user account details of the given user
      * @param screenName The screen name of the target user.
      */
