@@ -61,7 +61,7 @@ export class AuthService {
         csrfToken: string,
         cookie: string
     } {
-        this.changeCredentials();        
+        this.changeCredentials();
         return this.authCredentials;
     }
 }
