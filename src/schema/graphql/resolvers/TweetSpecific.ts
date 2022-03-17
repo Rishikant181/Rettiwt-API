@@ -1,8 +1,16 @@
 // This files contains resolvers for tweet specific operations
 
 // CUSTOM LIBS
+
+// SERVICES
 import { TweetService } from '../../../services/DataServices/TweetService';
+
+// TYPES
 import { TweetFilter } from '../../types/TweetData';
+import {
+    ValidationErrors,
+    validTweetFilter
+} from './helper/Validators';
 
 // Initialsing the service to fetch user details
 var tweetService = new TweetService();
@@ -39,9 +47,9 @@ export async function resolveTweets(filter: any): Promise<any[]> {
     // Preparing the filter to use
     const tweetFilter = new TweetFilter(filter);
 
-    // Validating tweet filter
-    if(!(tweetFilter.fromUsers || tweetFilter.toUsers || tweetFilter.words || tweetFilter.hashtags || tweetFilter.mentions)) {
-        throw new Error("Atleast one of fromUsers/toUsers/words/hashtags/mentions is required");
+    // Checking if the given tweet filter is valid or not
+    if(!validTweetFilter(filter)) {
+        throw new Error(ValidationErrors.InvalidTweetFilter);
     }
 
     // If required count less than batch size, setting batch size to required count
