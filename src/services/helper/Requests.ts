@@ -128,8 +128,8 @@ export function tweetsUrl(
         filter.startDate ? `since:${filter.startDate}` : '',
         filter.endDate ? `until:${filter.endDate}` : '',
     ]
-        .filter(item => item !== '()' && item !== '')
-        .join(' ');
+    .filter(item => item !== '()' && item !== '')
+    .join(' ');
 
     var url = '';
 
