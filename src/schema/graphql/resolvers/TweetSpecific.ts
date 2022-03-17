@@ -39,6 +39,11 @@ export async function resolveTweets(filter: any): Promise<any[]> {
     // Preparing the filter to use
     const tweetFilter = new TweetFilter(filter);
 
+    // Validating tweet filter
+    if(!(tweetFilter.fromUsers || tweetFilter.toUsers || tweetFilter.words || tweetFilter.hashtags || tweetFilter.mentions)) {
+        throw new Error("Atleast one of fromUsers/toUsers/words/hashtags/mentions is required");
+    }
+
     // If required count less than batch size, setting batch size to required count
     batchSize = (tweetFilter.count < batchSize) ? tweetFilter.count : batchSize;
 
