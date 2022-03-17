@@ -100,7 +100,6 @@ export class TweetService extends FetcherService {
             })
             // If error
             .catch(err => {
-                console.log(err);
                 return new Response<{ tweets: Tweet[], next: string }>(
                     false,
                     err,

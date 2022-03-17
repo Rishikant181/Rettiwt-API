@@ -118,6 +118,9 @@ export function tweetsUrl(
     filter: TweetFilter,
     cursor: string
 ): string {
+    // Adding '#' symbol to hastags
+    filter.hashtags = filter.hashtags.map(hashtag => '%23' + hashtag);
+    
     // Concatenating the input argument lists to a URL query formatted string
     var query = [
         filter.words ? filter.words.join(' ') : '',
