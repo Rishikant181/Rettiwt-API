@@ -166,7 +166,7 @@ export function extractTweets(res: any) {
 
     // Extracting the cursor to next batch
     // If not first batch
-    if (res['timeline']['instructions'].length > 1) {
+    if (res['timeline']['instructions'].length > 2) {
         next = res['timeline']['instructions'][2]['replaceEntry']['entry']['content']['operation']['cursor']['value'];
     }
     // If first batch

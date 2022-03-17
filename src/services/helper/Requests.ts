@@ -121,15 +121,15 @@ export function tweetsUrl(
     // Concatenating the input argument lists to a URL query formatted string
     var query = [
         filter.words ? filter.words.join(' ') : '',
-        filter.hashtags ? `(${filter.hashtags.join(' OR ')})` : '',
+        filter.hashtags ? `(${filter.hashtags.map(hashtag => '%23' + hashtag).join(' OR ')})` : '',
         filter.fromUsers ? `(${filter.fromUsers.map(user => `from:${user}`).join(' OR ')})` : '',
         filter.toUsers ? `(${filter.toUsers.map(user => `to:${user}`).join(' OR ')})` : '',
-        filter.mentions ? `(${filter.mentions.join(' OR ')})` : '',
+        filter.mentions ? `(${filter.mentions.map(mention => '%40' + mention).join(' OR ')})` : '',
         filter.startDate ? `since:${filter.startDate}` : '',
         filter.endDate ? `until:${filter.endDate}` : '',
     ]
-        .filter(item => item !== '()' && item !== '')
-        .join(' ');
+    .filter(item => item !== '()' && item !== '')
+    .join(' ');
 
     var url = '';
 
