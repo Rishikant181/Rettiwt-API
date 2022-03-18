@@ -1,7 +1,12 @@
 // This files contains resolvers for user specific operations
 
 // CUSTOM LIBS
+
+// SERVICES
 import { UserAccountService } from "../../../services/DataServices/UserAccountService";
+
+// HELPERS
+import { ValidationErrors } from './helper/Validation';
 
 // Initialsing the service to fetch user details
 var userService = new UserAccountService();
@@ -11,7 +16,7 @@ var userService = new UserAccountService();
  * @param userName The user name of the target twitter user
  * @param id The id of the target twitter user
  */
-export async function resolveUserDetails(userName?: string, id?: string): Promise<any> {
+export async function resolveUserDetails(userName: string, id: string): Promise<any> {
     var res: any;                                                               // To store response data
 
     // If user name is supplied
@@ -22,6 +27,10 @@ export async function resolveUserDetails(userName?: string, id?: string): Promis
     // If id is supplied
     else if (id) {
         res = await userService.getUserAccountDetailsById(id);
+    }
+    // If neither userName nor id is supplied
+    else {
+        throw new Error(ValidationErrors.NoUserIdentification);
     }
 
     // Evaluating response
