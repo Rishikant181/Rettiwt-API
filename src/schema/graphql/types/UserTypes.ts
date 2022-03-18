@@ -20,7 +20,10 @@ import {
     resolveUserFollowers,
     resolveUserFollowing
 } from '../resolvers/UserSpecific';
-import { resolveTweets } from '../resolvers/TweetSpecific';
+import {
+    resolveTweet,
+    resolveTweets
+} from '../resolvers/TweetSpecific';
 
 export const UserID = new GraphQLObjectType({
     name: 'UserID',
@@ -42,7 +45,10 @@ export const User = new GraphQLObjectType({
         description: { type: GraphQLString },
         isVerified: { type: GraphQLBoolean },
         location: { type: GraphQLString },
-        pinnedTweets: { type: GraphQLString },
+        pinnedTweet: {
+            type: Tweet,
+            resolve: (parent, args) => resolveTweet(parent.pinnedTweet)
+        },
         profileBanner: { type: GraphQLString },
         profileImage: { type: GraphQLString },
         favouritesCount: { type: GraphQLInt },
