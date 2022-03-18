@@ -7,10 +7,9 @@ import { TweetService } from '../../../services/DataServices/TweetService';
 
 // TYPES
 import { TweetFilter } from '../../types/TweetData';
-import {
-    ValidationErrors,
-    validTweetFilter
-} from './helper/Validators';
+
+// HELPERS
+import { ValidationErrors } from './helper/Validation';
 
 // Initialsing the service to fetch user details
 var tweetService = new TweetService();
@@ -35,7 +34,7 @@ export async function resolveTweet(id: string): Promise<any> {
 }
 
 /**
- * @returns The list of tweets matchin the given filter
+ * @returns The list of tweets matching the given filter
  * @param filter The filter to be used for fetching matching tweets
  */
 export async function resolveTweets(filter: any): Promise<any[]> {
@@ -48,7 +47,7 @@ export async function resolveTweets(filter: any): Promise<any[]> {
     const tweetFilter = new TweetFilter(filter);
 
     // Checking if the given tweet filter is valid or not
-    if(!validTweetFilter(filter)) {
+    if(!(filter.fromUsers || filter.toUsers || filter.words || filter.hashtags || filter.mentions)) {
         throw new Error(ValidationErrors.InvalidTweetFilter);
     }
 
