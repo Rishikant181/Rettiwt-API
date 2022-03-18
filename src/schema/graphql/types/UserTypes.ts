@@ -100,11 +100,13 @@ export const User = new GraphQLObjectType({
         tweets: {
             type: new GraphQLList(Tweet),
             args: {
-                count: {
-                    type: GraphQLInt,
-                    description: "The number of tweets to fetch",
-                    defaultValue: 1
-                }
+                toUsers: { type: new GraphQLList(GraphQLString) },
+                mentions: { type: new GraphQLList(GraphQLString) },
+                hashtags: { type: new GraphQLList(GraphQLString) },
+                words: { type: new GraphQLList(GraphQLString) },
+                startDate: { type: GraphQLString },
+                endDate: { type: GraphQLString },
+                count: { type: GraphQLInt, defaultValue: 1 }
             },
             resolve: (parent, args) => resolveTweets({ fromUsers: [parent.user.userName], ...args })
         }
