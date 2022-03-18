@@ -20,7 +20,10 @@ import {
     resolveUserFollowers,
     resolveUserFollowing
 } from '../resolvers/UserSpecific';
-import { resolveTweets } from '../resolvers/TweetSpecific';
+import {
+    resolveTweet,
+    resolveTweets
+} from '../resolvers/TweetSpecific';
 
 export const UserID = new GraphQLObjectType({
     name: 'UserID',
@@ -42,7 +45,10 @@ export const User = new GraphQLObjectType({
         description: { type: GraphQLString },
         isVerified: { type: GraphQLBoolean },
         location: { type: GraphQLString },
-        pinnedTweets: { type: GraphQLString },
+        pinnedTweet: {
+            type: Tweet,
+            resolve: (parent, args) => resolveTweet(parent.pinnedTweet)
+        },
         profileBanner: { type: GraphQLString },
         profileImage: { type: GraphQLString },
         favouritesCount: { type: GraphQLInt },
@@ -69,7 +75,7 @@ export const User = new GraphQLObjectType({
                 count: {
                     description: "The number of followers to fetch",
                     type: GraphQLInt,
-                    defaultValue: 10
+                    defaultValue: 20
                 },
                 all: {
                     description: "Whether to fetch all followers list",
@@ -86,7 +92,7 @@ export const User = new GraphQLObjectType({
                 count: {
                     type: GraphQLInt,
                     description: "The number of followings to fetch",
-                    defaultValue: 10
+                    defaultValue: 20
                 },
                 all: {
                     description: "Whether to fetch all followings list",
@@ -100,11 +106,13 @@ export const User = new GraphQLObjectType({
         tweets: {
             type: new GraphQLList(Tweet),
             args: {
-                count: {
-                    type: GraphQLInt,
-                    description: "The number of tweets to fetch",
-                    defaultValue: 1
-                }
+                toUsers: { type: new GraphQLList(GraphQLString) },
+                mentions: { type: new GraphQLList(GraphQLString) },
+                hashtags: { type: new GraphQLList(GraphQLString) },
+                words: { type: new GraphQLList(GraphQLString) },
+                startDate: { type: GraphQLString },
+                endDate: { type: GraphQLString },
+                count: { type: GraphQLInt, defaultValue: 1 }
             },
             resolve: (parent, args) => resolveTweets({ fromUsers: [parent.user.userName], ...args })
         }

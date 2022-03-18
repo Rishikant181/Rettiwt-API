@@ -48,7 +48,7 @@ export class User implements Deserializable {
     followingsCount: number;                                                // To store the number of people followed by this user
     statusesCount: number;                                                  // To store the number of status posted by user
     location: string;                                                       // To store the user's location
-    pinnedTweets: string[];                                                 // To store the ids of tweets that are pinned in the account
+    pinnedTweet: string;                                                    // To store the id of tweet that is pinned in the account
     profileBanner: string;                                                  // To store the url to the profile's banner
     profileImage: string;                                                   // To store the url to the profile's image
 
@@ -72,7 +72,7 @@ export class User implements Deserializable {
         this.followingsCount = data['legacy']['friends_count'];
         this.statusesCount = data['legacy']['statuses_count'];
         this.location = data['legacy']['location'];
-        this.pinnedTweets = data['legacy']['pinned_tweet_ids_str'];
+        this.pinnedTweet = data['legacy']['pinned_tweet_ids_str'][0];
         this.profileBanner = data['legacy']['profile_banner_url'];
         this.profileImage = data['legacy']['profile_image_url_https'];
         
