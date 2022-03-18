@@ -49,14 +49,14 @@ export class TweetFilter {
  */
 class TweetEntities implements Deserializable {
     // MEMBER DATA
-    hastags: string[];                                                          // To store a list of hastags used
+    hashtags: string[];                                                         // To store a list of hashtags used
     urls: string[];                                                             // To store a list of urls mentioned
     mentionedUsers: UserID[];                                                   // To store a list of users mentioned
     media: string[];                                                            // To store urls to various media files
 
     // MEMBER METHODS
     constructor() {
-        this.hastags = [];
+        this.hashtags = [];
         this.urls = [];
         this.mentionedUsers = [];
         this.media = [];
@@ -89,7 +89,7 @@ class TweetEntities implements Deserializable {
         // Extracting hashtags
         if(data['hashtags']) {
             for(var hashtag of data['hashtags']) {
-                this.hastags.push(hashtag.text);
+                this.hashtags.push(hashtag.text);
             }
         }
 

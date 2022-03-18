@@ -25,7 +25,7 @@ import {
 } from '../resolvers/TweetSpecific';
 
 import {
-    resolveUserDetailsById
+    resolveUserDetails
 } from "../resolvers/UserSpecific";
 
 
@@ -48,7 +48,7 @@ export const Tweet = new GraphQLObjectType({
         id: { type: GraphQLString },
         tweetBy: {
             type: User,
-            resolve: (parent, args) => resolveUserDetailsById(parent.tweetBy)
+            resolve: (parent, args) => resolveUserDetails('', parent.tweetBy)
         },
         createdAt: { type: GraphQLString },
         entities: { type: TweetTokens },

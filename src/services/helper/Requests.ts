@@ -121,15 +121,15 @@ export function tweetsUrl(
     // Concatenating the input argument lists to a URL query formatted string
     var query = [
         filter.words ? filter.words.join(' ') : '',
-        filter.hashtags ? `(${filter.hashtags.join(' OR ')})` : '',
+        filter.hashtags ? `(${filter.hashtags.map(hashtag => '%23' + hashtag).join(' OR ')})` : '',
         filter.fromUsers ? `(${filter.fromUsers.map(user => `from:${user}`).join(' OR ')})` : '',
         filter.toUsers ? `(${filter.toUsers.map(user => `to:${user}`).join(' OR ')})` : '',
-        filter.mentions ? `(${filter.mentions.join(' OR ')})` : '',
+        filter.mentions ? `(${filter.mentions.map(mention => '%40' + mention).join(' OR ')})` : '',
         filter.startDate ? `since:${filter.startDate}` : '',
         filter.endDate ? `until:${filter.endDate}` : '',
     ]
-        .filter(item => item !== '()' && item !== '')
-        .join(' ');
+    .filter(item => item !== '()' && item !== '')
+    .join(' ');
 
     var url = '';
 
@@ -263,15 +263,15 @@ export function unauthorizedHeader(
  * @param csrfToken The csrf token received from Twitter
  * @param cookie The cookie associated with the logged in account
  */
-export function authorizedHeader(
+export function authorizedHeader(authCred: {
     authToken: string,
     csrfToken: string,
     cookie: string
-): any {
+}): any {
     return {
         "accept": "*/*",
         "accept-language": "en-US,en;q=0.9",
-        "authorization": `Bearer ${authToken}`,
+        "authorization": `Bearer ${authCred.authToken}`,
         "content-type": "application/json",
         "sec-ch-ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"98\", \"Microsoft Edge\";v=\"98\"",
         "sec-ch-ua-mobile": "?0",
@@ -279,11 +279,11 @@ export function authorizedHeader(
         "sec-fetch-dest": "empty",
         "sec-fetch-mode": "cors",
         "sec-fetch-site": "same-origin",
-        "x-csrf-token": `${csrfToken}`,
+        "x-csrf-token": `${authCred.csrfToken}`,
         "x-twitter-active-user": "no",
         "x-twitter-auth-type": "OAuth2Session",
         "x-twitter-client-language": "en",
-        "cookie": `${cookie}`,
+        "cookie": `${authCred.cookie}`,
     };
 }
 
