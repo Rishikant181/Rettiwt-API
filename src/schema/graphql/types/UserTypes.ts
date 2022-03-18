@@ -69,7 +69,7 @@ export const User = new GraphQLObjectType({
                 count: {
                     description: "The number of followers to fetch",
                     type: GraphQLInt,
-                    defaultValue: 10
+                    defaultValue: 20
                 },
                 all: {
                     description: "Whether to fetch all followers list",
@@ -86,7 +86,7 @@ export const User = new GraphQLObjectType({
                 count: {
                     type: GraphQLInt,
                     description: "The number of followings to fetch",
-                    defaultValue: 10
+                    defaultValue: 20
                 },
                 all: {
                     description: "Whether to fetch all followings list",

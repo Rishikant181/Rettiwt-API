@@ -118,7 +118,12 @@ export class UserAccountService extends FetcherService {
         count: number,
         cursor: string
     ): Promise<Response<{ followers: User[], next: string }>> {
-        return this.fetchData(userFollowersUrl(userId, count, cursor))
+        /**
+         * When fetching list of followers, the official Twitter API seems to be fetching n + 20 followers,
+         * where n is the actual required number of followers.
+         * So changing count to count - 20, fixes fetching more than required number of follower
+         */
+        return this.fetchData(userFollowersUrl(userId, count - 20, cursor))
             .then(res => {
                 var data = extractUserFollowers(res);
                 return new Response<{ followers: User[], next: string }>(
