@@ -112,9 +112,10 @@ export const User = new GraphQLObjectType({
                 words: { type: new GraphQLList(GraphQLString) },
                 startDate: { type: GraphQLString },
                 endDate: { type: GraphQLString },
-                count: { type: GraphQLInt, defaultValue: 1 }
+                count: { type: GraphQLInt, defaultValue: 1 },
+                all: { type: GraphQLBoolean, defaultValue: false }
             },
-            resolve: (parent, args) => resolveTweets({ fromUsers: [parent.user.userName], ...args })
+            resolve: (parent, args) => resolveTweets({ fromUsers: [parent.user.userName], ...args, count: (args.all ? parent.statusesCount : args.count) })
         }
     })
 });
