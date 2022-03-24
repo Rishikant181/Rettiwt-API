@@ -9,6 +9,10 @@ import { Errors } from '../../schema/types/HTTP';
 
 // HELPERS
 import { isJSONEmpty } from './Parser';
+import {
+    Data,
+    destructureRawData
+} from './Destructurers';
 
 /* USERS */
 
@@ -17,14 +21,13 @@ import { isJSONEmpty } from './Parser';
  * @param res The raw response received from Twitter
  */
 export function extractUserAccountDetails(res: any): User {
-    // ERROR HANDLING    
-    // If user not found or account suspended
-    if(isJSONEmpty(res['data']) || isJSONEmpty(res['data']['user']) || res['data']['user']['result']['__typename'] === 'UserUnavailable') {
-        throw new Error(Errors.UserNotFound);
-    }
+    // Destructuring raw response
+    var data = destructureRawData(res, Data.UserAccount);
 
-    // DATA EXTRACTION    
-    return new User().deserialize(res['data']['user']['result']);
+    // Getting user account details data
+    var user = data.required[0];
+    
+    return new User().deserialize(user);
 }
 
 /**
@@ -112,7 +115,7 @@ export function extractUserLikes(res: any): { tweets: Tweet[], next: string } {
         throw new Error(Errors.UserNotFound);
     }
 
-    // Extracting the raw list of followers
+    // Extracting the raw list of liked tweets
     //@ts-ignore
     res = res['data']['user']['result']['timeline_v2']['timeline']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'];
 
@@ -163,6 +166,8 @@ export function extractTrending(res: any) {
 export function extractTweets(res: any) {
     var tweets: Tweet[] = [];
     var next: '';
+
+    console.log(destructureRawData(res, Data.Tweets));
 
     // Extracting the cursor to next batch
     // If not first batch
