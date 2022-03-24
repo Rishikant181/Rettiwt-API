@@ -43,7 +43,7 @@ export function extractUserFollowing(res: any): { following: User[], next: strin
     following = data.required.map(item => new User().deserialize(item));
 
     // Getting the cursor to next batch
-    next = data.cursor;
+    next = data.cursor.replace('|', '%7C');
 
     return {
         following: following,
@@ -66,7 +66,7 @@ export function extractUserFollowers(res: any): { followers: User[], next: strin
     followers = data.required.map(item => new User().deserialize(item));
 
     // Getting the cursor to next batch
-    next = data.cursor;
+    next = data.cursor.replace('|', '%7C');
 
     return {
         followers: followers,
