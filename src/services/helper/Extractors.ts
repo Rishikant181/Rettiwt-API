@@ -302,6 +302,8 @@ export function extractTweetReplies(res: any, tweetId: string): { replies: Tweet
     var replies: Tweet[] = [];
     var next: string = '';
 
+    console.log(destructureRawData(res, Data.TweetReplies));
+
     // If tweet does not exist
     if(isJSONEmpty(res['data'])) {
         throw new Error(Errors.TweetNotFound);

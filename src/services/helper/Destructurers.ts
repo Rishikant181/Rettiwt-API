@@ -29,10 +29,12 @@ export enum Data {
  */
 export function destructureRawData(res: any, type: Data): {
     required: any[],
+    cursor: string,
     users: any[],
     tweets: any[]
 } {
     var required: any[] = [];                                               // To store the reqruied raw data
+    var cursor: string = '';                                                // To store the cursor to next batch
     var users: any[] = [];                                                  // To store additional user data
     var tweets: any[] = [];                                                 // To store additional tweet data
 
@@ -68,7 +70,7 @@ export function destructureRawData(res: any, type: Data): {
             }
             // If entry is of type cursor
             else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
-                required.push(entry['content']['value']);
+                cursor = entry['content']['value'];
             }
         }
     }
@@ -94,7 +96,7 @@ export function destructureRawData(res: any, type: Data): {
             }
             // If entry is of type cursor
             else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
-                required.push(entry['content']['value']);
+                cursor = entry['content']['value'];
             }
         }
     }
@@ -126,12 +128,12 @@ export function destructureRawData(res: any, type: Data): {
         // Getting the cursor to next batch
         // If not first batch
         if (res['timeline']['instructions'].length > 2) {
-            required.push(res['timeline']['instructions'][2]['replaceEntry']['entry']['content']['operation']['cursor']['value']);
+            cursor = res['timeline']['instructions'][2]['replaceEntry']['entry']['content']['operation']['cursor']['value'];
         }
         // If first batch
         else {
             //@ts-ignore
-            required.push(res['timeline']['instructions'][0]['addEntries']['entries'].filter(item => item['entryId'].indexOf('cursor-bottom') != -1)[0]['content']['operation']['cursor']['value']);
+            cursor = res['timeline']['instructions'][0]['addEntries']['entries'].filter(item => item['entryId'].indexOf('cursor-bottom') != -1)[0]['content']['operation']['cursor']['value'];
         }
     }
     // If a single tweet is to be destructured
@@ -145,16 +147,85 @@ export function destructureRawData(res: any, type: Data): {
         //@ts-ignore
         res['data']['threaded_conversation_with_injections']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'].map(entry => {
             // If entry is of type tweet
-            if(entry['entryId'].indexOf('tweet') != -1) {
+            if (entry['entryId'].indexOf('tweet') != -1) {
                 required.push(entry['content']['itemContent']['tweet_results']['result']);
                 tweets.push(entry['content']['itemContent']['tweet_results']['result']);
                 users.push(entry['content']['itemContent']['tweet_results']['result']['core']['user_results']['result']);
             }
             // If entry if of type conversation
-            else if(entry['entryId'].indexOf('conversationthread') != -1) {
+            else if (entry['entryId'].indexOf('conversationthread') != -1) {
                 required.push(entry['content']['items'][0]['item']['itemContent']['tweet_results']['result']);
                 tweets.push(entry['content']['items'][0]['item']['itemContent']['tweet_results']['result']);
                 users.push(entry['content']['items'][0]['item']['itemContent']['tweet_results']['result']['core']['user_results']['result']);
+            }
+        });
+    }
+    // If tweet likers are to be destructured
+    else if (type == Data.TweetLikers) {
+        // If tweet does not exist
+        if (isJSONEmpty(res['data']['favoriters_timeline'])) {
+            throw new Error(Errors.TweetNotFound);
+        }
+
+        // Destructuring raw list of likers
+        //@ts-ignore
+        res['data']['favoriters_timeline']['timeline']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'].map(entry => {
+            // If entry is of type user
+            if (entry['entryId'].indexOf('user') != -1) {
+                required.push(entry['content']['itemContent']['user_results']['result']);
+                users.push(entry['content']['itemContent']['user_results']['result']);
+            }
+            // If entry is of type cursor
+            else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
+                cursor = entry['content']['value'];
+            }
+        });
+    }
+    // If tweet retweeters are to be destructured
+    else if (type == Data.TweetRetweeters) {
+        // If tweet does not exist
+        if (isJSONEmpty(res['data']['retweeters_timeline'])) {
+            throw new Error(Errors.TweetNotFound);
+        }
+
+        // Destructuring raw list of retweeters
+        //@ts-ignore
+        res['data']['retweeters_timeline']['timeline']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'].map(entry => {
+            // If entry is of type user
+            if (entry['entryId'].indexOf('user') != -1) {
+                required.push(entry['content']['itemContent']['user_results']['result']);
+                users.push(entry['content']['itemContent']['user_results']['result']);
+            }
+            // If entry is of type cursor
+            else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
+                cursor = entry['content']['value'];
+            }
+        });
+    }
+    // If tweet replies are to be fetched
+    else if (type == Data.TweetReplies) {
+        // If tweet does not exist
+        if (isJSONEmpty(res['data'])) {
+            throw new Error(Errors.TweetNotFound);
+        }
+
+        // Destructuring the received raw data
+        //@ts-ignore
+        res['data']['threaded_conversation_with_injections']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'].map(entry => {
+            // If entry is of type tweet
+            if (entry['entryId'].indexOf('tweet') != -1) {
+                tweets.push(entry['content']['itemContent']['tweet_results']['result']);
+                users.push(entry['content']['itemContent']['tweet_results']['result']['core']['user_results']['result']);
+            }
+            // If entry if of type conversation/reply
+            else if (entry['entryId'].indexOf('conversationthread') != -1) {
+                required.push(entry['content']['items'][0]['item']['itemContent']['tweet_results']['result']);
+                tweets.push(entry['content']['items'][0]['item']['itemContent']['tweet_results']['result']);
+                users.push(entry['content']['items'][0]['item']['itemContent']['tweet_results']['result']['core']['user_results']['result']);
+            }
+            // If entry is of type bottom cursor
+            else if(entry['entryId'].indexOf('cursor-bottom') != -1) {
+                cursor = entry['content']['itemContent']['value'];
             }
         });
     }
@@ -162,6 +233,7 @@ export function destructureRawData(res: any, type: Data): {
     // Returning the data
     return {
         required: required,
+        cursor: cursor,
         users: users,
         tweets: tweets
     };
