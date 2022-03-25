@@ -82,7 +82,7 @@ export async function resolveUserLikes(
             likes = likes.concat(res.data.tweets);
 
             // Updating total followers fetched
-            total += res.data.tweets.length;
+            total = likes.length;
 
             // Getting cursor to next batch
             next = res.data.next
@@ -115,7 +115,7 @@ export async function resolveUserFollowers(
     var batchSize: number = 20;                                                 // To store the batchsize to use
 
     // If all followers are to be fetched
-    count = all ? followersCount : count;
+    count = (all || count > followersCount) ? followersCount : count;
 
     // If required count less than batch size, setting batch size to required count
     batchSize = (count < batchSize) ? count : batchSize;
@@ -134,7 +134,7 @@ export async function resolveUserFollowers(
             followers = followers.concat(res.data.followers);
 
             // Updating total followers fetched
-            total += res.data.followers.length;
+            total = followers.length;
 
             // Getting cursor to next batch
             next = res.data.next
@@ -167,7 +167,7 @@ export async function resolveUserFollowing(
     var batchSize: number = 20;                                                 // To store the batchsize to use
 
     // If all followings are to be fetched
-    count = all ? followingsCount : count;
+    count = (all || count > followingsCount) ? followingsCount : count;
 
     // If required count less than batch size, setting batch size to required count
     batchSize = (count < batchSize) ? count : batchSize;
@@ -186,7 +186,7 @@ export async function resolveUserFollowing(
             following = following.concat(res.data.following);
 
             // Updating total following fetched
-            total += res.data.following.length;
+            total = following.length;
 
             // Getting cursor to next batch
             next = res.data.next
