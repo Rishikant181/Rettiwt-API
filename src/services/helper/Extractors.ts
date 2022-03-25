@@ -11,7 +11,7 @@ import { isJSONEmpty } from './Parser';
 /* USERS */
 
 /**
- * @returns The raw data formatted and sorted into required and additional data
+ * @returns The raw user account data formatted and sorted into required and additional data
  * @param res The raw response received from Twitter
  */
 export function extractUserAccountDetails(res: any): {
@@ -44,7 +44,7 @@ export function extractUserAccountDetails(res: any): {
 }
 
 /**
- * @returns The raw data formatted and sorted into required and additional data
+ * @returns The raw user following/followers data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
 export function extractUserFollow(res: any): {
@@ -91,7 +91,7 @@ export function extractUserFollow(res: any): {
 }
 
 /**
- * @returns The raw data formatted and sorted into required and additional data
+ * @returns The raw user likes data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
 export function extractUserLikes(res: any): {
@@ -141,7 +141,7 @@ export function extractUserLikes(res: any): {
 /* TWEETS */
 
 /**
- * @returns The raw data formatted and sorted into required and additional data
+ * @returns The raw tweets data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
 export function extractTweets(res: any): {
@@ -199,7 +199,7 @@ export function extractTweets(res: any): {
 }
 
 /**
- * @returns The raw data formatted and sorted into required and additional data
+ * @returns The raw tweet data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  * @param tweetId The rest id of the tweet to fetch
  */
@@ -256,7 +256,7 @@ export function extractTweet(res: any, tweetId: string): {
 }
 
 /**
- * @returns The raw data formatted and sorted into required and additional data
+ * @returns The raw tweet likers data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
 export function extractTweetLikers(res: any): {
@@ -299,7 +299,7 @@ export function extractTweetLikers(res: any): {
 }
 
 /**
- * @returns The raw data formatted and sorted into required and additional data
+ * @returns The raw tweet retweeters data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
 export function extractTweetRetweeters(res: any): {
@@ -342,7 +342,7 @@ export function extractTweetRetweeters(res: any): {
 }
 
 /**
- * @returns The raw data formatted and sorted into required and additional data
+ * @returns The raw tweet replies data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  * @param tweetId The id of the tweet whose replies must be extracted
  */

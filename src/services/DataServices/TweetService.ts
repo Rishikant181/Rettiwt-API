@@ -58,7 +58,7 @@ export class TweetService extends FetcherService {
                 var tweets = data.required.map(item => new Tweet().deserialize(item));
 
                 return new Response<{ tweets: Tweet[], next: string }>(
-                    tweets.length ? true : false,                          // Setting true or false based on tweets found or not
+                    tweets.length ? true : false,
                     new Error(Errors.NoError),
                     { tweets: tweets, next: data.cursor }
                 );
