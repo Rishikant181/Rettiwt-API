@@ -112,6 +112,7 @@ export class Tweet implements Deserializable {
     quoteCount: number;                                                     // To store the number of quotes of the tweet
     replyCount: number;                                                     // To store the number of replies to the tweet
     retweetCount: number;                                                   // To store the number of retweets
+    likeCount: number;                                                      // To store the number of likes
 
     // MEMBER METHODS
     /**
@@ -131,6 +132,7 @@ export class Tweet implements Deserializable {
         this.quoteCount = data['legacy']['quote_count'];
         this.replyCount = data['legacy']['reply_count'];
         this.retweetCount = data['legacy']['retweet_count'];
+        this.likeCount = data['legacy']['favorite_count'];
 
         return this;
     }
