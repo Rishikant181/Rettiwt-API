@@ -32,8 +32,8 @@ export class CacheService {
         this.connUrl = `${config['server']['db']['host']}:${config['server']['db']['port']}`;
 
         // Initialising database and index name
-        this.dbName = config['server']['db']['databases']['ai-cache']['name'];
-        this.dbIndex = config['server']['db']['databases']['ai-cache']['index'];
+        this.dbName = config['server']['db']['databases']['cache']['name'];
+        this.dbIndex = config['server']['db']['databases']['cache']['index'];
 
         // Creating connection to database
         this.client = new MongoClient(this.connUrl);

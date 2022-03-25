@@ -68,7 +68,7 @@ export async function resolveTweets(filter: any): Promise<any[]> {
             tweets = tweets.concat(res.data.tweets);
 
             // Updating total tweets fetched
-            total += res.data.tweets.length;
+            total = tweets.length;
 
             // Getting cursor to next batch
             next = res.data.next
@@ -86,12 +86,22 @@ export async function resolveTweets(filter: any): Promise<any[]> {
  * @returns The list of likers of the given tweet
  * @param id The id of the tweet whose likers are to be fetched
  * @param count The total number of likers to fetch
+ * @param all Whether to fetch all the likers of the tweet
+ * @param likesCount The total number of like of the tweet
  */
-export async function resolveTweetLikers(id: string, count: number): Promise<any[]> {
+export async function resolveTweetLikers(
+    id: string,
+    count: number,
+    all: boolean,
+    likesCount: number
+): Promise<any[]> {
     var likers: any[] = [];                                                     // To store the list of likers
     var next: string = '';                                                      // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of likers fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use
+
+    // If all likers are to be fetched
+    count = (all || count > likesCount) ? likesCount : count;
 
     // If required count less than batch size, setting batch size to required count
     batchSize = (count < batchSize) ? count : batchSize;
@@ -110,7 +120,7 @@ export async function resolveTweetLikers(id: string, count: number): Promise<any
             likers = likers.concat(res.data.likers);
 
             // Updating total likers fetched
-            total += res.data.likers.length;
+            total = likers.length;
 
             // Getting cursor to next batch
             next = res.data.next
@@ -128,12 +138,22 @@ export async function resolveTweetLikers(id: string, count: number): Promise<any
  * @returns The list of retweeters of the given tweet
  * @param id The id of the tweet whose retweeters are to be fetched
  * @param count The total number of retweeters to fetch
+ * @param all Whether to fetch all retweeters
+ * @param retweetsCount The total number of retweets of the 
  */
-export async function resolveTweetRetweeters(id: string, count: number): Promise<any[]> {
+export async function resolveTweetRetweeters(
+    id: string,
+    count: number,
+    all: boolean,
+    retweetsCount: number
+): Promise<any[]> {
     var retweeters: any[] = [];                                                 // To store the list of retweeters
     var next: string = '';                                                      // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of retweeters fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use
+
+    // If all retweeters are to be fetched
+    count = (all || count > retweetsCount) ? retweetsCount : count;
 
     // If required count less than batch size, setting batch size to required count
     batchSize = (count < batchSize) ? count : batchSize;
@@ -152,7 +172,7 @@ export async function resolveTweetRetweeters(id: string, count: number): Promise
             retweeters = retweeters.concat(res.data.retweeters);
 
             // Updating total retweeters fetched
-            total += res.data.retweeters.length;
+            total = retweeters.length;
 
             // Getting cursor to next batch
             next = res.data.next
@@ -170,11 +190,21 @@ export async function resolveTweetRetweeters(id: string, count: number): Promise
  * @returns The list of replies of the given tweet
  * @param id The id of the tweet whose replies are to be fetched
  * @param count The total number of replies to fetch
+ * @param all Whether to fetch list of all replies
+ * @param repliesCount The total number of replies to the target tweet
  */
-export async function resolveTweetReplies(id: string, count: number): Promise<any[]> {
+export async function resolveTweetReplies(
+    id: string,
+    count: number,
+    all: boolean,
+    repliesCount: number
+): Promise<any[]> {
     var replies: any[] = [];                                                    // To store the list of replies
     var next: string = '';                                                      // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of replies fetched
+
+    // If all replies are to be fetched
+    count = (all || count > repliesCount) ? repliesCount : count;
 
     // Repeatedly fetching data as long as total data fetched is less than requried
     while (total < count) {
@@ -187,7 +217,7 @@ export async function resolveTweetReplies(id: string, count: number): Promise<an
             replies = replies.concat(res.data.replies);
 
             // Updating total replies fetched
-            total += res.data.replies.length;
+            total = replies.length;
 
             // Getting cursor to next batch
             next = res.data.next
