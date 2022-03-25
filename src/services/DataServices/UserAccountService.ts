@@ -124,7 +124,7 @@ export class UserAccountService extends FetcherService {
          * where n is the actual required number of followers.
          * So changing count to count - 20, fixes fetching more than required number of follower
          */
-        return this.fetchData(userFollowersUrl(userId, count - 20, cursor))
+        return this.fetchData(userFollowersUrl(userId, (count > 20) ? (count - 20) : count, cursor))
             .then(res => {
                 var data = extractUserFollowers(res);
                 return new Response<{ followers: User[], next: string }>(
