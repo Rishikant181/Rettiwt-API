@@ -5,7 +5,8 @@ import {
     GraphQLList,
     GraphQLString,
     GraphQLObjectType,
-    GraphQLInt
+    GraphQLInt,
+    GraphQLBoolean
 } from "graphql";
 
 // CUSTOM LIBS
@@ -60,8 +61,7 @@ export const Tweet = new GraphQLObjectType({
         },
         lang: { type: GraphQLString },
         quoteCount: { type: GraphQLInt },
-        replyCount: { type: GraphQLInt },
-        retweetCount: { type: GraphQLInt },
+        likeCount: { type: GraphQLInt },
         likers: {
             type: new GraphQLList(User),
             args: {
@@ -69,10 +69,16 @@ export const Tweet = new GraphQLObjectType({
                     type: GraphQLInt,
                     description: "The number of likers to fetch",
                     defaultValue: 10
+                },
+                all: {
+                    type: GraphQLBoolean,
+                    description: "Whether to fetch all likers",
+                    defaultValue: false
                 }
             },
-            resolve: (parent, args) => resolveTweetLikers(parent.id, args.count)
+            resolve: (parent, args) => resolveTweetLikers(parent.id, args.count, args.all, parent.likeCount)
         },
+        retweetCount: { type: GraphQLInt },
         retweeters: {
             type: new GraphQLList(User),
             args: {
@@ -80,10 +86,16 @@ export const Tweet = new GraphQLObjectType({
                     type: GraphQLInt,
                     description: "The number of retweeters to fetch",
                     defaultValue: 10
+                },
+                all: {
+                    type: GraphQLBoolean,
+                    description: "Whether to fetch all likers",
+                    defaultValue: false
                 }
             },
-            resolve: (parent, args) => resolveTweetRetweeters(parent.id, args.count)
+            resolve: (parent, args) => resolveTweetRetweeters(parent.id, args.count, args.all, parent.retweetCount)
         },
+        replyCount: { type: GraphQLInt },
         replies: {
             type: new GraphQLList(Tweet),
             args: {
@@ -91,9 +103,14 @@ export const Tweet = new GraphQLObjectType({
                     type: GraphQLInt,
                     description: "The number of replies to fetch",
                     defaultValue: 10
+                },
+                all: {
+                    type: GraphQLBoolean,
+                    description: "Whether to fetch all replies",
+                    defaultValue: false
                 }
             },
-            resolve: (parent, args) => resolveTweetReplies(parent.id, args.count)
+            resolve: (parent, args) => resolveTweetReplies(parent.id, args.count, args.all, parent.replyCount)
         }
     })
 });
