@@ -51,7 +51,7 @@ export class FetcherService {
     private allowCache: boolean;                                            // To store whether caching is enabled or not
 
     // MEMBER METHODS
-    protected constructor() {
+    constructor() {
         this.allowCache = config['server']['db']['enabled'];
     }
 
