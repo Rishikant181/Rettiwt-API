@@ -277,7 +277,7 @@ export function extractTweetLikers(res: any): {
 
     // Destructuring raw list of likers
     //@ts-ignore
-    res['data']['favoriters_timeline']['timeline']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'].map(entry => {
+    res['data']['favoriters_timeline']['timeline']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'].forEach(entry => {
         // If entry is of type user
         if (entry['entryId'].indexOf('user') != -1) {
             required.push(entry['content']['itemContent']['user_results']['result']);
@@ -320,7 +320,7 @@ export function extractTweetRetweeters(res: any): {
 
     // Destructuring raw list of retweeters
     //@ts-ignore
-    res['data']['retweeters_timeline']['timeline']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'].map(entry => {
+    res['data']['retweeters_timeline']['timeline']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'].forEach(entry => {
         // If entry is of type user
         if (entry['entryId'].indexOf('user') != -1) {
             required.push(entry['content']['itemContent']['user_results']['result']);
