@@ -2,10 +2,19 @@
 import fetch, { Response } from "node-fetch";
 
 // CUSTOM LIBS
+
+// SERVICES
+import { AuthService } from './AuthService';
+import { CacheService } from './CacheService';
+
+// TYPES
+import { User } from '../schema/types/UserAccountData';
+import { Tweet } from '../schema/types/TweetData';
+
+// HELPERS
 import {
     authorizedHeader
 } from './helper/Requests'
-import { AuthService } from './AuthService';
 
 /**
  * @summary Stores all the different type of http requests
@@ -60,6 +69,25 @@ export class FetcherService {
         .catch((err) => {
             throw err;
         });
+    }
+
+    /**
+     * @summary Caches the extracted data
+     * @param data The extracted data to be cached
+     */
+    protected async cacheData(data: any): Promise<void> {
+        // Creating an instance of cache
+        var cache = new CacheService();
+
+        // Parsing the extracted data
+        //@ts-ignore
+        var users = data.users.map(user => new User().deserialize(user));
+        //@ts-ignore
+        var tweets = data.tweets.map(tweet => new Tweet().deserialize(tweet));
+
+        // Caching the data
+        cache.write(users);
+        cache.write(tweets);
     }
 
     /**

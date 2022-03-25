@@ -54,6 +54,9 @@ export class TweetService extends FetcherService {
                 // Extracting data
                 var data = extractTweets(res);
 
+                // Caching data
+                this.cacheData(data);
+
                 // Parsing data
                 var tweets = data.required.map(item => new Tweet().deserialize(item));
 
@@ -82,6 +85,9 @@ export class TweetService extends FetcherService {
             .then(res => {
                 // Extracting data
                 var data = extractTweet(res, tweetId);
+
+                // Caching data
+                this.cacheData(data);
 
                 // Parsing data
                 var tweet = new Tweet().deserialize(data.required[0]);
@@ -118,6 +124,9 @@ export class TweetService extends FetcherService {
                 // Extracting data
                 var data = extractTweetLikers(res);
 
+                // Caching data
+                this.cacheData(data);
+
                 // Parsing data
                 var users = data.required.map(item => new User().deserialize(item));
 
@@ -153,6 +162,9 @@ export class TweetService extends FetcherService {
                 // Extracting data
                 var data = extractTweetRetweeters(res);
 
+                // Caching data
+                this.cacheData(data);
+
                 // Parsing data
                 var users = data.required.map(item => new User().deserialize(item));
 
@@ -185,6 +197,9 @@ export class TweetService extends FetcherService {
             .then(res => {
                 // Extracting data
                 var data = extractTweetReplies(res, tweetId);
+
+                // Caching data
+                this.cacheData(data);
 
                 // Parsing data
                 var tweets = data.required.map(item => new Tweet().deserialize(item));

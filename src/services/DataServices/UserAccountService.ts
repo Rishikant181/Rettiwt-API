@@ -40,6 +40,9 @@ export class UserAccountService extends FetcherService {
                 // Extracting data
                 var data = extractUserAccountDetails(res);
 
+                // Caching data
+                this.cacheData(data);
+
                 // Parsing data
                 var user = new User().deserialize(data.required[0]);
                 
@@ -68,6 +71,9 @@ export class UserAccountService extends FetcherService {
             .then(res => {
                 // Extracting data
                 var data = extractUserAccountDetails(res);
+
+                // Caching data
+                this.cacheData(data);
 
                 // Parsing data
                 var user = new User().deserialize(data.required[0]);
@@ -103,6 +109,9 @@ export class UserAccountService extends FetcherService {
             .then(res => {
                 // Extracting data
                 var data = extractUserFollow(res);
+
+                // Caching data
+                this.cacheData(data);
 
                 // Parsing data
                 var users = data.required.map(item => new User().deserialize(item));
@@ -144,6 +153,9 @@ export class UserAccountService extends FetcherService {
                 // Extracting data
                 var data = extractUserFollow(res);
 
+                // Caching data
+                this.cacheData(data);
+
                 // Parsing data
                 var users = data.required.map(item => new User().deserialize(item));
 
@@ -178,6 +190,9 @@ export class UserAccountService extends FetcherService {
             .then(res => {
                 // Extracting data
                 var data = extractUserLikes(res);
+
+                // Caching data
+                this.cacheData(data);
 
                 // Parsing data
                 var tweets = data.required.map(item => new Tweet().deserialize(item));
