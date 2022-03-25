@@ -35,7 +35,10 @@ export const TweetTokens = new GraphQLObjectType({
     fields: () => ({
         hashtags: { type: new GraphQLList(GraphQLString) },
         urls: { type: new GraphQLList(GraphQLString) },
-        mentionedUsers: { type: new GraphQLList(UserID) },
+        mentionedUsers: {
+            type: new GraphQLList(User),
+            resolve: (parent) => parent.mentionedUsers.map((user: any) => resolveUserDetails('', user.id))
+        },
         media: { type: new GraphQLList(GraphQLString) },
     })
 });
