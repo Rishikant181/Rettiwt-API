@@ -81,6 +81,18 @@ export class TweetService extends FetcherService {
      * @param tweetId The rest id of the target tweet
      */
     async getTweetById(tweetId: string): Promise<Response<Tweet>> {
+        // Getting data from cache
+        var cachedData = await this.readData(tweetId);
+
+        // If data exists in cache
+        if(cachedData) {
+            return new Response<Tweet>(
+                true,
+                new Error(Errors.NoError),
+                cachedData
+            );
+        }
+        
         return this.fetchData(tweetDetailsUrl(tweetId))
             .then(res => {
                 // Extracting data

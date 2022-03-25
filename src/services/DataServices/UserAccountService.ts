@@ -67,6 +67,18 @@ export class UserAccountService extends FetcherService {
      * @param restId The screen name of the target user.
      */
     async getUserAccountDetailsById(restId: string): Promise<Response<User>> {
+        // Getting data from cache
+        var cachedData = await this.readData(restId);
+
+        // If data exists in cache
+        if(cachedData) {
+            return new Response<User>(
+                true,
+                new Error(Errors.NoError),
+                cachedData
+            );
+        }
+
         return this.fetchData(userAccountByIdUrl(restId))
             .then(res => {
                 // Extracting data

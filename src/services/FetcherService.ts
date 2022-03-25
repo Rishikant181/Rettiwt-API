@@ -91,6 +91,18 @@ export class FetcherService {
     }
 
     /**
+     * @returns The data with the given id (if it exists in cache)
+     * @param id The id of the data to be read from cache
+     */
+    protected async readData(id: string): Promise<any> {
+        // Creating an instance of cache
+        var cache = new CacheService();
+
+        // Reading data from cache
+        return cache.read(id);
+    }
+
+    /**
      * @summary Throws the appropriate http error after evaluation of the status code of reponse
      * @param res The response object received from http communication
      */
