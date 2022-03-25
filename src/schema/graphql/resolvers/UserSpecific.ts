@@ -178,7 +178,7 @@ export async function resolveUserFollowing(
         batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
 
         // Getting the data
-        const res = await userService.getUserFollowing(id, count, next);
+        const res = await userService.getUserFollowings(id, count, next);
 
         // If data is available
         if (res.success) {
