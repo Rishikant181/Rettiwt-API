@@ -372,12 +372,16 @@ export function extractTweetReplies(res: any, tweetId: string): {
         }
         // If entry if of type conversation/reply
         else if (entry['entryId'].indexOf('conversationthread') != -1) {
-            // Iterating over the conversation
+            // Adding the 1st entry, which is a reply, to required list
+            required.push(entry['content']['items'][0]['item']['itemContent']['tweet_results']['result']);
+            tweets.push(entry['content']['items'][0]['item']['itemContent']['tweet_results']['result']);
+            users.push(entry['content']['items'][0]['item']['itemContent']['tweet_results']['result']['core']['user_results']['result']);
+            
+            // Iterating over the rest of the conversation
             //@ts-ignore
             entry['content']['items'].forEach(item => {
                 // If item is of type tweet
                 if (item['entryId'].indexOf('tweet') != -1) {
-                    required.push(item['item']['itemContent']['tweet_results']['result']);
                     tweets.push(item['item']['itemContent']['tweet_results']['result']);
                     users.push(item['item']['itemContent']['tweet_results']['result']['core']['user_results']['result']);
                 }
