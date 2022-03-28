@@ -96,13 +96,6 @@ export function userLikesUrl(
 }
 
 /**
- * @returns The url used to set the current location for fetching trends
- */
-export function setLocationUrl(): string {
-    return 'https://twitter.com/i/api/2/guide/set_explore_settings.json';
-}
-
-/**
  * @returns The url from which the list of trending is fetched
  */
 export function trendingUrl() {

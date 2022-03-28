@@ -3,8 +3,6 @@
 // CUSTOM LIBS
 
 // TYPES
-import { Tweet } from '../../schema/types/TweetData';
-import { User } from '../../schema/types/UserAccountData';
 import { Errors } from '../../schema/types/HTTP';
 
 // HELPERS
@@ -13,322 +11,389 @@ import { isJSONEmpty } from './Parser';
 /* USERS */
 
 /**
- * @returns The raw user account details
+ * @returns The raw user account data formatted and sorted into required and additional data
  * @param res The raw response received from Twitter
  */
-export function extractUserAccountDetails(res: any): User {
-    // ERROR HANDLING    
+export function extractUserAccountDetails(res: any): {
+    required: any[],
+    cursor: string,
+    users: any[],
+    tweets: any[]
+} {
+    var required: any[] = [];                                               // To store the reqruied raw data
+    var cursor: string = '';                                                // To store the cursor to next batch
+    var users: any[] = [];                                                  // To store additional user data
+    var tweets: any[] = [];                                                 // To store additional tweet data
+
     // If user not found or account suspended
-    if(isJSONEmpty(res['data']) || isJSONEmpty(res['data']['user']) || res['data']['user']['result']['__typename'] === 'UserUnavailable') {
+    if (isJSONEmpty(res['data']) || isJSONEmpty(res['data']['user']) || res['data']['user']['result']['__typename'] === 'UserUnavailable') {
         throw new Error(Errors.UserNotFound);
     }
 
-    // DATA EXTRACTION    
-    return new User().deserialize(res['data']['user']['result']);
-}
+    // Destructuring user account data
+    required.push(res['data']['user']['result']);
+    users.push(res['data']['user']['result']);
 
-/**
- * @returns The raw list of following of the target user from raw response data.
- * @param res The raw response received from TwitterAPI
- */
-export function extractUserFollowing(res: any): { following: User[], next: string } {
-    var following: User[] = [];
-    var next: string = '';
-
-    // If user does not exist
-    if(isJSONEmpty(res['data']['user'])) {
-        throw new Error(Errors.UserNotFound);
-    }
-
-    // Extracting the raw list of following
-    //@ts-ignore
-    res = res['data']['user']['result']['timeline']['timeline']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'];
-
-    // Extracting cursor to next batch
-    //@ts-ignore
-    next = res.filter(item => item['entryId'].indexOf('cursor-bottom') != -1)[0]['content']['value'].replace('|', '%7C');
-
-    // Iterating over the raw list of following
-    for (var entry of res) {
-        // Checking if the entry is of type user
-        if (entry['entryId'].indexOf('user') != -1) {
-            // Adding the followed users to list of users
-            following.push(new User().deserialize(entry['content']['itemContent']['user_results']['result']));
-        }
-    }
-
+    // Returning the data
     return {
-        following: following,
-        next: next
+        required: required,
+        cursor: cursor,
+        users: users,
+        tweets: tweets
     };
 }
 
 /**
- * @returns The raw list of followers of the target user from raw response data.
+ * @returns The raw user following/followers data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
-export function extractUserFollowers(res: any): { followers: User[], next: string } {
-    var followers: User[] = [];
-    var next: string = '';
+export function extractUserFollow(res: any): {
+    required: any[],
+    cursor: string,
+    users: any[],
+    tweets: any[]
+} {
+    var required: any[] = [];                                               // To store the reqruied raw data
+    var cursor: string = '';                                                // To store the cursor to next batch
+    var users: any[] = [];                                                  // To store additional user data
+    var tweets: any[] = [];                                                 // To store additional tweet data
 
     // If user does not exist
-    if(isJSONEmpty(res['data']['user'])) {
+    if (isJSONEmpty(res['data']['user'])) {
         throw new Error(Errors.UserNotFound);
     }
-    
-    // Extracting the raw list of followers
+
+    // Extracting the raw list
     //@ts-ignore
     res = res['data']['user']['result']['timeline']['timeline']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'];
 
-    // Extracting cursor to next batch
+    // Destructuring data
     //@ts-ignore
-    next = res.filter(item => item['entryId'].indexOf('cursor-bottom') != -1)[0]['content']['value'].replace('|', '%7C');
-
-    // Itearating over the raw list of following
     for (var entry of res) {
-        // Checking if the entry is of type user
+        // If entry is of type user
         if (entry['entryId'].indexOf('user') != -1) {
-            // Adding the follower to list of followers
-            followers.push(new User().deserialize(entry['content']['itemContent']['user_results']['result']));
+            required.push(entry['content']['itemContent']['user_results']['result']);
+            users.push(entry['content']['itemContent']['user_results']['result']);
+        }
+        // If entry is of type cursor
+        else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
+            cursor = entry['content']['value'];
         }
     }
 
+    // Returning the data
     return {
-        followers: followers,
-        next: next
+        required: required,
+        cursor: cursor,
+        users: users,
+        tweets: tweets
     };
 }
 
 /**
- * @returns The raw list of tweets liked by the target user from raw response data.
+ * @returns The raw user likes data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
-export function extractUserLikes(res: any): { tweets: Tweet[], next: string } {
-    var tweets: Tweet[] = [];
-    var next: string = '';
+export function extractUserLikes(res: any): {
+    required: any[],
+    cursor: string,
+    users: any[],
+    tweets: any[]
+} {
+    var required: any[] = [];                                               // To store the reqruied raw data
+    var cursor: string = '';                                                // To store the cursor to next batch
+    var users: any[] = [];                                                  // To store additional user data
+    var tweets: any[] = [];                                                 // To store additional tweet data
 
     // If user does not exist
-    if(isJSONEmpty(res['data']['user'])) {
+    if (isJSONEmpty(res['data']['user'])) {
         throw new Error(Errors.UserNotFound);
     }
 
-    // Extracting the raw list of followers
+    // Extracting the raw list
     //@ts-ignore
     res = res['data']['user']['result']['timeline_v2']['timeline']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'];
 
-    // Extracting cursor to next batch
+    // Destructuring data
     //@ts-ignore
-    next = res.filter(item => item['entryId'].indexOf('cursor-bottom') != -1)[0]['content']['value'];
-
-    // Itearating over the raw list of following
     for (var entry of res) {
-        // Checking if the entry is of type user
+        // If entry is of type tweet
         if (entry['entryId'].indexOf('tweet') != -1) {
-            // Adding the tweet to list of liked tweets
-            tweets.push(new Tweet().deserialize(entry['content']['itemContent']['tweet_results']['result']));
+            required.push(entry['content']['itemContent']['tweet_results']['result']);
+            users.push(entry['content']['itemContent']['tweet_results']['result']['core']['user_results']['result']);
+            tweets.push(entry['content']['itemContent']['tweet_results']['result']);
+        }
+        // If entry is of type cursor
+        else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
+            cursor = entry['content']['value'];
         }
     }
 
+    // Returning the data
     return {
-        tweets: tweets,
-        next: next
+        required: required,
+        cursor: cursor,
+        users: users,
+        tweets: tweets
     };
 }
 
 /* TWEETS */
 
 /**
- * @returns The list of trending
+ * @returns The raw tweets data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
-export function extractTrending(res: any) {
-    var trending: string[] = [];
+export function extractTweets(res: any): {
+    required: any[],
+    cursor: string,
+    users: any[],
+    tweets: any[]
+} {
+    var required: any[] = [];                                               // To store the reqruied raw data
+    var cursor: string = '';                                                // To store the cursor to next batch
+    var users: any[] = [];                                                  // To store additional user data
+    var tweets: any[] = [];                                                 // To store additional tweet data
 
-    // Extracting raw list of trending from response
-    //@ts-ignore
-    res = res['timeline']['instructions'][1]['addEntries']['entries'].filter(item => item['entryId'] === 'trends')[0]['content']['timelineModule']['items'];
+    // Getting raw tweet list
+    var dataTweets = res['globalObjects']['tweets'];
 
-    // Parsing the raw list to string list
-    for (var item of res) {
-        trending.push(decodeURIComponent(item['entryId'].substring(item['entryId'].indexOf('trends-') + 'trends-'.length)).replace(/\+/g, ' ',));
+    // Getting raw users list
+    var dataUsers = res['globalObjects']['users'];
+
+    // Destructuring tweets, if not empty
+    if (!isJSONEmpty(dataTweets)) {
+        // Iterating through the json array of tweets
+        for (var key of Object.keys(dataTweets)) {
+            required.push({ rest_id: dataTweets[key]['id_str'], legacy: dataTweets[key] });
+            tweets.push({ rest_id: dataTweets[key]['id_str'], legacy: dataTweets[key] });
+        }
     }
 
-    return trending;
-}
+    // Destructuring users, if not empty
+    if (!isJSONEmpty(dataUsers)) {
+        // Iterating through the json array of users
+        for (var key of Object.keys(dataUsers)) {
+            users.push({ rest_id: dataUsers[key]['id_str'], legacy: dataUsers[key] });
+        }
+    }
 
-/**
- * @returns The raw list of tweets matching the given filter from raw response data.
- * @param res The raw response received from TwitterAPI
- */
-export function extractTweets(res: any) {
-    var tweets: Tweet[] = [];
-    var next: '';
-
-    // Extracting the cursor to next batch
+    // Getting the cursor to next batch
     // If not first batch
     if (res['timeline']['instructions'].length > 2) {
-        next = res['timeline']['instructions'][2]['replaceEntry']['entry']['content']['operation']['cursor']['value'];
+        cursor = res['timeline']['instructions'][2]['replaceEntry']['entry']['content']['operation']['cursor']['value'];
     }
     // If first batch
     else {
         //@ts-ignore
-        next = res['timeline']['instructions'][0]['addEntries']['entries'].filter(item => item['entryId'].indexOf('cursor-bottom') != -1)[0]['content']['operation']['cursor']['value'];
+        cursor = res['timeline']['instructions'][0]['addEntries']['entries'].filter(item => item['entryId'].indexOf('cursor-bottom') != -1)[0]['content']['operation']['cursor']['value'];
     }
 
-    // Getting the raw list of tweets from response
-    res = res['globalObjects']['tweets'];
-
-    // If not empty, extracting tweets
-    if (!isJSONEmpty(res)) {
-        // Iterating through the json array of tweets
-        for (var key of Object.keys(res)) {
-            // Adding the tweets to the tweets list
-            tweets.push(new Tweet().deserialize({ rest_id: res[key]['id_str'], legacy: res[key] }));
-        }
-    }
-
+    // Returning the data
     return {
-        tweets: tweets,
-        next: next
+        required: required,
+        cursor: cursor,
+        users: users,
+        tweets: tweets
     };
 }
 
 /**
- * @returns The required tweet from raw response data.
+ * @returns The raw tweet data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  * @param tweetId The rest id of the tweet to fetch
  */
-export function extractTweet(res: any, tweetId: string): Tweet {
-    var tweet: Tweet;
+export function extractTweet(res: any, tweetId: string): {
+    required: any[],
+    cursor: string,
+    users: any[],
+    tweets: any[]
+} {
+    var required: any[] = [];                                               // To store the reqruied raw data
+    var cursor: string = '';                                                // To store the cursor to next batch
+    var users: any[] = [];                                                  // To store additional user data
+    var tweets: any[] = [];                                                 // To store additional tweet data
 
     // If tweet does not exist
-    if(isJSONEmpty(res['data'])) {
+    if (isJSONEmpty(res['data'])) {
         throw new Error(Errors.TweetNotFound);
     }
 
-    // Extracting required raw tweet from response
+    // Destructuring the received raw data
     //@ts-ignore
-    res = res['data']['threaded_conversation_with_injections']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'].filter(item => item['entryId'].indexOf(tweetId) != -1)[0]['content']['itemContent']['tweet_results']['result'];
-
-    // Storing the tweet in a tweet object
-    tweet = new Tweet().deserialize(res);
-
-    return tweet;
-}
-
-/**
- * @returns The raw list of likers of the target tweet from raw response data.
- * @param res The raw response received from TwitterAPI
- */
-export function extractTweetLikers(res: any): { likers: User[], next: string } {
-    var likers: User[] = [];
-    var next: string = '';
-
-    // If tweet does not exist
-    if(isJSONEmpty(res['data']['favoriters_timeline'])) {
-        throw new Error(Errors.TweetNotFound);
-    }
-    
-    // Extracting raw likes list from response
-    //@ts-ignore
-    res = res['data']['favoriters_timeline']['timeline']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'];
-
-    // Extracting cursor to next batch
-    //@ts-ignore
-    next = res.filter(item => item['entryId'].indexOf('cursor-bottom') != -1)[0]['content']['value'];
-
-    // Iterating over the raw list of likers
-    for (var entry of res) {
-        // Checking if entry is of type user
-        if (entry['entryId'].indexOf('user') != -1) {
-            // Adding the user to list of likers
-            likers.push(new User().deserialize(entry['content']['itemContent']['user_results']['result']));
+    res['data']['threaded_conversation_with_injections']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'].forEach(entry => {
+        // If entry is of type tweet
+        if (entry['entryId'].indexOf('tweet') != -1) {
+            // If this is the required tweet
+            if (entry['entryId'].indexOf(tweetId) != -1) {
+                required.push(entry['content']['itemContent']['tweet_results']['result']);
+            }
+            tweets.push(entry['content']['itemContent']['tweet_results']['result']);
+            users.push(entry['content']['itemContent']['tweet_results']['result']['core']['user_results']['result']);
         }
-    }
+        // If entry if of type conversation
+        else if (entry['entryId'].indexOf('conversationthread') != -1) {
+            // Iterating over the conversation
+            //@ts-ignore
+            entry['content']['items'].forEach(item => {
+                // If item is of type tweet
+                if (item['entryId'].indexOf('tweet') != -1) {
+                    required.push(item['item']['itemContent']['tweet_results']['result']);
+                    tweets.push(item['item']['itemContent']['tweet_results']['result']);
+                    users.push(item['item']['itemContent']['tweet_results']['result']['core']['user_results']['result']);
+                }
+            });
+        }
+    });
 
+    // Returning the data
     return {
-        likers: likers,
-        next: next
+        required: required,
+        cursor: cursor,
+        users: users,
+        tweets: tweets
     };
 }
 
 /**
- * @returns The raw list of retweeters of the target tweet from raw response data.
+ * @returns The raw tweet likers data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
-export function extractTweetRetweeters(res: any): { retweeters: User[], next: string } {
-    var retweeters: User[] = [];
-    var next: string = '';
+export function extractTweetLikers(res: any): {
+    required: any[],
+    cursor: string,
+    users: any[],
+    tweets: any[]
+} {
+    var required: any[] = [];                                               // To store the reqruied raw data
+    var cursor: string = '';                                                // To store the cursor to next batch
+    var users: any[] = [];                                                  // To store additional user data
+    var tweets: any[] = [];                                                 // To store additional tweet data
 
     // If tweet does not exist
-    if(isJSONEmpty(res['data']['retweeters_timeline'])) {
+    if (isJSONEmpty(res['data']['favoriters_timeline'])) {
         throw new Error(Errors.TweetNotFound);
     }
 
-    // Extracting raw retweeters list from response
+    // Destructuring raw list of likers
     //@ts-ignore
-    res = res['data']['retweeters_timeline']['timeline']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'];
-
-    // Extracting cursor to next batch
-    //@ts-ignore
-    next = res.filter(item => item['entryId'].indexOf('cursor-bottom') != -1)[0]['content']['value'];
-
-    // Iterating over the raw list of likes
-    for (var entry of res) {
-        // Checking if entry is of type user
+    res['data']['favoriters_timeline']['timeline']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'].forEach(entry => {
+        // If entry is of type user
         if (entry['entryId'].indexOf('user') != -1) {
-            // Adding the user to list of retweeters
-            retweeters.push(new User().deserialize(entry['content']['itemContent']['user_results']['result']));
+            required.push(entry['content']['itemContent']['user_results']['result']);
+            users.push(entry['content']['itemContent']['user_results']['result']);
         }
-    }
+        // If entry is of type cursor
+        else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
+            cursor = entry['content']['value'];
+        }
+    });
 
+    // Returning the data
     return {
-        retweeters: retweeters,
-        next: next
+        required: required,
+        cursor: cursor,
+        users: users,
+        tweets: tweets
     };
 }
 
 /**
- * @returns The raw list of replies to a target tweet from raw response data.
+ * @returns The raw tweet retweeters data formatted and sorted into required and additional data
+ * @param res The raw response received from TwitterAPI
+ */
+export function extractTweetRetweeters(res: any): {
+    required: any[],
+    cursor: string,
+    users: any[],
+    tweets: any[]
+} {
+    var required: any[] = [];                                               // To store the reqruied raw data
+    var cursor: string = '';                                                // To store the cursor to next batch
+    var users: any[] = [];                                                  // To store additional user data
+    var tweets: any[] = [];                                                 // To store additional tweet data
+
+    // If tweet does not exist
+    if (isJSONEmpty(res['data']['retweeters_timeline'])) {
+        throw new Error(Errors.TweetNotFound);
+    }
+
+    // Destructuring raw list of retweeters
+    //@ts-ignore
+    res['data']['retweeters_timeline']['timeline']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'].forEach(entry => {
+        // If entry is of type user
+        if (entry['entryId'].indexOf('user') != -1) {
+            required.push(entry['content']['itemContent']['user_results']['result']);
+            users.push(entry['content']['itemContent']['user_results']['result']);
+        }
+        // If entry is of type cursor
+        else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
+            cursor = entry['content']['value'];
+        }
+    });
+
+    // Returning the data
+    return {
+        required: required,
+        cursor: cursor,
+        users: users,
+        tweets: tweets
+    };
+}
+
+/**
+ * @returns The raw tweet replies data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  * @param tweetId The id of the tweet whose replies must be extracted
  */
-export function extractTweetReplies(res: any, tweetId: string): { replies: Tweet[], next: string } {
-    var replies: Tweet[] = [];
-    var next: string = '';
+export function extractTweetReplies(res: any, tweetId: string): {
+    required: any[],
+    cursor: string,
+    users: any[],
+    tweets: any[]
+} {
+    var required: any[] = [];                                               // To store the reqruied raw data
+    var cursor: string = '';                                                // To store the cursor to next batch
+    var users: any[] = [];                                                  // To store additional user data
+    var tweets: any[] = [];                                                 // To store additional tweet data
 
     // If tweet does not exist
-    if(isJSONEmpty(res['data'])) {
+    if (isJSONEmpty(res['data'])) {
         throw new Error(Errors.TweetNotFound);
     }
 
-    // Extracting raw reply list
+    // Destructuring the received raw data
     //@ts-ignore
-    res = res['data']['threaded_conversation_with_injections']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'].filter(item => item['entryId'].indexOf(tweetId) == -1);
-
-    // Extracting cursor to next batch
-    //@ts-ignore
-    next = res.filter(item => item['entryId'].indexOf('cursor-bottom') != -1)[0]['content']['itemContent']['value'];
-
-    // Iterating over raw list of tweets
-    for (var entry of res) {
-        var tweet: any;
-
-        // Checking if entry is of type reply
-        if (entry['entryId'].indexOf('conversationthread') != -1) {
-            // Getting the tweet
-            tweet = entry['content']['items'][0]['item']['itemContent']['tweet_results']['result'];
-
-            // Checking if the reply is actually a reply to target tweet
-            if (tweet['legacy']['in_reply_to_status_id_str'] === tweetId) {
-                // Adding the reply to list of replies
-                replies.push(new Tweet().deserialize(tweet));
-            }
+    res['data']['threaded_conversation_with_injections']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'].map(entry => {
+        // If entry is of type tweet
+        if (entry['entryId'].indexOf('tweet') != -1) {
+            tweets.push(entry['content']['itemContent']['tweet_results']['result']);
+            users.push(entry['content']['itemContent']['tweet_results']['result']['core']['user_results']['result']);
         }
-    }
+        // If entry if of type conversation/reply
+        else if (entry['entryId'].indexOf('conversationthread') != -1) {
+            // Iterating over the conversation
+            //@ts-ignore
+            entry['content']['items'].forEach(item => {
+                // If item is of type tweet
+                if (item['entryId'].indexOf('tweet') != -1) {
+                    required.push(item['item']['itemContent']['tweet_results']['result']);
+                    tweets.push(item['item']['itemContent']['tweet_results']['result']);
+                    users.push(item['item']['itemContent']['tweet_results']['result']['core']['user_results']['result']);
+                }
+            });
+        }
+        // If entry is of type bottom cursor
+        else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
+            cursor = entry['content']['itemContent']['value'];
+        }
+    });
 
+    // Returning the data
     return {
-        replies: replies,
-        next: next
+        required: required,
+        cursor: cursor,
+        users: users,
+        tweets: tweets
     };
 }
