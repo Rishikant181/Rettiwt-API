@@ -21,8 +21,7 @@ import {
 
 import {
     extractUserAccountDetails,
-    extractUserFollowing,
-    extractUserFollowers,
+    extractUserFollow,
     extractUserLikes
 } from '../helper/Extractors';
 
@@ -38,10 +37,19 @@ export class UserAccountService extends FetcherService {
     async getUserAccountDetails(screenName: string): Promise<Response<User>> {
         return this.fetchData(userAccountUrl(screenName))
             .then(res => {
+                // Extracting data
+                var data = extractUserAccountDetails(res);
+
+                // Caching data
+                this.cacheData(data);
+
+                // Parsing data
+                var user = new User().deserialize(data.required[0]);
+                
                 return new Response<User>(
                     true,
                     new Error(Errors.NoError),
-                    extractUserAccountDetails(res)
+                    user
                 );
             })
             // If error
@@ -59,12 +67,33 @@ export class UserAccountService extends FetcherService {
      * @param restId The screen name of the target user.
      */
     async getUserAccountDetailsById(restId: string): Promise<Response<User>> {
+        // Getting data from cache
+        var cachedData = await this.readData(restId);
+
+        // If data exists in cache
+        if(cachedData) {
+            return new Response<User>(
+                true,
+                new Error(Errors.NoError),
+                cachedData
+            );
+        }
+
         return this.fetchData(userAccountByIdUrl(restId))
             .then(res => {
+                // Extracting data
+                var data = extractUserAccountDetails(res);
+
+                // Caching data
+                this.cacheData(data);
+
+                // Parsing data
+                var user = new User().deserialize(data.required[0]);
+                
                 return new Response<User>(
                     true,
                     new Error(Errors.NoError),
-                    extractUserAccountDetails(res)
+                    user
                 );
             })
             // If error
@@ -90,11 +119,19 @@ export class UserAccountService extends FetcherService {
     ): Promise<Response<{ following: User[], next: string }>> {
         return this.fetchData(userFollowingUrl(userId, count, cursor))
             .then(res => {
-                var data = extractUserFollowing(res);
+                // Extracting data
+                var data = extractUserFollow(res);
+
+                // Caching data
+                this.cacheData(data);
+
+                // Parsing data
+                var users = data.required.map(item => new User().deserialize(item));
+
                 return new Response<{ following: User[], next: string }>(
-                    data.following.length ? true : false,
+                    users.length ? true : false,
                     new Error(Errors.NoError),
-                    { following: data.following, next: data.next }
+                    { following: users, next: data.cursor }
                 );
             })
             // If error
@@ -125,11 +162,19 @@ export class UserAccountService extends FetcherService {
          */
         return this.fetchData(userFollowersUrl(userId, (count > 20) ? (count - 20) : count, cursor))
             .then(res => {
-                var data = extractUserFollowers(res);
+                // Extracting data
+                var data = extractUserFollow(res);
+
+                // Caching data
+                this.cacheData(data);
+
+                // Parsing data
+                var users = data.required.map(item => new User().deserialize(item));
+
                 return new Response<{ followers: User[], next: string }>(
-                    data.followers.length ? true : false,
+                    users.length ? true : false,
                     new Error(Errors.NoError),
-                    { followers: data.followers, next: data.next }
+                    { followers: users, next: data.cursor }
                 );
             })
             // If other run-time error
@@ -155,11 +200,19 @@ export class UserAccountService extends FetcherService {
     ): Promise<Response<{ tweets: Tweet[], next: string }>> {
         return this.fetchData(userLikesUrl(userId, count, cursor))
             .then(res => {
+                // Extracting data
                 var data = extractUserLikes(res);
+
+                // Caching data
+                this.cacheData(data);
+
+                // Parsing data
+                var tweets = data.required.map(item => new Tweet().deserialize(item));
+
                 return new Response<{ tweets: Tweet[], next: string }>(
-                    data.tweets.length ? true : false,
+                    tweets.length ? true : false,
                     new Error(Errors.NoError),
-                    { tweets: data.tweets, next: data.next }
+                    { tweets: tweets, next: data.cursor }
                 );
             })
             // If error
