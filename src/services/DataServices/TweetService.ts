@@ -93,7 +93,7 @@ export class TweetService extends FetcherService {
             );
         }
         
-        return this.fetchData(tweetDetailsUrl(tweetId))
+        return this.fetchData(tweetDetailsUrl(tweetId), undefined, undefined, false)
             .then(res => {
                 // Extracting data
                 var data = extractTweet(res, tweetId);
