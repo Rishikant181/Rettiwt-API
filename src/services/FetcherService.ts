@@ -64,8 +64,8 @@ export class FetcherService {
      */
     protected async fetchData(
         url: string,
-        method?: HttpMethods,
-        body?: any,
+        method: HttpMethods = HttpMethods.GET,
+        body: any = null,
         auth: boolean = true
     ): Promise<any> {
         return fetch(url, {

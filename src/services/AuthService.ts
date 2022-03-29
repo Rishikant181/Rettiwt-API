@@ -3,14 +3,13 @@ import fetch from 'node-fetch';
 
 // CUSTOM LIBS
 import { config } from '../config/env';
+
+// HELPERS
 import {
     guestTokenUrl,
     blankHeader
 } from './helper/Requests';
-import {
-    FetcherService,
-    HttpMethods
-} from './FetcherService';
+import { HttpMethods } from './FetcherService';
 
 /**
  * @summary Handles authentication of http requests and other authentication related tasks

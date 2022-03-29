@@ -260,14 +260,18 @@ export function unauthorizedHeader(authCred: {
     guestToken: string
 }): any {
     return {
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.9",
         "authorization": authCred.authToken,
-        "content-type": "application/x-www-form-urlencoded",
-        "sec-ch-ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"98\", \"Microsoft Edge\";v=\"98\"",
+        "content-type": "application/json",
+        "sec-ch-ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"99\", \"Microsoft Edge\";v=\"99\"",
         "sec-ch-ua-mobile": "?0",
         "sec-ch-ua-platform": "\"Windows\"",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
         "x-guest-token": authCred.guestToken,
         "x-twitter-active-user": "yes",
-        "x-twitter-auth-type": "OAuth2Session",
         "x-twitter-client-language": "en"
     };
 }
