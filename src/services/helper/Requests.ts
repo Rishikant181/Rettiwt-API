@@ -255,17 +255,17 @@ export function blankHeader(authToken: string): any {
  * @param authToken The authentication token received from Twitter
  * @param csrfToken The csrf token received from Twitter
  */
-export function unauthorizedHeader(
+export function unauthorizedHeader(authCred: {
     authToken: string,
-    csrfToken: string
-): any {
+    guestToken: string
+}): any {
     return {
-        "authorization": authToken,
+        "authorization": authCred.authToken,
         "content-type": "application/x-www-form-urlencoded",
         "sec-ch-ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"98\", \"Microsoft Edge\";v=\"98\"",
         "sec-ch-ua-mobile": "?0",
         "sec-ch-ua-platform": "\"Windows\"",
-        "x-csrf-token": csrfToken,
+        "x-guest-token": authCred.guestToken,
         "x-twitter-active-user": "yes",
         "x-twitter-auth-type": "OAuth2Session",
         "x-twitter-client-language": "en"

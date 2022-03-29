@@ -79,7 +79,7 @@ export class AuthService {
     /**
      * @returns The guest credentials required to fetch data anonymously
      */
-    async getGuestCredentials(): Promise<{ guestToken: string }> {
+    async getGuestCredentials(): Promise<{authToken: string, guestToken: string }> {
         // Fetching guest token from twitter api
         var res = await fetch(guestTokenUrl(), {
                 headers: blankHeader(this.authCredentials.authToken),
@@ -91,7 +91,10 @@ export class AuthService {
                 throw err;
             });
 
-        //@ts-ignore
-        return { guestToken: res['guest_token'] };
+        return {
+            authToken: this.authCredentials.authToken,
+            //@ts-ignore
+            guestToken: res['guest_token']
+        };
     }
 }
