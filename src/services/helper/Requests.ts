@@ -121,8 +121,8 @@ export function tweetsUrl(
         filter.startDate ? `since:${filter.startDate}` : '',
         filter.endDate ? `until:${filter.endDate}` : '',
     ]
-    .filter(item => item !== '()' && item !== '')
-    .join(' ');
+        .filter(item => item !== '()' && item !== '')
+        .join(' ');
 
     var url = '';
 
@@ -229,6 +229,21 @@ export function tweetRetweetUrl(
 // HEADERS
 
 /**
+ * @returns A header containing only the autorization token
+ * @param authToken The authorization token to be used
+ */
+export function blankHeader(authToken: string): any {
+    return {
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.9",
+        "authorization": authToken,
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-site"
+    };
+}
+
+/**
  * @returns The header used for making unauthorized HTTP requests
  * @param authToken The authentication token received from Twitter
  * @param csrfToken The csrf token received from Twitter
@@ -238,12 +253,12 @@ export function unauthorizedHeader(
     csrfToken: string
 ): any {
     return {
-        "authorization": `Bearer ${authToken}`,
+        "authorization": authToken,
         "content-type": "application/x-www-form-urlencoded",
         "sec-ch-ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"98\", \"Microsoft Edge\";v=\"98\"",
         "sec-ch-ua-mobile": "?0",
         "sec-ch-ua-platform": "\"Windows\"",
-        "x-csrf-token": `${csrfToken}`,
+        "x-csrf-token": csrfToken,
         "x-twitter-active-user": "yes",
         "x-twitter-auth-type": "OAuth2Session",
         "x-twitter-client-language": "en"
@@ -264,7 +279,7 @@ export function authorizedHeader(authCred: {
     return {
         "accept": "*/*",
         "accept-language": "en-US,en;q=0.9",
-        "authorization": `Bearer ${authCred.authToken}`,
+        "authorization": authCred.authToken,
         "content-type": "application/json",
         "sec-ch-ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"98\", \"Microsoft Edge\";v=\"98\"",
         "sec-ch-ua-mobile": "?0",
@@ -272,11 +287,11 @@ export function authorizedHeader(authCred: {
         "sec-fetch-dest": "empty",
         "sec-fetch-mode": "cors",
         "sec-fetch-site": "same-origin",
-        "x-csrf-token": `${authCred.csrfToken}`,
+        "x-csrf-token": authCred.csrfToken,
         "x-twitter-active-user": "no",
         "x-twitter-auth-type": "OAuth2Session",
         "x-twitter-client-language": "en",
-        "cookie": `${authCred.cookie}`,
+        "cookie": authCred.cookie,
     };
 }
 
