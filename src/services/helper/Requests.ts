@@ -239,11 +239,11 @@ export function tweetRetweetUrl(
  * @returns A header containing only the autorization token
  * @param authToken The authorization token to be used
  */
-export function blankHeader(authToken: string): any {
+export function blankHeader(authCred: { authToken: string }): any {
     return {
         "accept": "*/*",
         "accept-language": "en-US,en;q=0.9",
-        "authorization": authToken,
+        "authorization": authCred.authToken,
         "sec-fetch-dest": "empty",
         "sec-fetch-mode": "cors",
         "sec-fetch-site": "same-site"

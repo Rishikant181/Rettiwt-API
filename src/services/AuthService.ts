@@ -81,7 +81,7 @@ export class AuthService {
     async getGuestCredentials(): Promise<{authToken: string, guestToken: string }> {
         // Fetching guest token from twitter api
         var res = await fetch(guestTokenUrl(), {
-                headers: blankHeader(this.authCredentials.authToken),
+                headers: blankHeader({ authToken: this.authCredentials.authToken }),
                 method: HttpMethods.POST,
                 body: null
             })
