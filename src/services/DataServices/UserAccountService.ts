@@ -35,7 +35,7 @@ export class UserAccountService extends FetcherService {
      * @param screenName The screen name of the target user.
      */
     async getUserAccountDetails(screenName: string): Promise<Response<User>> {
-        return this.fetchData(userAccountUrl(screenName))
+        return this.fetchData(userAccountUrl(screenName), undefined, undefined, false)
             .then(res => {
                 // Extracting data
                 var data = extractUserAccountDetails(res);
@@ -79,7 +79,7 @@ export class UserAccountService extends FetcherService {
             );
         }
 
-        return this.fetchData(userAccountByIdUrl(restId))
+        return this.fetchData(userAccountByIdUrl(restId), undefined, undefined, false)
             .then(res => {
                 // Extracting data
                 var data = extractUserAccountDetails(res);
