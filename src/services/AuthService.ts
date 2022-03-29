@@ -1,5 +1,16 @@
+// PACKAGE LIBS
+import fetch from 'node-fetch';
+
 // CUSTOM LIBS
 import { config } from '../config/env';
+import {
+    guestTokenUrl,
+    blankHeader
+} from './helper/Requests';
+import {
+    FetcherService,
+    HttpMethods
+} from './FetcherService';
 
 /**
  * @summary Handles authentication of http requests and other authentication related tasks
@@ -63,5 +74,19 @@ export class AuthService {
     } {
         this.changeCredentials();
         return this.authCredentials;
+    }
+
+    /**
+     * @returns The guest credentials required to fetch data anonymously
+     */
+    async getGuestCredentials(): Promise<{ guestToken: string }> {
+        // Fetching guest token from twitter api
+        var res = await (new FetcherService().fetchData(
+            guestTokenUrl(),
+            HttpMethods.POST,
+            null
+        ));
+
+        return { guestToken: res['guest_token'] };
     }
 }

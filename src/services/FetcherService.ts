@@ -61,7 +61,7 @@ export class FetcherService {
      * @param method The type of HTTP request being made. Default is GET
      * @param body The content to be sent in the body of the response
      */
-    protected async fetchData(
+    async fetchData(
         url: string,
         method?: HttpMethods,
         body?: any
