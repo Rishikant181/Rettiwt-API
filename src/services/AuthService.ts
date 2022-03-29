@@ -81,12 +81,17 @@ export class AuthService {
      */
     async getGuestCredentials(): Promise<{ guestToken: string }> {
         // Fetching guest token from twitter api
-        var res = await (new FetcherService().fetchData(
-            guestTokenUrl(),
-            HttpMethods.POST,
-            null
-        ));
+        var res = await fetch(guestTokenUrl(), {
+                headers: blankHeader(this.authCredentials.authToken),
+                method: HttpMethods.POST,
+                body: null
+            })
+            .then(data => data.json())
+            .catch(err => {
+                throw err;
+            });
 
+        //@ts-ignore
         return { guestToken: res['guest_token'] };
     }
 }
