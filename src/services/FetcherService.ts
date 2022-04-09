@@ -13,7 +13,7 @@ import { Tweet } from '../schema/types/TweetData';
 
 // HELPERS
 import {
-    authorizedHeader
+    authorizedHeader, unauthorizedHeader
 } from './helper/Requests'
 
 // CONFIG
@@ -60,14 +60,16 @@ export class FetcherService {
      * @param url The url to fetch data from
      * @param method The type of HTTP request being made. Default is GET
      * @param body The content to be sent in the body of the response
+     * @param auth Whether to use authenticated requests or not
      */
     protected async fetchData(
         url: string,
-        method?: HttpMethods,
-        body?: any
+        method: HttpMethods = HttpMethods.GET,
+        body: any = null,
+        auth: boolean = true
     ): Promise<any> {
         return fetch(url, {
-            headers: authorizedHeader(AuthService.getInstance().getAuthCredentials()),
+            headers: auth ? authorizedHeader(AuthService.getInstance().getAuthCredentials()) : unauthorizedHeader(await AuthService.getInstance().getGuestCredentials()),
             method: method ? method : HttpMethods.GET,
             body: body
         })

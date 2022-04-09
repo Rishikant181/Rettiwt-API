@@ -5,6 +5,13 @@ import { TweetFilter } from "../../schema/types/TweetData";
 // URLS
 
 /**
+ * @returns The url for fetching the guest token from
+ */
+export function guestTokenUrl(): string {
+    return 'https://api.twitter.com/1.1/guest/activate.json';
+}
+
+/**
  * @returns The url for fetching user account details.
  * @param screenName The screen name of the target user
  */
@@ -121,8 +128,8 @@ export function tweetsUrl(
         filter.startDate ? `since:${filter.startDate}` : '',
         filter.endDate ? `until:${filter.endDate}` : '',
     ]
-    .filter(item => item !== '()' && item !== '')
-    .join(' ');
+        .filter(item => item !== '()' && item !== '')
+        .join(' ');
 
     var url = '';
 
@@ -229,23 +236,42 @@ export function tweetRetweetUrl(
 // HEADERS
 
 /**
+ * @returns A header containing only the autorization token
+ * @param authToken The authorization token to be used
+ */
+export function blankHeader(authCred: { authToken: string }): any {
+    return {
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.9",
+        "authorization": authCred.authToken,
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-site"
+    };
+}
+
+/**
  * @returns The header used for making unauthorized HTTP requests
  * @param authToken The authentication token received from Twitter
  * @param csrfToken The csrf token received from Twitter
  */
-export function unauthorizedHeader(
+export function unauthorizedHeader(authCred: {
     authToken: string,
-    csrfToken: string
-): any {
+    guestToken: string
+}): any {
     return {
-        "authorization": `Bearer ${authToken}`,
-        "content-type": "application/x-www-form-urlencoded",
-        "sec-ch-ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"98\", \"Microsoft Edge\";v=\"98\"",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.9",
+        "authorization": authCred.authToken,
+        "content-type": "application/json",
+        "sec-ch-ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"99\", \"Microsoft Edge\";v=\"99\"",
         "sec-ch-ua-mobile": "?0",
         "sec-ch-ua-platform": "\"Windows\"",
-        "x-csrf-token": `${csrfToken}`,
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "x-guest-token": authCred.guestToken,
         "x-twitter-active-user": "yes",
-        "x-twitter-auth-type": "OAuth2Session",
         "x-twitter-client-language": "en"
     };
 }
@@ -264,7 +290,7 @@ export function authorizedHeader(authCred: {
     return {
         "accept": "*/*",
         "accept-language": "en-US,en;q=0.9",
-        "authorization": `Bearer ${authCred.authToken}`,
+        "authorization": authCred.authToken,
         "content-type": "application/json",
         "sec-ch-ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"98\", \"Microsoft Edge\";v=\"98\"",
         "sec-ch-ua-mobile": "?0",
@@ -272,11 +298,11 @@ export function authorizedHeader(authCred: {
         "sec-fetch-dest": "empty",
         "sec-fetch-mode": "cors",
         "sec-fetch-site": "same-origin",
-        "x-csrf-token": `${authCred.csrfToken}`,
+        "x-csrf-token": authCred.csrfToken,
         "x-twitter-active-user": "no",
         "x-twitter-auth-type": "OAuth2Session",
         "x-twitter-client-language": "en",
-        "cookie": `${authCred.cookie}`,
+        "cookie": authCred.cookie,
     };
 }
 
