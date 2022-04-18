@@ -19,3 +19,5 @@ You can also develope using a developer container:
 4.  Run the container using the command: docker run -p 3000:3000 -v dev:/app rettiwt-api
 
 Note: Steps 1 and 2 need to be done only once. After the image has been built and volume created, you don't need to repeat those every time you want to develop.
+
+You can also pull the built image from Docker Hub using the command: 'docker pull rishikant181/rettiwt:rettiwt-api', and skip steps 1 and 2, although this method is slightly discouraged.
