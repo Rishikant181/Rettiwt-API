@@ -3,7 +3,6 @@ import express from 'express';
 import { graphqlHTTP } from 'express-graphql';
 
 // CUSTOM LIBS
-import { config } from './config/env';
 import { schema } from './schema/graphql/schema';
 
 // Initialising express instance
@@ -16,6 +15,6 @@ app.use('/graphql', graphqlHTTP({
 }));
 
 // Setting up express server
-app.listen(config['server']['port'], () => {
-    console.log(`Listening on port ${config['server']['port']}`);
+app.listen(process.env.APP_PORT, () => {
+    console.log(`Listening on port ${process.env.APP_PORT}`);
 });
