@@ -3,5 +3,8 @@ WORKDIR /app
 COPY . .
 RUN npm install
 RUN npm run build
+ENV APP_PORT=3000
+ENV CACHE_DB_HOST=mongodb://127.0.0.1
+ENV CACHE_DB_PORT=27017
 CMD npm run start
 EXPOSE 3000
