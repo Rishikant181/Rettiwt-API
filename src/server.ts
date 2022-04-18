@@ -17,6 +17,5 @@ app.use('/graphql', graphqlHTTP({
 
 // Setting up express server
 app.listen(config['server']['port'], () => {
-    console.log("Hello Server!")
     console.log(`Listening on port ${config['server']['port']}`);
 });
