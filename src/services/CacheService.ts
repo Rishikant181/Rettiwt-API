@@ -29,7 +29,7 @@ export class CacheService {
     // MEMBER METHODS
     constructor() {
         // Initialising the connection url to database server
-        this.connUrl = `${process.env.CACHE_DB_HOST}:${process.env.CACHE_DB_PORT}`;
+        this.connUrl = `mongodb://${process.env.CACHE_DB_HOST}:${process.env.CACHE_DB_PORT}`;
 
         // Initialising database and index name
         this.dbName = config['server']['db']['databases']['cache']['name'];
