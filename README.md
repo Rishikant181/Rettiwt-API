@@ -6,6 +6,11 @@ npm install
 
 NOTE: No global packages are used, so tou can be at peace ;)
 
+Set the following global variables for running the server
+APP_PORT=<host_port_number>
+CACHE_DB_HOST=<cache_db_hostname/ip>
+CACHE_DB_PORT=<cache_db_port_number>
+
 Then build the project project using the command:
 npm run build:watch --> Keep the build command running
 
