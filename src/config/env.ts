@@ -1,10 +1,7 @@
 export const config = {
     "server": {
-        "port": 3000,
         "db": {
             "enabled": true,
-            "host": "mongodb://127.0.0.1",
-            "port": 27017,
             "databases": {
                 "cache": {
                     "name": "data-cache",

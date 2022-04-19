@@ -6,22 +6,17 @@ npm install
 
 NOTE: No global packages are used, so tou can be at peace ;)
 
+Set the following global variables for running the server
+APP_PORT=<host_port_number>
+CACHE_DB_HOST=<cache_db_hostname/ip>
+CACHE_DB_PORT=<cache_db_port_number>
+
 Then build the project project using the command:
-npm run build --> Keep the build command running
+npm run build:watch --> Keep the build command running
 
 Use another terminal to run the command:
-npm start --> This command actually starts the compiled server
+npm start:watch --> This command actually starts the compiled server
 
-/* DOCUMENTATION (I don't know where to put it, for now, let it be here)*/
+You can also develope using a developer container, by building an image using the Dockerfile provided
 
-// FETCHING DATA
-All the methods used for fetching data reside inside services/DataHandlers
-
-1. UserAccountService --> For fetching data related to a user's account
-2. TweetService --> For fetching data related to tweets
-
-Open up a service's source file to see what methods are available to user and type of data they return as well as the types of arguments they take.
-
-In case you need to use the internal types(although I don't think you will be needing them explicityly), navigate to schema/types/*.
-
-This folder contains all the various internal data types used while fetching data
+To use the app in build mode, pull the image from Docker Hub using the command: 'docker pull rishikant181/rettiwt:rettiwt-api' and then run it.
