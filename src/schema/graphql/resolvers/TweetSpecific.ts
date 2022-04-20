@@ -47,7 +47,7 @@ export async function resolveTweets(filter: any): Promise<any[]> {
     const tweetFilter = new TweetFilter(filter);
 
     // Checking if the given tweet filter is valid or not
-    if(!(filter.fromUsers || filter.toUsers || filter.words || filter.hashtags || filter.mentions)) {
+    if(!(filter.fromUsers || filter.toUsers || filter.words || filter.hashtags || filter.mentions || filter.quoted)) {
         throw new Error(ValidationErrors.InvalidTweetFilter);
     }
 
@@ -80,6 +80,43 @@ export async function resolveTweets(filter: any): Promise<any[]> {
     }
 
     return tweets;
+}
+
+/**
+ * @returns The list of quotes of the given tweet
+ * @param id The id of the tweet whose quotes are to be fetched
+ * @param count The number of quotes to be fetched
+ * @param all Whether to fetch all quotes or not
+ * @param quoteCount The total number of quotes of the given tweet
+ */
+export async function resolveTweetQuotes(
+    id: string,
+    count: number,
+    all: boolean,
+    quoteCount: number
+): Promise<any[]> {
+    var quotes: any[] = [];                                                     // To store the list of quotes
+    
+    // If all tweets are to be fetched
+    count = (all || count > quoteCount) ? quoteCount : count;
+
+    // Preparing the filter to use
+    var filter = {
+        words: [],
+        hashtags: [],
+        fromUsers: [],
+        toUsers: [],
+        mentions: [],
+        startDate: '',
+        endDate: '',
+        quoted: id,
+        count: count
+    };
+
+    // Fetching the quotes using resolveTweets method
+    quotes = await resolveTweets(filter);
+
+    return quotes;
 }
 
 /**

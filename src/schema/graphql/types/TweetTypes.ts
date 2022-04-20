@@ -20,6 +20,7 @@ import {
 // RESOLVERS
 import {
     resolveTweet,
+    resolveTweetQuotes,
     resolveTweetLikers,
     resolveTweetReplies,
     resolveTweetRetweeters
@@ -64,6 +65,22 @@ export const Tweet = new GraphQLObjectType({
         },
         lang: { type: GraphQLString },
         quoteCount: { type: GraphQLInt },
+        quotes: {
+            type: new GraphQLList(Tweet),
+            args: {
+                count: {
+                    type: GraphQLInt,
+                    description: "The number of quotes to fetch",
+                    defaultValue: 10
+                },
+                all: {
+                    type: GraphQLBoolean,
+                    description: "Whether to fetch all quotes",
+                    defaultValue: false
+                }
+            },
+            resolve: (parent, args) => resolveTweetQuotes(parent.id, args.count, args.all, parent.quoteCount)
+        },
         likeCount: { type: GraphQLInt },
         likers: {
             type: new GraphQLList(User),
