@@ -4,7 +4,7 @@ An API that fetches data from Twitter for other services to use
 To run the API on your local machine, first install all required dependencies from packages.json using:\
 npm install
 
-NOTE: No global packages are used, so tou can be at peace ;)
+Note: No global packages are used, so you can be at peace ;)
 
 Set the following global variables for running the server\
 APP_PORT=<host_port_number>\
