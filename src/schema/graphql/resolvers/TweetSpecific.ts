@@ -83,6 +83,43 @@ export async function resolveTweets(filter: any): Promise<any[]> {
 }
 
 /**
+ * @returns The list of quotes of the given tweet
+ * @param id The id of the tweet whose quotes are to be fetched
+ * @param count The number of quotes to be fetched
+ * @param all Whether to fetch all quotes or not
+ * @param quoteCount The total number of quotes of the given tweet
+ */
+export async function resolveTweetQuotes(
+    id: string,
+    count: number,
+    all: boolean,
+    quoteCount: number
+): Promise<any[]> {
+    var quotes: any[] = [];                                                     // To store the list of quotes
+    
+    // If all tweets are to be fetched
+    count = (all || count > quoteCount) ? quoteCount : count;
+
+    // Preparing the filter to use
+    var filter = {
+        words: [],
+        hashtags: [],
+        fromUsers: [],
+        toUsers: [],
+        mentions: [],
+        startDate: '',
+        endDate: '',
+        quoted: id,
+        count: count
+    };
+
+    // Fetching the quotes using resolveTweets method
+    quotes = await resolveTweets(filter);
+
+    return quotes;
+}
+
+/**
  * @returns The list of likers of the given tweet
  * @param id The id of the tweet whose likers are to be fetched
  * @param count The total number of likers to fetch
