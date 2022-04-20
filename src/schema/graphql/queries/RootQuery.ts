@@ -54,6 +54,7 @@ export const rootQuery = new GraphQLObjectType({
                 words: { type: new GraphQLList(GraphQLString) },
                 startDate: { type: GraphQLString },
                 endDate: { type: GraphQLString },
+                quoted: { type: GraphQLString },
                 count: { type: GraphQLInt, defaultValue: 20 }
             },
             resolve: (parent, args) => resolveTweets(args)

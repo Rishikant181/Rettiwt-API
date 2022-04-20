@@ -47,7 +47,7 @@ export async function resolveTweets(filter: any): Promise<any[]> {
     const tweetFilter = new TweetFilter(filter);
 
     // Checking if the given tweet filter is valid or not
-    if(!(filter.fromUsers || filter.toUsers || filter.words || filter.hashtags || filter.mentions)) {
+    if(!(filter.fromUsers || filter.toUsers || filter.words || filter.hashtags || filter.mentions || filter.quoted)) {
         throw new Error(ValidationErrors.InvalidTweetFilter);
     }
 

@@ -127,6 +127,7 @@ export function tweetsUrl(
         filter.mentions ? `(${filter.mentions.map(mention => '%40' + mention).join(' OR ')})` : '',
         filter.startDate ? `since:${filter.startDate}` : '',
         filter.endDate ? `until:${filter.endDate}` : '',
+        filter.quoted ? `quoted_tweet_id:${filter.quoted}` : ''
     ]
         .filter(item => item !== '()' && item !== '')
         .join(' ');
