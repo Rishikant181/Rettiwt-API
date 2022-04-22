@@ -96,4 +96,12 @@ export class AuthService {
             guestToken: res['guest_token']
         };
     }
+
+    async loginAccount(email: string, userName: string, password: string): Promise<{
+        authToken: string,
+        csrfToken: string,
+        cookie: any
+    }> {
+        
+    }
 }
