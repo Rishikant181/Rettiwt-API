@@ -7,7 +7,10 @@ import { config } from '../config/env';
 // HELPERS
 import {
     guestTokenUrl,
-    blankHeader
+    initiateLoginUrl,
+    blankHeader,
+    unauthorizedHeader,
+    loginFlowBody
 } from './helper/Requests';
 import { HttpMethods } from './FetcherService';
 
@@ -84,17 +87,40 @@ export class AuthService {
                 headers: blankHeader({ authToken: this.authCredentials.authToken }),
                 method: HttpMethods.POST,
                 body: null
-            })
-            .then(data => data.json())
-            .catch(err => {
-                throw err;
-            });
+        })
+        .then(data => data.json())
+        .catch(err => {
+            throw err;
+        });
 
         return {
             authToken: this.authCredentials.authToken,
             //@ts-ignore
             guestToken: res['guest_token']
         };
+    }
+
+    /**
+     * @returns The flow token used to initiate the login process
+     */
+    private async getLoginFlow(authToken: string, guestToken: string): Promise<string> {
+        var flowToken: string = '';                                         // To store the flow token for the next step of login
+        
+        // Fetching the flow token to initiate login process
+        var res = await fetch(initiateLoginUrl(), {
+            headers: unauthorizedHeader({ authToken: authToken, guestToken: guestToken }),
+            method: HttpMethods.POST,
+            body: `${loginFlowBody()}`
+        })
+        .then(data => data.json())
+        .catch(err => {
+            throw err;
+        });
+
+        //@ts-ignore
+        flowToken = res['flow_token'];
+
+        return flowToken;
     }
 
     /**

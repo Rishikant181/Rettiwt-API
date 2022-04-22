@@ -12,9 +12,9 @@ export function guestTokenUrl(): string {
 }
 
 /**
- * @returns The url used for loggin into an account
+ * @returns The url used for initiating logging into an account
  */
-export function loginUrl(): string {
+export function initiateLoginUrl(): string {
     return 'https://twitter.com/i/api/1.1/onboarding/task.json?flow_name=login';
 }
 
@@ -321,3 +321,26 @@ export function authorizedHeader(authCred: {
     };
 }
 
+// BODIES
+
+/**
+ * @returns The body to be used for getting the flow for initiating login process
+ */
+export function loginFlowBody(): any {
+    return {
+        "input_flow_data": {
+            "flow_context": {
+                "debug_overrides": {},
+                "start_location": {
+                    "location": "splash_screen"
+                }
+            }
+        },
+        "subtask_versions": {
+            "contacts_live_sync_permission_prompt": 0,
+            "email_verification": 1,
+            "topics_selector": 1,
+            "wait_spinner":1,"cta": 4
+        }
+    };
+}
