@@ -12,7 +12,8 @@ import {
     blankHeader,
     unauthorizedHeader,
     loginFlowBody,
-    initiateLoginBody
+    initiateLoginBody,
+    verifyEmailBody
 } from './helper/Requests';
 import { HttpMethods } from './FetcherService';
 
@@ -106,8 +107,6 @@ export class AuthService {
      * @returns The flow token used to initiate the login process
      */
     private async getLoginFlow(authToken: string, guestToken: string): Promise<string> {
-        var token: string = '';                                           // To store the flow token for the next step of login
-        
         // Fetching the flow token to initiate login process
         var res = await fetch(initiateLoginUrl(), {
             headers: unauthorizedHeader({ authToken: authToken, guestToken: guestToken }),
@@ -120,9 +119,7 @@ export class AuthService {
         });
 
         //@ts-ignore
-        token = res['flow_token'];
-
-        return token;
+        return res['flow_token'];
     }
 
     /**
@@ -130,26 +127,55 @@ export class AuthService {
      * @returns The flow token used for verifying the email
      * @param authToken The authentication token to be used
      * @param guestToken The guest token to be used
-     * @param loginFlowToken The flow token used to initiate login, obtained from getLoginFlow method
+     * @param flowToken The flow token used to initiate login, obtained from getLoginFlow method
      */
     private async initiateLogin(
         authToken: string,
         guestToken: string,
-        loginFlowToken: string
+        flowToken: string
     ): Promise<string> {
-        var token: string = '';
-
         // Fetching the flow token used to verify email
         var res = await fetch(loginContinueUrl(), {
             headers: unauthorizedHeader({ authToken: authToken, guestToken: guestToken}),
             method: HttpMethods.POST,
-            body: initiateLoginBody(loginFlowToken),
+            body: initiateLoginBody(flowToken),
+        })
+        .then(data => data.json())
+        .catch(err => {
+            throw err;
         });
 
         //@ts-ignore
-        token = res['flow_token'];
+        return res['flow_token'];
+    }
 
-        return token;
+    /**
+     * @summary Verifies the input email
+     * @returns The flow token to be used for verifying the user name
+     * @param authToken The authentication token to be used
+     * @param guestToken The guest token to be used
+     * @param flowToken The flow token for verifying the email
+     * @param email The email to be verified for login
+     */
+    private async verifyEmail(
+        authToken: string,
+        guestToken: string,
+        flowToken: string,
+        email: string
+    ): Promise<string> {
+        // Fetching the flow token used to verify user name of the account with given email
+        var res = await fetch(loginContinueUrl(), {
+            headers: unauthorizedHeader({ authToken: authToken, guestToken: guestToken }),
+            method: HttpMethods.POST,
+            body: verifyEmailBody(flowToken, email)
+        })
+        .then(data => data.json())
+        .catch(err => {
+            throw err;
+        });
+
+        //@ts-ignore
+        return res['flow_token'];
     }
 
     /**

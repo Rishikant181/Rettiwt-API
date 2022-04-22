@@ -332,8 +332,17 @@ export function loginFlowBody(): string {
 
 /**
  * @returns The body to be used for initiating the login process
- * @param loginFlowToken The flow token for getting the flow for initiating login
+ * @param flowToken The flow token to be used
  */
-export function initiateLoginBody(loginFlowToken: string): any {
-    return `{\"flow_token\":\"${loginFlowToken}\",\"subtask_inputs\":[{\"subtask_id\":\"LoginJsInstrumentationSubtask\",\"js_instrumentation\":{\"response\":\"{\\\"rf\\\":{\\\"f3d0013d2401a9e86a63dac052aeec19524813e572f0b446241b550bc1e653e8\\\":-146,\\\"abef77ded0018c5ef4a2146465e76811c8ee7a377ff84c2181e58ac7e5bb8b97\\\":-17,\\\"a6d95f40b2cc05ac2baa2ce64ce976d3558cd9ca79a3e1ae797d3bda62847470\\\":112,\\\"ae30e4310433b0ae4e670acd918eebd0056daee600fa9db57082e8ace2c2fb1c\\\":14},\\\"s\\\":\\\"AR1nIiYWWtrhpM2n5cu-WDC77syV8L_zqLIHxmAePc0nhZAnrh3WdNig2MMFoIk-k1TjxWijXgVtjbLaYB-gTFA9KigwnaVsno0o6deCU1b_uH3XxKCRwaE-KN3c65PXRKNJP08YB1nQENeFXgM9MsrywIO0C60zGlPWj8XlB9sAICGoJ26OJ7IgvMZP_5VgIJZwMDpJx3gN4xhI44n32TiLxerU59vDbwltkf0rgsIL34PODWWDOt9m07jrFaPFkt40T_G0sWJhuy9xfEWetgOmMLnQCpn4Ut6kl_W9Yi6wNDH1vtnRMbgeKgaJJRv2cTIvOa9DBvYV63cp_3G9WQAAAYBLmqMB\\\"}\",\"link\":\"next_link\"}}]}`;
+export function initiateLoginBody(flowToken: string): string {
+    return `{\"flow_token\":\"${flowToken}\",\"subtask_inputs\":[{\"subtask_id\":\"LoginJsInstrumentationSubtask\",\"js_instrumentation\":{\"response\":\"{\\\"rf\\\":{\\\"f3d0013d2401a9e86a63dac052aeec19524813e572f0b446241b550bc1e653e8\\\":-146,\\\"abef77ded0018c5ef4a2146465e76811c8ee7a377ff84c2181e58ac7e5bb8b97\\\":-17,\\\"a6d95f40b2cc05ac2baa2ce64ce976d3558cd9ca79a3e1ae797d3bda62847470\\\":112,\\\"ae30e4310433b0ae4e670acd918eebd0056daee600fa9db57082e8ace2c2fb1c\\\":14},\\\"s\\\":\\\"AR1nIiYWWtrhpM2n5cu-WDC77syV8L_zqLIHxmAePc0nhZAnrh3WdNig2MMFoIk-k1TjxWijXgVtjbLaYB-gTFA9KigwnaVsno0o6deCU1b_uH3XxKCRwaE-KN3c65PXRKNJP08YB1nQENeFXgM9MsrywIO0C60zGlPWj8XlB9sAICGoJ26OJ7IgvMZP_5VgIJZwMDpJx3gN4xhI44n32TiLxerU59vDbwltkf0rgsIL34PODWWDOt9m07jrFaPFkt40T_G0sWJhuy9xfEWetgOmMLnQCpn4Ut6kl_W9Yi6wNDH1vtnRMbgeKgaJJRv2cTIvOa9DBvYV63cp_3G9WQAAAYBLmqMB\\\"}\",\"link\":\"next_link\"}}]}`;
+}
+
+/**
+ * @returns The body to be used for verifying the email for login
+ * @param flowToken The flow token to be used
+ * @param email The email to verified and logged into
+ */
+export function verifyEmailBody(flowToken: string, email: string): string {
+    return `{\"flow_token\":\"${flowToken}\",\"subtask_inputs\":[{\"subtask_id\":\"LoginEnterUserIdentifierSSOSubtask\",\"settings_list\":{\"setting_responses\":[{\"key\":\"user_identifier\",\"response_data\":{\"text_data\":{\"result\":\"${email}\"}}}],\"link\":\"next_link\"}}]}`;
 }
