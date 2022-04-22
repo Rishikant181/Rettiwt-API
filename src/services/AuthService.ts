@@ -8,9 +8,11 @@ import { config } from '../config/env';
 import {
     guestTokenUrl,
     initiateLoginUrl,
+    loginContinueUrl,
     blankHeader,
     unauthorizedHeader,
-    loginFlowBody
+    loginFlowBody,
+    initiateLoginBody
 } from './helper/Requests';
 import { HttpMethods } from './FetcherService';
 
@@ -104,7 +106,7 @@ export class AuthService {
      * @returns The flow token used to initiate the login process
      */
     private async getLoginFlow(authToken: string, guestToken: string): Promise<string> {
-        var flowToken: string = '';                                         // To store the flow token for the next step of login
+        var token: string = '';                                           // To store the flow token for the next step of login
         
         // Fetching the flow token to initiate login process
         var res = await fetch(initiateLoginUrl(), {
@@ -118,9 +120,36 @@ export class AuthService {
         });
 
         //@ts-ignore
-        flowToken = res['flow_token'];
+        token = res['flow_token'];
 
-        return flowToken;
+        return token;
+    }
+
+    /**
+     * @summary Initiates the login process
+     * @returns The flow token used for verifying the email
+     * @param authToken The authentication token to be used
+     * @param guestToken The guest token to be used
+     * @param loginFlowToken The flow token used to initiate login, obtained from getLoginFlow method
+     */
+    private async initiateLogin(
+        authToken: string,
+        guestToken: string,
+        loginFlowToken: string
+    ): Promise<string> {
+        var token: string = '';
+
+        // Fetching the flow token used to verify email
+        var res = await fetch(loginContinueUrl(), {
+            headers: unauthorizedHeader({ authToken: authToken, guestToken: guestToken}),
+            method: HttpMethods.POST,
+            body: initiateLoginBody(loginFlowToken),
+        });
+
+        //@ts-ignore
+        token = res['flow_token'];
+
+        return token;
     }
 
     /**
