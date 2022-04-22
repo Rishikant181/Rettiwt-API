@@ -346,3 +346,20 @@ export function initiateLoginBody(flowToken: string): string {
 export function verifyEmailBody(flowToken: string, email: string): string {
     return `{\"flow_token\":\"${flowToken}\",\"subtask_inputs\":[{\"subtask_id\":\"LoginEnterUserIdentifierSSOSubtask\",\"settings_list\":{\"setting_responses\":[{\"key\":\"user_identifier\",\"response_data\":{\"text_data\":{\"result\":\"${email}\"}}}],\"link\":\"next_link\"}}]}`;
 }
+
+/**
+ * @returns The body to be used for verifying the username of the account
+ * @param flowToken The flow token to be used
+ * @param userName The userName to be verified
+ */
+export function verifyUserNameBody(flowToken: string, userName: string) {
+    return `{\"flow_token\":\"${flowToken}\",\"subtask_inputs\":[{\"subtask_id\":\"LoginEnterAlternateIdentifierSubtask\",\"enter_text\":{\"text\":\"${userName}\",\"link\":\"next_link\"}}]}`;
+}
+
+export function verifyPasswordBody(flowToken: string, password: string) {
+    return `{\"flow_token\":\"${flowToken}\",\"subtask_inputs\":[{\"subtask_id\":\"LoginEnterPassword\",\"enter_password\":{\"password\":\"${password}\",\"link\":\"next_link\"}}]}`;
+}
+
+export function finalizeLoginBody(flowToken: string) {
+    return `{\"flow_token\":\"${flowToken}\",\"subtask_inputs\":[{\"subtask_id\":\"AccountDuplicationCheck\",\"check_logged_in_account\":{\"link\":\"AccountDuplicationCheck_false\"}}]}`;
+}
