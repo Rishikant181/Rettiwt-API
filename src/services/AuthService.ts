@@ -267,11 +267,20 @@ export class AuthService {
      * @param userName The username of the user associated with the account
      * @param password The password to the account
      */
-    async loginAccount(email: string, userName: string, password: string): Promise<{
-        authToken: string,
-        csrfToken: string,
-        cookie: string
-    }> {
+    async loginAccount(email: string, userName: string, password: string) {
+        var flowToken: string = ''                                          // To store flow token for each step of login
+        var guestCredentials = await this.getGuestCredentials();
+
+        // Initiating login process
+        flowToken = await this.getLoginFlow(guestCredentials.authToken, guestCredentials.guestToken);
+        flowToken = await this.initiateLogin(guestCredentials.authToken, guestCredentials.guestToken, flowToken);
+        flowToken = await this.verifyEmail(guestCredentials.authToken, guestCredentials.guestToken, flowToken, email);
+        flowToken = await this.verifyUserName(guestCredentials.authToken, guestCredentials.guestToken, flowToken, userName);
+        flowToken = await this.verifyPassword(guestCredentials.authToken, guestCredentials.guestToken, flowToken, password);
         
+        // Getting the account credentials
+        var creds = await this.finalizeLogin(guestCredentials.authToken, guestCredentials.guestToken, flowToken);
+
+        console.log(creds);
     }
 }
