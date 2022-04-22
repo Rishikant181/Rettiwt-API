@@ -98,6 +98,7 @@ export class AuthService {
     }
 
     /**
+     * @returns The authentication credentials of the given account
      * @param email The email of the account which is to be logged into
      * @param userName The username of the user associated with the account
      * @param password The password to the account
