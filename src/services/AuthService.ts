@@ -68,13 +68,19 @@ export class AuthService {
 
     /**
      * @returns The current authentication credentials. A different credential is returned each time this is invoked
+     * @param newCred Whether to get a different credential or the current one
      */
-    getAuthCredentials(): {
+    getAuthCredentials(newCred: boolean = false): {
         authToken: string,
         csrfToken: string,
         cookie: string
     } {
-        this.changeCredentials();
+        // If new credential is required
+        if(newCred) {
+            // Changing credentials
+            this.changeCredentials();
+        }
+
         return this.authCredentials;
     }
 
