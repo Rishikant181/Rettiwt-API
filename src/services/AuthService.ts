@@ -21,6 +21,7 @@ export class AuthService {
     // MEMBER DATA
     private static instance: AuthService;                                    // To store the current instance of this service
     private requestCount: number;                                            // To store the total number of requests made
+    private authToken: string;                                               // To store the common auth token
     private authCredentials: {
         authToken: string,
         csrfToken: string,
@@ -39,13 +40,16 @@ export class AuthService {
         this.requestCount = 0;
 
         // Initializing the total number of available credentials
-        this.numCredentials = config['twitter']['auth'].length;
+        this.numCredentials = config['twitter']['auth']['credentials'].length;
+
+        // Initializing the common authentication token
+        this.authToken = config['twitter']['auth']['authToken'];
 
         // Initializing authentication credentials to the first available one
-        this.authCredentials = config['twitter']['auth'][0];
+        this.authCredentials = { authToken: this.authToken, ...config['twitter']['auth']['credentials'][0]};
 
         // Initializing guest credentials
-        this.guestCredentials = { authToken: this.authCredentials.authToken, guestToken: '' };
+        this.guestCredentials = { authToken: this.authToken, guestToken: '' };
 
         this.credNumber = 0;
     }
@@ -71,7 +75,7 @@ export class AuthService {
         this.credNumber = (this.credNumber == (this.numCredentials - 1)) ? 0 : (this.credNumber + 1);
 
         // Changing the current credential
-        this.authCredentials = config['twitter']['auth'][this.credNumber];
+        this.authCredentials = { authToken: this.authToken , ...config['twitter']['auth']['credentials'][this.credNumber] };
     }
 
     /**
@@ -101,14 +105,14 @@ export class AuthService {
         if(newCred || !this.guestCredentials.guestToken) {
             // Fetching guest token from twitter api
             await fetch(guestTokenUrl(), {
-                headers: blankHeader({ authToken: this.authCredentials.authToken }),
+                headers: blankHeader({ authToken: this.authToken }),
                 method: HttpMethods.POST,
                 body: null
             })
             .then(data => data.json())
             // Setting new guest credentials
             .then(data => {
-                this.guestCredentials.authToken = this.authCredentials.authToken;
+                this.guestCredentials.authToken = this.authToken;
                 //@ts-ignore
                 this.guestCredentials.guestToken = data['guest_token'];
             })
