@@ -26,6 +26,10 @@ export class AuthService {
         csrfToken: string,
         cookie: string
     };                                                                       // To store the current authentication credentials
+    private guestCredentials: {
+        authToken: string,
+        guestToken: string
+    };                                                                       // To store the current guest credentials
     private numCredentials: number;                                          // To store the total number of available credentials
     private credNumber: number;                                              // To keep track of the current credential's number
 
@@ -39,6 +43,10 @@ export class AuthService {
 
         // Initializing authentication credentials to the first available one
         this.authCredentials = config['twitter']['auth'][0];
+
+        // Initializing guest credentials
+        this.guestCredentials = { authToken: this.authCredentials.authToken, guestToken: '' };
+
         this.credNumber = 0;
     }
 
@@ -86,24 +94,30 @@ export class AuthService {
 
     /**
      * @returns The guest credentials required to fetch data anonymously
+     * @param newCred Whether to get a different credential or the current one
      */
-    async getGuestCredentials(): Promise<{authToken: string, guestToken: string }> {
-        // Fetching guest token from twitter api
-        var res = await fetch(guestTokenUrl(), {
+    async getGuestCredentials(newCred: boolean = true): Promise<{authToken: string, guestToken: string }> {
+        // If new guest token is to used
+        if(newCred || !this.guestCredentials.guestToken) {
+            // Fetching guest token from twitter api
+            await fetch(guestTokenUrl(), {
                 headers: blankHeader({ authToken: this.authCredentials.authToken }),
                 method: HttpMethods.POST,
                 body: null
-        })
-        .then(data => data.json())
-        .catch(err => {
-            throw err;
-        });
+            })
+            .then(data => data.json())
+            // Setting new guest credentials
+            .then(data => {
+                this.guestCredentials.authToken = this.authCredentials.authToken;
+                //@ts-ignore
+                this.guestCredentials.guestToken = data['guest_token'];
+            })
+            .catch(err => {
+                throw err;
+            });
+        }
 
-        return {
-            authToken: this.authCredentials.authToken,
-            //@ts-ignore
-            guestToken: res['guest_token']
-        };
+        return this.guestCredentials;
     }
 
     /**
