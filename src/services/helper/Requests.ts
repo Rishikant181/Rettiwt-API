@@ -12,6 +12,20 @@ export function guestTokenUrl(): string {
 }
 
 /**
+ * @returns The url used for initiating logging into an account
+ */
+export function initiateLoginUrl(): string {
+    return 'https://twitter.com/i/api/1.1/onboarding/task.json?flow_name=login';
+}
+
+/**
+ * @returns The url used for continuing the login process
+ */
+export function loginContinueUrl(): string {
+    return 'https://twitter.com/i/api/1.1/onboarding/task.json';
+}
+
+/**
  * @returns The url for fetching user account details.
  * @param screenName The screen name of the target user
  */
@@ -306,4 +320,3 @@ export function authorizedHeader(authCred: {
         "cookie": authCred.cookie,
     };
 }
-

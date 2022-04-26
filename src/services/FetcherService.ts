@@ -123,7 +123,7 @@ export class FetcherService {
      */
     protected async readData(id: string): Promise<any> {
         // If caching is enabled
-        if (this.allowCache) {
+        if (process.env.USE_CACHE) {
             // Creating an instance of cache
             var cache = new CacheService();
 
