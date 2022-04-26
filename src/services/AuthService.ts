@@ -4,6 +4,9 @@ import fetch from 'node-fetch';
 // CUSTOM LIBS
 import { config } from '../config/env';
 
+// SERVICES
+import { HttpMethods } from './FetcherService';
+
 // HELPERS
 import {
     guestTokenUrl,
@@ -12,7 +15,6 @@ import {
     blankHeader,
     unauthorizedHeader
 } from './helper/Requests';
-import { HttpMethods } from './FetcherService';
 
 /**
  * @summary Handles authentication of http requests and other authentication related tasks
@@ -207,7 +209,7 @@ export class AuthService {
      * @param flowToken The flow token for verifying the username
      * @param userName The username to be verified for login
      */
-     private async verifyUserName(
+    private async verifyUserName(
         authToken: string,
         guestToken: string,
         flowToken: string,
@@ -236,7 +238,7 @@ export class AuthService {
      * @param flowToken The flow token for verifying the password
      * @param password The password to be verified for login
      */
-     private async verifyPassword(
+    private async verifyPassword(
         authToken: string,
         guestToken: string,
         flowToken: string,
@@ -265,7 +267,7 @@ export class AuthService {
      * @param flowToken The flow token for verifying the password
      * @param password The password to be verified for login
      */
-     private async finalizeLogin(
+    private async finalizeLogin(
         authToken: string,
         guestToken: string,
         flowToken: string

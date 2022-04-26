@@ -87,7 +87,7 @@ export class FetcherService {
      * @summary Throws the appropriate http error after evaluation of the status code of reponse
      * @param res The response object received from http communication
      */
-     private handleHTTPError(res: Response): Response {
+    private handleHTTPError(res: Response): Response {
         if (res.status != 200 && res.status in HttpStatus) {
             throw new Error(HttpStatus[res.status])
         }
