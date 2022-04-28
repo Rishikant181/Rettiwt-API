@@ -33,6 +33,9 @@ export class AccountsService {
         .then(token => verifyUserName(guestCredentials.authToken, guestCredentials.guestToken, token, userName))
         .then(token => verifyPassword(guestCredentials.authToken, guestCredentials.guestToken, token, password))
         .then(token => finalizeLogin(guestCredentials.authToken, guestCredentials.guestToken, token))
-        .then(data => console.log(data));
+        .then(data => console.log(data))
+        .catch(err => {
+            throw err;
+        })
     }
 }

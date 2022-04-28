@@ -5,7 +5,7 @@ import fetch from 'node-fetch';
 import { config } from '../config/env';
 
 // SERVICES
-import { HttpMethods } from './FetcherService';
+import { HttpMethods } from '../schema/types/HTTP';
 
 // HELPERS
 import {

@@ -1,5 +1,5 @@
 // PACKAGE LIBS
-import fetch, { Response } from "node-fetch";
+import fetch from "node-fetch";
 
 // CUSTOM LIBS
 
@@ -10,38 +10,17 @@ import { CacheService } from './CacheService';
 // TYPES
 import { User } from '../schema/types/UserAccountData';
 import { Tweet } from '../schema/types/TweetData';
+import { HttpMethods } from "../schema/types/HTTP";
 
 // HELPERS
 import {
-    authorizedHeader, unauthorizedHeader
+    authorizedHeader,
+    unauthorizedHeader
 } from './helper/Requests'
+import { handleHTTPError } from './helper/Parser';
 
 // CONFIG
 import { config } from '../config/env';
-
-/**
- * @summary Stores all the different type of http requests
- */
-export enum HttpMethods {
-    POST = "POST",
-    GET = "GET"
-};
-
-/**
- * @summary Stores the different types of http status codes
- */
-enum HttpStatus {
-    BadRequest = 400,
-    Unauthorized = 401,
-    Forbidden = 403,
-    NotFound = 404,
-    MethodNotAllowed = 405,
-    RequestTimeout = 408,
-    TooManyRequests = 429,
-    InternalServerError = 500,
-    BadGateway = 502,
-    ServiceUnavailable = 503
-};
 
 /**
  * @service The base serivice from which all other data services derive their behaviour
@@ -74,25 +53,13 @@ export class FetcherService {
             body: body
         })
         // Checking http status
-        .then(res => this.handleHTTPError(res))
+        .then(res => handleHTTPError(res))
         // Parsing data to json
         .then(res => res.json())
         // If other unknown error
         .catch((err) => {
             throw err;
         });
-    }
-
-    /**
-     * @summary Throws the appropriate http error after evaluation of the status code of reponse
-     * @param res The response object received from http communication
-     */
-    private handleHTTPError(res: Response): Response {
-        if (res.status != 200 && res.status in HttpStatus) {
-            throw new Error(HttpStatus[res.status])
-        }
-
-        return res;
     }
 
     /**
