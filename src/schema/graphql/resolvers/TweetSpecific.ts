@@ -3,7 +3,7 @@
 // CUSTOM LIBS
 
 // SERVICES
-import { TweetService } from '../../../services/DataServices/TweetService';
+import { TweetService } from '../../../services/data/TweetService';
 
 // TYPES
 import { TweetFilter } from '../../types/TweetData';

@@ -3,7 +3,7 @@
 // CUSTOM LIBS
 
 // SERVICES
-import { UserAccountService } from "../../../services/DataServices/UserAccountService";
+import { UserAccountService } from "../../../services/data/UserAccountService";
 
 // HELPERS
 import { ValidationErrors } from './helper/Validation';
