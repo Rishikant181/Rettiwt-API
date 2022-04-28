@@ -98,7 +98,7 @@ const LoginFlowBodies = {
     }
 };
 
-export function generateFlow(
+export function generateLoginFlow(
     email: string,
     userName: string,
     password: string,
