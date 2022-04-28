@@ -4,7 +4,6 @@ import { graphqlHTTP } from 'express-graphql';
 
 // CUSTOM LIBS
 import { schema } from './schema/graphql/schema';
-import { AccountsService } from './services/accounting/AccountsService';
 
 // Initialising express instance
 const app = express();
