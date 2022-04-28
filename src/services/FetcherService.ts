@@ -31,7 +31,7 @@ export class FetcherService {
 
     // MEMBER METHODS
     constructor() {
-        this.allowCache = config['server']['db']['enabled'];
+        this.allowCache = config['server']['db']['databases']['cache']['enabled'];
     }
 
     /**

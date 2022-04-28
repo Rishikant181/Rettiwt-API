@@ -1,11 +1,15 @@
 export const config = {
     "server": {
         "db": {
-            "enabled": true,
             "databases": {
+                "auth": {
+                    "name": "auth-credentials",
+                    "index": "index"
+                },
                 "cache": {
                     "name": "data-cache",
-                    "index": "index"
+                    "index": "index",
+                    "enabled": true
                 }
             }
         }

@@ -17,6 +17,14 @@ import {
 export class AccountsService {
     // MEMBER METHODS
     /**
+     * @summary Store the logged in account's cookie to database
+     * @param cookie 
+     */
+    async storeCookie(cookie: string): Promise<boolean> {
+        return true;
+    }
+    
+    /**
      * @summary Logins into the given account and stores the cookies and logged in credentials to database
      * @param email The email associated with the account to be logged into
      * @param userName The user name of the account
