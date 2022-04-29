@@ -139,19 +139,4 @@ export class CacheService extends DatabaseService {
             return null;
         }
     }
-
-    /**
-     * @summary Clears the cache completely, including all indexes
-     * @returns Whether clearing was successful or not
-     */
-    async clear(): Promise<boolean> {
-        // If connection to database successful
-        if (await this.connectDB()) {
-            // Clearing the cache
-            return await this.client.db(this.dbName).dropDatabase();
-        }
-        else {
-            return false;
-        }
-    }
 }

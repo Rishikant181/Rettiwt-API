@@ -7,6 +7,9 @@ import fetch from "node-fetch";
 import { AuthService } from '../AuthService';
 import { DatabaseService } from "../DatabaseService";
 
+// TYPES
+import { Errors, Response } from '../../schema/types/HTTP';
+
 // HELPERS
 import { HttpMethods } from '../../schema/types/HTTP';
 import { handleHTTPError } from '../helper/Parser';
@@ -15,7 +18,10 @@ import {
     initiateLoginUrl,
     loginContinueUrl
 } from "../helper/Requests";
-import { generateLoginFlow, LoginFlows } from "./LoginFlows";
+import {
+    generateLoginFlow,
+    LoginFlows
+} from "./LoginFlows";
 
 // CONFIGS
 import { config } from '../../config/env';
@@ -77,7 +83,10 @@ export class AccountsService extends DatabaseService {
      * @param userName The user name of the account
      * @param password The password to the account
      */
-    async login(email: string, userName: string, password: string): Promise<void> {
+    async login(email: string, userName: string, password: string): Promise<Response<null>> {
+        // Stores the response to be sent back
+        var res: Response<null> = new Response(false, new Error(Errors.NoError), {});       
+        
         // Getting each flow of login process
         for(var flow in LoginFlows) {
             /**
@@ -97,17 +106,27 @@ export class AccountsService extends DatabaseService {
                 else return data.json();
             })
             .then(data => {
-                //@ts-ignore
-                if(flow == LoginFlows.FinalizeLogin) return data.headers;
+                if(flow == LoginFlows.FinalizeLogin) {
+                    res = { success: true, error: new Error(Errors.NoError), data: null };
+
+                    //@ts-ignore                    
+                    return data.headers
+                }
                 //@ts-ignore
                 else return data['flow_token'];
+                
             })
             .catch(err => {
-                throw err;
+                res = { success: false, error: new Error(err), data: null };
             });
         }
 
-        // Storing cookies into the database
-        this.storeCookies(this.flowData).then(data => console.log(data));
+        // If login was successfull
+        if (res.success) {
+            // Storing cookies into the database
+            this.storeCookies(this.flowData).then(data => console.log(data));
+        }
+
+        return res;
     }
 }

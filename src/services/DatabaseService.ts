@@ -52,7 +52,7 @@ import {  MongoClient } from "mongodb";
         }
 
         // Returning success or failure
-        return Promise.resolve(success);
+        return success;
     }
     
     /**
@@ -65,11 +65,26 @@ import {  MongoClient } from "mongodb";
         // If connection to db was successful
         if (await this.connectDB()) {
             // Writing data to database's table
-            return Promise.resolve((await this.client.db(this.dbName).collection(table).insertOne(data)).acknowledged);
+            return (await this.client.db(this.dbName).collection(table).insertOne(data)).acknowledged;
         }
         // If failed to connect to db
         else {
-            return Promise.resolve(false);
+            return false;
+        }
+    }
+
+    /**
+     * @summary Clears the current database completely, including all indexes
+     * @returns Whether clearing was successful or not
+     */
+    protected async clear(): Promise<boolean> {
+        // If connection to database successful
+        if (await this.connectDB()) {
+            // Clearing the cache
+            return await this.client.db(this.dbName).dropDatabase();
+        }
+        else {
+            return false;
         }
     }
 }
