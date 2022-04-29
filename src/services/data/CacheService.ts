@@ -1,69 +1,28 @@
 // PACKAGE LIBS
 import {
-    MongoClient,
     InsertOneResult,
     ObjectId
 } from "mongodb";
 
 // CUSTOM LIBS
-import { config } from '../config/env';
-import { User } from '../schema/types/UserAccountData';
-import { Tweet } from '../schema/types/TweetData';
+import { DatabaseService } from '../DatabaseService';
+import { config } from '../../config/env';
+import { User } from '../../schema/types/UserAccountData';
+import { Tweet } from '../../schema/types/TweetData';
 import {
     dataToList,
     findJSONKey
-} from './helper/Parser';
+} from '../helper/Parser';
 
 /**
  * @summary Handles reading and writing of data from and to cache.
  * 
  * **Note**: To be able to CacheService, the data to be cached must of a unique "id" field.
  */
-export class CacheService {
-    // MEMBER DATA
-    private client: MongoClient;                                        // To store the connection to mongodb database
-    private connUrl: string;                                            // To store the connection url
-    private dbName: string;                                             // To store the name of database
-    private dbIndex: string;                                            // To store the name of the index table of db
-
+export class CacheService extends DatabaseService {
     // MEMBER METHODS
     constructor() {
-        // Initialising the connection url to database server
-        this.connUrl = `mongodb://${process.env.CACHE_DB_HOST}:${process.env.CACHE_DB_PORT}`;
-
-        // Initialising database and index name
-        this.dbName = config['server']['db']['databases']['cache']['name'];
-        this.dbIndex = config['server']['db']['databases']['cache']['index'];
-
-        // Creating connection to database
-        this.client = new MongoClient(this.connUrl);
-    }
-
-    /**
-     * @summary Connects to the database
-     * @returns Whether connection was successful or not
-     */
-    private async connectDB(): Promise<boolean> {
-        var success: boolean = false;                                           // To store whether connection to db successful or not
-
-        // Trying to connect to database
-        try {
-            // Connecting to db
-            await this.client.connect();
-
-            // Verifying connection
-            await this.client.db(this.dbName).command({ ping: 1 });
-
-            success = true;
-        }
-        // If connecting to database failed
-        catch (err) {
-            console.log("Failed to connect to caching server");
-            console.log(err);
-        }
-
-        // Returning success or failure
-        return Promise.resolve(success);
+        super(config['server']['db']['databases']['cache']['name'], config['server']['db']['databases']['cache']['index']);
     }
 
     /**

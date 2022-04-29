@@ -5,7 +5,7 @@ import fetch from "node-fetch";
 
 // SERVICES
 import { AuthService } from './AuthService';
-import { CacheService } from './CacheService';
+import { CacheService } from './data/CacheService';
 
 // TYPES
 import { User } from '../schema/types/UserAccountData';
