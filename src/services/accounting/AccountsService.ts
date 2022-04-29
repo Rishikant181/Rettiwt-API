@@ -25,7 +25,7 @@ export class AccountsService {
         authToken: string,
         guestToken: string
     };                                                                  // To store the guest credentials for logging in
-    private currentFlow: any;                                           // To store the current flow result
+    private flowData: any;                                              // To store the current flow result
     
     // MEMBER METHODS
     /**
@@ -34,9 +34,24 @@ export class AccountsService {
     async init(): Promise<AccountsService> {
         // Initializing member data
         this.guestCredentials = await AuthService.getInstance().getGuestCredentials();
-        this.currentFlow = '';
+        this.flowData = '';
 
         return this;
+    }
+
+    /**
+     * @summary Store the cookies extracted from the given headers into the database
+     * @param headers The headers from which the cookies are to be extracted and stored
+     */
+    private async storeCookies(headers: Headers): Promise<boolean> {
+        // Getting the cookies from the headers
+        const cookies: string = headers.get('set-cookie') + '';
+
+        // Getting csrf token from the cookie using regex
+        //@ts-ignore
+        const csrfToken: string = cookies.match(/ct0=(?<token>[a|A|0-z|Z|9]+);/)?.groups.token;
+        
+        return true;
     }
 
     /**
@@ -55,10 +70,10 @@ export class AccountsService {
              * For FinalizeLogin, the end data is the response headers, for all other flows, end data is the flow token from response body
              */
             // Executing each flow
-            this.currentFlow = await fetch((flow == LoginFlows.GetLoginFlow) ? initiateLoginUrl() : loginContinueUrl(), {
+            this.flowData = await fetch((flow == LoginFlows.GetLoginFlow) ? initiateLoginUrl() : loginContinueUrl(), {
                 headers: unauthorizedHeader(this.guestCredentials),
                 method: HttpMethods.POST,
-                body: generateLoginFlow(email, userName, password, this.currentFlow, LoginFlows[flow as LoginFlows])
+                body: generateLoginFlow(email, userName, password, this.flowData, LoginFlows[flow as LoginFlows])
             })
             .then(data => handleHTTPError(data))
             .then(data => {
@@ -76,6 +91,6 @@ export class AccountsService {
             });
         }
 
-        console.log(this.currentFlow);
+        this.storeCookies(this.flowData);
     }
 }
