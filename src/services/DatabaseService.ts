@@ -12,11 +12,15 @@ import {  MongoClient } from "mongodb";
     protected dbIndex: string;                                            // To store the name of the index table of db
 
     // MEMBER METHODS
+    /**
+     * @param database The name of the data where data operations are to be done
+     * @param index The name of the index table(if any)
+     */
     constructor(database: string, index: string) {
         // Initialising the connection url to database server
         this.connUrl = `mongodb://${process.env.CACHE_DB_HOST}:${process.env.CACHE_DB_PORT}`;
 
-        // Initialising database and index name
+        // Initialising names
         this.dbName = database;
         this.dbIndex = index;
 
@@ -49,5 +53,15 @@ import {  MongoClient } from "mongodb";
 
         // Returning success or failure
         return Promise.resolve(success);
+    }
+    
+    /**
+     * @summary Stores the given data in the given table of the database
+     * @param data The data to be stored
+     * @param table The table in which the data is to be stored
+     * @returns Whether write was successful or not
+     */
+    protected async write(data: any, table: string): Promise<boolean> {
+        return true;
     }
 }

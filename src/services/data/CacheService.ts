@@ -20,9 +20,15 @@ import {
  * **Note**: To be able to CacheService, the data to be cached must of a unique "id" field.
  */
 export class CacheService extends DatabaseService {
+    // MEMBER DATA
+    private update: boolean;                                            // Whether to update existing data or not
+    
     // MEMBER METHODS
     constructor() {
         super(config['server']['db']['databases']['cache']['name'], config['server']['db']['databases']['cache']['index']);
+
+        // Initialising member data
+        this.update = false;
     }
 
     /**
@@ -68,7 +74,7 @@ export class CacheService extends DatabaseService {
      * @param data The input data to store
      * @param update Whether to update the store data or not
      */
-    async write(data: User | User[] | Tweet | Tweet[], update = false): Promise<boolean> {
+    async write(data: User | User[] | Tweet | Tweet[]): Promise<boolean> {
         // Converting the data to a list of data
         data = dataToList(data);
 
@@ -80,11 +86,11 @@ export class CacheService extends DatabaseService {
                 var cached = await this.isCached(findJSONKey(item, 'id'));
 
                 // If data already exists in cache and no update required, skip
-                if (cached && update == false) {
+                if (cached && this.update == false) {
                     continue;
                 }
                 // If data already exists in cache and update required
-                else if (cached && update) {
+                else if (cached && this.update) {
                     // Getting the object id of data from index
                     var objectId = (await this.client.db(this.dbName).collection(this.dbIndex).findOne({ "id": findJSONKey(item, "id") }))?._id.toHexString();
                     
