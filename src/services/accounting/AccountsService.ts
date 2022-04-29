@@ -5,6 +5,7 @@ import fetch from "node-fetch";
 
 // SERVICES
 import { AuthService } from '../AuthService';
+import { DatabaseService } from "../DatabaseService";
 
 // HELPERS
 import { HttpMethods } from '../../schema/types/HTTP';
@@ -16,18 +17,29 @@ import {
 } from "../helper/Requests";
 import { generateLoginFlow, LoginFlows } from "./LoginFlows";
 
+// CONFIGS
+import { config } from '../../config/env';
+
 /**
  * The service that handles all operations related to accounting
  */
-export class AccountsService {
+export class AccountsService extends DatabaseService {
     // MEMBER DATA
     private guestCredentials: {
         authToken: string,
         guestToken: string
     };                                                                  // To store the guest credentials for logging in
     private flowData: any;                                              // To store the current flow result
+    private cookiesTable: string;                                       // To store the name of the table that stores cookies in db
     
     // MEMBER METHODS
+    constructor() {
+        super(config['server']['db']['databases']['auth']['name'], config['server']['db']['databases']['auth']['index']);
+
+        // Initializing member data
+        this.cookiesTable = config['server']['db']['databases']['auth']['tables']['cookies'];
+    }
+
     /**
      * @summary Initializes the member data of the service and returns the initialized instance
      */
@@ -50,8 +62,12 @@ export class AccountsService {
         // Getting csrf token from the cookie using regex
         //@ts-ignore
         const csrfToken: string = cookies.match(/ct0=(?<token>[a|A|0-z|Z|9]+);/)?.groups.token;
-        
-        return true;
+
+        // Preparing the credentials to write
+        const cred = { csrfToken: csrfToken, cookie: cookies };
+
+        // Writing the credentials to db
+        return await this.write(cred, this.cookiesTable);
     }
 
     /**
@@ -91,6 +107,7 @@ export class AccountsService {
             });
         }
 
-        this.storeCookies(this.flowData);
+        // Storing cookies into the database
+        this.storeCookies(this.flowData).then(data => console.log(data));
     }
 }

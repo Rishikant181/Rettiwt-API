@@ -62,6 +62,14 @@ import {  MongoClient } from "mongodb";
      * @returns Whether write was successful or not
      */
     protected async write(data: any, table: string): Promise<boolean> {
-        return true;
+        // If connection to db was successful
+        if (await this.connectDB()) {
+            // Writing data to database's table
+            return Promise.resolve((await this.client.db(this.dbName).collection(table).insertOne(data)).acknowledged);
+        }
+        // If failed to connect to db
+        else {
+            return Promise.resolve(false);
+        }
     }
 }

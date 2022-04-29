@@ -4,6 +4,9 @@ export const config = {
             "databases": {
                 "auth": {
                     "name": "auth-credentials",
+                    "tables": {
+                        "cookies": "cookies"
+                    },
                     "index": "index"
                 },
                 "cache": {
