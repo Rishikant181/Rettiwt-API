@@ -1,29 +1,35 @@
 // PACKAGE LIBS
 import fetch from 'node-fetch';
+import {
+    FindCursor,
+    Document,
+    WithId
+} from 'mongodb';
 
 // CUSTOM LIBS
-import { config } from '../config/env';
 
 // SERVICES
 import { HttpMethods } from '../schema/types/HTTP';
+import { DatabaseService } from './DatabaseService';
 
 // HELPERS
 import {
     guestTokenUrl,
-    initiateLoginUrl,
-    loginContinueUrl,
-    blankHeader,
-    unauthorizedHeader
+    blankHeader
 } from './helper/Requests';
+
+// CONFIGS
+import { config } from '../config/env';
 
 /**
  * @summary Handles authentication of http requests and other authentication related tasks
  */
-export class AuthService {
+export class AuthService extends DatabaseService {
     // MEMBER DATA
     private static instance: AuthService;                                    // To store the current instance of this service
     private requestCount: number;                                            // To store the total number of requests made
     private authToken: string;                                               // To store the common auth token
+    private static authCredList: FindCursor<WithId<Document>>;               // To store the cursored list of all authentication credentials
     private authCredentials: {
         authToken: string,
         csrfToken: string,
@@ -38,6 +44,8 @@ export class AuthService {
 
     // MEMEBER METHODS
     private constructor() {
+        super(config['server']['db']['databases']['auth']['name'], config['server']['db']['databases']['auth']['tables']['cookies']);
+
         // Initializing member data
         this.requestCount = 0;
 
@@ -59,7 +67,7 @@ export class AuthService {
     /**
      * @returns The active instance of AuthService
      */
-    static getInstance(): AuthService {
+    static async getInstance(): Promise<AuthService> {
         // Checking if an instance does not exists already
         if(!this.instance) {
             // Creating a new instance
