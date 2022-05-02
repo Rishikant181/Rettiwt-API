@@ -2,7 +2,7 @@
 
 // TYPES
 import { Response } from 'node-fetch';
-import { HttpStatus } from '../../schema/types/HTTP';
+import { HttpStatus } from '../../types/HTTP';
 
 /**
  * @summary Throws the appropriate http error after evaluation of the status code of reponse

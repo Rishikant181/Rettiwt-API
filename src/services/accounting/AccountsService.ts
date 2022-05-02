@@ -8,10 +8,10 @@ import { AuthService } from '../AuthService';
 import { DatabaseService } from "../DatabaseService";
 
 // TYPES
-import { Errors, Response } from '../../schema/types/HTTP';
+import { Errors, Response } from '../../types/HTTP';
 
 // HELPERS
-import { HttpMethods } from '../../schema/types/HTTP';
+import { HttpMethods } from '../../types/HTTP';
 import { handleHTTPError } from '../helper/Parser';
 import {
     unauthorizedHeader,
@@ -51,7 +51,7 @@ export class AccountsService extends DatabaseService {
      */
     async init(): Promise<AccountsService> {
         // Initializing member data
-        this.guestCredentials = await AuthService.getInstance().getGuestCredentials();
+        this.guestCredentials = await (await AuthService.getInstance()).getGuestCredentials();
         this.flowData = '';
 
         return this;

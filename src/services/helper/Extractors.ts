@@ -3,7 +3,7 @@
 // CUSTOM LIBS
 
 // TYPES
-import { Errors } from '../../schema/types/HTTP';
+import { Errors } from '../../types/HTTP';
 
 // HELPERS
 import { isJSONEmpty } from './Parser';

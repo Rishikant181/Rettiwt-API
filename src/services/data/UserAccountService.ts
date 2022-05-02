@@ -5,10 +5,10 @@ import { FetcherService } from '../FetcherService';
 import {
     Errors,
     Response
-} from '../../schema/types/HTTP'
+} from '../../types/HTTP'
 
-import { User } from '../../schema/types/UserAccountData';
-import { Tweet } from '../../schema/types/TweetData';
+import { User } from '../../types/UserAccountData';
+import { Tweet } from '../../types/TweetData';
 
 /* HELPERS */
 import {

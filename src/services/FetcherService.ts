@@ -8,9 +8,9 @@ import { AuthService } from './AuthService';
 import { CacheService } from './data/CacheService';
 
 // TYPES
-import { User } from '../schema/types/UserAccountData';
-import { Tweet } from '../schema/types/TweetData';
-import { HttpMethods } from "../schema/types/HTTP";
+import { User } from '../types/UserAccountData';
+import { Tweet } from '../types/TweetData';
+import { HttpMethods } from "../types/HTTP";
 
 // HELPERS
 import {
@@ -48,7 +48,7 @@ export class FetcherService {
         auth: boolean = true
     ): Promise<any> {
         return fetch(url, {
-            headers: auth ? authorizedHeader(AuthService.getInstance().getAuthCredentials()) : unauthorizedHeader(await AuthService.getInstance().getGuestCredentials()),
+            headers: auth ? authorizedHeader((await AuthService.getInstance()).getAuthCredentials()) : unauthorizedHeader(await (await AuthService.getInstance()).getGuestCredentials()),
             method: method ? method : HttpMethods.GET,
             body: body
         })

@@ -7,16 +7,16 @@ import {
 import {
     Errors,
     Response
-} from '../../schema/types/HTTP'
+} from '../../types/HTTP'
 
 import {
     TweetFilter,
     Tweet
-} from "../../schema/types/TweetData";
+} from "../../types/TweetData";
 
 import {
     User
-} from "../../schema/types/UserAccountData";
+} from "../../types/UserAccountData";
 
 /* HELPERS */
 import {

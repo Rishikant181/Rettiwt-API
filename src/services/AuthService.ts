@@ -9,7 +9,7 @@ import {
 // CUSTOM LIBS
 
 // SERVICES
-import { HttpMethods } from '../schema/types/HTTP';
+import { HttpMethods } from '../types/HTTP';
 import { DatabaseService } from './DatabaseService';
 
 // HELPERS
