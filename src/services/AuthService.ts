@@ -1,5 +1,10 @@
 // PACKAGE LIBS
 import fetch from 'node-fetch';
+import {
+    WithId, 
+    Document,
+    FindCursor
+} from 'mongodb'
 
 // CUSTOM LIBS
 
@@ -28,15 +33,20 @@ import { config } from '../config/env';
 export class AuthService extends DatabaseService {
     // MEMBER DATA
     private static instance: AuthService;                                    // To store the current instance of this service
+    private credTable: string;                                               // To store the name of the table with authentication credentials
     private authToken: string;                                               // To store the common auth token
     private currentUser: AuthCredentials;                                    // To store the current authentication credentials
     private currentGuest: GuestCredentials;                                  // To store the current guest credentials
+    private authCredList: FindCursor<WithId<Document>>;                      // To store the cursored list of available authentication credentials
     private numCredentials: number;                                          // To store the total number of available credentials
     private credNumber: number;                                              // To keep track of the current credential's number
 
-    // MEMEBER METHODS
+    // MEMBER METHODS
     private constructor() {
         super(config['server']['db']['databases']['auth']['name'], config['server']['db']['databases']['auth']['tables']['cookies']);
+
+        // Initializing member data
+        this.credTable = config['server']['db']['databases']['auth']['tables']['cookies'];
         this.numCredentials = config['twitter']['auth']['credentials'].length;
         this.authToken = config['twitter']['auth']['authToken'];
         this.currentUser = { authToken: this.authToken, ...config['twitter']['auth']['credentials'][0]};
@@ -45,20 +55,23 @@ export class AuthService extends DatabaseService {
     }
 
     /**
-     * @summary Initializes the member data of AuthService, which needs to be done asynchronously
+     * @summary Initializes asynchronous memeber data of AuthService
      */
     private async init(): Promise<void> {
-
+        this.authCredList = this.client.db(this.dbName).collection(this.credTable).find();
     }
 
     /**
      * @returns The active instance of AuthService
      */
-    static getInstance(): AuthService {
+    static async getInstance(): Promise<AuthService> {
         // Checking if an instance does not exists already
         if(!this.instance) {
             // Creating a new instance
             this.instance = new AuthService();
+
+            // Initializing async data
+            await this.instance.init();
         }
 
         return this.instance;

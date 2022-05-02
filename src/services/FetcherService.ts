@@ -48,7 +48,7 @@ export class FetcherService {
         auth: boolean = true
     ): Promise<any> {
         return fetch(url, {
-            headers: auth ? authorizedHeader(await AuthService.getInstance().getAuthCredentials()) : unauthorizedHeader(await AuthService.getInstance().getGuestCredentials()),
+            headers: auth ? authorizedHeader((await AuthService.getInstance()).getAuthCredentials()) : unauthorizedHeader(await (await AuthService.getInstance()).getGuestCredentials()),
             method: method ? method : HttpMethods.GET,
             body: body
         })
