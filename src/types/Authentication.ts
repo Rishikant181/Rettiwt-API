@@ -1,6 +1,14 @@
 // This file contains various types for handlind data related to authentication
 
 /**
+ * @summary Store each login flow
+ */
+export type LoginFlow = {
+    url: string,
+    body: string
+}
+
+/**
  * @summary Stores the credentials for unauthenticated/guest users
  */
 export type GuestCredentials = {

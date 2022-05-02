@@ -55,7 +55,7 @@ export class AuthService extends DatabaseService {
     }
 
     /**
-     * @summary Initializes asynchronous memeber data of AuthService
+     * @summary Initializes asynchronous member data of AuthService
      */
     private async init(): Promise<void> {
         if(await this.connectDB) {

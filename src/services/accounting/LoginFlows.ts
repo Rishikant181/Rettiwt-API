@@ -1,3 +1,8 @@
+// CUSTOM LIBS
+
+// TYPES
+import { LoginFlow } from '../../types/Authentication';
+
 /**
  * @summary Stores the different flows involved in login process
  */
@@ -54,7 +59,7 @@ export function generateLoginFlow(
     password: string,
     flowToken: string,
     flowName: LoginFlows
-): any {
+): LoginFlow {
     // Getting the requested flow
     var flow = LoginFlowsContent[flowName];
 
