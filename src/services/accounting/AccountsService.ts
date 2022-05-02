@@ -8,7 +8,7 @@ import { AuthService } from '../AuthService';
 import { FetcherService } from '../FetcherService';
 
 // TYPES
-import { Errors, Response } from '../../types/HTTP';
+import { Errors, HttpMethods, Response } from '../../types/HTTP';
 
 // HELPERS
 import {

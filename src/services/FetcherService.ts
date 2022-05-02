@@ -11,6 +11,7 @@ import { CacheService } from './data/CacheService';
 import { User } from '../types/UserAccountData';
 import { Tweet } from '../types/TweetData';
 import { HttpMethods } from "../types/HTTP";
+import { GuestCredentials } from "../types/Authentication";
 
 // HELPERS
 import {
@@ -40,19 +41,19 @@ export class FetcherService {
      * @param method The type of HTTP request being made. Default is GET
      * @param body The content to be sent in the body of the response
      * @param auth Whether to use authenticated requests or not
-     * @param newCred Whether to use new credentials or old one
      * @param headers Whether to return response headers or not
+     * @param guestCredes Guest credentials to use rather than auto-generated one
      */
     protected async fetchData(
         url: string,
         method: HttpMethods = HttpMethods.GET,
         body: any = null,
         auth: boolean = true,
-        newCred: boolean = true,
-        headers: boolean = false
+        headers: boolean = false,
+        guestCreds?: GuestCredentials
     ): Promise<any> {
         return fetch(url, {
-            headers: auth ? authorizedHeader((await AuthService.getInstance()).getAuthCredentials(newCred)) : unauthorizedHeader(await (await AuthService.getInstance()).getGuestCredentials(newCred)),
+            headers: auth ? authorizedHeader((await AuthService.getInstance()).getAuthCredentials()) : unauthorizedHeader(guestCreds ? guestCreds : await (await AuthService.getInstance()).getGuestCredentials()),
             method: method ? method : HttpMethods.GET,
             body: body
         })
