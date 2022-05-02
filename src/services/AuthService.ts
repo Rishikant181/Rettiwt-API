@@ -1,10 +1,5 @@
 // PACKAGE LIBS
 import fetch from 'node-fetch';
-import {
-    FindCursor,
-    Document,
-    WithId
-} from 'mongodb';
 
 // CUSTOM LIBS
 
@@ -27,9 +22,7 @@ import { config } from '../config/env';
 export class AuthService extends DatabaseService {
     // MEMBER DATA
     private static instance: AuthService;                                    // To store the current instance of this service
-    private requestCount: number;                                            // To store the total number of requests made
     private authToken: string;                                               // To store the common auth token
-    private static authCredList: FindCursor<WithId<Document>>;               // To store the cursored list of all authentication credentials
     private authCredentials: {
         authToken: string,
         csrfToken: string,
@@ -45,9 +38,6 @@ export class AuthService extends DatabaseService {
     // MEMEBER METHODS
     private constructor() {
         super(config['server']['db']['databases']['auth']['name'], config['server']['db']['databases']['auth']['tables']['cookies']);
-
-        // Initializing member data
-        this.requestCount = 0;
 
         // Initializing the total number of available credentials
         this.numCredentials = config['twitter']['auth']['credentials'].length;
@@ -67,7 +57,7 @@ export class AuthService extends DatabaseService {
     /**
      * @returns The active instance of AuthService
      */
-    static async getInstance(): Promise<AuthService> {
+    static getInstance(): AuthService {
         // Checking if an instance does not exists already
         if(!this.instance) {
             // Creating a new instance
