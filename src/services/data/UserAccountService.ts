@@ -49,7 +49,6 @@ export class UserAccountService extends FetcherService {
                 
                 return new Response<User>(
                     true,
-                    new Error(Errors.NoError),
                     user
                 );
             })
@@ -57,8 +56,8 @@ export class UserAccountService extends FetcherService {
             .catch(err => {
                 return new Response<User>(
                     false,
-                    err,
                     {},
+                    err
                 );
             });
     }
@@ -75,7 +74,6 @@ export class UserAccountService extends FetcherService {
         if(cachedData) {
             return new Response<User>(
                 true,
-                new Error(Errors.NoError),
                 cachedData
             );
         }
@@ -94,7 +92,6 @@ export class UserAccountService extends FetcherService {
                 
                 return new Response<User>(
                     true,
-                    new Error(Errors.NoError),
                     user
                 );
             })
@@ -102,8 +99,8 @@ export class UserAccountService extends FetcherService {
             .catch(err => {
                 return new Response<User>(
                     false,
-                    err,
                     {},
+                    err
                 );
             });
     }
@@ -133,7 +130,6 @@ export class UserAccountService extends FetcherService {
 
                 return new Response<{ following: User[], next: string }>(
                     users.length ? true : false,
-                    new Error(Errors.NoError),
                     { following: users, next: data.cursor }
                 );
             })
@@ -141,8 +137,8 @@ export class UserAccountService extends FetcherService {
             .catch(err => {
                 return new Response<{ following: User[], next: string }>(
                     false,
-                    err,
-                    { following: [], next: '' }
+                    { following: [], next: '' },
+                    err
                 )
             });
     }
@@ -177,7 +173,6 @@ export class UserAccountService extends FetcherService {
 
                 return new Response<{ followers: User[], next: string }>(
                     users.length ? true : false,
-                    new Error(Errors.NoError),
                     { followers: users, next: data.cursor }
                 );
             })
@@ -185,8 +180,8 @@ export class UserAccountService extends FetcherService {
             .catch(err => {
                 return new Response<{ followers: User[], next: string }>(
                     false,
-                    err,
-                    { followers: [], next: '' }
+                    { followers: [], next: '' },
+                    err
                 );
             });
     }
@@ -216,7 +211,6 @@ export class UserAccountService extends FetcherService {
 
                 return new Response<{ tweets: Tweet[], next: string }>(
                     tweets.length ? true : false,
-                    new Error(Errors.NoError),
                     { tweets: tweets, next: data.cursor }
                 );
             })
@@ -224,8 +218,8 @@ export class UserAccountService extends FetcherService {
             .catch(err => {
                 return new Response<{ tweets: Tweet[], next: string }>(
                     false,
-                    err,
-                    { tweets: [], next: '' }
+                    { tweets: [], next: '' },
+                    err
                 );
             });
     }

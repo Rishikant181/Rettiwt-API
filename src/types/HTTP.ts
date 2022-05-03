@@ -33,8 +33,7 @@ export enum Errors {
     UserNotFound = "An account with given username/id was not found",
     TweetNotFound = "A tweet with the given id was not found",
     NoTweetsFound = "No tweets matching the given criteria found",
-    FatalError = "A run-time error occured",
-    NoError = ""
+    FatalError = "A run-time error occured"
 }
 
 /**
@@ -44,8 +43,8 @@ export enum Errors {
 export class Response<Type> {
     // MEMBER DATA
     success: boolean;                                                       // To store whether success or failure
-    error: Error;                                                           // To store error details, if any
     data: Type;                                                             // To store the data received
+    error?: Error;                                                          // To store error details, if any
 
     // MEMBER METHODS
     /**
@@ -53,7 +52,7 @@ export class Response<Type> {
      * @param error Stores error, if any
      * @param data Any response data that is to be included in the response
      */
-    constructor(success: boolean, error: Error, data: any) {
+    constructor(success: boolean, data: any, error?: Error) {
         this.success = success;
         this.error = error;
         this.data = data;

@@ -41,7 +41,6 @@ export class FetcherService {
      * @param method The type of HTTP request being made. Default is GET
      * @param body The content to be sent in the body of the response
      * @param auth Whether to use authenticated requests or not
-     * @param headers Whether to return response headers or not
      * @param guestCredes Guest credentials to use rather than auto-generated one
      */
     protected async fetchData(
@@ -49,7 +48,6 @@ export class FetcherService {
         method: HttpMethods = HttpMethods.GET,
         body: any = null,
         auth: boolean = true,
-        headers: boolean = false,
         guestCreds?: GuestCredentials
     ): Promise<any> {
         return fetch(url, {

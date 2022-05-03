@@ -63,7 +63,6 @@ export class TweetService extends FetcherService {
 
                 return new Response<{ tweets: Tweet[], next: string }>(
                     tweets.length ? true : false,
-                    new Error(Errors.NoError),
                     { tweets: tweets, next: data.cursor }
                 );
             })
@@ -71,8 +70,8 @@ export class TweetService extends FetcherService {
             .catch(err => {
                 return new Response<{ tweets: Tweet[], next: string }>(
                     false,
+                    { tweets: [], next: '' },
                     err,
-                    { tweets: [], next: '' }
                 );
             });
     }
@@ -89,7 +88,6 @@ export class TweetService extends FetcherService {
         if(cachedData) {
             return new Response<Tweet>(
                 true,
-                new Error(Errors.NoError),
                 cachedData
             );
         }
@@ -108,7 +106,6 @@ export class TweetService extends FetcherService {
 
                 return new Response<Tweet>(
                     true,
-                    new Error(Errors.NoError),
                     tweet
                 );
             })
@@ -116,8 +113,8 @@ export class TweetService extends FetcherService {
             .catch(err => {
                 return new Response<Tweet>(
                     false,
-                    err,
-                    {}
+                    {},
+                    err
                 );
             });
     }
@@ -147,7 +144,6 @@ export class TweetService extends FetcherService {
 
                 return new Response<{ likers: User[], next: string }>(
                     users.length ? true : false,
-                    new Error(Errors.NoError),
                     { likers: users, next: data.cursor }
                 );
             })
@@ -155,8 +151,8 @@ export class TweetService extends FetcherService {
             .catch(err => {
                 return new Response<{ likers: User[], next: string }>(
                     false,
-                    err,
-                    { likers: [], next: '' }
+                    { likers: [], next: '' },
+                    err
                 );
             });
     }
@@ -186,7 +182,6 @@ export class TweetService extends FetcherService {
 
                 return new Response<{ retweeters: User[], next: string }>(
                     users.length ? true : false,
-                    new Error(Errors.NoError),
                     { retweeters: users, next: data.cursor }
                 );
             })
@@ -194,8 +189,8 @@ export class TweetService extends FetcherService {
             .catch(err => {
                 return new Response<{ retweeters: User[], next: string }>(
                     false,
-                    err,
-                    { retweeters: [], next: '' }
+                    { retweeters: [], next: '' },
+                    err
                 );
             });
     }
@@ -223,7 +218,6 @@ export class TweetService extends FetcherService {
 
                 return new Response<{ replies: Tweet[], next: string }>(
                     tweets.length ? true : false,
-                    new Error(Errors.NoError),
                     { replies: tweets, next: data.cursor }
                 );
             })
@@ -231,8 +225,8 @@ export class TweetService extends FetcherService {
             .catch(err => {
                 return new Response<{ replies: Tweet[], next: string }>(
                     false,
-                    err,
-                    { replies: [], next: '' }
+                    { replies: [], next: '' },
+                    err
                 );
             });
     }

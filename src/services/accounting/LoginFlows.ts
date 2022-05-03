@@ -69,7 +69,7 @@ export function generateLoginFlow(
     flow['body'] = flow['body'].replace("<user_name>", userName);
     flow['body'] = flow['body'].replace("<password>", password);
 
-    flow['body'] = JSON.stringify(flow['body']);
+    flow['body'] = flow['body'];
 
     return flow;
 }

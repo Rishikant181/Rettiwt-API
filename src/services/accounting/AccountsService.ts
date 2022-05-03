@@ -1,6 +1,3 @@
-// PACKAGE LIBS
-import fetch from "node-fetch";
-
 // CUSTOM LIBS
 
 // SERVICES
@@ -8,7 +5,7 @@ import { AuthService } from '../AuthService';
 import { FetcherService } from '../FetcherService';
 
 // TYPES
-import { Errors, HttpMethods, Response } from '../../types/HTTP';
+import { HttpMethods, Response } from '../../types/HTTP';
 
 // HELPERS
 import {
@@ -16,61 +13,12 @@ import {
     LoginFlows
 } from "./LoginFlows";
 
-// CONFIGS
-import { config } from '../../config/env';
-
 /**
  * The service that handles all operations related to accounting
  */
 export class AccountsService extends FetcherService {
-    // MEMBER DATA
-    private guestCredentials: {
-        authToken: string,
-        guestToken: string
-    };                                                                  // To store the guest credentials for logging in
-    private flowData: any;                                              // To store the current flow result
-    private cookiesTable: string;                                       // To store the name of the table that stores cookies in db
-    
     // MEMBER METHODS
-    constructor() {
-        super();
-
-        // Initializing member data
-        this.cookiesTable = config['server']['db']['databases']['auth']['tables']['cookies'];
-    }
-
-    /**
-     * @summary Initializes the member data of the service and returns the initialized instance
-     */
-    async init(): Promise<AccountsService> {
-        // Initializing member data
-        this.guestCredentials = await (await AuthService.getInstance()).getGuestCredentials();
-        this.flowData = '';
-
-        return this;
-    }
-
-    /**
-     * @summary Store the cookies extracted from the given headers into the database
-     * @param headers The headers from which the cookies are to be extracted and stored
-     */
-    /*
-    private async storeCookies(headers: Headers): Promise<boolean> {
-        // Getting the cookies from the headers
-        const cookies: string = headers.get('set-cookie') + '';
-
-        // Getting csrf token from the cookie using regex
-        //@ts-ignore
-        const csrfToken: string = cookies.match(/ct0=(?<token>[a|A|0-z|Z|9]+);/)?.groups.token;
-
-        // Preparing the credentials to write
-        const cred = { csrfToken: csrfToken, cookie: cookies };
-
-        // Writing the credentials to db
-        return await this.write(cred, this.cookiesTable);
-    }
-    */
-
+    
     /**
      * @summary Logins into the given account and stores the cookies and store logged in credentials to database
      * @returns The logged in account's cookies and other credentials
@@ -78,10 +26,49 @@ export class AccountsService extends FetcherService {
      * @param userName The user name of the account
      * @param password The password to the account
      */
-    async login(email: string, userName: string, password: string) {
+    async login(email: string, userName: string, password: string): Promise<Response<Headers>> {
+        var flowName: LoginFlows = LoginFlows.Login;                            // To store current flow name
+        var data = null;                                                        // To store the response of each fetch
+        var loginComplete: boolean = false;                                     // To store whether login is complete or not
+        var error: any = undefined;                                             // To store error, if any
+        
         // Getting the initial flow
         var currentFlow = generateLoginFlow(email, userName, password, '', LoginFlows.Login);
+        
+        // Getting the guest credentials to use
         var guestCredentials = await (await AuthService.getInstance()).getGuestCredentials(true);
-        var res = null;
+
+        while(true) {
+            data = await this.fetchData(currentFlow.url, HttpMethods.POST, currentFlow.body, false, guestCredentials)
+            .then(async (res) => {
+                // If this is the last step of login
+                if(flowName == LoginFlows.AccountDuplicationCheck) {
+                    loginComplete = true;
+                    return res.headers;
+                }
+                // If it's any other step
+                else {
+                    res = await res.json();
+                    
+                    // Changing flow name
+                    flowName = LoginFlows[res['subtasks'][0]['subtask_id'] as LoginFlows];
+
+                    // Changing flow data
+                    currentFlow = generateLoginFlow(email, userName, password, res['flow_token'], flowName);
+                }
+            })
+            .catch(err => {
+                error = err;
+                loginComplete = true;
+                return;
+            });
+
+            // If login is complete, return from loop
+            if(loginComplete) {
+                break;
+            }
+        }
+
+        return { success: error ? false : true, error: error, data: data };
     }
 }

@@ -58,7 +58,7 @@ export class AuthService extends DatabaseService {
      * @summary Initializes asynchronous member data of AuthService
      */
     private async init(): Promise<void> {
-        if(await this.connectDB) {
+        if(await this.connectDB()) {
             this.authCredList = this.client.db(this.dbName).collection(this.credTable).find();
         }
     }
