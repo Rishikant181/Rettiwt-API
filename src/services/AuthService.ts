@@ -64,25 +64,6 @@ export class AuthService extends DatabaseService {
     }
 
     /**
-     * @summary Store the authentication credentials extracted from the given headers into the database
-     * @param headers The headers from which the cookies are to be extracted and stored
-     */
-    async storeCredentials(headers: Headers): Promise<void> {
-        // Getting the cookies from the headers
-        const cookies: string = headers.get('set-cookie') + '';
-
-        // Getting csrf token from the cookie using regex
-        //@ts-ignore
-        const csrfToken: string = cookies.match(/ct0=(?<token>[a|A|0-z|Z|9]+);/)?.groups.token;
-        
-        // Preparing the credentials to write
-        const creds = { csrfToken: csrfToken, cookie: cookies };
-
-        // Writing credentials to database
-        await this.write(creds, this.credTable);
-    }
-
-    /**
      * @returns The active instance of AuthService
      */
     static async getInstance(): Promise<AuthService> {
@@ -107,6 +88,25 @@ export class AuthService extends DatabaseService {
 
         // Changing the current credential
         this.currentUser = { authToken: this.authToken , ...config['twitter']['auth']['credentials'][this.credNumber] };
+    }
+
+    /**
+     * @summary Store the authentication credentials extracted from the given headers into the database
+     * @param headers The headers from which the cookies are to be extracted and stored
+     */
+    async storeCredentials(headers: Headers): Promise<Boolean> {
+        // Getting the cookies from the headers
+        const cookies: string = headers.get('set-cookie') + '';
+
+        // Getting csrf token from the cookie using regex
+        //@ts-ignore
+        const csrfToken: string = cookies.match(/ct0=(?<token>[a|A|0-z|Z|9]+);/)?.groups.token;
+        
+        // Preparing the credentials to write
+        const creds = { csrfToken: csrfToken, cookie: cookies };
+
+        // Writing credentials to database and returning whether write was successful or not
+        return (await this.write(creds, this.credTable));
     }
 
     /**
