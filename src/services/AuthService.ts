@@ -47,7 +47,7 @@ export class AuthService extends DatabaseService {
         // Initializing member data
         this.credTable = config['server']['db']['databases']['auth']['tables']['cookies'];
         this.authToken = config['twitter']['auth']['authToken'];
-        this.currentUser = { authToken: this.authToken, ...config['twitter']['auth']['credentials'][0]};
+        this.currentUser = { authToken: this.authToken, csrfToken: '', cookie: ''};
         this.currentGuest = { authToken: this.authToken, guestToken: '' };
     }
 
