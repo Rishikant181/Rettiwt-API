@@ -39,8 +39,6 @@ export class AuthService extends DatabaseService {
     private currentUser: AuthCredentials;                                    // To store the current authentication credentials
     private currentGuest: GuestCredentials;                                  // To store the current guest credentials
     private authCredList: FindCursor<WithId<Document>>;                      // To store the cursored list of available authentication credentials
-    private numCredentials: number;                                          // To store the total number of available credentials
-    private credNumber: number;                                              // To keep track of the current credential's number
 
     // MEMBER METHODS
     private constructor() {
@@ -48,11 +46,9 @@ export class AuthService extends DatabaseService {
 
         // Initializing member data
         this.credTable = config['server']['db']['databases']['auth']['tables']['cookies'];
-        this.numCredentials = config['twitter']['auth']['credentials'].length;
         this.authToken = config['twitter']['auth']['authToken'];
         this.currentUser = { authToken: this.authToken, ...config['twitter']['auth']['credentials'][0]};
         this.currentGuest = { authToken: this.authToken, guestToken: '' };
-        this.credNumber = 0;
     }
 
     /**
