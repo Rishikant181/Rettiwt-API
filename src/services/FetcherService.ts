@@ -59,13 +59,6 @@ export class FetcherService {
         })
         // Checking http status
         .then(res => handleHTTPError(res))
-        // Parsing data to json
-        .then(res => {
-            // If response headers are to be returned
-            if(headers) return res.headers;
-            // If response body is to returned
-            else return res.json();
-        })
         // If other unknown error
         .catch((err) => {
             throw err;

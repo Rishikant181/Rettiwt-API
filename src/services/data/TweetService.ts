@@ -50,6 +50,7 @@ export class TweetService extends FetcherService {
         cursor: string
     ): Promise<Response<{ tweets: Tweet[], next: string }>> {
         return this.fetchData(tweetsUrl(filter, cursor))
+            .then(res => res.json())
             .then(res => {
                 // Extracting data
                 var data = extractTweets(res);
@@ -94,6 +95,7 @@ export class TweetService extends FetcherService {
         }
         
         return this.fetchData(tweetDetailsUrl(tweetId), undefined, undefined, false)
+            .then(res => res.json())
             .then(res => {
                 // Extracting data
                 var data = extractTweet(res, tweetId);
@@ -132,6 +134,7 @@ export class TweetService extends FetcherService {
         cursor: string
     ): Promise<Response<{ likers: User[], next: string }>> {
         return this.fetchData(tweetLikesUrl(tweetId, count, cursor))
+            .then(res => res.json())
             .then(res => {
                 // Extracting data
                 var data = extractTweetLikers(res);
@@ -170,6 +173,7 @@ export class TweetService extends FetcherService {
         cursor: string
     ): Promise<Response<{ retweeters: User[], next: string }>> {
         return this.fetchData(tweetRetweetUrl(tweetId, count, cursor))
+            .then(res => res.json())
             .then(res => {
                 // Extracting data
                 var data = extractTweetRetweeters(res);
@@ -206,6 +210,7 @@ export class TweetService extends FetcherService {
         cursor: string
     ): Promise<Response<{ replies: Tweet[], next: string }>> {
         return this.fetchData(tweetRepliesUrl(tweetId, cursor))
+            .then(res => res.json())
             .then(res => {
                 // Extracting data
                 var data = extractTweetReplies(res, tweetId);

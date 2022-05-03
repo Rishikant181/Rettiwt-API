@@ -36,6 +36,7 @@ export class UserAccountService extends FetcherService {
      */
     async getUserAccountDetails(screenName: string): Promise<Response<User>> {
         return this.fetchData(userAccountUrl(screenName), undefined, undefined, false)
+            .then(res => res.json())
             .then(res => {
                 // Extracting data
                 var data = extractUserAccountDetails(res);
@@ -80,6 +81,7 @@ export class UserAccountService extends FetcherService {
         }
 
         return this.fetchData(userAccountByIdUrl(restId), undefined, undefined, false)
+            .then(res => res.json())
             .then(res => {
                 // Extracting data
                 var data = extractUserAccountDetails(res);
@@ -118,6 +120,7 @@ export class UserAccountService extends FetcherService {
         cursor: string
     ): Promise<Response<{ following: User[], next: string }>> {
         return this.fetchData(userFollowingUrl(userId, count, cursor))
+            .then(res => res.json())
             .then(res => {
                 // Extracting data
                 var data = extractUserFollow(res);
@@ -161,6 +164,7 @@ export class UserAccountService extends FetcherService {
          * So changing count to count - 20, fixes fetching more than required number of follower
          */
         return this.fetchData(userFollowersUrl(userId, (count > 20) ? (count - 20) : count, cursor))
+            .then(res => res.json())
             .then(res => {
                 // Extracting data
                 var data = extractUserFollow(res);
@@ -199,6 +203,7 @@ export class UserAccountService extends FetcherService {
         cursor: string
     ): Promise<Response<{ tweets: Tweet[], next: string }>> {
         return this.fetchData(userLikesUrl(userId, count, cursor))
+            .then(res => res.json())
             .then(res => {
                 // Extracting data
                 var data = extractUserLikes(res);
