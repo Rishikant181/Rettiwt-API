@@ -25,7 +25,7 @@ export function parseCookies(headers: Headers): string {
     var cookies: string = headers.get('set-cookie') + '';
     var newCookie: string = '';
 
-    // Getting required cookies
+    // Getting required cookies from all cookies
     newCookie += cookies.match(/guest_id_marketing.+?;/) + " ";
     newCookie += cookies.match(/guest_id_ads.+?;/) + " ";
     newCookie += cookies.match(/kdt.+?;/) + " ";
