@@ -40,22 +40,25 @@ export class AccountsService extends FetcherService {
 
         while(true) {
             data = await this.fetchData(currentFlow.url, HttpMethods.POST, currentFlow.body, false, guestCredentials)
-            .then(async (res) => {
+            .then(async res => {
                 // If this is the last step of login
+                /**
+                 * The last step is actually LoginSuccessSubtask, but it doesn't do anything substantial
+                 * The actual cookies and credentials are returned in AccountDuplicationCheck flow
+                 */
                 if(flowName == LoginFlows.AccountDuplicationCheck) {
                     loginComplete = true;
                     return res.headers;
                 }
-                // If it's any other step
-                else {
-                    res = await res.json();
-                    
-                    // Changing flow name
-                    flowName = LoginFlows[res['subtasks'][0]['subtask_id'] as LoginFlows];
 
-                    // Changing flow data
-                    currentFlow = generateLoginFlow(email, userName, password, res['flow_token'], flowName);
-                }
+                // Parsing data to json
+                res = await res.json();
+
+                // Changing flow name
+                flowName = LoginFlows[res['subtasks'][0]['subtask_id'] as LoginFlows];
+
+                // Changing flow data
+                currentFlow = generateLoginFlow(email, userName, password, res['flow_token'], flowName);
             })
             .catch(err => {
                 error = err;
@@ -64,11 +67,14 @@ export class AccountsService extends FetcherService {
             });
 
             // If login is complete, return from loop
-            if(loginComplete) {
-                break;
-            }
+            if(loginComplete) break;
         }
 
-        return { success: error ? false : true, error: error, data: data };
+        // Storing credentials in database and returning result
+        return {
+            success: (!error && await (await AuthService.getInstance()).storeCredentials(data)) ? true : false,
+            error: error,
+            data: data
+        };
     }
 }

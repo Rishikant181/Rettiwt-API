@@ -13,6 +13,7 @@ export enum LoginFlows {
     LoginEnterAlternateIdentifierSubtask = "LoginEnterAlternateIdentifierSubtask",
     LoginEnterPassword = "LoginEnterPassword",
     AccountDuplicationCheck = "AccountDuplicationCheck",
+    LoginSuccessSubtask = "LoginSuccessSubtask"
 };
 
 /**
@@ -42,6 +43,10 @@ const LoginFlowsContent = {
     "AccountDuplicationCheck": {
         "url": 'https://twitter.com/i/api/1.1/onboarding/task.json',
         "body": '{"flow_token":"<flow_token>","subtask_inputs":[{"subtask_id":"AccountDuplicationCheck","check_logged_in_account":{"link":"AccountDuplicationCheck_false"}}]}'
+    },
+    "LoginSuccessSubtask": {
+        "url": '',
+        "body": ''
     }
 };
 
