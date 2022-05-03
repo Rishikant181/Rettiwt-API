@@ -23,6 +23,7 @@ import {
     guestTokenUrl,
     blankHeader
 } from './helper/Requests';
+import { parseCookies } from './helper/Parser';
 
 // CONFIGS
 import { config } from '../config/env';
@@ -99,8 +100,8 @@ export class AuthService extends DatabaseService {
      * @param headers The headers from which the cookies are to be extracted and stored
      */
     async storeCredentials(headers: Headers): Promise<Boolean> {
-        // Getting the cookies from the headers
-        const cookies: string = headers.get('set-cookie') + '';
+        // Parsing the cookies
+        const cookies: string = parseCookies(headers);
 
         // Getting csrf token from the cookie using regex
         //@ts-ignore

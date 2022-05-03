@@ -17,6 +17,29 @@ export function handleHTTPError(res: Response): Response {
 }
 
 /**
+ * @returns The cookie string after removing unnecessary data from it
+ * @param headers The raw header from which the cookies are to be extracted
+ */
+export function parseCookies(headers: Headers): string {
+    // Getting the raw cookie string
+    var cookies: string = headers.get('set-cookie') + '';
+    var newCookie: string = '';
+
+    // Getting required cookies
+    newCookie += cookies.match(/guest_id_marketing.+?;/) + " ";
+    newCookie += cookies.match(/guest_id_ads.+?;/) + " ";
+    newCookie += cookies.match(/kdt.+?;/) + " ";
+    newCookie += cookies.match(/personalization_id.+?;/) + " ";
+    newCookie += cookies.match(/guest_id.+?;/) + " ";
+    newCookie += cookies.match(/twid.+?;/) + " ";
+    newCookie += cookies.match(/guest_id_marketing.+?;/) + " ";
+    newCookie += cookies.match(/ct0.+?;/) + " ";
+    newCookie += cookies.match(/auth_token.+?;/) + " ";
+
+    return newCookie;
+}
+
+/**
  * @returns Whether the given json object is empty or not
  * @param data The input JSON object which needs to be checked
  */
