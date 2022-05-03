@@ -11,7 +11,7 @@ import { CacheService } from './data/CacheService';
 import { User } from '../types/UserAccountData';
 import { Tweet } from '../types/TweetData';
 import { HttpMethods } from "../types/HTTP";
-import { GuestCredentials } from "../types/Authentication";
+import { AuthCredentials, GuestCredentials } from "../types/Authentication";
 
 // HELPERS
 import {
@@ -51,7 +51,7 @@ export class FetcherService {
         guestCreds?: GuestCredentials
     ): Promise<any> {
         return fetch(url, {
-            headers: auth ? authorizedHeader((await AuthService.getInstance()).getAuthCredentials()) : unauthorizedHeader(guestCreds ? guestCreds : await (await AuthService.getInstance()).getGuestCredentials()),
+            headers: auth ? authorizedHeader(await (await AuthService.getInstance()).getAuthCredentials()) : unauthorizedHeader(guestCreds ? guestCreds : await (await AuthService.getInstance()).getGuestCredentials()),
             method: method ? method : HttpMethods.GET,
             body: body
         })

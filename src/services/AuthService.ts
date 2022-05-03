@@ -59,7 +59,7 @@ export class AuthService extends DatabaseService {
      */
     private async init(): Promise<void> {
         if(await this.connectDB()) {
-            this.authCredList = this.client.db(this.dbName).collection(this.credTable).find();
+            this.authCredList = this.client.db(this.dbName).collection(this.credTable).find().project({ _id: 0 });
         }
     }
 
@@ -82,12 +82,16 @@ export class AuthService extends DatabaseService {
     /**
      * @summary Changes to current active credential to the next available
      */
-    private changeCredentials(): void {
-        // Checking if more credentials are availabe and changing current credentials' number
-        this.credNumber = (this.credNumber == (this.numCredentials - 1)) ? 0 : (this.credNumber + 1);
+    private async changeCredentials(): Promise<void> {
+        // Changing the current credential to the next available in the cursored list
+        //@ts-ignore
+        this.currentUser = await this.authCredList.next()
+        this.currentUser.authToken = this.authToken;
 
-        // Changing the current credential
-        this.currentUser = { authToken: this.authToken , ...config['twitter']['auth']['credentials'][this.credNumber] };
+        // If cursor has been exhausted
+        if(!(await this.authCredList.hasNext())) {
+            await this.authCredList.rewind();
+        }
     }
 
     /**
@@ -113,15 +117,15 @@ export class AuthService extends DatabaseService {
      * @returns The current authentication credentials. A different credential is returned each time this is invoked
      * @param newCred Whether to get a different credential or the current one
      */
-    getAuthCredentials(newCred: boolean = false): {
+    async getAuthCredentials(newCred: boolean = true): Promise<{
         authToken: string,
         csrfToken: string,
         cookie: string
-    } {
+    }> {
         // If new credential is required
         if(newCred) {
             // Changing credentials
-            this.changeCredentials();
+            await this.changeCredentials();
         }
 
         return this.currentUser;
