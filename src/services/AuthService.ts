@@ -38,7 +38,9 @@ export class AuthService extends DatabaseService {
     private authToken: string;                                               // To store the common auth token
     private currentUser: AuthCredentials;                                    // To store the current authentication credentials
     private currentGuest: GuestCredentials;                                  // To store the current guest credentials
-    private authCredList: FindCursor<WithId<Document>>;                      // To store the cursored list of available authentication credentials
+    private authCredList: AuthCredentials[];                                 // To store the cursored list of available authentication credentials
+    private numCredentials: number;                                          // To store the total number of available auth credentials
+    private credentialNum: number;                                           // To store the current credentials number
 
     // MEMBER METHODS
     private constructor() {
@@ -56,7 +58,10 @@ export class AuthService extends DatabaseService {
      */
     private async init(): Promise<void> {
         if(await this.connectDB()) {
-            this.authCredList = this.client.db(this.dbName).collection(this.credTable).find().project({ _id: 0 });
+            //@ts-ignore
+            this.authCredList = await this.client.db(this.dbName).collection(this.credTable).find().project({ _id: 0 }).toArray();
+            this.numCredentials = this.authCredList.length;
+            this.credentialNum = 0;
         }
     }
 
@@ -80,15 +85,13 @@ export class AuthService extends DatabaseService {
      * @summary Changes to current active credential to the next available
      */
     private async changeCredentials(): Promise<void> {
-        // Changing the current credential to the next available in the cursored list
-        //@ts-ignore
-        this.currentUser = await this.authCredList.next()
-        this.currentUser.authToken = this.authToken;
+        // If all credentials have been use, reset credential number
+        this.credentialNum = (this.credentialNum == this.numCredentials) ? 0 : this.credentialNum;
 
-        // If cursor has been exhausted
-        if(!(await this.authCredList.hasNext())) {
-            await this.authCredList.rewind();
-        }
+        // Changing current auth credentials to the next available one
+        this.currentUser = this.authCredList[this.credentialNum];
+        this.currentUser.authToken = this.authToken;
+        this.credentialNum++;
     }
 
     /**
@@ -107,7 +110,15 @@ export class AuthService extends DatabaseService {
         const creds = { csrfToken: csrfToken, cookie: cookies };
 
         // Writing credentials to database and returning whether write was successful or not
-        return (await this.write(creds, this.credTable));
+        const isWritten = await this.write(creds, this.credTable);
+        
+        // If write was successful
+        if(isWritten) {
+            // Reinitializing credentials
+            await this.init();
+        }
+
+        return isWritten;
     }
 
     /**

@@ -50,8 +50,15 @@ export class FetcherService {
         auth: boolean = true,
         guestCreds?: GuestCredentials
     ): Promise<any> {
+        var creds: any;
+
+        // Getting credentials
+        if(auth) creds = await (await AuthService.getInstance()).getAuthCredentials();
+        else creds = await (await AuthService.getInstance()).getGuestCredentials();
+
+        // Fetching data
         return fetch(url, {
-            headers: auth ? authorizedHeader(await (await AuthService.getInstance()).getAuthCredentials()) : unauthorizedHeader(guestCreds ? guestCreds : await (await AuthService.getInstance()).getGuestCredentials()),
+            headers: auth ? authorizedHeader(creds) : unauthorizedHeader(guestCreds ? guestCreds : creds),
             method: method ? method : HttpMethods.GET,
             body: body
         })
