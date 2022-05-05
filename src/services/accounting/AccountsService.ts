@@ -6,16 +6,10 @@ import { FetcherService } from '../FetcherService';
 
 // TYPES
 import { LoginCredentials } from '../../types/Authentication';
-import {
-    HttpMethods,
-    Response
-} from '../../types/HTTP';
+import { HttpMethods, Response } from '../../types/HTTP';
 
 // HELPERS
-import {
-    generateLoginFlow,
-    LoginFlows
-} from "./LoginFlows";
+import { generateLoginFlow, LoginFlows } from "./LoginFlows";
 
 /**
  * The service that handles all operations related to accounting

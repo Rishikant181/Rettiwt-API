@@ -8,21 +8,13 @@ import { AuthService } from './AuthService';
 import { CacheService } from './data/CacheService';
 
 // TYPES
-import { User } from '../types/UserAccount';
-import { Tweet } from '../types/Tweet';
 import { HttpMethods } from "../types/HTTP";
 import { AuthCredentials, GuestCredentials } from "../types/Authentication";
 
 // HELPERS
-import {
-    authorizedHeader,
-    unauthorizedHeader
-} from './helper/Requests'
+import { authorizedHeader, unauthorizedHeader } from './helper/Requests'
 import { handleHTTPError } from './helper/Parser';
-import {
-    toUser,
-    toTweet
-} from './helper/Deserializers';
+import { toUser, toTweet } from './helper/Deserializers';
 
 // CONFIG
 import { config } from '../config/env';

@@ -3,14 +3,8 @@
 // CUSTOM LIBS
 
 // TYPES
-import {
-    UserID,
-    User
-} from '../../types/UserAccount';
-import {
-    Tweet,
-    TweetEntities
-} from '../../types/Tweet';
+import { UserID, User } from '../../types/UserAccount';
+import { Tweet, TweetEntities } from '../../types/Tweet';
 
 /**
  * @returns UserID object containing the id details of the user

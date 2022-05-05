@@ -15,10 +15,7 @@ import { Tweet } from '../types/TweetTypes';
 
 // RESOLVERS
 import { resolveUserDetails } from '../resolvers/UserSpecific';
-import {
-    resolveTweet,
-    resolveTweets
-} from '../resolvers/TweetSpecific';
+import { resolveTweet, resolveTweets } from '../resolvers/TweetSpecific';
 import { resolveUserLogin } from '../resolvers/AccountSpecific';
 
 export const rootQuery = new GraphQLObjectType({

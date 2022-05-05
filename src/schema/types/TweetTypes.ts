@@ -12,10 +12,7 @@ import {
 // CUSTOM LIBS
 
 // TYPES
-import {
-    User,
-    UserID
-} from './UserTypes';
+import { User } from './UserTypes';
 
 // RESOLVERS
 import {
@@ -26,9 +23,7 @@ import {
     resolveTweetRetweeters
 } from '../resolvers/TweetSpecific';
 
-import {
-    resolveUserDetails
-} from "../resolvers/UserSpecific";
+import { resolveUserDetails } from "../resolvers/UserSpecific";
 
 
 export const TweetTokens = new GraphQLObjectType({

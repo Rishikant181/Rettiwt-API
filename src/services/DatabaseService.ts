@@ -1,5 +1,5 @@
 // PACKAGE LIBS
-import {  MongoClient } from "mongodb";
+import { MongoClient } from "mongodb";
 
 /**
  * @summary Handles reading and writing of data from and to database.

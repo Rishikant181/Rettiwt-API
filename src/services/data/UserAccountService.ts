@@ -15,15 +15,8 @@ import {
     userFollowersUrl,
     userLikesUrl
 } from '../helper/Requests';
-import {
-    extractUserAccountDetails,
-    extractUserFollow,
-    extractUserLikes
-} from '../helper/Extractors';
-import {
-    toUser,
-    toTweet
-} from '../helper/Deserializers';
+import { extractUserAccountDetails, extractUserFollow, extractUserLikes } from '../helper/Extractors';
+import { toUser, toTweet } from '../helper/Deserializers';
 
 /**
  * A service that deals with fetching of data related to user account

@@ -1,10 +1,7 @@
 // CUSTOM LIBS
 
 // TYPES
-import {
-    LoginCredentials,
-    LoginFlow
-} from '../../types/Authentication';
+import { LoginCredentials, LoginFlow } from '../../types/Authentication';
 
 /**
  * @summary Stores the different flows involved in login process

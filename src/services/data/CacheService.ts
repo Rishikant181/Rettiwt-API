@@ -1,18 +1,12 @@
 // PACKAGE LIBS
-import {
-    InsertOneResult,
-    ObjectId
-} from "mongodb";
+import { InsertOneResult, ObjectId } from "mongodb";
 
 // CUSTOM LIBS
 import { DatabaseService } from '../DatabaseService';
 import { config } from '../../config/env';
 import { User } from '../../types/UserAccount';
 import { Tweet } from '../../types/Tweet';
-import {
-    dataToList,
-    findJSONKey
-} from '../helper/Parser';
+import { dataToList, findJSONKey } from '../helper/Parser';
 
 /**
  * @summary Handles reading and writing of data from and to cache.

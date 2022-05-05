@@ -1,10 +1,5 @@
 // PACKAGE LIBS
 import fetch from 'node-fetch';
-import {
-    WithId, 
-    Document,
-    FindCursor
-} from 'mongodb'
 
 // CUSTOM LIBS
 
@@ -13,16 +8,10 @@ import { HttpMethods } from '../types/HTTP';
 import { DatabaseService } from './DatabaseService';
 
 // TYPES
-import {
-    GuestCredentials,
-    AuthCredentials
-} from '../types/Authentication';
+import { GuestCredentials, AuthCredentials } from '../types/Authentication';
 
 // HELPERS
-import {
-    guestTokenUrl,
-    blankHeader
-} from './helper/Requests';
+import { guestTokenUrl, blankHeader } from './helper/Requests';
 import { parseCookies } from './helper/Parser';
 
 // CONFIGS

@@ -1,20 +1,13 @@
 // CUSTOM LIBS
-import {
-    FetcherService
-} from "../FetcherService";
+import { FetcherService } from "../FetcherService";
 
 // TYPES
 import { Response } from '../../types/HTTP';
-import {
-    TweetFilter,
-    Tweet
-} from "../../types/Tweet";
-import {
-    User
-} from "../../types/UserAccount";
+import { TweetFilter, Tweet } from "../../types/Tweet";
+import { User } from "../../types/UserAccount";
 import { CursoredData } from '../../types/Service';
 
-/* HELPERS */
+// HELPERS
 import {
     tweetsUrl,
     tweetDetailsUrl,
@@ -29,10 +22,7 @@ import {
     extractTweetRetweeters,
     extractTweets
 } from "../helper/Extractors";
-import {
-    toUser,
-    toTweet
-} from '../helper/Deserializers';
+import { toUser, toTweet } from '../helper/Deserializers';
 
 /**
  * A service that deals with fetching of data related to tweets

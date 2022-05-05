@@ -21,7 +21,6 @@ export async function resolveUserDetails(userName: string, id: string): Promise<
 
     // If user name is supplied
     if (userName) {
-        // Getting the data
         res = await userService.getUserAccountDetails(userName);
     }
     // If id is supplied
