@@ -24,3 +24,12 @@ export type AuthCredentials = {
     csrfToken: string,
     cookie: string
 };
+
+/**
+ * @summary Stores the actual login credentials to a Twitter account
+ */
+export type LoginCredentials = {
+    email: string,
+    userName: string,
+    password: string
+}

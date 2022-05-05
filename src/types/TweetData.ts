@@ -7,8 +7,7 @@ import { UserID } from './UserAccountData';
 /**
  * @summary Stores the filter to be used for fetching tweets from TwitterAPI
  */
-export class TweetFilter {
-    // MEMBER DATA
+export type TweetFilter = {
     words: string[];                                                            // To store the list of words to search
     hashtags: string[];                                                         // To store the list of hashtags to seach
     fromUsers: string[];                                                        // To store the list of users who made the tweet
@@ -18,25 +17,7 @@ export class TweetFilter {
     endDate: string;                                                            // To store the ending date to search tweets
     quoted: string;                                                             // To store the id of the tweet which is quoted
     count: number;                                                              // To store the number of tweets to fetch
-
-    // MEMBER METHODS
-    /**
-     * @param filter A json object containing the different type of filters to use
-     */
-    constructor(filter: {
-        words: string[],
-        hashtags: string[],
-        fromUsers: string[],
-        toUsers: string[],
-        mentions: string[],
-        startDate: string,
-        endDate: string,
-        quoted: string,
-        count: number
-    }) {
-        Object.assign(this, filter);
-    }
-}
+};
 
 /**
  * @summary Stores the different types of tweet elements like urls, media, mentions, hashtags, etc

@@ -44,7 +44,7 @@ export async function resolveTweets(filter: any): Promise<any[]> {
     var batchSize: number = 20;                                                 // To store the batchsize to use
 
     // Preparing the filter to use
-    const tweetFilter = new TweetFilter(filter);
+    const tweetFilter: TweetFilter = filter;
 
     // Checking if the given tweet filter is valid or not
     if(!(filter.fromUsers || filter.toUsers || filter.words || filter.hashtags || filter.mentions || filter.quoted)) {

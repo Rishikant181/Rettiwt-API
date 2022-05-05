@@ -1,7 +1,10 @@
 // CUSTOM LIBS
 
 // TYPES
-import { LoginFlow } from '../../types/Authentication';
+import {
+    LoginCredentials,
+    LoginFlow
+} from '../../types/Authentication';
 
 /**
  * @summary Stores the different flows involved in login process
@@ -58,21 +61,15 @@ const LoginFlowsContent = {
  * @param flowToken The flow token from the previous flow
  * @param flowName The required flow name
  */
-export function generateLoginFlow(
-    email: string,
-    userName: string,
-    password: string,
-    flowToken: string,
-    flowName: LoginFlows
-): LoginFlow {
+export function generateLoginFlow(cred: LoginCredentials, flowToken: string, flowName: LoginFlows): LoginFlow {
     // Getting the requested flow
     var flow = LoginFlowsContent[flowName];
 
     // Replacing the provided values into the flow body
     flow['body'] = flow['body'].replace("<flow_token>", flowToken);
-    flow['body'] = flow['body'].replace("<email>", email);
-    flow['body'] = flow['body'].replace("<user_name>", userName);
-    flow['body'] = flow['body'].replace("<password>", password);
+    flow['body'] = flow['body'].replace("<email>", cred.email);
+    flow['body'] = flow['body'].replace("<user_name>", cred.userName);
+    flow['body'] = flow['body'].replace("<password>", cred.password);
 
     flow['body'] = flow['body'];
 

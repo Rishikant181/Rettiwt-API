@@ -69,7 +69,7 @@ export const rootQuery = new GraphQLObjectType({
                 userName: { type: GraphQLString },
                 password: { type: GraphQLString }
             },
-            resolve: (parent, args) => resolveUserLogin(args.email, args.userName, args.password)
+            resolve: (parent, args) => resolveUserLogin(args)
         }
     }
 })

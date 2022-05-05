@@ -5,6 +5,9 @@
 // SERVICES
 import { AccountsService } from '../../services/accounting/AccountsService';
 
+// TYPES
+import { LoginCredentials } from '../../types/Authentication';
+
 // Initializing the service used for handling accounting operations
 var accountsService = new AccountsService();
 
@@ -14,9 +17,9 @@ var accountsService = new AccountsService();
  * @param userName The username of the user of the Twitter account
  * @param password The password to the Twitter account
  */
-export async function resolveUserLogin(email: string, userName: string, password: string): Promise<boolean> {
+export async function resolveUserLogin(cred: LoginCredentials): Promise<boolean> {
     // Logging into the given account
-    return accountsService.login(email, userName, password)
+    return accountsService.login(cred)
     .then(res => {
         // If error
         if(res.error) throw res.error        
