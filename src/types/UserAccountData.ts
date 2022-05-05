@@ -1,44 +1,18 @@
 // This file contains various objects for handling data related to User Account
 
-// CUSTOM LIBS
-import { Deserializable } from "./Data";
-
 /**
  * @summary Stores the UID of a user
  */
-export class UserID implements Deserializable {
-    // MEMBER DATA
+export type UserID = {
     id: string;                                                             // To store the internal rest id of user account
     userName: string;                                                       // To store the screen name of the user
     fullName: string;                                                       // To store the actual name of the user
-
-    // MEMEBER METHODS
-    /**
-     * @summary Stores the id of the user in this object
-     * @returns UserID object containing the id details of the user
-     * @param data Has the following params:
-     * @param id The rest id of the user
-     * @param userName The screen name of the user
-     * @param fullName The full name of the user
-     */
-    deserialize(data: {
-        id: string,
-        userName: string,
-        fullName: string
-    }): this {
-        this.id = data.id;
-        this.userName = data.userName;
-        this.fullName = data.fullName;
-        
-        return this;
-    }
 }
 
 /**
  * @summary Stores the complete details of the given user's account
  */
-export class User implements Deserializable {
-    // MEMBER DATA
+export type User = {
     user: UserID;                                                           // To store the internal rest id of user account
     createdAt: string;                                                      // To store the time when the account was created
     description: string;                                                    // To store the account description
@@ -51,31 +25,4 @@ export class User implements Deserializable {
     pinnedTweet: string;                                                    // To store the id of tweet that is pinned in the account
     profileBanner: string;                                                  // To store the url to the profile's banner
     profileImage: string;                                                   // To store the url to the profile's image
-
-    // MEMBER METHODS
-    /**
-     * @summary Stores the raw user data from the response received from TwitterAPI
-     * @returns A User object containing the user details
-     * @param data The raw json data
-     */
-    deserialize(data: any): this {
-        this.user = new UserID().deserialize({
-            id: data['rest_id'],
-            userName: data['legacy']['screen_name'],
-            fullName: data['legacy']['name']
-        })
-        this.createdAt = data['legacy']['created_at'];
-        this.description = data['legacy']['description'];
-        this.isVerified = data['legacy']['verified'];
-        this.favouritesCount = data['legacy']['favourites_count'];
-        this.followersCount = data['legacy']['followers_count'];
-        this.followingsCount = data['legacy']['friends_count'];
-        this.statusesCount = data['legacy']['statuses_count'];
-        this.location = data['legacy']['location'];
-        this.pinnedTweet = data['legacy']['pinned_tweet_ids_str'][0];
-        this.profileBanner = data['legacy']['profile_banner_url'];
-        this.profileImage = data['legacy']['profile_image_url_https'];
-        
-        return this;
-    }
 }
