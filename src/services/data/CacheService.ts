@@ -1,69 +1,28 @@
 // PACKAGE LIBS
-import {
-    MongoClient,
-    InsertOneResult,
-    ObjectId
-} from "mongodb";
+import { InsertOneResult, ObjectId } from "mongodb";
 
 // CUSTOM LIBS
-import { config } from '../config/env';
-import { User } from '../schema/types/UserAccountData';
-import { Tweet } from '../schema/types/TweetData';
-import {
-    dataToList,
-    findJSONKey
-} from './helper/Parser';
+import { DatabaseService } from '../DatabaseService';
+import { config } from '../../config/env';
+import { User } from '../../types/UserAccount';
+import { Tweet } from '../../types/Tweet';
+import { dataToList, findJSONKey } from '../helper/Parser';
 
 /**
  * @summary Handles reading and writing of data from and to cache.
  * 
  * **Note**: To be able to CacheService, the data to be cached must of a unique "id" field.
  */
-export class CacheService {
+export class CacheService extends DatabaseService {
     // MEMBER DATA
-    private client: MongoClient;                                        // To store the connection to mongodb database
-    private connUrl: string;                                            // To store the connection url
-    private dbName: string;                                             // To store the name of database
-    private dbIndex: string;                                            // To store the name of the index table of db
-
+    private update: boolean;                                            // Whether to update existing data or not
+    
     // MEMBER METHODS
     constructor() {
-        // Initialising the connection url to database server
-        this.connUrl = `mongodb://${process.env.CACHE_DB_HOST}:${process.env.CACHE_DB_PORT}`;
+        super(config['server']['db']['databases']['cache']['name'], config['server']['db']['databases']['cache']['index']);
 
-        // Initialising database and index name
-        this.dbName = config['server']['db']['databases']['cache']['name'];
-        this.dbIndex = config['server']['db']['databases']['cache']['index'];
-
-        // Creating connection to database
-        this.client = new MongoClient(this.connUrl);
-    }
-
-    /**
-     * @summary Connects to the database
-     * @returns Whether connection was successful or not
-     */
-    private async connectDB(): Promise<boolean> {
-        var success: boolean = false;                                           // To store whether connection to db successful or not
-
-        // Trying to connect to database
-        try {
-            // Connecting to db
-            await this.client.connect();
-
-            // Verifying connection
-            await this.client.db(this.dbName).command({ ping: 1 });
-
-            success = true;
-        }
-        // If connecting to database failed
-        catch (err) {
-            console.log("Failed to connect to caching server");
-            console.log(err);
-        }
-
-        // Returning success or failure
-        return Promise.resolve(success);
+        // Initialising member data
+        this.update = false;
     }
 
     /**
@@ -109,7 +68,7 @@ export class CacheService {
      * @param data The input data to store
      * @param update Whether to update the store data or not
      */
-    async write(data: User | User[] | Tweet | Tweet[], update = false): Promise<boolean> {
+    async write(data: User | User[] | Tweet | Tweet[]): Promise<boolean> {
         // Converting the data to a list of data
         data = dataToList(data);
 
@@ -121,11 +80,11 @@ export class CacheService {
                 var cached = await this.isCached(findJSONKey(item, 'id'));
 
                 // If data already exists in cache and no update required, skip
-                if (cached && update == false) {
+                if (cached && this.update == false) {
                     continue;
                 }
                 // If data already exists in cache and update required
-                else if (cached && update) {
+                else if (cached && this.update) {
                     // Getting the object id of data from index
                     var objectId = (await this.client.db(this.dbName).collection(this.dbIndex).findOne({ "id": findJSONKey(item, "id") }))?._id.toHexString();
                     
@@ -172,21 +131,6 @@ export class CacheService {
         }
         else {
             return null;
-        }
-    }
-
-    /**
-     * @summary Clears the cache completely, including all indexes
-     * @returns Whether clearing was successful or not
-     */
-    async clear(): Promise<boolean> {
-        // If connection to database successful
-        if (await this.connectDB()) {
-            // Clearing the cache
-            return await this.client.db(this.dbName).dropDatabase();
-        }
-        else {
-            return false;
         }
     }
 }

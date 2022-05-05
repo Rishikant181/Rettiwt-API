@@ -1,7 +1,5 @@
 // PACKAGE LIBS
-import {
-    GraphQLSchema
-} from 'graphql';
+import { GraphQLSchema } from 'graphql';
 
 // CUSTOM LIBS
 import { rootQuery } from './queries/RootQuery';

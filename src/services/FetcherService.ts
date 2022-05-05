@@ -1,47 +1,23 @@
 // PACKAGE LIBS
-import fetch, { Response } from "node-fetch";
+import fetch from "node-fetch";
 
 // CUSTOM LIBS
 
 // SERVICES
 import { AuthService } from './AuthService';
-import { CacheService } from './CacheService';
+import { CacheService } from './data/CacheService';
 
 // TYPES
-import { User } from '../schema/types/UserAccountData';
-import { Tweet } from '../schema/types/TweetData';
+import { HttpMethods } from "../types/HTTP";
+import { AuthCredentials, GuestCredentials } from "../types/Authentication";
 
 // HELPERS
-import {
-    authorizedHeader, unauthorizedHeader
-} from './helper/Requests'
+import { authorizedHeader, unauthorizedHeader } from './helper/Requests'
+import { handleHTTPError } from './helper/Parser';
+import { toUser, toTweet } from './helper/Deserializers';
 
 // CONFIG
 import { config } from '../config/env';
-
-/**
- * @summary Stores all the different type of http requests
- */
-export enum HttpMethods {
-    POST = "POST",
-    GET = "GET"
-};
-
-/**
- * @summary Stores the different types of http status codes
- */
-enum HttpStatus {
-    BadRequest = 400,
-    Unauthorized = 401,
-    Forbidden = 403,
-    NotFound = 404,
-    MethodNotAllowed = 405,
-    RequestTimeout = 408,
-    TooManyRequests = 429,
-    InternalServerError = 500,
-    BadGateway = 502,
-    ServiceUnavailable = 503
-};
 
 /**
  * @service The base serivice from which all other data services derive their behaviour
@@ -52,7 +28,7 @@ export class FetcherService {
 
     // MEMBER METHODS
     constructor() {
-        this.allowCache = config['server']['db']['enabled'];
+        this.allowCache = config['server']['db']['databases']['cache']['enabled'];
     }
 
     /**
@@ -61,38 +37,33 @@ export class FetcherService {
      * @param method The type of HTTP request being made. Default is GET
      * @param body The content to be sent in the body of the response
      * @param auth Whether to use authenticated requests or not
+     * @param guestCredes Guest credentials to use rather than auto-generated one
      */
     protected async fetchData(
         url: string,
         method: HttpMethods = HttpMethods.GET,
         body: any = null,
-        auth: boolean = true
+        auth: boolean = true,
+        guestCreds?: GuestCredentials
     ): Promise<any> {
+        var creds: AuthCredentials | GuestCredentials;
+
+        // Getting credentials
+        if(auth) creds = await (await AuthService.getInstance()).getAuthCredentials();
+        else creds = await (await AuthService.getInstance()).getGuestCredentials();
+
+        // Fetching data
         return fetch(url, {
-            headers: auth ? authorizedHeader(AuthService.getInstance().getAuthCredentials()) : unauthorizedHeader(await AuthService.getInstance().getGuestCredentials()),
+            headers: auth ? authorizedHeader(creds as AuthCredentials) : unauthorizedHeader(guestCreds ? guestCreds : creds as GuestCredentials),
             method: method ? method : HttpMethods.GET,
             body: body
         })
         // Checking http status
-        .then(res => this.handleHTTPError(res))
-        // Parsing data to json
-        .then(res => res.json())
+        .then(res => handleHTTPError(res))
         // If other unknown error
         .catch((err) => {
             throw err;
         });
-    }
-
-    /**
-     * @summary Throws the appropriate http error after evaluation of the status code of reponse
-     * @param res The response object received from http communication
-     */
-     private handleHTTPError(res: Response): Response {
-        if (res.status != 200 && res.status in HttpStatus) {
-            throw new Error(HttpStatus[res.status])
-        }
-
-        return res;
     }
 
     /**
@@ -107,9 +78,9 @@ export class FetcherService {
 
             // Parsing the extracted data
             //@ts-ignore
-            var users = data.users.map(user => new User().deserialize(user));
+            var users = data.users.map(user => toUser(user));
             //@ts-ignore
-            var tweets = data.tweets.map(tweet => new Tweet().deserialize(tweet));
+            var tweets = data.tweets.map(tweet => toTweet(tweet));
 
             // Caching the data
             cache.write(users);

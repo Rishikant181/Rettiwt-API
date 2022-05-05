@@ -6,4 +6,4 @@
 export enum ValidationErrors {
     InvalidTweetFilter = "Atleast one of fromUsers/toUsers/mentions/hashtags/words argument is required",
     NoUserIdentification = "Either userName or id must be given"
-}
+};
