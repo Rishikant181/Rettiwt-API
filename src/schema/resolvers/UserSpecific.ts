@@ -79,7 +79,7 @@ export async function resolveUserLikes(
         // If data is available
         if (res.success) {
             // Adding fetched followers to list of followers
-            likes = likes.concat(res.data?.tweets);
+            likes = likes.concat(res.data?.list);
 
             // Updating total followers fetched
             total = likes.length;
@@ -131,7 +131,7 @@ export async function resolveUserFollowers(
         // If data is available
         if (res.success) {
             // Adding fetched followers to list of followers
-            followers = followers.concat(res.data?.followers);
+            followers = followers.concat(res.data?.list);
 
             // Updating total followers fetched
             total = followers.length;
@@ -183,7 +183,7 @@ export async function resolveUserFollowing(
         // If data is available
         if (res.success) {
             // Adding fetched following to list of following
-            following = following.concat(res.data?.following);
+            following = following.concat(res.data?.list);
 
             // Updating total following fetched
             total = following.length;

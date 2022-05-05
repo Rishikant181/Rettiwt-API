@@ -3,8 +3,9 @@ import { FetcherService } from '../FetcherService';
 
 /* TYPES */
 import { Response } from '../../types/HTTP'
-import { User } from '../../types/UserAccountData';
-import { Tweet } from '../../types/TweetData';
+import { User } from '../../types/UserAccount';
+import { Tweet } from '../../types/Tweet';
+import { CursoredData } from '../../types/Service';
 
 /* HELPERS */
 import {
@@ -108,11 +109,7 @@ export class UserAccountService extends FetcherService {
      * @param count The batch size of the list
      * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
-    async getUserFollowing(
-        userId: string,
-        count: number,
-        cursor: string
-    ): Promise<Response<{ following: User[], next: string }>> {
+    async getUserFollowing(userId: string, count: number, cursor: string): Promise<Response<CursoredData<User>>> {
         return this.fetchData(userFollowingUrl(userId, count, cursor))
             .then(res => res.json())
             .then(res => {
@@ -127,7 +124,7 @@ export class UserAccountService extends FetcherService {
 
                 return {
                     success: users.length ? true : false,
-                    data: { following: users, next: data.cursor }
+                    data: { list: users, next: data.cursor }
                 };
             })
             // If error
@@ -145,11 +142,7 @@ export class UserAccountService extends FetcherService {
      * @param count The batch size of the list
      * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
-    async getUserFollowers(
-        userId: string,
-        count: number,
-        cursor: string
-    ): Promise<Response<{ followers: User[], next: string }>> {
+    async getUserFollowers(userId: string, count: number, cursor: string): Promise<Response<CursoredData<User>>> {
         /**
          * When fetching list of followers, the official Twitter API seems to be fetching n + 20 followers,
          * where n is the actual required number of followers.
@@ -169,7 +162,7 @@ export class UserAccountService extends FetcherService {
 
                 return {
                     success: users.length ? true : false,
-                    data: { followers: users, next: data.cursor }
+                    data: { list: users, next: data.cursor }
                 };
             })
             // If other run-time error
@@ -187,11 +180,7 @@ export class UserAccountService extends FetcherService {
      * @param count The batch size of the list
      * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
-    async getUserLikes(
-        userId: string,
-        count: number,
-        cursor: string
-    ): Promise<Response<{ tweets: Tweet[], next: string }>> {
+    async getUserLikes(userId: string, count: number, cursor: string): Promise<Response<CursoredData<Tweet>>> {
         return this.fetchData(userLikesUrl(userId, count, cursor))
             .then(res => res.json())
             .then(res => {
@@ -206,7 +195,7 @@ export class UserAccountService extends FetcherService {
 
                 return {
                     success: tweets.length ? true : false,
-                    data: { tweets: tweets, next: data.cursor }
+                    data: { list: tweets, next: data.cursor }
                 };
             })
             // If error

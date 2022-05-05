@@ -6,7 +6,7 @@
 import { TweetService } from '../../services/data/TweetService';
 
 // TYPES
-import { TweetFilter } from '../../types/TweetData';
+import { TweetFilter } from '../../types/Tweet';
 
 // HELPERS
 import { ValidationErrors } from './helper/Validation';
@@ -65,7 +65,7 @@ export async function resolveTweets(filter: any): Promise<any[]> {
         // If data is available
         if (res.success) {
             // Adding fetched tweets to list of tweets
-            tweets = tweets.concat(res.data?.tweets);
+            tweets = tweets.concat(res.data?.list);
 
             // Updating total tweets fetched
             total = tweets.length;
@@ -154,7 +154,7 @@ export async function resolveTweetLikers(
         // If data is available
         if (res.success) {
             // Adding fetched likers to list of likers
-            likers = likers.concat(res.data?.likers);
+            likers = likers.concat(res.data?.list);
 
             // Updating total likers fetched
             total = likers.length;
@@ -206,7 +206,7 @@ export async function resolveTweetRetweeters(
         // If data is available
         if (res.success) {
             // Adding fetched retweeters to list of retweeters
-            retweeters = retweeters.concat(res.data?.retweeters);
+            retweeters = retweeters.concat(res.data?.list);
 
             // Updating total retweeters fetched
             total = retweeters.length;
@@ -251,7 +251,7 @@ export async function resolveTweetReplies(
         // If data is available
         if (res.success) {
             // Adding fetched replies to list of replies
-            replies = replies.concat(res.data?.replies);
+            replies = replies.concat(res.data?.list);
 
             // Updating total replies fetched
             total = replies.length;

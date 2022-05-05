@@ -3,15 +3,16 @@ import {
     FetcherService
 } from "../FetcherService";
 
-//
+// TYPES
 import { Response } from '../../types/HTTP';
 import {
     TweetFilter,
     Tweet
-} from "../../types/TweetData";
+} from "../../types/Tweet";
 import {
     User
-} from "../../types/UserAccountData";
+} from "../../types/UserAccount";
+import { CursoredData } from '../../types/Service';
 
 /* HELPERS */
 import {
@@ -43,10 +44,7 @@ export class TweetService extends FetcherService {
      * @param filter The filter be used for searching the tweets
      * @param cursor The cursor to the next batch of tweets. If blank, first batch is fetched
      */
-    async getTweets(
-        filter: TweetFilter,
-        cursor: string
-    ): Promise<Response<{ tweets: Tweet[], next: string }>> {
+    async getTweets(filter: TweetFilter, cursor: string): Promise<Response<CursoredData<Tweet>>> {
         return this.fetchData(tweetsUrl(filter, cursor))
             .then(res => res.json())
             .then(res => {
@@ -61,7 +59,7 @@ export class TweetService extends FetcherService {
 
                 return {
                     success: tweets.length ? true : false,
-                    data: { tweets: tweets, next: data.cursor }
+                    data: { list: tweets, next: data.cursor }
                 };
             })
             // If error
@@ -121,11 +119,7 @@ export class TweetService extends FetcherService {
      * @param count The batch size of the list
      * @param cursor The cursor to the next batch of users. If blank, first batch is fetched
      */
-    async getTweetLikers(
-        tweetId: string,
-        count: number,
-        cursor: string
-    ): Promise<Response<{ likers: User[], next: string }>> {
+    async getTweetLikers(tweetId: string, count: number, cursor: string): Promise<Response<CursoredData<User>>> {
         return this.fetchData(tweetLikesUrl(tweetId, count, cursor))
             .then(res => res.json())
             .then(res => {
@@ -140,7 +134,7 @@ export class TweetService extends FetcherService {
 
                 return {
                     success: users.length ? true : false,
-                    data: { likers: users, next: data.cursor }
+                    data: { list: users, next: data.cursor }
                 };
             })
             // If other run-time error occured
@@ -158,11 +152,7 @@ export class TweetService extends FetcherService {
      * @param count The batch size of the list
      * @param cursor The cursor to the next batch of users. If blank, first batch is fetched
      */
-    async getTweetRetweeters(
-        tweetId: string,
-        count: number,
-        cursor: string
-    ): Promise<Response<{ retweeters: User[], next: string }>> {
+    async getTweetRetweeters(tweetId: string, count: number, cursor: string): Promise<Response<CursoredData<User>>> {
         return this.fetchData(tweetRetweetUrl(tweetId, count, cursor))
             .then(res => res.json())
             .then(res => {
@@ -177,7 +167,7 @@ export class TweetService extends FetcherService {
 
                 return {
                     success: users.length ? true : false,
-                    data: { retweeters: users, next: data.cursor }
+                    data: { list: users, next: data.cursor }
                 };
             })
             // If other run-time error occured
@@ -194,10 +184,7 @@ export class TweetService extends FetcherService {
      * @param tweetId The rest id of the target tweet
      * @param cursor The cursor to the next batch of replies. If blank, first batch is fetched
      */
-    async getTweetReplies(
-        tweetId: string,
-        cursor: string
-    ): Promise<Response<{ replies: Tweet[], next: string }>> {
+    async getTweetReplies(tweetId: string, cursor: string): Promise<Response<CursoredData<Tweet>>> {
         return this.fetchData(tweetRepliesUrl(tweetId, cursor))
             .then(res => res.json())
             .then(res => {
@@ -212,7 +199,7 @@ export class TweetService extends FetcherService {
 
                 return {
                     success: tweets.length ? true : false,
-                    data: { replies: tweets, next: data.cursor }
+                    data: { list: tweets, next: data.cursor }
                 };
             })
             // If other run-time error occured

@@ -1,8 +1,7 @@
 // This file contains various objects related to handling of Tweets made by a user
 
 // CUSTOM LIBS
-import { Deserializable } from "./Data";
-import { UserID } from './UserAccountData';
+import { UserID } from './UserAccount';
 
 /**
  * @summary Stores the filter to be used for fetching tweets from TwitterAPI

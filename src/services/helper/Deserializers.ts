@@ -6,11 +6,11 @@
 import {
     UserID,
     User
-} from '../../types/UserAccountData';
+} from '../../types/UserAccount';
 import {
     Tweet,
     TweetEntities
-} from '../../types/TweetData';
+} from '../../types/Tweet';
 
 /**
  * @returns UserID object containing the id details of the user

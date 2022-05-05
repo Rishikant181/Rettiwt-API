@@ -7,8 +7,8 @@ import {
 // CUSTOM LIBS
 import { DatabaseService } from '../DatabaseService';
 import { config } from '../../config/env';
-import { User } from '../../types/UserAccountData';
-import { Tweet } from '../../types/TweetData';
+import { User } from '../../types/UserAccount';
+import { Tweet } from '../../types/Tweet';
 import {
     dataToList,
     findJSONKey

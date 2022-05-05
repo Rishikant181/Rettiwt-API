@@ -1,7 +1,5 @@
 // This file contains various objects for handling data related to HTTP communication
 
-// TODO: Evaluate the error message and generate different error objects for different errors
-
 /**
  * @summary Stores all the different type of http requests
  */

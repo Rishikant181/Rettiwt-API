@@ -1,6 +1,6 @@
 // This file contains various helper method for operations related to HTTP requests sent to twitter
 
-import { TweetFilter } from "../../types/TweetData";
+import { TweetFilter } from "../../types/Tweet";
 
 // URLS
 

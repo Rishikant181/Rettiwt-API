@@ -8,8 +8,8 @@ import { AuthService } from './AuthService';
 import { CacheService } from './data/CacheService';
 
 // TYPES
-import { User } from '../types/UserAccountData';
-import { Tweet } from '../types/TweetData';
+import { User } from '../types/UserAccount';
+import { Tweet } from '../types/Tweet';
 import { HttpMethods } from "../types/HTTP";
 import { AuthCredentials, GuestCredentials } from "../types/Authentication";
 
