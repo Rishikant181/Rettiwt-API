@@ -65,13 +65,13 @@ export async function resolveTweets(filter: any): Promise<any[]> {
         // If data is available
         if (res.success) {
             // Adding fetched tweets to list of tweets
-            tweets = tweets.concat(res.data.tweets);
+            tweets = tweets.concat(res.data?.tweets);
 
             // Updating total tweets fetched
             total = tweets.length;
 
             // Getting cursor to next batch
-            next = res.data.next
+            next = res.data?.next!;
         }
         // If no more data is available
         else {
@@ -154,13 +154,13 @@ export async function resolveTweetLikers(
         // If data is available
         if (res.success) {
             // Adding fetched likers to list of likers
-            likers = likers.concat(res.data.likers);
+            likers = likers.concat(res.data?.likers);
 
             // Updating total likers fetched
             total = likers.length;
 
             // Getting cursor to next batch
-            next = res.data.next
+            next = res.data?.next!;
         }
         // If no more data is available
         else {
@@ -206,13 +206,13 @@ export async function resolveTweetRetweeters(
         // If data is available
         if (res.success) {
             // Adding fetched retweeters to list of retweeters
-            retweeters = retweeters.concat(res.data.retweeters);
+            retweeters = retweeters.concat(res.data?.retweeters);
 
             // Updating total retweeters fetched
             total = retweeters.length;
 
             // Getting cursor to next batch
-            next = res.data.next
+            next = res.data?.next!;
         }
         // If no more data is available
         else {
@@ -251,13 +251,13 @@ export async function resolveTweetReplies(
         // If data is available
         if (res.success) {
             // Adding fetched replies to list of replies
-            replies = replies.concat(res.data.replies);
+            replies = replies.concat(res.data?.replies);
 
             // Updating total replies fetched
             total = replies.length;
 
             // Getting cursor to next batch
-            next = res.data.next
+            next = res.data?.next!;
         }
         // If no more data is available
         else {

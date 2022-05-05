@@ -79,13 +79,13 @@ export async function resolveUserLikes(
         // If data is available
         if (res.success) {
             // Adding fetched followers to list of followers
-            likes = likes.concat(res.data.tweets);
+            likes = likes.concat(res.data?.tweets);
 
             // Updating total followers fetched
             total = likes.length;
 
             // Getting cursor to next batch
-            next = res.data.next
+            next = res.data?.next!;
         }
         // If no more data is available
         else {
@@ -131,13 +131,13 @@ export async function resolveUserFollowers(
         // If data is available
         if (res.success) {
             // Adding fetched followers to list of followers
-            followers = followers.concat(res.data.followers);
+            followers = followers.concat(res.data?.followers);
 
             // Updating total followers fetched
             total = followers.length;
 
             // Getting cursor to next batch
-            next = res.data.next
+            next = res.data?.next!;
         }
         // If no more data is available
         else {
@@ -183,13 +183,13 @@ export async function resolveUserFollowing(
         // If data is available
         if (res.success) {
             // Adding fetched following to list of following
-            following = following.concat(res.data.following);
+            following = following.concat(res.data?.following);
 
             // Updating total following fetched
             total = following.length;
 
             // Getting cursor to next batch
-            next = res.data.next
+            next = res.data?.next!;
         }
         // If no more data is available
         else {

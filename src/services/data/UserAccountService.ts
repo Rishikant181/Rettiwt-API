@@ -47,18 +47,17 @@ export class UserAccountService extends FetcherService {
                 // Parsing data
                 var user = new User().deserialize(data.required[0]);
                 
-                return new Response<User>(
-                    true,
-                    user
-                );
+                return {
+                    success: true,
+                    data: user
+                };
             })
             // If error
             .catch(err => {
-                return new Response<User>(
-                    false,
-                    {},
-                    err
-                );
+                return {
+                    success: false,
+                    error: err
+                };
             });
     }
 
@@ -72,10 +71,10 @@ export class UserAccountService extends FetcherService {
 
         // If data exists in cache
         if(cachedData) {
-            return new Response<User>(
-                true,
-                cachedData
-            );
+            return {
+                success: true,
+                data: cachedData
+            };
         }
 
         return this.fetchData(userAccountByIdUrl(restId), undefined, undefined, false)
@@ -90,18 +89,17 @@ export class UserAccountService extends FetcherService {
                 // Parsing data
                 var user = new User().deserialize(data.required[0]);
                 
-                return new Response<User>(
-                    true,
-                    user
-                );
+                return {
+                    success: true,
+                    data: user
+                };
             })
             // If error
             .catch(err => {
-                return new Response<User>(
-                    false,
-                    {},
-                    err
-                );
+                return {
+                    success: false,
+                    error: err
+                };
             });
     }
 
@@ -128,18 +126,17 @@ export class UserAccountService extends FetcherService {
                 // Parsing data
                 var users = data.required.map(item => new User().deserialize(item));
 
-                return new Response<{ following: User[], next: string }>(
-                    users.length ? true : false,
-                    { following: users, next: data.cursor }
-                );
+                return {
+                    success: users.length ? true : false,
+                    data: { following: users, next: data.cursor }
+                };
             })
             // If error
             .catch(err => {
-                return new Response<{ following: User[], next: string }>(
-                    false,
-                    { following: [], next: '' },
-                    err
-                )
+                return {
+                    success: false,
+                    error: err
+                }
             });
     }
 
@@ -171,18 +168,17 @@ export class UserAccountService extends FetcherService {
                 // Parsing data
                 var users = data.required.map(item => new User().deserialize(item));
 
-                return new Response<{ followers: User[], next: string }>(
-                    users.length ? true : false,
-                    { followers: users, next: data.cursor }
-                );
+                return {
+                    success: users.length ? true : false,
+                    data: { followers: users, next: data.cursor }
+                };
             })
             // If other run-time error
             .catch(err => {
-                return new Response<{ followers: User[], next: string }>(
-                    false,
-                    { followers: [], next: '' },
-                    err
-                );
+                return {
+                    success: false,
+                    error: err
+                };
             });
     }
 
@@ -209,18 +205,17 @@ export class UserAccountService extends FetcherService {
                 // Parsing data
                 var tweets = data.required.map(item => new Tweet().deserialize(item));
 
-                return new Response<{ tweets: Tweet[], next: string }>(
-                    tweets.length ? true : false,
-                    { tweets: tweets, next: data.cursor }
-                );
+                return {
+                    success: tweets.length ? true : false,
+                    data: { tweets: tweets, next: data.cursor }
+                };
             })
             // If error
             .catch(err => {
-                return new Response<{ tweets: Tweet[], next: string }>(
-                    false,
-                    { tweets: [], next: '' },
-                    err
-                );
+                return {
+                    success: false,
+                    error: err
+                };
             });
     }
 };

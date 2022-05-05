@@ -38,23 +38,10 @@ export enum Errors {
 
 /**
  * @summary Stores the response as returned by the services.
- * This is a generic class and the type supplied is the type of data that this reponse object stores in it's data field
+ * This is a generic type and the type supplied is the type of data that this reponse object stores in it's data field
  */
-export class Response<Type> {
-    // MEMBER DATA
+export type Response<Type> = {
     success: boolean;                                                       // To store whether success or failure
-    data: Type;                                                             // To store the data received
+    data?: Type;                                                            // To store the data received
     error?: Error;                                                          // To store error details, if any
-
-    // MEMBER METHODS
-    /**
-     * @param success Whether the action was successful or not
-     * @param error Stores error, if any
-     * @param data Any response data that is to be included in the response
-     */
-    constructor(success: boolean, data: any, error?: Error) {
-        this.success = success;
-        this.error = error;
-        this.data = data;
-    }
 }
