@@ -58,7 +58,11 @@ export function toTweetEntities(data: any): TweetEntities {
     // Extracting user mentions
     if(data['user_mentions']) {
         for(var user of data['user_mentions']) {
-            entities.mentionedUsers.push(toUserID(user));
+            entities.mentionedUsers.push(toUserID({
+                id: user['id_str'],
+                userName: user['screen_name'],
+                fullName: user['name']
+            }));
         }
     }
 
