@@ -19,6 +19,10 @@ import {
     unauthorizedHeader
 } from './helper/Requests'
 import { handleHTTPError } from './helper/Parser';
+import {
+    toUser,
+    toTweet
+} from './helper/Deserializers';
 
 // CONFIG
 import { config } from '../config/env';
@@ -82,9 +86,9 @@ export class FetcherService {
 
             // Parsing the extracted data
             //@ts-ignore
-            var users = data.users.map(user => new User().deserialize(user));
+            var users = data.users.map(user => toUser(user));
             //@ts-ignore
-            var tweets = data.tweets.map(tweet => new Tweet().deserialize(tweet));
+            var tweets = data.tweets.map(tweet => toTweet(tweet));
 
             // Caching the data
             cache.write(users);

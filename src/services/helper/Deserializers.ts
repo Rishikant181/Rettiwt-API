@@ -16,11 +16,11 @@ import {
  * @returns UserID object containing the id details of the user
  * @param data The raw user data from Twitter API
  */
-export function toUserID(data: any): UserID {
+export function toUserID(data: UserID): UserID {
     return {
-        id: data['rest_id'],
-        userName: data['legacy']['screen_name'],
-        fullName: data['legacy']['name']
+        id: data.id,
+        userName: data.userName,
+        fullName: data.fullName
     };
 }
 
@@ -30,7 +30,11 @@ export function toUserID(data: any): UserID {
  */
 export function toUser(data: any): User {
     return {
-        user: toUserID(data),
+        user: toUserID({
+            id: data['rest_id'],
+            userName: data['legacy']['screen_name'],
+            fullName: data['legacy']['name']
+        }),
         createdAt: data['legacy']['created_at'],
         description: data['legacy']['description'],
         isVerified: data['legacy']['verified'],
@@ -50,7 +54,12 @@ export function toUser(data: any): User {
  * @param data The raw tweet entities data from the response received from TwitterAPI
  */
 export function toTweetEntities(data: any): TweetEntities {
-    var entities: TweetEntities;
+    var entities: TweetEntities = {
+        mentionedUsers: [],
+        urls: [],
+        media: [],
+        hashtags: []
+    };
     
     // Extracting user mentions
     if(data['user_mentions']) {

@@ -2,11 +2,7 @@
 import { FetcherService } from '../FetcherService';
 
 /* TYPES */
-import {
-    Errors,
-    Response
-} from '../../types/HTTP'
-
+import { Response } from '../../types/HTTP'
 import { User } from '../../types/UserAccountData';
 import { Tweet } from '../../types/TweetData';
 
@@ -18,12 +14,15 @@ import {
     userFollowersUrl,
     userLikesUrl
 } from '../helper/Requests';
-
 import {
     extractUserAccountDetails,
     extractUserFollow,
     extractUserLikes
 } from '../helper/Extractors';
+import {
+    toUser,
+    toTweet
+} from '../helper/Deserializers';
 
 /**
  * A service that deals with fetching of data related to user account
@@ -45,7 +44,7 @@ export class UserAccountService extends FetcherService {
                 this.cacheData(data);
 
                 // Parsing data
-                var user = new User().deserialize(data.required[0]);
+                var user = toUser(data.required[0]);
                 
                 return {
                     success: true,
@@ -87,7 +86,7 @@ export class UserAccountService extends FetcherService {
                 this.cacheData(data);
 
                 // Parsing data
-                var user = new User().deserialize(data.required[0]);
+                var user = toUser(data.required[0]);
                 
                 return {
                     success: true,
@@ -124,7 +123,7 @@ export class UserAccountService extends FetcherService {
                 this.cacheData(data);
 
                 // Parsing data
-                var users = data.required.map(item => new User().deserialize(item));
+                var users = data.required.map(item => toUser(item));
 
                 return {
                     success: users.length ? true : false,
@@ -166,7 +165,7 @@ export class UserAccountService extends FetcherService {
                 this.cacheData(data);
 
                 // Parsing data
-                var users = data.required.map(item => new User().deserialize(item));
+                var users = data.required.map(item => toUser(item));
 
                 return {
                     success: users.length ? true : false,
@@ -203,7 +202,7 @@ export class UserAccountService extends FetcherService {
                 this.cacheData(data);
 
                 // Parsing data
-                var tweets = data.required.map(item => new Tweet().deserialize(item));
+                var tweets = data.required.map(item => toTweet(item));
 
                 return {
                     success: tweets.length ? true : false,
