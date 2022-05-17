@@ -25,10 +25,14 @@ import { config } from '../config/env';
 export class FetcherService {
     // MEMBER DATA
     private allowCache: boolean;                                            // To store whether caching is enabled or not
+    private userTable: string;                                              // To store the name of the table to cache user data to
+    private tweetTable: string;                                             // To store the name of the table to cache tweets to
 
     // MEMBER METHODS
     constructor() {
         this.allowCache = config['server']['db']['databases']['cache']['enabled'];
+        this.userTable = config['server']['db']['databases']['cache']['tables']['users'];
+        this.tweetTable = config['server']['db']['databases']['cache']['tables']['tweets'];
     }
 
     /**
@@ -83,8 +87,8 @@ export class FetcherService {
             var tweets = data.tweets.map(tweet => toTweet(tweet));
 
             // Caching the data
-            cache.write(users);
-            cache.write(tweets);
+            cache.write(users, this.userTable);
+            cache.write(tweets, this.tweetTable);
         }
     }
 

@@ -12,7 +12,11 @@ export const config = {
                 "cache": {
                     "name": "data-cache",
                     "index": "index",
-                    "enabled": true
+                    "enabled": true,
+                    "tables": {
+                        "users": "users",
+                        "tweets": "tweets"
+                    }
                 }
             }
         }

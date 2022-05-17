@@ -4,8 +4,6 @@ import { InsertOneResult, ObjectId } from "mongodb";
 // CUSTOM LIBS
 import { DatabaseService } from '../DatabaseService';
 import { config } from '../../config/env';
-import { User } from '../../types/UserAccount';
-import { Tweet } from '../../types/Tweet';
 import { dataToList, findJSONKey } from '../helper/Parser';
 
 /**
@@ -29,8 +27,9 @@ export class CacheService extends DatabaseService {
      * @summary Indexes the data inserted into the cache by mapping their id/rest id to their internal Object id and collection name
      * @param res The InsertManyResult from the write operation
      * @param data The data to be indexed
+     * @param table The name of the table in which the given data is cached
      */
-    private async index(res: InsertOneResult<Document>, data: any): Promise<void> {
+    private async index(res: InsertOneResult<Document>, data: any, table: string): Promise<void> {
         var index = [];
 
         // If data insertion failed, skipping indexing
@@ -42,7 +41,7 @@ export class CacheService extends DatabaseService {
         var indexItem = {
             "id": findJSONKey(data, 'id'),
             "_id": new ObjectId(res.insertedId.toHexString()),
-            "collection": data.constructor.name
+            "collection": table
         }
 
         index.push(indexItem);
@@ -66,9 +65,9 @@ export class CacheService extends DatabaseService {
      * @summary Stores the input data into the cache.
      * @returns Whether writing to cache was successful or not
      * @param data The input data to store
-     * @param update Whether to update the store data or not
+     * @param table The name of the table to insert the data into
      */
-    async write(data: User | User[] | Tweet | Tweet[]): Promise<boolean> {
+    async write(data: any, table: string): Promise<boolean> {
         // Converting the data to a list of data
         data = dataToList(data);
 
@@ -89,15 +88,15 @@ export class CacheService extends DatabaseService {
                     var objectId = (await this.client.db(this.dbName).collection(this.dbIndex).findOne({ "id": findJSONKey(item, "id") }))?._id.toHexString();
                     
                     // Updating data in cache
-                    await this.client.db(this.dbName).collection(data[0].constructor.name).updateOne({ "_id": new ObjectId(objectId) }, { $set: item });
+                    await this.client.db(this.dbName).collection(table).updateOne({ "_id": new ObjectId(objectId) }, { $set: item });
                 }
                 // If new data to be added
                 else {
                     // Writing data to cache
-                    var res = await this.client.db(this.dbName).collection(data[0].constructor.name).insertOne(item);
+                    var res = await this.client.db(this.dbName).collection(table).insertOne(item);
 
                     // Indexing the data
-                    this.index(res, item);
+                    this.index(res, item, table);
                 }
             }
 
