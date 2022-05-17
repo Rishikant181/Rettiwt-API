@@ -68,7 +68,7 @@ export class CacheService extends DatabaseService {
      * @param data The input data to store
      * @param update Whether to update the store data or not
      */
-    async write(data: User | User[] | Tweet | Tweet[]): Promise<boolean> {
+    async write(data: any, table: string): Promise<boolean> {
         // Converting the data to a list of data
         data = dataToList(data);
 
@@ -89,12 +89,12 @@ export class CacheService extends DatabaseService {
                     var objectId = (await this.client.db(this.dbName).collection(this.dbIndex).findOne({ "id": findJSONKey(item, "id") }))?._id.toHexString();
                     
                     // Updating data in cache
-                    await this.client.db(this.dbName).collection(data[0].constructor.name).updateOne({ "_id": new ObjectId(objectId) }, { $set: item });
+                    await this.client.db(this.dbName).collection(table).updateOne({ "_id": new ObjectId(objectId) }, { $set: item });
                 }
                 // If new data to be added
                 else {
                     // Writing data to cache
-                    var res = await this.client.db(this.dbName).collection(data[0].constructor.name).insertOne(item);
+                    var res = await this.client.db(this.dbName).collection(table).insertOne(item);
 
                     // Indexing the data
                     this.index(res, item);
