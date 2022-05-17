@@ -4,8 +4,6 @@ import { InsertOneResult, ObjectId } from "mongodb";
 // CUSTOM LIBS
 import { DatabaseService } from '../DatabaseService';
 import { config } from '../../config/env';
-import { User } from '../../types/UserAccount';
-import { Tweet } from '../../types/Tweet';
 import { dataToList, findJSONKey } from '../helper/Parser';
 
 /**
@@ -29,8 +27,9 @@ export class CacheService extends DatabaseService {
      * @summary Indexes the data inserted into the cache by mapping their id/rest id to their internal Object id and collection name
      * @param res The InsertManyResult from the write operation
      * @param data The data to be indexed
+     * @param table The name of the table in which the given data is cached
      */
-    private async index(res: InsertOneResult<Document>, data: any): Promise<void> {
+    private async index(res: InsertOneResult<Document>, data: any, table: string): Promise<void> {
         var index = [];
 
         // If data insertion failed, skipping indexing
@@ -42,7 +41,7 @@ export class CacheService extends DatabaseService {
         var indexItem = {
             "id": findJSONKey(data, 'id'),
             "_id": new ObjectId(res.insertedId.toHexString()),
-            "collection": data.constructor.name
+            "collection": table
         }
 
         index.push(indexItem);
@@ -97,7 +96,7 @@ export class CacheService extends DatabaseService {
                     var res = await this.client.db(this.dbName).collection(table).insertOne(item);
 
                     // Indexing the data
-                    this.index(res, item);
+                    this.index(res, item, table);
                 }
             }
 
