@@ -66,7 +66,7 @@ export class CacheService extends DatabaseService {
      * @summary Stores the input data into the cache.
      * @returns Whether writing to cache was successful or not
      * @param data The input data to store
-     * @param update Whether to update the store data or not
+     * @param table The name of the table to insert the data into
      */
     async write(data: any, table: string): Promise<boolean> {
         // Converting the data to a list of data
