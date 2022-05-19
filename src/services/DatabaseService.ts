@@ -17,6 +17,7 @@ import { MongoClient } from "mongodb";
      * @param index The name of the index table(if any)
      */
     constructor(database: string, index: string) {
+        // Initializing member data
         this.connUrl = `mongodb://${process.env.CACHE_DB_HOST}:${process.env.CACHE_DB_PORT}`;
         this.dbName = database;
         this.dbIndex = index;
@@ -27,9 +28,13 @@ import { MongoClient } from "mongodb";
      * @summary Connects to the database
      */
     protected async connectDB(): Promise<boolean> {
+        // Connecting to db
         return this.client.connect()
+        // Testing connection to database by making a ping to it
         .then(() => this.client.db(this.dbName).command({ ping: 1 }))
+        // If connection successful
         .then(() => true)
+        // If connection failed
         .catch(err => {
             console.log("Failed to connect to database server");            
             throw err;
@@ -43,9 +48,13 @@ import { MongoClient } from "mongodb";
      * @returns Whether write was successful or not
      */
     protected async write(data: any, table: string): Promise<boolean> {
+        // Connecting to db
         return this.connectDB()
+        // Inserting the data into the db
         .then(() => this.client.db(this.dbName).collection(table).insertOne(data))
+        // If insertion successful
         .then(() => true)
+        // If insertion failed
         .catch(err => {
             console.log("Failed to write to database");
             throw err;
@@ -57,9 +66,13 @@ import { MongoClient } from "mongodb";
      * @returns Whether clearing was successful or not
      */
     protected async clear(): Promise<boolean> {
+        // Connecting to db
         return this.connectDB()
+        // Clearing the db
         .then(() => this.client.db(this.dbName).dropDatabase())
+        // If clearing successful
         .then(() => true)
+        // If clearing failed
         .catch(err => {
             console.log("Failed to clear database");
             throw err;
