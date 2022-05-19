@@ -130,18 +130,19 @@ export class AuthService extends DatabaseService {
      * @returns The current authentication credentials. A different credential is returned each time this is invoked
      * @param newCred Whether to get a different credential or the current one
      */
-    async getAuthCredentials(newCred: boolean = true): Promise<{
-        authToken: string,
-        csrfToken: string,
-        cookie: string
-    }> {
+    async getAuthCredentials(newCred: boolean = true): Promise<{ authToken: string, csrfToken: string, cookie: string }> {
         // If new credential is required
         if(newCred) {
             // Changing credentials
-            await this.changeCredentials();
+            return this.changeCredentials()
+            .then(() => this.currentUser)
+            .catch(err => {
+                console.log("Failed to switch to new credentials");
+                throw err;
+            });
         }
-
-        return this.currentUser;
+        // If new credential is not required
+        else return this.currentUser;
     }
 
     /**
@@ -152,7 +153,7 @@ export class AuthService extends DatabaseService {
         // If new guest token is to used
         if(newCred || !this.currentGuest.guestToken) {
             // Fetching guest token from twitter api
-            await fetch(guestTokenUrl(), {
+            return fetch(guestTokenUrl(), {
                 headers: blankHeader({ authToken: this.authToken }),
                 method: HttpMethods.POST,
                 body: null
@@ -163,12 +164,14 @@ export class AuthService extends DatabaseService {
                 this.currentGuest.authToken = this.authToken;
                 //@ts-ignore
                 this.currentGuest.guestToken = data['guest_token'];
+                return this.currentGuest;
             })
             .catch(err => {
+                console.log("Failed to fetch new guest credentials");
                 throw err;
             });
         }
-
-        return this.currentGuest;
+        // If new guest credential is not required
+        else return this.currentGuest;
     }
 }
