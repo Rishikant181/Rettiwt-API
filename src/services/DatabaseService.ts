@@ -33,26 +33,16 @@ import { MongoClient } from "mongodb";
      * @returns Whether connection was successful or not
      */
     protected async connectDB(): Promise<boolean> {
-        var success: boolean = false;                                           // To store whether connection to db successful or not
-
-        // Trying to connect to database
-        try {
-            // Connecting to db
-            await this.client.connect();
-
-            // Verifying connection
-            await this.client.db(this.dbName).command({ ping: 1 });
-
-            success = true;
-        }
-        // If connecting to database failed
-        catch (err) {
-            console.log("Failed to connect to database server");
-            console.log(err);
-        }
-
-        // Returning success or failure
-        return success;
+        return this.client.connect()
+        // Testing connection to database
+        .then(() => this.client.db(this.dbName).command({ ping: 1 }))
+        // If connection successful
+        .then(() => true)
+        // If Connection failed
+        .catch((err) => {
+            console.log("Failed to connect to database server");            
+            return false;
+        });
     }
     
     /**
