@@ -2,13 +2,10 @@
 import { FetcherService } from '../FetcherService';
 
 /* TYPES */
-import {
-    Errors,
-    Response
-} from '../../schema/types/HTTP'
-
-import { User } from '../../schema/types/UserAccountData';
-import { Tweet } from '../../schema/types/TweetData';
+import { Response } from '../../types/HTTP'
+import { User } from '../../types/UserAccount';
+import { Tweet } from '../../types/Tweet';
+import { CursoredData } from '../../types/Service';
 
 /* HELPERS */
 import {
@@ -18,12 +15,8 @@ import {
     userFollowersUrl,
     userLikesUrl
 } from '../helper/Requests';
-
-import {
-    extractUserAccountDetails,
-    extractUserFollow,
-    extractUserLikes
-} from '../helper/Extractors';
+import { extractUserAccountDetails, extractUserFollow, extractUserLikes } from '../helper/Extractors';
+import { toUser, toTweet } from '../helper/Deserializers';
 
 /**
  * A service that deals with fetching of data related to user account
@@ -36,6 +29,7 @@ export class UserAccountService extends FetcherService {
      */
     async getUserAccountDetails(screenName: string): Promise<Response<User>> {
         return this.fetchData(userAccountUrl(screenName), undefined, undefined, false)
+            .then(res => res.json())
             .then(res => {
                 // Extracting data
                 var data = extractUserAccountDetails(res);
@@ -44,21 +38,19 @@ export class UserAccountService extends FetcherService {
                 this.cacheData(data);
 
                 // Parsing data
-                var user = new User().deserialize(data.required[0]);
+                var user = toUser(data.required[0]);
                 
-                return new Response<User>(
-                    true,
-                    new Error(Errors.NoError),
-                    user
-                );
+                return {
+                    success: true,
+                    data: user
+                };
             })
             // If error
             .catch(err => {
-                return new Response<User>(
-                    false,
-                    err,
-                    {},
-                );
+                return {
+                    success: false,
+                    error: err
+                };
             });
     }
 
@@ -72,14 +64,14 @@ export class UserAccountService extends FetcherService {
 
         // If data exists in cache
         if(cachedData) {
-            return new Response<User>(
-                true,
-                new Error(Errors.NoError),
-                cachedData
-            );
+            return {
+                success: true,
+                data: cachedData
+            };
         }
 
         return this.fetchData(userAccountByIdUrl(restId), undefined, undefined, false)
+            .then(res => res.json())
             .then(res => {
                 // Extracting data
                 var data = extractUserAccountDetails(res);
@@ -88,21 +80,19 @@ export class UserAccountService extends FetcherService {
                 this.cacheData(data);
 
                 // Parsing data
-                var user = new User().deserialize(data.required[0]);
+                var user = toUser(data.required[0]);
                 
-                return new Response<User>(
-                    true,
-                    new Error(Errors.NoError),
-                    user
-                );
+                return {
+                    success: true,
+                    data: user
+                };
             })
             // If error
             .catch(err => {
-                return new Response<User>(
-                    false,
-                    err,
-                    {},
-                );
+                return {
+                    success: false,
+                    error: err
+                };
             });
     }
 
@@ -112,12 +102,9 @@ export class UserAccountService extends FetcherService {
      * @param count The batch size of the list
      * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
-    async getUserFollowing(
-        userId: string,
-        count: number,
-        cursor: string
-    ): Promise<Response<{ following: User[], next: string }>> {
+    async getUserFollowing(userId: string, count: number, cursor: string): Promise<Response<CursoredData<User>>> {
         return this.fetchData(userFollowingUrl(userId, count, cursor))
+            .then(res => res.json())
             .then(res => {
                 // Extracting data
                 var data = extractUserFollow(res);
@@ -126,21 +113,19 @@ export class UserAccountService extends FetcherService {
                 this.cacheData(data);
 
                 // Parsing data
-                var users = data.required.map(item => new User().deserialize(item));
+                var users = data.required.map(item => toUser(item));
 
-                return new Response<{ following: User[], next: string }>(
-                    users.length ? true : false,
-                    new Error(Errors.NoError),
-                    { following: users, next: data.cursor }
-                );
+                return {
+                    success: users.length ? true : false,
+                    data: { list: users, next: data.cursor }
+                };
             })
             // If error
             .catch(err => {
-                return new Response<{ following: User[], next: string }>(
-                    false,
-                    err,
-                    { following: [], next: '' }
-                )
+                return {
+                    success: false,
+                    error: err
+                }
             });
     }
 
@@ -150,17 +135,14 @@ export class UserAccountService extends FetcherService {
      * @param count The batch size of the list
      * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
-    async getUserFollowers(
-        userId: string,
-        count: number,
-        cursor: string
-    ): Promise<Response<{ followers: User[], next: string }>> {
+    async getUserFollowers(userId: string, count: number, cursor: string): Promise<Response<CursoredData<User>>> {
         /**
          * When fetching list of followers, the official Twitter API seems to be fetching n + 20 followers,
          * where n is the actual required number of followers.
          * So changing count to count - 20, fixes fetching more than required number of follower
          */
         return this.fetchData(userFollowersUrl(userId, (count > 20) ? (count - 20) : count, cursor))
+            .then(res => res.json())
             .then(res => {
                 // Extracting data
                 var data = extractUserFollow(res);
@@ -169,21 +151,19 @@ export class UserAccountService extends FetcherService {
                 this.cacheData(data);
 
                 // Parsing data
-                var users = data.required.map(item => new User().deserialize(item));
+                var users = data.required.map(item => toUser(item));
 
-                return new Response<{ followers: User[], next: string }>(
-                    users.length ? true : false,
-                    new Error(Errors.NoError),
-                    { followers: users, next: data.cursor }
-                );
+                return {
+                    success: users.length ? true : false,
+                    data: { list: users, next: data.cursor }
+                };
             })
             // If other run-time error
             .catch(err => {
-                return new Response<{ followers: User[], next: string }>(
-                    false,
-                    err,
-                    { followers: [], next: '' }
-                );
+                return {
+                    success: false,
+                    error: err
+                };
             });
     }
 
@@ -193,12 +173,9 @@ export class UserAccountService extends FetcherService {
      * @param count The batch size of the list
      * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
-    async getUserLikes(
-        userId: string,
-        count: number,
-        cursor: string
-    ): Promise<Response<{ tweets: Tweet[], next: string }>> {
+    async getUserLikes(userId: string, count: number, cursor: string): Promise<Response<CursoredData<Tweet>>> {
         return this.fetchData(userLikesUrl(userId, count, cursor))
+            .then(res => res.json())
             .then(res => {
                 // Extracting data
                 var data = extractUserLikes(res);
@@ -207,21 +184,19 @@ export class UserAccountService extends FetcherService {
                 this.cacheData(data);
 
                 // Parsing data
-                var tweets = data.required.map(item => new Tweet().deserialize(item));
+                var tweets = data.required.map(item => toTweet(item));
 
-                return new Response<{ tweets: Tweet[], next: string }>(
-                    tweets.length ? true : false,
-                    new Error(Errors.NoError),
-                    { tweets: tweets, next: data.cursor }
-                );
+                return {
+                    success: tweets.length ? true : false,
+                    data: { list: tweets, next: data.cursor }
+                };
             })
             // If error
             .catch(err => {
-                return new Response<{ tweets: Tweet[], next: string }>(
-                    false,
-                    err,
-                    { tweets: [], next: '' }
-                );
+                return {
+                    success: false,
+                    error: err
+                };
             });
     }
 };

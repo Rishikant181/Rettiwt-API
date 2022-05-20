@@ -3,7 +3,7 @@ import express from 'express';
 import { graphqlHTTP } from 'express-graphql';
 
 // CUSTOM LIBS
-import { schema } from './schema/graphql/schema';
+import { schema } from './schema/schema';
 
 // Initialising express instance
 const app = express();

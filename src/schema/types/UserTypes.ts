@@ -15,15 +15,8 @@ import {
 import { Tweet } from './TweetTypes'
 
 // RESOLVERS
-import {
-    resolveUserLikes,
-    resolveUserFollowers,
-    resolveUserFollowing
-} from '../resolvers/UserSpecific';
-import {
-    resolveTweet,
-    resolveTweets
-} from '../resolvers/TweetSpecific';
+import { resolveUserLikes, resolveUserFollowers, resolveUserFollowing } from '../resolvers/UserSpecific';
+import { resolveTweet, resolveTweets } from '../resolvers/TweetSpecific';
 
 export const UserID = new GraphQLObjectType({
     name: 'UserID',
