@@ -50,22 +50,23 @@ export class FetcherService {
         auth: boolean = true,
         guestCreds?: GuestCredentials
     ): Promise<any> {
-        var creds: AuthCredentials | GuestCredentials;
-
-        // Getting credentials
-        if(auth) creds = await (await AuthService.getInstance()).getAuthCredentials();
-        else creds = await (await AuthService.getInstance()).getGuestCredentials();
-
-        // Fetching data
-        return fetch(url, {
-            headers: auth ? authorizedHeader(creds as AuthCredentials) : unauthorizedHeader(guestCreds ? guestCreds : creds as GuestCredentials),
-            method: method ? method : HttpMethods.GET,
-            body: body
-        })
+        // Getting the AuthService instance
+        return AuthService.getInstance()
+        // Getting the credentials
+        .then(async service => auth ? service.getAuthCredentials() : service.getGuestCredentials())
+        // Fetching the data
+        .then(creds => (
+            fetch(url, {
+                headers: auth ? authorizedHeader(creds as AuthCredentials) : unauthorizedHeader(guestCreds ? guestCreds : creds as GuestCredentials),
+                method: method ? method : HttpMethods.GET,
+                body: body
+            })
+        ))
         // Checking http status
         .then(res => handleHTTPError(res))
         // If other unknown error
-        .catch((err) => {
+        .catch(err => {
+            console.log("Failed to fetch data from Twitter");
             throw err;
         });
     }
