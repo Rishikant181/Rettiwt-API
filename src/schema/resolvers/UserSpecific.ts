@@ -32,15 +32,7 @@ export async function resolveUserDetails(userName: string, id: string): Promise<
         throw new Error(ValidationErrors.NoUserIdentification);
     }
 
-    // Evaluating response
-    // If user is found
-    if (res.success) {
-        return res.data;
-    }
-    // If user not found or any other error
-    else {
-        throw res.error;
-    }
+    return res.data;
 }
 
 /**

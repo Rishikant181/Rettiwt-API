@@ -29,29 +29,22 @@ export class UserAccountService extends FetcherService {
      */
     async getUserAccountDetails(screenName: string): Promise<Response<User>> {
         return this.fetchData(userAccountUrl(screenName), undefined, undefined, false)
-            .then(res => res.json())
-            .then(res => {
-                // Extracting data
-                var data = extractUserAccountDetails(res);
+        .then(res => res.json())
+        .then(res => {
+            // Extracting data
+            var data = extractUserAccountDetails(res);
 
-                // Caching data
-                this.cacheData(data);
+            // Caching data
+            this.cacheData(data);
 
-                // Parsing data
-                var user = toUser(data.required[0]);
+            // Parsing data
+            var user = toUser(data.required[0]);
                 
-                return {
-                    success: true,
-                    data: user
-                };
-            })
-            // If error
-            .catch(err => {
-                return {
-                    success: false,
-                    error: err
-                };
-            });
+            return {
+                success: true,
+                data: user
+            };
+        });
     }
 
     /**
@@ -70,30 +63,24 @@ export class UserAccountService extends FetcherService {
             };
         }
 
+        // If data does not exist in cache and needs to be fetched
         return this.fetchData(userAccountByIdUrl(restId), undefined, undefined, false)
-            .then(res => res.json())
-            .then(res => {
-                // Extracting data
-                var data = extractUserAccountDetails(res);
+        .then(res => res.json())
+        .then(res => {
+            // Extracting data
+            var data = extractUserAccountDetails(res);
 
-                // Caching data
-                this.cacheData(data);
+            // Caching data
+            this.cacheData(data);
 
-                // Parsing data
-                var user = toUser(data.required[0]);
+            // Parsing data
+            var user = toUser(data.required[0]);
                 
-                return {
-                    success: true,
-                    data: user
-                };
-            })
-            // If error
-            .catch(err => {
-                return {
-                    success: false,
-                    error: err
-                };
-            });
+            return {
+                success: true,
+                data: user
+            };
+        });
     }
 
     /**
