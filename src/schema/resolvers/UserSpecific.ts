@@ -17,22 +17,18 @@ var userService = new UserAccountService();
  * @param id The id of the target twitter user
  */
 export async function resolveUserDetails(userName: string, id: string): Promise<any> {
-    var res: any;                                                               // To store response data
-
     // If user name is supplied
     if (userName) {
-        res = await userService.getUserAccountDetails(userName);
+        return await userService.getUserAccountDetails(userName);
     }
     // If id is supplied
     else if (id) {
-        res = await userService.getUserAccountDetailsById(id);
+        return await userService.getUserAccountDetailsById(id);
     }
     // If neither userName nor id is supplied
     else {
         throw new Error(ValidationErrors.NoUserIdentification);
     }
-
-    return res.data;
 }
 
 /**
@@ -68,15 +64,15 @@ export async function resolveUserLikes(
         const res = await userService.getUserLikes(id, count, next);
 
         // If data is available
-        if (res.success) {
+        if (res.list.length) {
             // Adding fetched followers to list of followers
-            likes = likes.concat(res.data?.list);
+            likes = likes.concat(res.list);
 
             // Updating total followers fetched
             total = likes.length;
 
             // Getting cursor to next batch
-            next = res.data?.next!;
+            next = res.next;
         }
         // If no more data is available
         else {
@@ -120,15 +116,15 @@ export async function resolveUserFollowers(
         const res = await userService.getUserFollowers(id, count, next);
 
         // If data is available
-        if (res.success) {
+        if (res.list.length) {
             // Adding fetched followers to list of followers
-            followers = followers.concat(res.data?.list);
+            followers = followers.concat(res.list);
 
             // Updating total followers fetched
             total = followers.length;
 
             // Getting cursor to next batch
-            next = res.data?.next!;
+            next = res.next;
         }
         // If no more data is available
         else {
@@ -172,15 +168,15 @@ export async function resolveUserFollowing(
         const res = await userService.getUserFollowing(id, count, next);
 
         // If data is available
-        if (res.success) {
+        if (res.list.length) {
             // Adding fetched following to list of following
-            following = following.concat(res.data?.list);
+            following = following.concat(res.list);
 
             // Updating total following fetched
             total = following.length;
 
             // Getting cursor to next batch
-            next = res.data?.next!;
+            next = res.next;
         }
         // If no more data is available
         else {
