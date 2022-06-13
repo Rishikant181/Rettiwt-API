@@ -52,9 +52,7 @@ const LoginFlowsContent = {
 
 /**
  * @returns The login flow body content for the required login flow
- * @param email The email of the account to be logged into
- * @param userName The username of the account to be logged into
- * @param password The password to the account to be logged into
+ * @param cred The login credentials of the account to be logged into
  * @param flowToken The flow token from the previous flow
  * @param flowName The required flow name
  */

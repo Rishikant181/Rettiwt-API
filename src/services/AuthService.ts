@@ -33,6 +33,7 @@ export class AuthService extends DatabaseService {
 
     // MEMBER METHODS
     private constructor() {
+        // Initializing super class
         super(config['server']['db']['databases']['auth']['name'], config['server']['db']['databases']['auth']['tables']['cookies']);
 
         // Initializing member data
@@ -46,28 +47,43 @@ export class AuthService extends DatabaseService {
      * @summary Initializes asynchronous member data of AuthService
      */
     private async init(): Promise<void> {
-        if(await this.connectDB()) {
+        // Connecting to database
+        this.connectDB()
+        // Getting the list of credentials from the database
+        .then(() => this.client.db(this.dbName).collection(this.credTable).find().project({ _id: 0 }).toArray())
+        // Initializing the credentials' member data
+        .then(creds => {
             //@ts-ignore
-            this.authCredList = await this.client.db(this.dbName).collection(this.credTable).find().project({ _id: 0 }).toArray();
+            this.authCredList = creds;
             this.numCredentials = this.authCredList.length;
             this.credentialNum = 0;
-        }
+        })
+        // If fetching of credentials from db failed
+        .catch(err => {
+            console.log("Failed to get authentication credentials from db");
+            throw err;
+        });
     }
 
     /**
      * @returns The active instance of AuthService
      */
     static async getInstance(): Promise<AuthService> {
-        // Checking if an instance does not exists already
+        // If an instance doesn't exist already
         if(!this.instance) {
             // Creating a new instance
             this.instance = new AuthService();
 
-            // Initializing async data
-            await this.instance.init();
+            // Initializing async data and returning the new instance
+            return this.instance.init()
+            .then(() => this.instance)
+            .catch(err => {
+                console.log("Failed to initialize AuthService instance");
+                throw err;
+            });
         }
-
-        return this.instance;
+        // If an instance already exists
+        else return this.instance;
     }
 
     /**
@@ -84,7 +100,7 @@ export class AuthService extends DatabaseService {
     }
 
     /**
-     * @summary Store the authentication credentials extracted from the given headers into the database
+     * @summary Stores the authentication credentials extracted from the given headers into the database
      * @param headers The headers from which the cookies are to be extracted and stored
      */
     async storeCredentials(headers: Headers): Promise<Boolean> {
@@ -98,34 +114,35 @@ export class AuthService extends DatabaseService {
         // Preparing the credentials to write
         const creds = { csrfToken: csrfToken, cookie: cookies };
 
-        // Writing credentials to database and returning whether write was successful or not
-        const isWritten = await this.write(creds, this.credTable);
-        
-        // If write was successful
-        if(isWritten) {
-            // Reinitializing credentials
-            await this.init();
-        }
-
-        return isWritten;
+        // Writing credentials to database
+        return this.write(creds, this.credTable)
+        // If write was successful, reinitializing credentials
+        .then(() => this.init())
+        .then(() => true)
+        // If write failed
+        .catch(err => {
+            console.log("Failed to store credentials");
+            throw err;
+        });
     }
 
     /**
      * @returns The current authentication credentials. A different credential is returned each time this is invoked
      * @param newCred Whether to get a different credential or the current one
      */
-    async getAuthCredentials(newCred: boolean = true): Promise<{
-        authToken: string,
-        csrfToken: string,
-        cookie: string
-    }> {
+    async getAuthCredentials(newCred: boolean = true): Promise<{ authToken: string, csrfToken: string, cookie: string }> {
         // If new credential is required
         if(newCred) {
             // Changing credentials
-            await this.changeCredentials();
+            return this.changeCredentials()
+            .then(() => this.currentUser)
+            .catch(err => {
+                console.log("Failed to switch to new credentials");
+                throw err;
+            });
         }
-
-        return this.currentUser;
+        // If new credential is not required
+        else return this.currentUser;
     }
 
     /**
@@ -136,7 +153,7 @@ export class AuthService extends DatabaseService {
         // If new guest token is to used
         if(newCred || !this.currentGuest.guestToken) {
             // Fetching guest token from twitter api
-            await fetch(guestTokenUrl(), {
+            return fetch(guestTokenUrl(), {
                 headers: blankHeader({ authToken: this.authToken }),
                 method: HttpMethods.POST,
                 body: null
@@ -147,12 +164,14 @@ export class AuthService extends DatabaseService {
                 this.currentGuest.authToken = this.authToken;
                 //@ts-ignore
                 this.currentGuest.guestToken = data['guest_token'];
+                return this.currentGuest;
             })
             .catch(err => {
+                console.log("Failed to fetch new guest credentials");
                 throw err;
             });
         }
-
-        return this.currentGuest;
+        // If new guest credential is not required
+        else return this.currentGuest;
     }
 }
