@@ -1,5 +1,6 @@
 // PACKAGE LIBS
 import { InsertOneResult, ObjectId } from "mongodb";
+import { createClient as redisClient, RedisClientType } from 'redis';
 
 // CUSTOM LIBS
 import { DatabaseService } from '../DatabaseService';
@@ -11,16 +12,15 @@ import { dataToList, findJSONKey } from '../helper/Parser';
  * 
  * **Note**: To be able to CacheService, the data to be cached must of a unique "id" field.
  */
-export class CacheService extends DatabaseService {
+export class CacheService {
     // MEMBER DATA
     private update: boolean;                                            // Whether to update existing data or not
+    private client: RedisClientType;                                    // To store the redis client instance
     
     // MEMBER METHODS
     constructor() {
-        super(config['server']['db']['databases']['cache']['name'], config['server']['db']['databases']['cache']['index']);
-
-        // Initialising member data
-        this.update = false;
+        // Initializing the redis client instance
+        this.client = redisClient();
     }
 
     /**
