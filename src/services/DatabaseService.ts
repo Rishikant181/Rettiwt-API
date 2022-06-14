@@ -18,7 +18,7 @@ import { MongoClient } from "mongodb";
      */
     constructor(database: string, index: string) {
         // Initializing member data
-        this.connUrl = `mongodb://${process.env.CACHE_DB_HOST}:${process.env.CACHE_DB_PORT}`;
+        this.connUrl = `mongodb://${process.env.DATA_DB_HOST}:${process.env.DATA_DB_PORT}`;
         this.dbName = database;
         this.dbIndex = index;
         this.client = new MongoClient(this.connUrl);

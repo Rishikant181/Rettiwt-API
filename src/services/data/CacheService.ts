@@ -1,10 +1,7 @@
 // PACKAGE LIBS
-import { InsertOneResult, ObjectId } from "mongodb";
 import { createClient as redisClient, RedisClientType } from 'redis';
 
 // CUSTOM LIBS
-import { DatabaseService } from '../DatabaseService';
-import { config } from '../../config/env';
 import { dataToList, findJSONKey } from '../helper/Parser';
 
 /**
@@ -15,12 +12,14 @@ import { dataToList, findJSONKey } from '../helper/Parser';
 export class CacheService {
     // MEMBER DATA
     private update: boolean;                                            // Whether to update existing data or not
+    private connUrl: string;                                            // To store the connection url string to redis
     private client: RedisClientType;                                    // To store the redis client instance
     
     // MEMBER METHODS
     constructor() {
-        // Initializing the redis client instance
-        this.client = redisClient();
+        this.connUrl = `redis://${process.env.CACHE_DB_HOST}:${process.env.CACHE_DB_PORT}`;
+        this.client = redisClient({ url: this.connUrl });
+        this.client.connect();
     }
 
     /**
@@ -29,6 +28,7 @@ export class CacheService {
      * @param data The data to be indexed
      * @param table The name of the table in which the given data is cached
      */
+    /*
     private async index(res: InsertOneResult<Document>, data: any, table: string): Promise<void> {
         var index = [];
 
@@ -49,17 +49,20 @@ export class CacheService {
         // Inserting the index into index collection
         await this.client.db(this.dbName).collection(this.dbIndex).insertMany(index);
     }
+    */
 
     /**
      * @returns If the given data item is already cached or not
      * @param id The id/rest id of the data item to be checked
      */
+    /*
     private async isCached(id: string): Promise<boolean> {
         // Finding a matching data from cache
         var res = await this.client.db(this.dbName).collection(this.dbIndex).findOne({ "id": id })
 
         return res ? true : false;
     }
+    */
 
     /**
      * @summary Stores the input data into the cache.
@@ -71,41 +74,23 @@ export class CacheService {
         // Converting the data to a list of data
         data = dataToList(data);
 
-        // If connection to database successful
-        if (await this.connectDB()) {
-            // Iterating over the list of data
-            for (var item of data) {
-                // Storing whether data is already cached or not
-                var cached = await this.isCached(findJSONKey(item, 'id'));
+        // Iterating over the list of data
+        for (var item of data) {
+            // Storing whether data is already cached or not
+            var cached = await this.client.exists(findJSONKey(item, 'id'));
 
-                // If data already exists in cache and no update required, skip
-                if (cached && this.update == false) {
-                    continue;
-                }
-                // If data already exists in cache and update required
-                else if (cached && this.update) {
-                    // Getting the object id of data from index
-                    var objectId = (await this.client.db(this.dbName).collection(this.dbIndex).findOne({ "id": findJSONKey(item, "id") }))?._id.toHexString();
-                    
-                    // Updating data in cache
-                    await this.client.db(this.dbName).collection(table).updateOne({ "_id": new ObjectId(objectId) }, { $set: item });
-                }
-                // If new data to be added
-                else {
-                    // Writing data to cache
-                    var res = await this.client.db(this.dbName).collection(table).insertOne(item);
-
-                    // Indexing the data
-                    this.index(res, item, table);
-                }
+            // If data already exists in cache and no update required, skip
+            if (cached && this.update == false) {
+                continue;
             }
+            // If data does not exist or update is required
+            else {
+                // Updating data in cache
+                await this.client.set(findJSONKey(item, 'id'), JSON.stringify(item));
+            }
+        }
 
-            return true;
-        }
-        // If connection to database failed
-        else {
-            return false;
-        }
+        return true;
     }
 
     /**
@@ -113,23 +98,13 @@ export class CacheService {
      * @param id The id/rest id of the data to be fetched from cache
      */
     async read(id: string): Promise<any> {
-        // If connection to database successful
-        if (await this.connectDB()) {
-            // Getting data from cache
-            var res = await this.client.db(this.dbName).collection(this.dbIndex).findOne({ "id": id });
+        // Getting data from cache
+        var res = await this.client.get(id);
 
-            // If data exists in cache
-            if (res) {
-                // Getting object id and table name of data from index
-                var objectId = res['_id'];
-                var collection = res['collection'];
-
-                // Getting the actual data
-                return await this.client.db(this.dbName).collection(collection).findOne({ "_id": new ObjectId(objectId) });
-            }
-        }
-        else {
-            return null;
+        // If data exists in cache
+        if (res) {
+            // Getting the actual data
+            return JSON.parse(res);
         }
     }
 }
