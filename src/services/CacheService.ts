@@ -2,12 +2,12 @@
 import { createClient as redisClient, RedisClientType } from 'redis';
 
 // CUSTOM LIBS
-import { dataToList, findJSONKey } from '../helper/Parser';
+import { dataToList, findJSONKey } from './helper/Parser';
 
 /**
  * @summary Handles reading and writing of data from and to cache.
  * 
- * **Note**: To be able to CacheService, the data to be cached must of a unique "id" field.
+ * **Note**: To be able to CacheService, the data to be cached must have a unique "id" field.
  */
 export class CacheService {
     // MEMBER DATA
@@ -23,54 +23,11 @@ export class CacheService {
     }
 
     /**
-     * @summary Indexes the data inserted into the cache by mapping their id/rest id to their internal Object id and collection name
-     * @param res The InsertManyResult from the write operation
-     * @param data The data to be indexed
-     * @param table The name of the table in which the given data is cached
-     */
-    /*
-    private async index(res: InsertOneResult<Document>, data: any, table: string): Promise<void> {
-        var index = [];
-
-        // If data insertion failed, skipping indexing
-        if (!res.acknowledged) {
-            return;
-        }
-
-        // Preparing the index to be inserted
-        var indexItem = {
-            "id": findJSONKey(data, 'id'),
-            "_id": new ObjectId(res.insertedId.toHexString()),
-            "collection": table
-        }
-
-        index.push(indexItem);
-
-        // Inserting the index into index collection
-        await this.client.db(this.dbName).collection(this.dbIndex).insertMany(index);
-    }
-    */
-
-    /**
-     * @returns If the given data item is already cached or not
-     * @param id The id/rest id of the data item to be checked
-     */
-    /*
-    private async isCached(id: string): Promise<boolean> {
-        // Finding a matching data from cache
-        var res = await this.client.db(this.dbName).collection(this.dbIndex).findOne({ "id": id })
-
-        return res ? true : false;
-    }
-    */
-
-    /**
      * @summary Stores the input data into the cache.
      * @returns Whether writing to cache was successful or not
      * @param data The input data to store
-     * @param table The name of the table to insert the data into
      */
-    async write(data: any, table: string): Promise<boolean> {
+    async write(data: any): Promise<boolean> {
         // Converting the data to a list of data
         data = dataToList(data);
 
@@ -103,7 +60,7 @@ export class CacheService {
 
         // If data exists in cache
         if (res) {
-            // Getting the actual data
+            // Converting the string data to JSON and returning it
             return JSON.parse(res);
         }
     }

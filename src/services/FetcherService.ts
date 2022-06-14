@@ -5,7 +5,7 @@ import fetch from "node-fetch";
 
 // SERVICES
 import { AuthService } from './AuthService';
-import { CacheService } from './data/CacheService';
+import { CacheService } from './CacheService';
 
 // TYPES
 import { HttpMethods } from "../types/HTTP";
