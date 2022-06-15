@@ -121,16 +121,20 @@ export class AuthService extends DatabaseService {
         // Preparing the credentials to write
         const creds = { csrfToken: csrfToken, cookie: cookies };
 
-        // Writing credentials to database
-        return this.write(creds, this.credTable)
-        // If write was successful, reinitializing credentials
-        .then(() => this.init())
-        .then(() => true)
-        // If write failed
-        .catch(err => {
+        try {
+            // Writing credentials to database
+            await this.write(creds, this.credTable)
+
+            // If write was successful, reinitializing credentials
+            await this.init();
+
+            return true;
+        }
+        catch(err) {
+            // If writing of credentials to database failed
             console.log("Failed to store credentials");
             throw err;
-        });
+        }
     }
 
     /**
@@ -140,16 +144,22 @@ export class AuthService extends DatabaseService {
     async getAuthCredentials(newCred: boolean = true): Promise<{ authToken: string, csrfToken: string, cookie: string }> {
         // If new credential is required
         if(newCred) {
-            // Changing credentials
-            return this.changeCredentials()
-            .then(() => this.currentUser)
-            .catch(err => {
+            try {
+                // Changing to the next available credentials
+                await this.changeCredentials();
+
+                return this.currentUser;
+            }
+            catch(err) {
+                // If failed to switch to new credentials
                 console.log("Failed to switch to new credentials");
                 throw err;
-            });
+            }
         }
         // If new credential is not required
-        else return this.currentUser;
+        else {
+            return this.currentUser;
+        }
     }
 
     /**
@@ -159,26 +169,29 @@ export class AuthService extends DatabaseService {
     async getGuestCredentials(newCred: boolean = true): Promise<{authToken: string, guestToken: string }> {
         // If new guest token is to used
         if(newCred || !this.currentGuest.guestToken) {
-            // Fetching guest token from twitter api
-            return fetch(guestTokenUrl(), {
-                headers: blankHeader({ authToken: this.authToken }),
-                method: HttpMethods.POST,
-                body: null
-            })
-            .then(data => data.json())
-            // Setting new guest credentials
-            .then(data => {
+            try {
+                // Fetching guest token from twitter api
+                var data: any = await fetch(guestTokenUrl(), {
+                    headers: blankHeader({ authToken: this.authToken }),
+                    method: HttpMethods.POST,
+                    body: null
+                }).then(data => data.json());
+
+                // Setting new guest credentials
                 this.currentGuest.authToken = this.authToken;
-                //@ts-ignore
                 this.currentGuest.guestToken = data['guest_token'];
+
                 return this.currentGuest;
-            })
-            .catch(err => {
+            }
+            catch(err) {
+                // If failed to fetch new guest credentials from Twitter
                 console.log("Failed to fetch new guest credentials");
                 throw err;
-            });
+            }
         }
         // If new guest credential is not required
-        else return this.currentGuest;
+        else {
+            return this.currentGuest;
+        }
     }
 }
