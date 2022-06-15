@@ -1,5 +1,6 @@
 // PACKAGE LIBS
 import Redis from 'ioredis';
+import { FetcherService } from './FetcherService';
 
 // CUSTOM LIBS
 import { dataToList, findJSONKey } from './helper/Parser';
@@ -19,15 +20,19 @@ export class CacheService {
     // MEMBER METHODS
     private constructor() {
         this.connUrl = `redis://${process.env.CACHE_DB_HOST}:${process.env.CACHE_DB_PORT}`;
-        // Connecting to redis cache
-        try {
-            this.client = new Redis(this.connUrl);
-        }
-        // If failed to connect to cache
-        catch(err) {
-            console.log("Failed to connect to redis cache");
-            throw err;
-        }
+        this.client = new Redis(this.connUrl);
+        
+        // If failed to connect to redis caching server
+        this.client.on("error", (err) => {
+            console.log("Failed to connect to caching server");
+            console.log("Continuing without caching");
+
+            // Disabling caching for FetcherService
+            FetcherService.allowCache = false;
+
+            // Closing connection to redis cache
+            this.client.quit();
+        });
     }
 
     /**

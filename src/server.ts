@@ -3,9 +3,14 @@ import express from 'express';
 import { graphqlHTTP } from 'express-graphql';
 
 // CUSTOM LIBS
-import { schema } from './schema/schema';
+
+// SERVICES
+import { AuthService } from './services/AuthService';
 import { CacheService } from './services/CacheService';
-import { FetcherService } from './services/FetcherService';
+
+// TYPES
+import { schema } from './schema/schema';
+import { exit } from 'process';
 
 // Initialising express instance
 const app = express();
@@ -18,15 +23,16 @@ app.use('/graphql', graphqlHTTP({
 
 // Setting up express server
 app.listen(process.env.APP_PORT, async () => {
-    // Creating cache service instance
+    // Initializing essential global services
     try {
-        await CacheService.getInstance();
+        await AuthService.getInstance();
     }
-    // If failed to create CacheService instance, continuing without cache
     catch(err) {
-        console.log("Continuing without caching");
-        FetcherService.allowCache = false;
+        exit();
     }
+    
+    // Initializing non-essential global services
+    await CacheService.getInstance();
     
     console.log(`Listening on port ${process.env.APP_PORT}`);
 });

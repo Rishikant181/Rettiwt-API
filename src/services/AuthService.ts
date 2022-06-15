@@ -47,22 +47,21 @@ export class AuthService extends DatabaseService {
      * @summary Initializes asynchronous member data of AuthService
      */
     private async init(): Promise<void> {
-        // Connecting to database
-        this.connectDB()
-        // Getting the list of credentials from the database
-        .then(() => this.client.db(this.dbName).collection(this.credTable).find().project({ _id: 0 }).toArray())
-        // Initializing the credentials' member data
-        .then(creds => {
-            //@ts-ignore
-            this.authCredList = creds;
+        // Fetching stored authentication credentials from database
+        try {
+            // Connecting to database
+            await this.connectDB()
+
+            // Getting the list of stored credentials from database
+            this.authCredList = (await this.client.db(this.dbName).collection(this.credTable).find().project({ _id: 0 }).toArray()) as AuthCredentials[];
             this.numCredentials = this.authCredList.length;
             this.credentialNum = 0;
-        })
+        }
         // If fetching of credentials from db failed
-        .catch(err => {
+        catch(err) {
             console.log("Failed to get authentication credentials from db");
             throw err;
-        });
+        }
     }
 
     /**
@@ -74,16 +73,24 @@ export class AuthService extends DatabaseService {
             // Creating a new instance
             this.instance = new AuthService();
 
-            // Initializing async data and returning the new instance
-            return this.instance.init()
-            .then(() => this.instance)
-            .catch(err => {
+            // Creating new AuthService instance
+            try {
+                // Initializing async data
+                await this.instance.init()
+
+                // Returning the new instance
+                return this.instance;
+            }
+            // If failed to create AuthService instance
+            catch(err) {
                 console.log("Failed to initialize AuthService instance");
                 throw err;
-            });
+            };
         }
         // If an instance already exists
-        else return this.instance;
+        else {
+            return this.instance;
+        }
     }
 
     /**
