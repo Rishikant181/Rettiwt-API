@@ -28,20 +28,13 @@ import { MongoClient } from "mongodb";
      * @summary Connects to the database
      */
     protected async connectDB(): Promise<boolean> {
-        try {
-            // Connecting to db
-            await this.client.connect();
+        // Connecting to db
+        await this.client.connect();
 
-            // Testing connection to database by making a ping to it
-            await this.client.db(this.dbName).command({ ping: 1 });
+        // Testing connection to database by making a ping to it
+        await this.client.db(this.dbName).command({ ping: 1 });
 
-            return true;
-        }
-        catch(err) {
-            // If connection failed
-            console.log("Failed to connect to database server");            
-            throw err;
-        }
+        return true;
     }
     
     /**
@@ -51,20 +44,13 @@ import { MongoClient } from "mongodb";
      * @returns Whether write was successful or not
      */
     protected async write(data: any, table: string): Promise<boolean> {
-        try {
-            // Connecting to db
-            await this.connectDB();
+        // Connecting to db
+        await this.connectDB();
 
-            // Inserting the data into the db
-            await this.client.db(this.dbName).collection(table).insertOne(data)
+        // Inserting the data into the db
+        await this.client.db(this.dbName).collection(table).insertOne(data)
 
-            return true;
-        }
-        catch(err) {
-            // If insertion failed
-            console.log("Failed to write to database");
-            throw err;
-        }
+        return true;
     }
 
     /**
@@ -72,19 +58,12 @@ import { MongoClient } from "mongodb";
      * @returns Whether clearing was successful or not
      */
     protected async clear(): Promise<boolean> {
-        try {
-            // Connecting to db
-            await this.connectDB()
+        // Connecting to db
+        await this.connectDB()
 
-            // Clearing the db
-            await this.client.db(this.dbName).dropDatabase()
+        // Clearing the db
+        await this.client.db(this.dbName).dropDatabase()
 
-            return true;
-        }
-        catch(err) {
-            // If clearing failed
-            console.log("Failed to clear database");
-            throw err;
-        }
+        return true;
     }
 }

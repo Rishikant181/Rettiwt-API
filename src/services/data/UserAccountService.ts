@@ -27,20 +27,19 @@ export class UserAccountService extends FetcherService {
      * @param screenName The screen name of the target user.
      */
     async getUserAccountDetails(screenName: string): Promise<User> {
-        return this.fetchData(userAccountUrl(screenName), undefined, undefined, false)
-        .then(res => res.json())
-        .then(res => {
-            // Extracting data
-            var data = extractUserAccountDetails(res);
+        // Fetching the raw data
+        var res = await this.fetchData(userAccountUrl(screenName), undefined, undefined, false).then(res => res.json());
+        
+        // Extracting data
+        var data = extractUserAccountDetails(res);
 
-            // Caching data
-            this.cacheData(data);
+        // Caching data
+        this.cacheData(data);
 
-            // Parsing data
-            var user = toUser(data.required[0]);
-                
-            return user;
-        });
+        // Parsing data
+        var user = toUser(data.required[0]);
+            
+        return user;
     }
 
     /**
@@ -52,12 +51,19 @@ export class UserAccountService extends FetcherService {
         var cachedData = await this.readData(restId);
 
         // If data exists in cache
-        if(cachedData) return cachedData;
+        if(cachedData) {
+            return cachedData;
+        }
+        // If data does not exist in cache
+        else {
+            // Fetchin the raw data
+            var res = await this.fetchData(
+                userAccountByIdUrl(restId),
+                undefined,
+                undefined,
+                false
+            ).then(res => res.json());
 
-        // If data does not exist in cache and needs to be fetched
-        return this.fetchData(userAccountByIdUrl(restId), undefined, undefined, false)
-        .then(res => res.json())
-        .then(res => {
             // Extracting data
             var data = extractUserAccountDetails(res);
 
@@ -68,7 +74,7 @@ export class UserAccountService extends FetcherService {
             var user = toUser(data.required[0]);
                 
             return user;
-        });
+        }
     }
 
     /**
@@ -78,20 +84,19 @@ export class UserAccountService extends FetcherService {
      * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
     async getUserFollowing(userId: string, count: number, cursor: string): Promise<CursoredData<User>> {
-        return this.fetchData(userFollowingUrl(userId, count, cursor))
-        .then(res => res.json())
-        .then(res => {
-            // Extracting data
-            var data = extractUserFollow(res);
+        // Fetchin the raw data
+        var res = await this.fetchData(userFollowingUrl(userId, count, cursor)).then(res => res.json());
+        
+        // Extracting data
+        var data = extractUserFollow(res);
 
-            // Caching data
-            this.cacheData(data);
+        // Caching data
+        this.cacheData(data);
 
-            // Parsing data
-            var users = data.required.map(item => toUser(item));
+        // Parsing data
+        var users = data.required.map(item => toUser(item));
 
-            return { list: users, next: data.cursor };
-        });
+        return { list: users, next: data.cursor };
     }
 
     /**
@@ -106,20 +111,19 @@ export class UserAccountService extends FetcherService {
          * where n is the actual required number of followers.
          * So changing count to count - 20, fixes fetching more than required number of follower
          */
-        return this.fetchData(userFollowersUrl(userId, (count > 20) ? (count - 20) : count, cursor))
-        .then(res => res.json())
-        .then(res => {
-            // Extracting data
-            var data = extractUserFollow(res);
+        // Fetching the raw data
+        var res = await this.fetchData(userFollowersUrl(userId, (count > 20) ? (count - 20) : count, cursor)).then(res => res.json());
+        
+        // Extracting data
+        var data = extractUserFollow(res);
 
-            // Caching data
-            this.cacheData(data);
+        // Caching data
+        this.cacheData(data);
 
-            // Parsing data
-            var users = data.required.map(item => toUser(item));
+        // Parsing data
+        var users = data.required.map(item => toUser(item));
 
-            return { list: users, next: data.cursor };
-        });
+        return { list: users, next: data.cursor };
     }
 
     /**
@@ -129,19 +133,18 @@ export class UserAccountService extends FetcherService {
      * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
     async getUserLikes(userId: string, count: number, cursor: string): Promise<CursoredData<Tweet>> {
-        return this.fetchData(userLikesUrl(userId, count, cursor))
-        .then(res => res.json())
-        .then(res => {
-            // Extracting data
-            var data = extractUserLikes(res);
+        // Fetching the raw data
+        var res = await this.fetchData(userLikesUrl(userId, count, cursor)).then(res => res.json());
+        
+        // Extracting data
+        var data = extractUserLikes(res);
 
-            // Caching data
-            this.cacheData(data);
+        // Caching data
+        this.cacheData(data);
 
-            // Parsing data
-            var tweets = data.required.map(item => toTweet(item));
+        // Parsing data
+        var tweets = data.required.map(item => toTweet(item));
 
-            return { list: tweets, next: data.cursor };
-        });
+        return { list: tweets, next: data.cursor };
     }
 };

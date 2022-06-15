@@ -24,18 +24,17 @@ export class AccountsService extends FetcherService {
      */
     private async executeFlow(flow: LoginFlow, guestCredentials: GuestCredentials): Promise<{headers: Headers, nextFlowName: LoginFlows, nextFlowToken: string}> {
         // Executing the given flow
-        return this.fetchData(flow.url, HttpMethods.POST, flow.body, false, guestCredentials)
-        .then(async res => {
-            // Getting the response body
-            var data = await res.json();
+        var res = await this.fetchData(flow.url, HttpMethods.POST, flow.body, false, guestCredentials);
+        
+        // Getting the response body
+        var data = await res.json();
             
-            // Returning the response body as well as data of the flow
-            return {
-                headers: res.headers,
-                nextFlowName: LoginFlows[data['subtasks'][0]['subtask_id'] as LoginFlows],
-                nextFlowToken: data['flow_token']
-            };
-        });
+        // Returning the response body as well as data of the flow
+        return {
+            headers: res.headers,
+            nextFlowName: LoginFlows[data['subtasks'][0]['subtask_id'] as LoginFlows],
+            nextFlowToken: data['flow_token']
+        };
     }
     
     /**
