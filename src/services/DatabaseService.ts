@@ -28,17 +28,20 @@ import { MongoClient } from "mongodb";
      * @summary Connects to the database
      */
     protected async connectDB(): Promise<boolean> {
-        // Connecting to db
-        return this.client.connect()
-        // Testing connection to database by making a ping to it
-        .then(() => this.client.db(this.dbName).command({ ping: 1 }))
-        // If connection successful
-        .then(() => true)
-        // If connection failed
-        .catch(err => {
+        try {
+            // Connecting to db
+            await this.client.connect();
+
+            // Testing connection to database by making a ping to it
+            await this.client.db(this.dbName).command({ ping: 1 });
+
+            return true;
+        }
+        catch(err) {
+            // If connection failed
             console.log("Failed to connect to database server");            
             throw err;
-        });
+        }
     }
     
     /**
@@ -48,17 +51,20 @@ import { MongoClient } from "mongodb";
      * @returns Whether write was successful or not
      */
     protected async write(data: any, table: string): Promise<boolean> {
-        // Connecting to db
-        return this.connectDB()
-        // Inserting the data into the db
-        .then(() => this.client.db(this.dbName).collection(table).insertOne(data))
-        // If insertion successful
-        .then(() => true)
-        // If insertion failed
-        .catch(err => {
+        try {
+            // Connecting to db
+            await this.connectDB();
+
+            // Inserting the data into the db
+            await this.client.db(this.dbName).collection(table).insertOne(data)
+
+            return true;
+        }
+        catch(err) {
+            // If insertion failed
             console.log("Failed to write to database");
             throw err;
-        })
+        }
     }
 
     /**
@@ -66,16 +72,19 @@ import { MongoClient } from "mongodb";
      * @returns Whether clearing was successful or not
      */
     protected async clear(): Promise<boolean> {
-        // Connecting to db
-        return this.connectDB()
-        // Clearing the db
-        .then(() => this.client.db(this.dbName).dropDatabase())
-        // If clearing successful
-        .then(() => true)
-        // If clearing failed
-        .catch(err => {
+        try {
+            // Connecting to db
+            await this.connectDB()
+
+            // Clearing the db
+            await this.client.db(this.dbName).dropDatabase()
+
+            return true;
+        }
+        catch(err) {
+            // If clearing failed
             console.log("Failed to clear database");
             throw err;
-        });
+        }
     }
 }
