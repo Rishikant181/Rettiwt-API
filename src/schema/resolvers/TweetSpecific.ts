@@ -9,7 +9,7 @@ import { TweetService } from '../../services/data/TweetService';
 import { TweetFilter } from '../../types/Tweet';
 
 // HELPERS
-import { ValidationErrors } from './helper/Validation';
+import { ValidationErrors } from '../types/Errors';
 
 // Initialsing the service to fetch user details
 var tweetService = new TweetService();

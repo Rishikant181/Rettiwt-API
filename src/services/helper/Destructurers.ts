@@ -3,7 +3,7 @@
 // CUSTOM LIBS
 
 // TYPES
-import { Errors } from '../../types/HTTP';
+import { DataErrors } from '../../schema/types/Errors';
 
 // HELPERS
 import { isJSONEmpty } from './Parser';
@@ -42,7 +42,7 @@ export function destructureRawData(res: any, type: Data): {
     if (type == Data.UserAccount) {
         // If user not found or account suspended
         if (isJSONEmpty(res['data']) || isJSONEmpty(res['data']['user']) || res['data']['user']['result']['__typename'] === 'UserUnavailable') {
-            throw new Error(Errors.UserNotFound);
+            throw new Error(DataErrors.UserNotFound);
         }
 
         // Destructuring user account data
@@ -53,7 +53,7 @@ export function destructureRawData(res: any, type: Data): {
     else if (type == Data.UserFollow) {
         // If user does not exist
         if (isJSONEmpty(res['data']['user'])) {
-            throw new Error(Errors.UserNotFound);
+            throw new Error(DataErrors.UserNotFound);
         }
 
         // Extracting the raw list
@@ -78,7 +78,7 @@ export function destructureRawData(res: any, type: Data): {
     else if (type == Data.UserLikes) {
         // If user does not exist
         if (isJSONEmpty(res['data']['user'])) {
-            throw new Error(Errors.UserNotFound);
+            throw new Error(DataErrors.UserNotFound);
         }
 
         // Extracting the raw list
@@ -140,7 +140,7 @@ export function destructureRawData(res: any, type: Data): {
     else if (type == Data.Tweet) {
         // If tweet does not exist
         if (isJSONEmpty(res['data'])) {
-            throw new Error(Errors.TweetNotFound);
+            throw new Error(DataErrors.TweetNotFound);
         }
 
         // Destructuring the received raw data
@@ -164,7 +164,7 @@ export function destructureRawData(res: any, type: Data): {
     else if (type == Data.TweetLikers) {
         // If tweet does not exist
         if (isJSONEmpty(res['data']['favoriters_timeline'])) {
-            throw new Error(Errors.TweetNotFound);
+            throw new Error(DataErrors.TweetNotFound);
         }
 
         // Destructuring raw list of likers
@@ -185,7 +185,7 @@ export function destructureRawData(res: any, type: Data): {
     else if (type == Data.TweetRetweeters) {
         // If tweet does not exist
         if (isJSONEmpty(res['data']['retweeters_timeline'])) {
-            throw new Error(Errors.TweetNotFound);
+            throw new Error(DataErrors.TweetNotFound);
         }
 
         // Destructuring raw list of retweeters
@@ -206,7 +206,7 @@ export function destructureRawData(res: any, type: Data): {
     else if (type == Data.TweetReplies) {
         // If tweet does not exist
         if (isJSONEmpty(res['data'])) {
-            throw new Error(Errors.TweetNotFound);
+            throw new Error(DataErrors.TweetNotFound);
         }
 
         // Destructuring the received raw data

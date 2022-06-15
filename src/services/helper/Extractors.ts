@@ -3,7 +3,7 @@
 // CUSTOM LIBS
 
 // TYPES
-import { Errors } from '../../types/HTTP';
+import { DataErrors } from '../../schema/types/Errors';
 
 // HELPERS
 import { isJSONEmpty } from './Parser';
@@ -27,7 +27,7 @@ export function extractUserAccountDetails(res: any): {
 
     // If user not found or account suspended
     if (isJSONEmpty(res['data']) || isJSONEmpty(res['data']['user']) || res['data']['user']['result']['__typename'] !== 'User') {
-        throw new Error(Errors.UserNotFound);
+        throw new Error(DataErrors.UserNotFound);
     }
 
     // Destructuring user account data
@@ -60,7 +60,7 @@ export function extractUserFollow(res: any): {
 
     // If user does not exist
     if (isJSONEmpty(res['data']['user'])) {
-        throw new Error(Errors.UserNotFound);
+        throw new Error(DataErrors.UserNotFound);
     }
 
     // Extracting the raw list
@@ -110,7 +110,7 @@ export function extractUserLikes(res: any): {
 
     // If user does not exist
     if (isJSONEmpty(res['data']['user'])) {
-        throw new Error(Errors.UserNotFound);
+        throw new Error(DataErrors.UserNotFound);
     }
 
     // Extracting the raw list
@@ -222,7 +222,7 @@ export function extractTweet(res: any, tweetId: string): {
 
     // If tweet does not exist
     if (isJSONEmpty(res['data'])) {
-        throw new Error(Errors.TweetNotFound);
+        throw new Error(DataErrors.TweetNotFound);
     }
 
     // Destructuring the received raw data
@@ -284,7 +284,7 @@ export function extractTweetLikers(res: any): {
 
     // If tweet does not exist
     if (isJSONEmpty(res['data']['favoriters_timeline'])) {
-        throw new Error(Errors.TweetNotFound);
+        throw new Error(DataErrors.TweetNotFound);
     }
 
     // Destructuring raw list of likers
@@ -330,7 +330,7 @@ export function extractTweetRetweeters(res: any): {
 
     // If tweet does not exist
     if (isJSONEmpty(res['data']['retweeters_timeline'])) {
-        throw new Error(Errors.TweetNotFound);
+        throw new Error(DataErrors.TweetNotFound);
     }
 
     // Destructuring raw list of retweeters
@@ -377,7 +377,7 @@ export function extractTweetReplies(res: any, tweetId: string): {
 
     // If tweet does not exist
     if (isJSONEmpty(res['data'])) {
-        throw new Error(Errors.TweetNotFound);
+        throw new Error(DataErrors.TweetNotFound);
     }
 
     // Destructuring the received raw data
