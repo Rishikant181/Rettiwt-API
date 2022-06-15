@@ -12,6 +12,7 @@ import {
 // TYPES
 import { User } from '../types/UserTypes'
 import { Tweet } from '../types/TweetTypes';
+import { LoginCredentials } from 'src/types/Authentication';
 
 // RESOLVERS
 import { resolveUserDetails } from '../resolvers/UserSpecific';
@@ -66,7 +67,7 @@ export const rootQuery = new GraphQLObjectType({
                 userName: { type: GraphQLString },
                 password: { type: GraphQLString }
             },
-            resolve: (parent, args) => resolveUserLogin(args)
+            resolve: (parent, args) => resolveUserLogin(args as LoginCredentials)
         }
     }
 })

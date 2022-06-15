@@ -1,5 +1,5 @@
 // PACKAGE LIBS
-import { createClient as redisClient, RedisClientType } from 'redis';
+import Redis from 'ioredis';
 
 // CUSTOM LIBS
 import { dataToList, findJSONKey } from './helper/Parser';
@@ -14,12 +14,20 @@ export class CacheService {
     private static instance: CacheService;                              // To store the current instance of this service
     private update: boolean;                                            // Whether to update existing data or not
     private connUrl: string;                                            // To store the connection url string to redis
-    private client: RedisClientType;                                    // To store the redis client instance
+    private client: Redis;                                              // To store the redis client instance
     
     // MEMBER METHODS
     private constructor() {
         this.connUrl = `redis://${process.env.CACHE_DB_HOST}:${process.env.CACHE_DB_PORT}`;
-        this.client = redisClient({ url: this.connUrl });
+        // Connecting to redis cache
+        try {
+            this.client = new Redis(this.connUrl);
+        }
+        // If failed to connect to cache
+        catch(err) {
+            console.log("Failed to connect to redis cache");
+            throw err;
+        }
     }
 
     /**
@@ -28,15 +36,7 @@ export class CacheService {
     static async getInstance(): Promise<CacheService> {
         // If an instance doesnt exists already
         if (!this.instance) {
-            // Creating a new instance
             this.instance = new CacheService();
-
-            // Connecting to the cache
-            await this.instance.client.connect().catch(err => {
-                console.log("Failed to connect to caching server");
-                throw err;
-            });
-
             return this.instance;
         }
         // If an instance already exists, returning it
