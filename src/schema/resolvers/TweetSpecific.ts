@@ -9,7 +9,7 @@ import { TweetService } from '../../services/data/TweetService';
 import { TweetFilter } from '../../types/Tweet';
 
 // HELPERS
-import { ValidationErrors } from './helper/Validation';
+import { ValidationErrors } from '../types/Errors';
 
 // Initialsing the service to fetch user details
 var tweetService = new TweetService();
@@ -56,7 +56,7 @@ export async function resolveTweets(filter: any): Promise<any[]> {
         const res = await tweetService.getTweets(tweetFilter, next);
 
         // If data is available
-        if (res) {
+        if (res.list.length) {
             // Adding fetched tweets to list of tweets
             tweets = tweets.concat(res.list);
 
@@ -145,7 +145,7 @@ export async function resolveTweetLikers(
         const res = await tweetService.getTweetLikers(id, count, next);
 
         // If data is available
-        if (res) {
+        if (res.list.length) {
             // Adding fetched likers to list of likers
             likers = likers.concat(res.list);
 
@@ -197,7 +197,7 @@ export async function resolveTweetRetweeters(
         const res = await tweetService.getTweetRetweeters(id, count, next);
 
         // If data is available
-        if (res) {
+        if (res.list.length) {
             // Adding fetched retweeters to list of retweeters
             retweeters = retweeters.concat(res.list);
 
@@ -242,7 +242,7 @@ export async function resolveTweetReplies(
         const res = await tweetService.getTweetReplies(id, next);
 
         // If data is available
-        if (res) {
+        if (res.list.length) {
             // Adding fetched replies to list of replies
             replies = replies.concat(res.list);
 

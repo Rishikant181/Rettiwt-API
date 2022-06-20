@@ -48,21 +48,12 @@ export class AuthService extends DatabaseService {
      */
     private async init(): Promise<void> {
         // Connecting to database
-        this.connectDB()
-        // Getting the list of credentials from the database
-        .then(() => this.client.db(this.dbName).collection(this.credTable).find().project({ _id: 0 }).toArray())
-        // Initializing the credentials' member data
-        .then(creds => {
-            //@ts-ignore
-            this.authCredList = creds;
-            this.numCredentials = this.authCredList.length;
-            this.credentialNum = 0;
-        })
-        // If fetching of credentials from db failed
-        .catch(err => {
-            console.log("Failed to get authentication credentials from db");
-            throw err;
-        });
+        await this.connectDB()
+
+        // Getting the list of stored credentials from database
+        this.authCredList = (await this.client.db(this.dbName).collection(this.credTable).find().project({ _id: 0 }).toArray()) as AuthCredentials[];
+        this.numCredentials = this.authCredList.length;
+        this.credentialNum = 0;
     }
 
     /**
@@ -74,16 +65,16 @@ export class AuthService extends DatabaseService {
             // Creating a new instance
             this.instance = new AuthService();
 
-            // Initializing async data and returning the new instance
-            return this.instance.init()
-            .then(() => this.instance)
-            .catch(err => {
-                console.log("Failed to initialize AuthService instance");
-                throw err;
-            });
+            // Initializing async data
+            await this.instance.init()
+
+            // Returning the new instance
+            return this.instance;
         }
         // If an instance already exists
-        else return this.instance;
+        else {
+            return this.instance;
+        }
     }
 
     /**
@@ -115,15 +106,12 @@ export class AuthService extends DatabaseService {
         const creds = { csrfToken: csrfToken, cookie: cookies };
 
         // Writing credentials to database
-        return this.write(creds, this.credTable)
+        await this.write(creds, this.credTable)
+
         // If write was successful, reinitializing credentials
-        .then(() => this.init())
-        .then(() => true)
-        // If write failed
-        .catch(err => {
-            console.log("Failed to store credentials");
-            throw err;
-        });
+        await this.init();
+
+        return true;
     }
 
     /**
@@ -133,16 +121,15 @@ export class AuthService extends DatabaseService {
     async getAuthCredentials(newCred: boolean = true): Promise<{ authToken: string, csrfToken: string, cookie: string }> {
         // If new credential is required
         if(newCred) {
-            // Changing credentials
-            return this.changeCredentials()
-            .then(() => this.currentUser)
-            .catch(err => {
-                console.log("Failed to switch to new credentials");
-                throw err;
-            });
+            // Changing to the next available credentials
+            await this.changeCredentials();
+
+            return this.currentUser;
         }
         // If new credential is not required
-        else return this.currentUser;
+        else {
+            return this.currentUser;
+        }
     }
 
     /**
@@ -153,25 +140,21 @@ export class AuthService extends DatabaseService {
         // If new guest token is to used
         if(newCred || !this.currentGuest.guestToken) {
             // Fetching guest token from twitter api
-            return fetch(guestTokenUrl(), {
+            var data: any = await fetch(guestTokenUrl(), {
                 headers: blankHeader({ authToken: this.authToken }),
                 method: HttpMethods.POST,
                 body: null
-            })
-            .then(data => data.json())
+            }).then(data => data.json());
+
             // Setting new guest credentials
-            .then(data => {
-                this.currentGuest.authToken = this.authToken;
-                //@ts-ignore
-                this.currentGuest.guestToken = data['guest_token'];
-                return this.currentGuest;
-            })
-            .catch(err => {
-                console.log("Failed to fetch new guest credentials");
-                throw err;
-            });
+            this.currentGuest.authToken = this.authToken;
+            this.currentGuest.guestToken = data['guest_token'];
+
+            return this.currentGuest;
         }
         // If new guest credential is not required
-        else return this.currentGuest;
+        else {
+            return this.currentGuest;
+        }
     }
 }

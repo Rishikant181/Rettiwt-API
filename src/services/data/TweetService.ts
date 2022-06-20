@@ -34,23 +34,22 @@ export class TweetService extends FetcherService {
      * @param cursor The cursor to the next batch of tweets. If blank, first batch is fetched
      */
     async getTweets(filter: TweetFilter, cursor: string): Promise<CursoredData<Tweet>> {
-        return this.fetchData(tweetsUrl(filter, cursor))
-        .then(res => res.json())
-        .then(res => {
-            // Extracting data
-            var data = extractTweets(res);
+        // Getting the raw data
+        var res = await this.fetchData(tweetsUrl(filter, cursor)).then(res => res.json());
 
-            // Caching data
-            this.cacheData(data);
+        // Extracting data
+        var data = extractTweets(res);
 
-            // Parsing data
-            var tweets = data.required.map(item => toTweet(item));
+        // Caching data
+        this.cacheData(data);
 
-            return {
-                list: tweets,
-                next: data.cursor
-            };
-        });
+        // Parsing data
+        var tweets = data.required.map(item => toTweet(item));
+
+        return {
+            list: tweets,
+            next: data.cursor
+        };
     }
 
     /**
@@ -65,10 +64,16 @@ export class TweetService extends FetcherService {
         if(cachedData) {
             return cachedData;
         }
-        
-        return this.fetchData(tweetDetailsUrl(tweetId), undefined, undefined, false)
-        .then(res => res.json())
-        .then(res => {
+        // If data does not exist in cache
+        else {
+            // Fetching the raw data
+            var res = await this.fetchData(
+                tweetDetailsUrl(tweetId),
+                undefined,
+                undefined,
+                false
+            ).then(res => res.json());
+
             // Extracting data
             var data = extractTweet(res, tweetId);
 
@@ -79,7 +84,7 @@ export class TweetService extends FetcherService {
             var tweet = toTweet(data.required[0]);
 
             return tweet;
-        });
+        }
     }
 
     /**
@@ -89,23 +94,22 @@ export class TweetService extends FetcherService {
      * @param cursor The cursor to the next batch of users. If blank, first batch is fetched
      */
     async getTweetLikers(tweetId: string, count: number, cursor: string): Promise<CursoredData<User>> {
-        return this.fetchData(tweetLikesUrl(tweetId, count, cursor))
-        .then(res => res.json())
-        .then(res => {
-            // Extracting data
-            var data = extractTweetLikers(res);
+        // Fetching the raw data
+        var res = await this.fetchData(tweetLikesUrl(tweetId, count, cursor)).then(res => res.json());
 
-            // Caching data
-            this.cacheData(data);
+        // Extracting data
+        var data = extractTweetLikers(res);
 
-            // Parsing data
-            var users = data.required.map(item => toUser(item));
+        // Caching data
+        this.cacheData(data);
 
-            return {
-                list: users,
-                next: data.cursor
-            };
-        });
+        // Parsing data
+        var users = data.required.map(item => toUser(item));
+
+        return {
+            list: users,
+            next: data.cursor
+        };
     }
 
     /**
@@ -115,23 +119,22 @@ export class TweetService extends FetcherService {
      * @param cursor The cursor to the next batch of users. If blank, first batch is fetched
      */
     async getTweetRetweeters(tweetId: string, count: number, cursor: string): Promise<CursoredData<User>> {
-        return this.fetchData(tweetRetweetUrl(tweetId, count, cursor))
-        .then(res => res.json())
-        .then(res => {
-            // Extracting data
-            var data = extractTweetRetweeters(res);
+        // Fetching the raw data
+        var res = await this.fetchData(tweetRetweetUrl(tweetId, count, cursor)).then(res => res.json());
 
-            // Caching data
-            this.cacheData(data);
+        // Extracting data
+        var data = extractTweetRetweeters(res);
 
-            // Parsing data
-            var users = data.required.map(item => toUser(item));
+        // Caching data
+        this.cacheData(data);
 
-            return {
-                list: users,
-                next: data.cursor
-            };
-        });
+        // Parsing data
+        var users = data.required.map(item => toUser(item));
+
+        return {
+            list: users,
+            next: data.cursor
+        };
     }
 
     /**
@@ -140,22 +143,21 @@ export class TweetService extends FetcherService {
      * @param cursor The cursor to the next batch of replies. If blank, first batch is fetched
      */
     async getTweetReplies(tweetId: string, cursor: string): Promise<CursoredData<Tweet>> {
-        return this.fetchData(tweetRepliesUrl(tweetId, cursor))
-        .then(res => res.json())
-        .then(res => {
-            // Extracting data
-            var data = extractTweetReplies(res, tweetId);
+        // Fetching the raw data
+        var res = this.fetchData(tweetRepliesUrl(tweetId, cursor)).then(res => res.json());
+        
+        // Extracting data
+        var data = extractTweetReplies(res, tweetId);
 
-            // Caching data
-            this.cacheData(data);
+        // Caching data
+        this.cacheData(data);
 
-            // Parsing data
-            var tweets = data.required.map(item => toTweet(item));
+        // Parsing data
+        var tweets = data.required.map(item => toTweet(item));
 
-            return {
-                list: tweets,
-                next: data.cursor
-            };
-        });
+        return {
+            list: tweets,
+            next: data.cursor
+        };
     }
 }

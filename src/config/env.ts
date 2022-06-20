@@ -8,15 +8,6 @@ export const config = {
                         "cookies": "cookies"
                     },
                     "index": "index"
-                },
-                "cache": {
-                    "name": "data-cache",
-                    "index": "index",
-                    "enabled": true,
-                    "tables": {
-                        "users": "users",
-                        "tweets": "tweets"
-                    }
                 }
             }
         }

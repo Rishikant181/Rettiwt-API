@@ -6,7 +6,7 @@
 import { UserAccountService } from "../../services/data/UserAccountService";
 
 // HELPERS
-import { ValidationErrors } from './helper/Validation';
+import { ValidationErrors } from '../types/Errors';
 
 // Initialsing the service to fetch user details
 var userService = new UserAccountService();

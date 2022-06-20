@@ -1,10 +1,12 @@
 FROM node:alpine
 WORKDIR /app
 COPY ./package.json .
-RUN npm install --legacy-peer-deps
+RUN npm install
 COPY . .
 ENV APP_PORT 3000
 ENV USE_CACHE true
+ENV DATA_DB_HOST 127.0.0.1
+ENV DATA_DB_PORT 27017
 ENV CACHE_DB_HOST 127.0.0.1
 ENV CACHE_DB_PORT 27017
 CMD npm run start:dev
