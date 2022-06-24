@@ -17,6 +17,7 @@ import { parseCookies } from './helper/Parser';
 
 // CONFIGS
 import { config } from '../config/env';
+import { core_urls } from '../config/urls';
 
 /**
  * @summary Handles authentication of http requests and other authentication related tasks
@@ -49,7 +50,7 @@ export class AuthService extends DatabaseService {
      */
     private async init(): Promise<void> {
         // Connecting to database
-        await this.connectDB()
+        await this.connectDB();
 
         // Getting the list of stored credentials from database
         this.authCredList = (await this.client.db(this.dbName).collection(this.credTable).find().project({ _id: 0 }).toArray()) as AuthCredentials[];
