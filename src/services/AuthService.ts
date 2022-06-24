@@ -1,5 +1,6 @@
 // PACKAGE LIBS
 import fetch from 'node-fetch';
+import axios from 'axios';
 
 // CUSTOM LIBS
 
