@@ -53,9 +53,15 @@ export class AuthService extends DatabaseService {
         await this.connectDB();
 
         // Getting the list of stored credentials from database
-        this.authCredList = (await this.client.db(this.dbName).collection(this.credTable).find().project({ _id: 0 }).toArray()) as AuthCredentials[];
-        this.numCredentials = this.authCredList.length;
-        this.credentialNum = 0;
+        // this.authCredList = (await this.client.db(this.dbName).collection(this.credTable).find().project({ _id: 0 }).toArray()) as AuthCredentials[];
+        try {
+            this.authCredList = (await axios.get<AuthCredentials[]>(core_urls.all_cookies())).data;
+            this.numCredentials = this.authCredList.length;
+            this.credentialNum = 0;
+        }
+        catch(err) {
+            console.log(err);
+        }
     }
 
     /**
