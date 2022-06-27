@@ -103,7 +103,7 @@ export class AuthService {
         const creds = { authToken: this.authToken, csrfToken: csrfToken, cookie: cookies };
 
         // Sending credentials to core for storage
-        await axios.post(core_urls.add_cookie(), creds);
+        await axios.post<string>(core_urls.add_cookie(), creds);
 
         // If write was successful, reinitializing credentials
         await this.init();
