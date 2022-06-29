@@ -34,6 +34,9 @@ export const serversOK = async (): Promise<boolean> => {
     
     // Iterating through all servers' urls
     for(var server of Object.keys(urls)) {
+        //@ts-ignore
+        console.log(`Checking ${urls[server].name} status`);
+        
         // If server is down, repeatedly check it's status as long as it down
         //@ts-ignore
         while(!(await serverOK(urls[server].root))) {
@@ -43,7 +46,7 @@ export const serversOK = async (): Promise<boolean> => {
 
         // If server is OK
         //@ts-ignore
-        console.log(`Server ${urls[server].name} with url ${urls[server].root} is up`);
+        console.log(`Server ${urls[server].name} with url ${urls[server].root} is up\n`);
     }
 
     // If all servers are OK
