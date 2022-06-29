@@ -1,11 +1,11 @@
 // PACKAGE LIBS
 import fetch from 'node-fetch';
+import axios from 'axios';
 
 // CUSTOM LIBS
 
 // SERVICES
 import { HttpMethods } from '../types/HTTP';
-import { DatabaseService } from './DatabaseService';
 
 // TYPES
 import { GuestCredentials, AuthCredentials } from '../types/Authentication';
@@ -16,14 +16,14 @@ import { parseCookies } from './helper/Parser';
 
 // CONFIGS
 import { config } from '../config/env';
+import { core_urls } from '../config/urls';
 
 /**
  * @summary Handles authentication of http requests and other authentication related tasks
  */
-export class AuthService extends DatabaseService {
+export class AuthService {
     // MEMBER DATA
     private static instance: AuthService;                                    // To store the current instance of this service
-    private credTable: string;                                               // To store the name of the table with authentication credentials
     private authToken: string;                                               // To store the common auth token
     private currentUser: AuthCredentials;                                    // To store the current authentication credentials
     private currentGuest: GuestCredentials;                                  // To store the current guest credentials
@@ -33,12 +33,7 @@ export class AuthService extends DatabaseService {
 
     // MEMBER METHODS
     private constructor() {
-        // Initializing super class
-        super(config['server']['db']['databases']['auth']['name'], config['server']['db']['databases']['auth']['tables']['cookies']);
-
-        // Initializing member data
-        this.credTable = config['server']['db']['databases']['auth']['tables']['cookies'];
-        this.authToken = config['twitter']['auth']['authToken'];
+        this.authToken = config.twitter.auth.authToken;
         this.currentUser = { authToken: this.authToken, csrfToken: '', cookie: ''};
         this.currentGuest = { authToken: this.authToken, guestToken: '' };
     }
@@ -47,13 +42,15 @@ export class AuthService extends DatabaseService {
      * @summary Initializes asynchronous member data of AuthService
      */
     private async init(): Promise<void> {
-        // Connecting to database
-        await this.connectDB()
-
-        // Getting the list of stored credentials from database
-        this.authCredList = (await this.client.db(this.dbName).collection(this.credTable).find().project({ _id: 0 }).toArray()) as AuthCredentials[];
-        this.numCredentials = this.authCredList.length;
-        this.credentialNum = 0;
+        // Getting the list of stored credentials from core
+        try {
+            this.authCredList = (await axios.get<AuthCredentials[]>(core_urls.all_cookies())).data;
+            this.numCredentials = this.authCredList.length;
+            this.credentialNum = 0;
+        }
+        catch(err) {
+            console.log(err);
+        }
     }
 
     /**
@@ -103,10 +100,10 @@ export class AuthService extends DatabaseService {
         const csrfToken: string = cookies.match(/ct0=(?<token>[a|A|0-z|Z|9]+);/)?.groups.token;
         
         // Preparing the credentials to write
-        const creds = { csrfToken: csrfToken, cookie: cookies };
+        const creds = { authToken: this.authToken, csrfToken: csrfToken, cookie: cookies };
 
-        // Writing credentials to database
-        await this.write(creds, this.credTable)
+        // Sending credentials to core for storage
+        await axios.post<string>(core_urls.add_cookie(), creds);
 
         // If write was successful, reinitializing credentials
         await this.init();

@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/Rishikant181/twitter-api#readme",
   "dependencies": {
+    "axios": "^0.27.2",
     "concurrently": "^7.1.0",
     "connect": "^3.7.0",
     "express": "^4.17.2",

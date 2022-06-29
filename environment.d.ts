@@ -7,6 +7,8 @@ declare global {
             CACHE_DB_PORT: number,                              // To store the port number of caching database
             DATA_DB_HOST: string,                               // To store the hostname of the data db
             DATA_DB_PORT: number,                               // To store the port number of the data db
+            CORE_HOST: string,                                  // To store the hostname of the core api
+            CORE_PORT: number,                                  // To store the port number of the core api
             APP_PORT: number                                    // To store the port on which this app runs
         }
     }
