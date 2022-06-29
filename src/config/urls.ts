@@ -4,6 +4,7 @@
  * @summary Stores the urls used for communication with twitter api
  */
 export const twitter_urls = {
+    name: 'twitter',
     root: 'https://twitter.com/'                                            // The twitter root url
 };
 
@@ -11,6 +12,7 @@ export const twitter_urls = {
  * @summary Stores the urls used for communication with core API
  */
 export const core_urls = {
+    name: 'core',
     root: `http://${process.env.CORE_HOST}:${process.env.CORE_PORT}`,       // The core API root url
     single_cookie: (id: string) => `${core_urls.root}/Cookies/fetch/${id}`, // Endpoint to get a cookie with the given id
     all_cookies: () => `${core_urls.root}/Cookies/fetch`,                   // Endpoint to get all the stored cookies
