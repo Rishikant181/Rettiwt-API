@@ -39,16 +39,14 @@ export const serversOK = async (): Promise<boolean> => {
         while(!(await serverOK(urls[server].root))) {
             // All servers are not OK, so change allStatus to false
             allStatus = false;
-
-            // Log which server is down
-            //@ts-ignore
-            console.log(`Server ${urls[server].name} with url ${urls[server].root} is down, retrying`);
         }
 
+        // If server is OK
         //@ts-ignore
         console.log(`Server ${urls[server].name} with url ${urls[server].root} is up`);
     }
 
+    // If all servers are OK
     console.log("All servers are OK");
 
     return true;
