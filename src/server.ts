@@ -20,7 +20,7 @@ app.use('/graphql', graphqlHTTP({
 
 // Setting up express server
 app.listen(process.env.APP_PORT, async () => {
-    // Checking the status of all servers
+    // Checking the status of all servers and waiting till all servers are up
     await serversOK();
     
     // Initializing essential global services
