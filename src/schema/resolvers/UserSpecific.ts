@@ -5,6 +5,9 @@
 // SERVICES
 import { UserAccountService } from "../../services/data/UserAccountService";
 
+// TYPES
+import { Cursor } from '../../types/Service';
+
 // HELPERS
 import { ValidationErrors } from '../types/Errors';
 
@@ -45,7 +48,9 @@ export async function resolveUserLikes(
     favouritesCount: number
 ): Promise<any> {
     var likes: any[] = [];                                                      // To store the list of liked tweets
-    var next: string = '';                                                      // To store cursor to next batch
+    var next: Cursor = {
+        value: ''
+    };                                                                          // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of liked twets fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use
 
@@ -61,7 +66,7 @@ export async function resolveUserLikes(
         batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
 
         // Getting the data
-        const res = await userService.getUserLikes(id, count, next);
+        const res = await userService.getUserLikes(id, count, next.value);
 
         // If data is available
         if (res.list.length) {
@@ -80,6 +85,9 @@ export async function resolveUserLikes(
         }
     }
 
+    // Adding the cursor to the end of list of data
+    likes.push(next);
+
     return likes;
 }
 
@@ -97,7 +105,9 @@ export async function resolveUserFollowers(
     followersCount: number
 ): Promise<any> {
     var followers: any[] = [];                                                  // To store the list of followers
-    var next: string = '';                                                      // To store cursor to next batch
+    var next: Cursor = {
+        value: ''
+    };                                                                          // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of followers fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use
 
@@ -113,7 +123,7 @@ export async function resolveUserFollowers(
         batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
 
         // Getting the data
-        const res = await userService.getUserFollowers(id, count, next);
+        const res = await userService.getUserFollowers(id, count, next.value);
 
         // If data is available
         if (res.list.length) {
@@ -132,6 +142,9 @@ export async function resolveUserFollowers(
         }
     }
 
+    // Adding the cursor to the end of list of data
+    followers.push(next);
+
     return followers;
 }
 
@@ -149,7 +162,9 @@ export async function resolveUserFollowing(
     followingsCount: number
 ): Promise<any> {
     var following: any[] = [];                                                  // To store the list of following
-    var next: string = '';                                                      // To store cursor to next batch
+    var next: Cursor = {
+        value: ''
+    };                                                                          // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of following fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use
 
@@ -165,7 +180,7 @@ export async function resolveUserFollowing(
         batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
 
         // Getting the data
-        const res = await userService.getUserFollowing(id, count, next);
+        const res = await userService.getUserFollowing(id, count, next.value);
 
         // If data is available
         if (res.list.length) {
@@ -183,6 +198,9 @@ export async function resolveUserFollowing(
             break;
         }
     }
+
+    // Adding the cursor to the end of list of data
+    following.push(next);
 
     return following;
 }

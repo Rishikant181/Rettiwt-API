@@ -7,6 +7,7 @@ import { TweetService } from '../../services/data/TweetService';
 
 // TYPES
 import { TweetFilter } from '../../types/Tweet';
+import { Cursor } from '../../types/Service';
 
 // HELPERS
 import { ValidationErrors } from '../types/Errors';
@@ -32,7 +33,9 @@ export async function resolveTweet(id: string): Promise<any> {
  */
 export async function resolveTweets(filter: any): Promise<any[]> {
     var tweets: any[] = [];                                                     // To store the list of tweets
-    var next: string = '';                                                      // To store cursor to next batch
+    var next: Cursor = {
+        value: ''
+    };                                                                          // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of tweets fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use
 
@@ -53,7 +56,7 @@ export async function resolveTweets(filter: any): Promise<any[]> {
         batchSize = ((tweetFilter.count - total) < batchSize) ? (tweetFilter.count - total) : batchSize;
 
         // Getting the data
-        const res = await tweetService.getTweets(tweetFilter, next);
+        const res = await tweetService.getTweets(tweetFilter, next.value);
 
         // If data is available
         if (res.list.length) {
@@ -71,6 +74,9 @@ export async function resolveTweets(filter: any): Promise<any[]> {
             break;
         }
     }
+
+    // Adding the cursor to the end of list of data
+    tweets.push(next);
 
     return tweets;
 }
@@ -126,7 +132,9 @@ export async function resolveTweetLikers(
     likesCount: number
 ): Promise<any[]> {
     var likers: any[] = [];                                                     // To store the list of likers
-    var next: string = '';                                                      // To store cursor to next batch
+    var next: Cursor = {
+        value: ''
+    };                                                                          // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of likers fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use
 
@@ -142,7 +150,7 @@ export async function resolveTweetLikers(
         batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
 
         // Getting the data
-        const res = await tweetService.getTweetLikers(id, count, next);
+        const res = await tweetService.getTweetLikers(id, count, next.value);
 
         // If data is available
         if (res.list.length) {
@@ -161,6 +169,9 @@ export async function resolveTweetLikers(
         }
     }
 
+    // Adding the cursor to the end of list of data
+    likers.push(next);
+
     return likers;
 }
 
@@ -178,7 +189,9 @@ export async function resolveTweetRetweeters(
     retweetsCount: number
 ): Promise<any[]> {
     var retweeters: any[] = [];                                                 // To store the list of retweeters
-    var next: string = '';                                                      // To store cursor to next batch
+    var next: Cursor = {
+        value: ''
+    };                                                                          // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of retweeters fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use
 
@@ -194,7 +207,7 @@ export async function resolveTweetRetweeters(
         batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
 
         // Getting the data
-        const res = await tweetService.getTweetRetweeters(id, count, next);
+        const res = await tweetService.getTweetRetweeters(id, count, next.value);
 
         // If data is available
         if (res.list.length) {
@@ -213,6 +226,9 @@ export async function resolveTweetRetweeters(
         }
     }
 
+    // Adding the cursor to the end of list of data
+    retweeters.push(next);
+
     return retweeters;
 }
 
@@ -230,7 +246,9 @@ export async function resolveTweetReplies(
     repliesCount: number
 ): Promise<any[]> {
     var replies: any[] = [];                                                    // To store the list of replies
-    var next: string = '';                                                      // To store cursor to next batch
+    var next: Cursor = {
+        value: ''
+    };                                                                          // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of replies fetched
 
     // If all replies are to be fetched
@@ -239,7 +257,7 @@ export async function resolveTweetReplies(
     // Repeatedly fetching data as long as total data fetched is less than requried
     while (total < count) {
         // Getting the data
-        const res = await tweetService.getTweetReplies(id, next);
+        const res = await tweetService.getTweetReplies(id, next.value);
 
         // If data is available
         if (res.list.length) {
@@ -257,6 +275,9 @@ export async function resolveTweetReplies(
             break;
         }
     }
+
+    // Adding the cursor to the end of list of data
+    replies.push(next);
 
     return replies;
 }
