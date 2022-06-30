@@ -6,13 +6,15 @@ import {
     GraphQLObjectType,
     GraphQLString,
     GraphQLInt,
-    GraphQLList
+    GraphQLList,
+    GraphQLUnionType
 } from 'graphql';
 
 // CUSTOM LIBS
 
 // TYPES
-import { Tweet } from './TweetTypes'
+import { Tweet, TweetList } from './TweetTypes'
+import { Cursor } from './Global';
 
 // RESOLVERS
 import { resolveUserLikes, resolveUserFollowers, resolveUserFollowing } from '../resolvers/UserSpecific';
@@ -46,7 +48,7 @@ export const User = new GraphQLObjectType({
         profileImage: { type: GraphQLString },
         favouritesCount: { type: GraphQLInt },
         likes: {
-            type: new GraphQLList(Tweet),
+            type: TweetList,
             args: {
                 count: {
                     description: "The number of liked tweets to fetch",
@@ -63,7 +65,7 @@ export const User = new GraphQLObjectType({
         },
         followersCount: { type: GraphQLInt },
         followers: {
-            type: new GraphQLList(User),
+            type: UserList,
             args: {
                 count: {
                     description: "The number of followers to fetch",
@@ -80,7 +82,7 @@ export const User = new GraphQLObjectType({
         },
         followingsCount: { type: GraphQLInt },
         following: {
-            type: new GraphQLList(User),
+            type: UserList,
             args: {
                 count: {
                     type: GraphQLInt,
@@ -97,7 +99,7 @@ export const User = new GraphQLObjectType({
         },
         statusesCount: { type: GraphQLInt },
         tweets: {
-            type: new GraphQLList(Tweet),
+            type: TweetList,
             args: {
                 toUsers: { type: new GraphQLList(GraphQLString) },
                 mentions: { type: new GraphQLList(GraphQLString) },
@@ -112,3 +114,19 @@ export const User = new GraphQLObjectType({
         }
     })
 });
+
+export const UserList = new GraphQLList(new GraphQLUnionType({
+    name: 'UserCursorUnion',
+    description: 'A union type which can either be a User or a Cursor, used in cursored User lists',
+    types: [User, Cursor],
+    resolveType: (data) => {
+        // If it has a description field => this is a User object
+        if(data.description) {
+            return User;
+        }
+        // If it has a value field => this is a cursor object
+        else if(data.value) {
+            return Cursor;
+        }
+    }
+}));

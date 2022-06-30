@@ -13,7 +13,7 @@ import {
 // CUSTOM LIBS
 
 // TYPES
-import { User } from './UserTypes';
+import { User, UserList } from './UserTypes';
 import { Cursor } from './Global';
 
 // RESOLVERS
@@ -35,7 +35,7 @@ export const TweetTokens = new GraphQLObjectType({
         hashtags: { type: new GraphQLList(GraphQLString) },
         urls: { type: new GraphQLList(GraphQLString) },
         mentionedUsers: {
-            type: new GraphQLList(User),
+            type: UserList,
             resolve: (parent) => parent.mentionedUsers.map((user: any) => resolveUserDetails('', user.id))
         },
         media: { type: new GraphQLList(GraphQLString) },
@@ -63,7 +63,7 @@ export const Tweet = new GraphQLObjectType({
         lang: { type: GraphQLString },
         quoteCount: { type: GraphQLInt },
         quotes: {
-            type: new GraphQLList(Tweet),
+            type: TweetList,
             args: {
                 count: {
                     type: GraphQLInt,
@@ -80,7 +80,7 @@ export const Tweet = new GraphQLObjectType({
         },
         likeCount: { type: GraphQLInt },
         likers: {
-            type: new GraphQLList(User),
+            type: UserList,
             args: {
                 count: {
                     type: GraphQLInt,
@@ -97,7 +97,7 @@ export const Tweet = new GraphQLObjectType({
         },
         retweetCount: { type: GraphQLInt },
         retweeters: {
-            type: new GraphQLList(User),
+            type: UserList,
             args: {
                 count: {
                     type: GraphQLInt,
@@ -114,7 +114,7 @@ export const Tweet = new GraphQLObjectType({
         },
         replyCount: { type: GraphQLInt },
         replies: {
-            type: new GraphQLList(Tweet),
+            type: TweetList,
             args: {
                 count: {
                     type: GraphQLInt,
@@ -134,7 +134,7 @@ export const Tweet = new GraphQLObjectType({
 
 export const TweetList = new GraphQLList(new GraphQLUnionType({
     name: 'TweetCursorUnion',
-    description: 'A union type which can either be a Tweet or a cursor, used in cursored tweet lists',
+    description: 'A union type which can either be a Tweet or a Cursor, used in cursored tweet lists',
     types: [Tweet, Cursor],
     resolveType: (data) => {
         // If it has an id field => this is a Tweet object
@@ -146,4 +146,4 @@ export const TweetList = new GraphQLList(new GraphQLUnionType({
             return Cursor;
         }
     }
-}))
+}));
