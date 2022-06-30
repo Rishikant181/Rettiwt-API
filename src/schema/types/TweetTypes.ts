@@ -6,13 +6,15 @@ import {
     GraphQLString,
     GraphQLObjectType,
     GraphQLInt,
-    GraphQLBoolean
+    GraphQLBoolean,
+    GraphQLUnionType
 } from "graphql";
 
 // CUSTOM LIBS
 
 // TYPES
 import { User } from './UserTypes';
+import { Cursor } from './Global';
 
 // RESOLVERS
 import {
@@ -129,3 +131,19 @@ export const Tweet = new GraphQLObjectType({
         }
     })
 });
+
+export const TweetList = new GraphQLList(new GraphQLUnionType({
+    name: 'TweetCursorUnion',
+    description: 'A union type which can either be a Tweet or a cursor, used in cursored tweet lists',
+    types: [Tweet, Cursor],
+    resolveType: (data) => {
+        // If it has an id field => this is a Tweet object
+        if(data.id) {
+            return Tweet;
+        }
+        // If it has a value field => this is a cursor object
+        else if(data.value) {
+            return Cursor;
+        }
+    }
+}))
