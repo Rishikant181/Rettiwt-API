@@ -98,17 +98,19 @@ export async function resolveUserLikes(
  * @param id The id of the user whose followers are to be fetched
  * @param count The number of followers to fetch
  * @param all Whether to fetch all followers list
+ * @param cursor The cursor to the batch of followers to fetch
  * @param followerCount The total number of followers of the target user
  */
 export async function resolveUserFollowers(
     id: string,
     count: number,
     all: boolean,
+    cursor: string,
     followersCount: number
 ): Promise<any> {
     var followers: any[] = [];                                                  // To store the list of followers
     var next: Cursor = {
-        value: ''
+        value: cursor
     };                                                                          // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of followers fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use
@@ -155,17 +157,19 @@ export async function resolveUserFollowers(
  * @param id The id of the user whose followings are to be fetched
  * @param count The number of following to fetch
  * @param all Whether to fetch list of all followings
+ * @param cursor The cursor to the batch of followings to fetch
  * @param followingsCount The total number of followings of the target user
  */
 export async function resolveUserFollowing(
     id: string,
     count: number,
     all: boolean,
+    cursor: string,
     followingsCount: number
 ): Promise<any> {
     var following: any[] = [];                                                  // To store the list of following
     var next: Cursor = {
-        value: ''
+        value: cursor
     };                                                                          // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of following fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use

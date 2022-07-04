@@ -81,9 +81,14 @@ export const User = new GraphQLObjectType({
                     description: "Whether to fetch all followers list",
                     type: GraphQLBoolean,
                     defaultValue: false
+                },
+                cursor: {
+                    type: GraphQLString,
+                    description: 'The cursor to the batch of followers list to fetch',
+                    defaultValue: ''
                 }
             },
-            resolve: (parent, args) => resolveUserFollowers(parent.user.id, args.count, args.all, parent.followersCount)
+            resolve: (parent, args) => resolveUserFollowers(parent.user.id, args.count, args.all, args.cursor, parent.followersCount)
         },
         followingsCount: { type: GraphQLInt },
         following: {
@@ -98,9 +103,14 @@ export const User = new GraphQLObjectType({
                     description: "Whether to fetch all followings list",
                     type: GraphQLBoolean,
                     defaultValue: false
+                },
+                cursor: {
+                    type: GraphQLString,
+                    description: 'The cursor to the batch of followers list to fetch',
+                    defaultValue: ''
                 }
             },
-            resolve: (parent, args) => resolveUserFollowing(parent.user.id, args.count, args.all, parent.followingsCount)
+            resolve: (parent, args) => resolveUserFollowing(parent.user.id, args.count, args.all, args.cursor, parent.followingsCount)
         },
         statusesCount: { type: GraphQLInt },
         tweets: {
