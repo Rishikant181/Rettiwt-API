@@ -96,9 +96,14 @@ export const Tweet = new GraphQLObjectType({
                     type: GraphQLBoolean,
                     description: "Whether to fetch all likers",
                     defaultValue: false
+                },
+                cursor: {
+                    type: GraphQLString,
+                    description: 'The cursor to the batch of likers list to fetch',
+                    defaultValue: ''
                 }
             },
-            resolve: (parent, args) => resolveTweetLikers(parent.id, args.count, args.all, parent.likeCount)
+            resolve: (parent, args) => resolveTweetLikers(parent.id, args.count, args.all, args.cursor, parent.likeCount)
         },
         retweetCount: { type: GraphQLInt },
         retweeters: {

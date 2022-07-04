@@ -126,17 +126,19 @@ export async function resolveTweetQuotes(
  * @param id The id of the tweet whose likers are to be fetched
  * @param count The total number of likers to fetch
  * @param all Whether to fetch all the likers of the tweet
+ * @param cursor The cursor to the batch of likers to fetch
  * @param likesCount The total number of like of the tweet
  */
 export async function resolveTweetLikers(
     id: string,
     count: number,
     all: boolean,
+    cursor: string,
     likesCount: number
 ): Promise<any[]> {
     var likers: any[] = [];                                                     // To store the list of likers
     var next: Cursor = {
-        value: ''
+        value: cursor
     };                                                                          // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of likers fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use
