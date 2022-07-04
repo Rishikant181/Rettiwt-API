@@ -74,9 +74,14 @@ export const Tweet = new GraphQLObjectType({
                     type: GraphQLBoolean,
                     description: "Whether to fetch all quotes",
                     defaultValue: false
+                },
+                cursor: {
+                    type: GraphQLString,
+                    description: 'The cursor to the batch of quotes list to fetch',
+                    defaultValue: ''
                 }
             },
-            resolve: (parent, args) => resolveTweetQuotes(parent.id, args.count, args.all, parent.quoteCount)
+            resolve: (parent, args) => resolveTweetQuotes(parent.id, args.count, args.all, args.cursor, parent.quoteCount)
         },
         likeCount: { type: GraphQLInt },
         likers: {

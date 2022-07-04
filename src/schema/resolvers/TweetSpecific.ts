@@ -86,12 +86,14 @@ export async function resolveTweets(filter: any): Promise<any[]> {
  * @param id The id of the tweet whose quotes are to be fetched
  * @param count The number of quotes to be fetched
  * @param all Whether to fetch all quotes or not
+ * @param cursor The cursor to the batch of tweet quotes to fetch
  * @param quoteCount The total number of quotes of the given tweet
  */
 export async function resolveTweetQuotes(
     id: string,
     count: number,
     all: boolean,
+    cursor: string,
     quoteCount: number
 ): Promise<any[]> {
     var quotes: any[] = [];                                                     // To store the list of quotes
@@ -109,7 +111,8 @@ export async function resolveTweetQuotes(
         startDate: '',
         endDate: '',
         quoted: id,
-        count: count
+        count: count,
+        cursor: cursor
     };
 
     // Fetching the quotes using resolveTweets method
