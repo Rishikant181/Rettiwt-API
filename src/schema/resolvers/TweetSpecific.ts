@@ -185,17 +185,19 @@ export async function resolveTweetLikers(
  * @param id The id of the tweet whose retweeters are to be fetched
  * @param count The total number of retweeters to fetch
  * @param all Whether to fetch all retweeters
+ * @param cursor The cursor to the batch of retweeters to fetch
  * @param retweetsCount The total number of retweets of the 
  */
 export async function resolveTweetRetweeters(
     id: string,
     count: number,
     all: boolean,
+    cursor: string,
     retweetsCount: number
 ): Promise<any[]> {
     var retweeters: any[] = [];                                                 // To store the list of retweeters
     var next: Cursor = {
-        value: ''
+        value: cursor
     };                                                                          // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of retweeters fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use
@@ -242,17 +244,19 @@ export async function resolveTweetRetweeters(
  * @param id The id of the tweet whose replies are to be fetched
  * @param count The total number of replies to fetch
  * @param all Whether to fetch list of all replies
+ * @param cursor The cursor to the batch of replies to fetch
  * @param repliesCount The total number of replies to the target tweet
  */
 export async function resolveTweetReplies(
     id: string,
     count: number,
     all: boolean,
+    cursor: string,
     repliesCount: number
 ): Promise<any[]> {
     var replies: any[] = [];                                                    // To store the list of replies
     var next: Cursor = {
-        value: ''
+        value: cursor
     };                                                                          // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of replies fetched
 

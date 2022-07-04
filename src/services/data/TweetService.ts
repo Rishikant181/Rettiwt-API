@@ -144,7 +144,7 @@ export class TweetService extends FetcherService {
      */
     async getTweetReplies(tweetId: string, cursor: string): Promise<CursoredData<Tweet>> {
         // Fetching the raw data
-        var res = this.fetchData(tweetRepliesUrl(tweetId, cursor)).then(res => res.json());
+        var res = await this.fetchData(tweetRepliesUrl(tweetId, cursor)).then(res => res.json());
         
         // Extracting data
         var data = extractTweetReplies(res, tweetId);

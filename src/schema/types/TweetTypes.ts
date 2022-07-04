@@ -118,9 +118,14 @@ export const Tweet = new GraphQLObjectType({
                     type: GraphQLBoolean,
                     description: "Whether to fetch all likers",
                     defaultValue: false
+                },
+                cursor: {
+                    type: GraphQLString,
+                    description: 'The cursor to the batch of retweeters list to fetch',
+                    defaultValue: ''
                 }
             },
-            resolve: (parent, args) => resolveTweetRetweeters(parent.id, args.count, args.all, parent.retweetCount)
+            resolve: (parent, args) => resolveTweetRetweeters(parent.id, args.count, args.all, args.cursor, parent.retweetCount)
         },
         replyCount: { type: GraphQLInt },
         replies: {
@@ -135,9 +140,14 @@ export const Tweet = new GraphQLObjectType({
                     type: GraphQLBoolean,
                     description: "Whether to fetch all replies",
                     defaultValue: false
+                },
+                cursor: {
+                    type: GraphQLString,
+                    description: 'The cursor to the batch of replies list to fetch',
+                    defaultValue: ''
                 }
             },
-            resolve: (parent, args) => resolveTweetReplies(parent.id, args.count, args.all, parent.replyCount)
+            resolve: (parent, args) => resolveTweetReplies(parent.id, args.count, args.all, args.cursor, parent.replyCount)
         }
     })
 });
