@@ -34,7 +34,7 @@ export async function resolveTweet(id: string): Promise<any> {
 export async function resolveTweets(filter: any): Promise<any[]> {
     var tweets: any[] = [];                                                     // To store the list of tweets
     var next: Cursor = {
-        value: ''
+        value: filter.cursor
     };                                                                          // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of tweets fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use
