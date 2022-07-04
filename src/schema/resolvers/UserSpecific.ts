@@ -39,17 +39,19 @@ export async function resolveUserDetails(userName: string, id: string): Promise<
  * @param id The id of the user whose likes are to be fetched
  * @param count The number of likes to fetch
  * @param all Whether to fetch list of all tweets liked by user
+ * @param cursor The cursor to the batch of likes to fetch
  * @param favouritesCount The total number of tweets liked by target user
  */
 export async function resolveUserLikes(
     id: string,
     count: number,
     all: boolean,
+    cursor: string,
     favouritesCount: number
 ): Promise<any> {
     var likes: any[] = [];                                                      // To store the list of liked tweets
     var next: Cursor = {
-        value: ''
+        value: cursor
     };                                                                          // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of liked twets fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use

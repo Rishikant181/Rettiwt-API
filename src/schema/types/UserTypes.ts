@@ -59,9 +59,14 @@ export const User = new GraphQLObjectType({
                     description: "Whether to fetch all tweets liked by user",
                     type: GraphQLBoolean,
                     defaultValue: false
+                },
+                cursor: {
+                    type: GraphQLString,
+                    description: 'The cursor to the batch of likes list to fetch',
+                    defaultValue: ''
                 }
             },
-            resolve: (parent, args) => resolveUserLikes(parent.user.id, args.count, args.all, parent.favouritesCount)
+            resolve: (parent, args) => resolveUserLikes(parent.user.id, args.count, args.all, args.cursor, parent.favouritesCount)
         },
         followersCount: { type: GraphQLInt },
         followers: {
@@ -108,7 +113,12 @@ export const User = new GraphQLObjectType({
                 startDate: { type: GraphQLString },
                 endDate: { type: GraphQLString },
                 count: { type: GraphQLInt, defaultValue: 1 },
-                all: { type: GraphQLBoolean, defaultValue: false }
+                all: { type: GraphQLBoolean, defaultValue: false },
+                cursor: {
+                    type: GraphQLString,
+                    description: 'The cursor to the batch of tweets list to fetch',
+                    defaultValue: ''
+                }
             },
             resolve: (parent, args) => resolveTweets({ fromUsers: [parent.user.userName], ...args, count: (args.all ? parent.statusesCount : args.count) })
         }

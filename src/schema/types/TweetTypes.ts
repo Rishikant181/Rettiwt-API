@@ -157,8 +157,8 @@ export const TweetList = new GraphQLList(new GraphQLUnionType({
     description: 'A union type which can either be a Tweet or a Cursor, used in cursored tweet lists',
     types: [Tweet, Cursor],
     resolveType: (data) => {
-        // If it has an id field => this is a Tweet object
-        if(data.id) {
+        // If it has createdAt field => this is a Tweet object
+        if(data.createdAt) {
             return Tweet;
         }
         // If it has a value field => this is a cursor object
