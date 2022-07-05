@@ -2,7 +2,7 @@
 
 // TYPES
 import { Response } from 'node-fetch';
-import { AxiosResponse } from 'axios';
+import { AxiosResponse, AxiosResponseHeaders } from 'axios';
 import { HttpStatus } from '../../types/HTTP';
 
 /**
@@ -21,9 +21,9 @@ export function handleHTTPError(res: AxiosResponse): AxiosResponse {
  * @returns The cookie string after removing unnecessary data from it
  * @param headers The raw header from which the cookies are to be extracted
  */
-export function parseCookies(headers: Headers): string {
+export function parseCookies(headers: AxiosResponseHeaders): string {
     // Getting the raw cookie string
-    var cookies: string = headers.get('set-cookie') + '';
+    var cookies: string = headers['set-cookie'] + '';
     var newCookie: string = '';
 
     // Getting required cookies from all cookies
