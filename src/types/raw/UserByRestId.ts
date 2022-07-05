@@ -22,8 +22,6 @@ export interface Result {
     super_follow_eligible: boolean;
     super_followed_by: boolean;
     super_following: boolean;
-    legacy_extended_profile: LegacyExtendedProfile;
-    is_profile_translatable: boolean;
 }
 
 export interface AffiliatesHighlightedLabel { }
