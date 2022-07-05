@@ -62,8 +62,10 @@ export class FetcherService {
                 else {
                     return
                 }
-            })
+            })()
         }
+
+        console.log(config)
     
         // Fetching the data
         var res = await axios(url, config).then(res => handleHTTPError(res))

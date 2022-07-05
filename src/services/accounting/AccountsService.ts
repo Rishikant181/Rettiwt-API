@@ -30,7 +30,7 @@ export class AccountsService extends FetcherService {
         var res = await this.fetchData(flow.url, HttpMethods.POST, flow.body, false, guestCredentials);
         
         // Getting the response body
-        var data = await res.data();
+        var data = res.data;
             
         // Returning the response body as well as data of the flow
         return {
