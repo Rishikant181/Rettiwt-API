@@ -1,6 +1,6 @@
 // PACKAGE LIBS
 import fetch from "node-fetch";
-import axios from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 // CUSTOM LIBS
 
@@ -43,19 +43,32 @@ export class FetcherService {
         body: any = null,
         auth: boolean = true,
         guestCreds?: GuestCredentials
-    ): Promise<any> {
+    ): Promise<AxiosResponse> {
         // Getting the AuthService instance
         var service = await AuthService.getInstance();
 
         // Getting the required credentials
         var creds = await (auth ? service.getAuthCredentials() : service.getGuestCredentials());
-    
-        // Fetching the data
-        var res = await fetch(url, {
+
+        // Preparing the request config
+        var config: AxiosRequestConfig = {
             headers: auth ? authorizedHeader(creds as AuthCredentials) : unauthorizedHeader(guestCreds ? guestCreds : creds as GuestCredentials),
             method: method ? method : HttpMethods.GET,
-            body: body
-        }).then(res => handleHTTPError(res))
+            // Conditionally including body is POST method is to be used
+            ...(() => {
+                if (method == HttpMethods.POST) {
+                    return { data: body }
+                }
+                else {
+                    return
+                }
+            })()
+        }
+
+        console.log(config)
+    
+        // Fetching the data
+        var res = await axios(url, config).then(res => handleHTTPError(res))
 
         return res;
     }

@@ -1,3 +1,6 @@
+// PACKAGE LIBS
+import { AxiosResponseHeaders } from 'axios';
+
 // CUSTOM LIBS
 
 // SERVICES
@@ -22,12 +25,12 @@ export class AccountsService extends FetcherService {
      * @param flow The flow to be executed against Twitter API
      * @param guestCredentials The guest credentials to use for making HTTP request
      */
-    private async executeFlow(flow: LoginFlow, guestCredentials: GuestCredentials): Promise<{headers: Headers, nextFlowName: LoginFlows, nextFlowToken: string}> {
+    private async executeFlow(flow: LoginFlow, guestCredentials: GuestCredentials): Promise<{headers: AxiosResponseHeaders, nextFlowName: LoginFlows, nextFlowToken: string}> {
         // Executing the given flow
         var res = await this.fetchData(flow.url, HttpMethods.POST, flow.body, false, guestCredentials);
         
         // Getting the response body
-        var data = await res.json();
+        var data = res.data;
             
         // Returning the response body as well as data of the flow
         return {
@@ -42,7 +45,7 @@ export class AccountsService extends FetcherService {
      * @returns The logged in account's cookies and other credentials
      * @param cred The login credentials of the Twitter account to be logged into
      */
-    async login(cred: LoginCredentials): Promise<Headers> {
+    async login(cred: LoginCredentials): Promise<AxiosResponseHeaders> {
         var currentFlowName: LoginFlows = LoginFlows.Login;                     // To store current flow name
         
         // Getting the initial flow
