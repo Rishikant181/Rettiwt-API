@@ -2,13 +2,14 @@
 
 // TYPES
 import { Response } from 'node-fetch';
+import { AxiosResponse } from 'axios';
 import { HttpStatus } from '../../types/HTTP';
 
 /**
  * @summary Throws the appropriate http error after evaluation of the status code of reponse
  * @param res The response object received from http communication
  */
-export function handleHTTPError(res: Response): Response {
+export function handleHTTPError(res: AxiosResponse): AxiosResponse {
     if (res.status != 200 && res.status in HttpStatus) {
         throw new Error(HttpStatus[res.status])
     }
