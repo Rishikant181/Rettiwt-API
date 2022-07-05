@@ -12,16 +12,58 @@ export interface User {
 
 export interface Result {
     __typename: string
+    timeline: Timeline
+}
+
+export interface Timeline {
+    timeline: Timeline2
+}
+
+export interface Timeline2 {
+    instructions: Instruction[]
+}
+
+export interface Instruction {
+    type: string
+    direction?: string
+    entries?: Entry[]
+}
+
+export interface Entry {
+    entryId: string
+    sortIndex: string
+    content: Content
+}
+
+export interface Content {
+    entryType: string
+    itemContent?: ItemContent
+    clientEventInfo?: ClientEventInfo
+    value?: string
+    cursorType?: string
+}
+
+export interface ItemContent {
+    itemType: string
+    user_results: UserResults
+    userDisplayType: string
+}
+
+export interface UserResults {
+    result: Result2
+}
+
+export interface Result2 {
+    __typename: string
     id: string
     rest_id: string
     affiliates_highlighted_label: AffiliatesHighlightedLabel
     has_nft_avatar: boolean
     legacy: Legacy
-    smart_blocked_by: boolean
-    smart_blocking: boolean
     super_follow_eligible: boolean
     super_followed_by: boolean
     super_following: boolean
+    professional?: Professional
 }
 
 export interface AffiliatesHighlightedLabel { }
@@ -53,13 +95,16 @@ export interface Legacy {
     normal_followers_count: number
     notifications: boolean
     pinned_tweet_ids_str: string[]
-    profile_banner_url: string
+    profile_banner_extensions?: ProfileBannerExtensions
+    profile_banner_url?: string
+    profile_image_extensions: ProfileImageExtensions
     profile_image_url_https: string
     profile_interstitial_type: string
     protected: boolean
     screen_name: string
     statuses_count: number
     translator_type: string
+    url?: string
     verified: boolean
     want_retweets: boolean
     withheld_in_countries: any[]
@@ -67,10 +112,29 @@ export interface Legacy {
 
 export interface Entities {
     description: Description
+    url?: Url2
 }
 
 export interface Description {
-    urls: any[]
+    urls: Url[]
+}
+
+export interface Url {
+    display_url: string
+    expanded_url: string
+    url: string
+    indices: number[]
+}
+
+export interface Url2 {
+    urls: Url3[]
+}
+
+export interface Url3 {
+    display_url: string
+    expanded_url: string
+    url: string
+    indices: number[]
 }
 
 export interface ProfileBannerExtensions {
@@ -109,7 +173,7 @@ export interface MediaColor2 {
 }
 
 export interface R2 {
-    ok: Ok2
+    ok?: Ok2
 }
 
 export interface Ok2 {
@@ -127,4 +191,18 @@ export interface Rgb2 {
     red: number
 }
 
-export interface LegacyExtendedProfile { }
+export interface Professional {
+    rest_id: string
+    professional_type: string
+    category: Category[]
+}
+
+export interface Category {
+    id: number
+    name: string
+}
+
+export interface ClientEventInfo {
+    component: string
+    element: string
+}
