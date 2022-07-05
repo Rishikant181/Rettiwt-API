@@ -4,6 +4,10 @@
 
 // TYPES
 import { DataErrors } from '../../schema/types/Errors';
+import UserType from '../../types/raw/user/UserByScreenName';
+import UserFollowersType from '../../types/raw/user/UserFollowers';
+import UserFollowingType from '../../types/raw/user/UserFollowings';
+import UserLikesType from '../../types/raw/user/UserLikes';
 
 // HELPERS
 import { isJSONEmpty } from './Parser';
@@ -14,7 +18,7 @@ import { isJSONEmpty } from './Parser';
  * @returns The raw user account data formatted and sorted into required and additional data
  * @param res The raw response received from Twitter
  */
-export function extractUserAccountDetails(res: any): {
+export function extractUserAccountDetails(res: UserType): {
     required: any[],
     cursor: string,
     users: any[],
@@ -47,7 +51,7 @@ export function extractUserAccountDetails(res: any): {
  * @returns The raw user following/followers data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
-export function extractUserFollow(res: any): {
+export function extractUserFollow(res: UserFollowersType | UserFollowingType): {
     required: any[],
     cursor: string,
     users: any[],
@@ -97,7 +101,7 @@ export function extractUserFollow(res: any): {
  * @returns The raw user likes data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
-export function extractUserLikes(res: any): {
+export function extractUserLikes(res: UserLikesType): {
     required: any[],
     cursor: string,
     users: any[],
