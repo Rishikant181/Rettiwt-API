@@ -1,4 +1,4 @@
-export interface Root {
+export default interface Root {
     data: Data
 }
 
