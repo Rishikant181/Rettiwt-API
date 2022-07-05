@@ -33,9 +33,7 @@ export async function resolveTweet(id: string): Promise<any> {
  */
 export async function resolveTweets(filter: any): Promise<any[]> {
     var tweets: any[] = [];                                                     // To store the list of tweets
-    var next: Cursor = {
-        value: filter.cursor
-    };                                                                          // To store cursor to next batch
+    var next: Cursor = new Cursor(filter.cursor);                               // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of tweets fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use
 
@@ -137,9 +135,7 @@ export async function resolveTweetLikers(
     likesCount: number
 ): Promise<any[]> {
     var likers: any[] = [];                                                     // To store the list of likers
-    var next: Cursor = {
-        value: cursor
-    };                                                                          // To store cursor to next batch
+    var next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of likers fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use
 
@@ -196,9 +192,7 @@ export async function resolveTweetRetweeters(
     retweetsCount: number
 ): Promise<any[]> {
     var retweeters: any[] = [];                                                 // To store the list of retweeters
-    var next: Cursor = {
-        value: cursor
-    };                                                                          // To store cursor to next batch
+    var next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of retweeters fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use
 
@@ -255,9 +249,7 @@ export async function resolveTweetReplies(
     repliesCount: number
 ): Promise<any[]> {
     var replies: any[] = [];                                                    // To store the list of replies
-    var next: Cursor = {
-        value: cursor
-    };                                                                          // To store cursor to next batch
+    var next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of replies fetched
 
     // If all replies are to be fetched
