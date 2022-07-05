@@ -3,12 +3,9 @@ import express from 'express';
 import { graphqlHTTP } from 'express-graphql';
 
 // CUSTOM LIBS
-
-// SERVICES
+import { serversOK } from './ServerChecks';
 import { AuthService } from './services/AuthService';
 import { CacheService } from './services/CacheService';
-
-// TYPES
 import { schema } from './schema/schema';
 import { exit } from 'process';
 
@@ -23,6 +20,9 @@ app.use('/graphql', graphqlHTTP({
 
 // Setting up express server
 app.listen(process.env.APP_PORT, async () => {
+    // Checking the status of all servers and waiting till all servers are up
+    await serversOK();
+    
     // Initializing essential global services
     try {
         await AuthService.getInstance();

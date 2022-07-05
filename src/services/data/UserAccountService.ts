@@ -96,7 +96,10 @@ export class UserAccountService extends FetcherService {
         // Parsing data
         var users = data.required.map(item => toUser(item));
 
-        return { list: users, next: data.cursor };
+        return {
+            list: users,
+            next: { value: data.cursor }
+        };
     }
 
     /**
@@ -123,7 +126,10 @@ export class UserAccountService extends FetcherService {
         // Parsing data
         var users = data.required.map(item => toUser(item));
 
-        return { list: users, next: data.cursor };
+        return {
+            list: users,
+            next: { value: data.cursor }
+        };
     }
 
     /**
@@ -145,6 +151,9 @@ export class UserAccountService extends FetcherService {
         // Parsing data
         var tweets = data.required.map(item => toTweet(item));
 
-        return { list: tweets, next: data.cursor };
+        return {
+            list: tweets,
+            next: { value: data.cursor }
+        };
     }
 };

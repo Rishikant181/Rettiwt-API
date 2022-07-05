@@ -6,13 +6,15 @@ import {
     GraphQLObjectType,
     GraphQLString,
     GraphQLInt,
-    GraphQLList
+    GraphQLList,
+    GraphQLUnionType
 } from 'graphql';
 
 // CUSTOM LIBS
 
 // TYPES
-import { Tweet } from './TweetTypes'
+import { Tweet, TweetList } from './TweetTypes'
+import { Cursor } from './Global';
 
 // RESOLVERS
 import { resolveUserLikes, resolveUserFollowers, resolveUserFollowing } from '../resolvers/UserSpecific';
@@ -46,7 +48,7 @@ export const User = new GraphQLObjectType({
         profileImage: { type: GraphQLString },
         favouritesCount: { type: GraphQLInt },
         likes: {
-            type: new GraphQLList(Tweet),
+            type: TweetList,
             args: {
                 count: {
                     description: "The number of liked tweets to fetch",
@@ -57,13 +59,18 @@ export const User = new GraphQLObjectType({
                     description: "Whether to fetch all tweets liked by user",
                     type: GraphQLBoolean,
                     defaultValue: false
+                },
+                cursor: {
+                    type: GraphQLString,
+                    description: 'The cursor to the batch of likes list to fetch',
+                    defaultValue: ''
                 }
             },
-            resolve: (parent, args) => resolveUserLikes(parent.user.id, args.count, args.all, parent.favouritesCount)
+            resolve: (parent, args) => resolveUserLikes(parent.user.id, args.count, args.all, args.cursor, parent.favouritesCount)
         },
         followersCount: { type: GraphQLInt },
         followers: {
-            type: new GraphQLList(User),
+            type: UserList,
             args: {
                 count: {
                     description: "The number of followers to fetch",
@@ -74,13 +81,18 @@ export const User = new GraphQLObjectType({
                     description: "Whether to fetch all followers list",
                     type: GraphQLBoolean,
                     defaultValue: false
+                },
+                cursor: {
+                    type: GraphQLString,
+                    description: 'The cursor to the batch of followers list to fetch',
+                    defaultValue: ''
                 }
             },
-            resolve: (parent, args) => resolveUserFollowers(parent.user.id, args.count, args.all, parent.followersCount)
+            resolve: (parent, args) => resolveUserFollowers(parent.user.id, args.count, args.all, args.cursor, parent.followersCount)
         },
         followingsCount: { type: GraphQLInt },
         following: {
-            type: new GraphQLList(User),
+            type: UserList,
             args: {
                 count: {
                     type: GraphQLInt,
@@ -91,13 +103,18 @@ export const User = new GraphQLObjectType({
                     description: "Whether to fetch all followings list",
                     type: GraphQLBoolean,
                     defaultValue: false
+                },
+                cursor: {
+                    type: GraphQLString,
+                    description: 'The cursor to the batch of followers list to fetch',
+                    defaultValue: ''
                 }
             },
-            resolve: (parent, args) => resolveUserFollowing(parent.user.id, args.count, args.all, parent.followingsCount)
+            resolve: (parent, args) => resolveUserFollowing(parent.user.id, args.count, args.all, args.cursor, parent.followingsCount)
         },
         statusesCount: { type: GraphQLInt },
         tweets: {
-            type: new GraphQLList(Tweet),
+            type: TweetList,
             args: {
                 toUsers: { type: new GraphQLList(GraphQLString) },
                 mentions: { type: new GraphQLList(GraphQLString) },
@@ -106,9 +123,30 @@ export const User = new GraphQLObjectType({
                 startDate: { type: GraphQLString },
                 endDate: { type: GraphQLString },
                 count: { type: GraphQLInt, defaultValue: 1 },
-                all: { type: GraphQLBoolean, defaultValue: false }
+                all: { type: GraphQLBoolean, defaultValue: false },
+                cursor: {
+                    type: GraphQLString,
+                    description: 'The cursor to the batch of tweets list to fetch',
+                    defaultValue: ''
+                }
             },
             resolve: (parent, args) => resolveTweets({ fromUsers: [parent.user.userName], ...args, count: (args.all ? parent.statusesCount : args.count) })
         }
     })
 });
+
+export const UserList = new GraphQLList(new GraphQLUnionType({
+    name: 'UserCursorUnion',
+    description: 'A union type which can either be a User or a Cursor, used in cursored User lists',
+    types: [User, Cursor],
+    resolveType: (data) => {
+        // If it has a createdAt field => this is a User object
+        if(data.createdAt) {
+            return User;
+        }
+        // If it has a value field => this is a Cursor object
+        else if(data.value) {
+            return Cursor;
+        }
+    }
+}));
