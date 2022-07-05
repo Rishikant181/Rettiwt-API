@@ -1,6 +1,6 @@
 // PACKAGE LIBS
 import fetch from "node-fetch";
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 // CUSTOM LIBS
 
@@ -43,7 +43,7 @@ export class FetcherService {
         body: any = null,
         auth: boolean = true,
         guestCreds?: GuestCredentials
-    ): Promise<any> {
+    ): Promise<AxiosResponse> {
         // Getting the AuthService instance
         var service = await AuthService.getInstance();
 
