@@ -210,7 +210,7 @@ export function extractTweets(res: RawTweets): {
  * @param res The raw response received from TwitterAPI
  * @param tweetId The rest id of the tweet to fetch
  */
-export function extractTweet(res: any, tweetId: string): {
+export function extractTweet(res: RawTweet, tweetId: string): {
     required: any[],
     cursor: string,
     users: any[],
@@ -222,38 +222,30 @@ export function extractTweet(res: any, tweetId: string): {
     var tweets: any[] = [];                                                 // To store additional tweet data
 
     // If tweet does not exist
-    if (isJSONEmpty(res['data'])) {
+    if (isJSONEmpty(res.data)) {
         throw new Error(DataErrors.TweetNotFound);
     }
 
     // Destructuring the received raw data
-    //@ts-ignore
-    res['data']['threaded_conversation_with_injections']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'].forEach(entry => {
-        // If entry is of type tweet
-        if (entry['entryId'].indexOf('tweet') != -1) {
-            // If tweet exists
-            if(entry['content']['itemContent']['tweet_results']['result']['__typename'] === 'Tweet') {
-                // If this is the required tweet
-                if (entry['entryId'].indexOf(tweetId) != -1) {
-                    required.push(entry['content']['itemContent']['tweet_results']['result']);
-                }
-                tweets.push(entry['content']['itemContent']['tweet_results']['result']);
-                users.push(entry['content']['itemContent']['tweet_results']['result']['core']['user_results']['result']);
+    res.data.threaded_conversation_with_injections.instructions.filter(item => item['type'] === 'TimelineAddEntries')[0].entries?.forEach(entry => {
+        // If entry is of type tweet and tweet exists
+        if (entry.entryId.indexOf('tweet') != -1 && entry.content.itemContent?.tweet_results?.result.__typename === 'Tweet') {
+            // If this is the required tweet
+            if (entry.entryId.indexOf(tweetId) != -1) {
+                required.push(entry.content.itemContent.tweet_results.result);
             }
+            tweets.push(entry.content.itemContent.tweet_results.result);
+            users.push(entry.content.itemContent.tweet_results.result.core.user_results.result);
         }
         // If entry if of type conversation
-        else if (entry['entryId'].indexOf('conversationthread') != -1) {
+        else if (entry.entryId.indexOf('conversationthread') != -1) {
             // Iterating over the conversation
-            //@ts-ignore
-            entry['content']['items'].forEach(item => {
-                // If item is of type tweet
-                if (item['entryId'].indexOf('tweet') != -1) {
-                    // If tweet exists
-                    if(item['item']['itemContent']['tweet_results']['result']['__typename'] === 'Tweet') {
-                        required.push(item['item']['itemContent']['tweet_results']['result']);
-                        tweets.push(item['item']['itemContent']['tweet_results']['result']);
-                        users.push(item['item']['itemContent']['tweet_results']['result']['core']['user_results']['result']);
-                    }
+            entry.content.items?.forEach(item => {
+                // If item is of type tweet and tweet exists
+                if (item.entryId.indexOf('tweet') != -1 && item.item.itemContent.tweet_results?.result.__typename === 'Tweet') {
+                    required.push(item.item.itemContent.tweet_results.result);
+                    tweets.push(item.item.itemContent.tweet_results.result);
+                    users.push(item.item.itemContent.tweet_results.result.core.user_results.result);
                 }
             });
         }
