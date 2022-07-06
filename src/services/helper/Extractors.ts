@@ -133,12 +133,6 @@ export function extractUserLikes(res: RawUserLikes): {
         }
     });
 
-    
-    //@ts-ignore
-    for (var entry of res) {
-        
-    }
-
     // Returning the data
     return {
         required: required,
