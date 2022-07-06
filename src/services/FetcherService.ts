@@ -43,7 +43,7 @@ export class FetcherService {
         body: any = null,
         auth: boolean = true,
         guestCreds?: GuestCredentials
-    ): Promise<AxiosResponse> {
+    ): Promise<AxiosResponse<DataType>> {
         // Getting the AuthService instance
         var service = await AuthService.getInstance();
 

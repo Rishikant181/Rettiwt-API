@@ -5,11 +5,10 @@ import { FetcherService } from '../FetcherService';
 import { User } from '../../types/UserAccount';
 import { Tweet } from '../../types/Tweet';
 import { CursoredData } from '../../types/Service';
-import UserType from '../../types/raw/user/UserByScreenName';
-import UserByIdType from '../../types/raw/user/UserByScreenName';
-import UserFollowersType from '../../types/raw/user/UserFollowers';
-import UserFollowingType from '../../types/raw/user/UserFollowings';
-import UserLikesType from '../../types/raw/user/UserLikes';
+import RawUser from '../../types/raw/user/User';
+import RawUserFollowers from '../../types/raw/user/Followers';
+import RawUserFollowing from '../../types/raw/user/Following';
+import RawUserLikes from '../../types/raw/user/Likes';
 
 /* HELPERS */
 import {
@@ -33,7 +32,7 @@ export class UserAccountService extends FetcherService {
      */
     async getUserAccountDetails(screenName: string): Promise<User> {
         // Fetching the raw data
-        var res: UserType = await this.fetchData<UserType>(userAccountUrl(screenName), undefined, undefined, false).then(res => res.data);
+        var res: RawUser = await this.fetchData<RawUser>(userAccountUrl(screenName), undefined, undefined, false).then(res => res.data);
         
         // Extracting data
         var data = extractUserAccountDetails(res);
@@ -62,7 +61,7 @@ export class UserAccountService extends FetcherService {
         // If data does not exist in cache
         else {
             // Fetchin the raw data
-            var res: UserByIdType = await this.fetchData<UserByIdType>(
+            var res = await this.fetchData<RawUser>(
                 userAccountByIdUrl(restId),
                 undefined,
                 undefined,
@@ -90,7 +89,7 @@ export class UserAccountService extends FetcherService {
      */
     async getUserFollowing(userId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // Fetchin the raw data
-        var res: UserFollowingType = await this.fetchData<UserFollowingType>(userFollowingUrl(userId, count, cursor)).then(res => res.data);
+        var res = await this.fetchData<RawUserFollowing>(userFollowingUrl(userId, count, cursor)).then(res => res.data);
         
         // Extracting data
         var data = extractUserFollow(res);
@@ -120,7 +119,7 @@ export class UserAccountService extends FetcherService {
          * So changing count to count - 20, fixes fetching more than required number of follower
          */
         // Fetching the raw data
-        var res: UserFollowersType = await this.fetchData<UserFollowersType>(userFollowersUrl(userId, (count > 20) ? (count - 20) : count, cursor)).then(res => res.data);
+        var res = await this.fetchData<RawUserFollowers>(userFollowersUrl(userId, (count > 20) ? (count - 20) : count, cursor)).then(res => res.data);
         
         // Extracting data
         var data = extractUserFollow(res);
@@ -145,7 +144,7 @@ export class UserAccountService extends FetcherService {
      */
     async getUserLikes(userId: string, count: number, cursor: string): Promise<CursoredData<Tweet>> {
         // Fetching the raw data
-        var res: UserLikesType = await this.fetchData<UserLikesType>(userLikesUrl(userId, count, cursor)).then(res => res.data);
+        var res = await this.fetchData<RawUserLikes>(userLikesUrl(userId, count, cursor)).then(res => res.data);
         
         // Extracting data
         var data = extractUserLikes(res);
