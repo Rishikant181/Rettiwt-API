@@ -110,30 +110,33 @@ export function extractUserLikes(res: RawUserLikes): {
     var tweets: any[] = [];                                                 // To store additional tweet data
 
     // If user does not exist
-    if (isJSONEmpty(res['data']['user'])) {
+    if (isJSONEmpty(res.data.user)) {
         throw new Error(DataErrors.UserNotFound);
     }
 
     // Extracting the raw list
-    //@ts-ignore
-    res = res['data']['user']['result']['timeline_v2']['timeline']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'];
+    res.data.user.result.timeline_v2.timeline.instructions.forEach(item => {
+        if (item.type === 'TimelineAddEntries') {
+            // Destructuring data
+            item.entries.forEach(entry => {
+                // If entry is of type tweet and tweet exists
+                if (entry.entryId.indexOf('tweet') != -1 && entry.content.itemContent?.tweet_results.result.__typename === 'Tweet') {
+                    required.push(entry.content.itemContent.tweet_results.result);
+                    users.push(entry.content.itemContent.tweet_results.result.core.user_results.result);
+                    tweets.push(entry.content.itemContent.tweet_results.result);
+                }
+                // If entry is of type cursor
+                else if (entry.entryId.indexOf('cursor-bottom') != -1) {
+                    cursor = entry.content.value ?? '';
+                }
+            });     
+        }
+    });
 
-    // Destructuring data
+    
     //@ts-ignore
     for (var entry of res) {
-        // If entry is of type tweet
-        if (entry['entryId'].indexOf('tweet') != -1) {
-            // If tweet exists
-            if(entry['content']['itemContent']['tweet_results']['result']['__typename'] === 'Tweet') {
-                required.push(entry['content']['itemContent']['tweet_results']['result']);
-                users.push(entry['content']['itemContent']['tweet_results']['result']['core']['user_results']['result']);
-                tweets.push(entry['content']['itemContent']['tweet_results']['result']);
-            }
-        }
-        // If entry is of type cursor
-        else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
-            cursor = entry['content']['value'];
-        }
+        
     }
 
     // Returning the data
