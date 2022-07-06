@@ -149,8 +149,8 @@ export function tweetsUrl(
         filter.endDate ? `until:${filter.endDate}` : '',
         filter.quoted ? `quoted_tweet_id:${filter.quoted}` : ''
     ]
-        .filter(item => item !== '()' && item !== '')
-        .join(' ');
+    .filter(item => item !== '()' && item !== '')
+    .join(' ');
 
     var url = '';
 
