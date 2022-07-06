@@ -8,6 +8,10 @@ import RawUser from '../../types/raw/user/User';
 import RawUserFollowers from '../../types/raw/user/Followers';
 import RawUserFollowing from '../../types/raw/user/Following';
 import RawUserLikes from '../../types/raw/user/Likes';
+import RawTweet from '../../types/raw/tweet/Tweet';
+import RawTweets from '../../types/raw/tweet/Tweets';
+import RawLikers from '../../types/raw/tweet/Favouriters';
+import RawRetweeters from '../../types/raw/tweet/Retweeters';
 
 // HELPERS
 import { isJSONEmpty } from './Parser';
@@ -148,7 +152,7 @@ export function extractUserLikes(res: RawUserLikes): {
  * @returns The raw tweets data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
-export function extractTweets(res: any): {
+export function extractTweets(res: RawTweets): {
     required: any[],
     cursor: string,
     users: any[],
@@ -160,17 +164,17 @@ export function extractTweets(res: any): {
     var tweets: any[] = [];                                                 // To store additional tweet data
 
     // Getting raw tweet list
-    var dataTweets = res['globalObjects']['tweets'];
+    var dataTweets = res.globalObjects.tweets;
 
     // Getting raw users list
-    var dataUsers = res['globalObjects']['users'];
+    var dataUsers = res.globalObjects.users;
 
     // Destructuring tweets, if not empty
     if (!isJSONEmpty(dataTweets)) {
         // Iterating through the json array of tweets
         for (var key of Object.keys(dataTweets)) {
-            required.push({ rest_id: dataTweets[key]['id_str'], legacy: dataTweets[key] });
-            tweets.push({ rest_id: dataTweets[key]['id_str'], legacy: dataTweets[key] });
+            required.push({ rest_id: dataTweets[key].id_str, legacy: dataTweets[key] });
+            tweets.push({ rest_id: dataTweets[key].id_str, legacy: dataTweets[key] });
         }
     }
 
@@ -178,19 +182,18 @@ export function extractTweets(res: any): {
     if (!isJSONEmpty(dataUsers)) {
         // Iterating through the json array of users
         for (var key of Object.keys(dataUsers)) {
-            users.push({ rest_id: dataUsers[key]['id_str'], legacy: dataUsers[key] });
+            users.push({ rest_id: dataUsers[key].id_str, legacy: dataUsers[key] });
         }
     }
 
     // Getting the cursor to next batch
     // If not first batch
-    if (res['timeline']['instructions'].length > 2) {
-        cursor = res['timeline']['instructions'][2]['replaceEntry']['entry']['content']['operation']['cursor']['value'];
+    if (res.timeline.instructions.length > 2) {
+        cursor = res.timeline.instructions[2]?.replaceEntry.entry.content.operation?.cursor.value ?? '';
     }
     // If first batch
     else {
-        //@ts-ignore
-        cursor = res['timeline']['instructions'][0]['addEntries']['entries'].filter(item => item['entryId'].indexOf('cursor-bottom') != -1)[0]['content']['operation']['cursor']['value'];
+        cursor = res.timeline.instructions[0].addEntries?.entries.filter(item => item.entryId.indexOf('cursor-bottom') != -1)[0].content.operation?.cursor.value ?? '';
     }
 
     // Returning the data

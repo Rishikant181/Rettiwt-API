@@ -5,6 +5,10 @@ import { FetcherService } from "../FetcherService";
 import { TweetFilter, Tweet } from "../../types/Tweet";
 import { User } from "../../types/UserAccount";
 import { CursoredData } from '../../types/Service';
+import RawTweet from '../../types/raw/tweet/Tweet';
+import RawTweets from '../../types/raw/tweet/Tweets';
+import RawLikers from '../../types/raw/tweet/Favouriters';
+import RawRetweeters from '../../types/raw/tweet/Retweeters';
 
 // HELPERS
 import {
@@ -35,7 +39,7 @@ export class TweetService extends FetcherService {
      */
     async getTweets(filter: TweetFilter, cursor: string): Promise<CursoredData<Tweet>> {
         // Getting the raw data
-        var res = await this.fetchData(tweetsUrl(filter, cursor)).then(res => res.data);
+        var res = await this.fetchData<RawTweets>(tweetsUrl(filter, cursor)).then(res => res.data);
 
         // Extracting data
         var data = extractTweets(res);

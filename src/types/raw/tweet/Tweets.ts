@@ -127,8 +127,8 @@ export interface User {
     is_translator: boolean
     is_translation_enabled: boolean
     profile_background_color: string
-    profile_background_image_url: any
-    profile_background_image_url_https: any
+    profile_background_image_url: string
+    profile_background_image_url_https: string
     profile_background_tile: boolean
     profile_image_url: string
     profile_image_url_https: string
@@ -164,7 +164,7 @@ export interface User {
     blocked_by: boolean
     want_retweets: boolean
     advertiser_account_type: string
-    advertiser_account_service_levels: any[]
+    advertiser_account_service_levels: string[]
     profile_interstitial_type: string
     business_profile_state: string
     translator_type: string
@@ -298,15 +298,27 @@ export interface Lists { }
 
 export interface Timeline {
     id: string
-    instructions: Instruction[]
-}
-
-export interface Instruction {
-    addEntries: AddEntries
+    instructions: [
+        {
+            addEntries: AddEntries
+        },
+        {
+            replaceEntry: ReplaceEntry
+        },
+        {
+            replaceEntry: ReplaceEntry
+        }
+    ]
+    responseObjects: ResponseObjects
 }
 
 export interface AddEntries {
     entries: Entry[]
+}
+
+export interface ReplaceEntry {
+    entryIdToReplace: string
+    entry: Entry
 }
 
 export interface Entry {
@@ -333,11 +345,6 @@ export interface Content2 {
 export interface Tweet2 {
     id: string
     displayType: string
-    highlights: Highlights
-}
-
-export interface Highlights {
-    textHighlights: any[]
 }
 
 export interface ClientEventInfo {
@@ -356,6 +363,18 @@ export interface TimelinesDetails {
 
 export interface FeedbackInfo {
     feedbackKeys: string[]
+    displayContext: DisplayContext
+    clientEventInfo: ClientEventInfo2
+}
+
+export interface DisplayContext {
+    reason: string
+}
+
+export interface ClientEventInfo2 {
+    component: string
+    element: string
+    action: string
 }
 
 export interface Operation {
@@ -365,4 +384,61 @@ export interface Operation {
 export interface Cursor {
     value: string
     cursorType: string
+}
+
+export interface ResponseObjects {
+    feedbackActions: FeedbackActions
+}
+
+export interface FeedbackActions {
+    givefeedback: Givefeedback
+    notrelevant: Notrelevant
+    notcredible: Notcredible
+}
+
+export interface Givefeedback {
+    feedbackType: string
+    prompt: string
+    confirmation: string
+    childKeys: string[]
+    hasUndoAction: boolean
+    confirmationDisplayType: string
+    clientEventInfo: ClientEventInfo3
+    icon: string
+}
+
+export interface ClientEventInfo3 {
+    component: string
+    element: string
+    action: string
+}
+
+export interface Notrelevant {
+    feedbackType: string
+    prompt: string
+    confirmation: string
+    hasUndoAction: boolean
+    confirmationDisplayType: string
+    clientEventInfo: ClientEventInfo4
+}
+
+export interface ClientEventInfo4 {
+    component: string
+    element: string
+    action: string
+}
+
+export interface Notcredible {
+    feedbackType: string
+    prompt: string
+    confirmation: string
+    hasUndoAction: boolean
+    confirmationDisplayType: string
+    clientEventInfo: ClientEventInfo5
+}
+
+export interface ClientEventInfo5 {
+    component: string
+    element: string
+    action: string
 }
