@@ -30,13 +30,13 @@ export function extractUserAccountDetails(res: RawUser): {
     var tweets: any[] = [];                                                 // To store additional tweet data
 
     // If user not found or account suspended
-    if (isJSONEmpty(res['data']) || isJSONEmpty(res['data']['user']) || res['data']['user']['result']['__typename'] !== 'User') {
+    if (isJSONEmpty(res.data) || isJSONEmpty(res.data.user) || res.data.user.result.__typename !== 'User') {
         throw new Error(DataErrors.UserNotFound);
     }
 
     // Destructuring user account data
-    required.push(res['data']['user']['result']);
-    users.push(res['data']['user']['result']);
+    required.push(res.data.user.result);
+    users.push(res.data.user.result);
 
     // Returning the data
     return {
@@ -63,30 +63,27 @@ export function extractUserFollow(res: RawUserFollowers | RawUserFollowing): {
     var tweets: any[] = [];                                                 // To store additional tweet data
 
     // If user does not exist
-    if (isJSONEmpty(res['data']['user'])) {
+    if (isJSONEmpty(res.data.user)) {
         throw new Error(DataErrors.UserNotFound);
     }
 
     // Extracting the raw list
-    //@ts-ignore
-    res = res['data']['user']['result']['timeline']['timeline']['instructions'].filter(item => item['type'] === 'TimelineAddEntries')[0]['entries'];
-
-    // Destructuring data
-    //@ts-ignore
-    for (var entry of res) {
-        // If entry is of type user
-        if (entry['entryId'].indexOf('user') != -1) {
-            // If user account exists
-            if(entry['content']['itemContent']['user_results']['result']['__typename'] ==='User') {
-                required.push(entry['content']['itemContent']['user_results']['result']);
-                users.push(entry['content']['itemContent']['user_results']['result']);
-            }
+    res.data.user.result.timeline.timeline.instructions.forEach(item => {
+        if (item.type === 'TimelineAddEntries') {
+            // Destructuring data
+            item.entries?.forEach(entry => {
+                // If entry is of type user and user account exists
+                if (entry.entryId.indexOf('user') != -1 && entry.content.itemContent?.user_results.result.__typename ==='User') {
+                    required.push(entry.content.itemContent.user_results.result);
+                    users.push(entry.content.itemContent.user_results.result);
+                }
+                // If entry is of type cursor
+                else if (entry.entryId.indexOf('cursor-bottom') != -1) {
+                    cursor = entry.content.value ?? '';
+                }
+            });
         }
-        // If entry is of type cursor
-        else if (entry['entryId'].indexOf('cursor-bottom') != -1) {
-            cursor = entry['content']['value'];
-        }
-    }
+    });
 
     // Returning the data
     return {
