@@ -27,7 +27,7 @@ export class AccountsService extends FetcherService {
      */
     private async executeFlow(flow: LoginFlow, guestCredentials: GuestCredentials): Promise<{headers: AxiosResponseHeaders, nextFlowName: LoginFlows, nextFlowToken: string}> {
         // Executing the given flow
-        var res = await this.fetchData(flow.url, HttpMethods.POST, flow.body, false, guestCredentials);
+        var res = await this.fetchData<any>(flow.url, HttpMethods.POST, flow.body, false, guestCredentials);
         
         // Getting the response body
         var data = res.data;

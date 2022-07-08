@@ -99,7 +99,7 @@ export class TweetService extends FetcherService {
      */
     async getTweetLikers(tweetId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // Fetching the raw data
-        var res = await this.fetchData(tweetLikesUrl(tweetId, count, cursor)).then(res => res.data);
+        var res = await this.fetchData<RawLikers>(tweetLikesUrl(tweetId, count, cursor)).then(res => res.data);
 
         // Extracting data
         var data = extractTweetLikers(res);
@@ -124,7 +124,7 @@ export class TweetService extends FetcherService {
      */
     async getTweetRetweeters(tweetId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // Fetching the raw data
-        var res = await this.fetchData(tweetRetweetUrl(tweetId, count, cursor)).then(res => res.data);
+        var res = await this.fetchData<RawRetweeters>(tweetRetweetUrl(tweetId, count, cursor)).then(res => res.data);
 
         // Extracting data
         var data = extractTweetRetweeters(res);
@@ -148,7 +148,7 @@ export class TweetService extends FetcherService {
      */
     async getTweetReplies(tweetId: string, cursor: string): Promise<CursoredData<Tweet>> {
         // Fetching the raw data
-        var res = await this.fetchData(tweetRepliesUrl(tweetId, cursor)).then(res => res.data);
+        var res = await this.fetchData<RawTweet>(tweetRepliesUrl(tweetId, cursor)).then(res => res.data);
         
         // Extracting data
         var data = extractTweetReplies(res, tweetId);
