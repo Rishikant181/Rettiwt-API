@@ -1,5 +1,6 @@
 // PACKAGE LIBS
 import fetch from "node-fetch";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 // CUSTOM LIBS
 
@@ -36,25 +37,36 @@ export class FetcherService {
      * @param auth Whether to use authenticated requests or not
      * @param guestCredes Guest credentials to use rather than auto-generated one
      */
-    protected async fetchData(
+    protected async fetchData<DataType>(
         url: string,
         method: HttpMethods = HttpMethods.GET,
         body: any = null,
         auth: boolean = true,
         guestCreds?: GuestCredentials
-    ): Promise<any> {
+    ): Promise<AxiosResponse<DataType>> {
         // Getting the AuthService instance
         var service = await AuthService.getInstance();
 
         // Getting the required credentials
         var creds = await (auth ? service.getAuthCredentials() : service.getGuestCredentials());
-    
-        // Fetching the data
-        var res = await fetch(url, {
+
+        // Preparing the request config
+        var config: AxiosRequestConfig<DataType> = {
             headers: auth ? authorizedHeader(creds as AuthCredentials) : unauthorizedHeader(guestCreds ? guestCreds : creds as GuestCredentials),
             method: method ? method : HttpMethods.GET,
-            body: body
-        }).then(res => handleHTTPError(res))
+            // Conditionally including body is POST method is to be used
+            ...(() => {
+                if (method == HttpMethods.POST) {
+                    return { data: body }
+                }
+                else {
+                    return
+                }
+            })()
+        };
+    
+        // Fetching the data
+        var res = await axios(url, config).then(res => handleHTTPError(res));
 
         return res;
     }

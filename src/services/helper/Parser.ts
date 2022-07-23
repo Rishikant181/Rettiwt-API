@@ -2,13 +2,14 @@
 
 // TYPES
 import { Response } from 'node-fetch';
+import { AxiosResponse, AxiosResponseHeaders } from 'axios';
 import { HttpStatus } from '../../types/HTTP';
 
 /**
  * @summary Throws the appropriate http error after evaluation of the status code of reponse
  * @param res The response object received from http communication
  */
-export function handleHTTPError(res: Response): Response {
+export function handleHTTPError(res: AxiosResponse): AxiosResponse {
     if (res.status != 200 && res.status in HttpStatus) {
         throw new Error(HttpStatus[res.status])
     }
@@ -20,9 +21,9 @@ export function handleHTTPError(res: Response): Response {
  * @returns The cookie string after removing unnecessary data from it
  * @param headers The raw header from which the cookies are to be extracted
  */
-export function parseCookies(headers: Headers): string {
+export function parseCookies(headers: AxiosResponseHeaders): string {
     // Getting the raw cookie string
-    var cookies: string = headers.get('set-cookie') + '';
+    var cookies: string = headers['set-cookie'] + '';
     var newCookie: string = '';
 
     // Getting required cookies from all cookies

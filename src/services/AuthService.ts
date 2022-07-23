@@ -1,6 +1,6 @@
 // PACKAGE LIBS
 import fetch from 'node-fetch';
-import axios from 'axios';
+import axios, { AxiosResponseHeaders } from 'axios';
 
 // CUSTOM LIBS
 
@@ -91,7 +91,7 @@ export class AuthService {
      * @summary Stores the authentication credentials extracted from the given headers into the database
      * @param headers The headers from which the cookies are to be extracted and stored
      */
-    async storeCredentials(headers: Headers): Promise<Boolean> {
+    async storeCredentials(headers: AxiosResponseHeaders): Promise<Boolean> {
         // Parsing the cookies
         const cookies: string = parseCookies(headers);
 
