@@ -19,11 +19,5 @@ var accountsService = new AccountsService();
  */
 export async function resolveUserLogin(cred: LoginCredentials): Promise<boolean> {
     // Logging into the given account
-    return accountsService.login(cred)
-    .then(res => {
-        // If error
-        if(res.error) throw res.error        
-        // if no error
-        else return res.success
-    });
+    return (await accountsService.login(cred)) ? true : false;
 }

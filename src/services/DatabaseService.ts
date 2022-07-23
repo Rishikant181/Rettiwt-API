@@ -17,42 +17,24 @@ import { MongoClient } from "mongodb";
      * @param index The name of the index table(if any)
      */
     constructor(database: string, index: string) {
-        // Initialising the connection url to database server
-        this.connUrl = `mongodb://${process.env.CACHE_DB_HOST}:${process.env.CACHE_DB_PORT}`;
-
-        // Initialising names
+        // Initializing member data
+        this.connUrl = `mongodb://${process.env.DATA_DB_HOST}:${process.env.DATA_DB_PORT}`;
         this.dbName = database;
         this.dbIndex = index;
-
-        // Creating connection to database
         this.client = new MongoClient(this.connUrl);
     }
 
     /**
      * @summary Connects to the database
-     * @returns Whether connection was successful or not
      */
     protected async connectDB(): Promise<boolean> {
-        var success: boolean = false;                                           // To store whether connection to db successful or not
+        // Connecting to db
+        await this.client.connect();
 
-        // Trying to connect to database
-        try {
-            // Connecting to db
-            await this.client.connect();
+        // Testing connection to database by making a ping to it
+        await this.client.db(this.dbName).command({ ping: 1 });
 
-            // Verifying connection
-            await this.client.db(this.dbName).command({ ping: 1 });
-
-            success = true;
-        }
-        // If connecting to database failed
-        catch (err) {
-            console.log("Failed to connect to database server");
-            console.log(err);
-        }
-
-        // Returning success or failure
-        return success;
+        return true;
     }
     
     /**
@@ -62,15 +44,13 @@ import { MongoClient } from "mongodb";
      * @returns Whether write was successful or not
      */
     protected async write(data: any, table: string): Promise<boolean> {
-        // If connection to db was successful
-        if (await this.connectDB()) {
-            // Writing data to database's table
-            return (await this.client.db(this.dbName).collection(table).insertOne(data)).acknowledged;
-        }
-        // If failed to connect to db
-        else {
-            return false;
-        }
+        // Connecting to db
+        await this.connectDB();
+
+        // Inserting the data into the db
+        await this.client.db(this.dbName).collection(table).insertOne(data)
+
+        return true;
     }
 
     /**
@@ -78,13 +58,12 @@ import { MongoClient } from "mongodb";
      * @returns Whether clearing was successful or not
      */
     protected async clear(): Promise<boolean> {
-        // If connection to database successful
-        if (await this.connectDB()) {
-            // Clearing the cache
-            return await this.client.db(this.dbName).dropDatabase();
-        }
-        else {
-            return false;
-        }
+        // Connecting to db
+        await this.connectDB()
+
+        // Clearing the db
+        await this.client.db(this.dbName).dropDatabase()
+
+        return true;
     }
 }

@@ -54,6 +54,9 @@ export function userFollowingUrl(
 ): string {
     var url = '';
 
+    // Encoding cursor to valid URI format
+    cursor = encodeURI(cursor)
+
     // If a cursor is provided
     if (cursor) {
         url = `https://twitter.com/i/api/graphql/RL_g7COnuCi8Rwr8X4Gm0w/Following?variables=%7B%22userId%22%3A%2244196397%22%2C%22count%22%3A${count}%2C%22cursor%22%3A%22${cursor}%22%2C%22includePromotedContent%22%3Afalse%2C%22withSuperFollowsUserFields%22%3Atrue%2C%22withDownvotePerspective%22%3Afalse%2C%22withReactionsMetadata%22%3Afalse%2C%22withReactionsPerspective%22%3Afalse%2C%22withSuperFollowsTweetFields%22%3Atrue%2C%22__fs_responsive_web_uc_gql_enabled%22%3Afalse%2C%22__fs_dont_mention_me_view_api_enabled%22%3Afalse%2C%22__fs_interactive_text%22%3Afalse%7D`;
@@ -78,6 +81,9 @@ export function userFollowersUrl(
     cursor: string
 ): string {
     var url = '';
+
+    // Encoding cursor to valid URI format
+    cursor = encodeURI(cursor)
 
     // If a cursor if supplied
     if (cursor) {
@@ -143,8 +149,8 @@ export function tweetsUrl(
         filter.endDate ? `until:${filter.endDate}` : '',
         filter.quoted ? `quoted_tweet_id:${filter.quoted}` : ''
     ]
-        .filter(item => item !== '()' && item !== '')
-        .join(' ');
+    .filter(item => item !== '()' && item !== '')
+    .join(' ');
 
     var url = '';
 

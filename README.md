@@ -9,7 +9,11 @@ Note: No global packages are used, so you can be at peace ;)
 Set the following global variables for running the server\
 APP_PORT=<host_port_number>\
 CACHE_DB_HOST=<cache_db_hostname/ip>\
-CACHE_DB_PORT=<cache_db_port_number>
+CACHE_DB_PORT=<cache_db_port_number>\
+DATA_DB_HOST=<data_db_hostname/ip>\
+DATA_DB_PORT=<data_db_port_number>\
+
+Note: CACHE DB refers to Redis server and DATA DB refers to MongoDB server
 
 Then build the project project using the command:\
 npm run build:watch --> Keep the build command running

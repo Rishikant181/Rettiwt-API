@@ -1,11 +1,11 @@
 // PACKAGE LIBS
 import fetch from 'node-fetch';
+import axios, { AxiosResponseHeaders } from 'axios';
 
 // CUSTOM LIBS
 
 // SERVICES
 import { HttpMethods } from '../types/HTTP';
-import { DatabaseService } from './DatabaseService';
 
 // TYPES
 import { GuestCredentials, AuthCredentials } from '../types/Authentication';
@@ -16,14 +16,14 @@ import { parseCookies } from './helper/Parser';
 
 // CONFIGS
 import { config } from '../config/env';
+import { core_urls } from '../config/urls';
 
 /**
  * @summary Handles authentication of http requests and other authentication related tasks
  */
-export class AuthService extends DatabaseService {
+export class AuthService {
     // MEMBER DATA
     private static instance: AuthService;                                    // To store the current instance of this service
-    private credTable: string;                                               // To store the name of the table with authentication credentials
     private authToken: string;                                               // To store the common auth token
     private currentUser: AuthCredentials;                                    // To store the current authentication credentials
     private currentGuest: GuestCredentials;                                  // To store the current guest credentials
@@ -33,11 +33,7 @@ export class AuthService extends DatabaseService {
 
     // MEMBER METHODS
     private constructor() {
-        super(config['server']['db']['databases']['auth']['name'], config['server']['db']['databases']['auth']['tables']['cookies']);
-
-        // Initializing member data
-        this.credTable = config['server']['db']['databases']['auth']['tables']['cookies'];
-        this.authToken = config['twitter']['auth']['authToken'];
+        this.authToken = config.twitter.auth.authToken;
         this.currentUser = { authToken: this.authToken, csrfToken: '', cookie: ''};
         this.currentGuest = { authToken: this.authToken, guestToken: '' };
     }
@@ -46,11 +42,14 @@ export class AuthService extends DatabaseService {
      * @summary Initializes asynchronous member data of AuthService
      */
     private async init(): Promise<void> {
-        if(await this.connectDB()) {
-            //@ts-ignore
-            this.authCredList = await this.client.db(this.dbName).collection(this.credTable).find().project({ _id: 0 }).toArray();
+        // Getting the list of stored credentials from core
+        try {
+            this.authCredList = (await axios.get<AuthCredentials[]>(core_urls.all_cookies())).data;
             this.numCredentials = this.authCredList.length;
             this.credentialNum = 0;
+        }
+        catch(err) {
+            console.log(err);
         }
     }
 
@@ -58,16 +57,21 @@ export class AuthService extends DatabaseService {
      * @returns The active instance of AuthService
      */
     static async getInstance(): Promise<AuthService> {
-        // Checking if an instance does not exists already
+        // If an instance doesn't exist already
         if(!this.instance) {
             // Creating a new instance
             this.instance = new AuthService();
 
             // Initializing async data
-            await this.instance.init();
-        }
+            await this.instance.init()
 
-        return this.instance;
+            // Returning the new instance
+            return this.instance;
+        }
+        // If an instance already exists
+        else {
+            return this.instance;
+        }
     }
 
     /**
@@ -84,10 +88,10 @@ export class AuthService extends DatabaseService {
     }
 
     /**
-     * @summary Store the authentication credentials extracted from the given headers into the database
+     * @summary Stores the authentication credentials extracted from the given headers into the database
      * @param headers The headers from which the cookies are to be extracted and stored
      */
-    async storeCredentials(headers: Headers): Promise<Boolean> {
+    async storeCredentials(headers: AxiosResponseHeaders): Promise<Boolean> {
         // Parsing the cookies
         const cookies: string = parseCookies(headers);
 
@@ -96,36 +100,33 @@ export class AuthService extends DatabaseService {
         const csrfToken: string = cookies.match(/ct0=(?<token>[a|A|0-z|Z|9]+);/)?.groups.token;
         
         // Preparing the credentials to write
-        const creds = { csrfToken: csrfToken, cookie: cookies };
+        const creds = { authToken: this.authToken, csrfToken: csrfToken, cookie: cookies };
 
-        // Writing credentials to database and returning whether write was successful or not
-        const isWritten = await this.write(creds, this.credTable);
-        
-        // If write was successful
-        if(isWritten) {
-            // Reinitializing credentials
-            await this.init();
-        }
+        // Sending credentials to core for storage
+        await axios.post<string>(core_urls.add_cookie(), creds);
 
-        return isWritten;
+        // If write was successful, reinitializing credentials
+        await this.init();
+
+        return true;
     }
 
     /**
      * @returns The current authentication credentials. A different credential is returned each time this is invoked
      * @param newCred Whether to get a different credential or the current one
      */
-    async getAuthCredentials(newCred: boolean = true): Promise<{
-        authToken: string,
-        csrfToken: string,
-        cookie: string
-    }> {
+    async getAuthCredentials(newCred: boolean = true): Promise<{ authToken: string, csrfToken: string, cookie: string }> {
         // If new credential is required
         if(newCred) {
-            // Changing credentials
+            // Changing to the next available credentials
             await this.changeCredentials();
-        }
 
-        return this.currentUser;
+            return this.currentUser;
+        }
+        // If new credential is not required
+        else {
+            return this.currentUser;
+        }
     }
 
     /**
@@ -136,23 +137,21 @@ export class AuthService extends DatabaseService {
         // If new guest token is to used
         if(newCred || !this.currentGuest.guestToken) {
             // Fetching guest token from twitter api
-            await fetch(guestTokenUrl(), {
+            var data: any = await fetch(guestTokenUrl(), {
                 headers: blankHeader({ authToken: this.authToken }),
                 method: HttpMethods.POST,
                 body: null
-            })
-            .then(data => data.json())
-            // Setting new guest credentials
-            .then(data => {
-                this.currentGuest.authToken = this.authToken;
-                //@ts-ignore
-                this.currentGuest.guestToken = data['guest_token'];
-            })
-            .catch(err => {
-                throw err;
-            });
-        }
+            }).then(data => data.json());
 
-        return this.currentGuest;
+            // Setting new guest credentials
+            this.currentGuest.authToken = this.authToken;
+            this.currentGuest.guestToken = data['guest_token'];
+
+            return this.currentGuest;
+        }
+        // If new guest credential is not required
+        else {
+            return this.currentGuest;
+        }
     }
 }

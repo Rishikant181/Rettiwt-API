@@ -11,7 +11,8 @@ import {
 
 // TYPES
 import { User } from '../types/UserTypes'
-import { Tweet } from '../types/TweetTypes';
+import { Tweet, TweetList } from '../types/TweetTypes';
+import { LoginCredentials } from 'src/types/Authentication';
 
 // RESOLVERS
 import { resolveUserDetails } from '../resolvers/UserSpecific';
@@ -43,7 +44,7 @@ export const rootQuery = new GraphQLObjectType({
             resolve: (parent, args) => resolveTweet(args.id)
         },
         Tweets: {
-            type: new GraphQLList(Tweet),
+            type: TweetList,
             description: "Returns the list of tweets matching the given criteria",
             args: {
                 fromUsers: { type: new GraphQLList(GraphQLString) },
@@ -54,7 +55,8 @@ export const rootQuery = new GraphQLObjectType({
                 startDate: { type: GraphQLString },
                 endDate: { type: GraphQLString },
                 quoted: { type: GraphQLString },
-                count: { type: GraphQLInt, defaultValue: 20 }
+                count: { type: GraphQLInt, defaultValue: 20 },
+                cursor: { type: GraphQLString, defaultValue: '' }
             },
             resolve: (parent, args) => resolveTweets(args)
         },
@@ -66,7 +68,7 @@ export const rootQuery = new GraphQLObjectType({
                 userName: { type: GraphQLString },
                 password: { type: GraphQLString }
             },
-            resolve: (parent, args) => resolveUserLogin(args)
+            resolve: (parent, args) => resolveUserLogin(args as LoginCredentials)
         }
     }
 })

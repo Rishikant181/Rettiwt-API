@@ -1,3 +1,6 @@
+// PACKAGE LIBS
+import { AxiosResponseHeaders } from 'axios';
+
 // CUSTOM LIBS
 
 // SERVICES
@@ -5,8 +8,8 @@ import { AuthService } from '../AuthService';
 import { FetcherService } from '../FetcherService';
 
 // TYPES
-import { LoginCredentials } from '../../types/Authentication';
-import { HttpMethods, Response } from '../../types/HTTP';
+import { GuestCredentials, LoginCredentials, LoginFlow } from '../../types/Authentication';
+import { HttpMethods } from '../../types/HTTP';
 
 // HELPERS
 import { generateLoginFlow, LoginFlows } from "./LoginFlows";
@@ -16,17 +19,34 @@ import { generateLoginFlow, LoginFlows } from "./LoginFlows";
  */
 export class AccountsService extends FetcherService {
     // MEMBER METHODS
+
+    /**
+     * @returns The response from Twitter after execution of the given flow
+     * @param flow The flow to be executed against Twitter API
+     * @param guestCredentials The guest credentials to use for making HTTP request
+     */
+    private async executeFlow(flow: LoginFlow, guestCredentials: GuestCredentials): Promise<{headers: AxiosResponseHeaders, nextFlowName: LoginFlows, nextFlowToken: string}> {
+        // Executing the given flow
+        var res = await this.fetchData<any>(flow.url, HttpMethods.POST, flow.body, false, guestCredentials);
+        
+        // Getting the response body
+        var data = res.data;
+            
+        // Returning the response body as well as data of the flow
+        return {
+            headers: res.headers,
+            nextFlowName: LoginFlows[data['subtasks'][0]['subtask_id'] as LoginFlows],
+            nextFlowToken: data['flow_token']
+        };
+    }
     
     /**
      * @summary Logins into the given account and stores the cookies and store logged in credentials to database
      * @returns The logged in account's cookies and other credentials
      * @param cred The login credentials of the Twitter account to be logged into
      */
-    async login(cred: LoginCredentials): Promise<Response<Headers>> {
-        var flowName: LoginFlows = LoginFlows.Login;                            // To store current flow name
-        var data = null;                                                        // To store the response of each fetch
-        var loginComplete: boolean = false;                                     // To store whether login is complete or not
-        var error: any = undefined;                                             // To store error, if any
+    async login(cred: LoginCredentials): Promise<AxiosResponseHeaders> {
+        var currentFlowName: LoginFlows = LoginFlows.Login;                     // To store current flow name
         
         // Getting the initial flow
         var currentFlow = generateLoginFlow(cred, '', LoginFlows.Login);
@@ -34,43 +54,29 @@ export class AccountsService extends FetcherService {
         // Getting the guest credentials to use
         var guestCredentials = await (await AuthService.getInstance()).getGuestCredentials(true);
 
+        // Executing each flow successively
         while(true) {
-            data = await this.fetchData(currentFlow.url, HttpMethods.POST, currentFlow.body, false, guestCredentials)
-            .then(async res => {
-                // If this is the last step of login
-                /**
-                 * The last step is actually LoginSuccessSubtask, but it doesn't do anything substantial
-                 * The actual cookies and credentials are returned in AccountDuplicationCheck flow
-                 */
-                if(flowName == LoginFlows.AccountDuplicationCheck) {
-                    loginComplete = true;
-                    return res.headers;
-                }
+            var res = await this.executeFlow(currentFlow, guestCredentials);
 
-                // Parsing data to json
-                res = await res.json();
-
+            // If this is the last step of login
+            /**
+             * The last step is actually LoginSuccessSubtask, but it doesn't do anything substantial
+             * The actual cookies and credentials are returned in AccountDuplicationCheck flow
+             */
+            if(currentFlowName == LoginFlows.AccountDuplicationCheck) {
+                // Storing credentials in database
+                await (await AuthService.getInstance()).storeCredentials(res.headers);
+                
+                // Returning the headers
+                return res.headers;
+            }
+            else {
                 // Changing flow name
-                flowName = LoginFlows[res['subtasks'][0]['subtask_id'] as LoginFlows];
+                currentFlowName = LoginFlows[res.nextFlowName];
 
-                // Changing flow data
-                currentFlow = generateLoginFlow(cred, res['flow_token'], flowName);
-            })
-            .catch(err => {
-                error = err;
-                loginComplete = true;
-                return;
-            });
-
-            // If login is complete, return from loop
-            if(loginComplete) break;
+                // Changing current flow data
+                currentFlow = generateLoginFlow(cred, res.nextFlowToken, currentFlowName);
+            }
         }
-
-        // Storing credentials in database and returning result
-        return {
-            success: (!error && await (await AuthService.getInstance()).storeCredentials(data)) ? true : false,
-            error: error,
-            data: data
-        };
     }
 }
