@@ -27,7 +27,14 @@ export class AccountsService extends FetcherService {
      */
     private async executeFlow(flow: LoginFlow, guestCredentials: GuestCredentials): Promise<{headers: AxiosResponseHeaders, nextFlowName: LoginFlows, nextFlowToken: string}> {
         // Executing the given flow
-        var res = await this.fetchData<any>(flow.url, HttpMethods.POST, flow.body, false, guestCredentials);
+        var res = await this.fetchData<any>(flow.url, HttpMethods.POST, flow.body, false, guestCredentials)
+        // If error occurs while logging in
+        .catch(err => {
+            // Getting the list of errors
+            const errors = err.response.data.errors;
+            
+            throw new Error(errors[0].message);
+        });
         
         // Getting the response body
         var data = res.data;

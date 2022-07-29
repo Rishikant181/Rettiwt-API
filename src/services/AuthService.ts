@@ -1,6 +1,6 @@
 // PACKAGE LIBS
 import fetch from 'node-fetch';
-import axios, { AxiosResponseHeaders } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponseHeaders } from 'axios';
 
 // CUSTOM LIBS
 
@@ -137,15 +137,14 @@ export class AuthService {
         // If new guest token is to used
         if(newCred || !this.currentGuest.guestToken) {
             // Fetching guest token from twitter api
-            var data: any = await fetch(guestTokenUrl(), {
+            var data = (await axios(guestTokenUrl(), {
                 headers: blankHeader({ authToken: this.authToken }),
-                method: HttpMethods.POST,
-                body: null
-            }).then(data => data.json());
+                method: HttpMethods.POST
+            })).data;
 
             // Setting new guest credentials
             this.currentGuest.authToken = this.authToken;
-            this.currentGuest.guestToken = data['guest_token'];
+            this.currentGuest.guestToken = data.guest_token;
 
             return this.currentGuest;
         }
