@@ -1,6 +1,5 @@
 // PACKAGE LIBS
-import fetch from 'node-fetch';
-import axios, { AxiosRequestConfig, AxiosResponseHeaders } from 'axios';
+import axios, { AxiosResponseHeaders } from 'axios';
 
 // CUSTOM LIBS
 

@@ -9,6 +9,15 @@ export enum HttpMethods {
 };
 
 /**
+ * @summary Stores the different types of authentication available to authencticate HTTP requests
+ */
+export enum AuthType {
+    "NONE",
+    "GUEST",
+    "AUTH"
+};
+
+/**
  * @summary Stores the different types of http status codes
  */
 export enum HttpStatus {

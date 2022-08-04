@@ -1,5 +1,4 @@
 // PACKAGE LIBS
-import fetch from "node-fetch";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 // CUSTOM LIBS
@@ -9,7 +8,7 @@ import { AuthService } from './AuthService';
 import { CacheService } from './CacheService';
 
 // TYPES
-import { HttpMethods } from "../types/HTTP";
+import { HttpMethods, AuthType } from "../types/HTTP";
 import { AuthCredentials, GuestCredentials } from "../types/Authentication";
 
 // HELPERS
@@ -39,9 +38,9 @@ export class FetcherService {
      */
     protected async fetchData<DataType>(
         url: string,
-        method: HttpMethods = HttpMethods.GET,
+        method: HttpMethods,
         body: any = null,
-        auth: boolean = true,
+        auth: AuthType,
         guestCreds?: GuestCredentials
     ): Promise<AxiosResponse<DataType>> {
         // Getting the AuthService instance
