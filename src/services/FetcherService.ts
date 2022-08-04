@@ -47,11 +47,11 @@ export class FetcherService {
         var service = await AuthService.getInstance();
 
         // Getting the required credentials
-        var creds = await (auth ? service.getAuthCredentials() : service.getGuestCredentials());
+        var creds = await ((auth == AuthType.AUTH) ? service.getAuthCredentials() : service.getGuestCredentials());
 
         // Preparing the request config
         var config: AxiosRequestConfig<DataType> = {
-            headers: auth ? authorizedHeader(creds as AuthCredentials) : unauthorizedHeader(guestCreds ? guestCreds : creds as GuestCredentials),
+            headers: (auth == AuthType.AUTH) ? authorizedHeader(creds as AuthCredentials) : unauthorizedHeader(guestCreds ? guestCreds : creds as GuestCredentials),
             method: method ? method : HttpMethods.GET,
             // Conditionally including body is POST method is to be used
             ...(() => {

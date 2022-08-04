@@ -27,6 +27,9 @@ import {
 } from "../helper/Extractors";
 import { toUser, toTweet } from '../helper/Deserializers';
 
+// TYPES
+import { AuthType, HttpMethods } from "../../types/HTTP";
+
 /**
  * A service that deals with fetching of data related to tweets
  */
@@ -39,7 +42,12 @@ export class TweetService extends FetcherService {
      */
     async getTweets(filter: TweetFilter, cursor: string): Promise<CursoredData<Tweet>> {
         // Getting the raw data
-        var res = await this.fetchData<RawTweets>(tweetsUrl(filter, cursor)).then(res => res.data);
+        var res = await this.fetchData<RawTweets>(
+            tweetsUrl(filter, cursor),
+            HttpMethods.GET,
+            undefined,
+            AuthType.AUTH
+        ).then(res => res.data);
 
         // Extracting data
         var data = extractTweets(res);
@@ -73,9 +81,9 @@ export class TweetService extends FetcherService {
             // Fetching the raw data
             var res = await this.fetchData<RawTweet>(
                 tweetDetailsUrl(tweetId),
+                HttpMethods.GET,
                 undefined,
-                undefined,
-                false
+                AuthType.GUEST
             ).then(res => res.data);
 
             // Extracting data
@@ -99,7 +107,12 @@ export class TweetService extends FetcherService {
      */
     async getTweetLikers(tweetId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // Fetching the raw data
-        var res = await this.fetchData<RawLikers>(tweetLikesUrl(tweetId, count, cursor)).then(res => res.data);
+        var res = await this.fetchData<RawLikers>(
+            tweetLikesUrl(tweetId, count, cursor),
+            HttpMethods.GET,
+            undefined,
+            AuthType.AUTH
+        ).then(res => res.data);
 
         // Extracting data
         var data = extractTweetLikers(res);
@@ -124,7 +137,12 @@ export class TweetService extends FetcherService {
      */
     async getTweetRetweeters(tweetId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // Fetching the raw data
-        var res = await this.fetchData<RawRetweeters>(tweetRetweetUrl(tweetId, count, cursor)).then(res => res.data);
+        var res = await this.fetchData<RawRetweeters>(
+            tweetRetweetUrl(tweetId, count, cursor),
+            HttpMethods.GET,
+            undefined,
+            AuthType.AUTH
+        ).then(res => res.data);
 
         // Extracting data
         var data = extractTweetRetweeters(res);
@@ -148,7 +166,12 @@ export class TweetService extends FetcherService {
      */
     async getTweetReplies(tweetId: string, cursor: string): Promise<CursoredData<Tweet>> {
         // Fetching the raw data
-        var res = await this.fetchData<RawTweet>(tweetRepliesUrl(tweetId, cursor)).then(res => res.data);
+        var res = await this.fetchData<RawTweet>(
+            tweetRepliesUrl(tweetId, cursor),
+            HttpMethods.GET,
+            undefined,
+            AuthType.AUTH
+        ).then(res => res.data);
         
         // Extracting data
         var data = extractTweetReplies(res, tweetId);
