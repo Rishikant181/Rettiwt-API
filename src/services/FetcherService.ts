@@ -82,7 +82,7 @@ export class FetcherService {
      * @param auth Whether to use authenticated requests or not
      * @param guestCredes Guest credentials to use rather than auto-generated one
      */
-    protected async fetchData<DataType>(
+    protected async request<DataType>(
         url: string,
         method: HttpMethods,
         body: any = null,

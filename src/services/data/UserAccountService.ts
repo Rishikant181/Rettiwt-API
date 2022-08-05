@@ -33,7 +33,7 @@ export class UserAccountService extends FetcherService {
      */
     async getUserAccountDetails(screenName: string): Promise<User> {
         // Fetching the raw data
-        var res: RawUser = await this.fetchData<RawUser>(
+        var res: RawUser = await this.request<RawUser>(
             userAccountUrl(screenName),
             HttpMethods.GET,
             undefined,
@@ -67,7 +67,7 @@ export class UserAccountService extends FetcherService {
         // If data does not exist in cache
         else {
             // Fetchin the raw data
-            var res = await this.fetchData<RawUser>(
+            var res = await this.request<RawUser>(
                 userAccountByIdUrl(restId),
                 HttpMethods.GET,
                 undefined,
@@ -95,7 +95,7 @@ export class UserAccountService extends FetcherService {
      */
     async getUserFollowing(userId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // Fetchin the raw data
-        var res = await this.fetchData<RawUserFollowing>(
+        var res = await this.request<RawUserFollowing>(
             userFollowingUrl(userId, count, cursor),
             HttpMethods.GET,
             undefined,
@@ -130,7 +130,7 @@ export class UserAccountService extends FetcherService {
          * So changing count to count - 20, fixes fetching more than required number of follower
          */
         // Fetching the raw data
-        var res = await this.fetchData<RawUserFollowers>(
+        var res = await this.request<RawUserFollowers>(
             userFollowersUrl(userId, (count > 20) ? (count - 20) : count, cursor),
             HttpMethods.GET,
             undefined,
@@ -160,7 +160,7 @@ export class UserAccountService extends FetcherService {
      */
     async getUserLikes(userId: string, count: number, cursor: string): Promise<CursoredData<Tweet>> {
         // Fetching the raw data
-        var res = await this.fetchData<RawUserLikes>(
+        var res = await this.request<RawUserLikes>(
             userLikesUrl(userId, count, cursor),
             HttpMethods.GET,
             undefined,
