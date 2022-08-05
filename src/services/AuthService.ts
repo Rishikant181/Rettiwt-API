@@ -7,7 +7,7 @@ import axios, { AxiosResponseHeaders } from 'axios';
 import { HttpMethods } from '../types/HTTP';
 
 // TYPES
-import { GuestCredentials, AuthCredentials } from '../types/Authentication';
+import { GuestCredentials, AuthCredentials, BlankCredentials } from '../types/Authentication';
 
 // HELPERS
 import { guestTokenUrl, blankHeader } from './helper/Requests';
@@ -114,7 +114,7 @@ export class AuthService {
      * @returns The current authentication credentials. A different credential is returned each time this is invoked
      * @param newCred Whether to get a different credential or the current one
      */
-    async getAuthCredentials(newCred: boolean = true): Promise<{ authToken: string, csrfToken: string, cookie: string }> {
+    async getAuthCredentials(newCred: boolean = true): Promise<AuthCredentials> {
         // If new credential is required
         if(newCred) {
             // Changing to the next available credentials
@@ -132,7 +132,7 @@ export class AuthService {
      * @returns The guest credentials required to fetch data anonymously
      * @param newCred Whether to get a different credential or the current one
      */
-    async getGuestCredentials(newCred: boolean = true): Promise<{authToken: string, guestToken: string }> {
+    async getGuestCredentials(newCred: boolean = true): Promise<GuestCredentials> {
         // If new guest token is to used
         if(newCred || !this.currentGuest.guestToken) {
             // Fetching guest token from twitter api
@@ -151,5 +151,12 @@ export class AuthService {
         else {
             return this.currentGuest;
         }
+    }
+
+    /**
+     * @returns The blank credentials required to fetch unauthenticated requests
+     */
+    async getBlankCredentials(): Promise<BlankCredentials> {
+        return { authToken: config.twitter.auth.authToken };
     }
 }

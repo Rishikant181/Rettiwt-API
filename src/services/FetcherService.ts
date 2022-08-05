@@ -9,7 +9,7 @@ import { CacheService } from './CacheService';
 
 // TYPES
 import { HttpMethods, AuthType } from "../types/HTTP";
-import { AuthCredentials, GuestCredentials } from "../types/Authentication";
+import { AuthCredentials, GuestCredentials, BlankCredentials } from "../types/Authentication";
 
 // HELPERS
 import { authorizedHeader, blankHeader, unauthorizedHeader } from './helper/Requests'
@@ -33,7 +33,7 @@ export class FetcherService {
      * @param auth The type of authentication to use
      * @param guestCreds Pre deterermined guest credentials (if any)
      */
-    private async getCredentials(auth: AuthType, guestCreds?: GuestCredentials): Promise<GuestCredentials | AuthCredentials | { authToken: string }> {
+    private async getCredentials(auth: AuthType, guestCreds?: GuestCredentials): Promise<GuestCredentials | AuthCredentials | BlankCredentials> {
         // Getting the AuthService instance
         var service = await AuthService.getInstance();
         
@@ -47,12 +47,15 @@ export class FetcherService {
         }
         // If no credential is required
         else {
-            return {
-                authToken: 'Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA'
-            };
+            return await service.getBlankCredentials();
         }
     }
 
+    /**
+     * @returns The requested headers for making the http request
+     * @param auth The type of authentication to use
+     * @param guestCreds Pre deterermined guest credentials (if any)
+     */
     private async getHeaders(auth: AuthType, guestCreds?: GuestCredentials): Promise<any> {
         // Getting the credentials to user
         var creds = await this.getCredentials(auth, guestCreds);
