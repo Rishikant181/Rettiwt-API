@@ -93,15 +93,9 @@ export class FetcherService {
         var config: AxiosRequestConfig<DataType> = {
             headers: await this.getHeaders(auth, guestCreds),
             method: method ? method : HttpMethods.GET,
-            // Conditionally including body is POST method is to be used
-            ...(() => {
-                if (method == HttpMethods.POST) {
-                    return { data: body }
-                }
-                else {
-                    return
-                }
-            })()
+            
+            // Conditionally including body if request type if POST
+            ...((method == HttpMethods.POST) ? { data: body } : undefined)
         };
     
         // Fetching the data
