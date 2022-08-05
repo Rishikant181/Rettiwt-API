@@ -69,7 +69,7 @@ export class FetcherService {
             return unauthorizedHeader(creds as GuestCredentials);
         }
         // If header for unauthorized request is required
-        else if (auth == AuthType.NONE) {
+        else {
             return blankHeader(creds);
         }
     }
@@ -80,9 +80,9 @@ export class FetcherService {
      * @param method The type of HTTP request being made. Default is GET
      * @param body The content to be sent in the body of the response
      * @param auth Whether to use authenticated requests or not
-     * @param guestCredes Guest credentials to use rather than auto-generated one
+     * @param guestCreds Guest credentials to use rather than auto-generated one
      */
-    protected async request<DataType>(
+    async request<DataType>(
         url: string,
         method: HttpMethods,
         body: any = null,

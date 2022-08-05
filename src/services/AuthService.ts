@@ -4,18 +4,19 @@ import axios, { AxiosResponseHeaders } from 'axios';
 // CUSTOM LIBS
 
 // SERVICES
-import { HttpMethods } from '../types/HTTP';
+import { FetcherService } from './FetcherService';
 
 // TYPES
 import { GuestCredentials, AuthCredentials, BlankCredentials } from '../types/Authentication';
+import { AuthType, HttpMethods } from '../types/HTTP';
 
 // HELPERS
-import { guestTokenUrl, blankHeader } from './helper/Requests';
 import { parseCookies } from './helper/Parser';
 
 // CONFIGS
 import { config } from '../config/env';
 import { core_urls } from '../config/urls';
+import { guestTokenUrl } from './helper/Requests';
 
 /**
  * @summary Handles authentication of http requests and other authentication related tasks
@@ -136,10 +137,7 @@ export class AuthService {
         // If new guest token is to used
         if(newCred || !this.currentGuest.guestToken) {
             // Fetching guest token from twitter api
-            var data = (await axios(guestTokenUrl(), {
-                headers: blankHeader({ authToken: this.authToken }),
-                method: HttpMethods.POST
-            })).data;
+            var data = (await new FetcherService().request<any>(guestTokenUrl(), HttpMethods.POST, undefined, AuthType.NONE)).data;
 
             // Setting new guest credentials
             this.currentGuest.authToken = this.authToken;
