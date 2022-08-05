@@ -12,7 +12,7 @@ import { HttpMethods, AuthType } from "../types/HTTP";
 import { AuthCredentials, GuestCredentials } from "../types/Authentication";
 
 // HELPERS
-import { authorizedHeader, unauthorizedHeader } from './helper/Requests'
+import { authorizedHeader, blankHeader, unauthorizedHeader } from './helper/Requests'
 import { handleHTTPError } from './helper/Parser';
 import { toUser, toTweet } from './helper/Deserializers';
 
@@ -26,6 +26,49 @@ export class FetcherService {
     // MEMBER METHODS
     constructor() {
         FetcherService.allowCache = process.env.USE_CACHE;
+    }
+
+    /**
+     * @returns The requested credentials for authenticating requests
+     * @param auth The type of authentication to use
+     * @param guestCreds Pre deterermined guest credentials (if any)
+     */
+    private async getCredentials(auth: AuthType, guestCreds?: GuestCredentials): Promise<GuestCredentials | AuthCredentials | { authToken: string }> {
+        // Getting the AuthService instance
+        var service = await AuthService.getInstance();
+        
+        // If authenticated credential is required
+        if (auth == AuthType.AUTH) {
+            return await service.getAuthCredentials();
+        }
+        // If guest credential is required
+        else if (auth == AuthType.GUEST) {
+            return guestCreds ? guestCreds : (await service.getGuestCredentials());
+        }
+        // If no credential is required
+        else {
+            return {
+                authToken: 'Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA'
+            };
+        }
+    }
+
+    private async getHeaders(auth: AuthType, guestCreds?: GuestCredentials): Promise<any> {
+        // Getting the credentials to user
+        var creds = await this.getCredentials(auth, guestCreds);
+        
+        // If header for authorized request is required
+        if (auth == AuthType.AUTH) {
+            return authorizedHeader(creds as AuthCredentials);
+        }
+        // If header for guest authorized request is required
+        else if (auth == AuthType.GUEST) {
+            return unauthorizedHeader(creds as GuestCredentials);
+        }
+        // If header for unauthorized request is required
+        else if (auth == AuthType.NONE) {
+            return blankHeader(creds);
+        }
     }
 
     /**
@@ -43,15 +86,9 @@ export class FetcherService {
         auth: AuthType,
         guestCreds?: GuestCredentials
     ): Promise<AxiosResponse<DataType>> {
-        // Getting the AuthService instance
-        var service = await AuthService.getInstance();
-
-        // Getting the required credentials
-        var creds = await ((auth == AuthType.AUTH) ? service.getAuthCredentials() : service.getGuestCredentials());
-
         // Preparing the request config
         var config: AxiosRequestConfig<DataType> = {
-            headers: (auth == AuthType.AUTH) ? authorizedHeader(creds as AuthCredentials) : unauthorizedHeader(guestCreds ? guestCreds : creds as GuestCredentials),
+            headers: await this.getHeaders(auth, guestCreds),
             method: method ? method : HttpMethods.GET,
             // Conditionally including body is POST method is to be used
             ...(() => {
