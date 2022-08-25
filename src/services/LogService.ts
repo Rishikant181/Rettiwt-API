@@ -14,7 +14,7 @@ export class LogService {
      * @returns The only instance of the class
      */
     static getInstance(): LogService {
-        // If in instance does not exist already
+        // If an instance does not exist already
         if(!this.instance) {
             // Creating a new instance
             this.instance = new LogService();
