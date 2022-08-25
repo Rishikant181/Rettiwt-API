@@ -8,6 +8,7 @@ import { serversOK } from './ServerChecks';
 import { AuthService } from './services/AuthService';
 import { CacheService } from './services/CacheService';
 import { schema } from './graphql/schema';
+import { mongodb_urls } from './config/urls';
 import { exit } from 'process';
 
 // Initialising express instance
@@ -36,7 +37,7 @@ app.listen(process.env.APP_PORT, async () => {
     await CacheService.getInstance();
 
     // Connecting to mongo database for logging
-    await mongoose.connect('mongodb://data:27017/logs');
+    await mongoose.connect(mongodb_urls.logs_url());
     
     console.log(`Listening on port ${process.env.APP_PORT}`);
 });
