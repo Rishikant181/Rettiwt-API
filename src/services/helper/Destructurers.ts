@@ -3,7 +3,7 @@
 // CUSTOM LIBS
 
 // TYPES
-import { DataErrors } from '../../schema/types/Errors';
+import { DataErrors } from '../../graphql/types/Errors';
 
 // HELPERS
 import { isJSONEmpty } from './Parser';
