@@ -5,7 +5,7 @@ import axios, { AxiosResponseHeaders } from 'axios';
 
 // SERVICES
 import { FetcherService } from './FetcherService';
-import { LogService } from './LogService';
+import { Logger, LogService } from './LogService';
 
 // TYPES
 import { GuestCredentials, AuthCredentials, BlankCredentials } from '../types/Authentication';
@@ -31,12 +31,14 @@ export class AuthService {
     private authCredList: AuthCredentials[];                                 // To store the cursored list of available authentication credentials
     private numCredentials: number;                                          // To store the total number of available auth credentials
     private credentialNum: number;                                           // To store the current credentials number
+    private logger: Logger;                                                  // To store the instance of the logging service
 
     // MEMBER METHODS
-    private constructor() {
+    private constructor(logger: Logger) {
         this.authToken = config.twitter.auth.authToken;
         this.currentUser = { authToken: this.authToken, csrfToken: '', cookie: ''};
         this.currentGuest = { authToken: this.authToken, guestToken: '' };
+        this.logger = logger;
     }
 
     /**
@@ -61,7 +63,7 @@ export class AuthService {
         // If an instance doesn't exist already
         if(!this.instance) {
             // Creating a new instance
-            this.instance = new AuthService();
+            this.instance = new AuthService(await LogService.getInstance());
 
             // Initializing async data
             await this.instance.init()
@@ -143,13 +145,9 @@ export class AuthService {
             // Setting new guest credentials
             this.currentGuest.authToken = this.authToken;
             this.currentGuest.guestToken = data.guest_token;
+        }
 
-            return this.currentGuest;
-        }
-        // If new guest credential is not required
-        else {
-            return this.currentGuest;
-        }
+        return this.currentGuest;
     }
 
     /**

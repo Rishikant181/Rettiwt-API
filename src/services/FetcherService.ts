@@ -23,6 +23,7 @@ import { toUser, toTweet } from './helper/Deserializers';
 export class FetcherService {
     // MEMBER DATA
     public static allowCache: boolean;                                      // To store whether caching is enabled or not
+    protected logger: Logger;                                               // To store the instance of the logging service to use
 
     // MEMBER METHODS
     /**
@@ -30,6 +31,7 @@ export class FetcherService {
      */
     constructor(logger: Logger) {
         FetcherService.allowCache = process.env.USE_CACHE;
+        this.logger = logger;
     }
 
     /**
