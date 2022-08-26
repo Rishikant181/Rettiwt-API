@@ -1,14 +1,13 @@
 // PACKAGE LIBS
 import express from 'express';
 import { graphqlHTTP } from 'express-graphql';
-import mongoose from 'mongoose';
 
 // CUSTOM LIBS
 import { serversOK } from './ServerChecks';
 import { AuthService } from './services/AuthService';
+import { LogService } from './services/LogService';
 import { CacheService } from './services/CacheService';
 import { schema } from './graphql/schema';
-import { mongodb_urls } from './config/urls';
 import { exit } from 'process';
 
 // Initialising express instance
@@ -28,6 +27,7 @@ app.listen(process.env.APP_PORT, async () => {
     // Initializing essential global services
     try {
         await AuthService.getInstance();
+        await LogService.getInstance();
     }
     catch(err) {
         exit();
@@ -35,9 +35,6 @@ app.listen(process.env.APP_PORT, async () => {
     
     // Initializing non-essential global services
     await CacheService.getInstance();
-
-    // Connecting to mongo database for logging
-    await mongoose.connect(mongodb_urls.logs_url());
     
     console.log(`Listening on port ${process.env.APP_PORT}`);
 });
