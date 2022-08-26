@@ -6,23 +6,31 @@ import { mongodb_urls } from '../config/urls';
 import { Log } from '../data/models/Logs';
 
 /**
+ * @summary The interface used to inject the necessary Logging service into the requiring service
+ */
+export interface Logger {
+    // MEMBER METHODS
+    log(data: any): Promise<boolean>;                                                       // To log the given data into the database  
+}
+
+/**
  * @summary Manages logging of various activities of the api and other logging tasks
  */
-export class LogService {
+export class LogService implements Logger {
     // MEMBER DATA
     private static instance: LogService;                                                    // To store the only instance of the class
-    private dbUrl: string;                                                                  // To store the connection string url to the database
+    private connUrl: string;                                                                // To store the connection string url to the database
     
     // MEMBER METHODS
     private constructor() {
-        this.dbUrl = mongodb_urls.logs_url();
+        this.connUrl = mongodb_urls.logs_url();
     }
     
     /**
      * @summary Initializes all async data
      */
     private async init() {
-        await mongoose.connect(this.dbUrl);
+        await mongoose.connect(this.connUrl);
     }
 
     /**
@@ -50,5 +58,7 @@ export class LogService {
             time: new Date(),
             data: data
         }).save();
+
+        return true;
     }
 }
