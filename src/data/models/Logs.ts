@@ -8,5 +8,6 @@ import mongoose from 'mongoose';
  */
 export const Log = mongoose.model('Log', new mongoose.Schema({
     time: Date,
+    message: String,
     data: JSON
 }));
