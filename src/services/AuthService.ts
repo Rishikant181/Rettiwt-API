@@ -5,6 +5,7 @@ import axios, { AxiosResponseHeaders } from 'axios';
 
 // SERVICES
 import { FetcherService } from './FetcherService';
+import { LogService } from './LogService';
 
 // TYPES
 import { GuestCredentials, AuthCredentials, BlankCredentials } from '../types/Authentication';
@@ -137,7 +138,7 @@ export class AuthService {
         // If new guest token is to used
         if(newCred || !this.currentGuest.guestToken) {
             // Fetching guest token from twitter api
-            var data = (await new FetcherService().request<any>(guestTokenUrl(), HttpMethods.POST, undefined, AuthType.NONE)).data;
+            var data = (await new FetcherService(await LogService.getInstance()).request<any>(guestTokenUrl(), HttpMethods.POST, undefined, AuthType.NONE)).data;
 
             // Setting new guest credentials
             this.currentGuest.authToken = this.authToken;

@@ -4,12 +4,10 @@
 
 // SERVICES
 import { AccountsService } from '../../services/accounting/AccountsService';
+import { LogService } from '../../services/LogService';
 
 // TYPES
 import { LoginCredentials } from '../../types/Authentication';
-
-// Initializing the service used for handling accounting operations
-var accountsService = new AccountsService();
 
 /**
  * @returns Whether login was successfull or not
@@ -18,6 +16,9 @@ var accountsService = new AccountsService();
  * @param password The password to the Twitter account
  */
 export async function resolveUserLogin(cred: LoginCredentials): Promise<boolean> {
+    // Initializing the service used for handling accounting operations
+    var accountsService = new AccountsService(await LogService.getInstance());
+
     // Logging into the given account
     return (await accountsService.login(cred)) ? true : false;
 }

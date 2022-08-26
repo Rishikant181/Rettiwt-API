@@ -4,6 +4,7 @@
 
 // SERVICES
 import { TweetService } from '../../services/data/TweetService';
+import { LogService } from '../../services/LogService';
 
 // TYPES
 import { TweetFilter } from '../../types/Tweet';
@@ -12,14 +13,14 @@ import { Cursor } from '../../types/Service';
 // HELPERS
 import { ValidationErrors } from '../types/Errors';
 
-// Initialsing the service to fetch user details
-var tweetService = new TweetService();
-
 /**
  * @returns The details of the tweet with the given id
  * @param id The id of the tweet which is to be fetched
  */
 export async function resolveTweet(id: string): Promise<any> {
+    // Initialsing the service to fetch tweet related data
+    var tweetService = new TweetService(await LogService.getInstance());
+    
     // Getting the data
     var res = await tweetService.getTweetById(id);
 
@@ -36,6 +37,9 @@ export async function resolveTweets(filter: any): Promise<any[]> {
     var next: Cursor = new Cursor(filter.cursor);                               // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of tweets fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use
+
+    // Initialsing the service to fetch tweet related data
+    var tweetService = new TweetService(await LogService.getInstance());
 
     // Preparing the filter to use
     const tweetFilter: TweetFilter = filter;
@@ -139,6 +143,9 @@ export async function resolveTweetLikers(
     var total: number = 0;                                                      // To store the total number of likers fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use
 
+    // Initialsing the service to fetch tweet related data
+    var tweetService = new TweetService(await LogService.getInstance());
+
     // If all likers are to be fetched
     count = (all || count > likesCount) ? likesCount : count;
 
@@ -196,6 +203,9 @@ export async function resolveTweetRetweeters(
     var total: number = 0;                                                      // To store the total number of retweeters fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use
 
+    // Initialsing the service to fetch tweet related data
+    var tweetService = new TweetService(await LogService.getInstance());
+
     // If all retweeters are to be fetched
     count = (all || count > retweetsCount) ? retweetsCount : count;
 
@@ -251,6 +261,9 @@ export async function resolveTweetReplies(
     var replies: any[] = [];                                                    // To store the list of replies
     var next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of replies fetched
+
+    // Initialsing the service to fetch tweet related data
+    var tweetService = new TweetService(await LogService.getInstance());
 
     // If all replies are to be fetched
     count = (all || count > repliesCount) ? repliesCount : count;

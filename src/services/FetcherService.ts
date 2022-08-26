@@ -6,6 +6,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 // SERVICES
 import { AuthService } from './AuthService';
 import { CacheService } from './CacheService';
+import { Logger } from './LogService';
 
 // TYPES
 import { HttpMethods, AuthType } from "../types/HTTP";
@@ -24,7 +25,10 @@ export class FetcherService {
     public static allowCache: boolean;                                      // To store whether caching is enabled or not
 
     // MEMBER METHODS
-    constructor() {
+    /**
+     * @param logger The log service to be used to log data and events
+     */
+    constructor(logger: Logger) {
         FetcherService.allowCache = process.env.USE_CACHE;
     }
 
