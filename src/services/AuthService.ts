@@ -31,14 +31,12 @@ export class AuthService {
     private authCredList: AuthCredentials[];                                 // To store the cursored list of available authentication credentials
     private numCredentials: number;                                          // To store the total number of available auth credentials
     private credentialNum: number;                                           // To store the current credentials number
-    private logger: Logger;                                                  // To store the instance of the logging service
 
     // MEMBER METHODS
-    private constructor(logger: Logger) {
+    private constructor() {
         this.authToken = config.twitter.auth.authToken;
         this.currentUser = { authToken: this.authToken, csrfToken: '', cookie: ''};
         this.currentGuest = { authToken: this.authToken, guestToken: '' };
-        this.logger = logger;
     }
 
     /**
@@ -63,7 +61,7 @@ export class AuthService {
         // If an instance doesn't exist already
         if(!this.instance) {
             // Creating a new instance
-            this.instance = new AuthService(await LogService.getInstance());
+            this.instance = new AuthService();
 
             // Initializing async data
             await this.instance.init()
