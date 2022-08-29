@@ -1,21 +1,7 @@
 // This file contains various methods for extracting data from incoming JSON
 
 // TYPES
-import { Response } from 'node-fetch';
-import { AxiosResponse, AxiosResponseHeaders } from 'axios';
-import { HttpStatus } from '../../types/HTTP';
-
-/**
- * @summary Throws the appropriate http error after evaluation of the status code of reponse
- * @param res The response object received from http communication
- */
-export function handleHTTPError(res: AxiosResponse): AxiosResponse {
-    if (res.status != 200 && res.status in HttpStatus) {
-        throw new Error(HttpStatus[res.status])
-    }
-
-    return res;
-}
+import { AxiosResponseHeaders } from 'axios';
 
 /**
  * @returns The cookie string after removing unnecessary data from it

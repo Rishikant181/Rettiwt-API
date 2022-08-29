@@ -9,12 +9,11 @@ import { CacheService } from './CacheService';
 import { Logger } from './LogService';
 
 // TYPES
-import { HttpMethods, AuthType } from "../types/HTTP";
+import { HttpMethods, AuthType, HttpStatus } from "../types/HTTP";
 import { AuthCredentials, GuestCredentials, BlankCredentials } from "../types/Authentication";
 
 // HELPERS
 import { authorizedHeader, blankHeader, unauthorizedHeader } from './helper/Requests'
-import { handleHTTPError } from './helper/Parser';
 import { toUser, toTweet } from './helper/Deserializers';
 
 /**
@@ -81,6 +80,18 @@ export class FetcherService {
     }
 
     /**
+    * @summary Throws the appropriate http error after evaluation of the status code of reponse
+    * @param res The response object received from http communication
+    */
+    private handleHTTPError(res: AxiosResponse): AxiosResponse {
+        if (res.status != 200 && res.status in HttpStatus) {
+            throw new Error(HttpStatus[res.status])
+        }
+
+        return res;
+    }
+
+    /**
      * @returns The absolute raw json data from give url
      * @param url The url to fetch data from
      * @param method The type of HTTP request being made. Default is GET
@@ -105,7 +116,7 @@ export class FetcherService {
         };
     
         // Fetching the data
-        var res = await axios(url, config).then(res => handleHTTPError(res));
+        var res = await axios(url, config).then(res => this.handleHTTPError(res));
 
         // Logging
         this.logger.log("Data requested", res.config);
