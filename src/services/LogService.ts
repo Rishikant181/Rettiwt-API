@@ -10,7 +10,7 @@ import { Log } from '../data/models/Logs';
  */
 export interface Logger {
     // MEMBER METHODS
-    log(data: any): Promise<boolean>;                                                       // To log the given data into the database  
+    log(message: string, data: any): Promise<boolean>;                                                       // To log the given data into the database  
 }
 
 /**
@@ -53,9 +53,10 @@ export class LogService implements Logger {
      * @summary Logs the given data into the logs database
      * @param data The data to be logged
      */
-    public async log(data: any) {
+    public async log(message: string, data: any) {
         await new Log({
             time: new Date(),
+            message: message,
             data: data
         }).save();
 
