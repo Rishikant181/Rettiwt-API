@@ -4,6 +4,7 @@
 
 // SERVICES
 import { UserAccountService } from "../../services/data/UserAccountService";
+import { LogService } from "../../services/LogService";
 
 // TYPES
 import { Cursor } from '../../types/Service';
@@ -11,15 +12,15 @@ import { Cursor } from '../../types/Service';
 // HELPERS
 import { ValidationErrors } from '../types/Errors';
 
-// Initialsing the service to fetch user details
-var userService = new UserAccountService();
-
 /**
  * @returns The details of the target twitter user
  * @param userName The user name of the target twitter user
  * @param id The id of the target twitter user
  */
 export async function resolveUserDetails(userName: string, id: string): Promise<any> {
+    // Initialsing the service to fetch data related to twitter user
+    var userService = new UserAccountService(await LogService.getInstance());
+    
     // If user name is supplied
     if (userName) {
         return await userService.getUserAccountDetails(userName);
@@ -53,6 +54,9 @@ export async function resolveUserLikes(
     var next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of liked twets fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use
+
+    // Initialsing the service to fetch data related to twitter user
+    var userService = new UserAccountService(await LogService.getInstance());
 
     // If all liked tweets are to be fetched
     count = all ? favouritesCount : count;
@@ -111,6 +115,9 @@ export async function resolveUserFollowers(
     var total: number = 0;                                                      // To store the total number of followers fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use
 
+    // Initialsing the service to fetch data related to twitter user
+    var userService = new UserAccountService(await LogService.getInstance());
+
     // If all followers are to be fetched
     count = (all || count > followersCount) ? followersCount : count;
 
@@ -167,6 +174,9 @@ export async function resolveUserFollowing(
     var next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
     var total: number = 0;                                                      // To store the total number of following fetched
     var batchSize: number = 20;                                                 // To store the batchsize to use
+
+    // Initialsing the service to fetch data related to twitter user
+    var userService = new UserAccountService(await LogService.getInstance());
 
     // If all followings are to be fetched
     count = (all || count > followingsCount) ? followingsCount : count;

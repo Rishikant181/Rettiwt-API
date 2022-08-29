@@ -2,17 +2,6 @@ export const config = {
     server: {
         urls: {
             core: `${process.env.CORE_HOST}:${process.env.CORE_PORT}}`
-        },
-        db: {
-            databases: {
-                auth: {
-                    name: "auth-credentials",
-                    tables: {
-                        cookies: "cookies"
-                    },
-                    index: "index"
-                }
-            }
         }
     },
     twitter: {

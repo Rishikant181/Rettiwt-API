@@ -6,7 +6,7 @@
 export type LoginFlow = {
     url: string,
     body: string
-}
+};
 
 /**
  * @summary Stores the credentials for unauthenticated/guest users
@@ -26,10 +26,17 @@ export type AuthCredentials = {
 };
 
 /**
+ * Stores the credentials for blank requests
+ */
+export type BlankCredentials = {
+    authToken: string,
+};
+
+/**
  * @summary Stores the actual login credentials to a Twitter account
  */
 export type LoginCredentials = {
     email: string,
     userName: string,
     password: string
-}
+};

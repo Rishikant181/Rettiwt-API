@@ -1,22 +1,23 @@
 // PACKAGE LIBS
-import fetch from 'node-fetch';
-import axios, { AxiosRequestConfig, AxiosResponseHeaders } from 'axios';
+import axios, { AxiosResponseHeaders } from 'axios';
 
 // CUSTOM LIBS
 
 // SERVICES
-import { HttpMethods } from '../types/HTTP';
+import { FetcherService } from './FetcherService';
+import { Logger, LogService } from './LogService';
 
 // TYPES
-import { GuestCredentials, AuthCredentials } from '../types/Authentication';
+import { GuestCredentials, AuthCredentials, BlankCredentials } from '../types/Authentication';
+import { AuthType, HttpMethods } from '../types/HTTP';
 
 // HELPERS
-import { guestTokenUrl, blankHeader } from './helper/Requests';
 import { parseCookies } from './helper/Parser';
 
 // CONFIGS
 import { config } from '../config/env';
 import { core_urls } from '../config/urls';
+import { guestTokenUrl } from './helper/Requests';
 
 /**
  * @summary Handles authentication of http requests and other authentication related tasks
@@ -115,7 +116,7 @@ export class AuthService {
      * @returns The current authentication credentials. A different credential is returned each time this is invoked
      * @param newCred Whether to get a different credential or the current one
      */
-    async getAuthCredentials(newCred: boolean = true): Promise<{ authToken: string, csrfToken: string, cookie: string }> {
+    async getAuthCredentials(newCred: boolean = true): Promise<AuthCredentials> {
         // If new credential is required
         if(newCred) {
             // Changing to the next available credentials
@@ -133,24 +134,24 @@ export class AuthService {
      * @returns The guest credentials required to fetch data anonymously
      * @param newCred Whether to get a different credential or the current one
      */
-    async getGuestCredentials(newCred: boolean = true): Promise<{authToken: string, guestToken: string }> {
+    async getGuestCredentials(newCred: boolean = true): Promise<GuestCredentials> {
         // If new guest token is to used
         if(newCred || !this.currentGuest.guestToken) {
             // Fetching guest token from twitter api
-            var data = (await axios(guestTokenUrl(), {
-                headers: blankHeader({ authToken: this.authToken }),
-                method: HttpMethods.POST
-            })).data;
+            var data = (await new FetcherService(await LogService.getInstance()).request<any>(guestTokenUrl(), HttpMethods.POST, undefined, AuthType.NONE)).data;
 
             // Setting new guest credentials
             this.currentGuest.authToken = this.authToken;
             this.currentGuest.guestToken = data.guest_token;
+        }
 
-            return this.currentGuest;
-        }
-        // If new guest credential is not required
-        else {
-            return this.currentGuest;
-        }
+        return this.currentGuest;
+    }
+
+    /**
+     * @returns The blank credentials required to fetch unauthenticated requests
+     */
+    async getBlankCredentials(): Promise<BlankCredentials> {
+        return { authToken: config.twitter.auth.authToken };
     }
 }

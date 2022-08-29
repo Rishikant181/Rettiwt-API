@@ -9,7 +9,7 @@ import { FetcherService } from '../FetcherService';
 
 // TYPES
 import { GuestCredentials, LoginCredentials, LoginFlow } from '../../types/Authentication';
-import { HttpMethods } from '../../types/HTTP';
+import { HttpMethods, AuthType } from '../../types/HTTP';
 
 // HELPERS
 import { generateLoginFlow, LoginFlows } from "./LoginFlows";
@@ -27,7 +27,7 @@ export class AccountsService extends FetcherService {
      */
     private async executeFlow(flow: LoginFlow, guestCredentials: GuestCredentials): Promise<{headers: AxiosResponseHeaders, nextFlowName: LoginFlows, nextFlowToken: string}> {
         // Executing the given flow
-        var res = await this.fetchData<any>(flow.url, HttpMethods.POST, flow.body, false, guestCredentials)
+        var res = await this.request<any>(flow.url, HttpMethods.POST, flow.body, AuthType.GUEST, guestCredentials)
         // If error occurs while logging in
         .catch(err => {
             // Getting the list of errors

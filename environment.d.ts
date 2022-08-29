@@ -3,6 +3,7 @@ declare global {
     namespace NodeJS {
         interface ProcessEnv {
             USE_CACHE: boolean;                                 // To store whether to use cache or not
+            STORE_LOGS: boolean;                                // To store whether to use logs or not
             CACHE_DB_HOST: string,                              // To store the hostname of the caching database
             CACHE_DB_PORT: number,                              // To store the port number of caching database
             DATA_DB_HOST: string,                               // To store the hostname of the data db

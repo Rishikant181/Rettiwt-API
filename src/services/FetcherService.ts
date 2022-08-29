@@ -1,5 +1,4 @@
 // PACKAGE LIBS
-import fetch from "node-fetch";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 // CUSTOM LIBS
@@ -7,14 +6,14 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 // SERVICES
 import { AuthService } from './AuthService';
 import { CacheService } from './CacheService';
+import { Logger } from './LogService';
 
 // TYPES
-import { HttpMethods } from "../types/HTTP";
-import { AuthCredentials, GuestCredentials } from "../types/Authentication";
+import { HttpMethods, AuthType, HttpStatus } from "../types/HTTP";
+import { AuthCredentials, GuestCredentials, BlankCredentials } from "../types/Authentication";
 
 // HELPERS
-import { authorizedHeader, unauthorizedHeader } from './helper/Requests'
-import { handleHTTPError } from './helper/Parser';
+import { authorizedHeader, blankHeader, unauthorizedHeader } from './helper/Requests'
 import { toUser, toTweet } from './helper/Deserializers';
 
 /**
@@ -23,10 +22,73 @@ import { toUser, toTweet } from './helper/Deserializers';
 export class FetcherService {
     // MEMBER DATA
     public static allowCache: boolean;                                      // To store whether caching is enabled or not
+    protected logger: Logger;                                               // To store the instance of the logging service to use
 
     // MEMBER METHODS
-    constructor() {
+    /**
+     * @param logger The log service to be used to log data and events
+     */
+    constructor(logger: Logger) {
         FetcherService.allowCache = process.env.USE_CACHE;
+        this.logger = logger;
+    }
+
+    /**
+     * @returns The requested credentials for authenticating requests
+     * @param auth The type of authentication to use
+     * @param guestCreds Pre deterermined guest credentials (if any)
+     */
+    private async getCredentials(auth: AuthType, guestCreds?: GuestCredentials): Promise<GuestCredentials | AuthCredentials | BlankCredentials> {
+        // Getting the AuthService instance
+        var service = await AuthService.getInstance();
+        
+        // If authenticated credential is required
+        if (auth == AuthType.AUTH) {
+            return await service.getAuthCredentials();
+        }
+        // If guest credential is required
+        else if (auth == AuthType.GUEST) {
+            return guestCreds ? guestCreds : (await service.getGuestCredentials());
+        }
+        // If no credential is required
+        else {
+            return await service.getBlankCredentials();
+        }
+    }
+
+    /**
+     * @returns The requested headers for making the http request
+     * @param auth The type of authentication to use
+     * @param guestCreds Pre deterermined guest credentials (if any)
+     */
+    private async getHeaders(auth: AuthType, guestCreds?: GuestCredentials): Promise<any> {
+        // Getting the credentials to user
+        var creds = await this.getCredentials(auth, guestCreds);
+        
+        // If header for authorized request is required
+        if (auth == AuthType.AUTH) {
+            return authorizedHeader(creds as AuthCredentials);
+        }
+        // If header for guest authorized request is required
+        else if (auth == AuthType.GUEST) {
+            return unauthorizedHeader(creds as GuestCredentials);
+        }
+        // If header for unauthorized request is required
+        else {
+            return blankHeader(creds);
+        }
+    }
+
+    /**
+    * @summary Throws the appropriate http error after evaluation of the status code of reponse
+    * @param res The response object received from http communication
+    */
+    private handleHTTPError(res: AxiosResponse): AxiosResponse {
+        if (res.status != 200 && res.status in HttpStatus) {
+            throw new Error(HttpStatus[res.status])
+        }
+
+        return res;
     }
 
     /**
@@ -35,38 +97,30 @@ export class FetcherService {
      * @param method The type of HTTP request being made. Default is GET
      * @param body The content to be sent in the body of the response
      * @param auth Whether to use authenticated requests or not
-     * @param guestCredes Guest credentials to use rather than auto-generated one
+     * @param guestCreds Guest credentials to use rather than auto-generated one
      */
-    protected async fetchData<DataType>(
+    async request<DataType>(
         url: string,
-        method: HttpMethods = HttpMethods.GET,
+        method: HttpMethods,
         body: any = null,
-        auth: boolean = true,
+        auth: AuthType,
         guestCreds?: GuestCredentials
     ): Promise<AxiosResponse<DataType>> {
-        // Getting the AuthService instance
-        var service = await AuthService.getInstance();
-
-        // Getting the required credentials
-        var creds = await (auth ? service.getAuthCredentials() : service.getGuestCredentials());
-
         // Preparing the request config
         var config: AxiosRequestConfig<DataType> = {
-            headers: auth ? authorizedHeader(creds as AuthCredentials) : unauthorizedHeader(guestCreds ? guestCreds : creds as GuestCredentials),
+            headers: await this.getHeaders(auth, guestCreds),
             method: method ? method : HttpMethods.GET,
-            // Conditionally including body is POST method is to be used
-            ...(() => {
-                if (method == HttpMethods.POST) {
-                    return { data: body }
-                }
-                else {
-                    return
-                }
-            })()
+            
+            // Conditionally including body if request type if POST
+            ...((method == HttpMethods.POST) ? { data: body } : undefined)
         };
     
         // Fetching the data
-        var res = await axios(url, config).then(res => handleHTTPError(res));
+        var res = await axios(url, config).then(res => this.handleHTTPError(res));
+
+        // Logging
+        this.logger.log("Data requested", res.config);
+        this.logger.log("Data fetched", { headers: res.headers, data: res.data });
 
         return res;
     }

@@ -3,7 +3,7 @@
 // CUSTOM LIBS
 
 // TYPES
-import { DataErrors } from '../../schema/types/Errors';
+import { DataErrors } from '../../graphql/types/Errors';
 import RawUser from '../../types/raw/user/User';
 import RawUserFollowers from '../../types/raw/user/Followers';
 import RawUserFollowing from '../../types/raw/user/Following';
