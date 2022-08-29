@@ -13,6 +13,18 @@
  * }
  */
 
+/**
+ * @summary Stores the urls used for caching data in redis
+ */
+export const redis_urls = {
+    name: 'redis',
+    root: `redis://${process.env.CACHE_DB_HOST}:${process.env.CACHE_DB_PORT}`,
+    check: false
+}
+
+/**
+ * @summary Stores the urls for storing data in mongodb
+ */
 export const mongodb_urls = {
     name: 'mongodb',
     root: `mongodb://${process.env.DATA_DB_HOST}:${process.env.DATA_DB_PORT}`,

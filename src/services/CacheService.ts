@@ -3,6 +3,7 @@ import Redis from 'ioredis';
 import { FetcherService } from './FetcherService';
 
 // CUSTOM LIBS
+import { redis_urls } from '../config/urls';
 import { dataToList, findJSONKey } from './helper/Parser';
 
 /**
@@ -19,7 +20,7 @@ export class CacheService {
     
     // MEMBER METHODS
     private constructor() {
-        this.connUrl = `redis://${process.env.CACHE_DB_HOST}:${process.env.CACHE_DB_PORT}`;
+        this.connUrl = redis_urls.root;
         this.client = new Redis(this.connUrl);
         
         // If failed to connect to redis caching server
