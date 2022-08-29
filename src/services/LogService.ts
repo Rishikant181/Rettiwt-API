@@ -20,10 +20,12 @@ export class LogService implements Logger {
     // MEMBER DATA
     private static instance: LogService;                                                    // To store the only instance of the class
     private connUrl: string;                                                                // To store the connection string url to the database
+    private storeLogs: boolean;                                                             // To store whether to store logs in database or not
     
     // MEMBER METHODS
     private constructor() {
         this.connUrl = mongodb_urls.logs_url();
+        this.storeLogs = process.env.STORE_LOGS;
     }
     
     /**
@@ -54,11 +56,14 @@ export class LogService implements Logger {
      * @param data The data to be logged
      */
     public async log(message: string, data: any) {
-        await new Log({
-            time: new Date(),
-            message: message,
-            data: data
-        }).save();
+        // If logging is enabled
+        if (this.storeLogs) {
+            await new Log({
+                time: new Date(),
+                message: message,
+                data: data
+            }).save();
+        }
 
         return true;
     }
