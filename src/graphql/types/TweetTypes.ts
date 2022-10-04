@@ -58,7 +58,7 @@ export const Tweet = new GraphQLObjectType({
         fullText: { type: GraphQLString },
         replyTo: {
             type: Tweet,
-            resolve: (parent, args) => resolveTweet(parent.replyTo)
+            resolve: (parent, args) => parent.replyTo ? resolveTweet(parent.replyTo) : undefined
         },
         lang: { type: GraphQLString },
         quoteCount: { type: GraphQLInt },
