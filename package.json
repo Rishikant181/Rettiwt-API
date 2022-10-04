@@ -9,7 +9,7 @@
 		"build": "npx tsc --project ./",
 		"build:watch": "npx tsc -w --project ./",
 		"start": "node --experimental-specifier-resolution=node ./dist/server.js",
-		"start:watch": "nodemon --experimental-specifier-resolution=node ./dist/server.js",
+		"start:watch": "nodemon --experimental-specifier-resolution=node --inspect=0.0.0.0:3001 ./dist/server.js",
 		"start:dev": "npx concurrently \"npm run build:watch\" \"npm run start:watch\""
 	},
 	"repository": {
