@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "name": "Debug",
+            "port": 3001,
+            "request": "attach",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node",
+            "restart": true
+        }
+    ]
+}
