@@ -39,7 +39,7 @@ export const rootQuery = new GraphQLObjectType({
             type: Tweet,
             description: "Returns a single tweet given it's id",
             args: {
-                id!: { type: GraphQLString }
+                id: { type: GraphQLString }
             },
             resolve: (parent, args) => resolveTweet(args.id)
         },
