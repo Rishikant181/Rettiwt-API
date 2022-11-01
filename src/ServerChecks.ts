@@ -39,7 +39,7 @@ export const serversOK = async (): Promise<boolean> => {
         
         // If server is down and server needs to be checked, repeatedly check it's status as long as it down
         //@ts-ignore
-        while(!(await serverOK(urls[server].root)) && urls[server].check) {
+        while(urls[server].check && !(await serverOK(urls[server].root))) {
             // All servers are not OK, so change allStatus to false
             allStatus = false;
         }

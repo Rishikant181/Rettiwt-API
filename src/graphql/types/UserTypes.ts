@@ -42,7 +42,7 @@ export const User = new GraphQLObjectType({
         location: { type: GraphQLString },
         pinnedTweet: {
             type: Tweet,
-            resolve: (parent, args) => resolveTweet(parent.pinnedTweet)
+            resolve: (parent, args) => (parent.pinnedTweet) ? resolveTweet(parent.pinnedTweet) : undefined
         },
         profileBanner: { type: GraphQLString },
         profileImage: { type: GraphQLString },
