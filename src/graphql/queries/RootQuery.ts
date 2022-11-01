@@ -12,7 +12,7 @@ import {
 // TYPES
 import { User } from '../types/UserTypes'
 import { Tweet, TweetList } from '../types/TweetTypes';
-import { LoginCredentials } from 'src/types/Authentication';
+import { LoginCredentials } from '../../types/Authentication';
 
 // RESOLVERS
 import { resolveUserDetails } from '../resolvers/UserSpecific';
