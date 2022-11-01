@@ -12,5 +12,5 @@ ENV CACHE_DB_PORT 27017
 ENV CORE_HOST server
 ENV CORE_PORT 4000
 ENV STORE_LOGS true
-CMD npm run start:dev
+CMD npm run start
 EXPOSE 3000
