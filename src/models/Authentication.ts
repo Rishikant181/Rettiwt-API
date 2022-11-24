@@ -6,10 +6,10 @@ import mongoose from "mongoose";
 // CUSTOM LIBS
 
 // URLS
-import { mongodb_urls } from '../../config/urls';
+import { mongodb_urls } from '../config/urls';
 
 // TYPES
-import { AuthCredentials } from '../../types/Authentication';
+import { AuthCredentials } from '../types/Authentication';
 
 // Creating connection to mongodb database
 const auth = mongoose.createConnection(mongodb_urls.cookies_url());

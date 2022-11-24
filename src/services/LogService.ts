@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 // CUSTOM LIBS
 import { mongodb_urls } from '../config/urls';
-import { Log } from '../data/models/Logs';
+import { LogModel } from '../models/Logs';
 
 /**
  * @summary The interface used to inject the necessary Logging service into the requiring service
@@ -58,7 +58,7 @@ export class LogService implements Logger {
     public async log(message: string, data: any) {
         // If logging is enabled
         if (this.storeLogs) {
-            await new Log({
+            await new LogModel({
                 time: new Date(),
                 message: message,
                 data: data
