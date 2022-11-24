@@ -29,7 +29,8 @@ export const mongodb_urls = {
     name: 'mongodb',
     root: `mongodb://${process.env.DATA_DB_HOST}:${process.env.DATA_DB_PORT}`,
     check: false,
-    logs_url: () => `${mongodb_urls.root}/logs`
+    logs_url: () => `${mongodb_urls.root}/logs`,
+    cookies_url: () => `${mongodb_urls.root}/cookies`
 }
 
 /**
