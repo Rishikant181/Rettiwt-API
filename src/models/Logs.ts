@@ -3,10 +3,13 @@
 // PACKAGE LIBS
 import mongoose from 'mongoose';
 
+// TYPES
+import { Log } from '../types/Logs';
+
 /**
  * @summary Stores a single log entry
  */
-export const Log = mongoose.model('Log', new mongoose.Schema({
+export const LogModel = mongoose.model<Log>('Log', new mongoose.Schema({
     time: Date,
     message: String,
     data: JSON
