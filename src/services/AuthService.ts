@@ -1,22 +1,23 @@
 // PACKAGE LIBS
 import axios, { AxiosResponseHeaders } from 'axios';
+import mongoose from 'mongoose';
 
 // CUSTOM LIBS
 
 // SERVICES
 import { FetcherService } from './FetcherService';
-import { Logger, LogService } from './LogService';
+import { LogService } from './LogService';
 
 // TYPES
 import { GuestCredentials, AuthCredentials, BlankCredentials } from '../types/Authentication';
 import { AuthType, HttpMethods } from '../types/HTTP';
+import { AuthCredentialsModel } from '../data/models/Authentication';
 
 // HELPERS
 import { parseCookies } from './helper/Parser';
 
 // CONFIGS
 import { config } from '../config/env';
-import { core_urls } from '../config/urls';
 import { guestTokenUrl } from './helper/Requests';
 
 /**
@@ -45,7 +46,7 @@ export class AuthService {
     private async init(): Promise<void> {
         // Getting the list of stored credentials from core
         try {
-            this.authCredList = (await axios.get<AuthCredentials[]>(core_urls.all_cookies())).data;
+            this.authCredList = await AuthCredentialsModel.find();
             this.numCredentials = this.authCredList.length;
             this.credentialNum = 0;
         }
@@ -103,8 +104,8 @@ export class AuthService {
         // Preparing the credentials to write
         const creds = { authToken: this.authToken, csrfToken: csrfToken, cookie: cookies };
 
-        // Sending credentials to core for storage
-        await axios.post<string>(core_urls.add_cookie(), creds);
+        // Storing the credentials
+        await new AuthCredentialsModel(creds).save();
 
         // If write was successful, reinitializing credentials
         await this.init();
