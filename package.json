@@ -24,7 +24,7 @@
 		"graphql": "14.7.0",
 		"ioredis": "5.0.6",
 		"mongodb": "4.4.0",
-		"mongoose": "^6.5.1",
+		"mongoose": "6.5.1",
 		"node-fetch": "3.2.0"
 	},
 	"devDependencies": {

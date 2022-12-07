@@ -18,7 +18,7 @@
  */
 export const redis_urls = {
     name: 'redis',
-    root: `redis://${process.env.CACHE_DB_HOST}:${process.env.CACHE_DB_PORT}`,
+    root: `${process.env.CACHE_DB_URL}`,
     check: false
 }
 
@@ -27,7 +27,7 @@ export const redis_urls = {
  */
 export const mongodb_urls = {
     name: 'mongodb',
-    root: `mongodb://${process.env.DATA_DB_HOST}:${process.env.DATA_DB_PORT}`,
+    root: `${process.env.DATA_DB_URL}`,
     check: false,
     logs_url: () => `${mongodb_urls.root}/logs`,
     cookies_url: () => `${mongodb_urls.root}/cookies`
