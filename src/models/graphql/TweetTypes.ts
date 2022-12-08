@@ -54,7 +54,10 @@ export const Tweet = new GraphQLObjectType({
         },
         createdAt: { type: GraphQLString },
         entities: { type: TweetTokens },
-        quoted: { type: GraphQLString },
+        quoted: {
+            type: Tweet,
+            resolve: (parent, args) => parent.quoted ? resolveTweet(parent.quoted) : undefined
+        },
         fullText: { type: GraphQLString },
         replyTo: {
             type: Tweet,
