@@ -190,11 +190,13 @@ export interface Legacy2 {
     favorite_count: number
     favorited: boolean
     full_text: string
+    in_reply_to_status_id_str: string
     is_quote_status: boolean
     lang: string
     possibly_sensitive: boolean
     possibly_sensitive_editable: boolean
     quote_count: number
+    quoted_status_id_str: string
     reply_count: number
     retweet_count: number
     retweeted: boolean
