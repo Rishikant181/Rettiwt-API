@@ -3,20 +3,8 @@
 // CUSTOM LIBS
 
 // TYPES
-import { UserID, User } from '../../types/UserAccount';
+import { User } from '../../types/UserAccount';
 import { Tweet, TweetEntities } from '../../types/Tweet';
-
-/**
- * @returns UserID object containing the id details of the user
- * @param data The raw user data from Twitter API
- */
-export function toUserID(data: UserID): UserID {
-    return {
-        id: data.id,
-        userName: data.userName,
-        fullName: data.fullName
-    };
-}
 
 /**
  * @returns A User object containing the user details
@@ -24,11 +12,9 @@ export function toUserID(data: UserID): UserID {
  */
 export function toUser(data: any): User {
     return {
-        user: toUserID({
-            id: data['rest_id'],
-            userName: data['legacy']['screen_name'],
-            fullName: data['legacy']['name']
-        }),
+        id: data['rest_id'],
+        userName: data['legacy']['screen_name'],
+        fullName: data['legacy']['name'],
         createdAt: data['legacy']['created_at'],
         description: data['legacy']['description'],
         isVerified: data['legacy']['verified'],
@@ -58,11 +44,7 @@ export function toTweetEntities(data: any): TweetEntities {
     // Extracting user mentions
     if(data['user_mentions']) {
         for(var user of data['user_mentions']) {
-            entities.mentionedUsers.push(toUserID({
-                id: user['id_str'],
-                userName: user['screen_name'],
-                fullName: user['name']
-            }));
+            entities.mentionedUsers.push(user['id_str']);
         }
     }
 
