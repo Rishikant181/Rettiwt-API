@@ -1,19 +1,12 @@
 // This file contains various objects for handling data related to User Account
 
 /**
- * @summary Stores the UID of a user
- */
-export interface UserID {
-    id: string;                                                             // To store the internal rest id of user account
-    userName: string;                                                       // To store the screen name of the user
-    fullName: string;                                                       // To store the actual name of the user
-}
-
-/**
  * @summary Stores the complete details of the given user's account
  */
 export interface User {
-    user: UserID;                                                           // To store the internal rest id of user account
+    id: string;                                                             // To store the internal rest id of user account
+    userName: string;                                                       // To store the screen name of the user
+    fullName: string;                                                       // To store the actual name of the user
     createdAt: string;                                                      // To store the time when the account was created
     description: string;                                                    // To store the account description
     isVerified: boolean ;                                                   // To store whether this is a verified account or not

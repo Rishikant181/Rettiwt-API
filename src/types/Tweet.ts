@@ -1,7 +1,7 @@
 // This file contains various objects related to handling of Tweets made by a user
 
 // CUSTOM LIBS
-import { UserID } from './UserAccount';
+import { User } from './UserAccount';
 
 /**
  * @summary Stores the filter to be used for fetching tweets from TwitterAPI
@@ -24,7 +24,7 @@ export interface TweetFilter {
 export interface TweetEntities {
     hashtags: string[];                                                 // To store a list of hashtags used
     urls: string[];                                                     // To store a list of urls mentioned
-    mentionedUsers: UserID[];                                           // To store a list of users mentioned
+    mentionedUsers: string[];                                           // To store a list of users mentioned
     media: string[];                                                    // To store urls to various media files
 }
 

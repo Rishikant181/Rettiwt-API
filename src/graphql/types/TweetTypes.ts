@@ -27,7 +27,7 @@ import {
 
 import { resolveUserDetails } from "../resolvers/UserSpecific";
 
-
+//@ts-ignore
 export const TweetTokens = new GraphQLObjectType({
     name: 'TweetTokens',
     description: 'Additional extracted tokens from the tweet like mentions, hashtags, etc',
@@ -36,7 +36,7 @@ export const TweetTokens = new GraphQLObjectType({
         urls: { type: new GraphQLList(GraphQLString) },
         mentionedUsers: {
             type: UserList,
-            resolve: (parent) => parent.mentionedUsers.map((user: any) => resolveUserDetails('', user.id))
+            resolve: (parent) => parent.mentionedUsers.map((user: string) => resolveUserDetails('', user))
         },
         media: { type: new GraphQLList(GraphQLString) },
     })

@@ -20,22 +20,14 @@ import { Cursor } from './Global';
 import { resolveUserLikes, resolveUserFollowers, resolveUserFollowing } from '../resolvers/UserSpecific';
 import { resolveTweet, resolveTweets } from '../resolvers/TweetSpecific';
 
-export const UserID = new GraphQLObjectType({
-    name: 'UserID',
-    description: 'The identification details of a single target twitter user',
-    fields: () => ({
-        id: { type: GraphQLString },
-        userName: { type: GraphQLString },
-        fullName: { type: GraphQLString }
-    })
-});
-
 //@ts-ignore
 export const User = new GraphQLObjectType({
     name: 'User',
     description: 'The details of a single target twitter user',
     fields: () => ({
-        user: { type: UserID },
+        id: { type: GraphQLString },
+        userName: { type: GraphQLString },
+        fullName: { type: GraphQLString },
         createdAt: { type: GraphQLString },
         description: { type: GraphQLString },
         isVerified: { type: GraphQLBoolean },
@@ -66,7 +58,7 @@ export const User = new GraphQLObjectType({
                     defaultValue: ''
                 }
             },
-            resolve: (parent, args) => resolveUserLikes(parent.user.id, args.count, args.all, args.cursor, parent.favouritesCount)
+            resolve: (parent, args) => resolveUserLikes(parent.id, args.count, args.all, args.cursor, parent.favouritesCount)
         },
         followersCount: { type: GraphQLInt },
         followers: {
@@ -88,7 +80,7 @@ export const User = new GraphQLObjectType({
                     defaultValue: ''
                 }
             },
-            resolve: (parent, args) => resolveUserFollowers(parent.user.id, args.count, args.all, args.cursor, parent.followersCount)
+            resolve: (parent, args) => resolveUserFollowers(parent.id, args.count, args.all, args.cursor, parent.followersCount)
         },
         followingsCount: { type: GraphQLInt },
         following: {
@@ -110,7 +102,7 @@ export const User = new GraphQLObjectType({
                     defaultValue: ''
                 }
             },
-            resolve: (parent, args) => resolveUserFollowing(parent.user.id, args.count, args.all, args.cursor, parent.followingsCount)
+            resolve: (parent, args) => resolveUserFollowing(parent.id, args.count, args.all, args.cursor, parent.followingsCount)
         },
         statusesCount: { type: GraphQLInt },
         tweets: {
@@ -130,11 +122,12 @@ export const User = new GraphQLObjectType({
                     defaultValue: ''
                 }
             },
-            resolve: (parent, args) => resolveTweets({ fromUsers: [parent.user.userName], ...args, count: (args.all ? parent.statusesCount : args.count) })
+            resolve: (parent, args) => resolveTweets({ fromUsers: [parent.userName], ...args, count: (args.all ? parent.statusesCount : args.count) })
         }
     })
 });
 
+//@ts-ignore
 export const UserList = new GraphQLList(new GraphQLUnionType({
     name: 'UserCursorUnion',
     description: 'A union type which can either be a User or a Cursor, used in cursored User lists',
