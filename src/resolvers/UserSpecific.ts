@@ -3,14 +3,14 @@
 // CUSTOM LIBS
 
 // SERVICES
-import { UserAccountService } from "../../services/data/UserAccountService";
-import { LogService } from "../../services/LogService";
+import { UserAccountService } from "../services/data/UserAccountService";
+import { LogService } from "../services/LogService";
 
 // TYPES
-import { Cursor } from '../../types/Service';
+import { Cursor } from '../types/Service';
 
 // HELPERS
-import { ValidationErrors } from '../types/Errors';
+import { ValidationErrors } from '../types/graphql/Errors';
 
 /**
  * @returns The details of the target twitter user

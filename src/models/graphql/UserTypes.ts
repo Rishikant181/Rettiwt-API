@@ -17,8 +17,8 @@ import { Tweet, TweetList } from './TweetTypes'
 import { Cursor } from './Global';
 
 // RESOLVERS
-import { resolveUserLikes, resolveUserFollowers, resolveUserFollowing } from '../resolvers/UserSpecific';
-import { resolveTweet, resolveTweets } from '../resolvers/TweetSpecific';
+import { resolveUserLikes, resolveUserFollowers, resolveUserFollowing } from '../../resolvers/UserSpecific';
+import { resolveTweet, resolveTweets } from '../../resolvers/TweetSpecific';
 
 //@ts-ignore
 export const User = new GraphQLObjectType({

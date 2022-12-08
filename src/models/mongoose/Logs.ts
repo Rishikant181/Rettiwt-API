@@ -4,7 +4,7 @@
 import mongoose from 'mongoose';
 
 // TYPES
-import { Log } from '../types/Logs';
+import { Log } from '../../types/Logs';
 
 /**
  * @summary Stores a single log entry

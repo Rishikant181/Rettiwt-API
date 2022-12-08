@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 // CUSTOM LIBS
 import { mongodb_urls } from '../config/urls';
-import { LogModel } from '../models/Logs';
+import { LogModel } from '../models/mongoose/Logs';
 
 /**
  * @summary The interface used to inject the necessary Logging service into the requiring service

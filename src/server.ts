@@ -7,7 +7,7 @@ import { serversOK } from './ServerChecks';
 import { AuthService } from './services/AuthService';
 import { LogService } from './services/LogService';
 import { CacheService } from './services/CacheService';
-import { schema } from './graphql/schema';
+import { schema } from './schema';
 import { exit } from 'process';
 
 // Initialising express instance

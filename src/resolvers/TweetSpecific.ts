@@ -3,15 +3,15 @@
 // CUSTOM LIBS
 
 // SERVICES
-import { TweetService } from '../../services/data/TweetService';
-import { LogService } from '../../services/LogService';
+import { TweetService } from '../services/data/TweetService';
+import { LogService } from '../services/LogService';
 
 // TYPES
-import { TweetFilter } from '../../types/Tweet';
-import { Cursor } from '../../types/Service';
+import { TweetFilter } from '../types/Tweet';
+import { Cursor } from '../types/Service';
 
 // HELPERS
-import { ValidationErrors } from '../types/Errors';
+import { ValidationErrors } from '../types/graphql/Errors';
 
 /**
  * @returns The details of the tweet with the given id
