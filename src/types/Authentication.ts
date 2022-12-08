@@ -3,7 +3,7 @@
 /**
  * @summary Store each login flow
  */
-export type LoginFlow = {
+export interface LoginFlow {
     url: string,
     body: string
 };
@@ -11,7 +11,7 @@ export type LoginFlow = {
 /**
  * @summary Stores the credentials for unauthenticated/guest users
  */
-export type GuestCredentials = {
+export interface GuestCredentials {
     authToken: string,
     guestToken: string
 };
@@ -19,7 +19,7 @@ export type GuestCredentials = {
 /**
  * @summary Stores the credentials for authenticated/logged in users
  */
-export type AuthCredentials = {
+export interface AuthCredentials {
     authToken: string,
     csrfToken: string,
     cookie: string
@@ -28,14 +28,14 @@ export type AuthCredentials = {
 /**
  * Stores the credentials for blank requests
  */
-export type BlankCredentials = {
+export interface BlankCredentials {
     authToken: string,
 };
 
 /**
  * @summary Stores the actual login credentials to a Twitter account
  */
-export type LoginCredentials = {
+export interface LoginCredentials {
     email: string,
     userName: string,
     password: string

@@ -6,7 +6,7 @@ import { UserID } from './UserAccount';
 /**
  * @summary Stores the filter to be used for fetching tweets from TwitterAPI
  */
-export type TweetFilter = {
+export interface TweetFilter {
     words: string[];                                                    // To store the list of words to search
     hashtags: string[];                                                 // To store the list of hashtags to seach
     fromUsers: string[];                                                // To store the list of users who made the tweet
@@ -21,7 +21,7 @@ export type TweetFilter = {
 /**
  * @summary Stores the different types of tweet elements like urls, media, mentions, hashtags, etc
  */
-export type TweetEntities = {
+export interface TweetEntities {
     hashtags: string[];                                                 // To store a list of hashtags used
     urls: string[];                                                     // To store a list of urls mentioned
     mentionedUsers: UserID[];                                           // To store a list of users mentioned
@@ -31,7 +31,7 @@ export type TweetEntities = {
 /**
  * @summary Stores a single tweet
  */
-export type Tweet = {
+export interface Tweet {
     id: string;                                                         // To store the conversation id
     tweetBy: string;                                                    // To store the rest id of the user who made the tweet
     createdAt: string;                                                  // To store the time when the tweet was created
