@@ -10,9 +10,9 @@ import {
 // CUSTOM LIBS
 
 // TYPES
-import { User } from '../types/UserTypes'
-import { Tweet, TweetList } from '../types/TweetTypes';
-import { LoginCredentials } from '../../types/Authentication';
+import { User } from '../models/graphql/UserTypes';
+import { Tweet, TweetList } from '../models/graphql/TweetTypes';
+import { LoginCredentials } from '../types/Authentication';
 
 // RESOLVERS
 import { resolveUserDetails } from '../resolvers/UserSpecific';

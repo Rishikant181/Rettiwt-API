@@ -7,15 +7,18 @@ import { serversOK } from './ServerChecks';
 import { AuthService } from './services/AuthService';
 import { LogService } from './services/LogService';
 import { CacheService } from './services/CacheService';
-import { schema } from './graphql/schema';
+import { rootQuery } from './queries/RootQuery';
 import { exit } from 'process';
+import { GraphQLSchema } from 'graphql';
 
 // Initialising express instance
 const app = express();
 
 // Setting up graphql endpoint
 app.use('/graphql', graphqlHTTP({
-    schema: schema,
+    schema: new GraphQLSchema({
+        query: rootQuery
+    }),
     graphiql: true
 }));
 

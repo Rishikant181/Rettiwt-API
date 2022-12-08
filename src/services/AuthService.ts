@@ -11,7 +11,7 @@ import { LogService } from './LogService';
 // TYPES
 import { GuestCredentials, AuthCredentials, BlankCredentials } from '../types/Authentication';
 import { AuthType, HttpMethods } from '../types/HTTP';
-import { AuthCredentialsModel } from '../models/Authentication';
+import { AuthCredentialsModel } from '../models/mongoose/Authentication';
 
 // HELPERS
 import { parseCookies } from './helper/Parser';

@@ -23,9 +23,9 @@ import {
     resolveTweetLikers,
     resolveTweetReplies,
     resolveTweetRetweeters
-} from '../resolvers/TweetSpecific';
+} from '../../resolvers/TweetSpecific';
 
-import { resolveUserDetails } from "../resolvers/UserSpecific";
+import { resolveUserDetails } from "../../resolvers/UserSpecific";
 
 //@ts-ignore
 export const TweetTokens = new GraphQLObjectType({

@@ -3,11 +3,11 @@
 // CUSTOM LIBS
 
 // SERVICES
-import { AccountsService } from '../../services/accounting/AccountsService';
-import { LogService } from '../../services/LogService';
+import { AccountsService } from '../services/accounting/AccountsService';
+import { LogService } from '../services/LogService';
 
 // TYPES
-import { LoginCredentials } from '../../types/Authentication';
+import { LoginCredentials } from '../types/Authentication';
 
 /**
  * @returns Whether login was successfull or not
