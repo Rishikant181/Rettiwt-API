@@ -85,7 +85,7 @@ export function toTweet(data: RawTweet): Tweet {
         tweetBy: data.legacy.user_id_str,
         entities: toTweetEntities(data.legacy.entities),
         quoted: data.legacy.quoted_status_id_str,
-        fullText: data.legacy.full_text,
+        fullText: data.legacy.full_text.replace(/\n/g, '.').replace(/[.]+[\s+.\s+]+/g, '. '),
         replyTo: data.legacy.in_reply_to_status_id_str,
         lang: data.legacy.lang,
         quoteCount: data.legacy.quote_count,
