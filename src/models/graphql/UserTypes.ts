@@ -133,8 +133,8 @@ export const UserList = new GraphQLList(new GraphQLUnionType({
     description: 'A union type which can either be a User or a Cursor, used in cursored User lists',
     types: [User, Cursor],
     resolveType: (data) => {
-        // If it has a createdAt field => this is a User object
-        if(data.createdAt) {
+        // If it has a userName field => this is a User object
+        if(data.userName) {
             return User;
         }
         // If it has a value field => this is a Cursor object
