@@ -7,6 +7,7 @@ import { User } from '../../types/UserAccount';
 import { Tweet, TweetEntities } from '../../types/Tweet';
 import { Result as RawUser } from '../../types/raw/user/User';
 import { Result as RawTweet, Entities2 as RawTweetEntities } from '../../types/raw/tweet/Tweet';
+import { normalizeText } from './Parser';
 
 /**
  * @returns A User object containing the user details
@@ -85,7 +86,7 @@ export function toTweet(data: RawTweet): Tweet {
         tweetBy: data.legacy.user_id_str,
         entities: toTweetEntities(data.legacy.entities),
         quoted: data.legacy.quoted_status_id_str,
-        fullText: data.legacy.full_text.replace(/\n/g, '.').replace(/[.]+[\s+.\s+]+/g, '. '),
+        fullText: normalizeText(data.legacy.full_text),
         replyTo: data.legacy.in_reply_to_status_id_str,
         lang: data.legacy.lang,
         quoteCount: data.legacy.quote_count,

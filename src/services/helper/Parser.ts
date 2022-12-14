@@ -96,3 +96,19 @@ export function dataToList(data: any | any[]): any[] {
         return [data];
     }
 }
+
+/**
+ * @param text The text to be normalized
+ * @returns The text after being formatted to remove unnecessary characters
+ */
+export function normalizeText(text: string): string {
+    var normalizedText: string = '';                                                // To store the normalized text
+    
+    // Removing unnecessary full stops, and other characters
+    normalizedText = text.replace(/\n/g, '.').replace(/[.]+[\s+.\s+]+/g, '. ');
+    
+    // Adding full-stop to the end if does not exist already
+    normalizedText = normalizedText.endsWith('.') ? normalizedText : (normalizedText + '.');
+
+    return normalizedText;
+}
