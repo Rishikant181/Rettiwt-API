@@ -10,6 +10,7 @@ import { CacheService } from './services/CacheService';
 import { rootQuery } from './queries/RootQuery';
 import { exit } from 'process';
 import { GraphQLSchema } from 'graphql';
+import { config } from './config/env';
 
 // Initialising express instance
 const app = express();
@@ -23,7 +24,7 @@ app.use('/graphql', graphqlHTTP({
 }));
 
 // Setting up express server
-app.listen(process.env.APP_PORT, async () => {
+app.listen(config.port, async () => {
     // Checking the status of all servers and waiting till all servers are up
     await serversOK();
     
@@ -39,5 +40,7 @@ app.listen(process.env.APP_PORT, async () => {
     // Initializing non-essential global services
     await CacheService.getInstance();
     
-    console.log(`Listening on port ${process.env.APP_PORT}`);
+    console.log(`Listening on port ${config.port}`);
 });
+
+console.log(config)

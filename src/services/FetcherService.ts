@@ -16,6 +16,9 @@ import { AuthCredentials, GuestCredentials, BlankCredentials } from "../types/Au
 import { authorizedHeader, blankHeader, unauthorizedHeader } from './helper/Requests'
 import { toUser, toTweet } from './helper/Deserializers';
 
+// CONFIGS
+import { config } from '../config/env';
+
 /**
  * @service The base serivice from which all other data services derive their behaviour
  */
@@ -29,7 +32,7 @@ export class FetcherService {
      * @param logger The log service to be used to log data and events
      */
     constructor(logger: Logger) {
-        FetcherService.allowCache = (process.env.USE_CACHE == 'true');
+        FetcherService.allowCache = config.use_cache;
         this.logger = logger;
     }
 

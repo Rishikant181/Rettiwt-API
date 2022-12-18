@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 // CUSTOM LIBS
 import { mongodb_urls } from '../config/urls';
 import { LogModel } from '../models/mongoose/Logs';
+import { config } from '../config/env'; 
 
 /**
  * @summary The interface used to inject the necessary Logging service into the requiring service
@@ -25,7 +26,7 @@ export class LogService implements Logger {
     // MEMBER METHODS
     private constructor() {
         this.connUrl = mongodb_urls.logs_url();
-        this.storeLogs = (process.env.STORE_LOGS == 'true');
+        this.storeLogs = config.store_logs;
     }
     
     /**
