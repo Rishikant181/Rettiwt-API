@@ -25,7 +25,7 @@ export class LogService implements Logger {
     // MEMBER METHODS
     private constructor() {
         this.connUrl = mongodb_urls.logs_url();
-        this.storeLogs = Boolean(process.env.STORE_LOGS);
+        this.storeLogs = (process.env.STORE_LOGS == 'true');
     }
     
     /**

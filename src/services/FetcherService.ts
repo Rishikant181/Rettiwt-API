@@ -29,7 +29,7 @@ export class FetcherService {
      * @param logger The log service to be used to log data and events
      */
     constructor(logger: Logger) {
-        FetcherService.allowCache = Boolean(process.env.USE_CACHE);
+        FetcherService.allowCache = (process.env.USE_CACHE == 'true');
         this.logger = logger;
     }
 
