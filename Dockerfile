@@ -3,9 +3,9 @@ WORKDIR /app
 COPY ./package.json .
 RUN npm install
 COPY . .
-ENV USE_CACHE=false
+ENV USE_CACHE=true
 ENV APP_PORT=3000
 ENV CACHE_DB_URL=redis://cache:6379
 ENV DATA_DB_URL=mongodb://data:27017
-ENV STORE_LOGS=false
+ENV STORE_LOGS=true
 CMD npm run start

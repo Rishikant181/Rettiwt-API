@@ -3,7 +3,8 @@
 	"version": "0.1.0",
 	"description": "An API to fetch data from Twitter APIs and serve it to other frontend services",
 	"scripts": {
-		"start": "nodemon -L --exec node --inspect -r ts-node/register src/server.ts"
+		"start": "ts-node src/server.ts",
+		"debug": "nodemon -L --exec node --inspect -r ts-node/register src/server.ts"
 	},
 	"repository": {
 		"type": "git",
