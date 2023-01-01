@@ -42,5 +42,3 @@ app.listen(config.port, async () => {
     
     console.log(`Listening on port ${config.port}`);
 });
-
-console.log(config)
