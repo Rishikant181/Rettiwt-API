@@ -2,6 +2,7 @@
 declare global {
     namespace NodeJS {
         interface ProcessEnv {
+            DEVELOPMENT: string;                                // To store whether environment is production or development
             USE_CACHE: string;                                  // To store whether to use cache or not
             STORE_LOGS: string;                                 // To store whether to use logs or not
             CACHE_DB_URL: string,                               // To store the url of the caching database

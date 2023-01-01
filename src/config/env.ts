@@ -1,5 +1,6 @@
 export const config = {
     port: Number(process.env.APP_PORT),
+    isDevelopment: (process.env.DEVELOPMENT == 'true'),
     use_cache: (process.env.USE_CACHE == 'true'),
     store_logs: (process.env.STORE_LOGS == 'true'),
     twitter: {

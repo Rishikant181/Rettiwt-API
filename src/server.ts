@@ -20,7 +20,8 @@ app.use('/graphql', graphqlHTTP({
     schema: new GraphQLSchema({
         query: rootQuery
     }),
-    graphiql: true
+    // If app is running in development environment, enable graphiql
+    graphiql: config.isDevelopment
 }));
 
 // Setting up express server
