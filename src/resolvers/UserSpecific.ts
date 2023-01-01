@@ -4,7 +4,6 @@
 
 // SERVICES
 import { UserAccountService } from "../services/data/UserAccountService";
-import { LogService } from "../services/LogService";
 
 // TYPES
 import { Cursor } from '../types/Service';
@@ -19,7 +18,7 @@ import { ValidationErrors } from '../types/graphql/Errors';
  */
 export async function resolveUserDetails(userName: string, id: string): Promise<any> {
     // Initialsing the service to fetch data related to twitter user
-    var userService = new UserAccountService(await LogService.getInstance());
+    var userService = new UserAccountService();
     
     // If user name is supplied
     if (userName) {
@@ -56,7 +55,7 @@ export async function resolveUserLikes(
     var batchSize: number = 20;                                                 // To store the batchsize to use
 
     // Initialsing the service to fetch data related to twitter user
-    var userService = new UserAccountService(await LogService.getInstance());
+    var userService = new UserAccountService();
 
     // If all liked tweets are to be fetched
     count = all ? favouritesCount : count;
@@ -116,7 +115,7 @@ export async function resolveUserFollowers(
     var batchSize: number = 20;                                                 // To store the batchsize to use
 
     // Initialsing the service to fetch data related to twitter user
-    var userService = new UserAccountService(await LogService.getInstance());
+    var userService = new UserAccountService();
 
     // If all followers are to be fetched
     count = (all || count > followersCount) ? followersCount : count;
@@ -176,7 +175,7 @@ export async function resolveUserFollowing(
     var batchSize: number = 20;                                                 // To store the batchsize to use
 
     // Initialsing the service to fetch data related to twitter user
-    var userService = new UserAccountService(await LogService.getInstance());
+    var userService = new UserAccountService();
 
     // If all followings are to be fetched
     count = (all || count > followingsCount) ? followingsCount : count;

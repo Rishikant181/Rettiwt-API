@@ -4,7 +4,6 @@
 
 // SERVICES
 import { TweetService } from '../services/data/TweetService';
-import { LogService } from '../services/LogService';
 
 // TYPES
 import { TweetFilter } from '../types/Tweet';
@@ -19,7 +18,7 @@ import { ValidationErrors } from '../types/graphql/Errors';
  */
 export async function resolveTweet(id: string): Promise<any> {
     // Initialsing the service to fetch tweet related data
-    var tweetService = new TweetService(await LogService.getInstance());
+    var tweetService = new TweetService();
     
     // Getting the data
     var res = await tweetService.getTweetById(id);
@@ -39,7 +38,7 @@ export async function resolveTweets(filter: any): Promise<any[]> {
     var batchSize: number = 20;                                                 // To store the batchsize to use
 
     // Initialsing the service to fetch tweet related data
-    var tweetService = new TweetService(await LogService.getInstance());
+    var tweetService = new TweetService();
 
     // Preparing the filter to use
     const tweetFilter: TweetFilter = filter;
@@ -144,7 +143,7 @@ export async function resolveTweetLikers(
     var batchSize: number = 20;                                                 // To store the batchsize to use
 
     // Initialsing the service to fetch tweet related data
-    var tweetService = new TweetService(await LogService.getInstance());
+    var tweetService = new TweetService();
 
     // If all likers are to be fetched
     count = (all || count > likesCount) ? likesCount : count;
@@ -204,7 +203,7 @@ export async function resolveTweetRetweeters(
     var batchSize: number = 20;                                                 // To store the batchsize to use
 
     // Initialsing the service to fetch tweet related data
-    var tweetService = new TweetService(await LogService.getInstance());
+    var tweetService = new TweetService();
 
     // If all retweeters are to be fetched
     count = (all || count > retweetsCount) ? retweetsCount : count;
@@ -263,7 +262,7 @@ export async function resolveTweetReplies(
     var total: number = 0;                                                      // To store the total number of replies fetched
 
     // Initialsing the service to fetch tweet related data
-    var tweetService = new TweetService(await LogService.getInstance());
+    var tweetService = new TweetService();
 
     // If all replies are to be fetched
     count = (all || count > repliesCount) ? repliesCount : count;

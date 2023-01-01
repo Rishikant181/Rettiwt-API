@@ -5,7 +5,6 @@ import { graphqlHTTP } from 'express-graphql';
 // CUSTOM LIBS
 import { serversOK } from './ServerChecks';
 import { AuthService } from './services/AuthService';
-import { LogService } from './services/LogService';
 import { CacheService } from './services/CacheService';
 import { rootQuery } from './queries/RootQuery';
 import { exit } from 'process';
@@ -32,7 +31,6 @@ app.listen(config.port, async () => {
     // Initializing essential global services
     try {
         await AuthService.getInstance();
-        await LogService.getInstance();
     }
     catch(err) {
         exit();

@@ -27,10 +27,8 @@ export const redis_urls = {
  */
 export const mongodb_urls = {
     name: 'mongodb',
-    root: `${process.env.DATA_DB_URL}`,
-    check: false,
-    logs_url: () => `${mongodb_urls.root}/logs`,
-    cookies_url: () => `${mongodb_urls.root}/cookies`
+    root: `${process.env.DATA_DB_URL}/api`,
+    check: false
 }
 
 /**

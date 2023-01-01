@@ -12,7 +12,7 @@ import { mongodb_urls } from '../../config/urls';
 import { AuthCredentials } from '../../types/Authentication';
 
 // Creating connection to mongodb database
-const auth = mongoose.createConnection(mongodb_urls.cookies_url());
+const auth = mongoose.createConnection(mongodb_urls.root);
 
 /**
  * @summary Stores the credentials for authenticated/logged in users

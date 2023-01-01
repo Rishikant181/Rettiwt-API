@@ -6,7 +6,6 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 // SERVICES
 import { AuthService } from './AuthService';
 import { CacheService } from './CacheService';
-import { Logger } from './LogService';
 
 // TYPES
 import { HttpMethods, AuthType, HttpStatus } from "../types/HTTP";
@@ -25,15 +24,10 @@ import { config } from '../config/env';
 export class FetcherService {
     // MEMBER DATA
     public static allowCache: boolean;                                      // To store whether caching is enabled or not
-    protected logger: Logger;                                               // To store the instance of the logging service to use
 
     // MEMBER METHODS
-    /**
-     * @param logger The log service to be used to log data and events
-     */
-    constructor(logger: Logger) {
+    constructor() {
         FetcherService.allowCache = config.use_cache;
-        this.logger = logger;
     }
 
     /**
@@ -120,10 +114,6 @@ export class FetcherService {
     
         // Fetching the data
         var res = await axios(url, config).then(res => this.handleHTTPError(res));
-
-        // Logging
-        this.logger.log("Data requested", res.config);
-        this.logger.log("Data fetched", { headers: res.headers, data: res.data });
 
         return res;
     }

@@ -4,7 +4,6 @@
 
 // SERVICES
 import { AccountsService } from '../services/accounting/AccountsService';
-import { LogService } from '../services/LogService';
 
 // TYPES
 import { LoginCredentials } from '../types/Authentication';
@@ -17,7 +16,7 @@ import { LoginCredentials } from '../types/Authentication';
  */
 export async function resolveUserLogin(cred: LoginCredentials): Promise<boolean> {
     // Initializing the service used for handling accounting operations
-    var accountsService = new AccountsService(await LogService.getInstance());
+    var accountsService = new AccountsService();
 
     // Logging into the given account
     return (await accountsService.login(cred)) ? true : false;
