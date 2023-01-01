@@ -52,17 +52,16 @@ export class AccountsService extends FetcherService {
      * @returns The logged in account's cookies and other credentials
      * @param cred The login credentials of the Twitter account to be logged into
      */
-    async login(cred: LoginCredentials): Promise<AxiosResponseHeaders> {
-        var currentFlowName: LoginFlows = LoginFlows.Login;                     // To store current flow name
-        
-        // Getting the initial flow
-        var currentFlow = generateLoginFlow(cred, '', LoginFlows.Login);
-        
+    async login(cred: LoginCredentials): Promise<boolean> {
         // Getting the guest credentials to use
         var guestCredentials = await (await AuthService.getInstance()).getGuestCredentials(true);
 
         // Executing each flow successively
-        while(true) {
+        for(var flow in LoginFlows) {
+            // Getting the flow data
+            var currentFlow = generateLoginFlow(cred, '', LoginFlows.Login);
+            
+            // Executing the flow
             var res = await this.executeFlow(currentFlow, guestCredentials);
 
             // If this is the last step of login
@@ -70,20 +69,14 @@ export class AccountsService extends FetcherService {
              * The last step is actually LoginSuccessSubtask, but it doesn't do anything substantial
              * The actual cookies and credentials are returned in AccountDuplicationCheck flow
              */
-            if(currentFlowName == LoginFlows.AccountDuplicationCheck) {
+            if(flow == LoginFlows.AccountDuplicationCheck) {
                 // Storing credentials in database
                 await (await AuthService.getInstance()).storeCredentials(res.headers);
-                
-                // Returning the headers
-                return res.headers;
-            }
-            else {
-                // Changing flow name
-                currentFlowName = LoginFlows[res.nextFlowName];
 
-                // Changing current flow data
-                currentFlow = generateLoginFlow(cred, res.nextFlowToken, currentFlowName);
+                return true;
             }
         }
+
+        return false;
     }
 }

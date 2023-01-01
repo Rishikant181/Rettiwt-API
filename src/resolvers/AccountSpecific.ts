@@ -19,5 +19,5 @@ export async function resolveUserLogin(cred: LoginCredentials): Promise<boolean>
     var accountsService = new AccountsService();
 
     // Logging into the given account
-    return (await accountsService.login(cred)) ? true : false;
+    return await accountsService.login(cred);
 }
