@@ -4,10 +4,8 @@ import { graphqlHTTP } from 'express-graphql';
 
 // CUSTOM LIBS
 import { serversOK } from './ServerChecks';
-import { AuthService } from './services/AuthService';
 import { CacheService } from './services/CacheService';
 import { rootQuery } from './queries/RootQuery';
-import { exit } from 'process';
 import { GraphQLSchema } from 'graphql';
 import { config } from './config/env';
 
@@ -27,14 +25,6 @@ app.use('/graphql', graphqlHTTP({
 app.listen(config.port, async () => {
     // Checking the status of all servers and waiting till all servers are up
     await serversOK();
-    
-    // Initializing essential global services
-    try {
-        await AuthService.getInstance();
-    }
-    catch(err) {
-        exit();
-    }
     
     // Initializing non-essential global services
     await CacheService.getInstance();

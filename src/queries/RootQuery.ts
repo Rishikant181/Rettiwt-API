@@ -1,6 +1,5 @@
 // PACKAGE LIBS
 import {
-    GraphQLBoolean,
     GraphQLInt,
     GraphQLList,
     GraphQLObjectType,
@@ -12,12 +11,10 @@ import {
 // TYPES
 import { User } from '../models/graphql/UserTypes';
 import { Tweet, TweetList } from '../models/graphql/TweetTypes';
-import { LoginCredentials } from '../types/Authentication';
 
 // RESOLVERS
 import { resolveUserDetails } from '../resolvers/UserSpecific';
 import { resolveTweet, resolveTweets } from '../resolvers/TweetSpecific';
-import { resolveUserLogin } from '../resolvers/AccountSpecific';
 
 export const rootQuery = new GraphQLObjectType({
     name: 'Root',
@@ -59,16 +56,6 @@ export const rootQuery = new GraphQLObjectType({
                 cursor: { type: GraphQLString, defaultValue: '' }
             },
             resolve: (parent, args) => resolveTweets(args)
-        },
-        Login: {
-            type: GraphQLBoolean,
-            description: "Logs in into the given twitter account",
-            args: {
-                email: { type: GraphQLString },
-                userName: { type: GraphQLString },
-                password: { type: GraphQLString }
-            },
-            resolve: (parent, args) => resolveUserLogin(args as LoginCredentials)
         }
     }
 })
