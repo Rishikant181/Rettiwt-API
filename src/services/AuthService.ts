@@ -29,7 +29,7 @@ export class AuthService {
          * (?<=pattern) starts matching after the given pattern.
          * (?=pattern) stops matching just before the pattern
          */
-        this.currentUser = { authToken: this.authToken, csrfToken: cookie.match(/(?<=ct0=).+?(?=;)/) + '', cookie: ''};
+        this.currentUser = { authToken: this.authToken, csrfToken: cookie.match(/(?<=ct0=).+?(?=;)/) + '', cookie: cookie};
         
     }
     
