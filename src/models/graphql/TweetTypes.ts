@@ -11,21 +11,13 @@ import {
 } from "graphql";
 
 // CUSTOM LIBS
-
 // TYPES
 import { User, UserList } from './UserTypes';
 import { Cursor } from './Global';
 
 // RESOLVERS
-import {
-    resolveTweet,
-    resolveTweetQuotes,
-    resolveTweetLikers,
-    resolveTweetReplies,
-    resolveTweetRetweeters
-} from '../../resolvers/TweetSpecific';
-
-import { resolveUserDetails } from "../../resolvers/UserSpecific";
+import TweetResolver from '../../resolvers/TweetResolver';
+import UserResolver from "../../resolvers/UserResolver";
 
 //@ts-ignore
 export const TweetTokens = new GraphQLObjectType({
@@ -36,7 +28,7 @@ export const TweetTokens = new GraphQLObjectType({
         urls: { type: new GraphQLList(GraphQLString) },
         mentionedUsers: {
             type: UserList,
-            resolve: (parent) => parent.mentionedUsers.map((user: string) => resolveUserDetails('', user))
+            resolve: (parent, args, context) => parent.mentionedUsers.map((user: string) => new UserResolver(context).resolveUserDetails('', user))
         },
         media: { type: new GraphQLList(GraphQLString) },
     })
@@ -50,18 +42,18 @@ export const Tweet = new GraphQLObjectType({
         id: { type: GraphQLString },
         tweetBy: {
             type: User,
-            resolve: (parent, args) => resolveUserDetails('', parent.tweetBy)
+            resolve: (parent, args, context) => new UserResolver(context).resolveUserDetails('', parent.tweetBy)
         },
         createdAt: { type: GraphQLString },
         entities: { type: TweetTokens },
         quoted: {
             type: Tweet,
-            resolve: (parent, args) => parent.quoted ? resolveTweet(parent.quoted) : undefined
+            resolve: (parent, args, context) => parent.quoted ? new TweetResolver(context).resolveTweet(parent.quoted) : undefined
         },
         fullText: { type: GraphQLString },
         replyTo: {
             type: Tweet,
-            resolve: (parent, args) => parent.replyTo ? resolveTweet(parent.replyTo) : undefined
+            resolve: (parent, args, context) => parent.replyTo ? new TweetResolver(context).resolveTweet(parent.replyTo) : undefined
         },
         lang: { type: GraphQLString },
         quoteCount: { type: GraphQLInt },
@@ -84,7 +76,7 @@ export const Tweet = new GraphQLObjectType({
                     defaultValue: ''
                 }
             },
-            resolve: (parent, args) => resolveTweetQuotes(parent.id, args.count, args.all, args.cursor, parent.quoteCount)
+            resolve: (parent, args, context) => new TweetResolver(context).resolveTweetQuotes(parent.id, args.count, args.all, args.cursor, parent.quoteCount)
         },
         likeCount: { type: GraphQLInt },
         likers: {
@@ -106,7 +98,7 @@ export const Tweet = new GraphQLObjectType({
                     defaultValue: ''
                 }
             },
-            resolve: (parent, args) => resolveTweetLikers(parent.id, args.count, args.all, args.cursor, parent.likeCount)
+            resolve: (parent, args, context) => new TweetResolver(context).resolveTweetLikers(parent.id, args.count, args.all, args.cursor, parent.likeCount)
         },
         retweetCount: { type: GraphQLInt },
         retweeters: {
@@ -128,7 +120,7 @@ export const Tweet = new GraphQLObjectType({
                     defaultValue: ''
                 }
             },
-            resolve: (parent, args) => resolveTweetRetweeters(parent.id, args.count, args.all, args.cursor, parent.retweetCount)
+            resolve: (parent, args, context) => new TweetResolver(context).resolveTweetRetweeters(parent.id, args.count, args.all, args.cursor, parent.retweetCount)
         },
         replyCount: { type: GraphQLInt },
         replies: {
@@ -150,7 +142,7 @@ export const Tweet = new GraphQLObjectType({
                     defaultValue: ''
                 }
             },
-            resolve: (parent, args) => resolveTweetReplies(parent.id, args.count, args.all, args.cursor, parent.replyCount)
+            resolve: (parent, args, context) => new TweetResolver(context).resolveTweetReplies(parent.id, args.count, args.all, args.cursor, parent.replyCount)
         }
     })
 });

@@ -1,5 +1,6 @@
 // CUSTOM LIBS
 import { FetcherService } from '../FetcherService';
+import { AuthService } from '../AuthService';
 
 // TYPES
 import { User } from '../../types/UserAccount';
@@ -9,7 +10,6 @@ import RawUser from '../../types/raw/user/User';
 import RawUserFollowers from '../../types/raw/user/Followers';
 import RawUserFollowing from '../../types/raw/user/Following';
 import RawUserLikes from '../../types/raw/user/Likes';
-import { AuthType, HttpMethods } from '../../types/HTTP';
 
 // HELPERS
 import {
@@ -18,7 +18,7 @@ import {
     userFollowingUrl,
     userFollowersUrl,
     userLikesUrl
-} from '../helper/Requests';
+} from '../helper/Urls';
 import { extractUserAccountDetails, extractUserFollow, extractUserLikes } from '../helper/Extractors';
 import { toUser, toTweet } from '../helper/Deserializers';
 
@@ -27,18 +27,17 @@ import { toUser, toTweet } from '../helper/Deserializers';
  */
 export class UserAccountService extends FetcherService {
     // MEMBER METHODS
+    constructor(auth: AuthService) {
+        super(auth);
+    }
+
     /**
      * @returns The user account details of the given user
      * @param screenName The screen name of the target user.
      */
     async getUserAccountDetails(screenName: string): Promise<User> {
         // Fetching the raw data
-        var res: RawUser = await this.request<RawUser>(
-            userAccountUrl(screenName),
-            HttpMethods.GET,
-            undefined,
-            AuthType.GUEST
-        ).then(res => res.data);
+        var res: RawUser = await this.request<RawUser>(userAccountUrl(screenName)).then(res => res.data);
         
         // Extracting data
         var data = extractUserAccountDetails(res);
@@ -67,12 +66,7 @@ export class UserAccountService extends FetcherService {
         // If data does not exist in cache
         else {
             // Fetchin the raw data
-            var res = await this.request<RawUser>(
-                userAccountByIdUrl(restId),
-                HttpMethods.GET,
-                undefined,
-                AuthType.GUEST
-            ).then(res => res.data);
+            var res = await this.request<RawUser>(userAccountByIdUrl(restId)).then(res => res.data);
 
             // Extracting data
             var data = extractUserAccountDetails(res);
@@ -95,12 +89,7 @@ export class UserAccountService extends FetcherService {
      */
     async getUserFollowing(userId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // Fetchin the raw data
-        var res = await this.request<RawUserFollowing>(
-            userFollowingUrl(userId, count, cursor),
-            HttpMethods.GET,
-            undefined,
-            AuthType.AUTH
-        ).then(res => res.data);
+        var res = await this.request<RawUserFollowing>(userFollowingUrl(userId, count, cursor)).then(res => res.data);
         
         // Extracting data
         var data = extractUserFollow(res);
@@ -130,12 +119,7 @@ export class UserAccountService extends FetcherService {
          * So changing count to count - 20, fixes fetching more than required number of follower
          */
         // Fetching the raw data
-        var res = await this.request<RawUserFollowers>(
-            userFollowersUrl(userId, (count > 20) ? (count - 20) : count, cursor),
-            HttpMethods.GET,
-            undefined,
-            AuthType.AUTH
-        ).then(res => res.data);
+        var res = await this.request<RawUserFollowers>(userFollowersUrl(userId, (count > 20) ? (count - 20) : count, cursor)).then(res => res.data);
         
         // Extracting data
         var data = extractUserFollow(res);
@@ -160,12 +144,7 @@ export class UserAccountService extends FetcherService {
      */
     async getUserLikes(userId: string, count: number, cursor: string): Promise<CursoredData<Tweet>> {
         // Fetching the raw data
-        var res = await this.request<RawUserLikes>(
-            userLikesUrl(userId, count, cursor),
-            HttpMethods.GET,
-            undefined,
-            AuthType.AUTH
-        ).then(res => res.data);
+        var res = await this.request<RawUserLikes>(userLikesUrl(userId, count, cursor)).then(res => res.data);
         
         // Extracting data
         var data = extractUserLikes(res);

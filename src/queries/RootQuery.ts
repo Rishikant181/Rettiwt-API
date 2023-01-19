@@ -1,6 +1,5 @@
 // PACKAGE LIBS
 import {
-    GraphQLBoolean,
     GraphQLInt,
     GraphQLList,
     GraphQLObjectType,
@@ -12,12 +11,10 @@ import {
 // TYPES
 import { User } from '../models/graphql/UserTypes';
 import { Tweet, TweetList } from '../models/graphql/TweetTypes';
-import { LoginCredentials } from '../types/Authentication';
 
 // RESOLVERS
-import { resolveUserDetails } from '../resolvers/UserSpecific';
-import { resolveTweet, resolveTweets } from '../resolvers/TweetSpecific';
-import { resolveUserLogin } from '../resolvers/AccountSpecific';
+import UserResolver from '../resolvers/UserResolver';
+import TweetResolver from '../resolvers/TweetResolver';
 
 export const rootQuery = new GraphQLObjectType({
     name: 'Root',
@@ -33,7 +30,7 @@ export const rootQuery = new GraphQLObjectType({
                 userName: { type: GraphQLString },
                 id: { type: GraphQLString }
             },
-            resolve: (parent, args) => resolveUserDetails(args.userName, args.id)
+            resolve: (parent, args, context) => new UserResolver(context).resolveUserDetails(args.userName, args.id)
         },
         Tweet: {
             type: Tweet,
@@ -41,7 +38,7 @@ export const rootQuery = new GraphQLObjectType({
             args: {
                 id: { type: GraphQLString }
             },
-            resolve: (parent, args) => resolveTweet(args.id)
+            resolve: (parent, args, context) => new TweetResolver(context).resolveTweet(args.id)
         },
         Tweets: {
             type: TweetList,
@@ -58,17 +55,7 @@ export const rootQuery = new GraphQLObjectType({
                 count: { type: GraphQLInt, defaultValue: 20 },
                 cursor: { type: GraphQLString, defaultValue: '' }
             },
-            resolve: (parent, args) => resolveTweets(args)
-        },
-        Login: {
-            type: GraphQLBoolean,
-            description: "Logs in into the given twitter account",
-            args: {
-                email: { type: GraphQLString },
-                userName: { type: GraphQLString },
-                password: { type: GraphQLString }
-            },
-            resolve: (parent, args) => resolveUserLogin(args as LoginCredentials)
+            resolve: (parent, args, context) => new TweetResolver(context).resolveTweets(args)
         }
     }
 })
