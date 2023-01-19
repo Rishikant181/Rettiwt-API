@@ -10,7 +10,6 @@ import RawUser from '../../types/raw/user/User';
 import RawUserFollowers from '../../types/raw/user/Followers';
 import RawUserFollowing from '../../types/raw/user/Following';
 import RawUserLikes from '../../types/raw/user/Likes';
-import { AuthType, HttpMethods } from '../../types/HTTP';
 
 // HELPERS
 import {
@@ -19,7 +18,7 @@ import {
     userFollowingUrl,
     userFollowersUrl,
     userLikesUrl
-} from '../helper/Requests';
+} from '../helper/Urls';
 import { extractUserAccountDetails, extractUserFollow, extractUserLikes } from '../helper/Extractors';
 import { toUser, toTweet } from '../helper/Deserializers';
 

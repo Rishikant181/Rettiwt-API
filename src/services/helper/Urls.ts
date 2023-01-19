@@ -1,29 +1,5 @@
-// This file contains various helper method for operations related to HTTP requests sent to twitter
-
+// CUSTOM LIBS
 import { TweetFilter } from "../../types/Tweet";
-
-// URLS
-
-/**
- * @returns The url for fetching the guest token from
- */
-export function guestTokenUrl(): string {
-    return 'https://api.twitter.com/1.1/guest/activate.json';
-}
-
-/**
- * @returns The url used for initiating logging into an account
- */
-export function initiateLoginUrl(): string {
-    return 'https://twitter.com/i/api/1.1/onboarding/task.json?flow_name=login';
-}
-
-/**
- * @returns The url used for continuing the login process
- */
-export function loginContinueUrl(): string {
-    return 'https://twitter.com/i/api/1.1/onboarding/task.json';
-}
 
 /**
  * @returns The url for fetching user account details.
@@ -252,77 +228,4 @@ export function tweetRetweetUrl(
     }
 
     return url;
-}
-
-// HEADERS
-
-/**
- * @returns A header containing only the autorization token
- * @param authToken The authorization token to be used
- */
-export function blankHeader(authCred: { authToken: string }): any {
-    return {
-        "accept": "*/*",
-        "accept-language": "en-US,en;q=0.9",
-        "authorization": authCred.authToken,
-        "sec-fetch-dest": "empty",
-        "sec-fetch-mode": "cors",
-        "sec-fetch-site": "same-site"
-    };
-}
-
-/**
- * @returns The header used for making unauthorized HTTP requests
- * @param authToken The authentication token received from Twitter
- * @param csrfToken The csrf token received from Twitter
- */
-export function unauthorizedHeader(authCred: {
-    authToken: string,
-    guestToken: string
-}): any {
-    return {
-        "accept": "*/*",
-        "accept-language": "en-US,en;q=0.9",
-        "authorization": authCred.authToken,
-        "content-type": "application/json",
-        "sec-ch-ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"99\", \"Microsoft Edge\";v=\"99\"",
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": "\"Windows\"",
-        "sec-fetch-dest": "empty",
-        "sec-fetch-mode": "cors",
-        "sec-fetch-site": "same-origin",
-        "x-guest-token": authCred.guestToken,
-        "x-twitter-active-user": "yes",
-        "x-twitter-client-language": "en"
-    };
-}
-
-/**
- * @returns The header required for making authorized HTTP requests
- * @param authToken The authentication token received from Twitter
- * @param csrfToken The csrf token received from Twitter
- * @param cookie The cookie associated with the logged in account
- */
-export function authorizedHeader(authCred: {
-    authToken: string,
-    csrfToken: string,
-    cookie: string
-}): any {
-    return {
-        "accept": "*/*",
-        "accept-language": "en-US,en;q=0.9",
-        "authorization": authCred.authToken,
-        "content-type": "application/json",
-        "sec-ch-ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"98\", \"Microsoft Edge\";v=\"98\"",
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": "\"Windows\"",
-        "sec-fetch-dest": "empty",
-        "sec-fetch-mode": "cors",
-        "sec-fetch-site": "same-origin",
-        "x-csrf-token": authCred.csrfToken,
-        "x-twitter-active-user": "no",
-        "x-twitter-auth-type": "OAuth2Session",
-        "x-twitter-client-language": "en",
-        "cookie": authCred.cookie,
-    };
 }

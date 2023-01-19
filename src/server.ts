@@ -13,13 +13,14 @@ import { config } from './config/env';
 const app = express();
 
 // Setting up graphql endpoint
-app.use('/graphql', graphqlHTTP({
+app.use('/graphql', graphqlHTTP(req => ({
     schema: new GraphQLSchema({
         query: rootQuery
     }),
+    context: req,
     // If app is running in development environment, enable graphiql
     graphiql: config.isDevelopment
-}));
+})));
 
 // Setting up express server
 app.listen(config.port, async () => {

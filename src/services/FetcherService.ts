@@ -11,7 +11,7 @@ import { CacheService } from './CacheService';
 import { HttpMethods, HttpStatus } from "../types/HTTP";
 
 // HELPERS
-import { authorizedHeader } from './helper/Requests'
+import { authorizedHeader } from './helper/Headers'
 import { toUser, toTweet } from './helper/Deserializers';
 
 // CONFIGS

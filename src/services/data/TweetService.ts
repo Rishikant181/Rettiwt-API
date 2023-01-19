@@ -18,7 +18,7 @@ import {
     tweetRepliesUrl,
     tweetLikesUrl,
     tweetRetweetUrl
-} from '../helper/Requests';
+} from '../helper/Urls';
 import {
     extractTweet,
     extractTweetLikers,
@@ -27,9 +27,6 @@ import {
     extractTweets
 } from "../helper/Extractors";
 import { toUser, toTweet } from '../helper/Deserializers';
-
-// TYPES
-import { AuthType, HttpMethods } from "../../types/HTTP";
 
 /**
  * A service that deals with fetching of data related to tweets

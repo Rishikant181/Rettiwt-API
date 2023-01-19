@@ -1,6 +1,6 @@
 // CUSTOM LIBS
 // TYPES
-import { GuestCredentials, AuthCredentials, BlankCredentials } from '../types/Authentication';
+import { AuthCredentials } from '../types/Authentication';
 
 // CONFIGS
 import { config } from '../config/env';
