@@ -8,11 +8,10 @@ import { AuthService } from './AuthService';
 import { CacheService } from './CacheService';
 
 // TYPES
-import { HttpMethods, AuthType, HttpStatus } from "../types/HTTP";
-import { AuthCredentials, GuestCredentials, BlankCredentials } from "../types/Authentication";
+import { HttpMethods, HttpStatus } from "../types/HTTP";
 
 // HELPERS
-import { authorizedHeader, blankHeader, unauthorizedHeader } from './helper/Requests'
+import { authorizedHeader } from './helper/Requests'
 import { toUser, toTweet } from './helper/Deserializers';
 
 // CONFIGS
@@ -24,56 +23,12 @@ import { config } from '../config/env';
 export class FetcherService {
     // MEMBER DATA
     public static allowCache: boolean;                                      // To store whether caching is enabled or not
+    private auth: AuthService;                                              // To store the auth service instance to use for authentication
 
     // MEMBER METHODS
-    constructor() {
+    constructor(auth: AuthService) {
         FetcherService.allowCache = config.use_cache;
-    }
-
-    /**
-     * @returns The requested credentials for authenticating requests
-     * @param auth The type of authentication to use
-     * @param guestCreds Pre deterermined guest credentials (if any)
-     */
-    private async getCredentials(auth: AuthType, guestCreds?: GuestCredentials): Promise<GuestCredentials | AuthCredentials | BlankCredentials> {
-        // Getting the AuthService instance
-        var service = await AuthService.getInstance();
-        
-        // If authenticated credential is required
-        if (auth == AuthType.AUTH) {
-            return await service.getAuthCredentials();
-        }
-        // If guest credential is required
-        else if (auth == AuthType.GUEST) {
-            return guestCreds ? guestCreds : (await service.getGuestCredentials());
-        }
-        // If no credential is required
-        else {
-            return await service.getBlankCredentials();
-        }
-    }
-
-    /**
-     * @returns The requested headers for making the http request
-     * @param auth The type of authentication to use
-     * @param guestCreds Pre deterermined guest credentials (if any)
-     */
-    private async getHeaders(auth: AuthType, guestCreds?: GuestCredentials): Promise<any> {
-        // Getting the credentials to user
-        var creds = await this.getCredentials(auth, guestCreds);
-        
-        // If header for authorized request is required
-        if (auth == AuthType.AUTH) {
-            return authorizedHeader(creds as AuthCredentials);
-        }
-        // If header for guest authorized request is required
-        else if (auth == AuthType.GUEST) {
-            return unauthorizedHeader(creds as GuestCredentials);
-        }
-        // If header for unauthorized request is required
-        else {
-            return blankHeader(creds);
-        }
+        this.auth = auth;
     }
 
     /**
@@ -96,20 +51,11 @@ export class FetcherService {
      * @param auth Whether to use authenticated requests or not
      * @param guestCreds Guest credentials to use rather than auto-generated one
      */
-    async request<DataType>(
-        url: string,
-        method: HttpMethods,
-        body: any = null,
-        auth: AuthType,
-        guestCreds?: GuestCredentials
-    ): Promise<AxiosResponse<DataType>> {
+    async request<DataType>(url: string): Promise<AxiosResponse<DataType>> {
         // Preparing the request config
         var config: AxiosRequestConfig<DataType> = {
-            headers: await this.getHeaders(auth, guestCreds),
-            method: method ? method : HttpMethods.GET,
-            
-            // Conditionally including body if request type if POST
-            ...((method == HttpMethods.POST) ? { data: body } : undefined)
+            headers: await authorizedHeader(await this.auth.getAuthCredentials()),
+            method: HttpMethods.GET
         };
     
         // Fetching the data

@@ -1,14 +1,9 @@
 // CUSTOM LIBS
-// SERVICES
-import { FetcherService } from './FetcherService';
-
 // TYPES
 import { GuestCredentials, AuthCredentials, BlankCredentials } from '../types/Authentication';
-import { AuthType, HttpMethods } from '../types/HTTP';
 
 // CONFIGS
 import { config } from '../config/env';
-import { guestTokenUrl } from './helper/Requests';
 
 /**
  * @summary Handles authentication of http requests and other authentication related tasks
@@ -43,20 +38,6 @@ export class AuthService {
      */
     async getAuthCredentials(): Promise<AuthCredentials> {
         return this.currentUser;
-    }
-
-    /**
-     * @returns The guest credentials required to fetch data anonymously
-     */
-    async getGuestCredentials(): Promise<GuestCredentials> {
-        // Fetching guest token from twitter api
-        var data = (await new FetcherService().request<any>(guestTokenUrl(), HttpMethods.POST, undefined, AuthType.NONE)).data;
-
-        // Setting new guest credentials
-        this.currentGuest.authToken = this.authToken;
-        this.currentGuest.guestToken = data.guest_token;
-
-        return this.currentGuest;
     }
 
     /**
