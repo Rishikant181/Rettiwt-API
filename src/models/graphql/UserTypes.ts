@@ -17,8 +17,8 @@ import { Tweet, TweetList } from './TweetTypes'
 import { Cursor } from './Global';
 
 // RESOLVERS
-import { resolveUserLikes, resolveUserFollowers, resolveUserFollowing } from '../../resolvers/UserSpecific';
-import { resolveTweet, resolveTweets } from '../../resolvers/TweetSpecific';
+import UserResolver from '../../resolvers/UserResolver';
+import TweetResolver from '../../resolvers/TweetResolver';
 
 //@ts-ignore
 export const User = new GraphQLObjectType({
@@ -34,7 +34,7 @@ export const User = new GraphQLObjectType({
         location: { type: GraphQLString },
         pinnedTweet: {
             type: Tweet,
-            resolve: (parent, args) => (parent.pinnedTweet) ? resolveTweet(parent.pinnedTweet) : undefined
+            resolve: (parent, args, context) => (parent.pinnedTweet) ? new TweetResolver(context).resolveTweet(parent.pinnedTweet) : undefined
         },
         profileBanner: { type: GraphQLString },
         profileImage: { type: GraphQLString },
@@ -58,7 +58,7 @@ export const User = new GraphQLObjectType({
                     defaultValue: ''
                 }
             },
-            resolve: (parent, args) => resolveUserLikes(parent.id, args.count, args.all, args.cursor, parent.favouritesCount)
+            resolve: (parent, args, context) => new UserResolver(context).resolveUserLikes(parent.id, args.count, args.all, args.cursor, parent.favouritesCount)
         },
         followersCount: { type: GraphQLInt },
         followers: {
@@ -80,7 +80,7 @@ export const User = new GraphQLObjectType({
                     defaultValue: ''
                 }
             },
-            resolve: (parent, args) => resolveUserFollowers(parent.id, args.count, args.all, args.cursor, parent.followersCount)
+            resolve: (parent, args, context) => new UserResolver(context).resolveUserFollowers(parent.id, args.count, args.all, args.cursor, parent.followersCount)
         },
         followingsCount: { type: GraphQLInt },
         following: {
@@ -102,7 +102,7 @@ export const User = new GraphQLObjectType({
                     defaultValue: ''
                 }
             },
-            resolve: (parent, args) => resolveUserFollowing(parent.id, args.count, args.all, args.cursor, parent.followingsCount)
+            resolve: (parent, args, context) => new UserResolver(context).resolveUserFollowing(parent.id, args.count, args.all, args.cursor, parent.followingsCount)
         },
         statusesCount: { type: GraphQLInt },
         tweets: {
@@ -122,7 +122,7 @@ export const User = new GraphQLObjectType({
                     defaultValue: ''
                 }
             },
-            resolve: (parent, args) => resolveTweets({ fromUsers: [parent.userName], ...args, count: (args.all ? parent.statusesCount : args.count) })
+            resolve: (parent, args, context) => new TweetResolver(context).resolveTweets({ fromUsers: [parent.userName], ...args, count: (args.all ? parent.statusesCount : args.count) })
         }
     })
 });
