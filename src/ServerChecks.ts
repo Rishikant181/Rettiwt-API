@@ -30,10 +30,10 @@ const serverOK = async (rootUrl: string): Promise<boolean> => {
  * @returns Whether all the server on which this API is dependent are OK or not
  */
 export const serversOK = async (): Promise<boolean> => {
-    var allStatus: boolean = true;                                      // To store whether all servers are OK or not
+    let allStatus: boolean = true;                                      // To store whether all servers are OK or not
     
     // Iterating through all servers' urls
-    for(var server of Object.keys(urls)) {
+    for(let server of Object.keys(urls)) {
         //@ts-ignore
         console.log(`Checking ${urls[server].name} status`);
         

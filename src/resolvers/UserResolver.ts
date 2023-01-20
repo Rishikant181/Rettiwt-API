@@ -51,10 +51,10 @@ export default class UserResolver extends ResolverBase {
         cursor: string,
         favouritesCount: number
     ): Promise<any> {
-        var likes: any[] = [];                                                      // To store the list of liked tweets
-        var next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
-        var total: number = 0;                                                      // To store the total number of liked twets fetched
-        var batchSize: number = 20;                                                 // To store the batchsize to use
+        let likes: any[] = [];                                                      // To store the list of liked tweets
+        let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
+        let total: number = 0;                                                      // To store the total number of liked twets fetched
+        let batchSize: number = 20;                                                 // To store the batchsize to use
 
         // If all liked tweets are to be fetched
         count = all ? favouritesCount : count;
@@ -108,10 +108,10 @@ export default class UserResolver extends ResolverBase {
         cursor: string,
         followersCount: number
     ): Promise<any> {
-        var followers: any[] = [];                                                  // To store the list of followers
-        var next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
-        var total: number = 0;                                                      // To store the total number of followers fetched
-        var batchSize: number = 20;                                                 // To store the batchsize to use
+        let followers: any[] = [];                                                  // To store the list of followers
+        let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
+        let total: number = 0;                                                      // To store the total number of followers fetched
+        let batchSize: number = 20;                                                 // To store the batchsize to use
 
         // If all followers are to be fetched
         count = (all || count > followersCount) ? followersCount : count;
@@ -165,10 +165,10 @@ export default class UserResolver extends ResolverBase {
         cursor: string,
         followingsCount: number
     ): Promise<any> {
-        var following: any[] = [];                                                  // To store the list of following
-        var next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
-        var total: number = 0;                                                      // To store the total number of following fetched
-        var batchSize: number = 20;                                                 // To store the batchsize to use
+        let following: any[] = [];                                                  // To store the list of following
+        let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
+        let total: number = 0;                                                      // To store the total number of following fetched
+        let batchSize: number = 20;                                                 // To store the batchsize to use
 
         // If all followings are to be fetched
         count = (all || count > followingsCount) ? followingsCount : count;

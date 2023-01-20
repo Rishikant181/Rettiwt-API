@@ -28,10 +28,10 @@ export function extractUserAccountDetails(res: RawUser): {
     users: any[],
     tweets: any[]
 } {
-    var required: any[] = [];                                               // To store the reqruied raw data
-    var cursor: string = '';                                                // To store the cursor to next batch
-    var users: any[] = [];                                                  // To store additional user data
-    var tweets: any[] = [];                                                 // To store additional tweet data
+    let required: any[] = [];                                               // To store the reqruied raw data
+    let cursor: string = '';                                                // To store the cursor to next batch
+    let users: any[] = [];                                                  // To store additional user data
+    let tweets: any[] = [];                                                 // To store additional tweet data
 
     // If user not found or account suspended
     if (isJSONEmpty(res.data) || isJSONEmpty(res.data.user) || res.data.user.result.__typename !== 'User') {
@@ -61,10 +61,10 @@ export function extractUserFollow(res: RawUserFollowers | RawUserFollowing): {
     users: any[],
     tweets: any[]
 } {
-    var required: any[] = [];                                               // To store the reqruied raw data
-    var cursor: string = '';                                                // To store the cursor to next batch
-    var users: any[] = [];                                                  // To store additional user data
-    var tweets: any[] = [];                                                 // To store additional tweet data
+    let required: any[] = [];                                               // To store the reqruied raw data
+    let cursor: string = '';                                                // To store the cursor to next batch
+    let users: any[] = [];                                                  // To store additional user data
+    let tweets: any[] = [];                                                 // To store additional tweet data
 
     // If user does not exist
     if (isJSONEmpty(res.data.user)) {
@@ -108,10 +108,10 @@ export function extractUserLikes(res: RawUserLikes): {
     users: any[],
     tweets: any[]
 } {
-    var required: any[] = [];                                               // To store the reqruied raw data
-    var cursor: string = '';                                                // To store the cursor to next batch
-    var users: any[] = [];                                                  // To store additional user data
-    var tweets: any[] = [];                                                 // To store additional tweet data
+    let required: any[] = [];                                               // To store the reqruied raw data
+    let cursor: string = '';                                                // To store the cursor to next batch
+    let users: any[] = [];                                                  // To store additional user data
+    let tweets: any[] = [];                                                 // To store additional tweet data
 
     // If user does not exist
     if (isJSONEmpty(res.data.user)) {
@@ -158,21 +158,21 @@ export function extractTweets(res: RawTweets): {
     users: any[],
     tweets: any[]
 } {
-    var required: any[] = [];                                               // To store the reqruied raw data
-    var cursor: string = '';                                                // To store the cursor to next batch
-    var users: any[] = [];                                                  // To store additional user data
-    var tweets: any[] = [];                                                 // To store additional tweet data
+    let required: any[] = [];                                               // To store the reqruied raw data
+    let cursor: string = '';                                                // To store the cursor to next batch
+    let users: any[] = [];                                                  // To store additional user data
+    let tweets: any[] = [];                                                 // To store additional tweet data
 
     // Getting raw tweet list
-    var dataTweets = res.globalObjects.tweets;
+    let dataTweets = res.globalObjects.tweets;
 
     // Getting raw users list
-    var dataUsers = res.globalObjects.users;
+    let dataUsers = res.globalObjects.users;
 
     // Destructuring tweets, if not empty
     if (!isJSONEmpty(dataTweets)) {
         // Iterating through the json array of tweets
-        for (var key of Object.keys(dataTweets)) {
+        for (let key of Object.keys(dataTweets)) {
             required.push({ rest_id: dataTweets[key].id_str, legacy: dataTweets[key] });
             tweets.push({ rest_id: dataTweets[key].id_str, legacy: dataTweets[key] });
         }
@@ -181,7 +181,7 @@ export function extractTweets(res: RawTweets): {
     // Destructuring users, if not empty
     if (!isJSONEmpty(dataUsers)) {
         // Iterating through the json array of users
-        for (var key of Object.keys(dataUsers)) {
+        for (let key of Object.keys(dataUsers)) {
             users.push({ rest_id: dataUsers[key].id_str, legacy: dataUsers[key] });
         }
     }
@@ -216,10 +216,10 @@ export function extractTweet(res: RawTweet, tweetId: string): {
     users: any[],
     tweets: any[]
 } {
-    var required: any[] = [];                                               // To store the reqruied raw data
-    var cursor: string = '';                                                // To store the cursor to next batch
-    var users: any[] = [];                                                  // To store additional user data
-    var tweets: any[] = [];                                                 // To store additional tweet data
+    let required: any[] = [];                                               // To store the reqruied raw data
+    let cursor: string = '';                                                // To store the cursor to next batch
+    let users: any[] = [];                                                  // To store additional user data
+    let tweets: any[] = [];                                                 // To store additional tweet data
 
     // If tweet does not exist
     if (isJSONEmpty(res.data)) {
@@ -270,10 +270,10 @@ export function extractTweetLikers(res: RawLikers): {
     users: any[],
     tweets: any[]
 } {
-    var required: any[] = [];                                               // To store the reqruied raw data
-    var cursor: string = '';                                                // To store the cursor to next batch
-    var users: any[] = [];                                                  // To store additional user data
-    var tweets: any[] = [];                                                 // To store additional tweet data
+    let required: any[] = [];                                               // To store the reqruied raw data
+    let cursor: string = '';                                                // To store the cursor to next batch
+    let users: any[] = [];                                                  // To store additional user data
+    let tweets: any[] = [];                                                 // To store additional tweet data
 
     // If tweet does not exist
     if (isJSONEmpty(res.data.favoriters_timeline)) {
@@ -312,10 +312,10 @@ export function extractTweetRetweeters(res: RawRetweeters): {
     users: any[],
     tweets: any[]
 } {
-    var required: any[] = [];                                               // To store the reqruied raw data
-    var cursor: string = '';                                                // To store the cursor to next batch
-    var users: any[] = [];                                                  // To store additional user data
-    var tweets: any[] = [];                                                 // To store additional tweet data
+    let required: any[] = [];                                               // To store the reqruied raw data
+    let cursor: string = '';                                                // To store the cursor to next batch
+    let users: any[] = [];                                                  // To store additional user data
+    let tweets: any[] = [];                                                 // To store additional tweet data
 
     // If tweet does not exist
     if (isJSONEmpty(res.data.retweeters_timeline)) {
@@ -355,10 +355,10 @@ export function extractTweetReplies(res: RawTweet, tweetId: string): {
     users: any[],
     tweets: any[]
 } {
-    var required: any[] = [];                                               // To store the reqruied raw data
-    var cursor: string = '';                                                // To store the cursor to next batch
-    var users: any[] = [];                                                  // To store additional user data
-    var tweets: any[] = [];                                                 // To store additional tweet data
+    let required: any[] = [];                                               // To store the reqruied raw data
+    let cursor: string = '';                                                // To store the cursor to next batch
+    let users: any[] = [];                                                  // To store additional user data
+    let tweets: any[] = [];                                                 // To store additional tweet data
 
     // If tweet does not exist
     if (isJSONEmpty(res.data)) {

@@ -53,13 +53,13 @@ export class FetcherService {
      */
     async request<DataType>(url: string): Promise<AxiosResponse<DataType>> {
         // Preparing the request config
-        var config: AxiosRequestConfig<DataType> = {
+        let config: AxiosRequestConfig<DataType> = {
             headers: await authorizedHeader(await this.auth.getAuthCredentials()),
             method: HttpMethods.GET
         };
     
         // Fetching the data
-        var res = await axios(url, config).then(res => this.handleHTTPError(res));
+        let res = await axios(url, config).then(res => this.handleHTTPError(res));
 
         return res;
     }
@@ -72,13 +72,13 @@ export class FetcherService {
         // If caching is enabled
         if (FetcherService.allowCache) {
             // Creating an instance of cache
-            var cache = await CacheService.getInstance();
+            let cache = await CacheService.getInstance();
 
             // Parsing the extracted data
             //@ts-ignore
-            var users = data.users.map(user => toUser(user));
+            let users = data.users.map(user => toUser(user));
             //@ts-ignore
-            var tweets = data.tweets.map(tweet => toTweet(tweet));
+            let tweets = data.tweets.map(tweet => toTweet(tweet));
 
             // Caching the data
             cache.write(users);
@@ -94,7 +94,7 @@ export class FetcherService {
         // If caching is enabled
         if (FetcherService.allowCache) {
             // Creating an instance of cache
-            var cache = await CacheService.getInstance();
+            let cache = await CacheService.getInstance();
 
             // Reading data from cache
             return cache.read(id);

@@ -23,7 +23,7 @@ export default class TweetResolver extends ResolverBase {
      */
     async resolveTweet(id: string): Promise<any> {
         // Getting the data
-        var res = await this.tweets.getTweetById(id);
+        let res = await this.tweets.getTweetById(id);
 
         // Evaluating response
         return res;
@@ -34,10 +34,10 @@ export default class TweetResolver extends ResolverBase {
      * @param filter The filter to be used for fetching matching tweets
      */
     async resolveTweets(filter: any): Promise<any[]> {
-        var tweets: any[] = [];                                                     // To store the list of tweets
-        var next: Cursor = new Cursor(filter.cursor);                               // To store cursor to next batch
-        var total: number = 0;                                                      // To store the total number of tweets fetched
-        var batchSize: number = 20;                                                 // To store the batchsize to use
+        let tweets: any[] = [];                                                     // To store the list of tweets
+        let next: Cursor = new Cursor(filter.cursor);                               // To store cursor to next batch
+        let total: number = 0;                                                      // To store the total number of tweets fetched
+        let batchSize: number = 20;                                                 // To store the batchsize to use
 
         // Preparing the filter to use
         const tweetFilter: TweetFilter = filter;
@@ -96,13 +96,13 @@ export default class TweetResolver extends ResolverBase {
         cursor: string,
         quoteCount: number
     ): Promise<any[]> {
-        var quotes: any[] = [];                                                     // To store the list of quotes
+        let quotes: any[] = [];                                                     // To store the list of quotes
 
         // If all tweets are to be fetched
         count = (all || count > quoteCount) ? quoteCount : count;
 
         // Preparing the filter to use
-        var filter = {
+        let filter = {
             words: [],
             hashtags: [],
             fromUsers: [],
@@ -136,10 +136,10 @@ export default class TweetResolver extends ResolverBase {
         cursor: string,
         likesCount: number
     ): Promise<any[]> {
-        var likers: any[] = [];                                                     // To store the list of likers
-        var next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
-        var total: number = 0;                                                      // To store the total number of likers fetched
-        var batchSize: number = 20;                                                 // To store the batchsize to use
+        let likers: any[] = [];                                                     // To store the list of likers
+        let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
+        let total: number = 0;                                                      // To store the total number of likers fetched
+        let batchSize: number = 20;                                                 // To store the batchsize to use
 
         // If all likers are to be fetched
         count = (all || count > likesCount) ? likesCount : count;
@@ -193,10 +193,10 @@ export default class TweetResolver extends ResolverBase {
         cursor: string,
         retweetsCount: number
     ): Promise<any[]> {
-        var retweeters: any[] = [];                                                 // To store the list of retweeters
-        var next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
-        var total: number = 0;                                                      // To store the total number of retweeters fetched
-        var batchSize: number = 20;                                                 // To store the batchsize to use
+        let retweeters: any[] = [];                                                 // To store the list of retweeters
+        let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
+        let total: number = 0;                                                      // To store the total number of retweeters fetched
+        let batchSize: number = 20;                                                 // To store the batchsize to use
 
         // If all retweeters are to be fetched
         count = (all || count > retweetsCount) ? retweetsCount : count;
@@ -250,9 +250,9 @@ export default class TweetResolver extends ResolverBase {
         cursor: string,
         repliesCount: number
     ): Promise<any[]> {
-        var replies: any[] = [];                                                    // To store the list of replies
-        var next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
-        var total: number = 0;                                                      // To store the total number of replies fetched
+        let replies: any[] = [];                                                    // To store the list of replies
+        let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
+        let total: number = 0;                                                      // To store the total number of replies fetched
 
         // If all replies are to be fetched
         count = (all || count > repliesCount) ? repliesCount : count;

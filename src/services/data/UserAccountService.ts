@@ -37,16 +37,16 @@ export class UserAccountService extends FetcherService {
      */
     async getUserAccountDetails(screenName: string): Promise<User> {
         // Fetching the raw data
-        var res: RawUser = await this.request<RawUser>(userAccountUrl(screenName)).then(res => res.data);
+        let res: RawUser = await this.request<RawUser>(userAccountUrl(screenName)).then(res => res.data);
         
         // Extracting data
-        var data = extractUserAccountDetails(res);
+        let data = extractUserAccountDetails(res);
 
         // Caching data
         this.cacheData(data);
 
         // Parsing data
-        var user = toUser(data.required[0]);
+        let user = toUser(data.required[0]);
             
         return user;
     }
@@ -57,7 +57,7 @@ export class UserAccountService extends FetcherService {
      */
     async getUserAccountDetailsById(restId: string): Promise<User> {
         // Getting data from cache
-        var cachedData = await this.readData(restId);
+        let cachedData = await this.readData(restId);
 
         // If data exists in cache
         if(cachedData) {
@@ -66,16 +66,16 @@ export class UserAccountService extends FetcherService {
         // If data does not exist in cache
         else {
             // Fetchin the raw data
-            var res = await this.request<RawUser>(userAccountByIdUrl(restId)).then(res => res.data);
+            let res = await this.request<RawUser>(userAccountByIdUrl(restId)).then(res => res.data);
 
             // Extracting data
-            var data = extractUserAccountDetails(res);
+            let data = extractUserAccountDetails(res);
 
             // Caching data
             this.cacheData(data);
 
             // Parsing data
-            var user = toUser(data.required[0]);
+            let user = toUser(data.required[0]);
                 
             return user;
         }
@@ -89,16 +89,16 @@ export class UserAccountService extends FetcherService {
      */
     async getUserFollowing(userId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // Fetchin the raw data
-        var res = await this.request<RawUserFollowing>(userFollowingUrl(userId, count, cursor)).then(res => res.data);
+        let res = await this.request<RawUserFollowing>(userFollowingUrl(userId, count, cursor)).then(res => res.data);
         
         // Extracting data
-        var data = extractUserFollow(res);
+        let data = extractUserFollow(res);
 
         // Caching data
         this.cacheData(data);
 
         // Parsing data
-        var users = data.required.map(item => toUser(item));
+        let users = data.required.map(item => toUser(item));
 
         return {
             list: users,
@@ -119,16 +119,16 @@ export class UserAccountService extends FetcherService {
          * So changing count to count - 20, fixes fetching more than required number of follower
          */
         // Fetching the raw data
-        var res = await this.request<RawUserFollowers>(userFollowersUrl(userId, (count > 20) ? (count - 20) : count, cursor)).then(res => res.data);
+        let res = await this.request<RawUserFollowers>(userFollowersUrl(userId, (count > 20) ? (count - 20) : count, cursor)).then(res => res.data);
         
         // Extracting data
-        var data = extractUserFollow(res);
+        let data = extractUserFollow(res);
 
         // Caching data
         this.cacheData(data);
 
         // Parsing data
-        var users = data.required.map(item => toUser(item));
+        let users = data.required.map(item => toUser(item));
 
         return {
             list: users,
@@ -144,16 +144,16 @@ export class UserAccountService extends FetcherService {
      */
     async getUserLikes(userId: string, count: number, cursor: string): Promise<CursoredData<Tweet>> {
         // Fetching the raw data
-        var res = await this.request<RawUserLikes>(userLikesUrl(userId, count, cursor)).then(res => res.data);
+        let res = await this.request<RawUserLikes>(userLikesUrl(userId, count, cursor)).then(res => res.data);
         
         // Extracting data
-        var data = extractUserLikes(res);
+        let data = extractUserLikes(res);
 
         // Caching data
         this.cacheData(data);
 
         // Parsing data
-        var tweets = data.required.map(item => toTweet(item));
+        let tweets = data.required.map(item => toTweet(item));
 
         return {
             list: tweets,
