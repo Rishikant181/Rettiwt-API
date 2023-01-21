@@ -14,7 +14,7 @@ export class CacheService {
     // MEMBER DATA
     private allowCache: boolean;                                        // To store whether to use cache or not
     private static instance: CacheService;                              // To store the current instance of this service
-    private update: boolean;                                            // Whether to update existing data or not
+    private update: boolean;                                            // To store whether to update existing data or not
     private connUrl: string;                                            // To store the connection url string to redis
     private client: Redis;                                              // To store the redis client instance
 
@@ -23,6 +23,7 @@ export class CacheService {
         this.allowCache = config.use_cache;
         this.connUrl = config.cache_url;
         this.client = new Redis(this.connUrl);
+        this.update = false;
 
         // If failed to connect to redis caching server
         this.client.on("error", (err) => {
