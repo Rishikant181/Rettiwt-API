@@ -14,20 +14,15 @@ import { HttpMethods, HttpStatus } from "../types/HTTP";
 import { authorizedHeader } from './helper/Headers'
 import { toUser, toTweet } from './helper/Deserializers';
 
-// CONFIGS
-import { config } from '../config/env';
-
 /**
  * @service The base serivice from which all other data services derive their behaviour
  */
 export class FetcherService {
     // MEMBER DATA
-    public static allowCache: boolean;                                      // To store whether caching is enabled or not
     private auth: AuthService;                                              // To store the auth service instance to use for authentication
 
     // MEMBER METHODS
     constructor(auth: AuthService) {
-        FetcherService.allowCache = config.use_cache;
         this.auth = auth;
     }
 
@@ -69,21 +64,18 @@ export class FetcherService {
      * @param data The extracted data to be cached
      */
     protected async cacheData(data: any): Promise<void> {
-        // If caching is enabled
-        if (FetcherService.allowCache) {
-            // Creating an instance of cache
-            let cache = await CacheService.getInstance();
+        // Creating an instance of cache
+        let cache = await CacheService.getInstance();
 
-            // Parsing the extracted data
-            //@ts-ignore
-            let users = data.users.map(user => toUser(user));
-            //@ts-ignore
-            let tweets = data.tweets.map(tweet => toTweet(tweet));
+        // Parsing the extracted data
+        //@ts-ignore
+        let users = data.users.map(user => toUser(user));
+        //@ts-ignore
+        let tweets = data.tweets.map(tweet => toTweet(tweet));
 
-            // Caching the data
-            cache.write(users);
-            cache.write(tweets);
-        }
+        // Caching the data
+        cache.write(users);
+        cache.write(tweets);
     }
 
     /**
@@ -91,13 +83,10 @@ export class FetcherService {
      * @param id The id of the data to be read from cache
      */
     protected async readData(id: string): Promise<any> {
-        // If caching is enabled
-        if (FetcherService.allowCache) {
-            // Creating an instance of cache
-            let cache = await CacheService.getInstance();
+        // Creating an instance of cache
+        let cache = await CacheService.getInstance();
 
-            // Reading data from cache
-            return cache.read(id);
-        }
+        // Reading data from cache
+        return cache.read(id);
     }
 }
