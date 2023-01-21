@@ -37,7 +37,7 @@ export function toUser(data: RawUser): User {
  * @param data The raw tweet entities data from the response received from TwitterAPI
  */
 export function toTweetEntities(data: RawTweetEntities): TweetEntities {
-    var entities: TweetEntities = {
+    let entities: TweetEntities = {
         mentionedUsers: [],
         urls: [],
         media: [],
@@ -46,21 +46,21 @@ export function toTweetEntities(data: RawTweetEntities): TweetEntities {
     
     // Extracting user mentions
     if(data.user_mentions) {
-        for(var user of data.user_mentions) {
+        for(let user of data.user_mentions) {
             entities.mentionedUsers.push(user.id_str);
         }
     }
 
     // Extracting urls
     if(data.urls) {
-        for(var url of data.urls) {
+        for(let url of data.urls) {
             entities.urls.push(url.expanded_url);
         }
     }
     
     // Extracting hashtags
     if(data.hashtags) {
-        for(var hashtag of data.hashtags) {
+        for(let hashtag of data.hashtags) {
             entities.hashtags.push(hashtag.text);
         }
     }

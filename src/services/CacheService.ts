@@ -61,9 +61,9 @@ export class CacheService {
         data = dataToList(data);
 
         // Iterating over the list of data
-        for (var item of data) {
+        for (let item of data) {
             // Storing whether data is already cached or not
-            var cached = await this.client.exists(findJSONKey(item, 'id'));
+            let cached = await this.client.exists(findJSONKey(item, 'id'));
 
             // If data already exists in cache and no update required, skip
             if (cached && this.update == false) {
@@ -85,7 +85,7 @@ export class CacheService {
      */
     async read(id: string): Promise<any> {
         // Getting data from cache
-        var res = await this.client.get(id);
+        let res = await this.client.get(id);
 
         // If data exists in cache
         if (res) {

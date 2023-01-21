@@ -20,19 +20,19 @@ export function isJSONEmpty(data: any): boolean {
  * @param last Whether to begin searching from the end
  */
 export function findJSONKey(data: any, key: string, last: boolean = false): any {
-    var jsonStr: string = JSON.stringify(data);                                 // To store the input data as string
-    var extStr: string = '';                                                    // To store the extracted string
-    var len: number = jsonStr.length;                                           // To store length of input data
+    let jsonStr: string = JSON.stringify(data);                                 // To store the input data as string
+    let extStr: string = '';                                                    // To store the extracted string
+    let len: number = jsonStr.length;                                           // To store length of input data
 
     /**
      * Getting the position to start extracting data from
      * This the position just after the key plus ":"
      * */
-    var start: number = !last ? (jsonStr.indexOf(`"${key}"`) + `"${key}":`.length) : (jsonStr.lastIndexOf(`"${key}"`) + `"${key}":`.length);
+    let start: number = !last ? (jsonStr.indexOf(`"${key}"`) + `"${key}":`.length) : (jsonStr.lastIndexOf(`"${key}"`) + `"${key}":`.length);
 
-    for (var i = start; i < len; i++) {
+    for (let i = start; i < len; i++) {
         // Getting each character
-        var char: string = jsonStr[i];
+        let char: string = jsonStr[i];
 
         // If not ending of value
         if (char != ',' && char != '\n') {
@@ -74,7 +74,7 @@ export function dataToList(data: any | any[]): any[] {
  * @returns The text after being formatted to remove unnecessary characters
  */
 export function normalizeText(text: string): string {
-    var normalizedText: string = '';                                                // To store the normalized text
+    let normalizedText: string = '';                                                // To store the normalized text
     
     // Removing unnecessary full stops, and other characters
     normalizedText = text.replace(/\n/g, '.').replace(/[.]+[\s+.\s+]+/g, '. ');

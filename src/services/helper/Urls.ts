@@ -28,7 +28,7 @@ export function userFollowingUrl(
     count: number,
     cursor: string
 ): string {
-    var url = '';
+    let url = '';
 
     // Encoding cursor to valid URI format
     cursor = encodeURI(cursor)
@@ -56,7 +56,7 @@ export function userFollowersUrl(
     count: number,
     cursor: string
 ): string {
-    var url = '';
+    let url = '';
 
     // Encoding cursor to valid URI format
     cursor = encodeURI(cursor)
@@ -84,7 +84,7 @@ export function userLikesUrl(
     count: number,
     cursor: string
 ): string {
-    var url: string = '';
+    let url: string = '';
 
     // If cursor is supplied
     if (cursor) {
@@ -115,7 +115,7 @@ export function tweetsUrl(
     cursor: string
 ): string {
     // Concatenating the input argument lists to a URL query formatted string
-    var query = [
+    let query = [
         filter.words ? filter.words.join(' ') : '',
         filter.hashtags ? `(${filter.hashtags.map(hashtag => '%23' + hashtag).join(' OR ')})` : '',
         filter.fromUsers ? `(${filter.fromUsers.map(user => `from:${user}`).join(' OR ')})` : '',
@@ -128,7 +128,7 @@ export function tweetsUrl(
     .filter(item => item !== '()' && item !== '')
     .join(' ');
 
-    var url = '';
+    let url = '';
 
     // If a cursor has been supplied
     if (cursor) {
@@ -149,7 +149,7 @@ export function tweetsUrl(
 export function tweetDetailsUrl(
     tweetId: string
 ): string {
-    var url = '';
+    let url = '';
 
     // If a cursor is provided
     url = `https://twitter.com/i/api/graphql/L5bZJ8DPGqZjl6dXJ8lApw/TweetDetail?variables=%7B%22focalTweetId%22%3A%22${tweetId}%22%2C%22with_rux_injections%22%3Afalse%2C%22includePromotedContent%22%3Afalse%2C%22withCommunity%22%3Afalse%2C%22withQuickPromoteEligibilityTweetFields%22%3Afalse%2C%22withBirdwatchNotes%22%3Afalse%2C%22withSuperFollowsUserFields%22%3Afalse%2C%22withDownvotePerspective%22%3Afalse%2C%22withReactionsMetadata%22%3Afalse%2C%22withReactionsPerspective%22%3Afalse%2C%22withSuperFollowsTweetFields%22%3Afalse%2C%22withVoice%22%3Afalse%2C%22withV2Timeline%22%3Afalse%2C%22__fs_dont_mention_me_view_api_enabled%22%3Afalse%2C%22__fs_interactive_text_enabled%22%3Afalse%2C%22__fs_responsive_web_uc_gql_enabled%22%3Afalse%7D`;
@@ -166,7 +166,7 @@ export function tweetRepliesUrl(
     tweetId: string,
     cursor: string
 ): string {
-    var url = '';
+    let url = '';
 
     // If a cursor is provided
     if (cursor) {
@@ -191,7 +191,7 @@ export function tweetLikesUrl(
     count: number,
     cursor: string
 ): string {
-    var url = '';
+    let url = '';
 
     // If a cursor if provided
     if (cursor) {
@@ -216,7 +216,7 @@ export function tweetRetweetUrl(
     count: number,
     cursor: string
 ): string {
-    var url = '';
+    let url = '';
 
     // If a cursor is provided
     if (cursor) {
