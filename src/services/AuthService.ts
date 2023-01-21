@@ -16,7 +16,7 @@ export class AuthService {
     // MEMBER METHODS
     constructor(cookie: string) {
         // Reading the auth token from the config, since it's always the same
-        this.authToken = config.twitter.auth.authToken;
+        this.authToken = config.twitter_auth_token;
 
         // Setting up the authenticated credentials
         /**
