@@ -2,12 +2,22 @@
     "configurations": [
         {
             "name": "Debug",
-            "request": "attach",
+            "request": "launch",
+            "runtimeArgs": [
+                "run-script",
+                "debug"
+            ],
+            "preLaunchTask": "tsc: watch - tsconfig.json",
+            "env": {
+                "APP_PORT": "3000",
+                "USE_CACHE": "false",
+                "DEVELOPMENT": "true"
+            },
+            "runtimeExecutable": "npm",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "type": "node",
-            "restart": true
+            "type": "node"
         }
     ]
 }
