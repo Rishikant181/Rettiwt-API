@@ -1,16 +1,5 @@
-// This file contains various graphql types related to handling of data related to user
-
-// PACKAGE LIBS
-import {
-    GraphQLBoolean,
-    GraphQLObjectType,
-    GraphQLString,
-    GraphQLInt,
-    GraphQLList,
-    GraphQLUnionType
-} from 'graphql';
-
-// CUSTOM LIBS
+// PACKAGE
+import { GraphQLBoolean, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLUnionType } from 'graphql';
 
 // TYPES
 import { Tweet, TweetList } from './TweetTypes'

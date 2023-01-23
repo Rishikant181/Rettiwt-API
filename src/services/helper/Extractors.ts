@@ -1,7 +1,3 @@
-// This file contains various methods for extracting raw data and parsing it into pre-defined types
-
-// CUSTOM LIBS
-
 // TYPES
 import { DataErrors } from '../../types/graphql/Errors';
 import RawUser from '../../types/raw/user/User';
@@ -13,8 +9,8 @@ import RawTweets from '../../types/raw/tweet/Tweets';
 import RawLikers from '../../types/raw/tweet/Favouriters';
 import RawRetweeters from '../../types/raw/tweet/Retweeters';
 
-// HELPERS
-import { isJSONEmpty } from './Parser';
+// PARSERS
+import * as Parsers from './Parser';
 
 /* USERS */
 
@@ -34,7 +30,7 @@ export function extractUserAccountDetails(res: RawUser): {
     let tweets: any[] = [];                                                 // To store additional tweet data
 
     // If user not found or account suspended
-    if (isJSONEmpty(res.data) || isJSONEmpty(res.data.user) || res.data.user.result.__typename !== 'User') {
+    if (Parsers.isJSONEmpty(res.data) || Parsers.isJSONEmpty(res.data.user) || res.data.user.result.__typename !== 'User') {
         throw new Error(DataErrors.UserNotFound);
     }
 
@@ -67,7 +63,7 @@ export function extractUserFollow(res: RawUserFollowers | RawUserFollowing): {
     let tweets: any[] = [];                                                 // To store additional tweet data
 
     // If user does not exist
-    if (isJSONEmpty(res.data.user)) {
+    if (Parsers.isJSONEmpty(res.data.user)) {
         throw new Error(DataErrors.UserNotFound);
     }
 
@@ -114,7 +110,7 @@ export function extractUserLikes(res: RawUserLikes): {
     let tweets: any[] = [];                                                 // To store additional tweet data
 
     // If user does not exist
-    if (isJSONEmpty(res.data.user)) {
+    if (Parsers.isJSONEmpty(res.data.user)) {
         throw new Error(DataErrors.UserNotFound);
     }
 
@@ -170,7 +166,7 @@ export function extractTweets(res: RawTweets): {
     let dataUsers = res.globalObjects.users;
 
     // Destructuring tweets, if not empty
-    if (!isJSONEmpty(dataTweets)) {
+    if (!Parsers.isJSONEmpty(dataTweets)) {
         // Iterating through the json array of tweets
         for (let key of Object.keys(dataTweets)) {
             required.push({ rest_id: dataTweets[key].id_str, legacy: dataTweets[key] });
@@ -179,7 +175,7 @@ export function extractTweets(res: RawTweets): {
     }
 
     // Destructuring users, if not empty
-    if (!isJSONEmpty(dataUsers)) {
+    if (!Parsers.isJSONEmpty(dataUsers)) {
         // Iterating through the json array of users
         for (let key of Object.keys(dataUsers)) {
             users.push({ rest_id: dataUsers[key].id_str, legacy: dataUsers[key] });
@@ -222,7 +218,7 @@ export function extractTweet(res: RawTweet, tweetId: string): {
     let tweets: any[] = [];                                                 // To store additional tweet data
 
     // If tweet does not exist
-    if (isJSONEmpty(res.data)) {
+    if (Parsers.isJSONEmpty(res.data)) {
         throw new Error(DataErrors.TweetNotFound);
     }
 
@@ -276,7 +272,7 @@ export function extractTweetLikers(res: RawLikers): {
     let tweets: any[] = [];                                                 // To store additional tweet data
 
     // If tweet does not exist
-    if (isJSONEmpty(res.data.favoriters_timeline)) {
+    if (Parsers.isJSONEmpty(res.data.favoriters_timeline)) {
         throw new Error(DataErrors.TweetNotFound);
     }
 
@@ -318,7 +314,7 @@ export function extractTweetRetweeters(res: RawRetweeters): {
     let tweets: any[] = [];                                                 // To store additional tweet data
 
     // If tweet does not exist
-    if (isJSONEmpty(res.data.retweeters_timeline)) {
+    if (Parsers.isJSONEmpty(res.data.retweeters_timeline)) {
         throw new Error(DataErrors.TweetNotFound);
     }
 
@@ -361,7 +357,7 @@ export function extractTweetReplies(res: RawTweet, tweetId: string): {
     let tweets: any[] = [];                                                 // To store additional tweet data
 
     // If tweet does not exist
-    if (isJSONEmpty(res.data)) {
+    if (Parsers.isJSONEmpty(res.data)) {
         throw new Error(DataErrors.TweetNotFound);
     }
 

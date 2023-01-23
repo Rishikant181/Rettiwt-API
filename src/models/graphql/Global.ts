@@ -1,6 +1,4 @@
-// This file contains various graphql types related to handling of data having a global scope
-
-// PACKAGE LIBS
+// PACKAGE
 import { GraphQLString, GraphQLObjectType, } from "graphql";
 
 export const Cursor = new GraphQLObjectType({

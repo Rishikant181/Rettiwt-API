@@ -1,4 +1,4 @@
-// CUSTOM LIBS
+// RESOLVERS
 import ResolverBase from './ResolverBase';
 
 // TYPES

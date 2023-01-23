@@ -1,4 +1,4 @@
-// CUSTOM LIBS
+// SERVICES
 import { FetcherService } from '../FetcherService';
 import { AuthService } from '../AuthService';
 
@@ -11,16 +11,14 @@ import RawUserFollowers from '../../types/raw/user/Followers';
 import RawUserFollowing from '../../types/raw/user/Following';
 import RawUserLikes from '../../types/raw/user/Likes';
 
-// HELPERS
-import {
-    userAccountUrl,
-    userAccountByIdUrl,
-    userFollowingUrl,
-    userFollowersUrl,
-    userLikesUrl
-} from '../helper/Urls';
-import { extractUserAccountDetails, extractUserFollow, extractUserLikes } from '../helper/Extractors';
-import { toUser, toTweet } from '../helper/Deserializers';
+// URLS
+import * as Urls from '../helper/Urls';
+
+// EXTRACTORS
+import * as Extractors from '../helper/Extractors';
+
+// DESERIALIZERS
+import * as Deserializers from '../helper/Deserializers';
 
 /**
  * A service that deals with fetching of data related to user account
@@ -37,16 +35,16 @@ export class UserAccountService extends FetcherService {
      */
     async getUserAccountDetails(screenName: string): Promise<User> {
         // Fetching the raw data
-        let res: RawUser = await this.request<RawUser>(userAccountUrl(screenName)).then(res => res.data);
+        let res: RawUser = await this.request<RawUser>(Urls.userAccountUrl(screenName)).then(res => res.data);
         
         // Extracting data
-        let data = extractUserAccountDetails(res);
+        let data = Extractors.extractUserAccountDetails(res);
 
         // Caching data
         this.cacheData(data);
 
         // Parsing data
-        let user = toUser(data.required[0]);
+        let user = Deserializers.toUser(data.required[0]);
             
         return user;
     }
@@ -66,16 +64,16 @@ export class UserAccountService extends FetcherService {
         // If data does not exist in cache
         else {
             // Fetchin the raw data
-            let res = await this.request<RawUser>(userAccountByIdUrl(restId)).then(res => res.data);
+            let res = await this.request<RawUser>(Urls.userAccountByIdUrl(restId)).then(res => res.data);
 
             // Extracting data
-            let data = extractUserAccountDetails(res);
+            let data = Extractors.extractUserAccountDetails(res);
 
             // Caching data
             this.cacheData(data);
 
             // Parsing data
-            let user = toUser(data.required[0]);
+            let user = Deserializers.toUser(data.required[0]);
                 
             return user;
         }
@@ -89,16 +87,16 @@ export class UserAccountService extends FetcherService {
      */
     async getUserFollowing(userId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // Fetchin the raw data
-        let res = await this.request<RawUserFollowing>(userFollowingUrl(userId, count, cursor)).then(res => res.data);
+        let res = await this.request<RawUserFollowing>(Urls.userFollowingUrl(userId, count, cursor)).then(res => res.data);
         
         // Extracting data
-        let data = extractUserFollow(res);
+        let data = Extractors.extractUserFollow(res);
 
         // Caching data
         this.cacheData(data);
 
         // Parsing data
-        let users = data.required.map(item => toUser(item));
+        let users = data.required.map(item => Deserializers.toUser(item));
 
         return {
             list: users,
@@ -119,16 +117,16 @@ export class UserAccountService extends FetcherService {
          * So changing count to count - 20, fixes fetching more than required number of follower
          */
         // Fetching the raw data
-        let res = await this.request<RawUserFollowers>(userFollowersUrl(userId, (count > 20) ? (count - 20) : count, cursor)).then(res => res.data);
+        let res = await this.request<RawUserFollowers>(Urls.userFollowersUrl(userId, (count > 20) ? (count - 20) : count, cursor)).then(res => res.data);
         
         // Extracting data
-        let data = extractUserFollow(res);
+        let data = Extractors.extractUserFollow(res);
 
         // Caching data
         this.cacheData(data);
 
         // Parsing data
-        let users = data.required.map(item => toUser(item));
+        let users = data.required.map(item => Deserializers.toUser(item));
 
         return {
             list: users,
@@ -144,16 +142,16 @@ export class UserAccountService extends FetcherService {
      */
     async getUserLikes(userId: string, count: number, cursor: string): Promise<CursoredData<Tweet>> {
         // Fetching the raw data
-        let res = await this.request<RawUserLikes>(userLikesUrl(userId, count, cursor)).then(res => res.data);
+        let res = await this.request<RawUserLikes>(Urls.userLikesUrl(userId, count, cursor)).then(res => res.data);
         
         // Extracting data
-        let data = extractUserLikes(res);
+        let data = Extractors.extractUserLikes(res);
 
         // Caching data
         this.cacheData(data);
 
         // Parsing data
-        let tweets = data.required.map(item => toTweet(item));
+        let tweets = data.required.map(item => Deserializers.toTweet(item));
 
         return {
             list: tweets,

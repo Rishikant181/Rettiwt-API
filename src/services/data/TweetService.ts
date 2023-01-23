@@ -1,4 +1,4 @@
-// CUSTOM LIBS
+// SERVICES
 import { FetcherService } from "../FetcherService";
 import { AuthService } from "../AuthService";
 
@@ -11,22 +11,14 @@ import RawTweets from '../../types/raw/tweet/Tweets';
 import RawLikers from '../../types/raw/tweet/Favouriters';
 import RawRetweeters from '../../types/raw/tweet/Retweeters';
 
-// HELPERS
-import {
-    tweetsUrl,
-    tweetDetailsUrl,
-    tweetRepliesUrl,
-    tweetLikesUrl,
-    tweetRetweetUrl
-} from '../helper/Urls';
-import {
-    extractTweet,
-    extractTweetLikers,
-    extractTweetReplies,
-    extractTweetRetweeters,
-    extractTweets
-} from "../helper/Extractors";
-import { toUser, toTweet } from '../helper/Deserializers';
+// URLS
+import * as Urls from '../helper/Urls';
+
+// EXTRACTORS
+import * as Extractors from "../helper/Extractors";
+
+// DESERIALIZERS
+import * as Deserializers from '../helper/Deserializers';
 
 /**
  * A service that deals with fetching of data related to tweets
@@ -44,16 +36,16 @@ export class TweetService extends FetcherService {
      */
     async getTweets(filter: TweetFilter, cursor: string): Promise<CursoredData<Tweet>> {
         // Getting the raw data
-        let res = await this.request<RawTweets>(tweetsUrl(filter, cursor)).then(res => res.data);
+        let res = await this.request<RawTweets>(Urls.tweetsUrl(filter, cursor)).then(res => res.data);
 
         // Extracting data
-        let data = extractTweets(res);
+        let data = Extractors.extractTweets(res);
 
         // Caching data
         this.cacheData(data);
 
         // Parsing data
-        let tweets = data.required.map(item => toTweet(item));
+        let tweets = data.required.map(item => Deserializers.toTweet(item));
 
         return {
             list: tweets,
@@ -76,16 +68,16 @@ export class TweetService extends FetcherService {
         // If data does not exist in cache
         else {
             // Fetching the raw data
-            let res = await this.request<RawTweet>(tweetDetailsUrl(tweetId)).then(res => res.data);
+            let res = await this.request<RawTweet>(Urls.tweetDetailsUrl(tweetId)).then(res => res.data);
 
             // Extracting data
-            let data = extractTweet(res, tweetId);
+            let data = Extractors.extractTweet(res, tweetId);
 
             // Caching data
             this.cacheData(data);
 
             // Parsing data
-            let tweet = toTweet(data.required[0]);
+            let tweet = Deserializers.toTweet(data.required[0]);
 
             return tweet;
         }
@@ -99,16 +91,16 @@ export class TweetService extends FetcherService {
      */
     async getTweetLikers(tweetId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // Fetching the raw data
-        let res = await this.request<RawLikers>(tweetLikesUrl(tweetId, count, cursor)).then(res => res.data);
+        let res = await this.request<RawLikers>(Urls.tweetLikesUrl(tweetId, count, cursor)).then(res => res.data);
 
         // Extracting data
-        let data = extractTweetLikers(res);
+        let data = Extractors.extractTweetLikers(res);
 
         // Caching data
         this.cacheData(data);
 
         // Parsing data
-        let users = data.required.map(item => toUser(item));
+        let users = data.required.map(item => Deserializers.toUser(item));
 
         return {
             list: users,
@@ -124,16 +116,16 @@ export class TweetService extends FetcherService {
      */
     async getTweetRetweeters(tweetId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // Fetching the raw data
-        let res = await this.request<RawRetweeters>(tweetRetweetUrl(tweetId, count, cursor)).then(res => res.data);
+        let res = await this.request<RawRetweeters>(Urls.tweetRetweetUrl(tweetId, count, cursor)).then(res => res.data);
 
         // Extracting data
-        let data = extractTweetRetweeters(res);
+        let data = Extractors.extractTweetRetweeters(res);
 
         // Caching data
         this.cacheData(data);
 
         // Parsing data
-        let users = data.required.map(item => toUser(item));
+        let users = data.required.map(item => Deserializers.toUser(item));
 
         return {
             list: users,
@@ -148,16 +140,16 @@ export class TweetService extends FetcherService {
      */
     async getTweetReplies(tweetId: string, cursor: string): Promise<CursoredData<Tweet>> {
         // Fetching the raw data
-        let res = await this.request<RawTweet>(tweetRepliesUrl(tweetId, cursor)).then(res => res.data);
+        let res = await this.request<RawTweet>(Urls.tweetRepliesUrl(tweetId, cursor)).then(res => res.data);
         
         // Extracting data
-        let data = extractTweetReplies(res, tweetId);
+        let data = Extractors.extractTweetReplies(res, tweetId);
 
         // Caching data
         this.cacheData(data);
 
         // Parsing data
-        let tweets = data.required.map(item => toTweet(item));
+        let tweets = data.required.map(item => Deserializers.toTweet(item));
 
         return {
             list: tweets,
