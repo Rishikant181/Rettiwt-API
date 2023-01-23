@@ -31,6 +31,6 @@ export interface CursoredData<Type> {
  * @summary Stores the data context from where data is to be fetched
  */
 export interface DataContext {
-    users: UserAccountService,
-    tweets: TweetService
+    users: UserAccountService,                                          // To store the source for fetching user account data
+    tweets: TweetService                                                // To store the source for fetching tweet data
 }
