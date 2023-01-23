@@ -1,19 +1,16 @@
-// PACKAGE LIBS
-import { Request } from 'express';
-
 // CUSTOM LIBS
 import ResolverBase from './ResolverBase';
 
 // TYPES
 import { TweetFilter } from '../types/Tweet';
-import { Cursor } from '../types/Service';
+import { Cursor, DataContext } from '../types/Service';
 
 // HELPERS
 import { ValidationErrors } from '../types/graphql/Errors';
 
 export default class TweetResolver extends ResolverBase {
     // MEMBER METHODS
-    constructor(context: Request) {
+    constructor(context: DataContext) {
         super(context);
     }
     
@@ -23,7 +20,7 @@ export default class TweetResolver extends ResolverBase {
      */
     async resolveTweet(id: string): Promise<any> {
         // Getting the data
-        let res = await this.tweets.getTweetById(id);
+        let res = await this.context.tweets.getTweetById(id);
 
         // Evaluating response
         return res;
@@ -56,7 +53,7 @@ export default class TweetResolver extends ResolverBase {
             batchSize = ((tweetFilter.count - total) < batchSize) ? (tweetFilter.count - total) : batchSize;
 
             // Getting the data
-            const res = await this.tweets.getTweets(tweetFilter, next.value);
+            const res = await this.context.tweets.getTweets(tweetFilter, next.value);
 
             // If data is available
             if (res.list.length) {
@@ -153,7 +150,7 @@ export default class TweetResolver extends ResolverBase {
             batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
 
             // Getting the data
-            const res = await this.tweets.getTweetLikers(id, count, next.value);
+            const res = await this.context.tweets.getTweetLikers(id, count, next.value);
 
             // If data is available
             if (res.list.length) {
@@ -210,7 +207,7 @@ export default class TweetResolver extends ResolverBase {
             batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
 
             // Getting the data
-            const res = await this.tweets.getTweetRetweeters(id, count, next.value);
+            const res = await this.context.tweets.getTweetRetweeters(id, count, next.value);
 
             // If data is available
             if (res.list.length) {
@@ -260,7 +257,7 @@ export default class TweetResolver extends ResolverBase {
         // Repeatedly fetching data as long as total data fetched is less than requried
         while (total < count) {
             // Getting the data
-            const res = await this.tweets.getTweetReplies(id, next.value);
+            const res = await this.context.tweets.getTweetReplies(id, next.value);
 
             // If data is available
             if (res.list.length) {
