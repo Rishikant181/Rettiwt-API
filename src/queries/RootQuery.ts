@@ -1,12 +1,5 @@
-// PACKAGE LIBS
-import {
-    GraphQLInt,
-    GraphQLList,
-    GraphQLObjectType,
-    GraphQLString
-} from 'graphql'
-
-// CUSTOM LIBS
+// PACKAGE
+import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql'
 
 // TYPES
 import { User } from '../models/graphql/UserTypes';

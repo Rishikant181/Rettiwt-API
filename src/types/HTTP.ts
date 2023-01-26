@@ -1,5 +1,3 @@
-// This file contains various objects for handling data related to HTTP communication
-
 /**
  * @summary Stores all the different type of http requests
  */

@@ -1,4 +1,4 @@
-// CUSTOM LIBS
+// TYPES
 import { TweetFilter } from "../../types/Tweet";
 
 /**

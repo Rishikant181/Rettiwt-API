@@ -1,7 +1,5 @@
-// PACKAGE LIBS
+// PACKAGES
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-
-// CUSTOM LIBS
 
 // SERVICES
 import { AuthService } from './AuthService';
@@ -9,10 +7,12 @@ import { CacheService } from './CacheService';
 
 // TYPES
 import { HttpMethods, HttpStatus } from "../types/HTTP";
+import { Result as RawUser } from '../types/raw/user/User';
+import { Result as RawTweet } from '../types/raw/tweet/Tweet';
 
 // HELPERS
-import { authorizedHeader } from './helper/Headers'
-import { toUser, toTweet } from './helper/Deserializers';
+import * as Headers from './helper/Headers'
+import * as Deserializers from './helper/Deserializers';
 
 /**
  * @service The base serivice from which all other data services derive their behaviour
@@ -49,7 +49,7 @@ export class FetcherService {
     async request<DataType>(url: string): Promise<AxiosResponse<DataType>> {
         // Preparing the request config
         let config: AxiosRequestConfig<DataType> = {
-            headers: await authorizedHeader(await this.auth.getAuthCredentials()),
+            headers: await Headers.authorizedHeader(await this.auth.getAuthCredentials()),
             method: HttpMethods.GET
         };
     
@@ -68,10 +68,8 @@ export class FetcherService {
         let cache = await CacheService.getInstance();
 
         // Parsing the extracted data
-        //@ts-ignore
-        let users = data.users.map(user => toUser(user));
-        //@ts-ignore
-        let tweets = data.tweets.map(tweet => toTweet(tweet));
+        let users = data.users.map((user: RawUser) => Deserializers.toUser(user));
+        let tweets = data.tweets.map((tweet: RawTweet) => Deserializers.toTweet(tweet));
 
         // Caching the data
         cache.write(users);

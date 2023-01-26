@@ -1,4 +1,3 @@
-// CUSTOM LIBS
 // TYPES
 import { AuthCredentials } from '../types/Authentication';
 

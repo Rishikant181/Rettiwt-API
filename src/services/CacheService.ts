@@ -1,8 +1,8 @@
-// PACKAGE LIBS
+// PACKAGES
 import NodeCache from 'node-cache';
 
-// CUSTOM LIBS
-import { dataToList, findJSONKey } from './helper/Parser';
+// PARSERS
+import * as Parsers from './helper/Parser';
 
 /**
  * @summary Handles reading and writing of data from and to cache.
@@ -42,17 +42,17 @@ export class CacheService {
      */
     async write(data: any): Promise<void> {
         // Converting the data to a list of data
-        data = dataToList(data);
+        data = Parsers.dataToList(data);
 
         // Iterating over the list of data
         for (let item of data) {
             // Storing whether data is already cached or not
-            let cached = this.client.has(findJSONKey(item, 'id'));
+            let cached = this.client.has(Parsers.findJSONKey(item, 'id'));
 
             // If data does not already exist in cache
             if(!cached) {
                 // Adding data to cache
-                this.client.set(findJSONKey(item, 'id'), item);
+                this.client.set(Parsers.findJSONKey(item, 'id'), item);
             }
         }
     }
