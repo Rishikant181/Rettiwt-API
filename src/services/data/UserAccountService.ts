@@ -7,6 +7,7 @@ import { User } from '../../types/UserAccount';
 import { Tweet } from '../../types/Tweet';
 import { CursoredData } from '../../types/Service';
 import RawUser from '../../types/raw/user/User';
+import RawUserTweets from '../../types/raw/user/Tweets';
 import RawUserFollowers from '../../types/raw/user/Followers';
 import RawUserFollowing from '../../types/raw/user/Following';
 import RawUserLikes from '../../types/raw/user/Likes';
@@ -146,6 +147,31 @@ export class UserAccountService extends FetcherService {
         
         // Extracting data
         let data = Extractors.extractUserLikes(res);
+
+        // Caching data
+        this.cacheData(data);
+
+        // Parsing data
+        let tweets = data.required.map(item => Deserializers.toTweet(item));
+
+        return {
+            list: tweets,
+            next: { value: data.cursor }
+        };
+    }
+
+    /**
+     * @returns The list of tweets made by the target user
+     * @param userId The rest id of the target user
+     * @param count The batch size of the list
+     * @param cursor The cursor to next batch. If blank, first batch is fetched
+     */
+    async getUserTweets(userId: string, count: number, cursor: string): Promise<CursoredData<Tweet>> {
+        // Fetching the raw data
+        let res = await this.request<RawUserTweets>(Urls.userTweetsUrl(userId, count, cursor)).then(res => res.data);
+
+        // Extracting data
+        let data = Extractors.extractUserTweets(res);
 
         // Caching data
         this.cacheData(data);

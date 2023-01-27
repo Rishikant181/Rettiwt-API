@@ -4,6 +4,7 @@ import RawUser from '../../types/raw/user/User';
 import RawUserFollowers from '../../types/raw/user/Followers';
 import RawUserFollowing from '../../types/raw/user/Following';
 import RawUserLikes from '../../types/raw/user/Likes';
+import RawUserTweets from '../../types/raw/user/Tweets';
 import RawTweet from '../../types/raw/tweet/Tweet';
 import RawTweets from '../../types/raw/tweet/Tweets';
 import RawLikers from '../../types/raw/tweet/Favouriters';
@@ -134,6 +135,49 @@ export function extractUserLikes(res: RawUserLikes): {
     });
 
     // Returning the data
+    return {
+        required: required,
+        cursor: cursor,
+        users: users,
+        tweets: tweets
+    };
+}
+
+/**
+ * @returns The raw tweets data formatted and sorted into required and additional data
+ * @param res The raw response received from TwitterAPI
+ */
+export function extractUserTweets(res: RawUserTweets): {
+    required: any[],
+    cursor: string,
+    users: any[],
+    tweets: any[]
+} {
+    let required: any[] = [];                                               // To store the reqruied raw data
+    let cursor: string = '';                                                // To store the cursor to next batch
+    let users: any[] = [];                                                  // To store additional user data
+    let tweets: any[] = [];                                                 // To store additional tweet data
+
+    // Getting the raw tweet list
+    let dataTweets = res.data.user.result.timeline_v2.timeline.instructions.filter(item => item.type === 'TimelineAddEntries')[0].entries;
+
+    // Destructuring tweets, if not empty
+    if (!Parsers.isJSONEmpty(dataTweets)) {
+        // Iterating through the json array of tweets
+        for (let entry of dataTweets) {
+            // If the entry is a tweet
+            if(entry.entryId.indexOf('tweet') != -1) {
+                required.push(entry.content.itemContent?.tweet_results.result);
+                tweets.push(entry.content.itemContent?.tweet_results.result);
+                users.push(entry.content.itemContent?.tweet_results.result.core.user_results.result);
+            }
+            // If the entry is a cursor
+            else if(entry.entryId.indexOf('cursor-bottom') != -1) {
+                cursor = entry.content.value as string;
+            }
+        }
+    }
+
     return {
         required: required,
         cursor: cursor,
