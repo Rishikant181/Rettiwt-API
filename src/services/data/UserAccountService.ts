@@ -7,6 +7,7 @@ import { User } from '../../types/UserAccount';
 import { Tweet } from '../../types/Tweet';
 import { CursoredData } from '../../types/Service';
 import RawUser from '../../types/raw/user/User';
+import RawUserTweets from '../../types/raw/user/Tweets';
 import RawUserFollowers from '../../types/raw/user/Followers';
 import RawUserFollowing from '../../types/raw/user/Following';
 import RawUserLikes from '../../types/raw/user/Likes';
@@ -157,5 +158,10 @@ export class UserAccountService extends FetcherService {
             list: tweets,
             next: { value: data.cursor }
         };
+    }
+
+    async getUserTweets(userId: string, count: number, cursor: string): Promise<CursoredData<Tweet>> {
+        // Fetching the raw data
+        let res = await this.request<RawUserTweets>()
     }
 };

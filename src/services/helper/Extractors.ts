@@ -143,6 +143,10 @@ export function extractUserLikes(res: RawUserLikes): {
     };
 }
 
+/**
+ * @returns The raw tweets data formatted and sorted into required and additional data
+ * @param res The raw response received from TwitterAPI
+ */
 export function extractUserTweets(res: RawUserTweets): {
     required: any[],
     cursor: string,
