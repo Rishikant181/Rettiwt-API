@@ -159,7 +159,7 @@ export function extractUserTweets(res: RawUserTweets): {
     let tweets: any[] = [];                                                 // To store additional tweet data
 
     // Getting the raw tweet list
-    let dataTweets = res.data.user.result.timeline_v2.timeline.instructions[0].entries;
+    let dataTweets = res.data.user.result.timeline_v2.timeline.instructions.filter(item => item.type === 'TimelineAddEntries')[0].entries;
 
     // Destructuring tweets, if not empty
     if (!Parsers.isJSONEmpty(dataTweets)) {
