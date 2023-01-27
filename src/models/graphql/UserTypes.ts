@@ -97,21 +97,23 @@ export const User = new GraphQLObjectType({
         tweets: {
             type: TweetList,
             args: {
-                toUsers: { type: new GraphQLList(GraphQLString) },
-                mentions: { type: new GraphQLList(GraphQLString) },
-                hashtags: { type: new GraphQLList(GraphQLString) },
-                words: { type: new GraphQLList(GraphQLString) },
-                startDate: { type: GraphQLString },
-                endDate: { type: GraphQLString },
-                count: { type: GraphQLInt, defaultValue: 1 },
-                all: { type: GraphQLBoolean, defaultValue: false },
+                count: {
+                    description: "The number of tweets to fetch",
+                    type: GraphQLInt,
+                    defaultValue: 10
+                },
+                all: {
+                    description: "Whether to fetch all tweets made by user",
+                    type: GraphQLBoolean,
+                    defaultValue: false
+                },
                 cursor: {
                     type: GraphQLString,
                     description: 'The cursor to the batch of tweets list to fetch',
                     defaultValue: ''
                 }
             },
-            resolve: (parent, args, context) => new TweetResolver(context).resolveTweets({ fromUsers: [parent.userName], ...args, count: (args.all ? parent.statusesCount : args.count) })
+            resolve: (parent, args, context) => new UserResolver(context).resolveUserTweets(parent.id, args.count, args.all, args.cursor, parent.statusesCount)
         }
     })
 });
