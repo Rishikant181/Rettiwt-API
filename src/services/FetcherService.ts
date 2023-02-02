@@ -1,5 +1,5 @@
 // PACKAGES
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import { curly } from 'node-libcurl';
 
 // SERVICES
 import { AuthService } from './AuthService';
@@ -47,14 +47,10 @@ export class FetcherService {
      * @param guestCreds Guest credentials to use rather than auto-generated one
      */
     async request<DataType>(url: string): Promise<AxiosResponse<DataType>> {
-        // Preparing the request config
-        let config: AxiosRequestConfig<DataType> = {
-            headers: await Headers.authorizedHeader(await this.auth.getAuthCredentials()),
-            method: HttpMethods.GET
-        };
-    
         // Fetching the data
-        let res = await axios(url, config).then(res => this.handleHTTPError(res));
+        let res = await curly.get(url, {
+            httpHeader: Headers.authorizedHeader(await this.auth.getAuthCredentials())
+        })
 
         return res;
     }

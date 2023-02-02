@@ -9,21 +9,18 @@ export function authorizedHeader(authCred: {
     csrfToken: string,
     cookie: string
 }): any {
-    return {
-        "accept": "*/*",
-        "accept-language": "en-US,en;q=0.9",
-        "authorization": authCred.authToken,
-        "content-type": "application/json",
-        "sec-ch-ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"98\", \"Microsoft Edge\";v=\"98\"",
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": "\"Windows\"",
-        "sec-fetch-dest": "empty",
-        "sec-fetch-mode": "cors",
-        "sec-fetch-site": "same-origin",
-        "x-csrf-token": authCred.csrfToken,
-        "x-twitter-active-user": "no",
-        "x-twitter-auth-type": "OAuth2Session",
-        "x-twitter-client-language": "en",
-        "cookie": authCred.cookie,
-    };
+    return [
+        `sec-ch-ua: "Not_A Brand";v="99", "Microsoft Edge";v="109", "Chromium";v="109"`,
+        `x-twitter-client-language: en`,
+        `x-csrf-token: ${authCred.csrfToken}`,
+        `sec-ch-ua-mobile: ?0`,
+        `authorization: ${authCred.authToken}`,
+        `User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 Edg/109.0.1518.61`,
+        `x-twitter-auth-type: OAuth2Session`,
+        `x-twitter-active-user: yes`,
+        `sec-ch-ua-platform: "Windows"`,
+        `Accept: */*`,
+        `host: api.twitter.com`,
+        `Cookie: ${authCred.cookie}`
+    ];
 }
