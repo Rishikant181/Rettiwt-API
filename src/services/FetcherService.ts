@@ -46,7 +46,7 @@ export class FetcherService {
      * @param auth Whether to use authenticated requests or not
      * @param guestCreds Guest credentials to use rather than auto-generated one
      */
-    async request<DataType>(url: string): Promise<CurlyResult<DataType>> {
+    protected async request<DataType>(url: string): Promise<CurlyResult<DataType>> {
         // Fetching the data
         let res = await curly.get(url, {
             httpHeader: Headers.authorizedHeader(await this.auth.getAuthCredentials()),
