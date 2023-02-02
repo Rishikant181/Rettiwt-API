@@ -4,6 +4,7 @@ import { GraphQLBoolean, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLLi
 // TYPES
 import { Tweet, TweetList } from './TweetTypes'
 import { Cursor } from './Global';
+import { TweetFilter } from '../../types/Tweet';
 
 // RESOLVERS
 import UserResolver from '../../resolvers/UserResolver';
@@ -113,7 +114,7 @@ export const User = new GraphQLObjectType({
                     defaultValue: ''
                 }
             },
-            resolve: (parent, args, context) => new UserResolver(context).resolveUserTweets(parent.id, args.count, args.all, args.cursor, parent.statusesCount)
+            resolve: (parent, args, context) => new TweetResolver(context).resolveTweets({ fromUsers: [parent.userName], count: args.count } as TweetFilter, args.cursor)
         }
     })
 });

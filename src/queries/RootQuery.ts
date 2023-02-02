@@ -4,6 +4,7 @@ import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graph
 // TYPES
 import { User } from '../models/graphql/UserTypes';
 import { Tweet, TweetList } from '../models/graphql/TweetTypes';
+import { TweetFilter } from '../types/Tweet';
 
 // RESOLVERS
 import UserResolver from '../resolvers/UserResolver';
@@ -48,7 +49,7 @@ export const rootQuery = new GraphQLObjectType({
                 count: { type: GraphQLInt, defaultValue: 20 },
                 cursor: { type: GraphQLString, defaultValue: '' }
             },
-            resolve: (parent, args, context) => new TweetResolver(context).resolveTweets(args)
+            resolve: (parent, args, context) => new TweetResolver(context).resolveTweets(args as TweetFilter, args.cursor)
         }
     }
 })

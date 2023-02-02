@@ -29,15 +29,13 @@ export default class TweetResolver extends ResolverBase {
     /**
      * @returns The list of tweets matching the given filter
      * @param filter The filter to be used for fetching matching tweets
+     * @param cursor The cursor to the batch of tweets to fetch
      */
-    async resolveTweets(filter: any): Promise<any[]> {
+    async resolveTweets(filter: TweetFilter, cursor: string): Promise<any[]> {
         let tweets: any[] = [];                                                     // To store the list of tweets
-        let next: Cursor = new Cursor(filter.cursor);                               // To store cursor to next batch
+        let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
         let total: number = 0;                                                      // To store the total number of tweets fetched
         let batchSize: number = 20;                                                 // To store the batchsize to use
-
-        // Preparing the filter to use
-        const tweetFilter: TweetFilter = filter;
 
         // Checking if the given tweet filter is valid or not
         if (!(filter.fromUsers || filter.toUsers || filter.words || filter.hashtags || filter.mentions || filter.quoted)) {
@@ -45,15 +43,15 @@ export default class TweetResolver extends ResolverBase {
         }
 
         // If required count less than batch size, setting batch size to required count
-        batchSize = (tweetFilter.count < batchSize) ? tweetFilter.count : batchSize;
+        batchSize = (filter.count < batchSize) ? filter.count : batchSize;
 
         // Repeatedly fetching data as long as total data fetched is less than requried
-        while (total < tweetFilter.count) {
+        while (total < filter.count) {
             // If this is the last batch, change batch size to number of remaining tweets
-            batchSize = ((tweetFilter.count - total) < batchSize) ? (tweetFilter.count - total) : batchSize;
+            batchSize = ((filter.count - total) < batchSize) ? (filter.count - total) : batchSize;
 
             // Getting the data
-            const res = await this.context.tweets.getTweets(tweetFilter, next.value);
+            const res = await this.context.tweets.getTweets(filter, next.value);
 
             // If data is available
             if (res.list.length) {
@@ -108,12 +106,11 @@ export default class TweetResolver extends ResolverBase {
             startDate: '',
             endDate: '',
             quoted: id,
-            count: count,
-            cursor: cursor
+            count: count
         };
 
         // Fetching the quotes using resolveTweets method
-        quotes = await this.resolveTweets(filter);
+        quotes = await this.resolveTweets(filter, cursor);
 
         return quotes;
     }
