@@ -41,13 +41,7 @@ export default class UserResolver extends ResolverBase {
      * @param cursor The cursor to the batch of likes to fetch
      * @param favouritesCount The total number of tweets liked by target user
      */
-    async resolveUserLikes(
-        id: string,
-        count: number,
-        all: boolean,
-        cursor: string,
-        favouritesCount: number
-    ): Promise<any> {
+    async resolveUserLikes(id: string, count: number, all: boolean, cursor: string, favouritesCount: number): Promise<any> {
         let likes: any[] = [];                                                      // To store the list of liked tweets
         let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
         let total: number = 0;                                                      // To store the total number of liked twets fetched
@@ -98,13 +92,7 @@ export default class UserResolver extends ResolverBase {
      * @param cursor The cursor to the batch of followers to fetch
      * @param followerCount The total number of followers of the target user
      */
-    async resolveUserFollowers(
-        id: string,
-        count: number,
-        all: boolean,
-        cursor: string,
-        followersCount: number
-    ): Promise<any> {
+    async resolveUserFollowers(id: string, count: number, all: boolean, cursor: string, followersCount: number): Promise<any> {
         let followers: any[] = [];                                                  // To store the list of followers
         let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
         let total: number = 0;                                                      // To store the total number of followers fetched
@@ -155,13 +143,7 @@ export default class UserResolver extends ResolverBase {
      * @param cursor The cursor to the batch of followings to fetch
      * @param followingsCount The total number of followings of the target user
      */
-    async resolveUserFollowing(
-        id: string,
-        count: number,
-        all: boolean,
-        cursor: string,
-        followingsCount: number
-    ): Promise<any> {
+    async resolveUserFollowing(id: string, count: number, all: boolean, cursor: string, followingsCount: number): Promise<any> {
         let following: any[] = [];                                                  // To store the list of following
         let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
         let total: number = 0;                                                      // To store the total number of following fetched
@@ -212,13 +194,7 @@ export default class UserResolver extends ResolverBase {
      * @param cursor The cursor to the batch of tweets to fetch
      * @param statusesCount The total number of tweets made by target user
      */
-    async resolveUserTweets(
-        id: string,
-        count: number,
-        all: boolean,
-        cursor: string,
-        statusesCount: number
-    ): Promise<any> {
+    async resolveUserTweets(id: string, count: number, all: boolean, cursor: string, statusesCount: number): Promise<any> {
         let tweets: any[] = [];                                                     // To store the list of tweets
         let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
         let total: number = 0;                                                      // To store the total number of tweets fetched

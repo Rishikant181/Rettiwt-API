@@ -85,13 +85,7 @@ export default class TweetResolver extends ResolverBase {
      * @param cursor The cursor to the batch of tweet quotes to fetch
      * @param quoteCount The total number of quotes of the given tweet
      */
-    async resolveTweetQuotes(
-        id: string,
-        count: number,
-        all: boolean,
-        cursor: string,
-        quoteCount: number
-    ): Promise<any[]> {
+    async resolveTweetQuotes(id: string, count: number, all: boolean, cursor: string, quoteCount: number): Promise<any[]> {
         let quotes: any[] = [];                                                     // To store the list of quotes
 
         // If all tweets are to be fetched
@@ -123,13 +117,7 @@ export default class TweetResolver extends ResolverBase {
      * @param cursor The cursor to the batch of likers to fetch
      * @param likesCount The total number of like of the tweet
      */
-    async resolveTweetLikers(
-        id: string,
-        count: number,
-        all: boolean,
-        cursor: string,
-        likesCount: number
-    ): Promise<any[]> {
+    async resolveTweetLikers(id: string, count: number, all: boolean, cursor: string, likesCount: number): Promise<any[]> {
         let likers: any[] = [];                                                     // To store the list of likers
         let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
         let total: number = 0;                                                      // To store the total number of likers fetched
@@ -180,13 +168,7 @@ export default class TweetResolver extends ResolverBase {
      * @param cursor The cursor to the batch of retweeters to fetch
      * @param retweetsCount The total number of retweets of the 
      */
-    async resolveTweetRetweeters(
-        id: string,
-        count: number,
-        all: boolean,
-        cursor: string,
-        retweetsCount: number
-    ): Promise<any[]> {
+    async resolveTweetRetweeters(id: string, count: number, all: boolean, cursor: string, retweetsCount: number): Promise<any[]> {
         let retweeters: any[] = [];                                                 // To store the list of retweeters
         let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
         let total: number = 0;                                                      // To store the total number of retweeters fetched
@@ -237,13 +219,7 @@ export default class TweetResolver extends ResolverBase {
      * @param cursor The cursor to the batch of replies to fetch
      * @param repliesCount The total number of replies to the target tweet
      */
-    async resolveTweetReplies(
-        id: string,
-        count: number,
-        all: boolean,
-        cursor: string,
-        repliesCount: number
-    ): Promise<any[]> {
+    async resolveTweetReplies(id: string, count: number, all: boolean, cursor: string, repliesCount: number): Promise<any[]> {
         let replies: any[] = [];                                                    // To store the list of replies
         let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
         let total: number = 0;                                                      // To store the total number of replies fetched
