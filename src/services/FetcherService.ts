@@ -1,5 +1,5 @@
 // PACKAGES
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import { curly, CurlyResult } from 'node-libcurl';
 
 // SERVICES
 import { AuthService } from './AuthService';
@@ -30,9 +30,9 @@ export class FetcherService {
     * @summary Throws the appropriate http error after evaluation of the status code of reponse
     * @param res The response object received from http communication
     */
-    private handleHTTPError(res: AxiosResponse): AxiosResponse {
-        if (res.status != 200 && res.status in HttpStatus) {
-            throw new Error(HttpStatus[res.status])
+    private handleHTTPError(res: CurlyResult): CurlyResult {
+        if (res.statusCode != 200 && res.statusCode in HttpStatus) {
+            throw new Error(HttpStatus[res.statusCode])
         }
 
         return res;
@@ -46,15 +46,12 @@ export class FetcherService {
      * @param auth Whether to use authenticated requests or not
      * @param guestCreds Guest credentials to use rather than auto-generated one
      */
-    async request<DataType>(url: string): Promise<AxiosResponse<DataType>> {
-        // Preparing the request config
-        let config: AxiosRequestConfig<DataType> = {
-            headers: await Headers.authorizedHeader(await this.auth.getAuthCredentials()),
-            method: HttpMethods.GET
-        };
-    
+    async request<DataType>(url: string): Promise<CurlyResult<DataType>> {
         // Fetching the data
-        let res = await axios(url, config).then(res => this.handleHTTPError(res));
+        let res = await curly.get(url, {
+            httpHeader: Headers.authorizedHeader(await this.auth.getAuthCredentials()),
+            sslVerifyPeer: false
+        }).then(res => this.handleHTTPError(res));
 
         return res;
     }
