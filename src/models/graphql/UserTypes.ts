@@ -114,7 +114,7 @@ export const User = new GraphQLObjectType({
                     defaultValue: ''
                 }
             },
-            resolve: (parent, args, context) => new TweetResolver(context).resolveTweets({ fromUsers: [parent.userName], count: args.count } as TweetFilter, args.cursor)
+            resolve: (parent, args, context) => new TweetResolver(context).resolveTweets({ fromUsers: [parent.userName] } as TweetFilter, args.count, args.cursor)
         }
     })
 });

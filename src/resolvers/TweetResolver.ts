@@ -29,9 +29,10 @@ export default class TweetResolver extends ResolverBase {
     /**
      * @returns The list of tweets matching the given filter
      * @param filter The filter to be used for fetching matching tweets
+     * @param count The number of tweets to fetch
      * @param cursor The cursor to the batch of tweets to fetch
      */
-    async resolveTweets(filter: TweetFilter, cursor: string): Promise<any[]> {
+    async resolveTweets(filter: TweetFilter, count: number, cursor: string): Promise<any[]> {
         let tweets: any[] = [];                                                     // To store the list of tweets
         let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
         let total: number = 0;                                                      // To store the total number of tweets fetched
@@ -43,15 +44,15 @@ export default class TweetResolver extends ResolverBase {
         }
 
         // If required count less than batch size, setting batch size to required count
-        batchSize = (filter.count < batchSize) ? filter.count : batchSize;
+        batchSize = (count < batchSize) ? count : batchSize;
 
         // Repeatedly fetching data as long as total data fetched is less than requried
-        while (total < filter.count) {
+        while (total < count) {
             // If this is the last batch, change batch size to number of remaining tweets
-            batchSize = ((filter.count - total) < batchSize) ? (filter.count - total) : batchSize;
+            batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
 
             // Getting the data
-            const res = await this.context.tweets.getTweets(filter, next.value);
+            const res = await this.context.tweets.getTweets(filter, count, next.value);
 
             // If data is available
             if (res.list.length) {
@@ -105,12 +106,11 @@ export default class TweetResolver extends ResolverBase {
             mentions: [],
             startDate: '',
             endDate: '',
-            quoted: id,
-            count: count
+            quoted: id
         };
 
         // Fetching the quotes using resolveTweets method
-        quotes = await this.resolveTweets(filter, cursor);
+        quotes = await this.resolveTweets(filter, count, cursor);
 
         return quotes;
     }
