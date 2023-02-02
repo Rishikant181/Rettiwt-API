@@ -189,7 +189,7 @@ export interface Legacy2 {
     extended_entities: ExtendedEntities
     favorite_count: number
     favorited: boolean
-    full_text: string
+    text: string
     in_reply_to_status_id_str: string
     is_quote_status: boolean
     lang: string

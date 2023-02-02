@@ -32,11 +32,7 @@ export const rootQuery = new GraphQLObjectType({
                 id: { type: GraphQLString }
             },
             resolve: (parent, args, context) => new TweetResolver(context).resolveTweet(args.id)
-        }
-        /**
-         * Disabled because twitter advanced search reverse engineering is broken right now.
-         * Use user tweets instead
-         * 
+        },
         Tweets: {
             type: TweetList,
             description: "Returns the list of tweets matching the given criteria",
@@ -54,6 +50,5 @@ export const rootQuery = new GraphQLObjectType({
             },
             resolve: (parent, args, context) => new TweetResolver(context).resolveTweets(args)
         }
-        */
     }
 })
