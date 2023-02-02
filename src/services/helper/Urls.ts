@@ -67,8 +67,8 @@ export function tweetsUrl(filter: TweetFilter, cursor: string): string {
     let query = [
         filter.words ? filter.words.join(' ') : '',
         filter.hashtags ? `(${filter.hashtags.map(hashtag => '%23' + hashtag).join(' OR ')})` : '',
-        filter.fromUsers ? `(${filter.fromUsers.map(user => `from:${user}`).join(' OR ')})` : '',
-        filter.toUsers ? `(${filter.toUsers.map(user => `to:${user}`).join(' OR ')})` : '',
+        filter.fromUsers ? `(${filter.fromUsers.map(user => `from%3A${user}`).join(' OR ')})` : '',
+        filter.toUsers ? `(${filter.toUsers.map(user => `to%3A${user}`).join(' OR ')})` : '',
         filter.mentions ? `(${filter.mentions.map(mention => '%40' + mention).join(' OR ')})` : '',
         filter.startDate ? `since:${filter.startDate}` : '',
         filter.endDate ? `until:${filter.endDate}` : '',
@@ -79,7 +79,7 @@ export function tweetsUrl(filter: TweetFilter, cursor: string): string {
 
     let url = '';
 
-    return url = `https://api.twitter.com/2/search/adaptive.json?q=${query}&query_source=typed_query&count=${filter.count}`;
+    return url = `https://api.twitter.com/2/search/adaptive.json?include_want_retweets=1&include_quote_count=true&include_reply_count=1&include_entities=true&include_user_entities=true&simple_quoted_tweet=true&q=${query}&tweet_search_mode=live&count=${filter.count}&query_source=typed_query&cursor=${cursor}`;
 }
 
 /**
