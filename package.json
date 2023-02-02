@@ -1,7 +1,9 @@
 {
-	"name": "twitter-api",
-	"version": "0.1.0",
-	"description": "An API to fetch data from Twitter APIs and serve it to other frontend services",
+	"name": "rettiwt-api",
+	"version": "1.0.0",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"description": "An API to fetch data from Twitter APIs",
 	"scripts": {
 		"build": "tsc",
 		"start": "node ./dist/server.js",
@@ -11,7 +13,10 @@
 		"type": "git",
 		"url": "git+https://github.com/Rishikant181/twitter-api.git"
 	},
-	"author": "",
+	"author": {
+		"email": "rishikantsahu181@gmail.com",
+		"name": "Rishikant Sahu"
+	},
 	"license": "ISC",
 	"bugs": {
 		"url": "https://github.com/Rishikant181/twitter-api/issues"
