@@ -67,8 +67,8 @@ export function tweetsUrl(filter: TweetFilter, cursor: string): string {
     let query = [
         filter.words ? filter.words.join(' ') : '',
         filter.hashtags ? `(${filter.hashtags.map(hashtag => '%23' + hashtag).join(' OR ')})` : '',
-        filter.fromUsers ? `(${filter.fromUsers.map(user => `from%3A${user}`).join(' OR ')})` : '',
-        filter.toUsers ? `(${filter.toUsers.map(user => `to%3A${user}`).join(' OR ')})` : '',
+        filter.fromUsers ? `(${filter.fromUsers.map(user => `from:${user}`).join(' OR ')})` : '',
+        filter.toUsers ? `(${filter.toUsers.map(user => `to:${user}`).join(' OR ')})` : '',
         filter.mentions ? `(${filter.mentions.map(mention => '%40' + mention).join(' OR ')})` : '',
         filter.startDate ? `since:${filter.startDate}` : '',
         filter.endDate ? `until:${filter.endDate}` : '',
