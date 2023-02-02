@@ -7,7 +7,7 @@ import { TweetService } from "./services/data/TweetService";
  * @param cookie The cookies string to use to fetch data
  * @returns The API for fetching user and tweet data
  */
-const Rettiwt = (cookie: string) => {
+export const Rettiwt = (cookie: string) => {
     // Creating new auth service instance using the given cookie string
     const auth: AuthService = new AuthService(cookie);
 
@@ -17,5 +17,3 @@ const Rettiwt = (cookie: string) => {
         tweets: new TweetService(auth)
     };
 }
-
-export default Rettiwt;
