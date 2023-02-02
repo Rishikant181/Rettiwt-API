@@ -7,6 +7,7 @@ import { User } from '../../types/UserAccount';
 import { Tweet } from '../../types/Tweet';
 import { CursoredData } from '../../types/Service';
 import RawUser from '../../types/raw/user/User';
+import RawUsers from '../../types/raw/user/Users';
 import RawUserTweets from '../../types/raw/user/Tweets';
 import RawUserFollowers from '../../types/raw/user/Followers';
 import RawUserFollowing from '../../types/raw/user/Following';
@@ -65,10 +66,13 @@ export class UserAccountService extends FetcherService {
         // If data does not exist in cache
         else {
             // Fetchin the raw data
-            let res = await this.request<RawUser>(Urls.userAccountByIdUrl(restId)).then(res => res.data);
+            let res = await this.request<RawUsers>(Urls.userAccountByIdUrl(restId)).then(res => res.data);
+
+            // Reshaping raw data to that of a single user
+            let reshapedRes: RawUser = { data: { user: res.data.users[0] } };
 
             // Extracting data
-            let data = Extractors.extractUserAccountDetails(res);
+            let data = Extractors.extractUserAccountDetails(reshapedRes);
 
             // Caching data
             this.cacheData(data);
