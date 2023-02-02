@@ -20,6 +20,9 @@ import * as Extractors from "../helper/Extractors";
 // DESERIALIZERS
 import * as Deserializers from '../helper/Deserializers';
 
+// PARSERS
+import { toQueryString } from '../helper/Parser';
+
 /**
  * A service that deals with fetching of data related to tweets
  */
@@ -32,11 +35,12 @@ export class TweetService extends FetcherService {
     /**
      * @returns The list of tweets that match the given filter
      * @param filter The filter be used for searching the tweets
+     * @param count The number of tweets to fetch
      * @param cursor The cursor to the next batch of tweets. If blank, first batch is fetched
      */
-    async getTweets(filter: TweetFilter, cursor: string): Promise<CursoredData<Tweet>> {
+    async getTweets(filter: TweetFilter, count: number, cursor: string): Promise<CursoredData<Tweet>> {
         // Getting the raw data
-        let res = await this.request<RawTweets>(Urls.tweetsUrl(filter, cursor)).then(res => res.data);
+        let res = await this.request<RawTweets>(Urls.tweetsUrl(toQueryString(filter), count, cursor)).then(res => res.data);
 
         // Extracting data
         let data = Extractors.extractTweets(res);
@@ -62,7 +66,7 @@ export class TweetService extends FetcherService {
         let cachedData = await this.readData(tweetId);
 
         // If data exists in cache
-        if(cachedData) {
+        if (cachedData) {
             return cachedData;
         }
         // If data does not exist in cache
@@ -141,7 +145,7 @@ export class TweetService extends FetcherService {
     async getTweetReplies(tweetId: string, cursor: string): Promise<CursoredData<Tweet>> {
         // Fetching the raw data
         let res = await this.request<RawTweet>(Urls.tweetRepliesUrl(tweetId, cursor)).then(res => res.data);
-        
+
         // Extracting data
         let data = Extractors.extractTweetReplies(res, tweetId);
 

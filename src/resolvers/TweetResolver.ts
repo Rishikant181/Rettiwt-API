@@ -29,15 +29,14 @@ export default class TweetResolver extends ResolverBase {
     /**
      * @returns The list of tweets matching the given filter
      * @param filter The filter to be used for fetching matching tweets
+     * @param count The number of tweets to fetch
+     * @param cursor The cursor to the batch of tweets to fetch
      */
-    async resolveTweets(filter: any): Promise<any[]> {
+    async resolveTweets(filter: TweetFilter, count: number, cursor: string): Promise<any[]> {
         let tweets: any[] = [];                                                     // To store the list of tweets
-        let next: Cursor = new Cursor(filter.cursor);                               // To store cursor to next batch
+        let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
         let total: number = 0;                                                      // To store the total number of tweets fetched
         let batchSize: number = 20;                                                 // To store the batchsize to use
-
-        // Preparing the filter to use
-        const tweetFilter: TweetFilter = filter;
 
         // Checking if the given tweet filter is valid or not
         if (!(filter.fromUsers || filter.toUsers || filter.words || filter.hashtags || filter.mentions || filter.quoted)) {
@@ -45,15 +44,15 @@ export default class TweetResolver extends ResolverBase {
         }
 
         // If required count less than batch size, setting batch size to required count
-        batchSize = (tweetFilter.count < batchSize) ? tweetFilter.count : batchSize;
+        batchSize = (count < batchSize) ? count : batchSize;
 
         // Repeatedly fetching data as long as total data fetched is less than requried
-        while (total < tweetFilter.count) {
+        while (total < count) {
             // If this is the last batch, change batch size to number of remaining tweets
-            batchSize = ((tweetFilter.count - total) < batchSize) ? (tweetFilter.count - total) : batchSize;
+            batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
 
             // Getting the data
-            const res = await this.context.tweets.getTweets(tweetFilter, next.value);
+            const res = await this.context.tweets.getTweets(filter, count, next.value);
 
             // If data is available
             if (res.list.length) {
@@ -86,13 +85,7 @@ export default class TweetResolver extends ResolverBase {
      * @param cursor The cursor to the batch of tweet quotes to fetch
      * @param quoteCount The total number of quotes of the given tweet
      */
-    async resolveTweetQuotes(
-        id: string,
-        count: number,
-        all: boolean,
-        cursor: string,
-        quoteCount: number
-    ): Promise<any[]> {
+    async resolveTweetQuotes(id: string, count: number, all: boolean, cursor: string, quoteCount: number): Promise<any[]> {
         let quotes: any[] = [];                                                     // To store the list of quotes
 
         // If all tweets are to be fetched
@@ -107,13 +100,11 @@ export default class TweetResolver extends ResolverBase {
             mentions: [],
             startDate: '',
             endDate: '',
-            quoted: id,
-            count: count,
-            cursor: cursor
+            quoted: id
         };
 
         // Fetching the quotes using resolveTweets method
-        quotes = await this.resolveTweets(filter);
+        quotes = await this.resolveTweets(filter, count, cursor);
 
         return quotes;
     }
@@ -126,13 +117,7 @@ export default class TweetResolver extends ResolverBase {
      * @param cursor The cursor to the batch of likers to fetch
      * @param likesCount The total number of like of the tweet
      */
-    async resolveTweetLikers(
-        id: string,
-        count: number,
-        all: boolean,
-        cursor: string,
-        likesCount: number
-    ): Promise<any[]> {
+    async resolveTweetLikers(id: string, count: number, all: boolean, cursor: string, likesCount: number): Promise<any[]> {
         let likers: any[] = [];                                                     // To store the list of likers
         let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
         let total: number = 0;                                                      // To store the total number of likers fetched
@@ -183,13 +168,7 @@ export default class TweetResolver extends ResolverBase {
      * @param cursor The cursor to the batch of retweeters to fetch
      * @param retweetsCount The total number of retweets of the 
      */
-    async resolveTweetRetweeters(
-        id: string,
-        count: number,
-        all: boolean,
-        cursor: string,
-        retweetsCount: number
-    ): Promise<any[]> {
+    async resolveTweetRetweeters(id: string, count: number, all: boolean, cursor: string, retweetsCount: number): Promise<any[]> {
         let retweeters: any[] = [];                                                 // To store the list of retweeters
         let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
         let total: number = 0;                                                      // To store the total number of retweeters fetched
@@ -240,13 +219,7 @@ export default class TweetResolver extends ResolverBase {
      * @param cursor The cursor to the batch of replies to fetch
      * @param repliesCount The total number of replies to the target tweet
      */
-    async resolveTweetReplies(
-        id: string,
-        count: number,
-        all: boolean,
-        cursor: string,
-        repliesCount: number
-    ): Promise<any[]> {
+    async resolveTweetReplies(id: string, count: number, all: boolean, cursor: string, repliesCount: number): Promise<any[]> {
         let replies: any[] = [];                                                    // To store the list of replies
         let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
         let total: number = 0;                                                      // To store the total number of replies fetched

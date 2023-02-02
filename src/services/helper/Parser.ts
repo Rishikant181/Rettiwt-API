@@ -1,3 +1,5 @@
+import { TweetFilter } from '../../types/Tweet';
+
 /**
  * @returns Whether the given json object is empty or not
  * @param data The input JSON object which needs to be checked
@@ -83,4 +85,24 @@ export function normalizeText(text: string): string {
     normalizedText = normalizedText.endsWith('.') ? normalizedText : (normalizedText + '.');
 
     return normalizedText;
+}
+
+/**
+ * @param filter The tweet filter to use for getting filtered tweets
+ * @returns The same tweet filter, in a URL query format string
+ */
+export function toQueryString(filter: TweetFilter): string {
+    // Concatenating the input filter arguments to a URL query formatted string
+    return [
+        filter.words ? filter.words.join(' ') : '',
+        filter.hashtags ? `(${filter.hashtags.map(hashtag => '%23' + hashtag).join(' OR ')})` : '',
+        filter.fromUsers ? `(${filter.fromUsers.map(user => `from:${user}`).join(' OR ')})` : '',
+        filter.toUsers ? `(${filter.toUsers.map(user => `to:${user}`).join(' OR ')})` : '',
+        filter.mentions ? `(${filter.mentions.map(mention => '%40' + mention).join(' OR ')})` : '',
+        filter.startDate ? `since:${filter.startDate}` : '',
+        filter.endDate ? `until:${filter.endDate}` : '',
+        filter.quoted ? `quoted_tweet_id:${filter.quoted}` : ''
+    ]
+    .filter(item => item !== '()' && item !== '')
+    .join(' ');
 }

@@ -6,7 +6,7 @@ import { AuthService } from './AuthService';
 import { CacheService } from './CacheService';
 
 // TYPES
-import { HttpMethods, HttpStatus } from "../types/HTTP";
+import { HttpStatus } from "../types/HTTP";
 import { Result as RawUser } from '../types/raw/user/User';
 import { Result as RawTweet } from '../types/raw/tweet/Tweet';
 

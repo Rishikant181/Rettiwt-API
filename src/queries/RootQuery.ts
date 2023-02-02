@@ -4,6 +4,7 @@ import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graph
 // TYPES
 import { User } from '../models/graphql/UserTypes';
 import { Tweet, TweetList } from '../models/graphql/TweetTypes';
+import { TweetFilter } from '../types/Tweet';
 
 // RESOLVERS
 import UserResolver from '../resolvers/UserResolver';
@@ -32,11 +33,7 @@ export const rootQuery = new GraphQLObjectType({
                 id: { type: GraphQLString }
             },
             resolve: (parent, args, context) => new TweetResolver(context).resolveTweet(args.id)
-        }
-        /**
-         * Disabled because twitter advanced search reverse engineering is broken right now.
-         * Use user tweets instead
-         * 
+        },
         Tweets: {
             type: TweetList,
             description: "Returns the list of tweets matching the given criteria",
@@ -52,8 +49,7 @@ export const rootQuery = new GraphQLObjectType({
                 count: { type: GraphQLInt, defaultValue: 20 },
                 cursor: { type: GraphQLString, defaultValue: '' }
             },
-            resolve: (parent, args, context) => new TweetResolver(context).resolveTweets(args)
+            resolve: (parent, args, context) => new TweetResolver(context).resolveTweets(args as TweetFilter, args.count, args.cursor)
         }
-        */
     }
 })
