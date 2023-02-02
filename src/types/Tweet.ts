@@ -4,14 +4,14 @@
  * @summary Stores the filter to be used for fetching tweets from TwitterAPI
  */
 export interface TweetFilter {
-    words: string[];                                                    // To store the list of words to search
-    hashtags: string[];                                                 // To store the list of hashtags to seach
-    fromUsers: string[];                                                // To store the list of users who made the tweet
-    toUsers: string[];                                                  // To store the list of users to whom the tweet was meant for
-    mentions: string[];                                                 // To store the list of mentioned users
-    startDate: string;                                                  // To store the beginning date to search tweets
-    endDate: string;                                                    // To store the ending date to search tweets
-    quoted: string;                                                     // To store the id of the tweet which is quoted
+    words?: string[];                                                   // To store the list of words to search
+    hashtags?: string[];                                                // To store the list of hashtags to seach
+    fromUsers?: string[];                                               // To store the list of users who made the tweet
+    toUsers?: string[];                                                 // To store the list of users to whom the tweet was meant for
+    mentions?: string[];                                                // To store the list of mentioned users
+    startDate?: string;                                                 // To store the beginning date to search tweets
+    endDate?: string;                                                   // To store the ending date to search tweets
+    quoted?: string;                                                    // To store the id of the tweet which is quoted
 };
 
 /**
