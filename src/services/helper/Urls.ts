@@ -11,7 +11,7 @@ export function userAccountUrl(screenName: string): string {
  * @param restid The restId of the target user
  */
 export function userAccountByIdUrl(restId: string): string {
-    return `https://twitter.com/i/api/graphql/I5nvpI91ljifos1Y3Lltyg/UserByRestId?variables=%7B%22userId%22%3A%22${restId}%22%2C%22withSafetyModeUserFields%22%3Atrue%2C%22withSuperFollowsUserFields%22%3Atrue%7D`
+    return `https://api.twitter.com/graphql/vcl5Tp6rs_SV-to6g4_IAQ/UsersByRestIds?variables=%7B%22userIds%22%3A%5B%22${restId}%22%5D%2C%22withSuperFollowsUserFields%22%3Atrue%7D&features=%7B%22responsive_web_twitter_blue_verified_badge_is_enabled%22%3Atrue%2C%22verified_phone_label_enabled%22%3Atrue%2C%22responsive_web_graphql_timeline_navigation_enabled%22%3Atrue%7D`;
 }
 
 /**
