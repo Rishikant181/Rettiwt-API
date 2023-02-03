@@ -12,6 +12,7 @@ export interface TweetFilter {
     startDate?: string;                                                 // To store the beginning date to search tweets
     endDate?: string;                                                   // To store the ending date to search tweets
     quoted?: string;                                                    // To store the id of the tweet which is quoted
+    links?: boolean;                                                    // To store whether to fetch link tweets or not
 };
 
 /**
