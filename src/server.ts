@@ -13,7 +13,6 @@ import { rootQuery } from './queries/RootQuery';
 
 // CONFIGS
 import { config } from './config/env';
-import { Rettiwt } from '.';
 
 // Initialising express instance
 const app = express();
