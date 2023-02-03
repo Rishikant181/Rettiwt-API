@@ -19,9 +19,9 @@
 	},
 	"license": "ISC",
 	"bugs": {
-		"url": "https://github.com/Rishikant181/twitter-api/issues"
+		"url": "https://github.com/Rishikant181/Rettiwt-API/issues"
 	},
-	"homepage": "https://github.com/Rishikant181/twitter-api#readme",
+	"homepage": "https://github.com/Rishikant181/Rettiwt-API#readme",
 	"dependencies": {
 		"express": "^4.18.2",
 		"express-graphql": "0.12.0",
