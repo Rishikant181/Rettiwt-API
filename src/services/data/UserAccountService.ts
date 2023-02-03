@@ -36,7 +36,7 @@ export class UserAccountService extends FetcherService {
      */
     async getUserAccountDetails(screenName: string): Promise<User> {
         // Fetching the raw data
-        let res: RawUser = await this.request<RawUser>(Urls.userAccountUrl(screenName)).then(res => res.data);
+        let res: RawUser = await this.request<RawUser>(Urls.userAccountUrl(screenName), false).then(res => res.data);
         
         // Extracting data
         let data = Extractors.extractUserAccountDetails(res);
@@ -65,7 +65,7 @@ export class UserAccountService extends FetcherService {
         // If data does not exist in cache
         else {
             // Fetchin the raw data
-            let res = await this.request<RawUser>(Urls.userAccountByIdUrl(restId)).then(res => res.data);
+            let res = await this.request<RawUser>(Urls.userAccountByIdUrl(restId), false).then(res => res.data);
 
             // Extracting data
             let data = Extractors.extractUserAccountDetails(res);

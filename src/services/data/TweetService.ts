@@ -40,7 +40,7 @@ export class TweetService extends FetcherService {
      */
     async getTweets(filter: TweetFilter, count: number, cursor: string): Promise<CursoredData<Tweet>> {
         // Getting the raw data
-        let res = await this.request<RawTweets>(Urls.tweetsUrl(toQueryString(filter), count, cursor)).then(res => res.data);
+        let res = await this.request<RawTweets>(Urls.tweetsUrl(toQueryString(filter), count, cursor), false).then(res => res.data);
 
         // Extracting data
         let data = Extractors.extractTweets(res);

@@ -1,5 +1,11 @@
+// PACKAGE
+import axios from 'axios';
+
+// URLS
+import { guestTokenUrl } from './helper/Urls';
+
 // TYPES
-import { AuthCredentials } from '../types/Authentication';
+import { GuestCredentials, AuthCredentials } from '../types/Authentication';
 
 // CONFIGS
 import { config } from '../config/env';
@@ -13,7 +19,7 @@ export class AuthService {
     private credentials: AuthCredentials;                                    // To store the current authentication credentials
 
     // MEMBER METHODS
-    constructor(cookie: string) {
+    constructor(cookie: string = '') {
         // Reading the auth token from the config, since it's always the same
         this.authToken = config.twitter_auth_token;
 
@@ -33,5 +39,20 @@ export class AuthService {
      */
     async getAuthCredentials(): Promise<AuthCredentials> {
         return this.credentials;
+    }
+
+    /**
+     * @returns The guest credentials fetched from twitter
+     */
+    async getGuestCredentials(): Promise<GuestCredentials> {
+        // Getting the guest credentials from twitter
+        return await axios.post<{ guest_token: string }>(guestTokenUrl(), null, {
+            headers: {
+                'Authorization': this.authToken
+            }
+        }).then(res => ({
+            authToken: this.authToken,
+            guestToken: res.data.guest_token
+        }));
     }
 }

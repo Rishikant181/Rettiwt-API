@@ -1,14 +1,13 @@
+// TYPES
+import { GuestCredentials, AuthCredentials } from '../../types/Authentication';
+
 /**
  * @returns The header required for making authorized HTTP requests
  * @param authToken The authentication token received from Twitter
  * @param csrfToken The csrf token received from Twitter
  * @param cookie The cookie associated with the logged in account
  */
-export function authorizedHeader(authCred: {
-    authToken: string,
-    csrfToken: string,
-    cookie: string
-}): any {
+export function authorizedHeader(authCred: AuthCredentials): any {
     return [
         `sec-ch-ua: "Not_A Brand";v="99", "Microsoft Edge";v="109", "Chromium";v="109"`,
         `x-twitter-client-language: en`,
@@ -22,5 +21,25 @@ export function authorizedHeader(authCred: {
         `Accept: */*`,
         `host: api.twitter.com`,
         `Cookie: ${authCred.cookie}`
+    ];
+}
+
+export function guestHeader(guestCred: GuestCredentials): any {
+    return [
+        'authority: api.twitter.com',
+        'accept: */*',
+        'accept-language: en-US,en;q=0.9',
+        `authorization: ${guestCred.authToken}`,
+        'content-type: application/json',
+        'origin: https://twitter.com',
+        'referer: https://twitter.com/',
+        'sec-ch-ua: ^\^"Not_A Brand^\^";v=^\^"99^\^", ^\^"Microsoft Edge^\^";v=^\^"109^\^", ^\^"Chromium^\^";v=^\^"109^\^"',
+        'sec-ch-ua-mobile: ?0',
+        'sec-ch-ua-platform: ^\^"Windows^\^"',
+        'sec-fetch-dest: empty',
+        'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 Edg/109.0.1518.70',
+        `x-guest-token: ${guestCred.guestToken}`,
+        'x-twitter-active-user: yes',
+        'x-twitter-client-language: en'
     ];
 }
