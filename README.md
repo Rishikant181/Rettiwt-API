@@ -28,8 +28,11 @@ To use the API as an npm package,
 3.  const rettiwt = Rettiwt('[cookies_string_scraped_from_browser_with_twitter_logged_in]').  
 4.  Use the created Rettiwt instance to fetch data from Twitter.  
 
-### **The API uses the cookie of a working Twitter account to authenticate agains the Twitter APIs**
+### **The API uses the cookie of a working Twitter account to authenticate against the Twitter APIs**
 ### **So you first need to scrape the cookie of your own logged in Twitter account using your browser and retrieving the cookie from the headers of outgoing request, and pass it to Rettiwt-API**
 
 -   For GraphQL Server mode, pass the cookie in the header while making a request to the graphql server
 -   For npm library mode, pass the cookie to the constructor while creating instance of Rettiwt
+
+If you dont want to use you account's cookie, you can also not supply the cookie at all. However, the functionality of the API is limited to just fetching Tweets and User details.  
+**No likes, followers, followings, retweets, replies, tweet likes, quotes can be fetched without using cookie!**
