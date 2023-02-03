@@ -1,5 +1,5 @@
 // PACKAGE
-import { GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql'
+import { GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql'
 
 // TYPES
 import { User } from '../models/graphql/UserTypes';
@@ -46,6 +46,7 @@ export const rootQuery = new GraphQLObjectType({
                 startDate: { type: GraphQLString },
                 endDate: { type: GraphQLString },
                 quoted: { type: GraphQLString },
+                links: { type: GraphQLBoolean, defaultValue: false },
                 count: { type: GraphQLInt, defaultValue: 20 },
                 cursor: { type: GraphQLString, defaultValue: '' }
             },
