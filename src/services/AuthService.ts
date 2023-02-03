@@ -47,7 +47,9 @@ export class AuthService {
     async getGuestCredentials(): Promise<GuestCredentials> {
         // Getting the guest credentials from twitter
         return await axios.post<{ guest_token: string }>(guestTokenUrl(), null, {
-            headers: { 'Authorization': this.authToken }
+            headers: {
+                'Authorization': this.authToken
+            }
         }).then(res => ({
             authToken: this.authToken,
             guestToken: res.data.guest_token
