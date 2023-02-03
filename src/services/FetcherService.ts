@@ -41,15 +41,12 @@ export class FetcherService {
     /**
      * @returns The absolute raw json data from give url
      * @param url The url to fetch data from
-     * @param method The type of HTTP request being made. Default is GET
-     * @param body The content to be sent in the body of the response
-     * @param auth Whether to use authenticated requests or not
-     * @param guestCreds Guest credentials to use rather than auto-generated one
+     * @param authenticated Whether to authenticate requests or not
      */
-    protected async request<DataType>(url: string): Promise<CurlyResult<DataType>> {
+    protected async request<DataType>(url: string, authenticated: boolean = false): Promise<CurlyResult<DataType>> {
         // Fetching the data
         let res = await curly.get(url, {
-            httpHeader: Headers.authorizedHeader(await this.auth.getAuthCredentials()),
+            httpHeader: authenticated ? Headers.authorizedHeader(await this.auth.getAuthCredentials()) : Headers.guestHeader(await this.auth.getGuestCredentials()),
             sslVerifyPeer: false
         }).then(res => this.handleHTTPError(res));
 

@@ -19,7 +19,7 @@ export class AuthService {
     private credentials: AuthCredentials;                                    // To store the current authentication credentials
 
     // MEMBER METHODS
-    constructor(cookie: string) {
+    constructor(cookie: string = '') {
         // Reading the auth token from the config, since it's always the same
         this.authToken = config.twitter_auth_token;
 
