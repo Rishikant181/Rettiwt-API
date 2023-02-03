@@ -61,7 +61,7 @@ export function userTweetsUrl(userId: string, count: number, cursor: string): st
  * @param cursor The cusor to next batch * 
  */
 export function tweetsUrl(query: string, count: number, cursor: string): string {
-    return `https://api.twitter.com/2/search/adaptive.json?include_want_retweets=1&include_quote_count=true&include_reply_count=1&include_entities=true&include_user_entities=true&simple_quoted_tweet=true&q=${query}&tweet_search_mode=live&count=${count}&query_source=typed_query&cursor=${cursor}`;
+    return `https://api.twitter.com/2/search/adaptive.json?include_want_retweets=1&include_quote_count=true&include_reply_count=1&tweet_mode=extended&include_entities=true&include_user_entities=true&simple_quoted_tweet=true&q=${query}&tweet_search_mode=live&count=${count}&query_source=typed_query&cursor=${cursor}`;
 }
 
 /**
