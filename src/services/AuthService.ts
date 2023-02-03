@@ -1,5 +1,11 @@
+// PACKAGE
+import { curly } from 'node-libcurl';
+
+// URLS
+import { guestTokenUrl } from './helper/Urls';
+
 // TYPES
-import { AuthCredentials } from '../types/Authentication';
+import { GuestCredentials, AuthCredentials } from '../types/Authentication';
 
 // CONFIGS
 import { config } from '../config/env';
@@ -33,5 +39,20 @@ export class AuthService {
      */
     async getAuthCredentials(): Promise<AuthCredentials> {
         return this.credentials;
+    }
+
+    /**
+     * @returns The guest credentials fetched from twitter
+     */
+    async getGuestCredentials(): Promise<GuestCredentials> {
+        return await curly.post<{ guest_token: string }>(guestTokenUrl(), {
+            httpHeader: [
+                `authorization: ${this.authToken}`,
+            ],
+            sslVerifyPeer: false
+        }).then(res => ({
+            authToken: this.authToken,
+            guestToken: res.data.guest_token
+        }));
     }
 }
