@@ -1,5 +1,5 @@
 // PACKAGE
-import { curly } from 'node-libcurl';
+import axios from 'axios';
 
 // URLS
 import { guestTokenUrl } from './helper/Urls';
@@ -45,11 +45,9 @@ export class AuthService {
      * @returns The guest credentials fetched from twitter
      */
     async getGuestCredentials(): Promise<GuestCredentials> {
-        return await curly.post<{ guest_token: string }>(guestTokenUrl(), {
-            httpHeader: [
-                `authorization: ${this.authToken}`,
-            ],
-            sslVerifyPeer: false
+        // Getting the guest credentials from twitter
+        return await axios.post<{ guest_token: string }>(guestTokenUrl(), null, {
+            headers: { 'Authorization': this.authToken }
         }).then(res => ({
             authToken: this.authToken,
             guestToken: res.data.guest_token
