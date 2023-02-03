@@ -15,6 +15,8 @@ To use the API as a server,
 4.  Start the server using 'npm run start'  
 5.  Make graphql requests to server listening on localhost:port/graphql
 
+**You can go to localhost:port/graphql to see the graphql schema**
+
 ## 2. NPM Package
 The API can also be used as a standalone npm package.  
 The limitation is that, large number of data cannot be fetched automatically, and the data needs to fetched in batches, by using cursors.
