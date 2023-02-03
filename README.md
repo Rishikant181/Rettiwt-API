@@ -1,5 +1,5 @@
 # Rettiwt-API
-An API for fetching data from TwitterAPI, by reverse-engineering the API used by Twitter client-apps
+An API for fetching data from TwitterAPI, without any rate limits!
 
 **The API can either be used as a GraphQL Server or as a standalone npm library**
 
