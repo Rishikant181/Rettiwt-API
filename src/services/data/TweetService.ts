@@ -72,7 +72,7 @@ export class TweetService extends FetcherService {
         // If data does not exist in cache
         else {
             // Fetching the raw data
-            let res = await this.request<RawTweet>(Urls.tweetDetailsUrl(tweetId)).then(res => res.data);
+            let res = await this.request<RawTweet>(Urls.tweetDetailsUrl(tweetId), false).then(res => res.data);
 
             // Extracting data
             let data = Extractors.extractTweet(res, tweetId);
