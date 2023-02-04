@@ -34,5 +34,7 @@ To use the API as an npm package,
 -   For GraphQL Server mode, pass the cookie in the header while making a request to the graphql server
 -   For npm library mode, pass the cookie to the constructor while creating instance of Rettiwt
 
-## **If you don't want to risk you twitter account getting banned, using cookies is completely optional and you can omit passing cookie and use the API as guest**  
-## **No likes, followers, followings, retweets, replies, tweet likes, quotes can be fetched without using cookie!**
+### **If you don't want to risk you twitter account getting banned, using cookies is completely optional and you can omit passing cookie and use the API as guest**  
+### **No likes, followers, followings, retweets, replies, tweet likes, quotes can be fetched without using cookie!**
+
+### **I'm not responsible if you get you twitter account banned using this. Use cookies at your own risk!**
