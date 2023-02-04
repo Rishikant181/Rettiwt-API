@@ -1,6 +1,10 @@
 # Rettiwt-API
 An API for fetching data from TwitterAPI, without any rate limits!
 
+### **This API is not a replacement of official Twitter API, since it does not scale**  
+### **It works well for small applications like the one side project you started and are never gonna finish**  
+### **If you want something that will scale as you application grows, Twitter API is the way to go**  
+
 **The API can either be used as a GraphQL Server or as a standalone npm library**
 
 ## 1. GraphQL Server
