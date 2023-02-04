@@ -26,20 +26,9 @@ export function authorizedHeader(authCred: AuthCredentials): any {
 
 export function guestHeader(guestCred: GuestCredentials): any {
     return [
-        'authority: api.twitter.com',
-        'accept: */*',
-        'accept-language: en-US,en;q=0.9',
+        'Accept: */*',
         `authorization: ${guestCred.authToken}`,
-        'content-type: application/json',
-        'origin: https://twitter.com',
-        'referer: https://twitter.com/',
-        'sec-ch-ua: ^\^"Not_A Brand^\^";v=^\^"99^\^", ^\^"Microsoft Edge^\^";v=^\^"109^\^", ^\^"Chromium^\^";v=^\^"109^\^"',
-        'sec-ch-ua-mobile: ?0',
-        'sec-ch-ua-platform: ^\^"Windows^\^"',
-        'sec-fetch-dest: empty',
-        'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 Edg/109.0.1518.70',
-        `x-guest-token: ${guestCred.guestToken}`,
-        'x-twitter-active-user: yes',
-        'x-twitter-client-language: en'
+        'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 Edg/109.0.1518.70',
+        `x-guest-token: ${guestCred.guestToken}`
     ];
 }
