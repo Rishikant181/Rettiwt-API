@@ -94,6 +94,11 @@ export class TweetService extends FetcherService {
      * @param cursor The cursor to the next batch of users. If blank, first batch is fetched
      */
     async getTweetLikers(tweetId: string, count: number, cursor: string): Promise<CursoredData<User>> {
+        // If user is not authenticated, abort
+        if(!this.isAuthenticated) {
+            return { error: new Error('Cannot fetch tweet likes without authentication!') };
+        }
+        
         // Fetching the raw data
         let res = await this.request<RawLikers>(Urls.tweetLikesUrl(tweetId, count, cursor)).then(res => res.data);
 
@@ -119,6 +124,11 @@ export class TweetService extends FetcherService {
      * @param cursor The cursor to the next batch of users. If blank, first batch is fetched
      */
     async getTweetRetweeters(tweetId: string, count: number, cursor: string): Promise<CursoredData<User>> {
+        // If user is not authenticated, abort
+        if(!this.isAuthenticated) {
+            return { error: new Error('Cannot fetch tweet retweeters without authentication!') };
+        }
+
         // Fetching the raw data
         let res = await this.request<RawRetweeters>(Urls.tweetRetweetUrl(tweetId, count, cursor)).then(res => res.data);
 
@@ -143,6 +153,11 @@ export class TweetService extends FetcherService {
      * @param cursor The cursor to the next batch of replies. If blank, first batch is fetched
      */
     async getTweetReplies(tweetId: string, cursor: string): Promise<CursoredData<Tweet>> {
+        // If user is not authenticated, abort
+        if(!this.isAuthenticated) {
+            return { error: new Error('Cannot fetch tweet replies without authentication!') };
+        }
+
         // Fetching the raw data
         let res = await this.request<RawTweet>(Urls.tweetRepliesUrl(tweetId, cursor)).then(res => res.data);
 

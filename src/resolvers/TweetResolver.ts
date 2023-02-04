@@ -55,7 +55,7 @@ export default class TweetResolver extends ResolverBase {
             const res = await this.context.tweets.getTweets(filter, count, next.value);
 
             // If data is available
-            if (res.list.length) {
+            if (res.list?.length) {
                 // Adding fetched tweets to list of tweets
                 tweets = tweets.concat(res.list);
 
@@ -63,7 +63,7 @@ export default class TweetResolver extends ResolverBase {
                 total = tweets.length;
 
                 // Getting cursor to next batch
-                next = res.next;
+                next = res.next as Cursor;
             }
             // If no more data is available
             else {
@@ -138,7 +138,7 @@ export default class TweetResolver extends ResolverBase {
             const res = await this.context.tweets.getTweetLikers(id, count, next.value);
 
             // If data is available
-            if (res.list.length) {
+            if (res.list?.length) {
                 // Adding fetched likers to list of likers
                 likers = likers.concat(res.list);
 
@@ -146,7 +146,7 @@ export default class TweetResolver extends ResolverBase {
                 total = likers.length;
 
                 // Getting cursor to next batch
-                next = res.next;
+                next = res.next as Cursor;
             }
             // If no more data is available
             else {
@@ -189,7 +189,7 @@ export default class TweetResolver extends ResolverBase {
             const res = await this.context.tweets.getTweetRetweeters(id, count, next.value);
 
             // If data is available
-            if (res.list.length) {
+            if (res.list?.length) {
                 // Adding fetched retweeters to list of retweeters
                 retweeters = retweeters.concat(res.list);
 
@@ -197,7 +197,7 @@ export default class TweetResolver extends ResolverBase {
                 total = retweeters.length;
 
                 // Getting cursor to next batch
-                next = res.next;
+                next = res.next as Cursor;
             }
             // If no more data is available
             else {
@@ -233,7 +233,7 @@ export default class TweetResolver extends ResolverBase {
             const res = await this.context.tweets.getTweetReplies(id, next.value);
 
             // If data is available
-            if (res.list.length) {
+            if (res.list?.length) {
                 // Adding fetched replies to list of replies
                 replies = replies.concat(res.list);
 
@@ -241,7 +241,7 @@ export default class TweetResolver extends ResolverBase {
                 total = replies.length;
 
                 // Getting cursor to next batch
-                next = res.next;
+                next = res.next as Cursor;
             }
             // If no more data is available
             else {
