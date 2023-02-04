@@ -25,6 +25,7 @@ export class Cursor {
 export interface CursoredData<Type> {
     list: Type[];                                                       // To store the list data
     next: Cursor;                                                       // To store the information about cursor to the next batch
+    error?: Error;                                                      // To store the error message, if any
 }
 
 /**
