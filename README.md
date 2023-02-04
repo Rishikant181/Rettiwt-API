@@ -35,6 +35,6 @@ To use the API as an npm package,
 -   For npm library mode, pass the cookie to the constructor while creating instance of Rettiwt
 
 ### **If you don't want to risk you twitter account getting banned, using cookies is completely optional and you can omit passing cookie and use the API as guest**  
-### **No likes, followers, followings, retweets, replies, tweet likes, quotes can be fetched without using cookie!**
-
-### **I'm not responsible if you get you twitter account banned using this. Use cookies at your own risk!**
+### **No likes, followers, followings, retweets, replies, tweet likes, quotes can be fetched without using cookie!**  
+### **It's completely safe to use the API as a guest and not using cookies, since that way, no form of authentication is used**
+### **If you decide to use cookies for full functionality, I'M NOT RESPONSIBLE IF YOU GET YOU TWITTER ACCOUNT BANNED!**
