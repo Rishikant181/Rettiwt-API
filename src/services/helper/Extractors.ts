@@ -267,7 +267,7 @@ export function extractTweet(res: RawTweet, tweetId: string): {
     }
 
     // Destructuring the received raw data
-    res.data.threaded_conversation_with_injections.instructions.filter(item => item['type'] === 'TimelineAddEntries')[0].entries?.forEach(entry => {
+    res.data.threaded_conversation_with_injections_v2.instructions.filter(item => item['type'] === 'TimelineAddEntries')[0].entries?.forEach(entry => {
         // If entry is of type tweet and tweet exists
         if (entry.entryId.indexOf('tweet') != -1 && entry.content.itemContent?.tweet_results?.result.__typename === 'Tweet') {
             // If this is the required tweet

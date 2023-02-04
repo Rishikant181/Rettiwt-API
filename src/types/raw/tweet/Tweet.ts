@@ -3,10 +3,10 @@ export default interface Root {
 }
 
 export interface Data {
-    threaded_conversation_with_injections: ThreadedConversationWithInjections
+    threaded_conversation_with_injections_v2: ThreadedConversationWithInjections_v2
 }
 
-export interface ThreadedConversationWithInjections {
+export interface ThreadedConversationWithInjections_v2 {
     instructions: Instruction[]
     metadata: Metadata
 }
