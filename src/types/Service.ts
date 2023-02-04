@@ -23,8 +23,8 @@ export class Cursor {
  * @summary Stores cursored data that is returned by services
  */
 export interface CursoredData<Type> {
-    list: Type[];                                                       // To store the list data
-    next: Cursor;                                                       // To store the information about cursor to the next batch
+    list?: Type[];                                                      // To store the list data
+    next?: Cursor;                                                      // To store the information about cursor to the next batch
     error?: Error;                                                      // To store the error message, if any
 }
 

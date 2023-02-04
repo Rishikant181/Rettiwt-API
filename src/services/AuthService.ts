@@ -17,11 +17,15 @@ export class AuthService {
     // MEMBER DATA
     private authToken: string;                                               // To store the common auth token
     private credentials: AuthCredentials;                                    // To store the current authentication credentials
+    public isAuthenticated: boolean;                                         // To store whether authenticated or not
 
     // MEMBER METHODS
     constructor(cookie: string = '') {
         // Reading the auth token from the config, since it's always the same
         this.authToken = config.twitter_auth_token;
+
+        // Setting authentication status
+        this.isAuthenticated = cookie != '';
 
         // Setting up the authenticated credentials
         /**

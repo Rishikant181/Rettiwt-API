@@ -20,10 +20,12 @@ import * as Deserializers from './helper/Deserializers';
 export class FetcherService {
     // MEMBER DATA
     private auth: AuthService;                                              // To store the auth service instance to use for authentication
+    protected isAuthenticated: boolean;                                     // To store whether user is authenticated or not
 
     // MEMBER METHODS
     constructor(auth: AuthService) {
         this.auth = auth;
+        this.isAuthenticated = this.auth.isAuthenticated;
     }
 
     /**
