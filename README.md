@@ -5,7 +5,7 @@ An API for fetching data from TwitterAPI, without any rate limits!
 #### **It works well for small applications like the one side project you started and are never gonna finish**  
 #### **If you want something that will scale as you application grows, Twitter API is the way to go**  
 
-**The API can either be used as a GraphQL Server or as a standalone npm library**
+#### **The API can either be used as a GraphQL Server or as a standalone npm library**
 
 ## 1. GraphQL Server
 Using the API as a GraphQL enables complex nested queries to fetch data from twitter.  
