@@ -39,7 +39,7 @@ If you wan't full functionality, you need to use the cookie of a logged in Twitt
 -   For GraphQL Server mode, pass the cookie-string in the header while making a request to the graphql server
 -   For npm library mode, pass the cookie-string to the constructor while creating instance of Rettiwt
 
-### **If you don't want to risk you twitter account getting banned, using cookies is completely optional and you can omit passing cookie and use the API as guest**  
+### **If you don't want to risk your twitter account getting banned, using cookies is completely optional and you can omit passing cookie and use the API as guest**  
 ### **No likes, followers, followings, retweets, replies, tweet likes, quotes can be fetched without using cookie!**  
 ### **It's completely safe to use the API as a guest and not using cookies, since that way, no form of authentication is used**
 ### **If you decide to use cookies for full functionality, I'M NOT RESPONSIBLE IF YOU GET YOU TWITTER ACCOUNT BANNED!**
