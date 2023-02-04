@@ -45,7 +45,7 @@ export class FetcherService {
      * @param url The url to fetch data from
      * @param authenticated Whether to authenticate requests or not
      */
-    protected async request<DataType>(url: string, authenticated: boolean = false): Promise<CurlyResult<DataType>> {
+    protected async request<DataType>(url: string, authenticated: boolean = true): Promise<CurlyResult<DataType>> {
         // Fetching the data
         let res = await curly.get(url, {
             httpHeader: authenticated ? Headers.authorizedHeader(await this.auth.getAuthCredentials()) : Headers.guestHeader(await this.auth.getGuestCredentials()),
