@@ -141,7 +141,7 @@ export class AccountService {
      * @param password The password to the account
      * @returns The cookies for authenticating with the given account
      */
-    public async login(email: string, userName: string, password: string): Promise<Cookie[]> {
+    public async login(email: string, userName: string, password: string): Promise<string> {
         // Executing each step of login flow
         await this.initiateLogin();
         await this.jsInstrumentationSubtask();
@@ -151,6 +151,6 @@ export class AccountService {
         await this.accountDuplicationCheck();
         
         // Returning the final cookies
-        return this.cookies;
+        return this.cookies.join(';');
     }
 }

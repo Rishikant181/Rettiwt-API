@@ -2,6 +2,7 @@
 import { AuthService } from "./services/AuthService";
 import { UserAccountService } from "./services/data/UserAccountService";
 import { TweetService } from "./services/data/TweetService";
+import { AccountService } from "./services/accounts/AccountService";
 
 /**
  * @param cookie The cookies string to use to fetch data
@@ -14,6 +15,7 @@ export const Rettiwt = (cookie: string = '') => {
     // Using the auth service instance to create data services instances
     return {
         users: new UserAccountService(auth),
-        tweets: new TweetService(auth)
+        tweets: new TweetService(auth),
+        account: new AccountService()
     };
 }
