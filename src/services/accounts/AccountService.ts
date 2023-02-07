@@ -63,8 +63,16 @@ export class AccountService {
      */
     private async initiateLogin(): Promise<AxiosResponse> {
         // Initiating the login process
-        const res: AxiosResponse = await axios.post(LoginFlows.InitiateLogin.url, JSON.stringify(LoginFlows.InitiateLogin.body));
+        const res: AxiosResponse = await axios.post(LoginFlows.InitiateLogin.url, JSON.stringify(LoginFlows.InitiateLogin.body), {
+            headers: this.getLoginHeaders(await this.getGuestCredentials(), this.cookie)
+        });
 
         return res;
+    }
+
+    public async login(email: string, userName: string, password: string) {
+        this.initiateLogin().then(res => {
+            console.log(res);
+        });
     }
 }
