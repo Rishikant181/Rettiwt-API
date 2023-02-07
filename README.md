@@ -36,8 +36,8 @@ This creates an instance of Rettiwt which can be used to fetch data from Twitter
 
 If you wan't full functionality, you need to use the cookie of a logged in Twitter account, which can be retrieved from the browser.
 
--   For GraphQL Server mode, pass the cookie-string in the header while making a request to the graphql server
--   For npm library mode, pass the cookie-string to the constructor while creating instance of Rettiwt
+-   For GraphQL Server mode, you can get the cookie using the Login query and pass the received cookie-string in the header while making a request to the graphql server
+-   For npm library mode, you can get the cookie using the Rettiwt().account.login method and pass the received cookie-string to the constructor while creating instance of Rettiwt
 
 ### **If you don't want to risk your twitter account getting banned, using cookies is completely optional and you can omit passing cookie and use the API as guest**  
 ### **No likes, followers, followings, retweets, replies, tweet likes, quotes can be fetched without using cookie!**  
