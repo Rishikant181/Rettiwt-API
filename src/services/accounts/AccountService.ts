@@ -1,5 +1,5 @@
 // PACKAGES
-import axios, { AxiosHeaders, AxiosResponse } from 'axios';
+import { curly, CurlyResult } from 'node-libcurl';
 
 // SERVICES
 import { AuthService } from '../AuthService';
@@ -40,13 +40,13 @@ export class AccountService {
      * @summary Initiates the login process
      * @returns The response received from Twitter API
      */
-    private async initiateLogin(): Promise<AxiosResponse> {
+    private async initiateLogin(): Promise<CurlyResult> {
         // Initiating the login process
-        const res: AxiosResponse = await axios.post(LoginFlows.InitiateLogin.url, JSON.stringify(LoginFlows.InitiateLogin.body), {
-            headers: loginHeader(await this.getGuestCredentials(), this.cookie)
+        return await curly.post(LoginFlows.InitiateLogin.url, {
+            httpHeader: loginHeader(await this.getGuestCredentials(), this.cookie),
+            sslVerifyPeer: false,
+            postFields: ''
         });
-
-        return res;
     }
 
     public async login(email: string, userName: string, password: string) {
