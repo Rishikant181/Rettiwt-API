@@ -9,6 +9,7 @@ import { TweetFilter } from '../types/Tweet';
 // RESOLVERS
 import UserResolver from '../resolvers/UserResolver';
 import TweetResolver from '../resolvers/TweetResolver';
+import AccountResolver from '../resolvers/AccountResolver';
 
 export const rootQuery = new GraphQLObjectType({
     name: 'Root',
@@ -51,6 +52,16 @@ export const rootQuery = new GraphQLObjectType({
                 cursor: { type: GraphQLString, defaultValue: '' }
             },
             resolve: (parent, args, context) => new TweetResolver(context).resolveTweets(args as TweetFilter, args.count, args.cursor)
+        },
+        Login: {
+            type: GraphQLString,
+            description: "Returns the cookies that can be used to fetch data from twitter",
+            args: {
+                email: { type: GraphQLString },
+                userName: { type: GraphQLString },
+                password: { type: GraphQLString }
+            },
+            resolve: (parent, args, context) => new AccountResolver(context).resolveLogin(args.email, args.userName, args.password)
         }
     }
 })

@@ -1,4 +1,5 @@
 // SERVICES
+import { AccountService } from "../services/accounts/AccountService";
 import { TweetService } from "../services/data/TweetService";
 import { UserAccountService } from "../services/data/UserAccountService";
 
@@ -33,5 +34,6 @@ export interface CursoredData<Type> {
  */
 export interface DataContext {
     users: UserAccountService,                                          // To store the source for fetching user account data
-    tweets: TweetService                                                // To store the source for fetching tweet data
+    tweets: TweetService,                                               // To store the source for fetching tweet data
+    account: AccountService                                             // To store the source for account related operations
 }
