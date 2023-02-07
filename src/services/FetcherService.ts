@@ -13,6 +13,15 @@ import { Result as RawTweet } from '../types/raw/tweet/Tweet';
 // HELPERS
 import * as Headers from './helper/Headers'
 import * as Deserializers from './helper/Deserializers';
+import { CurlyOptions } from 'node-libcurl/dist/curly';
+
+/**
+ * @summary Stores all the different type of http requests
+ */
+export enum HttpMethods {
+    POST = "POST",
+    GET = "GET"
+};
 
 /**
  * @service The base serivice from which all other data services derive their behaviour
@@ -43,16 +52,25 @@ export class FetcherService {
     /**
      * @returns The absolute raw json data from give url
      * @param url The url to fetch data from
-     * @param authenticated Whether to authenticate requests or not
+     * @param authenticate Whether to authenticate requests or not
+     * @param method The HTTP method to use
+     * @param data The data to be sent along with the request (works with only POST method)
      */
-    protected async request<DataType>(url: string, authenticated: boolean = true): Promise<CurlyResult<DataType>> {
-        // Fetching the data
-        let res = await curly.get(url, {
-            httpHeader: authenticated ? Headers.authorizedHeader(await this.auth.getAuthCredentials()) : Headers.guestHeader(await this.auth.getGuestCredentials()),
-            sslVerifyPeer: false
-        }).then(res => this.handleHTTPError(res));
+    protected async request<DataType>(url: string, authenticate: boolean = true, method: HttpMethods = HttpMethods.GET, data?: any): Promise<CurlyResult<DataType>> {
+        // Creating the configuration for the http request
+        let config: CurlyOptions = {
+            httpHeader: authenticate ? Headers.authorizedHeader(await this.auth.getAuthCredentials()) : Headers.guestHeader(await this.auth.getGuestCredentials()),
+            sslVerifyPeer: false,
+        };
 
-        return res;
+        // If post request is to be made
+        if (method == HttpMethods.POST) {
+            return await curly.post(url, { ...config, postFields: JSON.stringify(data) }).then(res => this.handleHTTPError(res));
+        }
+        // If get request is to be made
+        else {
+            return await curly.get(url, config).then(res => this.handleHTTPError(res));
+        }
     }
 
     /**
