@@ -29,11 +29,13 @@ export enum HttpMethods {
 export class FetcherService {
     // MEMBER DATA
     private auth: AuthService;                                              // To store the auth service instance to use for authentication
+    private cache: CacheService;                                            // To stoer the cache service instance to use for caching data
     protected isAuthenticated: boolean;                                     // To store whether user is authenticated or not
 
     // MEMBER METHODS
     constructor(auth: AuthService) {
         this.auth = auth;
+        this.cache = CacheService.getInstance();
         this.isAuthenticated = this.auth.isAuthenticated;
     }
 
@@ -77,28 +79,22 @@ export class FetcherService {
      * @summary Caches the extracted data
      * @param data The extracted data to be cached
      */
-    protected async cacheData(data: any): Promise<void> {
-        // Creating an instance of cache
-        let cache = await CacheService.getInstance();
-
+    protected cacheData(data: any): void {
         // Parsing the extracted data
         let users = data.users.map((user: RawUser) => Deserializers.toUser(user));
         let tweets = data.tweets.map((tweet: RawTweet) => Deserializers.toTweet(tweet));
 
         // Caching the data
-        cache.write(users);
-        cache.write(tweets);
+        this.cache.write(users);
+        this.cache.write(tweets);
     }
 
     /**
      * @returns The data with the given id (if it exists in cache)
      * @param id The id of the data to be read from cache
      */
-    protected async readData(id: string): Promise<any> {
-        // Creating an instance of cache
-        let cache = await CacheService.getInstance();
-
+    protected readData(id: string): any {
         // Reading data from cache
-        return cache.read(id);
+        return this.cache.read(id);
     }
 }
