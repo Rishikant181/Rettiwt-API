@@ -106,3 +106,49 @@ export function toQueryString(filter: TweetFilter): string {
     .filter(item => item !== '()' && item !== '')
     .join(' ') + (!filter.links ? '%20-filter%3Alinks' : '');
 }
+
+/**
+ * 
+ * @param input string to number
+ * @returns  De-abbreviated Number
+ */
+export function convertToNumber(input: string): number {
+    
+    // Work-around to handle missing data.
+    if (input=='') return -1;
+
+
+    // Define the regular expression pattern to match the input string
+    const regex = /^([\d,]+\.?[\d]+)([kKmMbB]?)\s*(.*)$/;
+  
+    // Use the match method to match the input string against the pattern
+    const match = input.match(regex);
+  
+    // If the match is not successful, return the input string with the commas removed and converted to a number
+    if (!match) {
+      return parseFloat(input.replace(/,/g, ''));
+    }
+  
+    // If the match is successful, extract the number part and the abbreviation from the match
+    const [, numberPart, abbreviation] = match;
+  
+    // Convert the number part into an actual number by removing the commas and parsing it as a float
+    const number = parseFloat(numberPart.replace(/,/g, ''));
+  
+    // If the abbreviation is "k" or "K", multiply the number by 1000
+    if (abbreviation === 'k' || abbreviation === 'K') {
+      return number * 1000;
+    }
+  
+    // If the abbreviation is "m" or "M", multiply the number by 1000000
+    if (abbreviation === 'm' || abbreviation === 'M') {
+      return number * 1000000;
+    }
+    // If the abbreviation is "b" or "B", multiply the number by 1000000000
+    if (abbreviation === 'b' || abbreviation === 'B') {
+      return number * 1000000000;
+    }
+  
+    // If there is no abbreviation, return the number as is
+    return number;
+  }
