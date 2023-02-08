@@ -23,16 +23,14 @@ export class CacheService {
     /**
      * @returns The current working instance of CacheService
      */
-    static async getInstance(): Promise<CacheService> {
+    static getInstance(): CacheService {
         // If an instance doesnt exists already
         if (!this.instance) {
             this.instance = new CacheService();
-            return this.instance;
         }
-        // If an instance already exists, returning it
-        else {
-            return this.instance;
-        }
+        
+        // Returning the current instance
+        return this.instance;
     }
 
     /**
@@ -40,7 +38,7 @@ export class CacheService {
      * @returns Whether writing to cache was successful or not
      * @param data The input data to store
      */
-    async write(data: any): Promise<void> {
+    public write(data: any): void {
         // Converting the data to a list of data
         data = Parsers.dataToList(data);
 
@@ -61,7 +59,7 @@ export class CacheService {
      * @returns The data with the given id/rest id from cache
      * @param id The id/rest id of the data to be fetched from cache
      */
-    async read(id: string): Promise<any> {
+    public read(id: string): any {
         // Getting data from cache
         let res = this.client.get(id);
 

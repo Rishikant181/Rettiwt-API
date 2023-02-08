@@ -104,5 +104,5 @@ export function toQueryString(filter: TweetFilter): string {
         filter.quoted ? `quoted_tweet_id:${filter.quoted}` : ''
     ]
     .filter(item => item !== '()' && item !== '')
-    .join(' ');
+    .join(' ') + (!filter.links ? '%20-filter%3Alinks' : '');
 }

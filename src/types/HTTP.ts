@@ -1,12 +1,4 @@
 /**
- * @summary Stores all the different type of http requests
- */
-export enum HttpMethods {
-    POST = "POST",
-    GET = "GET"
-};
-
-/**
  * @summary Stores the different types of http status codes
  */
 export enum HttpStatus {

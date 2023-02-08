@@ -6,6 +6,7 @@ import { GraphQLSchema } from 'graphql';
 // Services
 import { UserAccountService } from './services/data/UserAccountService';
 import { TweetService } from './services/data/TweetService';
+import { AccountService } from './services/accounts/AccountService';
 import { AuthService } from './services/AuthService';
 
 // SCHEMA
@@ -24,7 +25,8 @@ app.use('/graphql', graphqlHTTP(req => ({
     }),
     context: {
         users: new UserAccountService(new AuthService(req.headers.cookie as string)),
-        tweets: new TweetService(new AuthService(req.headers.cookie as string))
+        tweets: new TweetService(new AuthService(req.headers.cookie as string)),
+        account: new AccountService()
     },
     // If app is running in development environment, enable graphiql
     graphiql: config.is_development

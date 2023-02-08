@@ -62,7 +62,7 @@ export default class UserResolver extends ResolverBase {
             const res = await this.context.users.getUserLikes(id, count, next.value);
 
             // If data is available
-            if (res.list.length) {
+            if (res.list?.length) {
                 // Adding fetched tweets to list of tweets
                 likes = likes.concat(res.list);
 
@@ -70,7 +70,7 @@ export default class UserResolver extends ResolverBase {
                 total = likes.length;
 
                 // Getting cursor to next batch
-                next = res.next;
+                next = res.next as Cursor;
             }
             // If no more data is available
             else {
@@ -113,7 +113,7 @@ export default class UserResolver extends ResolverBase {
             const res = await this.context.users.getUserFollowers(id, count, next.value);
 
             // If data is available
-            if (res.list.length) {
+            if (res.list?.length) {
                 // Adding fetched followers to list of followers
                 followers = followers.concat(res.list);
 
@@ -121,7 +121,7 @@ export default class UserResolver extends ResolverBase {
                 total = followers.length;
 
                 // Getting cursor to next batch
-                next = res.next;
+                next = res.next as Cursor;
             }
             // If no more data is available
             else {
@@ -164,7 +164,7 @@ export default class UserResolver extends ResolverBase {
             const res = await this.context.users.getUserFollowing(id, count, next.value);
 
             // If data is available
-            if (res.list.length) {
+            if (res.list?.length) {
                 // Adding fetched following to list of following
                 following = following.concat(res.list);
 
@@ -172,7 +172,7 @@ export default class UserResolver extends ResolverBase {
                 total = following.length;
 
                 // Getting cursor to next batch
-                next = res.next;
+                next = res.next as Cursor;
             }
             // If no more data is available
             else {
@@ -184,56 +184,5 @@ export default class UserResolver extends ResolverBase {
         following.push(next);
 
         return following;
-    }
-
-    /**
-     * @returns The list of tweets made by the given user
-     * @param id The id of the user whose tweets are to be fetched
-     * @param count The number of tweets to fetch
-     * @param all Whether to fetch list of all tweets made by user
-     * @param cursor The cursor to the batch of tweets to fetch
-     * @param statusesCount The total number of tweets made by target user
-     */
-    async resolveUserTweets(id: string, count: number, all: boolean, cursor: string, statusesCount: number): Promise<any> {
-        let tweets: any[] = [];                                                     // To store the list of tweets
-        let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
-        let total: number = 0;                                                      // To store the total number of tweets fetched
-        let batchSize: number = 20;                                                 // To store the batchsize to use
-
-        // If all tweets are to be fetched
-        count = all ? statusesCount : count;
-
-        // If required count less than batch size, setting batch size to required count
-        batchSize = (count < batchSize) ? count : batchSize;
-
-        // Repeatedly fetching data as long as total data fetched is less than requried
-        while (total < count) {
-            // If this is the last batch, change batch size to number of remaining tweets
-            batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
-
-            // Getting the data
-            const res = await this.context.users.getUserTweets(id, count, next.value);
-
-            // If data is available
-            if (res.list.length) {
-                // Adding fetched tweets to list of tweets
-                tweets = tweets.concat(res.list);
-
-                // Updating total tweets fetched
-                total = tweets.length;
-
-                // Getting cursor to next batch
-                next = res.next;
-            }
-            // If no more data is available
-            else {
-                break;
-            }
-        }
-
-        // Adding the cursor to the end of list of data
-        tweets.push(next);
-
-        return tweets;
     }
 }

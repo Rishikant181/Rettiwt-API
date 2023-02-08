@@ -13,6 +13,15 @@ import { Result as RawTweet } from '../types/raw/tweet/Tweet';
 // HELPERS
 import * as Headers from './helper/Headers'
 import * as Deserializers from './helper/Deserializers';
+import { CurlyOptions } from 'node-libcurl/dist/curly';
+
+/**
+ * @summary Stores all the different type of http requests
+ */
+export enum HttpMethods {
+    POST = "POST",
+    GET = "GET"
+};
 
 /**
  * @service The base serivice from which all other data services derive their behaviour
@@ -20,10 +29,14 @@ import * as Deserializers from './helper/Deserializers';
 export class FetcherService {
     // MEMBER DATA
     private auth: AuthService;                                              // To store the auth service instance to use for authentication
+    private cache: CacheService;                                            // To stoer the cache service instance to use for caching data
+    protected isAuthenticated: boolean;                                     // To store whether user is authenticated or not
 
     // MEMBER METHODS
     constructor(auth: AuthService) {
         this.auth = auth;
+        this.cache = CacheService.getInstance();
+        this.isAuthenticated = this.auth.isAuthenticated;
     }
 
     /**
@@ -41,47 +54,47 @@ export class FetcherService {
     /**
      * @returns The absolute raw json data from give url
      * @param url The url to fetch data from
-     * @param method The type of HTTP request being made. Default is GET
-     * @param body The content to be sent in the body of the response
-     * @param auth Whether to use authenticated requests or not
-     * @param guestCreds Guest credentials to use rather than auto-generated one
+     * @param authenticate Whether to authenticate requests or not
+     * @param method The HTTP method to use
+     * @param data The data to be sent along with the request (works with only POST method)
      */
-    protected async request<DataType>(url: string): Promise<CurlyResult<DataType>> {
-        // Fetching the data
-        let res = await curly.get(url, {
-            httpHeader: Headers.authorizedHeader(await this.auth.getAuthCredentials()),
-            sslVerifyPeer: false
-        }).then(res => this.handleHTTPError(res));
+    protected async request<DataType>(url: string, authenticate: boolean = true, method: HttpMethods = HttpMethods.GET, data?: any): Promise<CurlyResult<DataType>> {
+        // Creating the configuration for the http request
+        let config: CurlyOptions = {
+            httpHeader: authenticate ? Headers.authorizedHeader(await this.auth.getAuthCredentials()) : Headers.guestHeader(await this.auth.getGuestCredentials()),
+            sslVerifyPeer: false,
+        };
 
-        return res;
+        // If post request is to be made
+        if (method == HttpMethods.POST) {
+            return await curly.post(url, { ...config, postFields: JSON.stringify(data) }).then(res => this.handleHTTPError(res));
+        }
+        // If get request is to be made
+        else {
+            return await curly.get(url, config).then(res => this.handleHTTPError(res));
+        }
     }
 
     /**
      * @summary Caches the extracted data
      * @param data The extracted data to be cached
      */
-    protected async cacheData(data: any): Promise<void> {
-        // Creating an instance of cache
-        let cache = await CacheService.getInstance();
-
+    protected cacheData(data: any): void {
         // Parsing the extracted data
         let users = data.users.map((user: RawUser) => Deserializers.toUser(user));
         let tweets = data.tweets.map((tweet: RawTweet) => Deserializers.toTweet(tweet));
 
         // Caching the data
-        cache.write(users);
-        cache.write(tweets);
+        this.cache.write(users);
+        this.cache.write(tweets);
     }
 
     /**
      * @returns The data with the given id (if it exists in cache)
      * @param id The id of the data to be read from cache
      */
-    protected async readData(id: string): Promise<any> {
-        // Creating an instance of cache
-        let cache = await CacheService.getInstance();
-
+    protected readData(id: string): any {
         // Reading data from cache
-        return cache.read(id);
+        return this.cache.read(id);
     }
 }
