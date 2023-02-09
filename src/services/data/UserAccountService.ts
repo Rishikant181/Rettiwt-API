@@ -82,13 +82,18 @@ export class UserAccountService extends FetcherService {
     /**
      * @returns The list of users followed by the target user
      * @param userId The rest id of the target user
-     * @param count The batch size of the list
+     * @param count The batch size of the list, should be >= 40 and <=100
      * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
     async getUserFollowing(userId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
             return { error: new Error('Cannot fetch user following without authentication!') };
+        }
+
+        // If invalid count provided
+        if ((count < 40 || count > 100) && !cursor) {
+            return { error: new Error('Count must be >= 40 and <= 100, when no cursor is provided!') };
         }
 
         // Fetchin the raw data
