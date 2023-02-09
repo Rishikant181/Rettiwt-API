@@ -55,9 +55,9 @@ export const User = new GraphQLObjectType({
             type: UserList,
             args: {
                 count: {
-                    description: "The number of followers to fetch",
+                    description: "The number of followers to fetch, must be >= 40",
                     type: GraphQLInt,
-                    defaultValue: 20
+                    defaultValue: 40
                 },
                 all: {
                     description: "Whether to fetch all followers list",

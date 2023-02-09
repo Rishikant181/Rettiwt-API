@@ -122,8 +122,8 @@ export class UserAccountService extends FetcherService {
         }
 
         // If invalid count provided
-        if (count < 40 || count > 100) {
-            return { error: new Error('Count must be >= 40 and <= 100') };
+        if ((count < 40 || count > 100) && !cursor) {
+            return { error: new Error('Count must be >= 40 and <= 100, when no cursor is provided!') };
         }
 
         // Fetching the raw data

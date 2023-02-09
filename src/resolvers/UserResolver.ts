@@ -87,7 +87,7 @@ export default class UserResolver extends ResolverBase {
     /**
      * @returns The list of followers of the given twiiter user
      * @param id The id of the user whose followers are to be fetched
-     * @param count The number of followers to fetch
+     * @param count The number of followers to fetch, must be >= 40
      * @param all Whether to fetch all followers list
      * @param cursor The cursor to the batch of followers to fetch
      * @param followerCount The total number of followers of the target user
