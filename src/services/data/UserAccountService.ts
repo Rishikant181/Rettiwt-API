@@ -82,13 +82,18 @@ export class UserAccountService extends FetcherService {
     /**
      * @returns The list of users followed by the target user
      * @param userId The rest id of the target user
-     * @param count The batch size of the list
+     * @param count The batch size of the list, should be >= 40 and <=100
      * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
     async getUserFollowing(userId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
             return { error: new Error('Cannot fetch user following without authentication!') };
+        }
+
+        // If invalid count provided
+        if ((count < 40 || count > 100) && !cursor) {
+            return { error: new Error('Count must be >= 40 and <= 100, when no cursor is provided!') };
         }
 
         // Fetchin the raw data
@@ -112,22 +117,22 @@ export class UserAccountService extends FetcherService {
     /**
      * @returns The list of users following the target user
      * @param userId The rest id of the target user
-     * @param count The batch size of the list
+     * @param count The batch size of the list, should be >= 40 and <=100
      * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
     async getUserFollowers(userId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
-        if(!this.isAuthenticated) {
+        if (!this.isAuthenticated) {
             return { error: new Error('Cannot fetch user followers without authentication!') };
         }
 
-        /**
-         * When fetching list of followers, the official Twitter API seems to be fetching n + 20 followers,
-         * where n is the actual required number of followers.
-         * So changing count to count - 20, fixes fetching more than required number of follower
-         */
+        // If invalid count provided
+        if ((count < 40 || count > 100) && !cursor) {
+            return { error: new Error('Count must be >= 40 and <= 100, when no cursor is provided!') };
+        }
+
         // Fetching the raw data
-        let res = await this.request<RawUserFollowers>(Urls.userFollowersUrl(userId, (count > 20) ? (count - 20) : count, cursor)).then(res => res.data);
+        let res = await this.request<RawUserFollowers>(Urls.userFollowersUrl(userId, count, cursor)).then(res => res.data);
         
         // Extracting data
         let data = Extractors.extractUserFollow(res);
