@@ -33,7 +33,7 @@ export const User = new GraphQLObjectType({
             type: TweetList,
             args: {
                 count: {
-                    description: "The number of liked tweets to fetch",
+                    description: "The number of liked tweets to fetch, must be >= 40 (when no cursor if provided)",
                     type: GraphQLInt,
                     defaultValue: 10
                 },
@@ -55,7 +55,7 @@ export const User = new GraphQLObjectType({
             type: UserList,
             args: {
                 count: {
-                    description: "The number of followers to fetch, must be >= 40 when no cursor is provided",
+                    description: "The number of followers to fetch, must be >= 40 (when no cursor is provided)",
                     type: GraphQLInt,
                     defaultValue: 40
                 },
@@ -78,7 +78,7 @@ export const User = new GraphQLObjectType({
             args: {
                 count: {
                     type: GraphQLInt,
-                    description: "The number of followings to fetch, must be >= 40 when no cursor is provided",
+                    description: "The number of followings to fetch, must be >= 40 (when no cursor is provided)",
                     defaultValue: 40
                 },
                 all: {
@@ -99,7 +99,7 @@ export const User = new GraphQLObjectType({
             type: TweetList,
             args: {
                 count: {
-                    description: "The number of tweets to fetch",
+                    description: "The number of tweets to fetch, must be >= 1",
                     type: GraphQLInt,
                     defaultValue: 10
                 },

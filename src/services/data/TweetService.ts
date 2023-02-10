@@ -35,10 +35,15 @@ export class TweetService extends FetcherService {
     /**
      * @returns The list of tweets that match the given filter
      * @param filter The filter be used for searching the tweets
-     * @param count The number of tweets to fetch
+     * @param count The number of tweets to fetch, must be >= 1 and <= 100
      * @param cursor The cursor to the next batch of tweets. If blank, first batch is fetched
      */
     async getTweets(filter: TweetFilter, count: number, cursor: string): Promise<CursoredData<Tweet>> {
+        // If invalid count provided
+        if (count < 1 && !cursor) {
+            return { error: new Error('Count must be >= 1!') };
+        }
+
         // Getting the raw data
         let res = await this.request<RawTweets>(Urls.tweetsUrl(toQueryString(filter), count, cursor), false).then(res => res.data);
 
@@ -69,34 +74,37 @@ export class TweetService extends FetcherService {
         if (cachedData) {
             return cachedData;
         }
-        // If data does not exist in cache
-        else {
-            // Fetching the raw data
-            let res = await this.request<RawTweet>(Urls.tweetDetailsUrl(tweetId), false).then(res => res.data);
+        
+        // Fetching the raw data
+        let res = await this.request<RawTweet>(Urls.tweetDetailsUrl(tweetId), false).then(res => res.data);
 
-            // Extracting data
-            let data = Extractors.extractTweet(res, tweetId);
+        // Extracting data
+        let data = Extractors.extractTweet(res, tweetId);
 
-            // Caching data
-            this.cacheData(data);
+        // Caching data
+        this.cacheData(data);
 
-            // Parsing data
-            let tweet = Deserializers.toTweet(data.required[0]);
+        // Parsing data
+        let tweet = Deserializers.toTweet(data.required[0]);
 
-            return tweet;
-        }
+        return tweet;
     }
 
     /**
      * @returns The list of users who liked the given tweet
      * @param tweetId The rest id of the target tweet
-     * @param count The batch size of the list
+     * @param count The batch size of the list, must be >= 10 (when no cursor is provided) and <= 100
      * @param cursor The cursor to the next batch of users. If blank, first batch is fetched
      */
     async getTweetLikers(tweetId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
             return { error: new Error('Cannot fetch tweet likes without authentication!') };
+        }
+
+        // If invalid count provided
+        if (count < 10 && !cursor) {
+            return { error: new Error('Count must be >= 10 (when no cursor is provided)!') };
         }
         
         // Fetching the raw data
@@ -120,13 +128,18 @@ export class TweetService extends FetcherService {
     /**
      * @returns The list of users who retweeted the given tweet     
      * @param tweetId The rest id of the target tweet
-     * @param count The batch size of the list
+     * @param count The batch size of the list, must be >= 10 (when no cursor is provided) and <= 100
      * @param cursor The cursor to the next batch of users. If blank, first batch is fetched
      */
     async getTweetRetweeters(tweetId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
             return { error: new Error('Cannot fetch tweet retweeters without authentication!') };
+        }
+
+        // If invalid count provided
+        if (count < 10 && !cursor) {
+            return { error: new Error('Count must be >= 10 (when no cursor is provided)!') };
         }
 
         // Fetching the raw data

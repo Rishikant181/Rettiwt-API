@@ -48,7 +48,7 @@ export const rootQuery = new GraphQLObjectType({
                 endDate: { type: GraphQLString },
                 quoted: { type: GraphQLString },
                 links: { type: GraphQLBoolean, defaultValue: false },
-                count: { type: GraphQLInt, defaultValue: 20 },
+                count: { type: GraphQLInt, defaultValue: 10 },
                 cursor: { type: GraphQLString, defaultValue: '' }
             },
             resolve: (parent, args, context) => new TweetResolver(context).resolveTweets(args as TweetFilter, args.count, args.cursor)

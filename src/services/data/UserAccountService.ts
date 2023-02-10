@@ -61,28 +61,26 @@ export class UserAccountService extends FetcherService {
         if(cachedData) {
             return cachedData;
         }
-        // If data does not exist in cache
-        else {
-            // Fetchin the raw data
-            let res = await this.request<RawUser>(Urls.userAccountByIdUrl(restId), false).then(res => res.data);
+        
+        // Fetchin the raw data
+        let res = await this.request<RawUser>(Urls.userAccountByIdUrl(restId), false).then(res => res.data);
 
-            // Extracting data
-            let data = Extractors.extractUserAccountDetails(res);
+        // Extracting data
+        let data = Extractors.extractUserAccountDetails(res);
 
-            // Caching data
-            this.cacheData(data);
+        // Caching data
+        this.cacheData(data);
 
-            // Parsing data
-            let user = Deserializers.toUser(data.required[0]);
-                
-            return user;
-        }
+        // Parsing data
+        let user = Deserializers.toUser(data.required[0]);
+            
+        return user;
     }
 
     /**
      * @returns The list of users followed by the target user
      * @param userId The rest id of the target user
-     * @param count The batch size of the list, should be >= 40 and <=100
+     * @param count The number of following to fetch, should be >= 40 (when no cursor is provided) and <=100
      * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
     async getUserFollowing(userId: string, count: number, cursor: string): Promise<CursoredData<User>> {
@@ -92,8 +90,8 @@ export class UserAccountService extends FetcherService {
         }
 
         // If invalid count provided
-        if ((count < 40 || count > 100) && !cursor) {
-            return { error: new Error('Count must be >= 40 and <= 100, when no cursor is provided!') };
+        if (count < 40 && !cursor) {
+            return { error: new Error('Count must be >= 40 (when no cursor if provided)!') };
         }
 
         // Fetchin the raw data
@@ -117,7 +115,7 @@ export class UserAccountService extends FetcherService {
     /**
      * @returns The list of users following the target user
      * @param userId The rest id of the target user
-     * @param count The batch size of the list, should be >= 40 and <=100
+     * @param count The number of followers to fetch, should be >= 40 (when no cursor is provided) and <=100
      * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
     async getUserFollowers(userId: string, count: number, cursor: string): Promise<CursoredData<User>> {
@@ -127,8 +125,8 @@ export class UserAccountService extends FetcherService {
         }
 
         // If invalid count provided
-        if ((count < 40 || count > 100) && !cursor) {
-            return { error: new Error('Count must be >= 40 and <= 100, when no cursor is provided!') };
+        if (count < 40 && !cursor) {
+            return { error: new Error('Count must be >= 40 (when no cursor is provided)!') };
         }
 
         // Fetching the raw data
@@ -152,13 +150,18 @@ export class UserAccountService extends FetcherService {
     /**
      * @returns The list of tweets liked by the target user
      * @param userId The rest id of the target user
-     * @param count The batch size of the list
+     * @param count The number of likes to fetch, must be >= 10 (when no cursor is provided) and <= 100
      * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
     async getUserLikes(userId: string, count: number, cursor: string): Promise<CursoredData<Tweet>> {
         // If user is not authenticated, abort
-        if(!this.isAuthenticated) {
+        if (!this.isAuthenticated) {
             return { error: new Error('Cannot fetch user likes without authentication!') };
+        }
+
+        // If invalid count provided
+        if (count < 40 && !cursor) {
+            return { error: new Error('Count must be >= 10 (when no cursor is provided)!') };
         }
 
         // Fetching the raw data
