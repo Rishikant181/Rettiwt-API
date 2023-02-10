@@ -40,8 +40,8 @@ export class TweetService extends FetcherService {
      */
     async getTweets(filter: TweetFilter, count: number, cursor: string): Promise<CursoredData<Tweet>> {
         // If invalid count provided
-        if ((count < 1 || count > 100) && !cursor) {
-            return { error: new Error('Count must be >= 1 and <= 100!') };
+        if (count < 1 && !cursor) {
+            return { error: new Error('Count must be >= 1!') };
         }
 
         // Getting the raw data
@@ -103,8 +103,8 @@ export class TweetService extends FetcherService {
         }
 
         // If invalid count provided
-        if ((count < 10 || count > 100) && !cursor) {
-            return { error: new Error('Count must be >= 40 (when no cursor is provided) and <= 100!') };
+        if (count < 10 && !cursor) {
+            return { error: new Error('Count must be >= 10 (when no cursor is provided)!') };
         }
         
         // Fetching the raw data
@@ -138,8 +138,8 @@ export class TweetService extends FetcherService {
         }
 
         // If invalid count provided
-        if ((count < 10 || count > 100) && !cursor) {
-            return { error: new Error('Count must be >= 40 (when no cursor is provided) and <= 100!') };
+        if (count < 10 && !cursor) {
+            return { error: new Error('Count must be >= 10 (when no cursor is provided)!') };
         }
 
         // Fetching the raw data

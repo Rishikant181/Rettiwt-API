@@ -80,7 +80,7 @@ export class UserAccountService extends FetcherService {
     /**
      * @returns The list of users followed by the target user
      * @param userId The rest id of the target user
-     * @param count The batch size of the list, should be >= 40 (when no cursor is provided) and <=100
+     * @param count The number of following to fetch, should be >= 40 (when no cursor is provided) and <=100
      * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
     async getUserFollowing(userId: string, count: number, cursor: string): Promise<CursoredData<User>> {
@@ -90,8 +90,8 @@ export class UserAccountService extends FetcherService {
         }
 
         // If invalid count provided
-        if ((count < 40 || count > 100) && !cursor) {
-            return { error: new Error('Count must be >= 40 (when no cursor if provided) and <= 100!') };
+        if (count < 40 && !cursor) {
+            return { error: new Error('Count must be >= 40 (when no cursor if provided)!') };
         }
 
         // Fetchin the raw data
@@ -115,7 +115,7 @@ export class UserAccountService extends FetcherService {
     /**
      * @returns The list of users following the target user
      * @param userId The rest id of the target user
-     * @param count The batch size of the list, should be >= 40 (when no cursor is provided) and <=100
+     * @param count The number of followers to fetch, should be >= 40 (when no cursor is provided) and <=100
      * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
     async getUserFollowers(userId: string, count: number, cursor: string): Promise<CursoredData<User>> {
@@ -125,8 +125,8 @@ export class UserAccountService extends FetcherService {
         }
 
         // If invalid count provided
-        if ((count < 40 || count > 100) && !cursor) {
-            return { error: new Error('Count must be >= 40 (when no cursor is provided) and <= 100!') };
+        if (count < 40 && !cursor) {
+            return { error: new Error('Count must be >= 40 (when no cursor is provided)!') };
         }
 
         // Fetching the raw data
@@ -150,7 +150,7 @@ export class UserAccountService extends FetcherService {
     /**
      * @returns The list of tweets liked by the target user
      * @param userId The rest id of the target user
-     * @param count The batch size of the list, must be >= 40 (when no cursor is provided) and <= 100
+     * @param count The number of likes to fetch, must be >= 10 (when no cursor is provided) and <= 100
      * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
     async getUserLikes(userId: string, count: number, cursor: string): Promise<CursoredData<Tweet>> {
@@ -160,8 +160,8 @@ export class UserAccountService extends FetcherService {
         }
 
         // If invalid count provided
-        if ((count < 10 || count > 100) && !cursor) {
-            return { error: new Error('Count must be >= 40 (when no cursor is provided) and <= 100!') };
+        if (count < 40 && !cursor) {
+            return { error: new Error('Count must be >= 10 (when no cursor is provided)!') };
         }
 
         // Fetching the raw data

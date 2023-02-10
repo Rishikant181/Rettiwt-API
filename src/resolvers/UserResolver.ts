@@ -14,7 +14,7 @@ export default class UserResolver extends ResolverBase {
     // MEMBER METHODS
     constructor(context: DataContext) {
         super(context);
-        this.batchSize = 40
+        this.batchSize = 40;
     }
 
     /**
@@ -63,6 +63,11 @@ export default class UserResolver extends ResolverBase {
 
             // Getting the data
             const res = await this.context.users.getUserLikes(id, count, next.value);
+
+            // If error
+            if(res.error) {
+                return res.error;
+            }
 
             // If data is available
             if (res.list?.length) {
@@ -114,6 +119,11 @@ export default class UserResolver extends ResolverBase {
             // Getting the data
             const res = await this.context.users.getUserFollowers(id, count, next.value);
 
+            // If error
+            if(res.error) {
+                return res.error;
+            }
+
             // If data is available
             if (res.list?.length) {
                 // Adding fetched followers to list of followers
@@ -163,6 +173,11 @@ export default class UserResolver extends ResolverBase {
 
             // Getting the data
             const res = await this.context.users.getUserFollowing(id, count, next.value);
+
+            // If error
+            if(res.error) {
+                return res.error;
+            }
 
             // If data is available
             if (res.list?.length) {
