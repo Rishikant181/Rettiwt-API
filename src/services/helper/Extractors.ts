@@ -1,5 +1,5 @@
 // TYPES
-import { DataErrors } from '../../types/graphql/Errors';
+import { DataErrors } from '../../types/Errors';
 import RawUser from '../../types/raw/user/User';
 import RawUserFollowers from '../../types/raw/user/Followers';
 import RawUserFollowing from '../../types/raw/user/Following';

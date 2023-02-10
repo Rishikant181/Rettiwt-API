@@ -10,7 +10,7 @@ import { AccountService } from './services/accounts/AccountService';
 import { AuthService } from './services/AuthService';
 
 // SCHEMA
-import { rootQuery } from './queries/RootQuery';
+import { rootQuery } from './graphql/queries/RootQuery';
 
 // CONFIGS
 import { config } from './config/env';
