@@ -35,13 +35,13 @@ export class TweetService extends FetcherService {
     /**
      * @returns The list of tweets that match the given filter
      * @param filter The filter be used for searching the tweets
-     * @param count The number of tweets to fetch, must be >= 10 (when no cursor is provided) and <= 100
+     * @param count The number of tweets to fetch, must be >= 1 and <= 100
      * @param cursor The cursor to the next batch of tweets. If blank, first batch is fetched
      */
     async getTweets(filter: TweetFilter, count: number, cursor: string): Promise<CursoredData<Tweet>> {
         // If invalid count provided
-        if ((count < 10 || count > 100) && !cursor) {
-            return { error: new Error('Count must be >= 40 (when no cursor is provided) and <= 100!') };
+        if ((count < 1 || count > 100) && !cursor) {
+            return { error: new Error('Count must be >= 1 and <= 100!') };
         }
 
         // Getting the raw data

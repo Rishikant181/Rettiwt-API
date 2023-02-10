@@ -9,9 +9,12 @@ import { Cursor, DataContext } from '../types/Service';
 import { ValidationErrors } from '../types/graphql/Errors';
 
 export default class TweetResolver extends ResolverBase {
+    // MEMBER DATA
+    private batchSize: number;                                              // To store the batch size while fetching data
     // MEMBER METHODS
     constructor(context: DataContext) {
         super(context);
+        this.batchSize = 20
     }
     
     /**
@@ -29,14 +32,13 @@ export default class TweetResolver extends ResolverBase {
     /**
      * @returns The list of tweets matching the given filter
      * @param filter The filter to be used for fetching matching tweets
-     * @param count The number of tweets to fetch
+     * @param count The number of tweets to fetch, must be >= 1
      * @param cursor The cursor to the batch of tweets to fetch
      */
     async resolveTweets(filter: TweetFilter, count: number, cursor: string): Promise<any[]> {
         let tweets: any[] = [];                                                     // To store the list of tweets
         let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
         let total: number = 0;                                                      // To store the total number of tweets fetched
-        let batchSize: number = 20;                                                 // To store the batchsize to use
 
         // Checking if the given tweet filter is valid or not
         if (!(filter.fromUsers || filter.toUsers || filter.words || filter.hashtags || filter.mentions || filter.quoted)) {
@@ -44,12 +46,12 @@ export default class TweetResolver extends ResolverBase {
         }
 
         // If required count less than batch size, setting batch size to required count
-        batchSize = (count < batchSize) ? count : batchSize;
+        this.batchSize = (count < this.batchSize) ? count : this.batchSize;
 
         // Repeatedly fetching data as long as total data fetched is less than requried
         while (total < count) {
             // If this is the last batch, change batch size to number of remaining tweets
-            batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
+            this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
 
             // Getting the data
             const res = await this.context.tweets.getTweets(filter, count, next.value);
@@ -80,7 +82,7 @@ export default class TweetResolver extends ResolverBase {
     /**
      * @returns The list of quotes of the given tweet
      * @param id The id of the tweet whose quotes are to be fetched
-     * @param count The number of quotes to be fetched
+     * @param count The number of quotes to be fetched, must be >= 1 (when no cursor if provided)
      * @param all Whether to fetch all quotes or not
      * @param cursor The cursor to the batch of tweet quotes to fetch
      * @param quoteCount The total number of quotes of the given tweet
@@ -112,7 +114,7 @@ export default class TweetResolver extends ResolverBase {
     /**
      * @returns The list of likers of the given tweet
      * @param id The id of the tweet whose likers are to be fetched
-     * @param count The total number of likers to fetch
+     * @param count The total number of likers to fetch, must be >= 10 (when no cursor if provided)
      * @param all Whether to fetch all the likers of the tweet
      * @param cursor The cursor to the batch of likers to fetch
      * @param likesCount The total number of like of the tweet
@@ -121,18 +123,17 @@ export default class TweetResolver extends ResolverBase {
         let likers: any[] = [];                                                     // To store the list of likers
         let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
         let total: number = 0;                                                      // To store the total number of likers fetched
-        let batchSize: number = 20;                                                 // To store the batchsize to use
 
         // If all likers are to be fetched
         count = (all || count > likesCount) ? likesCount : count;
 
         // If required count less than batch size, setting batch size to required count
-        batchSize = (count < batchSize) ? count : batchSize;
+        this.batchSize = (count < this.batchSize) ? count : this.batchSize;
 
         // Repeatedly fetching data as long as total data fetched is less than requried
         while (total < count) {
             // If this is the last batch, change batch size to number of remaining likers
-            batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
+            this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
 
             // Getting the data
             const res = await this.context.tweets.getTweetLikers(id, count, next.value);
@@ -163,7 +164,7 @@ export default class TweetResolver extends ResolverBase {
     /**
      * @returns The list of retweeters of the given tweet
      * @param id The id of the tweet whose retweeters are to be fetched
-     * @param count The total number of retweeters to fetch
+     * @param count The total number of retweeters to fetch, must be >= 10 (when no cursor if provided)
      * @param all Whether to fetch all retweeters
      * @param cursor The cursor to the batch of retweeters to fetch
      * @param retweetsCount The total number of retweets of the 
@@ -172,18 +173,17 @@ export default class TweetResolver extends ResolverBase {
         let retweeters: any[] = [];                                                 // To store the list of retweeters
         let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
         let total: number = 0;                                                      // To store the total number of retweeters fetched
-        let batchSize: number = 20;                                                 // To store the batchsize to use
 
         // If all retweeters are to be fetched
         count = (all || count > retweetsCount) ? retweetsCount : count;
 
         // If required count less than batch size, setting batch size to required count
-        batchSize = (count < batchSize) ? count : batchSize;
+        this.batchSize = (count < this.batchSize) ? count : this.batchSize;
 
         // Repeatedly fetching data as long as total data fetched is less than requried
         while (total < count) {
             // If this is the last batch, change batch size to number of remaining retweeters
-            batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
+            this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
 
             // Getting the data
             const res = await this.context.tweets.getTweetRetweeters(id, count, next.value);

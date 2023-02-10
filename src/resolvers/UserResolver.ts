@@ -8,9 +8,13 @@ import { Cursor, DataContext } from '../types/Service';
 import { ValidationErrors } from '../types/graphql/Errors';
 
 export default class UserResolver extends ResolverBase {
+    // MEMBER DATA
+    private batchSize: number;                                                // To store the batch size when fetching data
+    
     // MEMBER METHODS
     constructor(context: DataContext) {
         super(context);
+        this.batchSize = 40
     }
 
     /**
@@ -36,7 +40,7 @@ export default class UserResolver extends ResolverBase {
     /**
      * @returns The list of tweets liked by the given user
      * @param id The id of the user whose likes are to be fetched
-     * @param count The number of likes to fetch
+     * @param count The number of likes to fetch, must be >= 40
      * @param all Whether to fetch list of all tweets liked by user
      * @param cursor The cursor to the batch of likes to fetch
      * @param favouritesCount The total number of tweets liked by target user
@@ -45,18 +49,17 @@ export default class UserResolver extends ResolverBase {
         let likes: any[] = [];                                                      // To store the list of liked tweets
         let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
         let total: number = 0;                                                      // To store the total number of liked twets fetched
-        let batchSize: number = 20;                                                 // To store the batchsize to use
 
         // If all liked tweets are to be fetched
         count = all ? favouritesCount : count;
 
         // If required count less than batch size, setting batch size to required count
-        batchSize = (count < batchSize) ? count : batchSize;
+        this.batchSize = (count < this.batchSize) ? count : this.batchSize;
 
         // Repeatedly fetching data as long as total data fetched is less than requried
         while (total < count) {
             // If this is the last batch, change batch size to number of remaining tweets
-            batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
+            this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
 
             // Getting the data
             const res = await this.context.users.getUserLikes(id, count, next.value);
@@ -96,18 +99,17 @@ export default class UserResolver extends ResolverBase {
         let followers: any[] = [];                                                  // To store the list of followers
         let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
         let total: number = 0;                                                      // To store the total number of followers fetched
-        let batchSize: number = 20;                                                 // To store the batchsize to use
 
         // If all followers are to be fetched
         count = (all || count > followersCount) ? followersCount : count;
 
         // If required count less than batch size, setting batch size to required count
-        batchSize = (count < batchSize) ? count : batchSize;
+        this.batchSize = (count < this.batchSize) ? count : this.batchSize;
 
         // Repeatedly fetching data as long as total data fetched is less than requried
         while (total < count) {
             // If this is the last batch, change batch size to number of remaining followers
-            batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
+            this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
 
             // Getting the data
             const res = await this.context.users.getUserFollowers(id, count, next.value);
@@ -147,18 +149,17 @@ export default class UserResolver extends ResolverBase {
         let following: any[] = [];                                                  // To store the list of following
         let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
         let total: number = 0;                                                      // To store the total number of following fetched
-        let batchSize: number = 20;                                                 // To store the batchsize to use
 
         // If all followings are to be fetched
         count = (all || count > followingsCount) ? followingsCount : count;
 
         // If required count less than batch size, setting batch size to required count
-        batchSize = (count < batchSize) ? count : batchSize;
+        this.batchSize = (count < this.batchSize) ? count : this.batchSize;
 
         // Repeatedly fetching data as long as total data fetched is less than requried
         while (total < count) {
             // If this is the last batch, change batch size to number of remaining following
-            batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
+            this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
 
             // Getting the data
             const res = await this.context.users.getUserFollowing(id, count, next.value);

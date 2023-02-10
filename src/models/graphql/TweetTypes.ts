@@ -52,7 +52,7 @@ export const Tweet = new GraphQLObjectType({
             args: {
                 count: {
                     type: GraphQLInt,
-                    description: "The number of quotes to fetch",
+                    description: "The number of quotes to fetch, must be >= 1",
                     defaultValue: 10
                 },
                 all: {
@@ -74,7 +74,7 @@ export const Tweet = new GraphQLObjectType({
             args: {
                 count: {
                     type: GraphQLInt,
-                    description: "The number of likers to fetch",
+                    description: "The number of likers to fetch, must be >= 10 (when no cursor if provided)",
                     defaultValue: 10
                 },
                 all: {
@@ -96,7 +96,7 @@ export const Tweet = new GraphQLObjectType({
             args: {
                 count: {
                     type: GraphQLInt,
-                    description: "The number of retweeters to fetch",
+                    description: "The number of retweeters to fetch, must be >= 10 (when no cursor if provided)",
                     defaultValue: 10
                 },
                 all: {
