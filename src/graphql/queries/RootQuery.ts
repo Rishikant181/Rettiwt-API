@@ -46,7 +46,6 @@ export const rootQuery = new GraphQLObjectType({
                 words: { type: new GraphQLList(GraphQLString) },
                 startDate: { type: GraphQLString },
                 endDate: { type: GraphQLString },
-                sinceId: { type: GraphQLString },
                 quoted: { type: GraphQLString },
                 links: { type: GraphQLBoolean, defaultValue: false },
                 count: { type: GraphQLInt, defaultValue: 10 },
