@@ -101,6 +101,7 @@ export function toQueryString(filter: TweetFilter): string {
         filter.mentions ? `(${filter.mentions.map(mention => '@' + mention).join(' OR ')})` : '',
         filter.startDate ? `since:${filter.startDate}` : '',
         filter.endDate ? `until:${filter.endDate}` : '',
+        filter.sinceId ? `since:${filter.sinceId}` : '',
         filter.quoted ? `quoted_tweet_id:${filter.quoted}` : ''
     ]
     .filter(item => item !== '()' && item !== '')
