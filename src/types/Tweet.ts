@@ -11,6 +11,7 @@ export interface TweetFilter {
     mentions?: string[];                                                // To store the list of mentioned users
     startDate?: string;                                                 // To store the beginning date to search tweets
     endDate?: string;                                                   // To store the ending date to search tweets
+    sinceId?: string;                                                   // To store the first id (exclusive) from which to search tweets
     quoted?: string;                                                    // To store the id of the tweet which is quoted
     links?: boolean;                                                    // To store whether to fetch link tweets or not
 };
