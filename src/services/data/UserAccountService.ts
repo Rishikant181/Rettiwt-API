@@ -6,7 +6,8 @@ import { AuthService } from '../AuthService';
 import { User } from '../../types/UserAccount';
 import { Tweet } from '../../types/Tweet';
 import { CursoredData } from '../../types/Service';
-import RawUser from '../../types/raw/user/User';
+import RawTweet, { Result as TweetData } from '../../types/raw/tweet/Tweet';
+import RawUser, { Result as UserData } from '../../types/raw/user/User';
 import RawUserFollowers from '../../types/raw/user/Followers';
 import RawUserFollowing from '../../types/raw/user/Following';
 import RawUserLikes from '../../types/raw/user/Likes';
@@ -105,7 +106,7 @@ export class UserAccountService extends FetcherService {
         this.cacheData(data);
 
         // Parsing data
-        let users = data.required.map(item => UserDeserializers.toUser(item));
+        let users = data.required.map((item: UserData) => UserDeserializers.toUser(item));
 
         return {
             list: users,
@@ -140,7 +141,7 @@ export class UserAccountService extends FetcherService {
         this.cacheData(data);
 
         // Parsing data
-        let users = data.required.map(item => UserDeserializers.toUser(item));
+        let users = data.required.map((item: UserData) => UserDeserializers.toUser(item));
 
         return {
             list: users,
@@ -175,7 +176,7 @@ export class UserAccountService extends FetcherService {
         this.cacheData(data);
 
         // Parsing data
-        let tweets = data.required.map(item => TweetDeserializers.toTweet(item));
+        let tweets = data.required.map((item: TweetData) => TweetDeserializers.toTweet(item));
 
         return {
             list: tweets,
