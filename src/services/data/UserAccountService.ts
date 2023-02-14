@@ -15,10 +15,11 @@ import RawUserLikes from '../../types/raw/user/Likes';
 import * as Urls from '../helper/Urls';
 
 // EXTRACTORS
-import * as Extractors from '../helper/Extractors';
+import * as UserExtractors from '../helper/extractors/Users';
 
 // DESERIALIZERS
-import * as Deserializers from '../helper/Deserializers';
+import * as UserDeserializers from '../helper/deserializers/Users';
+import * as TweetDeserializers from '../helper/deserializers/Tweets';
 
 /**
  * A service that deals with fetching of data related to user account
@@ -38,13 +39,13 @@ export class UserAccountService extends FetcherService {
         let res: RawUser = await this.request<RawUser>(Urls.userAccountUrl(screenName), false).then(res => res.data);
         
         // Extracting data
-        let data = Extractors.extractUserAccountDetails(res);
+        let data = UserExtractors.extractUserAccountDetails(res);
 
         // Caching data
         this.cacheData(data);
 
         // Parsing data
-        let user = Deserializers.toUser(data.required[0]);
+        let user = UserDeserializers.toUser(data.required[0]);
             
         return user;
     }
@@ -66,13 +67,13 @@ export class UserAccountService extends FetcherService {
         let res = await this.request<RawUser>(Urls.userAccountByIdUrl(restId), false).then(res => res.data);
 
         // Extracting data
-        let data = Extractors.extractUserAccountDetails(res);
+        let data = UserExtractors.extractUserAccountDetails(res);
 
         // Caching data
         this.cacheData(data);
 
         // Parsing data
-        let user = Deserializers.toUser(data.required[0]);
+        let user = UserDeserializers.toUser(data.required[0]);
             
         return user;
     }
@@ -98,13 +99,13 @@ export class UserAccountService extends FetcherService {
         let res = await this.request<RawUserFollowing>(Urls.userFollowingUrl(userId, count, cursor)).then(res => res.data);
         
         // Extracting data
-        let data = Extractors.extractUserFollow(res);
+        let data = UserExtractors.extractUserFollow(res);
 
         // Caching data
         this.cacheData(data);
 
         // Parsing data
-        let users = data.required.map(item => Deserializers.toUser(item));
+        let users = data.required.map(item => UserDeserializers.toUser(item));
 
         return {
             list: users,
@@ -133,13 +134,13 @@ export class UserAccountService extends FetcherService {
         let res = await this.request<RawUserFollowers>(Urls.userFollowersUrl(userId, count, cursor)).then(res => res.data);
         
         // Extracting data
-        let data = Extractors.extractUserFollow(res);
+        let data = UserExtractors.extractUserFollow(res);
 
         // Caching data
         this.cacheData(data);
 
         // Parsing data
-        let users = data.required.map(item => Deserializers.toUser(item));
+        let users = data.required.map(item => UserDeserializers.toUser(item));
 
         return {
             list: users,
@@ -168,13 +169,13 @@ export class UserAccountService extends FetcherService {
         let res = await this.request<RawUserLikes>(Urls.userLikesUrl(userId, count, cursor)).then(res => res.data);
         
         // Extracting data
-        let data = Extractors.extractUserLikes(res);
+        let data = UserExtractors.extractUserLikes(res);
 
         // Caching data
         this.cacheData(data);
 
         // Parsing data
-        let tweets = data.required.map(item => Deserializers.toTweet(item));
+        let tweets = data.required.map(item => TweetDeserializers.toTweet(item));
 
         return {
             list: tweets,
