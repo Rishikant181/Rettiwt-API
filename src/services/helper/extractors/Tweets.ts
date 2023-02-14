@@ -25,21 +25,20 @@ export function extractTweets(res: RawTweets): DataExtract {
     // Getting raw users list
     let dataUsers = res.globalObjects.users;
 
-    // Destructuring tweets, if not empty
-    if (!Parsers.isJSONEmpty(dataTweets)) {
-        // Iterating through the json array of tweets
-        for (let key of Object.keys(dataTweets)) {
-            required.push({ rest_id: dataTweets[key].id_str, legacy: dataTweets[key] });
-            tweets.push({ rest_id: dataTweets[key].id_str, legacy: dataTweets[key] });
-        }
+    // If no tweets found
+    if (Parsers.isJSONEmpty(dataTweets)) {
+        throw new Error(DataErrors.NoTweetsFound);
     }
 
-    // Destructuring users, if not empty
-    if (!Parsers.isJSONEmpty(dataUsers)) {
-        // Iterating through the json array of users
-        for (let key of Object.keys(dataUsers)) {
-            users.push({ rest_id: dataUsers[key].id_str, legacy: dataUsers[key] });
-        }
+    // Destructuring the list of tweets
+    for (let key of Object.keys(dataTweets)) {
+        required.push({ rest_id: dataTweets[key].id_str, legacy: dataTweets[key] });
+        tweets.push({ rest_id: dataTweets[key].id_str, legacy: dataTweets[key] });
+    }
+
+    // Destructuring the list of users
+    for (let key of Object.keys(dataUsers)) {
+        users.push({ rest_id: dataUsers[key].id_str, legacy: dataUsers[key] });
     }
 
     // Getting the cursor to next batch
@@ -166,6 +165,11 @@ export function extractTweetRetweeters(res: RawRetweeters): DataExtract {
     // If tweet does not exist
     if (Parsers.isJSONEmpty(res.data.retweeters_timeline)) {
         throw new Error(DataErrors.TweetNotFound);
+    }
+
+    // If no retweeters found
+    if (!res.data.retweeters_timeline.timeline.instructions.length) {
+        throw new Error(DataErrors.NoRetweetersFound);
     }
 
     // Destructuring raw list of retweeters
