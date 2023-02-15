@@ -11,6 +11,7 @@ import { Result as UserData } from "../../types/raw/user/User";
 import RawTweets from '../../types/raw/tweet/Tweets';
 import RawLikers from '../../types/raw/tweet/Favouriters';
 import RawRetweeters from '../../types/raw/tweet/Retweeters';
+import * as Errors from '../../types/Errors';
 
 // URLS
 import * as Urls from '../helper/Urls';
@@ -43,7 +44,7 @@ export class TweetService extends FetcherService {
     async getTweets(filter: TweetFilter, count: number, cursor: string): Promise<CursoredData<Tweet>> {
         // If invalid count provided
         if (count < 1 && !cursor) {
-            return { error: new Error('Count must be >= 1!') };
+            throw new Error(Errors.ValidationErrors.InvalidCount);
         }
 
         // Getting the raw data
@@ -101,12 +102,12 @@ export class TweetService extends FetcherService {
     async getTweetLikers(tweetId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
-            return { error: new Error('Cannot fetch tweet likes without authentication!') };
+            throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
         }
 
         // If invalid count provided
         if (count < 10 && !cursor) {
-            return { error: new Error('Count must be >= 10 (when no cursor is provided)!') };
+            throw new Error(Errors.ValidationErrors.InvalidCount);
         }
         
         // Fetching the raw data
@@ -136,12 +137,12 @@ export class TweetService extends FetcherService {
     async getTweetRetweeters(tweetId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
-            return { error: new Error('Cannot fetch tweet retweeters without authentication!') };
+            throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
         }
 
         // If invalid count provided
         if (count < 10 && !cursor) {
-            return { error: new Error('Count must be >= 10 (when no cursor is provided)!') };
+            throw new Error(Errors.ValidationErrors.InvalidCount);
         }
 
         // Fetching the raw data
@@ -170,7 +171,7 @@ export class TweetService extends FetcherService {
     async getTweetReplies(tweetId: string, cursor: string): Promise<CursoredData<Tweet>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
-            return { error: new Error('Cannot fetch tweet replies without authentication!') };
+            throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
         }
 
         // Fetching the raw data

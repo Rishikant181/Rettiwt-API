@@ -11,6 +11,7 @@ import RawUser, { Result as UserData } from '../../types/raw/user/User';
 import RawUserFollowers from '../../types/raw/user/Followers';
 import RawUserFollowing from '../../types/raw/user/Following';
 import RawUserLikes from '../../types/raw/user/Likes';
+import * as Errors from '../../types/Errors';
 
 // URLS
 import * as Urls from '../helper/Urls';
@@ -88,12 +89,12 @@ export class UserAccountService extends FetcherService {
     async getUserFollowing(userId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
-            return { error: new Error('Cannot fetch user following without authentication!') };
+            throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
         }
 
         // If invalid count provided
         if (count < 40 && !cursor) {
-            return { error: new Error('Count must be >= 40 (when no cursor if provided)!') };
+            throw new Error(Errors.ValidationErrors.InvalidCount);
         }
 
         // Fetchin the raw data
@@ -123,12 +124,12 @@ export class UserAccountService extends FetcherService {
     async getUserFollowers(userId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
         if (!this.isAuthenticated) {
-            return { error: new Error('Cannot fetch user followers without authentication!') };
+            throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
         }
 
         // If invalid count provided
         if (count < 40 && !cursor) {
-            return { error: new Error('Count must be >= 40 (when no cursor is provided)!') };
+            throw new Error(Errors.ValidationErrors.InvalidCount);
         }
 
         // Fetching the raw data
@@ -158,12 +159,12 @@ export class UserAccountService extends FetcherService {
     async getUserLikes(userId: string, count: number, cursor: string): Promise<CursoredData<Tweet>> {
         // If user is not authenticated, abort
         if (!this.isAuthenticated) {
-            return { error: new Error('Cannot fetch user likes without authentication!') };
+            throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
         }
 
         // If invalid count provided
         if (count < 40 && !cursor) {
-            return { error: new Error('Count must be >= 40 (when no cursor is provided)!') };
+            throw new Error(Errors.ValidationErrors.InvalidCount);
         }
 
         // Fetching the raw data
