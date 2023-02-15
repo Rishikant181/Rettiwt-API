@@ -3,7 +3,7 @@ import ResolverBase from './ResolverBase';
 
 // TYPES
 import { Cursor, DataContext } from '../../types/Service';
-import { ValidationErrors } from '../../types/Errors';
+import { DataErrors, ValidationErrors } from '../../types/Errors';
 
 export default class UserResolver extends ResolverBase {
     // MEMBER DATA
@@ -79,6 +79,11 @@ export default class UserResolver extends ResolverBase {
             }
         } while (total < count);
 
+        // If no likes found
+        if (!likes.length) {
+            return new Error(DataErrors.NoLikedTweetsFound);
+        }
+
         // Adding the cursor to the end of list of data
         likes.push(next);
 
@@ -129,6 +134,11 @@ export default class UserResolver extends ResolverBase {
             }
         } while (total < count);
 
+        // If no followers found
+        if (!followers.length) {
+            return new Error(DataErrors.NoFollowsFound);
+        }
+
         // Adding the cursor to the end of list of data
         followers.push(next);
 
@@ -178,6 +188,11 @@ export default class UserResolver extends ResolverBase {
                 break;
             }
         } while (total < count);
+
+        // If no following found
+        if (!following.length) {
+            return new Error(DataErrors.NoFollowsFound);
+        }
 
         // Adding the cursor to the end of list of data
         following.push(next);

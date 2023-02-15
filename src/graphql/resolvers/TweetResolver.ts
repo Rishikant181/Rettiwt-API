@@ -4,7 +4,7 @@ import ResolverBase from './ResolverBase';
 // TYPES
 import { TweetFilter } from '../../types/Tweet';
 import { Cursor, DataContext } from '../../types/Service';
-import { ValidationErrors } from '../../types/Errors';
+import { DataErrors, ValidationErrors } from '../../types/Errors';
 
 export default class TweetResolver extends ResolverBase {
     // MEMBER DATA
@@ -70,6 +70,11 @@ export default class TweetResolver extends ResolverBase {
                 break;
             }
         } while (total < count);
+
+        // If no tweets found
+        if (!tweets.length) {
+            return new Error(DataErrors.NoTweetsFound);
+        }
 
         // Adding the cursor to the end of list of data
         tweets.push(next);
@@ -153,6 +158,11 @@ export default class TweetResolver extends ResolverBase {
             }
         } while (total < count);
 
+        // If no likers found
+        if (!likers.length) {
+            return new Error(DataErrors.NoLikersFound);
+        }
+
         // Adding the cursor to the end of list of data
         likers.push(next);
 
@@ -202,6 +212,11 @@ export default class TweetResolver extends ResolverBase {
                 break;
             }
         } while (total < count);
+
+        // If no retweeters found
+        if (!retweeters.length) {
+            return new Error(DataErrors.NoRetweetersFound);
+        }
 
         // Adding the cursor to the end of list of data
         retweeters.push(next);
