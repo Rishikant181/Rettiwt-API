@@ -25,30 +25,28 @@ export function extractTweets(res: RawTweets): DataExtract {
     // Getting raw users list
     let dataUsers = res.globalObjects.users;
 
-    // If no tweets found
-    if (Parsers.isJSONEmpty(dataTweets)) {
-        throw new Error(DataErrors.NoTweetsFound);
-    }
+    // If tweets found
+    if (!Parsers.isJSONEmpty(dataTweets)) {
+        // Destructuring the list of tweets
+        for (let key of Object.keys(dataTweets)) {
+            required.push({ rest_id: dataTweets[key].id_str, legacy: dataTweets[key] });
+            tweets.push({ rest_id: dataTweets[key].id_str, legacy: dataTweets[key] });
+        }
 
-    // Destructuring the list of tweets
-    for (let key of Object.keys(dataTweets)) {
-        required.push({ rest_id: dataTweets[key].id_str, legacy: dataTweets[key] });
-        tweets.push({ rest_id: dataTweets[key].id_str, legacy: dataTweets[key] });
-    }
+        // Destructuring the list of users
+        for (let key of Object.keys(dataUsers)) {
+            users.push({ rest_id: dataUsers[key].id_str, legacy: dataUsers[key] });
+        }
 
-    // Destructuring the list of users
-    for (let key of Object.keys(dataUsers)) {
-        users.push({ rest_id: dataUsers[key].id_str, legacy: dataUsers[key] });
-    }
-
-    // Getting the cursor to next batch
-    // If not first batch
-    if (res.timeline.instructions.length > 2) {
-        cursor = res.timeline.instructions[2]?.replaceEntry.entry.content.operation?.cursor.value ?? '';
-    }
-    // If first batch
-    else {
-        cursor = res.timeline.instructions[0].addEntries?.entries.filter(item => item.entryId.indexOf('cursor-bottom') != -1)[0].content.operation?.cursor.value ?? '';
+        // Getting the cursor to next batch
+        // If not first batch
+        if (res.timeline.instructions.length > 2) {
+            cursor = res.timeline.instructions[2]?.replaceEntry.entry.content.operation?.cursor.value ?? '';
+        }
+        // If first batch
+        else {
+            cursor = res.timeline.instructions[0].addEntries?.entries.filter(item => item.entryId.indexOf('cursor-bottom') != -1)[0].content.operation?.cursor.value ?? '';
+        }
     }
 
     // Returning the data
@@ -125,23 +123,21 @@ export function extractTweetLikers(res: RawLikers): DataExtract {
         throw new Error(DataErrors.TweetNotFound);
     }
 
-    // If no likes found
-    if (!res.data.favoriters_timeline.timeline.instructions.length) {
-        throw new Error(DataErrors.NoLikersFound);
+    // If likes found
+    if (res.data.favoriters_timeline.timeline.instructions.length) {
+        // Destructuring raw list of likers
+        res.data.favoriters_timeline.timeline.instructions.filter(item => item.type === 'TimelineAddEntries')[0].entries.forEach(entry => {
+            // If entry is of type user and user exists
+            if (entry.entryId.indexOf('user') != -1 && entry.content.itemContent?.user_results.result.__typename === 'User') {
+                required.push(entry.content.itemContent.user_results.result);
+                users.push(entry.content.itemContent.user_results.result);
+            }
+            // If entry is of type cursor
+            else if (entry.entryId.indexOf('cursor-bottom') != -1) {
+                cursor = entry.content.value ?? '';
+            }
+        });
     }
-
-    // Destructuring raw list of likers
-    res.data.favoriters_timeline.timeline.instructions.filter(item => item.type === 'TimelineAddEntries')[0].entries.forEach(entry => {
-        // If entry is of type user and user exists
-        if (entry.entryId.indexOf('user') != -1 && entry.content.itemContent?.user_results.result.__typename === 'User') {
-            required.push(entry.content.itemContent.user_results.result);
-            users.push(entry.content.itemContent.user_results.result);
-        }
-        // If entry is of type cursor
-        else if (entry.entryId.indexOf('cursor-bottom') != -1) {
-            cursor = entry.content.value ?? '';
-        }
-    });
 
     // Returning the data
     return {
@@ -167,23 +163,21 @@ export function extractTweetRetweeters(res: RawRetweeters): DataExtract {
         throw new Error(DataErrors.TweetNotFound);
     }
 
-    // If no retweeters found
-    if (!res.data.retweeters_timeline.timeline.instructions.length) {
-        throw new Error(DataErrors.NoRetweetersFound);
+    // If retweeters found
+    if (res.data.retweeters_timeline.timeline.instructions.length) {
+        // Destructuring raw list of retweeters
+        res.data.retweeters_timeline.timeline.instructions.filter(item => item.type === 'TimelineAddEntries')[0].entries.forEach(entry => {
+            // If entry is of type user and user exists
+            if (entry.entryId.indexOf('user') != -1 && entry.content.itemContent?.user_results.result.__typename === 'User') {
+                required.push(entry.content.itemContent.user_results.result);
+                users.push(entry.content.itemContent.user_results.result);
+            }
+            // If entry is of type cursor
+            else if (entry.entryId.indexOf('cursor-bottom') != -1) {
+                cursor = entry.content.value ?? '';
+            }
+        });
     }
-
-    // Destructuring raw list of retweeters
-    res.data.retweeters_timeline.timeline.instructions.filter(item => item.type === 'TimelineAddEntries')[0].entries.forEach(entry => {
-        // If entry is of type user and user exists
-        if (entry.entryId.indexOf('user') != -1 && entry.content.itemContent?.user_results.result.__typename === 'User') {
-            required.push(entry.content.itemContent.user_results.result);
-            users.push(entry.content.itemContent.user_results.result);
-        }
-        // If entry is of type cursor
-        else if (entry.entryId.indexOf('cursor-bottom') != -1) {
-            cursor = entry.content.value ?? '';
-        }
-    });
 
     // Returning the data
     return {

@@ -57,9 +57,15 @@ export function extractUserFollow(res: RawUserFollowers | RawUserFollowing): Dat
         if (item.type === 'TimelineAddEntries') {
             // If no follow found
             if (item.entries?.length == 2) {
-                throw new Error(DataErrors.NoFollowsFound);
+                // Returning the data
+                return {
+                    required: required,
+                    cursor: cursor,
+                    users: users,
+                    tweets: tweets
+                };
             }
-            
+
             // Destructuring data
             item.entries?.forEach(entry => {
                 // If entry is of type user and user account exists
@@ -99,29 +105,27 @@ export function extractUserLikes(res: RawUserLikes): DataExtract {
         throw new Error(DataErrors.UserNotFound);
     }
 
-    // If no user likes found
-    if (res.data.user.result.timeline_v2.timeline.instructions.length == 0) {
-        throw new Error(DataErrors.NoLikedTweetsFound);
+    // If user likes found
+    if (res.data.user.result.timeline_v2.timeline.instructions.length) {
+        // Extracting the raw list
+        res.data.user.result.timeline_v2.timeline.instructions.forEach(item => {
+            if (item.type === 'TimelineAddEntries') {
+                // Destructuring data
+                item.entries.forEach(entry => {
+                    // If entry is of type tweet and tweet exists
+                    if (entry.entryId.indexOf('tweet') != -1 && entry.content.itemContent?.tweet_results.result.__typename === 'Tweet') {
+                        required.push(entry.content.itemContent.tweet_results.result);
+                        users.push(entry.content.itemContent.tweet_results.result.core.user_results.result);
+                        tweets.push(entry.content.itemContent.tweet_results.result);
+                    }
+                    // If entry is of type cursor
+                    else if (entry.entryId.indexOf('cursor-bottom') != -1) {
+                        cursor = entry.content.value ?? '';
+                    }
+                });
+            }
+        });
     }
-
-    // Extracting the raw list
-    res.data.user.result.timeline_v2.timeline.instructions.forEach(item => {
-        if (item.type === 'TimelineAddEntries') {
-            // Destructuring data
-            item.entries.forEach(entry => {
-                // If entry is of type tweet and tweet exists
-                if (entry.entryId.indexOf('tweet') != -1 && entry.content.itemContent?.tweet_results.result.__typename === 'Tweet') {
-                    required.push(entry.content.itemContent.tweet_results.result);
-                    users.push(entry.content.itemContent.tweet_results.result.core.user_results.result);
-                    tweets.push(entry.content.itemContent.tweet_results.result);
-                }
-                // If entry is of type cursor
-                else if (entry.entryId.indexOf('cursor-bottom') != -1) {
-                    cursor = entry.content.value ?? '';
-                }
-            });
-        }
-    });
 
     // Returning the data
     return {
