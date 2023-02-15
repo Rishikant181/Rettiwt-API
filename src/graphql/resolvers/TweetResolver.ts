@@ -89,7 +89,7 @@ export default class TweetResolver extends ResolverBase {
         let quotes: any[] = [];                                                     // To store the list of quotes
 
         // If all tweets are to be fetched
-        count = (all || count > quoteCount) ? quoteCount : count;
+        count = all ? quoteCount : count;
 
         // Preparing the filter to use
         let filter = {
@@ -123,7 +123,7 @@ export default class TweetResolver extends ResolverBase {
         let total: number = 0;                                                      // To store the total number of likers fetched
 
         // If all likers are to be fetched
-        count = (all || count > likesCount) ? likesCount : count;
+        count = all ? likesCount : count;
 
         // If required count less than batch size, setting batch size to required count
         this.batchSize = (count < this.batchSize) ? count : this.batchSize;
@@ -173,7 +173,7 @@ export default class TweetResolver extends ResolverBase {
         let total: number = 0;                                                      // To store the total number of retweeters fetched
 
         // If all retweeters are to be fetched
-        count = (all || count > retweetsCount) ? retweetsCount : count;
+        count = all ? retweetsCount : count;
 
         // If required count less than batch size, setting batch size to required count
         this.batchSize = (count < this.batchSize) ? count : this.batchSize;

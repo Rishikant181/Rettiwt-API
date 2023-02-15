@@ -99,7 +99,7 @@ export default class UserResolver extends ResolverBase {
         let total: number = 0;                                                      // To store the total number of followers fetched
 
         // If all followers are to be fetched
-        count = (all || count > followersCount) ? followersCount : count;
+        count = all ? followersCount : count;
 
         // If required count less than batch size, setting batch size to required count
         this.batchSize = (count < this.batchSize) ? count : this.batchSize;
@@ -149,7 +149,7 @@ export default class UserResolver extends ResolverBase {
         let total: number = 0;                                                      // To store the total number of following fetched
 
         // If all followings are to be fetched
-        count = (all || count > followingsCount) ? followingsCount : count;
+        count = all ? followingsCount : count;
 
         // If required count less than batch size, setting batch size to required count
         this.batchSize = (count < this.batchSize) ? count : this.batchSize;
