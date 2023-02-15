@@ -14,5 +14,7 @@ export enum DataErrors {
     TweetNotFound = "A tweet with the given id was not found",
     NoTweetsFound = "No tweets matching the given criteria found",
     NoLikersFound = "No likers found for the tweet with the given id",
-    NoRetweetersFound = "No retweeters found for the tweet with the given id"
+    NoRetweetersFound = "No retweeters found for the tweet with the given id",
+    NoFollowsFound = "No follow details was found for the user with the given id",
+    NoLikedTweetsFound = "No liked tweets were found for the user with the given id"
 };

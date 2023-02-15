@@ -152,7 +152,7 @@ export class UserAccountService extends FetcherService {
     /**
      * @returns The list of tweets liked by the target user
      * @param userId The rest id of the target user
-     * @param count The number of likes to fetch, must be >= 10 (when no cursor is provided) and <= 100
+     * @param count The number of likes to fetch, must be >= 40 (when no cursor is provided) and <= 100
      * @param cursor The cursor to next batch. If blank, first batch is fetched
      */
     async getUserLikes(userId: string, count: number, cursor: string): Promise<CursoredData<Tweet>> {
@@ -163,7 +163,7 @@ export class UserAccountService extends FetcherService {
 
         // If invalid count provided
         if (count < 40 && !cursor) {
-            return { error: new Error('Count must be >= 10 (when no cursor is provided)!') };
+            return { error: new Error('Count must be >= 40 (when no cursor is provided)!') };
         }
 
         // Fetching the raw data
