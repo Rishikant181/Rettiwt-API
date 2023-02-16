@@ -2,8 +2,8 @@
 import ResolverBase from './ResolverBase';
 
 // TYPES
-import { Cursor, DataContext } from '../../types/Service';
-import { ValidationErrors } from '../../types/Errors';
+import { Cursor, DataContext } from '../../types/data/Service';
+import { DataErrors, ValidationErrors } from '../../types/data/Errors';
 
 export default class UserResolver extends ResolverBase {
     // MEMBER DATA
@@ -23,11 +23,11 @@ export default class UserResolver extends ResolverBase {
     async resolveUserDetails(userName: string, id: string): Promise<any> {
         // If user name is supplied
         if (userName) {
-            return await this.context.users.getUserAccountDetails(userName);
+            return await this.context.users.getUserDetails(userName);
         }
         // If id is supplied
         else if (id) {
-            return await this.context.users.getUserAccountDetailsById(id);
+            return await this.context.users.getUserDetailsById(id);
         }
         // If neither userName nor id is supplied
         else {
@@ -46,7 +46,7 @@ export default class UserResolver extends ResolverBase {
     async resolveUserLikes(id: string, count: number, all: boolean, cursor: string, favouritesCount: number): Promise<any> {
         let likes: any[] = [];                                                      // To store the list of liked tweets
         let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
-        let total: number = 0;                                                      // To store the total number of liked twets fetched
+        let total: number = 0;                                                      // To store the total number of liked tweets fetched
 
         // If all liked tweets are to be fetched
         count = all ? favouritesCount : count;
@@ -55,17 +55,12 @@ export default class UserResolver extends ResolverBase {
         this.batchSize = (count < this.batchSize) ? count : this.batchSize;
 
         // Repeatedly fetching data as long as total data fetched is less than requried
-        while (total < count) {
+        do {
             // If this is the last batch, change batch size to number of remaining tweets
             this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
 
             // Getting the data
-            const res = await this.context.users.getUserLikes(id, count, next.value);
-
-            // If error
-            if(res.error) {
-                return res.error;
-            }
+            const res = await this.context.users.getUserLikes(id, this.batchSize, next.value);
 
             // If data is available
             if (res.list?.length) {
@@ -82,6 +77,11 @@ export default class UserResolver extends ResolverBase {
             else {
                 break;
             }
+        } while (total < count);
+
+        // If no likes found
+        if (!likes.length) {
+            return new Error(DataErrors.NoLikedTweetsFound);
         }
 
         // Adding the cursor to the end of list of data
@@ -104,23 +104,18 @@ export default class UserResolver extends ResolverBase {
         let total: number = 0;                                                      // To store the total number of followers fetched
 
         // If all followers are to be fetched
-        count = (all || count > followersCount) ? followersCount : count;
+        count = all ? followersCount : count;
 
         // If required count less than batch size, setting batch size to required count
         this.batchSize = (count < this.batchSize) ? count : this.batchSize;
 
         // Repeatedly fetching data as long as total data fetched is less than requried
-        while (total < count) {
+        do {
             // If this is the last batch, change batch size to number of remaining followers
             this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
 
             // Getting the data
-            const res = await this.context.users.getUserFollowers(id, count, next.value);
-
-            // If error
-            if(res.error) {
-                return res.error;
-            }
+            const res = await this.context.users.getUserFollowers(id, this.batchSize, next.value);
 
             // If data is available
             if (res.list?.length) {
@@ -137,6 +132,11 @@ export default class UserResolver extends ResolverBase {
             else {
                 break;
             }
+        } while (total < count);
+
+        // If no followers found
+        if (!followers.length) {
+            return new Error(DataErrors.NoFollowsFound);
         }
 
         // Adding the cursor to the end of list of data
@@ -159,23 +159,18 @@ export default class UserResolver extends ResolverBase {
         let total: number = 0;                                                      // To store the total number of following fetched
 
         // If all followings are to be fetched
-        count = (all || count > followingsCount) ? followingsCount : count;
+        count = all ? followingsCount : count;
 
         // If required count less than batch size, setting batch size to required count
         this.batchSize = (count < this.batchSize) ? count : this.batchSize;
 
         // Repeatedly fetching data as long as total data fetched is less than requried
-        while (total < count) {
+        do {
             // If this is the last batch, change batch size to number of remaining following
             this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
 
             // Getting the data
-            const res = await this.context.users.getUserFollowing(id, count, next.value);
-
-            // If error
-            if(res.error) {
-                return res.error;
-            }
+            const res = await this.context.users.getUserFollowing(id, this.batchSize, next.value);
 
             // If data is available
             if (res.list?.length) {
@@ -192,6 +187,11 @@ export default class UserResolver extends ResolverBase {
             else {
                 break;
             }
+        } while (total < count);
+
+        // If no following found
+        if (!following.length) {
+            return new Error(DataErrors.NoFollowsFound);
         }
 
         // Adding the cursor to the end of list of data

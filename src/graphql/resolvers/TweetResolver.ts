@@ -2,9 +2,9 @@
 import ResolverBase from './ResolverBase';
 
 // TYPES
-import { TweetFilter } from '../../types/Tweet';
-import { Cursor, DataContext } from '../../types/Service';
-import { ValidationErrors } from '../../types/Errors';
+import { TweetFilter } from '../../types/data/Tweet';
+import { Cursor, DataContext } from '../../types/data/Service';
+import { DataErrors, ValidationErrors } from '../../types/data/Errors';
 
 export default class TweetResolver extends ResolverBase {
     // MEMBER DATA
@@ -47,17 +47,12 @@ export default class TweetResolver extends ResolverBase {
         this.batchSize = (count < this.batchSize) ? count : this.batchSize;
 
         // Repeatedly fetching data as long as total data fetched is less than requried
-        while (total < count) {
+        do {
             // If this is the last batch, change batch size to number of remaining tweets
             this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
 
             // Getting the data
-            const res = await this.context.tweets.getTweets(filter, count, next.value);
-
-            // If error
-            if(res.error) {
-                return res.error;
-            }
+            const res = await this.context.tweets.getTweets(filter, this.batchSize, next.value);
 
             // If data is available
             if (res.list?.length) {
@@ -74,6 +69,11 @@ export default class TweetResolver extends ResolverBase {
             else {
                 break;
             }
+        } while (total < count);
+
+        // If no tweets found
+        if (!tweets.length) {
+            return new Error(DataErrors.NoTweetsFound);
         }
 
         // Adding the cursor to the end of list of data
@@ -94,7 +94,7 @@ export default class TweetResolver extends ResolverBase {
         let quotes: any[] = [];                                                     // To store the list of quotes
 
         // If all tweets are to be fetched
-        count = (all || count > quoteCount) ? quoteCount : count;
+        count = all ? quoteCount : count;
 
         // Preparing the filter to use
         let filter = {
@@ -128,23 +128,18 @@ export default class TweetResolver extends ResolverBase {
         let total: number = 0;                                                      // To store the total number of likers fetched
 
         // If all likers are to be fetched
-        count = (all || count > likesCount) ? likesCount : count;
+        count = all ? likesCount : count;
 
         // If required count less than batch size, setting batch size to required count
         this.batchSize = (count < this.batchSize) ? count : this.batchSize;
 
         // Repeatedly fetching data as long as total data fetched is less than requried
-        while (total < count) {
+        do {
             // If this is the last batch, change batch size to number of remaining likers
             this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
 
             // Getting the data
-            const res = await this.context.tweets.getTweetLikers(id, count, next.value);
-
-            // If error
-            if(res.error) {
-                return res.error;
-            }
+            const res = await this.context.tweets.getTweetLikers(id, this.batchSize, next.value);
 
             // If data is available
             if (res.list?.length) {
@@ -161,6 +156,11 @@ export default class TweetResolver extends ResolverBase {
             else {
                 break;
             }
+        } while (total < count);
+
+        // If no likers found
+        if (!likers.length) {
+            return new Error(DataErrors.NoLikersFound);
         }
 
         // Adding the cursor to the end of list of data
@@ -183,23 +183,18 @@ export default class TweetResolver extends ResolverBase {
         let total: number = 0;                                                      // To store the total number of retweeters fetched
 
         // If all retweeters are to be fetched
-        count = (all || count > retweetsCount) ? retweetsCount : count;
+        count = all ? retweetsCount : count;
 
         // If required count less than batch size, setting batch size to required count
         this.batchSize = (count < this.batchSize) ? count : this.batchSize;
 
         // Repeatedly fetching data as long as total data fetched is less than requried
-        while (total < count) {
+        do {
             // If this is the last batch, change batch size to number of remaining retweeters
             this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
 
             // Getting the data
-            const res = await this.context.tweets.getTweetRetweeters(id, count, next.value);
-
-            // If error
-            if(res.error) {
-                return res.error;
-            }
+            const res = await this.context.tweets.getTweetRetweeters(id, this.batchSize, next.value);
 
             // If data is available
             if (res.list?.length) {
@@ -216,6 +211,11 @@ export default class TweetResolver extends ResolverBase {
             else {
                 break;
             }
+        } while (total < count);
+
+        // If no retweeters found
+        if (!retweeters.length) {
+            return new Error(DataErrors.NoRetweetersFound);
         }
 
         // Adding the cursor to the end of list of data
