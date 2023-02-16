@@ -1,4 +1,5 @@
-import { TweetFilter } from '../../types/Tweet';
+// TYPES
+import { TweetFilter } from '../../types/data/Tweet';
 
 /**
  * @returns Whether the given json object is empty or not

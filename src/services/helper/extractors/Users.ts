@@ -1,6 +1,6 @@
 // TYPES
 import { DataExtract } from '../../../types/Resolvers'
-import { DataErrors } from '../../../types/Errors';
+import { DataErrors } from '../../../types/data/Errors';
 import RawUser from '../../../types/raw/user/User';
 import RawUserFollowers from '../../../types/raw/user/Followers';
 import RawUserFollowing from '../../../types/raw/user/Following';
@@ -13,7 +13,7 @@ import * as Parsers from '../Parser';
  * @returns The raw user account data formatted and sorted into required and additional data
  * @param res The raw response received from Twitter
  */
-export function extractUserAccountDetails(res: RawUser): DataExtract {
+export function extractUserDetails(res: RawUser): DataExtract {
     let required: any[] = [];                                               // To store the reqruied raw data
     let cursor: string = '';                                                // To store the cursor to next batch
     let users: any[] = [];                                                  // To store additional user data

@@ -1,5 +1,5 @@
 // PACKAGE
-import { GraphQLList, GraphQLString, GraphQLObjectType, GraphQLInt, GraphQLBoolean, GraphQLUnionType } from "graphql";
+import { GraphQLList, GraphQLString, GraphQLObjectType, GraphQLInt, GraphQLBoolean, GraphQLUnionType, GraphQLType } from "graphql";
 
 // TYPES
 import { User, UserList } from './UserTypes';
@@ -9,8 +9,7 @@ import { Cursor } from './Global';
 import TweetResolver from '../resolvers/TweetResolver';
 import UserResolver from "../resolvers/UserResolver";
 
-//@ts-ignore
-export const TweetTokens = new GraphQLObjectType({
+export const TweetTokens: GraphQLObjectType = new GraphQLObjectType({
     name: 'TweetTokens',
     description: 'Additional extracted tokens from the tweet like mentions, hashtags, etc',
     fields: () => ({
@@ -24,8 +23,7 @@ export const TweetTokens = new GraphQLObjectType({
     })
 });
 
-//@ts-ignore
-export const Tweet = new GraphQLObjectType({
+export const Tweet: GraphQLObjectType = new GraphQLObjectType({
     name: 'Tweet',
     description: 'The details of single tweet',
     fields: () => ({
@@ -137,7 +135,7 @@ export const Tweet = new GraphQLObjectType({
     })
 });
 
-export const TweetList = new GraphQLList(new GraphQLUnionType({
+export const TweetList: GraphQLList<GraphQLType> = new GraphQLList(new GraphQLUnionType({
     name: 'TweetCursorUnion',
     description: 'A union type which can either be a Tweet or a Cursor, used in cursored tweet lists',
     types: [Tweet, Cursor],

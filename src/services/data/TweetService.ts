@@ -3,18 +3,18 @@ import { FetcherService } from "../FetcherService";
 import { AuthService } from "../AuthService";
 
 // TYPES
-import { TweetFilter, Tweet } from "../../types/Tweet";
-import { User } from "../../types/UserAccount";
-import { CursoredData } from '../../types/Service';
+import { TweetFilter, Tweet } from "../../types/data/Tweet";
+import { User } from "../../types/data/User";
+import { CursoredData } from '../../types/data/Service';
 import RawTweet, { Result as TweetData } from '../../types/raw/tweet/Tweet';
 import { Result as UserData } from "../../types/raw/user/User";
 import RawTweets from '../../types/raw/tweet/Tweets';
 import RawLikers from '../../types/raw/tweet/Favouriters';
 import RawRetweeters from '../../types/raw/tweet/Retweeters';
-import * as Errors from '../../types/Errors';
+import * as Errors from '../../types/data/Errors';
 
 // URLS
-import * as Urls from '../helper/Urls';
+import * as TweetUrls from '../helper/urls/Tweets';
 
 // EXTRACTORS
 import * as TweetExtractors from "../helper/extractors/Tweets";
@@ -48,7 +48,7 @@ export class TweetService extends FetcherService {
         }
 
         // Getting the raw data
-        let res = await this.request<RawTweets>(Urls.tweetsUrl(toQueryString(filter), count, cursor), false).then(res => res.data);
+        let res = await this.request<RawTweets>(TweetUrls.tweetsUrl(toQueryString(filter), count, cursor), false).then(res => res.data);
 
         // Extracting data
         let data = TweetExtractors.extractTweets(res);
@@ -79,7 +79,7 @@ export class TweetService extends FetcherService {
         }
         
         // Fetching the raw data
-        let res = await this.request<RawTweet>(Urls.tweetDetailsUrl(tweetId), false).then(res => res.data);
+        let res = await this.request<RawTweet>(TweetUrls.tweetDetailsUrl(tweetId), false).then(res => res.data);
 
         // Extracting data
         let data = TweetExtractors.extractTweet(res, tweetId);
@@ -111,7 +111,7 @@ export class TweetService extends FetcherService {
         }
         
         // Fetching the raw data
-        let res = await this.request<RawLikers>(Urls.tweetLikesUrl(tweetId, count, cursor)).then(res => res.data);
+        let res = await this.request<RawLikers>(TweetUrls.tweetLikesUrl(tweetId, count, cursor)).then(res => res.data);
 
         // Extracting data
         let data = TweetExtractors.extractTweetLikers(res);
@@ -146,7 +146,7 @@ export class TweetService extends FetcherService {
         }
 
         // Fetching the raw data
-        let res = await this.request<RawRetweeters>(Urls.tweetRetweetUrl(tweetId, count, cursor)).then(res => res.data);
+        let res = await this.request<RawRetweeters>(TweetUrls.tweetRetweetUrl(tweetId, count, cursor)).then(res => res.data);
 
         // Extracting data
         let data = TweetExtractors.extractTweetRetweeters(res);
@@ -175,7 +175,7 @@ export class TweetService extends FetcherService {
         }
 
         // Fetching the raw data
-        let res = await this.request<RawTweet>(Urls.tweetRepliesUrl(tweetId, cursor)).then(res => res.data);
+        let res = await this.request<RawTweet>(TweetUrls.tweetRepliesUrl(tweetId, cursor)).then(res => res.data);
 
         // Extracting data
         let data = TweetExtractors.extractTweetReplies(res, tweetId);

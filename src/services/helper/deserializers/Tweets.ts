@@ -1,5 +1,5 @@
 // TYPES
-import { Tweet, TweetEntities } from '../../../types/Tweet';
+import { Tweet, TweetEntities } from '../../../types/data/Tweet';
 import { Result as RawTweet, Entities2 as RawTweetEntities } from '../../../types/raw/tweet/Tweet';
 
 // PARSERS

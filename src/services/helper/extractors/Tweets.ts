@@ -1,6 +1,6 @@
 // TYPES
 import { DataExtract } from '../../../types/Resolvers';
-import { DataErrors } from '../../../types/Errors';
+import { DataErrors } from '../../../types/data/Errors';
 import RawTweet from '../../../types/raw/tweet/Tweet';
 import RawTweets from '../../../types/raw/tweet/Tweets';
 import RawRetweeters from '../../../types/raw/tweet/Retweeters';
@@ -205,8 +205,7 @@ export function extractTweetReplies(res: RawTweet, tweetId: string): DataExtract
     }
 
     // Destructuring the received raw data
-    //@ts-ignore
-    res.data.threaded_conversation_with_injections.instructions.filter(item => item.type === 'TimelineAddEntries')[0].entries.map(entry => {
+    res.data.threaded_conversation_with_injections_v2.instructions.filter(item => item.type === 'TimelineAddEntries')[0].entries?.map(entry => {
         // If entry is of type tweet
         if (entry.entryId.indexOf('tweet') != -1) {
             // If tweet exists
@@ -226,8 +225,7 @@ export function extractTweetReplies(res: RawTweet, tweetId: string): DataExtract
             }
 
             // Iterating over the rest of the conversation
-            //@ts-ignore
-            entry.content.items.forEach(item => {
+            entry.content.items?.forEach(item => {
                 // If item is of type tweet
                 if (item.entryId.indexOf('tweet') != -1) {
                     // If tweet exists

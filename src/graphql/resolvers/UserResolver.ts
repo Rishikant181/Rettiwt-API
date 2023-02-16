@@ -2,8 +2,8 @@
 import ResolverBase from './ResolverBase';
 
 // TYPES
-import { Cursor, DataContext } from '../../types/Service';
-import { DataErrors, ValidationErrors } from '../../types/Errors';
+import { Cursor, DataContext } from '../../types/data/Service';
+import { DataErrors, ValidationErrors } from '../../types/data/Errors';
 
 export default class UserResolver extends ResolverBase {
     // MEMBER DATA
@@ -23,11 +23,11 @@ export default class UserResolver extends ResolverBase {
     async resolveUserDetails(userName: string, id: string): Promise<any> {
         // If user name is supplied
         if (userName) {
-            return await this.context.users.getUserAccountDetails(userName);
+            return await this.context.users.getUserDetails(userName);
         }
         // If id is supplied
         else if (id) {
-            return await this.context.users.getUserAccountDetailsById(id);
+            return await this.context.users.getUserDetailsById(id);
         }
         // If neither userName nor id is supplied
         else {

@@ -1,6 +1,6 @@
 // SERVICES
 import { AuthService } from "./services/AuthService";
-import { UserAccountService } from "./services/data/UserAccountService";
+import { UserService } from "./services/data/UserService";
 import { TweetService } from "./services/data/TweetService";
 import { AccountService } from "./services/accounts/AccountService";
 
@@ -14,7 +14,7 @@ export const Rettiwt = (cookie: string = '') => {
 
     // Using the auth service instance to create data services instances
     return {
-        users: new UserAccountService(auth),
+        users: new UserService(auth),
         tweets: new TweetService(auth),
         account: new AccountService()
     };

@@ -4,7 +4,7 @@ import { GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLStri
 // TYPES
 import { User } from '../types/UserTypes';
 import { Tweet, TweetList } from '../types/TweetTypes';
-import { TweetFilter } from '../../types/Tweet';
+import { TweetFilter } from '../../types/data/Tweet';
 
 // RESOLVERS
 import UserResolver from '../resolvers/UserResolver';

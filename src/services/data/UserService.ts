@@ -3,18 +3,18 @@ import { FetcherService } from '../FetcherService';
 import { AuthService } from '../AuthService';
 
 // TYPES
-import { User } from '../../types/UserAccount';
-import { Tweet } from '../../types/Tweet';
-import { CursoredData } from '../../types/Service';
-import RawTweet, { Result as TweetData } from '../../types/raw/tweet/Tweet';
+import { User } from '../../types/data/User';
+import { Tweet } from '../../types/data/Tweet';
+import { CursoredData } from '../../types/data/Service';
+import { Result as TweetData } from '../../types/raw/tweet/Tweet';
 import RawUser, { Result as UserData } from '../../types/raw/user/User';
 import RawUserFollowers from '../../types/raw/user/Followers';
 import RawUserFollowing from '../../types/raw/user/Following';
 import RawUserLikes from '../../types/raw/user/Likes';
-import * as Errors from '../../types/Errors';
+import * as Errors from '../../types/data/Errors';
 
 // URLS
-import * as Urls from '../helper/Urls';
+import * as UserUrls from '../helper/urls/Users';
 
 // EXTRACTORS
 import * as UserExtractors from '../helper/extractors/Users';
@@ -26,22 +26,22 @@ import * as TweetDeserializers from '../helper/deserializers/Tweets';
 /**
  * A service that deals with fetching of data related to user account
  */
-export class UserAccountService extends FetcherService {
+export class UserService extends FetcherService {
     // MEMBER METHODS
     constructor(auth: AuthService) {
         super(auth);
     }
 
     /**
-     * @returns The user account details of the given user
+     * @returns The details of the given user
      * @param screenName The screen name of the target user.
      */
-    async getUserAccountDetails(screenName: string): Promise<User> {
+    async getUserDetails(screenName: string): Promise<User> {
         // Fetching the raw data
-        let res: RawUser = await this.request<RawUser>(Urls.userAccountUrl(screenName), false).then(res => res.data);
+        let res: RawUser = await this.request<RawUser>(UserUrls.userDetailsUrl(screenName), false).then(res => res.data);
         
         // Extracting data
-        let data = UserExtractors.extractUserAccountDetails(res);
+        let data = UserExtractors.extractUserDetails(res);
 
         // Caching data
         this.cacheData(data);
@@ -53,10 +53,10 @@ export class UserAccountService extends FetcherService {
     }
 
     /**
-     * @returns The user account details of the user with given rest id
+     * @returns The details of the user with given rest id
      * @param restId The screen name of the target user.
      */
-    async getUserAccountDetailsById(restId: string): Promise<User> {
+    async getUserDetailsById(restId: string): Promise<User> {
         // Getting data from cache
         let cachedData = await this.readData(restId);
 
@@ -66,10 +66,10 @@ export class UserAccountService extends FetcherService {
         }
         
         // Fetchin the raw data
-        let res = await this.request<RawUser>(Urls.userAccountByIdUrl(restId), false).then(res => res.data);
+        let res = await this.request<RawUser>(UserUrls.userDetailsByIdUrl(restId), false).then(res => res.data);
 
         // Extracting data
-        let data = UserExtractors.extractUserAccountDetails(res);
+        let data = UserExtractors.extractUserDetails(res);
 
         // Caching data
         this.cacheData(data);
@@ -98,7 +98,7 @@ export class UserAccountService extends FetcherService {
         }
 
         // Fetchin the raw data
-        let res = await this.request<RawUserFollowing>(Urls.userFollowingUrl(userId, count, cursor)).then(res => res.data);
+        let res = await this.request<RawUserFollowing>(UserUrls.userFollowingUrl(userId, count, cursor)).then(res => res.data);
         
         // Extracting data
         let data = UserExtractors.extractUserFollow(res);
@@ -133,7 +133,7 @@ export class UserAccountService extends FetcherService {
         }
 
         // Fetching the raw data
-        let res = await this.request<RawUserFollowers>(Urls.userFollowersUrl(userId, count, cursor)).then(res => res.data);
+        let res = await this.request<RawUserFollowers>(UserUrls.userFollowersUrl(userId, count, cursor)).then(res => res.data);
         
         // Extracting data
         let data = UserExtractors.extractUserFollow(res);
@@ -168,7 +168,7 @@ export class UserAccountService extends FetcherService {
         }
 
         // Fetching the raw data
-        let res = await this.request<RawUserLikes>(Urls.userLikesUrl(userId, count, cursor)).then(res => res.data);
+        let res = await this.request<RawUserLikes>(UserUrls.userLikesUrl(userId, count, cursor)).then(res => res.data);
         
         // Extracting data
         let data = UserExtractors.extractUserLikes(res);

@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // URLS
-import { guestTokenUrl } from './helper/Urls';
+import { guestTokenUrl } from './helper/urls/Authentication';
 
 // TYPES
 import { GuestCredentials, AuthCredentials } from '../types/Authentication';
