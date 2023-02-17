@@ -110,7 +110,12 @@ export const Tweet: GraphQLObjectType = new GraphQLObjectType({
             },
             resolve: (parent, args, context) => new TweetResolver(context).resolveTweetRetweeters(parent.id, args.count, args.all, args.cursor, parent.retweetCount)
         },
-        replyCount: { type: GraphQLInt },
+        replyCount: { type: GraphQLInt }
+        /**
+         * THIS IS DISABLED FOR USE FOR NOW BECAUSE TWITTER DOESN'T HAVE ANY ENDPOINT FOR FETCHING REPLIES.
+         * THE DATA THIS RETURNS IS INCONSISTENT!
+         */
+        /*
         replies: {
             type: TweetList,
             args: {
@@ -132,6 +137,7 @@ export const Tweet: GraphQLObjectType = new GraphQLObjectType({
             },
             resolve: (parent, args, context) => new TweetResolver(context).resolveTweetReplies(parent.id, args.count, args.all, args.cursor, parent.replyCount)
         }
+        */
     })
 });
 

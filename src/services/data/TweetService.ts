@@ -164,10 +164,14 @@ export class TweetService extends FetcherService {
     }
 
     /**
+     * THIS IS DISABLED FOR USE FOR NOW BECAUSE TWITTER DOESN'T HAVE ANY ENDPOINT FOR FETCHING REPLIES.
+     * THE DATA THIS RETURNS IS INCONSISTENT!
+     * 
      * @returns The list of replies to the given tweet
      * @param tweetId The rest id of the target tweet
      * @param cursor The cursor to the next batch of replies. If blank, first batch is fetched
      */
+    /*
     async getTweetReplies(tweetId: string, cursor: string): Promise<CursoredData<Tweet>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
@@ -191,4 +195,5 @@ export class TweetService extends FetcherService {
             next: { value: data.cursor }
         };
     }
+    */
 }

@@ -225,6 +225,9 @@ export default class TweetResolver extends ResolverBase {
     }
 
     /**
+     * THIS IS DISABLED FOR USE FOR NOW BECAUSE TWITTER DOESN'T HAVE ANY ENDPOINT FOR FETCHING REPLIES.
+     * THE DATA THIS RETURNS IS INCONSISTENT!
+     * 
      * @returns The list of replies of the given tweet
      * @param id The id of the tweet whose replies are to be fetched
      * @param count The total number of replies to fetch
@@ -232,6 +235,7 @@ export default class TweetResolver extends ResolverBase {
      * @param cursor The cursor to the batch of replies to fetch
      * @param repliesCount The total number of replies to the target tweet
      */
+    /*
     async resolveTweetReplies(id: string, count: number, all: boolean, cursor: string, repliesCount: number): Promise<any[]> {
         let replies: any[] = [];                                                    // To store the list of replies
         let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
@@ -267,4 +271,5 @@ export default class TweetResolver extends ResolverBase {
 
         return replies;
     }
+    */
 }
