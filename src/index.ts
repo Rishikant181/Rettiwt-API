@@ -19,3 +19,7 @@ export const Rettiwt = (cookie: string = '') => {
         account: new AccountService()
     };
 }
+
+// Exporting additional types
+export { User } from './types/data/User';
+export { Tweet, TweetEntities, TweetFilter } from './types/data/Tweet';
