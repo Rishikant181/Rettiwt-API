@@ -23,3 +23,5 @@ export const Rettiwt = (cookie: string = '') => {
 // Exporting additional types
 export { User } from './types/data/User';
 export { Tweet, TweetEntities, TweetFilter } from './types/data/Tweet';
+export { Cursor, CursoredData } from './types/data/Service';
+export { AuthenticationErrors, ValidationErrors, DataErrors } from './types/data/Errors';
