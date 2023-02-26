@@ -24,6 +24,7 @@ import { extractTrendData } from "../helper/Extractors";
 export class TrendService extends FetcherService{
     constructor(auth: AuthService) {
         super(auth);
+        this.isAuthenticated=auth.isAuthenticated
     }
 
     async getTrends(type:trendOn): Promise<Trends> {
@@ -33,4 +34,6 @@ export class TrendService extends FetcherService{
         this.cacheData(Data);
         return Data;
     }
+
 }
+
