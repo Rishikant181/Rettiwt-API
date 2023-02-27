@@ -12,7 +12,6 @@ import { config } from '../config/env';
 
 /**
  * @summary Handles authentication of http requests and other authentication related tasks
- * 
  */
 export class AuthService {
     // MEMBER DATA
