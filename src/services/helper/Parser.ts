@@ -153,4 +153,4 @@ export function convertToNumber(input: string): number {
   
     // If there is no abbreviation, return the number as is
     return number;
-  }
+}
