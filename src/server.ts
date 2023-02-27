@@ -14,8 +14,6 @@ import { rootQuery } from './graphql/queries/RootQuery';
 
 // CONFIGS
 import { config } from './config/env';
-import { Rettiwt } from '.';
-import { type } from 'os';
 import { trendOn } from './types/Trends';
 
 // Initialising express instance
@@ -35,7 +33,6 @@ app.use('/graphql', graphqlHTTP(req => ({
     graphiql: config.is_development
 })));
 
-(Rettiwt().trends.getTrends(trendOn.sports).then(res=>console.log(res)))
 // Setting up express server
 app.listen(config.port, async () => {
     console.log(`Listening on port ${config.port}`);
