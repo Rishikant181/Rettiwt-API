@@ -133,6 +133,8 @@ dist
 .pnp.*
 
 # Test files
-test
+./src/test
+./src/experimental
+./src/temp
 
 
