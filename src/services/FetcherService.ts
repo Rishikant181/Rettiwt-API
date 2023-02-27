@@ -12,7 +12,8 @@ import { Result as RawTweet } from '../types/raw/tweet/Tweet';
 
 // HELPERS
 import * as Headers from './helper/Headers'
-import * as Deserializers from './helper/Deserializers';
+import * as UserDeserializers from './helper/deserializers/Users';
+import * as TweetDeserializers from './helper/deserializers/Tweets';
 import { CurlyOptions } from 'node-libcurl/dist/curly';
 
 /**
@@ -81,8 +82,8 @@ export class FetcherService {
      */
     protected cacheData(data: any): void {
         // Parsing the extracted data
-        let users = data.users.map((user: RawUser) => Deserializers.toUser(user));
-        let tweets = data.tweets.map((tweet: RawTweet) => Deserializers.toTweet(tweet));
+        let users = data.users.map((user: RawUser) => UserDeserializers.toUser(user));
+        let tweets = data.tweets.map((tweet: RawTweet) => TweetDeserializers.toTweet(tweet));
 
         // Caching the data
         this.cache.write(users);

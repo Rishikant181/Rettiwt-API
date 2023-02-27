@@ -1,7 +1,7 @@
 // SERVICES
-import { AccountService } from "../services/accounts/AccountService";
-import { TweetService } from "../services/data/TweetService";
-import { UserAccountService } from "../services/data/UserAccountService";
+import { AccountService } from "../../services/accounts/AccountService";
+import { TweetService } from "../../services/data/TweetService";
+import { UserService } from "../../services/data/UserService";
 
 /**
  * @summary Stores the cursor to the batch of data
@@ -24,16 +24,15 @@ export class Cursor {
  * @summary Stores cursored data that is returned by services
  */
 export interface CursoredData<Type> {
-    list?: Type[];                                                      // To store the list data
-    next?: Cursor;                                                      // To store the information about cursor to the next batch
-    error?: Error;                                                      // To store the error message, if any
+    list: Type[];                                                       // To store the list data
+    next: Cursor;                                                       // To store the information about cursor to the next batch
 }
 
 /**
  * @summary Stores the data context from where data is to be fetched
  */
 export interface DataContext {
-    users: UserAccountService,                                          // To store the source for fetching user account data
+    users: UserService,                                                 // To store the source for fetching user data
     tweets: TweetService,                                               // To store the source for fetching tweet data
     account: AccountService                                             // To store the source for account related operations
 }

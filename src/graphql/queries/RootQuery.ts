@@ -2,9 +2,9 @@
 import { GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql'
 
 // TYPES
-import { User } from '../models/graphql/UserTypes';
-import { Tweet, TweetList } from '../models/graphql/TweetTypes';
-import { TweetFilter } from '../types/Tweet';
+import { User } from '../types/UserTypes';
+import { Tweet, TweetList } from '../types/TweetTypes';
+import { TweetFilter } from '../../types/data/Tweet';
 
 // RESOLVERS
 import UserResolver from '../resolvers/UserResolver';
@@ -46,9 +46,10 @@ export const rootQuery = new GraphQLObjectType({
                 words: { type: new GraphQLList(GraphQLString) },
                 startDate: { type: GraphQLString },
                 endDate: { type: GraphQLString },
+                sinceId: { type: GraphQLString },
                 quoted: { type: GraphQLString },
                 links: { type: GraphQLBoolean, defaultValue: false },
-                count: { type: GraphQLInt, defaultValue: 20 },
+                count: { type: GraphQLInt, defaultValue: 10 },
                 cursor: { type: GraphQLString, defaultValue: '' }
             },
             resolve: (parent, args, context) => new TweetResolver(context).resolveTweets(args as TweetFilter, args.count, args.cursor)

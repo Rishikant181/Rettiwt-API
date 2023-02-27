@@ -1,5 +1,5 @@
 // TYPES
-import { DataContext } from '../types/Service';
+import { DataContext } from '../../types/data/Service';
 
 export default class ResolverBase {
     // MEMBER DATA

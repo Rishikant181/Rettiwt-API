@@ -1,17 +1,16 @@
 // PACKAGE
-import { GraphQLBoolean, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLUnionType } from 'graphql';
+import { GraphQLBoolean, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLUnionType, GraphQLType } from 'graphql';
 
 // TYPES
 import { Tweet, TweetList } from './TweetTypes'
 import { Cursor } from './Global';
-import { TweetFilter } from '../../types/Tweet';
+import { TweetFilter } from '../../types/data/Tweet';
 
 // RESOLVERS
-import UserResolver from '../../resolvers/UserResolver';
-import TweetResolver from '../../resolvers/TweetResolver';
+import UserResolver from '../resolvers/UserResolver';
+import TweetResolver from '../resolvers/TweetResolver';
 
-//@ts-ignore
-export const User = new GraphQLObjectType({
+export const User: GraphQLObjectType = new GraphQLObjectType({
     name: 'User',
     description: 'The details of a single target twitter user',
     fields: () => ({
@@ -33,7 +32,7 @@ export const User = new GraphQLObjectType({
             type: TweetList,
             args: {
                 count: {
-                    description: "The number of liked tweets to fetch",
+                    description: "The number of liked tweets to fetch, must be >= 40 (when no cursor if provided)",
                     type: GraphQLInt,
                     defaultValue: 10
                 },
@@ -55,9 +54,9 @@ export const User = new GraphQLObjectType({
             type: UserList,
             args: {
                 count: {
-                    description: "The number of followers to fetch",
+                    description: "The number of followers to fetch, must be >= 40 (when no cursor is provided)",
                     type: GraphQLInt,
-                    defaultValue: 20
+                    defaultValue: 40
                 },
                 all: {
                     description: "Whether to fetch all followers list",
@@ -78,8 +77,8 @@ export const User = new GraphQLObjectType({
             args: {
                 count: {
                     type: GraphQLInt,
-                    description: "The number of followings to fetch",
-                    defaultValue: 20
+                    description: "The number of followings to fetch, must be >= 40 (when no cursor is provided)",
+                    defaultValue: 40
                 },
                 all: {
                     description: "Whether to fetch all followings list",
@@ -99,7 +98,7 @@ export const User = new GraphQLObjectType({
             type: TweetList,
             args: {
                 count: {
-                    description: "The number of tweets to fetch",
+                    description: "The number of tweets to fetch, must be >= 1",
                     type: GraphQLInt,
                     defaultValue: 10
                 },
@@ -114,13 +113,12 @@ export const User = new GraphQLObjectType({
                     defaultValue: ''
                 }
             },
-            resolve: (parent, args, context) => new TweetResolver(context).resolveTweets({ fromUsers: [parent.userName] } as TweetFilter, args.count, args.cursor)
+            resolve: (parent, args, context) => new TweetResolver(context).resolveTweets({ fromUsers: [parent.userName] } as TweetFilter, args.all ? parent.statusesCount : args.count, args.cursor)
         }
     })
 });
 
-//@ts-ignore
-export const UserList = new GraphQLList(new GraphQLUnionType({
+export const UserList: GraphQLList<GraphQLType> = new GraphQLList(new GraphQLUnionType({
     name: 'UserCursorUnion',
     description: 'A union type which can either be a User or a Cursor, used in cursored User lists',
     types: [User, Cursor],

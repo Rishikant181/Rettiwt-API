@@ -1,4 +1,5 @@
-import { TweetFilter } from '../../types/Tweet';
+// TYPES
+import { TweetFilter } from '../../types/data/Tweet';
 
 /**
  * @returns Whether the given json object is empty or not
@@ -95,16 +96,17 @@ export function toQueryString(filter: TweetFilter): string {
     // Concatenating the input filter arguments to a URL query formatted string
     return [
         filter.words ? filter.words.join(' ') : '',
-        filter.hashtags ? `(${filter.hashtags.map(hashtag => '%23' + hashtag).join(' OR ')})` : '',
+        filter.hashtags ? `(${filter.hashtags.map(hashtag => '#' + hashtag).join(' OR ')})` : '',
         filter.fromUsers ? `(${filter.fromUsers.map(user => `from:${user}`).join(' OR ')})` : '',
         filter.toUsers ? `(${filter.toUsers.map(user => `to:${user}`).join(' OR ')})` : '',
-        filter.mentions ? `(${filter.mentions.map(mention => '%40' + mention).join(' OR ')})` : '',
+        filter.mentions ? `(${filter.mentions.map(mention => '@' + mention).join(' OR ')})` : '',
         filter.startDate ? `since:${filter.startDate}` : '',
         filter.endDate ? `until:${filter.endDate}` : '',
+        filter.sinceId ? `since_id:${filter.sinceId}` : '',
         filter.quoted ? `quoted_tweet_id:${filter.quoted}` : ''
     ]
     .filter(item => item !== '()' && item !== '')
-    .join(' ') + (!filter.links ? '%20-filter%3Alinks' : '');
+    .join(' ') + (!filter.links ? ' -filter:links' : '');
 }
 
 /**

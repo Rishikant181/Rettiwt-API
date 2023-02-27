@@ -4,13 +4,13 @@ import { graphqlHTTP } from 'express-graphql';
 import { GraphQLSchema } from 'graphql';
 
 // Services
-import { UserAccountService } from './services/data/UserAccountService';
+import { UserService } from './services/data/UserService';
 import { TweetService } from './services/data/TweetService';
 import { AccountService } from './services/accounts/AccountService';
 import { AuthService } from './services/AuthService';
 
 // SCHEMA
-import { rootQuery } from './queries/RootQuery';
+import { rootQuery } from './graphql/queries/RootQuery';
 
 // CONFIGS
 import { config } from './config/env';
@@ -24,7 +24,7 @@ app.use('/graphql', graphqlHTTP(req => ({
         query: rootQuery
     }),
     context: {
-        users: new UserAccountService(new AuthService(req.headers.cookie as string)),
+        users: new UserService(new AuthService(req.headers.cookie as string)),
         tweets: new TweetService(new AuthService(req.headers.cookie as string)),
         account: new AccountService()
     },
