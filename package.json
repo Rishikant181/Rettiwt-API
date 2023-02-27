@@ -27,7 +27,6 @@
 		"cookiejar": "2.1.4",
 		"express": "4.18.2",
 		"express-graphql": "0.12.0",
-		"fetch": "^1.1.0",
 		"graphql": "14.7.0",
 		"node-cache": "5.1.2",
 		"node-libcurl": "3.0.0"
