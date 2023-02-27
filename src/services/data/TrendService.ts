@@ -32,5 +32,4 @@ export class TrendService extends FetcherService{
         let Data = extractTrendData(res.data);
         return Data;
     }
-
 }
