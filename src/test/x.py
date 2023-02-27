@@ -1,1 +1,0 @@
-print(len('Cumpdump got served XD \n Thats what I can do in fuckin seconds. Next time think thrice before trollin\' somebody there is gonna be some nightmare like me \n to serve you cum dumps a chilled fuckin\' nightmare.\n Blockin me, deleting the post aint gonna help you consider this my last warning'))
