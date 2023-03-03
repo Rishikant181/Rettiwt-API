@@ -1,45 +1,114 @@
-// This file contains various objects related to handling of Tweets made by a user
-
 /**
- * @summary Stores the filter to be used for fetching tweets from TwitterAPI
+ * The filter to be used for fetching tweets from Twitter
+ * @public
  */
 export interface TweetFilter {
-    words?: string[];                                                   // To store the list of words to search
-    hashtags?: string[];                                                // To store the list of hashtags to seach
-    fromUsers?: string[];                                               // To store the list of users who made the tweet
-    toUsers?: string[];                                                 // To store the list of users to whom the tweet was meant for
-    mentions?: string[];                                                // To store the list of mentioned users
-    startDate?: string;                                                 // To store the beginning date to search tweets
-    endDate?: string;                                                   // To store the ending date to search tweets
-    sinceId?: string;                                                   // To store the first id (exclusive) from which to search tweets
-    quoted?: string;                                                    // To store the id of the tweet which is quoted
-    links?: boolean;                                                    // To store whether to fetch link tweets or not
+    /** The list of words to search */
+    words?: string[];
+
+    /** The list of hashtags to search
+     * 
+     * @remarks '#' must be excluded from the hashtag!
+     */
+    hashtags?: string[];
+
+    /** The list of usernames whose tweets are to be searched
+     * 
+     * @remarks '@' must be excluded from the username!
+     */
+    fromUsers?: string[];
+    
+    /** The list of username to whom the tweets to be searched, are adressed
+     * 
+     * @remarks '@' must be excluded from the username!
+     */
+    toUsers?: string[];
+
+    /** The list of username mentioned in the tweets to search
+     * 
+     * @remarks '@' must be excluded from the username!
+     */
+    mentions?: string[];
+
+    /** The date starting from which tweets are to be searched
+     * 
+     * @remarks Must be in the format YYYY-MM-DD
+     */
+    startDate?: string;
+
+    /** The date upto which tweets are to be searched
+     * 
+     * @remarks Must be in the format YYYY-MM-DD
+     */
+    endDate?: string;
+
+    /** The id of the tweet, after which the tweets are to be searched */
+    sinceId?: string;
+
+    /** The id of the tweet which is quoted in the tweets to search */
+    quoted?: string;
+
+    /** Whether to fetch tweets that are links or not
+     * 
+     * @defaultValue false
+     */
+    links?: boolean;
 };
 
 /**
- * @summary Stores the different types of tweet elements like urls, media, mentions, hashtags, etc
+ * The different types parsed entities like urls, media, mentions, hashtags, etc
  */
 export interface TweetEntities {
-    hashtags: string[];                                                 // To store a list of hashtags used
-    urls: string[];                                                     // To store a list of urls mentioned
-    mentionedUsers: string[];                                           // To store a list of users mentioned
-    media: string[];                                                    // To store urls to various media files
+    /** The list of hashtags mentioned in the tweet */
+    hashtags: string[];
+
+    /** The list of urls mentioned in the tweet */
+    urls: string[];
+
+    /** The list of IDs of users mentioned in the tweet */
+    mentionedUsers: string[];
+
+    /** The list of urls to various media mentioned in the tweet */
+    media: string[];
 }
 
 /**
- * @summary Stores a single tweet
+ * The details of a single Tweet
  */
 export interface Tweet {
-    id: string;                                                         // To store the conversation id
-    tweetBy: string;                                                    // To store the rest id of the user who made the tweet
-    createdAt: string;                                                  // To store the time when the tweet was created
-    entities: TweetEntities;                                            // To store additional tweet entities
-    quoted: string;                                                     // To store the id of the tweet quote (if any)
-    fullText: string;                                                   // To store the full text in the tweet
-    replyTo: string;                                                    // To store the id of the tweet to which this was a reply
-    lang: string;                                                       // To store the language used in the tweet
-    quoteCount: number;                                                 // To store the number of quotes of the tweet
-    replyCount: number;                                                 // To store the number of replies to the tweet
-    retweetCount: number;                                               // To store the number of retweets
-    likeCount: number;                                                  // To store the number of likes
+    /** The rest id of the tweet */
+    id: string;
+
+    /** The rest id of the user who made the tweet */
+    tweetBy: string;
+
+    /** The date and time of creation of the tweet, in UTC string format */
+    createdAt: string;
+
+    /** Additional tweet entities like urls, mentions, etc */
+    entities: TweetEntities;
+
+    /** The rest id of the tweet which is quoted in the tweet */
+    quoted: string;
+
+    /** The full text content of the tweet */
+    fullText: string;
+
+    /** The rest id of the user to which the tweet is a reply */
+    replyTo: string;
+
+    /** The language in which the tweet is written */
+    lang: string;
+
+    /** The number of quotes of the tweet */
+    quoteCount: number;
+
+    /** The number of replies to the tweet */
+    replyCount: number;
+
+    /** The number of retweets of the tweet */
+    retweetCount: number;
+
+    /** The number of likes of the tweet */
+    likeCount: number;
 }
