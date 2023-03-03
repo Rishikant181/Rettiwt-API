@@ -4,15 +4,17 @@ import { TweetService } from "../../services/data/TweetService";
 import { UserService } from "../../services/data/UserService";
 
 /**
- * @summary Stores the cursor to the batch of data
+ * The cursor to the batch of data to be fetched
+ * @public
  */
 export class Cursor {
     // MEMBER DATA
-    value: string;                                                      // To store the cursor to next batch of data
+    /** The cursor string */
+    value: string;
 
     // MEMBER DATA
     /**
-     * @summary Initializes a new cursor from the given cursor string
+     * Initializes a new cursor from the given cursor string
      * @param cursorStr The string representation of the cursor
      */
     constructor(cursorStr: string) {
@@ -21,18 +23,29 @@ export class Cursor {
 }
 
 /**
- * @summary Stores cursored data that is returned by services
+ * The data that us fetched batch-wise along with a cursor
+ * @param Type The type of data present in the list
+ * @public
  */
 export interface CursoredData<Type> {
-    list: Type[];                                                       // To store the list data
-    next: Cursor;                                                       // To store the information about cursor to the next batch
+    /** The list of data of the given type */
+    list: Type[];
+
+    /** The cursor to the next batch of data */
+    next: Cursor;
 }
 
 /**
- * @summary Stores the data context from where data is to be fetched
+ * The data context from where data is to be fetched
+ * @public
  */
 export interface DataContext {
-    users: UserService,                                                 // To store the source for fetching user data
-    tweets: TweetService,                                               // To store the source for fetching tweet data
-    account: AccountService                                             // To store the source for account related operations
+    /** Handles data related to users */
+    users: UserService,
+
+    /** Handles data related to tweets */
+    tweets: TweetService,
+
+    /** Handles account related operations  */
+    account: AccountService
 }
