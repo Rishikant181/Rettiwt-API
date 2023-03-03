@@ -1,5 +1,7 @@
 /**
  * The guest credentials for guest authentication.
+ * 
+ * @internal
  */
 export interface GuestCredentials {
     /** The bearer token from twitter.com.
@@ -16,6 +18,8 @@ export interface GuestCredentials {
 
 /**
  * The credentials for authenticated/logged in users.
+ * 
+ * @internal
  */
 export interface AuthCredentials {
     /** The bearer token from twitter.com.
