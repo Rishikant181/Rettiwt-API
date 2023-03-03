@@ -15,7 +15,6 @@ export class Cursor {
     // MEMBER DATA
     /**
      * Initializes a new cursor from the given cursor string
-     * 
      * @param cursorStr The string representation of the cursor
      */
     constructor(cursorStr: string) {
@@ -25,7 +24,6 @@ export class Cursor {
 
 /**
  * The data that us fetched batch-wise along with a cursor
- * 
  * @typeParam Type - The type of data present in the list
  * @public
  */
@@ -39,7 +37,6 @@ export interface CursoredData<Type> {
 
 /**
  * The data context from where data is to be fetched
- * 
  * @public
  */
 export interface DataContext {

@@ -1,5 +1,6 @@
 /**
  * The details of a single user
+ * @public
  */
 export interface User {
     /** The rest id of the user */
@@ -30,7 +31,6 @@ export interface User {
     followingsCount: number;
 
     /** The number of tweets made by the user
-     * 
      * @remarks This includes original tweets along with retweets
      */
     statusesCount: number;
