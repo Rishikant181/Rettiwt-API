@@ -136,13 +136,22 @@ export class AccountService {
     }
 
     /**
+     * Login to Twitter using the given credentials and get back the cookies.
+     * 
      * @param email The email of the account to be logged into
      * @param userName The username associated with the given account
      * @param password The password to the account
      * @returns The cookies for authenticating with the given account
+     * @public
      */
     public async login(email: string, userName: string, password: string): Promise<string> {
-        // Executing each step of login flow
+        /**
+         * This works by sending a chain of request that are required for login to twitter.
+         * Each method in the chain returns a flow token that must be provied as payload in the next method in the chain.
+         * Each such method is called a subtask.
+         * Each subtask sets the {@link flowToken} property of the class which is then given in the payload of the next subtask.
+         * The final subtask returns the headers which actually contains the cookie in the 'set-cookie' field.
+         */
         await this.initiateLogin();
         await this.jsInstrumentationSubtask();
         await this.enterUserIdentifier(email);
