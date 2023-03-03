@@ -20,8 +20,14 @@ export const Rettiwt = (cookie: string = '') => {
     };
 }
 
-// Exporting additional types
-export { User } from './types/data/User';
-export { Tweet, TweetEntities, TweetFilter } from './types/data/Tweet';
-export { Cursor, CursoredData } from './types/data/Service';
-export { AuthenticationErrors, ValidationErrors, DataErrors } from './types/data/Errors';
+// Exporting classes
+export * from './services/FetcherService';
+export * from './services/accounts/AccountService';
+export * from './services/data/TweetService';
+export * from './services/data/UserService';
+
+// Exporting types
+export * from './types/data/Errors';
+export * from './types/data/Service';
+export * from './types/data/Tweet';
+export * from './types/data/User';
