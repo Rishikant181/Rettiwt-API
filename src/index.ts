@@ -21,6 +21,8 @@ export const Rettiwt = (cookie: string = '') => {
 }
 
 // Exporting classes
+export * from './services/AuthService';
+export * from './services/CacheService';
 export * from './services/FetcherService';
 export * from './services/accounts/AccountService';
 export * from './services/data/TweetService';
@@ -31,3 +33,5 @@ export * from './types/data/Errors';
 export * from './types/data/Service';
 export * from './types/data/Tweet';
 export * from './types/data/User';
+export * from './types/Authentication';
+export * from './types/HTTP';
