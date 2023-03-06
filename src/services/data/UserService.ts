@@ -24,17 +24,20 @@ import * as UserDeserializers from '../helper/deserializers/Users';
 import * as TweetDeserializers from '../helper/deserializers/Tweets';
 
 /**
- * A service that deals with fetching of data related to user account
+ * Handles fetching of data related to user account
  */
 export class UserService extends FetcherService {
     // MEMBER METHODS
+    /**
+     * @param auth The AuthService instance to use for authentication.
+     */
     constructor(auth: AuthService) {
         super(auth);
     }
 
     /**
-     * @returns The details of the given user
      * @param screenName The screen name of the target user.
+     * @returns The details of the given user.
      */
     async getUserDetails(screenName: string): Promise<User> {
         // Fetching the raw data
@@ -53,8 +56,8 @@ export class UserService extends FetcherService {
     }
 
     /**
-     * @returns The details of the user with given rest id
      * @param restId The screen name of the target user.
+     * @returns The details of the user with given rest id.
      */
     async getUserDetailsById(restId: string): Promise<User> {
         // Getting data from cache
@@ -81,10 +84,11 @@ export class UserService extends FetcherService {
     }
 
     /**
-     * @returns The list of users followed by the target user
-     * @param userId The rest id of the target user
-     * @param count The number of following to fetch, should be >= 40 (when no cursor is provided) and <=100
-     * @param cursor The cursor to next batch. If blank, first batch is fetched
+     * @param userId The rest id of the target user.
+     * @param count The number of following to fetch.
+     * @param cursor The cursor to next batch. If blank, first batch is fetched.
+     * @returns The list of users followed by the target user.
+     * @remarks count must be >= 40 (when no cursor is provided) and <=100.
      */
     async getUserFollowing(userId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
@@ -116,10 +120,11 @@ export class UserService extends FetcherService {
     }
 
     /**
-     * @returns The list of users following the target user
-     * @param userId The rest id of the target user
-     * @param count The number of followers to fetch, should be >= 40 (when no cursor is provided) and <=100
-     * @param cursor The cursor to next batch. If blank, first batch is fetched
+     * @param userId The rest id of the target user.
+     * @param count The number of followers to fetch.
+     * @param cursor The cursor to next batch. If blank, first batch is fetched.
+     * @returns The list of users following the target user.
+     * @remarks count must be >= 40 (when no cursor is provided) and <=100.
      */
     async getUserFollowers(userId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
@@ -151,10 +156,11 @@ export class UserService extends FetcherService {
     }
 
     /**
-     * @returns The list of tweets liked by the target user
-     * @param userId The rest id of the target user
-     * @param count The number of likes to fetch, must be >= 40 (when no cursor is provided) and <= 100
-     * @param cursor The cursor to next batch. If blank, first batch is fetched
+     * @param userId The rest id of the target user.
+     * @param count The number of likes to fetch.
+     * @param cursor The cursor to next batch. If blank, first batch is fetched.
+     * @returns The list of tweets liked by the target user.
+     * @remarks count must be >= 40 (when no cursor is provided) and <= 100.
      */
     async getUserLikes(userId: string, count: number, cursor: string): Promise<CursoredData<Tweet>> {
         // If user is not authenticated, abort

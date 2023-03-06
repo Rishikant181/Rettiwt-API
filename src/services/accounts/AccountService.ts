@@ -12,12 +12,23 @@ import LoginFlows from './LoginFlows';
 import { loginHeader } from '../helper/Headers';
 import { Cookie, CookieJar } from 'cookiejar';
 
+/**
+ * Handles all operations related to a user's account, such as loggin in, managing account, etc
+ * @public
+ */
 export class AccountService {
     // MEMBER DATA
-    private auth: AuthService;                                                  // To store the auth service instance to use
-    private guestCreds: GuestCredentials;                                       // To store the guest credentials to use
-    private cookies: Cookie[];                                                  // To store the cookies received from twitter
-    private flowToken: string;                                                  // To store the flow token received from current flow
+    /** The AuthService instance to use for authentication. */
+    private auth: AuthService;
+    
+    /** The current guest credentials to use. */
+    private guestCreds: GuestCredentials;
+
+    /** The cookies received from Twitter after logging in. */
+    private cookies: Cookie[];
+
+    /** The flow token received after execution of current flow. */
+    private flowToken: string;
 
     // MEMBER METHODS
     constructor() {
@@ -40,7 +51,8 @@ export class AccountService {
     }
 
     /**
-     * @summary Step 1: Initiates login
+     * Step 1: Initiates login
+     * @internal
      */
     private async initiateLogin(): Promise<void> {
         // Initiating the login process
@@ -58,7 +70,8 @@ export class AccountService {
     }
 
     /**
-     * @summary Step 2: Does something
+     * Step 2: Does something
+     * @internal
      */
     private async jsInstrumentationSubtask(): Promise<void> {
         // Executing the flow
@@ -73,7 +86,8 @@ export class AccountService {
     }
 
     /**
-     * @summary Step 3: Takes the email for login
+     * Step 3: Takes the email for login
+     * @internal
      */
     private async enterUserIdentifier(email: string): Promise<void> {
         // Executing the flow
@@ -88,7 +102,8 @@ export class AccountService {
     }
 
     /**
-     * @summary Step 4: Takes the username for login
+     * Step 4: Takes the username for login
+     * @internal
      */
     private async enterAlternateUserIdentifier(userName: string): Promise<void> {
         // Executing the flow
@@ -103,7 +118,8 @@ export class AccountService {
     }
 
     /**
-     * @summary Step 5: Takes the password for login
+     * Step 5: Takes the password for login
+     * @internal
      */
     private async enterPassword(password: string): Promise<void> {
         // Executing the flow
@@ -118,7 +134,8 @@ export class AccountService {
     }
 
     /**
-     * @summary Step 6: Gets the actual cookies
+     * Step 6: Gets the actual cookies
+     * @internal
      */
     private async accountDuplicationCheck(): Promise<void> {
         // Executing the flow
@@ -128,7 +145,7 @@ export class AccountService {
             postFields: JSON.stringify(LoginFlows.AccountDuplicationCheck.body(this.flowToken))
         });
 
-        // Storing cookies received
+        // Getting the cookies from the set-cookie header of the reponse.
         this.cookies = new CookieJar().setCookies(res.headers[0]['Set-Cookie'] as string[]);
 
         // Getting the flow token
@@ -136,13 +153,22 @@ export class AccountService {
     }
 
     /**
+     * Login to Twitter using the given credentials and get back the cookies.
+     * @public
+     * 
      * @param email The email of the account to be logged into
      * @param userName The username associated with the given account
      * @param password The password to the account
      * @returns The cookies for authenticating with the given account
      */
     public async login(email: string, userName: string, password: string): Promise<string> {
-        // Executing each step of login flow
+        /**
+         * This works by sending a chain of request that are required for login to twitter.
+         * Each method in the chain returns a flow token that must be provied as payload in the next method in the chain.
+         * Each such method is called a subtask.
+         * Each subtask sets the {@link flowToken} property of the class which is then given in the payload of the next subtask.
+         * The final subtask returns the headers which actually contains the cookie in the 'set-cookie' field.
+         */
         await this.initiateLogin();
         await this.jsInstrumentationSubtask();
         await this.enterUserIdentifier(email);

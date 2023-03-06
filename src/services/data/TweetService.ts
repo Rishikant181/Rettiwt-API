@@ -27,19 +27,24 @@ import * as TweetDeserializers from '../helper/deserializers/Tweets';
 import { toQueryString } from '../helper/Parser';
 
 /**
- * A service that deals with fetching of data related to tweets
+ * Handles fetching of data related to tweets.
+ * @public
  */
 export class TweetService extends FetcherService {
     // MEMBER METHODS
+    /**
+     * @param auth The AuthService instance to use for authentication.
+     */
     constructor(auth: AuthService) {
         super(auth);
     }
 
     /**
-     * @returns The list of tweets that match the given filter
-     * @param filter The filter be used for searching the tweets
-     * @param count The number of tweets to fetch, must be >= 1 and <= 100
-     * @param cursor The cursor to the next batch of tweets. If blank, first batch is fetched
+     * @param filter The filter be used for searching the tweets.
+     * @param count The number of tweets to fetch.
+     * @param cursor The cursor to the next batch of tweets. If blank, first batch is fetched.
+     * @returns The list of tweets that match the given filter.
+     * @remarks count must be >= 1 and <= 100.
      */
     async getTweets(filter: TweetFilter, count: number, cursor: string): Promise<CursoredData<Tweet>> {
         // If invalid count provided
@@ -66,8 +71,8 @@ export class TweetService extends FetcherService {
     }
 
     /**
-     * @returns The details of a single tweet with the given tweet id
-     * @param tweetId The rest id of the target tweet
+     * @param tweetId The rest id of the target tweet.
+     * @returns The details of a single tweet with the given tweet id.
      */
     async getTweetById(tweetId: string): Promise<Tweet> {
         // Getting data from cache
@@ -94,10 +99,11 @@ export class TweetService extends FetcherService {
     }
 
     /**
-     * @returns The list of users who liked the given tweet
-     * @param tweetId The rest id of the target tweet
-     * @param count The batch size of the list, must be >= 10 (when no cursor is provided) and <= 100
-     * @param cursor The cursor to the next batch of users. If blank, first batch is fetched
+     * @param tweetId The rest id of the target tweet.
+     * @param count The batch size of the list.
+     * @param cursor The cursor to the next batch of users. If blank, first batch is fetched.
+     * @returns The list of users who liked the given tweet.
+     * @remarks count must be >= 10 (when no cursor is provided) and <= 100.
      */
     async getTweetLikers(tweetId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
@@ -129,10 +135,11 @@ export class TweetService extends FetcherService {
     }
 
     /**
-     * @returns The list of users who retweeted the given tweet     
-     * @param tweetId The rest id of the target tweet
-     * @param count The batch size of the list, must be >= 10 (when no cursor is provided) and <= 100
-     * @param cursor The cursor to the next batch of users. If blank, first batch is fetched
+     * @param tweetId The rest id of the target tweet.
+     * @param count The batch size of the list.
+     * @param cursor The cursor to the next batch of users. If blank, first batch is fetched.
+     * @returns The list of users who retweeted the given tweet.
+     * @remarks count must be >= 10 (when no cursor is provided) and <= 100.
      */
     async getTweetRetweeters(tweetId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
@@ -167,9 +174,9 @@ export class TweetService extends FetcherService {
      * THIS IS DISABLED FOR USE FOR NOW BECAUSE TWITTER DOESN'T HAVE ANY ENDPOINT FOR FETCHING REPLIES.
      * THE DATA THIS RETURNS IS INCONSISTENT!
      * 
-     * @returns The list of replies to the given tweet
-     * @param tweetId The rest id of the target tweet
-     * @param cursor The cursor to the next batch of replies. If blank, first batch is fetched
+     * @param tweetId The rest id of the target tweet.
+     * @param cursor The cursor to the next batch of replies. If blank, first batch is fetched.
+     * @returns The list of replies to the given tweet.
      */
     /*
     async getTweetReplies(tweetId: string, cursor: string): Promise<CursoredData<Tweet>> {

@@ -1,12 +1,16 @@
 /**
- * @summary Stores different types of error messages related to authentication
+ * Different types of error messages related to authentication.
+ *
+ * @public
  */
 export enum AuthenticationErrors {
     NotAuthenticated = "Cannot fetch this data without authentication",
 };
 
 /**
- * @summary Stores different types error messages for validation errors
+ * Different types error messages for validation errors.
+ *
+ * @public
  */
 export enum ValidationErrors {
     InvalidTweetFilter = "Atleast one of fromUsers/toUsers/mentions/hashtags/words argument is required",
@@ -15,7 +19,9 @@ export enum ValidationErrors {
 };
 
 /**
- * @summary Stores all the different type of error messages that are returned by services
+ * Different type of error messages that are returned by services.
+ *
+ * @public
  */
 export enum DataErrors {
     UserNotFound = "An account with given username/id was not found",

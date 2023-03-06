@@ -17,7 +17,7 @@ import * as TweetDeserializers from './helper/deserializers/Tweets';
 import { CurlyOptions } from 'node-libcurl/dist/curly';
 
 /**
- * @summary Stores all the different type of http requests
+ * The different types of http requests.
  */
 export enum HttpMethods {
     POST = "POST",
@@ -25,15 +25,26 @@ export enum HttpMethods {
 };
 
 /**
- * @service The base serivice from which all other data services derive their behaviour
+ * Handles all HTTP requests.
+ * @internal
+ * 
+ * This serves as the base service from which all other data services derive their behaviour.
  */
 export class FetcherService {
     // MEMBER DATA
-    private auth: AuthService;                                              // To store the auth service instance to use for authentication
-    private cache: CacheService;                                            // To stoer the cache service instance to use for caching data
-    protected isAuthenticated: boolean;                                     // To store whether user is authenticated or not
+    /** The authentication service instance. */
+    private auth: AuthService;
+
+    /** The caching service instance. */
+    private cache: CacheService;
+
+    /** Whether instance has been authenticated or not. */
+    protected isAuthenticated: boolean;
 
     // MEMBER METHODS
+    /**
+     * @param auth The AuthService instance to use for authentication.
+     */
     constructor(auth: AuthService) {
         this.auth = auth;
         this.cache = CacheService.getInstance();
@@ -41,47 +52,75 @@ export class FetcherService {
     }
 
     /**
-    * @summary Throws the appropriate http error after evaluation of the status code of reponse
-    * @param res The response object received from http communication
+    * The middleware for handling any HTTP error.
+    * 
+    * @param res The response object received.
+    * @throws {@link HttpStatus}.
+    * @returns The received response, if no HTTP errors are found.
     */
     private handleHTTPError(res: CurlyResult): CurlyResult {
+        /**
+         * If the status code is not 200 => the HTTP request was not successful. hence throwing error
+         */
         if (res.statusCode != 200 && res.statusCode in HttpStatus) {
             throw new Error(HttpStatus[res.statusCode])
         }
-
+        
         return res;
     }
 
     /**
-     * @returns The absolute raw json data from give url
-     * @param url The url to fetch data from
-     * @param authenticate Whether to authenticate requests or not
-     * @param method The HTTP method to use
-     * @param data The data to be sent along with the request (works with only POST method)
+     * Creates an HTTP request according to the given parameters.
+     * 
+     * This method internally uses node-libcurl library to make curl requests to the URL, instead of node-fetch.
+     * This has been done since that way it better mimics the HTTP requests made from browser.
+     * 
+     * @param url The url to fetch data from.
+     * @param authenticate Whether to authenticate requests or not.
+     * @param method The HTTP method (from {@link HttpMethods}) to use.
+     * @param data The data to be sent along with the request (for POST request).
+     * @returns The {@link CurlyResult} received.
      */
     protected async request<DataType>(url: string, authenticate: boolean = true, method: HttpMethods = HttpMethods.GET, data?: any): Promise<CurlyResult<DataType>> {
-        // Creating the configuration for the http request
+        /**
+         * Creating the request configuration based on the params
+         */
         let config: CurlyOptions = {
+            /**
+             * If authorization is required, using the authenticated header, using the authentication credentiials.
+             * Else, using the guest header, using the guest credentials.
+             */
             httpHeader: authenticate ? Headers.authorizedHeader(await this.auth.getAuthCredentials()) : Headers.guestHeader(await this.auth.getGuestCredentials()),
+            /** 
+             * Disabling SSL peer verification because verification causes Error 404 (only while fetching tweets), likely because peer verification fails.
+             */
             sslVerifyPeer: false,
         };
 
-        // If post request is to be made
+        /**
+         * While making requests, if data is to be sent, the JSON data first need to be stringified.
+         * After making the request, the response is then passed to HTTP error handling middlware for HTTP error handling.
+         */
+        // If POST request is to be made
         if (method == HttpMethods.POST) {
             return await curly.post(url, { ...config, postFields: JSON.stringify(data) }).then(res => this.handleHTTPError(res));
         }
-        // If get request is to be made
+        // If GET request is to be made
         else {
             return await curly.get(url, config).then(res => this.handleHTTPError(res));
         }
     }
 
     /**
-     * @summary Caches the extracted data
+     * Caches the extracted data into the {@link CacheService} instance.
+     * 
      * @param data The extracted data to be cached
      */
     protected cacheData(data: any): void {
-        // Parsing the extracted data
+        /**
+         * The extracted data is in raw form.
+         * This raw data is deserialized into the respective known types.
+         */
         let users = data.users.map((user: RawUser) => UserDeserializers.toUser(user));
         let tweets = data.tweets.map((tweet: RawTweet) => TweetDeserializers.toTweet(tweet));
 
@@ -91,8 +130,10 @@ export class FetcherService {
     }
 
     /**
-     * @returns The data with the given id (if it exists in cache)
-     * @param id The id of the data to be read from cache
+     * Fetches the data with the given id from the cache.
+     * 
+     * @param id The id of the data to be read from cache.
+     * @returns The data with the given id. If does not exists, returns undefined.
      */
     protected readData(id: string): any {
         // Reading data from cache
