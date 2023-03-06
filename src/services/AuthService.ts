@@ -19,7 +19,7 @@ export class AuthService {
     /** The common bearer token for authentication. */
     private authToken: string;
 
-    /** The current authenticatio credentials. */
+    /** The current authentication credentials. */
     private credentials: AuthCredentials;
 
     /** Whether instance has been authenticated or not. */
