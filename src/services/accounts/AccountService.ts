@@ -12,12 +12,22 @@ import LoginFlows from './LoginFlows';
 import { loginHeader } from '../helper/Headers';
 import { Cookie, CookieJar } from 'cookiejar';
 
+/**
+ * Handles all operations related to a user's account, such as loggin in, managing account, etc
+ */
 export class AccountService {
     // MEMBER DATA
-    private auth: AuthService;                                                  // To store the auth service instance to use
-    private guestCreds: GuestCredentials;                                       // To store the guest credentials to use
-    private cookies: Cookie[];                                                  // To store the cookies received from twitter
-    private flowToken: string;                                                  // To store the flow token received from current flow
+    /** The AuthService instance to use for authentication */
+    private auth: AuthService;
+    
+    /** The current guest credentials to use */
+    private guestCreds: GuestCredentials;
+
+    /** The cookies received from Twitter after logging in */
+    private cookies: Cookie[];
+
+    /** The flow token received after execution of current flow */
+    private flowToken: string;
 
     // MEMBER METHODS
     constructor() {
@@ -40,7 +50,7 @@ export class AccountService {
     }
 
     /**
-     * @summary Step 1: Initiates login
+     * Step 1: Initiates login
      */
     private async initiateLogin(): Promise<void> {
         // Initiating the login process
@@ -58,7 +68,7 @@ export class AccountService {
     }
 
     /**
-     * @summary Step 2: Does something
+     * Step 2: Does something
      */
     private async jsInstrumentationSubtask(): Promise<void> {
         // Executing the flow
@@ -73,7 +83,7 @@ export class AccountService {
     }
 
     /**
-     * @summary Step 3: Takes the email for login
+     * Step 3: Takes the email for login
      */
     private async enterUserIdentifier(email: string): Promise<void> {
         // Executing the flow
@@ -88,7 +98,7 @@ export class AccountService {
     }
 
     /**
-     * @summary Step 4: Takes the username for login
+     * Step 4: Takes the username for login
      */
     private async enterAlternateUserIdentifier(userName: string): Promise<void> {
         // Executing the flow
@@ -103,7 +113,7 @@ export class AccountService {
     }
 
     /**
-     * @summary Step 5: Takes the password for login
+     * Step 5: Takes the password for login
      */
     private async enterPassword(password: string): Promise<void> {
         // Executing the flow
@@ -118,7 +128,7 @@ export class AccountService {
     }
 
     /**
-     * @summary Step 6: Gets the actual cookies
+     * Step 6: Gets the actual cookies
      */
     private async accountDuplicationCheck(): Promise<void> {
         // Executing the flow
@@ -128,7 +138,7 @@ export class AccountService {
             postFields: JSON.stringify(LoginFlows.AccountDuplicationCheck.body(this.flowToken))
         });
 
-        // Storing cookies received
+        // Getting the cookies from the set-cookie header of the reponse.
         this.cookies = new CookieJar().setCookies(res.headers[0]['Set-Cookie'] as string[]);
 
         // Getting the flow token
