@@ -25,7 +25,10 @@ export enum HttpMethods {
 };
 
 /**
- * The base serivice from which all other data services derive their behaviour.
+ * Handles all HTTP requests.
+ * @internal
+ * 
+ * This serves as the base service from which all other data services derive their behaviour.
  */
 export class FetcherService {
     // MEMBER DATA

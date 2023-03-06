@@ -14,19 +14,20 @@ import { Cookie, CookieJar } from 'cookiejar';
 
 /**
  * Handles all operations related to a user's account, such as loggin in, managing account, etc
+ * @public
  */
 export class AccountService {
     // MEMBER DATA
-    /** The AuthService instance to use for authentication */
+    /** The AuthService instance to use for authentication. */
     private auth: AuthService;
     
-    /** The current guest credentials to use */
+    /** The current guest credentials to use. */
     private guestCreds: GuestCredentials;
 
-    /** The cookies received from Twitter after logging in */
+    /** The cookies received from Twitter after logging in. */
     private cookies: Cookie[];
 
-    /** The flow token received after execution of current flow */
+    /** The flow token received after execution of current flow. */
     private flowToken: string;
 
     // MEMBER METHODS
@@ -51,6 +52,7 @@ export class AccountService {
 
     /**
      * Step 1: Initiates login
+     * @internal
      */
     private async initiateLogin(): Promise<void> {
         // Initiating the login process
@@ -69,6 +71,7 @@ export class AccountService {
 
     /**
      * Step 2: Does something
+     * @internal
      */
     private async jsInstrumentationSubtask(): Promise<void> {
         // Executing the flow
@@ -84,6 +87,7 @@ export class AccountService {
 
     /**
      * Step 3: Takes the email for login
+     * @internal
      */
     private async enterUserIdentifier(email: string): Promise<void> {
         // Executing the flow
@@ -99,6 +103,7 @@ export class AccountService {
 
     /**
      * Step 4: Takes the username for login
+     * @internal
      */
     private async enterAlternateUserIdentifier(userName: string): Promise<void> {
         // Executing the flow
@@ -114,6 +119,7 @@ export class AccountService {
 
     /**
      * Step 5: Takes the password for login
+     * @internal
      */
     private async enterPassword(password: string): Promise<void> {
         // Executing the flow
@@ -129,6 +135,7 @@ export class AccountService {
 
     /**
      * Step 6: Gets the actual cookies
+     * @internal
      */
     private async accountDuplicationCheck(): Promise<void> {
         // Executing the flow
@@ -147,12 +154,12 @@ export class AccountService {
 
     /**
      * Login to Twitter using the given credentials and get back the cookies.
+     * @public
      * 
      * @param email The email of the account to be logged into
      * @param userName The username associated with the given account
      * @param password The password to the account
      * @returns The cookies for authenticating with the given account
-     * @public
      */
     public async login(email: string, userName: string, password: string): Promise<string> {
         /**

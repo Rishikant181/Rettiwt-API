@@ -10,6 +10,7 @@ import * as Parsers from './helper/Parser';
  * This services uses a local node-cache instance to cache data, since the data to be cached has no real purpose outside of the server session.
  * This serivce follows a singleton pattern, where at any point, only a single instance of this class exists.
  * This is done so that all the data is cached in a single instance, which makes sharing of cached data between different endpoints possible.
+ * @internal
  */
 export class CacheService {
     // MEMBER DATA
@@ -60,8 +61,6 @@ export class CacheService {
     }
 
     /**
-     * Reads the data with the given id from cache.
-     * 
      * @param id The id id of the data to be fetched from cache.
      * @returns The data with the given id.
      */

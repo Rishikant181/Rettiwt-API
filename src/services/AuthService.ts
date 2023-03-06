@@ -11,13 +11,19 @@ import { GuestCredentials, AuthCredentials } from '../types/Authentication';
 import { config } from '../config/env';
 
 /**
- * Handles authentication of http requests and other authentication related tasks
+ * Handles authentication of http requests and other authentication related tasks.
+ * @internal
  */
 export class AuthService {
     // MEMBER DATA
-    private authToken: string;                                               // To store the common auth token
-    private credentials: AuthCredentials;                                    // To store the current authentication credentials
-    public isAuthenticated: boolean;                                         // To store whether authenticated or not
+    /** The common bearer token for authentication. */
+    private authToken: string;
+
+    /** The current authenticatio credentials. */
+    private credentials: AuthCredentials;
+
+    /** Whether instance has been authenticated or not. */
+    public isAuthenticated: boolean;
 
     // MEMBER METHODS
     constructor(cookie: string = '') {
@@ -32,7 +38,7 @@ export class AuthService {
          * The following regex pattern is used to extract the csrfToken from the cookie string.
          * This is done by matching any string between the characters 'ct0=' and nearest enclosing ';'.
          * (?<=pattern) starts matching after the given pattern.
-         * (?=pattern) stops matching just before the pattern
+         * (?=pattern) stops matching just before the pattern.
          */
         this.credentials = { authToken: this.authToken, csrfToken: cookie.match(/(?<=ct0=).+?(?=;)/) + '', cookie: cookie};
         
@@ -46,7 +52,7 @@ export class AuthService {
     }
 
     /**
-     * @returns The guest credentials fetched from twitter
+     * @returns The guest credentials fetched from twitter.
      */
     async getGuestCredentials(): Promise<GuestCredentials> {
         // Getting the guest credentials from twitter
