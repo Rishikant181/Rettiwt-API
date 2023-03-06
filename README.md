@@ -7,6 +7,8 @@ An API for fetching data from TwitterAPI, without any rate limits!
 
 #### **The API can either be used as a GraphQL Server or as a standalone npm library**
 
+#### **For complete documentation and API reference, head over to the [documentation](https://rishikant181.github.io/Rettiwt-API/)**
+
 ## 1. GraphQL Server
 Using the API as a GraphQL enables complex nested queries to fetch data from twitter.  
 To use the API as a server,
