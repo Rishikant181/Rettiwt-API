@@ -14,3 +14,8 @@ jobs:
           node-version: '18.x'
       - run: npm install
       - run: npx typedoc src/index.ts
+      - run: git config --global user.name "Rishikant Sahu"
+      - run: git config --global user.email "rishikantsahu181@gmail.com"
+      - run: git add -A
+      - run: git commit -m "Updated documentations"
+      - run: git push
