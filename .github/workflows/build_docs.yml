@@ -7,15 +7,21 @@ on:
 jobs:
   documentation:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: '18.x'
+      # Installing dependencies
       - run: npm install
+
+      # Generating documentations
       - run: npx typedoc src/index.ts
-      - run: git config --global user.name "Rishikant Sahu"
-      - run: git config --global user.email "rishikantsahu181@gmail.com"
-      - run: git add -A
-      - run: git commit -m "Updated documentations"
-      - run: git push origin release --force
+
+      # Commiting the documentations
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Updated documentation
+          branch: release
