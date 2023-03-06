@@ -1,6 +1,5 @@
 /**
  * The different types of http status codes
- * 
  * @internal
  */
 export enum HttpStatus {
