@@ -5,8 +5,10 @@ import { TweetService } from "./services/data/TweetService";
 import { AccountService } from "./services/accounts/AccountService";
 
 /**
- * @param cookie The cookies string to use to fetch data
+ * @param cookie The cookie string to use to fetch data
  * @returns The API for fetching user and tweet data
+ * @remarks The cookie can be obtained by using {@link AccountService.login} method.
+ * To use the {@link AccountService.login} method, create a {@link Rettiwt} instance without passing any cookie string and then using the {@link AccountService.login} method of {@link AccountService}
  */
 export const Rettiwt = (cookie: string = '') => {
     // Creating new auth service instance using the given cookie string
