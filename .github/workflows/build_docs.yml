@@ -18,4 +18,4 @@ jobs:
       - run: git config --global user.email "rishikantsahu181@gmail.com"
       - run: git add -A
       - run: git commit -m "Updated documentations"
-      - run: git push
+      - run: git push --force
