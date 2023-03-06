@@ -1,6 +1,5 @@
 /**
  * The data returned from extractor methods.
- * 
  * @internal
  */
 export interface DataExtract {
