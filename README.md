@@ -32,7 +32,7 @@ To use the API as an npm package,
 1.  In your node project, install the package using 'npm install --save rettiwt-api'.  
 2.  import { Rettiwt } from 'rettiwt-api'.  
 3.  const rettiwt = Rettiwt().  
-4.  Use the created Rettiwt instance to fetch data from Twitter.  
+4.  Use the created [Rettiwt](https://rishikant181.github.io/Rettiwt-API/functions/Rettiwt.html) instance to fetch data from Twitter.  
 
 This creates an instance of Rettiwt which can be used to fetch data from Twitter. This instance works as guest and no form of authentication is used. However, guest mode implies functionalities such fetching of user followings, followers, likes and tweet likes, retweets, quotes and replies is not possible. Whatever data can be viewed in Twitter without loggin in, can be accessed this way.  
 
