@@ -1,6 +1,8 @@
 name: build-documentation
 run-name: Building the documentation for the release
-on: [push]
+on:
+  release:
+    types: [push]
 jobs:
   documentation:
     runs-on: ubuntu-latest
