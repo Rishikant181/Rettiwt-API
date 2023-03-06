@@ -17,7 +17,7 @@ import * as TweetDeserializers from './helper/deserializers/Tweets';
 import { CurlyOptions } from 'node-libcurl/dist/curly';
 
 /**
- * The different type of http requests.
+ * The different types of http requests.
  */
 export enum HttpMethods {
     POST = "POST",
