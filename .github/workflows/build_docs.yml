@@ -1,0 +1,14 @@
+name: build-documentation
+run-name: Building the documentation for the release
+on:
+  release:
+    types: [push]
+jobs:
+  documentation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+      - run: npm install
+      - run: npx typedoc src/index.ts
