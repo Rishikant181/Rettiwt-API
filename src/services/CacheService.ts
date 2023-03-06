@@ -5,9 +5,11 @@ import NodeCache from 'node-cache';
 import * as Parsers from './helper/Parser';
 
 /**
- * @summary Handles reading and writing of data from and to cache.
+ * Handles reading and writing of data from and to cache.
  * 
- * **Note**: To be able to CacheService, the data to be cached must have a unique "id" field.
+ * This services uses a local node-cache instance to cache data, since the data to be cached has no real purpose outside of the server session.
+ * This serivce follows a singleton pattern, where at any point, only a single instance of this class exists.
+ * This is done so that all the data is cached in a single instance, which makes sharing of cached data between different endpoints possible.
  */
 export class CacheService {
     // MEMBER DATA
@@ -34,9 +36,11 @@ export class CacheService {
     }
 
     /**
-     * @summary Stores the input data into the cache.
-     * @returns Whether writing to cache was successful or not
-     * @param data The input data to store
+     * Stores the input data in the cache.
+     * 
+     * @param data The input data to store.
+     * @returns Whether writing to cache was successful or not.
+     * @remarks In order to cache data, the data to be cached must have a unique 'id' field.
      */
     public write(data: any): void {
         // Converting the data to a list of data
@@ -56,8 +60,10 @@ export class CacheService {
     }
 
     /**
-     * @returns The data with the given id/rest id from cache
-     * @param id The id/rest id of the data to be fetched from cache
+     * Reads the data with the given id from cache.
+     * 
+     * @param id The id id of the data to be fetched from cache.
+     * @returns The data with the given id.
      */
     public read(id: string): any {
         // Getting data from cache

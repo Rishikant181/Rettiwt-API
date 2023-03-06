@@ -11,7 +11,7 @@ import { GuestCredentials, AuthCredentials } from '../types/Authentication';
 import { config } from '../config/env';
 
 /**
- * @summary Handles authentication of http requests and other authentication related tasks
+ * Handles authentication of http requests and other authentication related tasks
  */
 export class AuthService {
     // MEMBER DATA
