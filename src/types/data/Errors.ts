@@ -1,5 +1,6 @@
 /**
  * Different types of error messages related to authentication.
+ *
  * @public
  */
 export enum AuthenticationErrors {
@@ -8,6 +9,7 @@ export enum AuthenticationErrors {
 
 /**
  * Different types error messages for validation errors.
+ *
  * @public
  */
 export enum ValidationErrors {
@@ -18,6 +20,7 @@ export enum ValidationErrors {
 
 /**
  * Different type of error messages that are returned by services.
+ *
  * @public
  */
 export enum DataErrors {
