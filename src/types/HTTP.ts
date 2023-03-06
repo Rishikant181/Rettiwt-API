@@ -1,5 +1,7 @@
 /**
- * @summary Stores the different types of http status codes
+ * The different types of http status codes
+ *
+ * @internal
  */
 export enum HttpStatus {
     BadRequest = 400,

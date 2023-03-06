@@ -1,21 +1,51 @@
-// This file contains various objects for handling data related to User Account
-
 /**
- * @summary Stores the complete details of the given user's account
+ * The details of a single user.
+ * 
+ * @public
  */
 export interface User {
-    id: string;                                                             // To store the internal rest id of user account
-    userName: string;                                                       // To store the screen name of the user
-    fullName: string;                                                       // To store the actual name of the user
-    createdAt: string;                                                      // To store the time when the account was created
-    description: string;                                                    // To store the account description
-    isVerified: boolean ;                                                   // To store whether this is a verified account or not
-    favouritesCount: number;                                                // To store the number of favourites
-    followersCount: number;                                                 // To store the number of followers
-    followingsCount: number;                                                // To store the number of people followed by this user
-    statusesCount: number;                                                  // To store the number of status posted by user
-    location: string;                                                       // To store the user's location
-    pinnedTweet: string;                                                    // To store the id of tweet that is pinned in the account
-    profileBanner: string;                                                  // To store the url to the profile's banner
-    profileImage: string;                                                   // To store the url to the profile's image
+    /** The rest id of the user. */
+    id: string;
+
+    /** The username/screenname of the user. */
+    userName: string;
+
+    /** The full name of the user. */
+    fullName: string;
+
+    /** The creation date of user's account. */
+    createdAt: string;
+
+    /** The user's description. */
+    description: string;
+
+    /** Whether the account is verified or not. */
+    isVerified: boolean;
+
+    /** The number of tweets liked by the user. */
+    favouritesCount: number;
+
+    /** The number of followers of the user. */
+    followersCount: number;
+
+    /** The number of following of the user. */
+    followingsCount: number;
+
+    /** The number of tweets made by the user.
+     * 
+     * @remarks This includes original tweets along with retweets.
+     */
+    statusesCount: number;
+
+    /** The location of user as provided by user. */
+    location: string;
+
+    /** The rest id of the tweet pinned in the user's profile. */
+    pinnedTweet: string;
+
+    /** The url of the profile banner image. */
+    profileBanner: string;
+
+    /** The url of the profile image. */
+    profileImage: string;
 }

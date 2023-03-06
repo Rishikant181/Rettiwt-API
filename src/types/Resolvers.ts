@@ -1,9 +1,17 @@
 /**
- * @summary Stores the data returned from extractors
+ * The data returned from extractor methods.
+ * @internal
  */
 export interface DataExtract {
-    required: any;                                              // To store the required data extracted
-    cursor: string;                                             // To store the cursor extracted
-    users: any;                                                 // To store all user details extracted
-    tweets: any;                                                // To store all tweets exracted
+    /** The required data. */
+    required: any;
+
+    /** The cursor string to the next batch of data. */
+    cursor: string;
+
+    /** Additional extracted user details. */
+    users: any;
+
+    /** Additional extracted tweet details */
+    tweets: any;
 }
