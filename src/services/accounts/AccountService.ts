@@ -6,6 +6,8 @@ import { AuthService } from '../AuthService';
 
 // TYPES
 import { GuestCredentials } from '../../types/Authentication';
+import { HttpStatus } from '../../types/HTTP';
+import { AuthenticationErrors } from '../../types/data/Errors';
 
 // HELPERS
 import LoginFlows from './LoginFlows';
@@ -97,6 +99,11 @@ export class AccountService {
             postFields: JSON.stringify(LoginFlows.EnterUserIdentifier.body(this.flowToken, email))
         });
 
+        // If no account found with given email
+        if (res.statusCode == HttpStatus.BadRequest && res.data.errors[0].code == 399) {
+            throw new Error(AuthenticationErrors.InvalidEmail);
+        }
+
         // Getting the flow token
         this.flowToken = res.data['flow_token'];
     }
@@ -113,6 +120,11 @@ export class AccountService {
             postFields: JSON.stringify(LoginFlows.EnterAlternateUserIdentifier.body(this.flowToken, userName))
         });
 
+        // If invalid username for the given account
+        if (res.statusCode == HttpStatus.BadRequest && res.data.errors[0].code == 399) {
+            throw new Error(AuthenticationErrors.InvalidUsername);
+        }
+
         // Getting the flow token
         this.flowToken = res.data['flow_token'];
     }
@@ -128,6 +140,11 @@ export class AccountService {
             sslVerifyPeer: false,
             postFields: JSON.stringify(LoginFlows.EnterPassword.body(this.flowToken, password))
         });
+
+        // If invalid password for the given account
+        if (res.statusCode == HttpStatus.BadRequest && res.data.errors[0].code == 399) {
+            throw new Error(AuthenticationErrors.InvalidPassword);
+        }
 
         // Getting the flow token
         this.flowToken = res.data['flow_token'];

@@ -5,6 +5,9 @@
  */
 export enum AuthenticationErrors {
     NotAuthenticated = "Cannot fetch this data without authentication",
+    InvalidEmail = "No Twitter account found for the given email address",
+    InvalidUsername = "Incorrect username given for the given Twitter account",
+    InvalidPassword = "Incorrect password given for the given Twitter account"
 };
 
 /**
