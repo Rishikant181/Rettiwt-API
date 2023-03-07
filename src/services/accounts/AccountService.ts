@@ -90,6 +90,8 @@ export class AccountService {
     /**
      * Step 3: Takes the email for login
      * @internal
+     * 
+     * @throws {@link AuthenticationErrors.InvalidEmail}, if email does not exist.
      */
     private async enterUserIdentifier(email: string): Promise<void> {
         // Executing the flow
@@ -111,6 +113,8 @@ export class AccountService {
     /**
      * Step 4: Takes the username for login
      * @internal
+     * 
+     * @throws {@link AuthenticationErrors.InvalidUsername}, if wrong username entered.
      */
     private async enterAlternateUserIdentifier(userName: string): Promise<void> {
         // Executing the flow
@@ -132,6 +136,8 @@ export class AccountService {
     /**
      * Step 5: Takes the password for login
      * @internal
+     * 
+     * @throws {@link AuthenticationErrors.InvalidPassword}, incorrect password entered.
      */
     private async enterPassword(password: string): Promise<void> {
         // Executing the flow
