@@ -41,10 +41,16 @@ export class TweetService extends FetcherService {
 
     /**
      * @param filter The filter be used for searching the tweets.
-     * @param count The number of tweets to fetch.
+     * @param count The number of tweets to fetch, must be >= 1 and <= 100
      * @param cursor The cursor to the next batch of tweets. If blank, first batch is fetched.
+     * 
      * @returns The list of tweets that match the given filter.
-     * @remarks count must be >= 1 and <= 100.
+     * 
+     * @throws {@link Errors.ValidationErrors.InvalidCount} error, if an invalid count has been provided.
+     * 
+     * @remarks
+     * 
+     * If cookies have been provided, then authenticated requests are made. Else, guest requests are made.
      */
     async getTweets(filter: TweetFilter, count: number, cursor: string): Promise<CursoredData<Tweet>> {
         // If invalid count provided
@@ -53,7 +59,7 @@ export class TweetService extends FetcherService {
         }
 
         // Getting the raw data
-        let res = await this.request<RawTweets>(TweetUrls.tweetsUrl(toQueryString(filter), count, cursor), false).then(res => res.data);
+        let res = await this.request<RawTweets>(TweetUrls.tweetsUrl(toQueryString(filter), count, cursor), this.isAuthenticated).then(res => res.data);
 
         // Extracting data
         let data = TweetExtractors.extractTweets(res);
@@ -72,7 +78,14 @@ export class TweetService extends FetcherService {
 
     /**
      * @param tweetId The rest id of the target tweet.
+     * 
      * @returns The details of a single tweet with the given tweet id.
+     * 
+     * @throws {@link Errors.DataErrors.TweetNotFound} error, if no tweet with the given id was found.
+     * 
+     * @remarks
+     * 
+     * No cookies are required to use this method.
      */
     async getTweetById(tweetId: string): Promise<Tweet> {
         // Getting data from cache
@@ -100,10 +113,18 @@ export class TweetService extends FetcherService {
 
     /**
      * @param tweetId The rest id of the target tweet.
-     * @param count The batch size of the list.
+     * @param count The batch size of the list, must be >= 10 (when no cursor is provided) and <= 100.
      * @param cursor The cursor to the next batch of users. If blank, first batch is fetched.
+     * 
      * @returns The list of users who liked the given tweet.
-     * @remarks count must be >= 10 (when no cursor is provided) and <= 100.
+     * 
+     * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
+     * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count is provided.
+     * @throws {@link Errors.DataErrors.TweetNotFound} error, if no tweet with the given id was found.
+     * 
+     * @remarks
+     * 
+     * Cookies are required to use this method!
      */
     async getTweetLikers(tweetId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
@@ -136,10 +157,18 @@ export class TweetService extends FetcherService {
 
     /**
      * @param tweetId The rest id of the target tweet.
-     * @param count The batch size of the list.
+     * @param count The batch size of the list, must be >= 10 (when no cursor is provided) and <= 100.
      * @param cursor The cursor to the next batch of users. If blank, first batch is fetched.
+     * 
      * @returns The list of users who retweeted the given tweet.
-     * @remarks count must be >= 10 (when no cursor is provided) and <= 100.
+     * 
+     * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
+     * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count is provided.
+     * @throws {@link Errors.DataErrors.TweetNotFound} error, if no tweet with the given id was found.
+     * 
+     * @remarks
+     * 
+     * Cookies are required to use this method!
      */
     async getTweetRetweeters(tweetId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort

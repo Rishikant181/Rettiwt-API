@@ -40,7 +40,9 @@ export class CacheService {
      * Stores the input data in the cache.
      * 
      * @param data The input data to store.
+     * 
      * @returns Whether writing to cache was successful or not.
+     * 
      * @remarks In order to cache data, the data to be cached must have a unique 'id' field.
      */
     public write(data: any): void {
@@ -62,6 +64,7 @@ export class CacheService {
 
     /**
      * @param id The id id of the data to be fetched from cache.
+     * 
      * @returns The data with the given id.
      */
     public read(id: string): any {

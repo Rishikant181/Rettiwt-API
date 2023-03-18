@@ -37,7 +37,14 @@ export class UserService extends FetcherService {
 
     /**
      * @param screenName The screen name of the target user.
+     * 
      * @returns The details of the given user.
+     * 
+     * @throws {@link Errors.DataErrors.UserNotFound} error, if no user with the given username was found.
+     * 
+     * @remarks
+     * 
+     * No cookies are required to use this method.
      */
     async getUserDetails(screenName: string): Promise<User> {
         // Fetching the raw data
@@ -57,7 +64,14 @@ export class UserService extends FetcherService {
 
     /**
      * @param restId The screen name of the target user.
+     * 
      * @returns The details of the user with given rest id.
+     * 
+     * @throws {@link Errors.DataErrors.UserNotFound} error, if no user with the given id was found.
+     * 
+     * @remarks
+     * 
+     * No cookies are required to use this method.
      */
     async getUserDetailsById(restId: string): Promise<User> {
         // Getting data from cache
@@ -85,10 +99,18 @@ export class UserService extends FetcherService {
 
     /**
      * @param userId The rest id of the target user.
-     * @param count The number of following to fetch.
+     * @param count The number of following to fetch, must be >= 40 (when no cursor is provided) and <=100.
      * @param cursor The cursor to next batch. If blank, first batch is fetched.
+     * 
      * @returns The list of users followed by the target user.
-     * @remarks count must be >= 40 (when no cursor is provided) and <=100.
+     * 
+     * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
+     * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count has been provided.
+     * @throws {@link Errors.DataErrors.UserNotFound} error, if invalid count has been provided.
+     * 
+     * @remarks
+     * 
+     * Cookies are required to use this method!
      */
     async getUserFollowing(userId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
@@ -121,10 +143,18 @@ export class UserService extends FetcherService {
 
     /**
      * @param userId The rest id of the target user.
-     * @param count The number of followers to fetch.
+     * @param count The number of followers to fetch, must be >= 40 (when no cursor is provided) and <=100.
      * @param cursor The cursor to next batch. If blank, first batch is fetched.
+     * 
      * @returns The list of users following the target user.
-     * @remarks count must be >= 40 (when no cursor is provided) and <=100.
+     * 
+     * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
+     * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count has been provided.
+     * @throws {@link Errors.DataErrors.UserNotFound} error, if invalid count has been provided.
+     * 
+     * @remarks
+     * 
+     * Cookies are required to use this method!
      */
     async getUserFollowers(userId: string, count: number, cursor: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
@@ -158,9 +188,17 @@ export class UserService extends FetcherService {
     /**
      * @param userId The rest id of the target user.
      * @param count The number of likes to fetch.
-     * @param cursor The cursor to next batch. If blank, first batch is fetched.
+     * @param cursor The cursor to next batch. If blank, first batch is fetched, must be >= 40 (when no cursor is provided) and <=100.
+     * 
      * @returns The list of tweets liked by the target user.
-     * @remarks count must be >= 40 (when no cursor is provided) and <= 100.
+     * 
+     * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
+     * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count has been provided.
+     * @throws {@link Errors.DataErrors.UserNotFound} error, if invalid count has been provided.
+     * 
+     * @remarks
+     * 
+     * Cookies are required to use this method!
      */
     async getUserLikes(userId: string, count: number, cursor: string): Promise<CursoredData<Tweet>> {
         // If user is not authenticated, abort
