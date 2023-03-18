@@ -53,7 +53,7 @@ export class TweetService extends FetcherService {
         }
 
         // Getting the raw data
-        let res = await this.request<RawTweets>(TweetUrls.tweetsUrl(toQueryString(filter), count, cursor), false).then(res => res.data);
+        let res = await this.request<RawTweets>(TweetUrls.tweetsUrl(toQueryString(filter), count, cursor), this.isAuthenticated).then(res => res.data);
 
         // Extracting data
         let data = TweetExtractors.extractTweets(res);
