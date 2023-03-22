@@ -37,6 +37,7 @@ export * from './services/data/UserService';
 // Exporting types
 export * from './types/data/Errors';
 export * from './types/data/Service';
+export * from './types/interfaces/Args';
 export * from './types/interfaces/Tweet';
 export * from './types/interfaces/User';
 export * from './types/Authentication';
