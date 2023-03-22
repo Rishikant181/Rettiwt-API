@@ -3,7 +3,7 @@ import { FetcherService } from "../FetcherService";
 import { AuthService } from "../AuthService";
 
 // TYPES
-import { TweetInterface } from "../../types/interfaces/Tweet";
+import { Tweet } from "../../types/data/Tweet";
 import { UserInterface } from "../../types/interfaces/User";
 import { TweetFilter } from "../../types/args/TweetFilter";
 import { CursoredData } from '../../types/data/Service';
@@ -22,7 +22,6 @@ import * as TweetExtractors from "../helper/extractors/Tweets";
 
 // DESERIALIZERS
 import * as UserDeserializers from '../helper/deserializers/Users';
-import * as TweetDeserializers from '../helper/deserializers/Tweets';
 
 // PARSERS
 import { toQueryString } from '../helper/Parser';
@@ -53,7 +52,7 @@ export class TweetService extends FetcherService {
      * 
      * If cookies have been provided, then authenticated requests are made. Else, guest requests are made.
      */
-    async getTweets(filter: TweetFilter, count: number, cursor: string): Promise<CursoredData<TweetInterface>> {
+    async getTweets(filter: TweetFilter, count: number, cursor: string): Promise<CursoredData<Tweet>> {
         // If invalid count provided
         if (count < 1 && !cursor) {
             throw new Error(Errors.ValidationErrors.InvalidCount);
@@ -69,7 +68,7 @@ export class TweetService extends FetcherService {
         this.cacheData(data);
 
         // Parsing data
-        let tweets = data.required.map((item: TweetData) => TweetDeserializers.toTweet(item));
+        let tweets = data.required.map((item: TweetData) => new Tweet(item));
 
         return {
             list: tweets,
@@ -88,7 +87,7 @@ export class TweetService extends FetcherService {
      * 
      * No cookies are required to use this method.
      */
-    async getTweetById(tweetId: string): Promise<TweetInterface> {
+    async getTweetById(tweetId: string): Promise<Tweet> {
         // Getting data from cache
         let cachedData = await this.readData(tweetId);
 
@@ -107,7 +106,7 @@ export class TweetService extends FetcherService {
         this.cacheData(data);
 
         // Parsing data
-        let tweet = TweetDeserializers.toTweet(data.required[0]);
+        let tweet = new Tweet(data.required[0]);
 
         return tweet;
     }

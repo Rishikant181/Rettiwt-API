@@ -4,7 +4,7 @@ import { AuthService } from '../AuthService';
 
 // TYPES
 import { UserInterface } from '../../types/interfaces/User';
-import { TweetInterface } from '../../types/interfaces/Tweet';
+import { Tweet } from '../../types/data/Tweet';
 import { CursoredData } from '../../types/data/Service';
 import { Result as TweetData } from '../../types/raw/tweet/Tweet';
 import RawUser, { Result as UserData } from '../../types/raw/user/User';
@@ -21,7 +21,6 @@ import * as UserExtractors from '../helper/extractors/Users';
 
 // DESERIALIZERS
 import * as UserDeserializers from '../helper/deserializers/Users';
-import * as TweetDeserializers from '../helper/deserializers/Tweets';
 
 /**
  * Handles fetching of data related to user account
@@ -200,7 +199,7 @@ export class UserService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getUserLikes(userId: string, count: number, cursor: string): Promise<CursoredData<TweetInterface>> {
+    async getUserLikes(userId: string, count: number, cursor: string): Promise<CursoredData<Tweet>> {
         // If user is not authenticated, abort
         if (!this.isAuthenticated) {
             throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
@@ -221,7 +220,7 @@ export class UserService extends FetcherService {
         this.cacheData(data);
 
         // Parsing data
-        let tweets = data.required.map((item: TweetData) => TweetDeserializers.toTweet(item));
+        let tweets = data.required.map((item: TweetData) => new Tweet(item));
 
         return {
             list: tweets,

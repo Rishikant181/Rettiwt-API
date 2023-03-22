@@ -14,11 +14,11 @@ import { TweetFilter } from '../types/args/TweetFilter';
 import { HttpStatus } from "../types/HTTP";
 import { Result as RawUser } from '../types/raw/user/User';
 import { Result as RawTweet } from '../types/raw/tweet/Tweet';
+import { Tweet } from '../types/data/Tweet';
 
 // HELPERS
 import * as Headers from './helper/Headers'
 import * as UserDeserializers from './helper/deserializers/Users';
-import * as TweetDeserializers from './helper/deserializers/Tweets';
 import { CurlyOptions } from 'node-libcurl/dist/curly';
 
 /**
@@ -145,7 +145,7 @@ export class FetcherService {
          * This raw data is deserialized into the respective known types.
          */
         let users = data.users.map((user: RawUser) => UserDeserializers.toUser(user));
-        let tweets = data.tweets.map((tweet: RawTweet) => TweetDeserializers.toTweet(tweet));
+        let tweets = data.tweets.map((tweet: RawTweet) => new Tweet(tweet));
 
         // Caching the data
         this.cache.write(users);
