@@ -2,7 +2,7 @@
 import { IsArray, IsBoolean, IsNumberString, IsString, IsOptional, IsDateString } from 'class-validator';
 
 // TYPES
-import { TweetFilterInterface } from '../data/Tweet';
+import { TweetFilterInterface } from '../interfaces/Tweet';
 
 export class TweetFilter implements TweetFilterInterface {
     /** The list of words to search. */

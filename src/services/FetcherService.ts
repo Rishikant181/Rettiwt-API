@@ -1,9 +1,14 @@
 // PACKAGES
 import { curly, CurlyResult } from 'node-libcurl';
+import { validate } from 'class-validator';
+import { plainToClass } from 'class-transformer';
 
 // SERVICES
 import { AuthService } from './AuthService';
 import { CacheService } from './CacheService';
+
+// ARGS
+import { TweetFilter } from '../types/args/TweetFilter';
 
 // TYPES
 import { HttpStatus } from "../types/HTTP";
@@ -49,6 +54,21 @@ export class FetcherService {
         this.auth = auth;
         this.cache = CacheService.getInstance();
         this.isAuthenticated = this.auth.isAuthenticated;
+    }
+
+    /**
+     * Validate the given data.
+     * 
+     * @param data The data to be validated.
+     */
+    protected async validate(data: TweetFilter) {
+        // Converting plain JSON data to a validation enabled class
+        data = plainToClass(TweetFilter, data);
+
+        // Validating the data
+        const validationResult = await validate(data);
+
+        console.log(validationResult);
     }
 
     /**
