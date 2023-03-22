@@ -1,3 +1,6 @@
+// PACKAGES
+import 'reflect-metadata';
+
 // SERVICES
 import { AuthService } from "./services/AuthService";
 import { UserService } from "./services/data/UserService";
