@@ -1,6 +1,6 @@
 // PACKAGES
 import { Type } from 'class-transformer';
-import { IsInt, IsString, IsOptional, Min, validateSync } from 'class-validator';
+import { IsInt, IsString, IsOptional, Min, validateSync, Max } from 'class-validator';
 
 // TYPES
 import { ListArgs } from '../interfaces/Args';
@@ -10,25 +10,27 @@ export class UserListArgs implements ListArgs {
     /** The number of data items to fetch.
      * 
      * @defaultValue 40
-     * @remarks Must be >= 40
+     * @remarks Must be >= 40 and <= 100
      */
     @Type(() => Number)
     @IsInt()
     @IsOptional()
     @Min(40)
-    count?: number = 40;
+    @Max(100)
+    count: number;
 
     /** The cursor to the batch of data to fetch. */
     @IsString()
     @IsOptional()
-    cursor?: string = '';
+    cursor: string;
 
     /**
-     * @param args The list arguments in JSON format.
+     * @param count The number of data items to fetch.
+     * @param cursor The cursor to the batch of data to fetch.
      */
-    constructor(args: UserListArgs) {
-        this.count = args.count;
-        this.cursor = args.cursor;
+    constructor(count: number = 40, cursor: string = '') {
+        this.count = count;
+        this.cursor = cursor;
 
         // Validating the arguments
         const validationResult = validateSync(this);

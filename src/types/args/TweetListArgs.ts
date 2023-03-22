@@ -1,34 +1,40 @@
 // PACKAGES
 import { Type } from 'class-transformer';
-import { IsInt, IsString, IsOptional, Min, validateSync } from 'class-validator';
+import { IsInt, IsString, IsOptional, Min, validateSync, Max } from 'class-validator';
 
 // TYPES
 import { ListArgs } from '../interfaces/Args';
 import { ArgumentValidationError } from '../data/Errors';
 
+/**
+ * @param count The number of data items to fetch.
+ * @param cursor The cursor to the next batch of data.
+ */
 export class TweetListArgs implements ListArgs {
     /** The number of data items to fetch.
      * 
      * @defaultValue 10
-     * @remarks Must be >= 10
+     * @remarks Must be >= 10 and <= 100
      */
     @Type(() => Number)
     @IsInt()
     @IsOptional()
     @Min(10)
-    count?: number = 10;
+    @Max(100)
+    count: number;
 
     /** The cursor to the batch of data to fetch. */
     @IsString()
     @IsOptional()
-    cursor?: string = '';
+    cursor: string;
 
     /**
-     * @param args The list arguments in JSON format.
+     * @param count The number of data items to fetch.
+     * @param cursor The cursor to the batch of data to fetch.
      */
-    constructor(args: TweetListArgs) {
-        this.count = args.count;
-        this.cursor = args.cursor;
+    constructor(count: number = 10, cursor: string = '') {
+        this.count = count;
+        this.cursor = cursor;
 
         // Validating the arguments
         const validationResult = validateSync(this);
