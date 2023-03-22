@@ -1,3 +1,6 @@
+// PACKAGES
+import { ValidationError } from "class-validator";
+
 /**
  * Different types of error messages related to authentication.
  *
@@ -37,9 +40,11 @@ export enum DataErrors {
 };
 
 /**
- * @typeParam The type of error details that this error object carries.
+ * Error when any fields of a JSON argument fails to validate.
+ * 
+ * @param errorDetails The details of about the specific fields that failed to validate.
  */
-export class ValidationError<T> implements Error {
+export class ArgumentValidationError implements Error {
     /** The name of the error. */
     name: string;
 
@@ -47,14 +52,14 @@ export class ValidationError<T> implements Error {
     message: string;
 
     /** The error data. */
-    data: T;
+    data: ValidationError[];
 
     /**
      * @param data The error details.
      */
-    constructor(data: T) {
+    constructor(errorDetails: ValidationError[]) {
         this.name = 'ValidationError';
         this.message = 'One or more validation errors occured. Refer to data for details';
-        this.data = data;
+        this.data = errorDetails;
     }
 }
