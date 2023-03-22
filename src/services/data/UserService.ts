@@ -3,8 +3,8 @@ import { FetcherService } from '../FetcherService';
 import { AuthService } from '../AuthService';
 
 // TYPES
-import { User } from '../../types/data/User';
-import { Tweet } from '../../types/data/Tweet';
+import { UserInterface } from '../../types/interfaces/User';
+import { TweetInterface } from '../../types/interfaces/Tweet';
 import { CursoredData } from '../../types/data/Service';
 import { Result as TweetData } from '../../types/raw/tweet/Tweet';
 import RawUser, { Result as UserData } from '../../types/raw/user/User';
@@ -46,7 +46,7 @@ export class UserService extends FetcherService {
      * 
      * No cookies are required to use this method.
      */
-    async getUserDetails(screenName: string): Promise<User> {
+    async getUserDetails(screenName: string): Promise<UserInterface> {
         // Fetching the raw data
         let res: RawUser = await this.request<RawUser>(UserUrls.userDetailsUrl(screenName), false).then(res => res.data);
         
@@ -73,7 +73,7 @@ export class UserService extends FetcherService {
      * 
      * No cookies are required to use this method.
      */
-    async getUserDetailsById(restId: string): Promise<User> {
+    async getUserDetailsById(restId: string): Promise<UserInterface> {
         // Getting data from cache
         let cachedData = await this.readData(restId);
 
@@ -112,7 +112,7 @@ export class UserService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getUserFollowing(userId: string, count: number, cursor: string): Promise<CursoredData<User>> {
+    async getUserFollowing(userId: string, count: number, cursor: string): Promise<CursoredData<UserInterface>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
             throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
@@ -156,7 +156,7 @@ export class UserService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getUserFollowers(userId: string, count: number, cursor: string): Promise<CursoredData<User>> {
+    async getUserFollowers(userId: string, count: number, cursor: string): Promise<CursoredData<UserInterface>> {
         // If user is not authenticated, abort
         if (!this.isAuthenticated) {
             throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
@@ -200,7 +200,7 @@ export class UserService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getUserLikes(userId: string, count: number, cursor: string): Promise<CursoredData<Tweet>> {
+    async getUserLikes(userId: string, count: number, cursor: string): Promise<CursoredData<TweetInterface>> {
         // If user is not authenticated, abort
         if (!this.isAuthenticated) {
             throw new Error(Errors.AuthenticationErrors.NotAuthenticated);

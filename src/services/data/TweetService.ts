@@ -3,8 +3,8 @@ import { FetcherService } from "../FetcherService";
 import { AuthService } from "../AuthService";
 
 // TYPES
-import { Tweet } from "../../types/data/Tweet";
-import { User } from "../../types/data/User";
+import { TweetInterface } from "../../types/interfaces/Tweet";
+import { UserInterface } from "../../types/interfaces/User";
 import { TweetFilter } from "../../types/args/TweetFilter";
 import { CursoredData } from '../../types/data/Service';
 import RawTweet, { Result as TweetData } from '../../types/raw/tweet/Tweet';
@@ -53,7 +53,7 @@ export class TweetService extends FetcherService {
      * 
      * If cookies have been provided, then authenticated requests are made. Else, guest requests are made.
      */
-    async getTweets(filter: TweetFilter, count: number, cursor: string): Promise<CursoredData<Tweet>> {
+    async getTweets(filter: TweetFilter, count: number, cursor: string): Promise<CursoredData<TweetInterface>> {
         // If invalid count provided
         if (count < 1 && !cursor) {
             throw new Error(Errors.ValidationErrors.InvalidCount);
@@ -88,7 +88,7 @@ export class TweetService extends FetcherService {
      * 
      * No cookies are required to use this method.
      */
-    async getTweetById(tweetId: string): Promise<Tweet> {
+    async getTweetById(tweetId: string): Promise<TweetInterface> {
         // Getting data from cache
         let cachedData = await this.readData(tweetId);
 
@@ -127,7 +127,7 @@ export class TweetService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getTweetLikers(tweetId: string, count: number, cursor: string): Promise<CursoredData<User>> {
+    async getTweetLikers(tweetId: string, count: number, cursor: string): Promise<CursoredData<UserInterface>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
             throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
@@ -171,7 +171,7 @@ export class TweetService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getTweetRetweeters(tweetId: string, count: number, cursor: string): Promise<CursoredData<User>> {
+    async getTweetRetweeters(tweetId: string, count: number, cursor: string): Promise<CursoredData<UserInterface>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
             throw new Error(Errors.AuthenticationErrors.NotAuthenticated);

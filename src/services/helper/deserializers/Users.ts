@@ -1,12 +1,12 @@
 // TYPES
-import { User } from '../../../types/data/User';
+import { UserInterface } from '../../../types/interfaces/User';
 import { Result as RawUser } from '../../../types/raw/user/User';
 
 /**
  * @returns A User object containing the user details
  * @param data The raw user data from Twitter API
  */
-export function toUser(data: RawUser): User {
+export function toUser(data: RawUser): UserInterface {
     return {
         id: data.rest_id,
         userName: data.legacy.screen_name,

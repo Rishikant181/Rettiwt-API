@@ -1,5 +1,5 @@
 // TYPES
-import { Tweet, TweetEntities } from '../../../types/data/Tweet';
+import { TweetInterface, TweetEntitiesInterface } from '../../../types/interfaces/Tweet';
 import { Result as RawTweet, Entities2 as RawTweetEntities } from '../../../types/raw/tweet/Tweet';
 
 // PARSERS
@@ -9,8 +9,8 @@ import * as Parsers from '../Parser';
  * @returns A TweetEntities object containing the various tweet entities
  * @param data The raw tweet entities data from the response received from TwitterAPI
  */
-export function toTweetEntities(data: RawTweetEntities): TweetEntities {
-    let entities: TweetEntities = {
+export function toTweetEntities(data: RawTweetEntities): TweetEntitiesInterface {
+    let entities: TweetEntitiesInterface = {
         mentionedUsers: [],
         urls: [],
         media: [],
@@ -52,7 +52,7 @@ export function toTweetEntities(data: RawTweetEntities): TweetEntities {
  * @returns A Tweet object containing the tweet data
  * @param data The raw tweet data from the response received from TwitterAPI
  */
-export function toTweet(data: RawTweet): Tweet {
+export function toTweet(data: RawTweet): TweetInterface {
     return {
         id: data.rest_id,
         createdAt: data.legacy.created_at,
