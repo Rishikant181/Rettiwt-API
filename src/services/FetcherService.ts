@@ -57,21 +57,6 @@ export class FetcherService {
     }
 
     /**
-     * Validate the given data.
-     * 
-     * @param data The data to be validated.
-     */
-    protected async validate(data: TweetFilter) {
-        // Converting plain JSON data to a validation enabled class
-        data = plainToClass(TweetFilter, data);
-
-        // Validating the data
-        const validationResult = await validate(data);
-
-        console.log(validationResult);
-    }
-
-    /**
     * The middleware for handling any HTTP error.
     * 
     * @param res The response object received.

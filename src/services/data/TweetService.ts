@@ -58,6 +58,9 @@ export class TweetService extends FetcherService {
             throw new Error(Errors.ValidationErrors.InvalidCount);
         }
 
+        // Converting filter from JSON to a TweetFilter object
+        filter = new TweetFilter(filter);
+
         // Getting the raw data
         let res = await this.request<RawTweets>(TweetUrls.tweetsUrl(toQueryString(filter), count, cursor), this.isAuthenticated).then(res => res.data);
 
