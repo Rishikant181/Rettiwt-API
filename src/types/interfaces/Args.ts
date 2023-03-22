@@ -34,3 +34,16 @@ export interface TweetFilterInterface {
     /** Whether to fetch tweets that are links or not. */
     links?: boolean;
 };
+
+/**
+ * The arguments for fetching cursored list.
+ * 
+ * @internal
+ */
+export interface ListArgs {
+    /** The number of data items to fetch. */
+    count?: number;
+
+    /** The cursor to the batch of data to fetch. */
+    cursor?: string;
+};
