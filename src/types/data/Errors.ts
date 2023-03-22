@@ -35,3 +35,26 @@ export enum DataErrors {
     NoFollowsFound = "No follow details were found for the user with the given id",
     NoLikedTweetsFound = "No liked tweets were found for the user with the given id"
 };
+
+/**
+ * @typeParam The type of error details that this error object carries.
+ */
+export class ValidationError<T> implements Error {
+    /** The name of the error. */
+    name: string;
+
+    /** The user-friendly error message. */
+    message: string;
+
+    /** The error data. */
+    data: T;
+
+    /**
+     * @param data The error details.
+     */
+    constructor(data: T) {
+        this.name = 'ValidationError';
+        this.message = 'One or more validation errors occured. Refer to data for details';
+        this.data = data;
+    }
+}
