@@ -1,5 +1,5 @@
 // PACKAGE
-import { IsArray, IsBoolean, IsNumberString, IsString, IsOptional, IsDateString } from 'class-validator';
+import { IsArray, IsBoolean, IsNumberString, IsString, IsOptional, IsDateString, validateSync } from 'class-validator';
 
 // TYPES
 import { TweetFilterInterface } from '../interfaces/Args';
@@ -86,4 +86,23 @@ export class TweetFilter implements TweetFilterInterface {
     @IsBoolean()
     @IsOptional()
     links?: boolean;
+
+    /**
+     * @param filter The incoming filter in JSON format.
+     */
+    constructor(filter: TweetFilter) {
+        this.endDate = filter.endDate;
+        this.fromUsers = filter.fromUsers;
+        this.hashtags = filter.hashtags;
+        this.links = filter.links;
+        this.mentions = filter.mentions;
+        this.quoted = filter.quoted;
+        this.sinceId = filter.sinceId;
+        this.startDate = filter.startDate;
+        this.toUsers = filter.toUsers;
+        this.words = filter.words;
+
+        // Validating the filter
+        const validationResult = validateSync(this);
+    }
 }
