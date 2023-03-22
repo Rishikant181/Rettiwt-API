@@ -3,8 +3,9 @@ import { FetcherService } from "../FetcherService";
 import { AuthService } from "../AuthService";
 
 // TYPES
-import { TweetFilter, Tweet } from "../../types/data/Tweet";
+import { Tweet } from "../../types/data/Tweet";
 import { User } from "../../types/data/User";
+import { TweetFilter } from "../../types/args/TweetFilter";
 import { CursoredData } from '../../types/data/Service';
 import RawTweet, { Result as TweetData } from '../../types/raw/tweet/Tweet';
 import { Result as UserData } from "../../types/raw/user/User";

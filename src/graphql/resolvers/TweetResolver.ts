@@ -2,7 +2,7 @@
 import ResolverBase from './ResolverBase';
 
 // TYPES
-import { TweetFilter } from '../../types/data/Tweet';
+import { TweetFilter } from '../../types/args/TweetFilter';
 import { Cursor, DataContext } from '../../types/data/Service';
 import { DataErrors, ValidationErrors } from '../../types/data/Errors';
 

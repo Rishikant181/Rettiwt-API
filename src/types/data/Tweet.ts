@@ -3,7 +3,7 @@
  * 
  * @public
  */
-export interface TweetFilter {
+export interface TweetFilterInterface {
     /** The list of words to search. */
     words?: string[];
 
