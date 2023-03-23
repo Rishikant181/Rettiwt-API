@@ -1,5 +1,4 @@
 // PACKAGES
-import { Type } from 'class-transformer';
 import { IsInt, IsString, IsOptional, Min, validateSync, Max } from 'class-validator';
 
 // TYPES
@@ -12,7 +11,6 @@ export class UserListArgs implements ListArgs {
      * @defaultValue 40
      * @remarks Must be >= 40 and <= 100
      */
-    @Type(() => Number)
     @IsInt()
     @IsOptional()
     @Min(40)

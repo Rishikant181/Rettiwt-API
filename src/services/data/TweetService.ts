@@ -4,6 +4,7 @@ import { AuthService } from "../AuthService";
 
 // TYPES
 import { Tweet } from "../../types/data/Tweet";
+import { TweetListArgs } from "../../types/args/TweetListArgs";
 import { UserInterface } from "../../types/interfaces/User";
 import { TweetFilter } from "../../types/args/TweetFilter";
 import { CursoredData } from '../../types/data/Service';
@@ -41,7 +42,7 @@ export class TweetService extends FetcherService {
 
     /**
      * @param filter The filter be used for searching the tweets.
-     * @param count The number of tweets to fetch, must be >= 1 and <= 100
+     * @param count The number of tweets to fetch, must be >= 10 and <= 100
      * @param cursor The cursor to the next batch of tweets. If blank, first batch is fetched.
      * 
      * @returns The list of tweets that match the given filter.
@@ -52,17 +53,13 @@ export class TweetService extends FetcherService {
      * 
      * If cookies have been provided, then authenticated requests are made. Else, guest requests are made.
      */
-    async getTweets(filter: TweetFilter, count: number, cursor: string): Promise<CursoredData<Tweet>> {
-        // If invalid count provided
-        if (count < 1 && !cursor) {
-            throw new Error(Errors.ValidationErrors.InvalidCount);
-        }
-
-        // Converting filter from JSON to a TweetFilter object
-        filter = new TweetFilter(filter);
+    async getTweets(query: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+        // Objectifying parameters
+        let filter: TweetFilter = new TweetFilter(query);
+        let args: TweetListArgs = new TweetListArgs(count, cursor);
 
         // Getting the raw data
-        let res = await this.request<RawTweets>(TweetUrls.tweetsUrl(toQueryString(filter), count, cursor), this.isAuthenticated).then(res => res.data);
+        let res = await this.request<RawTweets>(TweetUrls.tweetsUrl(toQueryString(filter), args.count, args.cursor), this.isAuthenticated).then(res => res.data);
 
         // Extracting data
         let data = TweetExtractors.extractTweets(res);
@@ -129,19 +126,17 @@ export class TweetService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getTweetLikers(tweetId: string, count: number, cursor: string): Promise<CursoredData<UserInterface>> {
+    async getTweetLikers(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<UserInterface>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
             throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
         }
 
-        // If invalid count provided
-        if (count < 10 && !cursor) {
-            throw new Error(Errors.ValidationErrors.InvalidCount);
-        }
+        // Objectifying parameters
+        let args: TweetListArgs = new TweetListArgs(count, cursor);
         
         // Fetching the raw data
-        let res = await this.request<RawLikers>(TweetUrls.tweetLikesUrl(tweetId, count, cursor)).then(res => res.data);
+        let res = await this.request<RawLikers>(TweetUrls.tweetLikesUrl(tweetId, args.count, args.cursor)).then(res => res.data);
 
         // Extracting data
         let data = TweetExtractors.extractTweetLikers(res);
@@ -173,19 +168,17 @@ export class TweetService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getTweetRetweeters(tweetId: string, count: number, cursor: string): Promise<CursoredData<UserInterface>> {
+    async getTweetRetweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<UserInterface>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
             throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
         }
 
-        // If invalid count provided
-        if (count < 10 && !cursor) {
-            throw new Error(Errors.ValidationErrors.InvalidCount);
-        }
+        // Objectifying parameters
+        let args: TweetListArgs = new TweetListArgs(count, cursor);
 
         // Fetching the raw data
-        let res = await this.request<RawRetweeters>(TweetUrls.tweetRetweetUrl(tweetId, count, cursor)).then(res => res.data);
+        let res = await this.request<RawRetweeters>(TweetUrls.tweetRetweetUrl(tweetId, args.count, args.cursor)).then(res => res.data);
 
         // Extracting data
         let data = TweetExtractors.extractTweetRetweeters(res);

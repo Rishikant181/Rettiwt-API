@@ -1,5 +1,4 @@
 // PACKAGES
-import { Type } from 'class-transformer';
 import { IsInt, IsString, IsOptional, Min, validateSync, Max } from 'class-validator';
 
 // TYPES
@@ -16,7 +15,6 @@ export class TweetListArgs implements ListArgs {
      * @defaultValue 10
      * @remarks Must be >= 10 and <= 100
      */
-    @Type(() => Number)
     @IsInt()
     @IsOptional()
     @Min(10)

@@ -52,7 +52,7 @@ export default class TweetResolver extends ResolverBase {
             this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
 
             // Getting the data
-            const res = await this.context.tweets.getTweets(filter, this.batchSize, next.value);
+            const res = await this.context.tweets.getTweets(filter, this.batchSize, next.value );
 
             // If data is available
             if (res.list?.length) {

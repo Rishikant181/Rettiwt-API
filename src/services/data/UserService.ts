@@ -4,6 +4,7 @@ import { AuthService } from '../AuthService';
 
 // TYPES
 import { UserInterface } from '../../types/interfaces/User';
+import { UserListArgs } from '../../types/args/UserListArgs';
 import { Tweet } from '../../types/data/Tweet';
 import { CursoredData } from '../../types/data/Service';
 import { Result as TweetData } from '../../types/raw/tweet/Tweet';
@@ -111,19 +112,17 @@ export class UserService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getUserFollowing(userId: string, count: number, cursor: string): Promise<CursoredData<UserInterface>> {
+    async getUserFollowing(userId: string, count?: number, cursor?: string): Promise<CursoredData<UserInterface>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
             throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
         }
 
-        // If invalid count provided
-        if (count < 40 && !cursor) {
-            throw new Error(Errors.ValidationErrors.InvalidCount);
-        }
+        // Objectifying parameters
+        let args: UserListArgs = new UserListArgs(count, cursor);
 
         // Fetchin the raw data
-        let res = await this.request<RawUserFollowing>(UserUrls.userFollowingUrl(userId, count, cursor)).then(res => res.data);
+        let res = await this.request<RawUserFollowing>(UserUrls.userFollowingUrl(userId, args.count, args.cursor)).then(res => res.data);
         
         // Extracting data
         let data = UserExtractors.extractUserFollow(res);
@@ -155,19 +154,17 @@ export class UserService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getUserFollowers(userId: string, count: number, cursor: string): Promise<CursoredData<UserInterface>> {
+    async getUserFollowers(userId: string, count?: number, cursor?: string): Promise<CursoredData<UserInterface>> {
         // If user is not authenticated, abort
         if (!this.isAuthenticated) {
             throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
         }
 
-        // If invalid count provided
-        if (count < 40 && !cursor) {
-            throw new Error(Errors.ValidationErrors.InvalidCount);
-        }
+        // Objectifying parameters
+        let args: UserListArgs = new UserListArgs(count, cursor);
 
         // Fetching the raw data
-        let res = await this.request<RawUserFollowers>(UserUrls.userFollowersUrl(userId, count, cursor)).then(res => res.data);
+        let res = await this.request<RawUserFollowers>(UserUrls.userFollowersUrl(userId, args.count, args.cursor)).then(res => res.data);
         
         // Extracting data
         let data = UserExtractors.extractUserFollow(res);
@@ -199,19 +196,17 @@ export class UserService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getUserLikes(userId: string, count: number, cursor: string): Promise<CursoredData<Tweet>> {
+    async getUserLikes(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
         // If user is not authenticated, abort
         if (!this.isAuthenticated) {
             throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
         }
-
-        // If invalid count provided
-        if (count < 40 && !cursor) {
-            throw new Error(Errors.ValidationErrors.InvalidCount);
-        }
+        
+        // Objectifying parameters
+        let args: UserListArgs = new UserListArgs(count, cursor);
 
         // Fetching the raw data
-        let res = await this.request<RawUserLikes>(UserUrls.userLikesUrl(userId, count, cursor)).then(res => res.data);
+        let res = await this.request<RawUserLikes>(UserUrls.userLikesUrl(userId, args.count, args.cursor)).then(res => res.data);
         
         // Extracting data
         let data = UserExtractors.extractUserLikes(res);
