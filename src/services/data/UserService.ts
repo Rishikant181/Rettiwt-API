@@ -3,7 +3,7 @@ import { FetcherService } from '../FetcherService';
 import { AuthService } from '../AuthService';
 
 // TYPES
-import { UserInterface } from '../../types/interfaces/User';
+import { User } from '../../types/data/User';
 import { UserListArgs } from '../../types/args/UserListArgs';
 import { Tweet } from '../../types/data/Tweet';
 import { CursoredData } from '../../types/data/Service';
@@ -19,9 +19,6 @@ import * as UserUrls from '../helper/urls/Users';
 
 // EXTRACTORS
 import * as UserExtractors from '../helper/extractors/Users';
-
-// DESERIALIZERS
-import * as UserDeserializers from '../helper/deserializers/Users';
 
 /**
  * Handles fetching of data related to user account
@@ -46,7 +43,7 @@ export class UserService extends FetcherService {
      * 
      * No cookies are required to use this method.
      */
-    async getUserDetails(screenName: string): Promise<UserInterface> {
+    async getUserDetails(screenName: string): Promise<User> {
         // Fetching the raw data
         let res: RawUser = await this.request<RawUser>(UserUrls.userDetailsUrl(screenName), false).then(res => res.data);
         
@@ -57,7 +54,7 @@ export class UserService extends FetcherService {
         this.cacheData(data);
 
         // Parsing data
-        let user = UserDeserializers.toUser(data.required[0]);
+        let user = new User(data.required[0]);
             
         return user;
     }
@@ -73,7 +70,7 @@ export class UserService extends FetcherService {
      * 
      * No cookies are required to use this method.
      */
-    async getUserDetailsById(restId: string): Promise<UserInterface> {
+    async getUserDetailsById(restId: string): Promise<User> {
         // Getting data from cache
         let cachedData = await this.readData(restId);
 
@@ -92,7 +89,7 @@ export class UserService extends FetcherService {
         this.cacheData(data);
 
         // Parsing data
-        let user = UserDeserializers.toUser(data.required[0]);
+        let user = new User(data.required[0]);
             
         return user;
     }
@@ -112,7 +109,7 @@ export class UserService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getUserFollowing(userId: string, count?: number, cursor?: string): Promise<CursoredData<UserInterface>> {
+    async getUserFollowing(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
             throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
@@ -131,7 +128,7 @@ export class UserService extends FetcherService {
         this.cacheData(data);
 
         // Parsing data
-        let users = data.required.map((item: UserData) => UserDeserializers.toUser(item));
+        let users = data.required.map((item: UserData) => new User(item));
 
         return {
             list: users,
@@ -154,7 +151,7 @@ export class UserService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getUserFollowers(userId: string, count?: number, cursor?: string): Promise<CursoredData<UserInterface>> {
+    async getUserFollowers(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
         if (!this.isAuthenticated) {
             throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
@@ -173,7 +170,7 @@ export class UserService extends FetcherService {
         this.cacheData(data);
 
         // Parsing data
-        let users = data.required.map((item: UserData) => UserDeserializers.toUser(item));
+        let users = data.required.map((item: UserData) => new User(item));
 
         return {
             list: users,

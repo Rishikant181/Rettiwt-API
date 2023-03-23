@@ -1,6 +1,3 @@
-// PACKAGES
-import { } from 'class-validator';
-
 // TYPES
 import { TweetInterface, TweetEntitiesInterface } from '../interfaces/Tweet';
 import { Result as RawTweet, Entities2 as RawTweetEntities } from '../raw/tweet/Tweet';
@@ -65,7 +62,6 @@ export class TweetEntities implements TweetEntitiesInterface {
  * @public
  */
 export class Tweet implements TweetInterface {
-    // MEMBER DATA
     /** The rest id of the tweet. */
     id: string;
 
@@ -102,7 +98,9 @@ export class Tweet implements TweetInterface {
     /** The number of likes of the tweet. */
     likeCount: number;
 
-    // MEMBER METHODS
+    /**
+     * @param tweet The raw tweet data.
+     */
     constructor(tweet: RawTweet) {
         this.id = tweet.rest_id;
         this.createdAt = tweet.legacy.created_at;

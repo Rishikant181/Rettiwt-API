@@ -1,9 +1,13 @@
+// TYPES
+import { UserInterface } from '../interfaces/User';
+import { Result as RawUser } from '../raw/User/User';
+
 /**
  * The details of a single user.
  * 
  * @public
  */
-export interface UserInterface {
+export class User implements UserInterface {
     /** The rest id of the user. */
     id: string;
 
@@ -45,4 +49,24 @@ export interface UserInterface {
 
     /** The url of the profile image. */
     profileImage: string;
+
+    /**
+     * @param user The raw user data.
+     */
+    constructor(user: RawUser) {
+        this.id = user.rest_id;
+        this.userName = user.legacy.screen_name;
+        this.fullName = user.legacy.name;
+        this.createdAt = user.legacy.created_at;
+        this.description = user.legacy.description;
+        this.isVerified = user.legacy.verified;
+        this.favouritesCount = user.legacy.favourites_count;
+        this.followersCount = user.legacy.followers_count;
+        this.followingsCount = user.legacy.friends_count;
+        this.statusesCount = user.legacy.statuses_count;
+        this.location = user.legacy.location;
+        this.pinnedTweet = user.legacy.pinned_tweet_ids_str[0];
+        this.profileBanner = user.legacy.profile_banner_url;
+        this.profileImage = user.legacy.profile_image_url_https;
+    }
 }

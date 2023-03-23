@@ -4,8 +4,8 @@ import { AuthService } from "../AuthService";
 
 // TYPES
 import { Tweet } from "../../types/data/Tweet";
+import { User } from "../../types/data/User";
 import { TweetListArgs } from "../../types/args/TweetListArgs";
-import { UserInterface } from "../../types/interfaces/User";
 import { TweetFilter } from "../../types/args/TweetFilter";
 import { CursoredData } from '../../types/data/Service';
 import RawTweet, { Result as TweetData } from '../../types/raw/tweet/Tweet';
@@ -20,9 +20,6 @@ import * as TweetUrls from '../helper/urls/Tweets';
 
 // EXTRACTORS
 import * as TweetExtractors from "../helper/extractors/Tweets";
-
-// DESERIALIZERS
-import * as UserDeserializers from '../helper/deserializers/Users';
 
 // PARSERS
 import { toQueryString } from '../helper/Parser';
@@ -126,7 +123,7 @@ export class TweetService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getTweetLikers(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<UserInterface>> {
+    async getTweetLikers(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
             throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
@@ -145,7 +142,7 @@ export class TweetService extends FetcherService {
         this.cacheData(data);
 
         // Parsing data
-        let users = data.required.map((item: UserData) => UserDeserializers.toUser(item));
+        let users = data.required.map((item: UserData) => new User(item));
 
         return {
             list: users,
@@ -168,7 +165,7 @@ export class TweetService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getTweetRetweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<UserInterface>> {
+    async getTweetRetweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
             throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
@@ -187,7 +184,7 @@ export class TweetService extends FetcherService {
         this.cacheData(data);
 
         // Parsing data
-        let users = data.required.map((item: UserData) => UserDeserializers.toUser(item));
+        let users = data.required.map((item: UserData) => new User(item));
 
         return {
             list: users,

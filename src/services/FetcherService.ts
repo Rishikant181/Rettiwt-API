@@ -15,10 +15,10 @@ import { HttpStatus } from "../types/HTTP";
 import { Result as RawUser } from '../types/raw/user/User';
 import { Result as RawTweet } from '../types/raw/tweet/Tweet';
 import { Tweet } from '../types/data/Tweet';
+import { User } from '../types/data/User';
 
 // HELPERS
 import * as Headers from './helper/Headers'
-import * as UserDeserializers from './helper/deserializers/Users';
 import { CurlyOptions } from 'node-libcurl/dist/curly';
 
 /**
@@ -129,7 +129,7 @@ export class FetcherService {
          * The extracted data is in raw form.
          * This raw data is deserialized into the respective known types.
          */
-        let users = data.users.map((user: RawUser) => UserDeserializers.toUser(user));
+        let users = data.users.map((user: RawUser) => new User(user));
         let tweets = data.tweets.map((tweet: RawTweet) => new Tweet(tweet));
 
         // Caching the data
