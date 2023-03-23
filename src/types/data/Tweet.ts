@@ -104,17 +104,17 @@ export class Tweet implements TweetInterface {
 
     // MEMBER METHODS
     constructor(tweet: RawTweet) {
-        this.id = tweet.rest_id,
-            this.createdAt = tweet.legacy.created_at,
-            this.tweetBy = tweet.legacy.user_id_str,
-            this.entities = new TweetEntities(tweet.legacy.entities),
-            this.quoted = tweet.legacy.quoted_status_id_str,
-            this.fullText = Parsers.normalizeText(tweet.legacy.full_text),
-            this.replyTo = tweet.legacy.in_reply_to_status_id_str,
-            this.lang = tweet.legacy.lang,
-            this.quoteCount = tweet.legacy.quote_count,
-            this.replyCount = tweet.legacy.reply_count,
-            this.retweetCount = tweet.legacy.retweet_count,
-            this.likeCount = tweet.legacy.favorite_count
+        this.id = tweet.rest_id;
+        this.createdAt = tweet.legacy.created_at;
+        this.tweetBy = tweet.legacy.user_id_str;
+        this.entities = new TweetEntities(tweet.legacy.entities);
+        this.quoted = tweet.legacy.quoted_status_id_str;
+        this.fullText = Parsers.normalizeText(tweet.legacy.full_text);
+        this.replyTo = tweet.legacy.in_reply_to_status_id_str;
+        this.lang = tweet.legacy.lang;
+        this.quoteCount = tweet.legacy.quote_count;
+        this.replyCount = tweet.legacy.reply_count;
+        this.retweetCount = tweet.legacy.retweet_count;
+        this.likeCount = tweet.legacy.favorite_count;
     }
 }
