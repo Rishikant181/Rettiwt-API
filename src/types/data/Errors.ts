@@ -40,11 +40,11 @@ export enum DataErrors {
 };
 
 /**
- * Error when any fields of a JSON argument fails to validate.
+ * Error when any fields of a JSON data fails to validate.
  * 
  * @param errorDetails The details of about the specific fields that failed to validate.
  */
-export class ArgumentValidationError implements Error {
+export class DataValidationError implements Error {
     /** The name of the error. */
     name: string;
 

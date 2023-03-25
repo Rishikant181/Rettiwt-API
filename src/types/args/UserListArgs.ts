@@ -3,7 +3,7 @@ import { IsInt, IsString, IsOptional, Min, validateSync, Max } from 'class-valid
 
 // TYPES
 import { ListArgs } from '../interfaces/Args';
-import { ArgumentValidationError } from '../data/Errors';
+import { DataValidationError } from '../data/Errors';
 
 export class UserListArgs implements ListArgs {
     /** The number of data items to fetch.
@@ -35,7 +35,7 @@ export class UserListArgs implements ListArgs {
 
         // If valiation error occured
         if (validationResult.length) {
-            throw new ArgumentValidationError(validationResult);
+            throw new DataValidationError(validationResult);
         }
     }
 }

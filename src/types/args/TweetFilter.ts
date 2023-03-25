@@ -3,7 +3,7 @@ import { IsArray, IsBoolean, IsNumberString, IsString, IsOptional, IsDateString,
 
 // TYPES
 import { TweetFilterInterface } from '../interfaces/Args';
-import { ArgumentValidationError } from '../data/Errors';
+import { DataValidationError } from '../data/Errors';
 
 export class TweetFilter implements TweetFilterInterface {
     /** The list of words to search. */
@@ -108,7 +108,7 @@ export class TweetFilter implements TweetFilterInterface {
 
         // If valiation error occured
         if (validationResult.length) {
-            throw new ArgumentValidationError(validationResult);
+            throw new DataValidationError(validationResult);
         }
     }
 }

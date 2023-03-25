@@ -9,6 +9,9 @@ import { UserService } from "../../services/data/UserService";
 // INTERFACES
 import { CursoredDataInterface } from "../interfaces/Service";
 
+// TYPES
+import { DataValidationError } from './Errors';
+
 /**
  * The cursor to the batch of data to be fetched.
  * 
@@ -39,7 +42,7 @@ export class Cursor {
 export class CursoredData<T> implements CursoredDataInterface<T> {
     /** The list of data of the given type. */
     @IsArray()
-    @ArrayNotEmpty({ message: "No data found!" })
+    @ArrayNotEmpty({ message: "No data matching the given criteria found!" })
     list: T[];
 
     /** The cursor to the next batch of data. */
@@ -59,7 +62,7 @@ export class CursoredData<T> implements CursoredDataInterface<T> {
 
         // If validation error occured
         if (validationResult.length) {
-            throw new Error("NO DATA");
+            throw new DataValidationError(validationResult);
         }
     }
 }
