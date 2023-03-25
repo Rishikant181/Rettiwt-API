@@ -1,6 +1,3 @@
-// PACKAGES
-import { ArrayNotEmpty, IsArray, IsObject, validateSync } from 'class-validator';
-
 // SERVICES
 import { AccountService } from "../../services/accounts/AccountService";
 import { TweetService } from "../../services/data/TweetService";
@@ -9,20 +6,15 @@ import { UserService } from "../../services/data/UserService";
 // INTERFACES
 import { CursoredDataInterface } from "../interfaces/Service";
 
-// TYPES
-import { DataValidationError } from './Errors';
-
 /**
  * The cursor to the batch of data to be fetched.
  * 
  * @public
  */
 export class Cursor {
-    // MEMBER DATA
     /** The cursor string. */
     value: string;
 
-    // MEMBER DATA
     /**
      * Initializes a new cursor from the given cursor string.
      * 
@@ -41,12 +33,9 @@ export class Cursor {
  */
 export class CursoredData<T> implements CursoredDataInterface<T> {
     /** The list of data of the given type. */
-    @IsArray()
-    @ArrayNotEmpty({ message: "No data matching the given criteria found!" })
     list: T[];
 
     /** The cursor to the next batch of data. */
-    @IsObject()
     next: Cursor;
 
     /**
@@ -56,14 +45,6 @@ export class CursoredData<T> implements CursoredDataInterface<T> {
     constructor(list: T[] = [], next: string = '') {
         this.list = list;
         this.next = new Cursor(next);
-
-        // Validating the list data
-        const validationResult = validateSync(this);
-
-        // If validation error occured
-        if (validationResult.length) {
-            throw new DataValidationError(validationResult);
-        }
     }
 }
 
