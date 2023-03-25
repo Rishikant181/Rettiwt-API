@@ -1,5 +1,5 @@
 // PACKAGES
-import { IsArray, IsObject, IsString, MinLength } from 'class-validator';
+import { ArrayNotEmpty, IsArray, IsObject, validateSync } from 'class-validator';
 
 // SERVICES
 import { AccountService } from "../../services/accounts/AccountService";
@@ -39,7 +39,7 @@ export class Cursor {
 export class CursoredData<T> implements CursoredDataInterface<T> {
     /** The list of data of the given type. */
     @IsArray()
-    @MinLength(1 , { message: "No data found!" })
+    @ArrayNotEmpty({ message: "No data found!" })
     list: T[];
 
     /** The cursor to the next batch of data. */
@@ -50,9 +50,17 @@ export class CursoredData<T> implements CursoredDataInterface<T> {
      * @param list The list of data item to store.
      * @param next The cursor to the next batch of data.
      */
-    constructor(list: T[] = [], next: Cursor = new Cursor('')) {
+    constructor(list: T[] = [], next: string = '') {
         this.list = list;
-        this.next = next;
+        this.next = new Cursor(next);
+
+        // Validating the list data
+        const validationResult = validateSync(this);
+
+        // If validation error occured
+        if (validationResult.length) {
+            throw new Error("NO DATA");
+        }
     }
 }
 

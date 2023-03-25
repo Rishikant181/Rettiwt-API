@@ -7,7 +7,7 @@ import { Tweet } from "../../types/data/Tweet";
 import { User } from "../../types/data/User";
 import { TweetListArgs } from "../../types/args/TweetListArgs";
 import { TweetFilter } from "../../types/args/TweetFilter";
-import { CursoredDataInterface } from '../../types/interfaces/Service';
+import { CursoredData } from '../../types/data/Service';
 import RawTweet, { Result as TweetData } from '../../types/raw/tweet/Tweet';
 import { Result as UserData } from "../../types/raw/user/User";
 import RawTweets from '../../types/raw/tweet/Tweets';
@@ -50,7 +50,7 @@ export class TweetService extends FetcherService {
      * 
      * If cookies have been provided, then authenticated requests are made. Else, guest requests are made.
      */
-    async getTweets(query: TweetFilter, count?: number, cursor?: string): Promise<CursoredDataInterface<Tweet>> {
+    async getTweets(query: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
         // Objectifying parameters
         let filter: TweetFilter = new TweetFilter(query);
         let args: TweetListArgs = new TweetListArgs(count, cursor);
@@ -67,10 +67,7 @@ export class TweetService extends FetcherService {
         // Parsing data
         let tweets = data.required.map((item: TweetData) => new Tweet(item));
 
-        return {
-            list: tweets,
-            next: { value: data.cursor }
-        };
+        return new CursoredData<Tweet>(tweets, data.cursor);
     }
 
     /**
@@ -123,7 +120,7 @@ export class TweetService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getTweetLikers(tweetId: string, count?: number, cursor?: string): Promise<CursoredDataInterface<User>> {
+    async getTweetLikers(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
             throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
@@ -144,10 +141,7 @@ export class TweetService extends FetcherService {
         // Parsing data
         let users = data.required.map((item: UserData) => new User(item));
 
-        return {
-            list: users,
-            next: { value: data.cursor }
-        };
+        return new CursoredData<User>(users, data.cursor);
     }
 
     /**
@@ -165,7 +159,7 @@ export class TweetService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getTweetRetweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredDataInterface<User>> {
+    async getTweetRetweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
             throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
@@ -186,10 +180,7 @@ export class TweetService extends FetcherService {
         // Parsing data
         let users = data.required.map((item: UserData) => new User(item));
 
-        return {
-            list: users,
-            next: { value: data.cursor }
-        };
+        return new CursoredData<User>(users, data.cursor);
     }
 
     /**
