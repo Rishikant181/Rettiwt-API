@@ -4,7 +4,7 @@ import ResolverBase from './ResolverBase';
 // TYPES
 import { TweetFilter } from '../../types/args/TweetFilter';
 import { Cursor, DataContext } from '../../types/data/Service';
-import { DataErrors, ValidationErrors } from '../../types/data/Errors';
+import { DataErrors } from '../../types/data/Errors';
 
 export default class TweetResolver extends ResolverBase {
     // MEMBER DATA
@@ -39,11 +39,6 @@ export default class TweetResolver extends ResolverBase {
         let tweets: any[] = [];                                                     // To store the list of tweets
         let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
         let total: number = 0;                                                      // To store the total number of tweets fetched
-
-        // Checking if the given tweet filter is valid or not
-        if (!(filter.fromUsers || filter.toUsers || filter.words || filter.hashtags || filter.mentions || filter.quoted)) {
-            throw new Error(ValidationErrors.InvalidTweetFilter);
-        }
 
         // If required count less than batch size, setting batch size to required count
         this.batchSize = (count < this.batchSize) ? count : this.batchSize;
