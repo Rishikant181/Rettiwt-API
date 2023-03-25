@@ -7,7 +7,7 @@ import { Tweet } from "../../types/data/Tweet";
 import { User } from "../../types/data/User";
 import { TweetListArgs } from "../../types/args/TweetListArgs";
 import { TweetFilter } from "../../types/args/TweetFilter";
-import { CursoredData } from '../../types/data/Service';
+import { CursoredDataInterface } from '../../types/interfaces/Service';
 import RawTweet, { Result as TweetData } from '../../types/raw/tweet/Tweet';
 import { Result as UserData } from "../../types/raw/user/User";
 import RawTweets from '../../types/raw/tweet/Tweets';
@@ -50,7 +50,7 @@ export class TweetService extends FetcherService {
      * 
      * If cookies have been provided, then authenticated requests are made. Else, guest requests are made.
      */
-    async getTweets(query: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+    async getTweets(query: TweetFilter, count?: number, cursor?: string): Promise<CursoredDataInterface<Tweet>> {
         // Objectifying parameters
         let filter: TweetFilter = new TweetFilter(query);
         let args: TweetListArgs = new TweetListArgs(count, cursor);
@@ -123,7 +123,7 @@ export class TweetService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getTweetLikers(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+    async getTweetLikers(tweetId: string, count?: number, cursor?: string): Promise<CursoredDataInterface<User>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
             throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
@@ -165,7 +165,7 @@ export class TweetService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getTweetRetweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+    async getTweetRetweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredDataInterface<User>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
             throw new Error(Errors.AuthenticationErrors.NotAuthenticated);

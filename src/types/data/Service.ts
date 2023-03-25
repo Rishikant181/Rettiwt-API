@@ -25,20 +25,6 @@ export class Cursor {
 }
 
 /**
- * The data that us fetched batch-wise along with a cursor.
- * 
- * @typeParam Type - The type of data present in the list.
- * @public
- */
-export interface CursoredData<Type> {
-    /** The list of data of the given type. */
-    list: Type[];
-
-    /** The cursor to the next batch of data. */
-    next: Cursor;
-}
-
-/**
  * The data context from where data is to be fetched.
  * 
  * @public

@@ -6,7 +6,7 @@ import { AuthService } from '../AuthService';
 import { User } from '../../types/data/User';
 import { UserListArgs } from '../../types/args/UserListArgs';
 import { Tweet } from '../../types/data/Tweet';
-import { CursoredData } from '../../types/data/Service';
+import { CursoredDataInterface } from '../../types/interfaces/Service';
 import { Result as TweetData } from '../../types/raw/tweet/Tweet';
 import RawUser, { Result as UserData } from '../../types/raw/user/User';
 import RawUserFollowers from '../../types/raw/user/Followers';
@@ -109,7 +109,7 @@ export class UserService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getUserFollowing(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+    async getUserFollowing(userId: string, count?: number, cursor?: string): Promise<CursoredDataInterface<User>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
             throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
@@ -151,7 +151,7 @@ export class UserService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getUserFollowers(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+    async getUserFollowers(userId: string, count?: number, cursor?: string): Promise<CursoredDataInterface<User>> {
         // If user is not authenticated, abort
         if (!this.isAuthenticated) {
             throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
@@ -193,7 +193,7 @@ export class UserService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getUserLikes(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+    async getUserLikes(userId: string, count?: number, cursor?: string): Promise<CursoredDataInterface<Tweet>> {
         // If user is not authenticated, abort
         if (!this.isAuthenticated) {
             throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
