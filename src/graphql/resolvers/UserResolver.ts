@@ -23,11 +23,15 @@ export default class UserResolver extends ResolverBase {
     async resolveUserDetails(userName: string, id: string): Promise<any> {
         // If user name is supplied
         if (userName) {
-            return await this.context.users.getUserDetails(userName);
+            return await this.context.users.getUserDetails(userName).catch(error => {
+                throw this.getGraphQLError(error);
+            });
         }
         // If id is supplied
         else if (id) {
-            return await this.context.users.getUserDetailsById(id);
+            return await this.context.users.getUserDetailsById(id).catch(error => {
+                throw this.getGraphQLError(error);
+            });
         }
         // If neither userName nor id is supplied
         else {
@@ -60,7 +64,9 @@ export default class UserResolver extends ResolverBase {
             this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
 
             // Getting the data
-            const res = await this.context.users.getUserLikes(id, this.batchSize, next.value);
+            const res = await this.context.users.getUserLikes(id, this.batchSize, next.value).catch(error => {
+                throw this.getGraphQLError(error);
+            });
 
             // If data is available
             if (res.list?.length) {
@@ -115,7 +121,9 @@ export default class UserResolver extends ResolverBase {
             this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
 
             // Getting the data
-            const res = await this.context.users.getUserFollowers(id, this.batchSize, next.value);
+            const res = await this.context.users.getUserFollowers(id, this.batchSize, next.value).catch(error => {
+                throw this.getGraphQLError(error);
+            });
 
             // If data is available
             if (res.list?.length) {
@@ -170,7 +178,9 @@ export default class UserResolver extends ResolverBase {
             this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
 
             // Getting the data
-            const res = await this.context.users.getUserFollowing(id, this.batchSize, next.value);
+            const res = await this.context.users.getUserFollowing(id, this.batchSize, next.value).catch(error => {
+                throw this.getGraphQLError(error);
+            });
 
             // If data is available
             if (res.list?.length) {

@@ -16,7 +16,7 @@ export default class ResolverBase {
     }
 
     /**
-     * @param error The error object received from the service.
+     * @param error The error object received from the services.
      * 
      * @returns The GraphQL error object that can be returned to the client.
      */
