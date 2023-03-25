@@ -1,7 +1,13 @@
+// PACKAGES
+import { IsArray, IsObject, IsString, MinLength } from 'class-validator';
+
 // SERVICES
 import { AccountService } from "../../services/accounts/AccountService";
 import { TweetService } from "../../services/data/TweetService";
 import { UserService } from "../../services/data/UserService";
+
+// INTERFACES
+import { CursoredDataInterface } from "../interfaces/Service";
 
 /**
  * The cursor to the batch of data to be fetched.
@@ -21,6 +27,32 @@ export class Cursor {
      */
     constructor(cursorStr: string) {
         this.value = cursorStr;
+    }
+}
+
+/**
+ * The data that us fetched batch-wise along with a cursor.
+ * 
+ * @typeParam Type - The type of data present in the list.
+ * @public
+ */
+export class CursoredData<T> implements CursoredDataInterface<T> {
+    /** The list of data of the given type. */
+    @IsArray()
+    @MinLength(1 , { message: "No data found!" })
+    list: T[];
+
+    /** The cursor to the next batch of data. */
+    @IsObject()
+    next: Cursor;
+
+    /**
+     * @param list The list of data item to store.
+     * @param next The cursor to the next batch of data.
+     */
+    constructor(list: T[] = [], next: Cursor = new Cursor('')) {
+        this.list = list;
+        this.next = next;
     }
 }
 
