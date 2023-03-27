@@ -11,15 +11,6 @@ export enum AuthenticationErrors {
 };
 
 /**
- * Different types error messages for validation errors returned by services.
- *
- * @public
- */
-export enum ValidationErrors {
-    NoUserIdentification = "Either userName or id must be given"
-};
-
-/**
  * Different type of error messages related to data that are returned by services.
  *
  * @public

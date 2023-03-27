@@ -16,7 +16,7 @@ import RawUserFollowing from '../../types/raw/user/Following';
 import RawUserLikes from '../../types/raw/user/Likes';
 
 // ENUMS
-import { AuthenticationErrors, ValidationErrors } from '../../enums/Errors';
+import { AuthenticationErrors } from '../../enums/Errors';
 
 // URLS
 import * as UserUrls from '../helper/urls/Users';
@@ -56,7 +56,7 @@ export class UserService extends FetcherService {
             res = await this.request<RawUser>(UserUrls.userDetailsUrl(id), false).then(res => res.data);
         }
         // If id is a numeric string => id is supplied
-        else if (!isNaN(Number(id))) {
+        else {
             // Getting data from cache
             let cachedData = await this.readData(id);
 
@@ -67,10 +67,6 @@ export class UserService extends FetcherService {
 
             // Fetching the raw data
             res = await this.request<RawUser>(UserUrls.userDetailsByIdUrl(id), false).then(res => res.data);
-        }
-        // If neither userName nor id is supplied
-        else {
-            throw new Error(ValidationErrors.NoUserIdentification);
         }
 
         // Extracting data
