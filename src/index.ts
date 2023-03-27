@@ -1,3 +1,6 @@
+// PACKAGES
+import 'reflect-metadata';
+
 // SERVICES
 import { AuthService } from "./services/AuthService";
 import { UserService } from "./services/data/UserService";
@@ -32,9 +35,10 @@ export * from './services/data/TweetService';
 export * from './services/data/UserService';
 
 // Exporting types
-export * from './types/data/Errors';
-export * from './types/data/Service';
-export * from './types/data/Tweet';
-export * from './types/data/User';
+export * from './models/errors/DataValidationError';
+export * from './models/data/CursoredData';
+export * from './types/Args';
+export * from './types/Tweet';
+export * from './types/User';
 export * from './types/Authentication';
-export * from './types/HTTP';
+export * from './enums/HTTP';

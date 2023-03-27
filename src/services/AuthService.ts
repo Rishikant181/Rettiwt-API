@@ -5,7 +5,7 @@ import axios from 'axios';
 import { guestTokenUrl } from './helper/urls/Authentication';
 
 // TYPES
-import { GuestCredentials, AuthCredentials } from '../types/Authentication';
+import { GuestCredentials as IGuestCredentials, AuthCredentials as IAuthCredentials } from '../types/Authentication';
 
 // CONFIGS
 import { config } from '../config/env';
@@ -20,7 +20,7 @@ export class AuthService {
     private authToken: string;
 
     /** The current authentication credentials. */
-    private credentials: AuthCredentials;
+    private credentials: IAuthCredentials;
 
     /** Whether instance has been authenticated or not. */
     public isAuthenticated: boolean;
@@ -47,14 +47,14 @@ export class AuthService {
     /**
      * @returns The current authentication credentials. A different credential is returned each time this is invoked
      */
-    async getAuthCredentials(): Promise<AuthCredentials> {
+    async getAuthCredentials(): Promise<IAuthCredentials> {
         return this.credentials;
     }
 
     /**
      * @returns The guest credentials fetched from twitter.
      */
-    async getGuestCredentials(): Promise<GuestCredentials> {
+    async getGuestCredentials(): Promise<IGuestCredentials> {
         // Getting the guest credentials from twitter
         return await axios.post<{ guest_token: string }>(guestTokenUrl(), null, {
             headers: {

@@ -1,6 +1,6 @@
 // TYPES
 import { DataExtract } from '../../../types/Resolvers';
-import { DataErrors } from '../../../types/data/Errors';
+import { DataErrors } from '../../../enums/Errors';
 import RawTweet from '../../../types/raw/tweet/Tweet';
 import RawTweets from '../../../types/raw/tweet/Tweets';
 import RawRetweeters from '../../../types/raw/tweet/Retweeters';

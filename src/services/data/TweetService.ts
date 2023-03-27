@@ -2,26 +2,28 @@
 import { FetcherService } from "../FetcherService";
 import { AuthService } from "../AuthService";
 
+// MODELS
+import { Tweet } from "../../models/data/Tweet";
+import { User } from "../../models/data/User";
+import { TweetListArgs } from "../../models/args/TweetListArgs";
+import { TweetFilter } from "../../models/args/TweetFilter";
+import { CursoredData } from '../../models/data/CursoredData';
+
 // TYPES
-import { TweetFilter, Tweet } from "../../types/data/Tweet";
-import { User } from "../../types/data/User";
-import { CursoredData } from '../../types/data/Service';
 import RawTweet, { Result as TweetData } from '../../types/raw/tweet/Tweet';
 import { Result as UserData } from "../../types/raw/user/User";
 import RawTweets from '../../types/raw/tweet/Tweets';
 import RawLikers from '../../types/raw/tweet/Favouriters';
 import RawRetweeters from '../../types/raw/tweet/Retweeters';
-import * as Errors from '../../types/data/Errors';
+
+// ENUMS
+import { AuthenticationErrors } from '../../enums/Errors';
 
 // URLS
 import * as TweetUrls from '../helper/urls/Tweets';
 
 // EXTRACTORS
 import * as TweetExtractors from "../helper/extractors/Tweets";
-
-// DESERIALIZERS
-import * as UserDeserializers from '../helper/deserializers/Users';
-import * as TweetDeserializers from '../helper/deserializers/Tweets';
 
 // PARSERS
 import { toQueryString } from '../helper/Parser';
@@ -41,7 +43,7 @@ export class TweetService extends FetcherService {
 
     /**
      * @param filter The filter be used for searching the tweets.
-     * @param count The number of tweets to fetch, must be >= 1 and <= 100
+     * @param count The number of tweets to fetch, must be >= 10 and <= 100
      * @param cursor The cursor to the next batch of tweets. If blank, first batch is fetched.
      * 
      * @returns The list of tweets that match the given filter.
@@ -52,14 +54,13 @@ export class TweetService extends FetcherService {
      * 
      * If cookies have been provided, then authenticated requests are made. Else, guest requests are made.
      */
-    async getTweets(filter: TweetFilter, count: number, cursor: string): Promise<CursoredData<Tweet>> {
-        // If invalid count provided
-        if (count < 1 && !cursor) {
-            throw new Error(Errors.ValidationErrors.InvalidCount);
-        }
+    async getTweets(query: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+        // Objectifying parameters
+        let filter: TweetFilter = new TweetFilter(query);
+        let args: TweetListArgs = new TweetListArgs(count, cursor);
 
         // Getting the raw data
-        let res = await this.request<RawTweets>(TweetUrls.tweetsUrl(toQueryString(filter), count, cursor), this.isAuthenticated).then(res => res.data);
+        let res = await this.request<RawTweets>(TweetUrls.tweetsUrl(toQueryString(filter), args.count, args.cursor), this.isAuthenticated).then(res => res.data);
 
         // Extracting data
         let data = TweetExtractors.extractTweets(res);
@@ -68,12 +69,9 @@ export class TweetService extends FetcherService {
         this.cacheData(data);
 
         // Parsing data
-        let tweets = data.required.map((item: TweetData) => TweetDeserializers.toTweet(item));
+        let tweets = data.required.map((item: TweetData) => new Tweet(item));
 
-        return {
-            list: tweets,
-            next: { value: data.cursor }
-        };
+        return new CursoredData<Tweet>(tweets, data.cursor);
     }
 
     /**
@@ -106,7 +104,7 @@ export class TweetService extends FetcherService {
         this.cacheData(data);
 
         // Parsing data
-        let tweet = TweetDeserializers.toTweet(data.required[0]);
+        let tweet = new Tweet(data.required[0]);
 
         return tweet;
     }
@@ -126,19 +124,17 @@ export class TweetService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getTweetLikers(tweetId: string, count: number, cursor: string): Promise<CursoredData<User>> {
+    async getTweetLikers(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
-            throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
+            throw new Error(AuthenticationErrors.NotAuthenticated);
         }
 
-        // If invalid count provided
-        if (count < 10 && !cursor) {
-            throw new Error(Errors.ValidationErrors.InvalidCount);
-        }
+        // Objectifying parameters
+        let args: TweetListArgs = new TweetListArgs(count, cursor);
         
         // Fetching the raw data
-        let res = await this.request<RawLikers>(TweetUrls.tweetLikesUrl(tweetId, count, cursor)).then(res => res.data);
+        let res = await this.request<RawLikers>(TweetUrls.tweetLikesUrl(tweetId, args.count, args.cursor)).then(res => res.data);
 
         // Extracting data
         let data = TweetExtractors.extractTweetLikers(res);
@@ -147,12 +143,9 @@ export class TweetService extends FetcherService {
         this.cacheData(data);
 
         // Parsing data
-        let users = data.required.map((item: UserData) => UserDeserializers.toUser(item));
+        let users = data.required.map((item: UserData) => new User(item));
 
-        return {
-            list: users,
-            next: { value: data.cursor }
-        };
+        return new CursoredData<User>(users, data.cursor);
     }
 
     /**
@@ -170,19 +163,17 @@ export class TweetService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getTweetRetweeters(tweetId: string, count: number, cursor: string): Promise<CursoredData<User>> {
+    async getTweetRetweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
-            throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
+            throw new Error(AuthenticationErrors.NotAuthenticated);
         }
 
-        // If invalid count provided
-        if (count < 10 && !cursor) {
-            throw new Error(Errors.ValidationErrors.InvalidCount);
-        }
+        // Objectifying parameters
+        let args: TweetListArgs = new TweetListArgs(count, cursor);
 
         // Fetching the raw data
-        let res = await this.request<RawRetweeters>(TweetUrls.tweetRetweetUrl(tweetId, count, cursor)).then(res => res.data);
+        let res = await this.request<RawRetweeters>(TweetUrls.tweetRetweetUrl(tweetId, args.count, args.cursor)).then(res => res.data);
 
         // Extracting data
         let data = TweetExtractors.extractTweetRetweeters(res);
@@ -191,12 +182,9 @@ export class TweetService extends FetcherService {
         this.cacheData(data);
 
         // Parsing data
-        let users = data.required.map((item: UserData) => UserDeserializers.toUser(item));
+        let users = data.required.map((item: UserData) => new User(item));
 
-        return {
-            list: users,
-            next: { value: data.cursor }
-        };
+        return new CursoredData<User>(users, data.cursor);
     }
 
     /**

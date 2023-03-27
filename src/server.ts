@@ -2,6 +2,7 @@
 import express from 'express';
 import { graphqlHTTP } from 'express-graphql';
 import { GraphQLSchema } from 'graphql';
+import 'reflect-metadata';
 
 // Services
 import { UserService } from './services/data/UserService';

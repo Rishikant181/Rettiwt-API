@@ -1,5 +1,5 @@
 // TYPES
-import { GuestCredentials, AuthCredentials } from '../../types/Authentication';
+import { GuestCredentials as IGuestCredentials, AuthCredentials as IAuthCredentials } from '../../types/Authentication';
 
 /**
  * @param authToken The authentication token received from Twitter
@@ -7,7 +7,7 @@ import { GuestCredentials, AuthCredentials } from '../../types/Authentication';
  * @param cookie The cookie associated with the logged in account
  * @returns The header required for making authorized HTTP requests
  */
-export function authorizedHeader(authCred: AuthCredentials): any {
+export function authorizedHeader(authCred: IAuthCredentials): any {
     return [
         `sec-ch-ua: "Not_A Brand";v="99", "Microsoft Edge";v="109", "Chromium";v="109"`,
         `x-twitter-client-language: en`,
@@ -28,7 +28,7 @@ export function authorizedHeader(authCred: AuthCredentials): any {
  * @param guestCred The guest credentials to use
  * @returns The header requred for making guest HTTP requests
  */
-export function guestHeader(guestCred: GuestCredentials): any {
+export function guestHeader(guestCred: IGuestCredentials): any {
     return [
         'Accept: */*',
         `authorization: ${guestCred.authToken}`,
@@ -42,7 +42,7 @@ export function guestHeader(guestCred: GuestCredentials): any {
  * @param cookie The cookie to be used
  * @returns The header for making HTTP request for logging in
  */
-export function loginHeader(guestCred: GuestCredentials, cookie: string): any {
+export function loginHeader(guestCred: IGuestCredentials, cookie: string): any {
     return [ 
         `sec-ch-ua: "Not_A Brand";v="99", "Microsoft Edge";v="109", "Chromium";v="109"`, 
         `x-twitter-client-language: en`, 
