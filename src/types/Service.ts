@@ -1,5 +1,5 @@
 // TYPES
-import { Cursor } from '../../models/data/CursoredData';
+import { Cursor } from '../models/data/CursoredData';
 
 /**
  * The data that us fetched batch-wise along with a cursor.

@@ -37,8 +37,8 @@ export * from './services/data/UserService';
 // Exporting types
 export * from './models/errors/DataValidationError';
 export * from './models/data/CursoredData';
-export * from './types/interfaces/Args';
-export * from './types/interfaces/Tweet';
-export * from './types/interfaces/User';
-export * from './types/interfaces/Authentication';
+export * from './types/Args';
+export * from './types/Tweet';
+export * from './types/User';
+export * from './types/Authentication';
 export * from './enums/HTTP';

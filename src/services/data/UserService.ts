@@ -8,7 +8,7 @@ import { UserListArgs } from '../../models/args/UserListArgs';
 import { Tweet } from '../../models/data/Tweet';
 
 // TYPES
-import { CursoredData as ICursoredData } from '../../types/interfaces/Service';
+import { CursoredData as ICursoredData } from '../../types/Service';
 import { Result as TweetData } from '../../types/raw/tweet/Tweet';
 import RawUser, { Result as UserData } from '../../types/raw/user/User';
 import RawUserFollowers from '../../types/raw/user/Followers';

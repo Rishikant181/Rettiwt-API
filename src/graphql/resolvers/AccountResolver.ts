@@ -2,7 +2,7 @@
 import ResolverBase from './ResolverBase';
 
 // TYPES
-import { DataContext } from '../../types/interfaces/Rettiwt';
+import { DataContext } from '../../types/Rettiwt';
 
 export default class AccountResolver extends ResolverBase {
     // MEMBER METHODS

@@ -2,7 +2,7 @@
 import { IsInt, IsString, IsOptional, Min, validateSync, Max } from 'class-validator';
 
 // TYPES
-import { ListArgs } from '../../types/interfaces/Args';
+import { ListArgs } from '../../types/Args';
 import { DataValidationError } from '../errors/DataValidationError';
 
 /**

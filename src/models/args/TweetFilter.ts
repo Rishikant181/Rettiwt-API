@@ -2,7 +2,7 @@
 import { IsArray, IsBoolean, IsNumberString, IsString, IsOptional, IsDateString, validateSync } from 'class-validator';
 
 // TYPES
-import { TweetFilter as ITweetFilter } from '../../types/interfaces/Args';
+import { TweetFilter as ITweetFilter } from '../../types/Args';
 import { DataValidationError } from '../errors/DataValidationError';
 
 export class TweetFilter implements ITweetFilter {

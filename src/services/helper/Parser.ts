@@ -1,5 +1,5 @@
 // TYPES
-import { TweetFilter as ITweetFilter } from '../../types/interfaces/Args';
+import { TweetFilter as ITweetFilter } from '../../types/Args';
 
 /**
  * @returns Whether the given json object is empty or not

@@ -5,7 +5,7 @@ import { curly, CurlyResult } from 'node-libcurl';
 import { AuthService } from '../AuthService';
 
 // TYPES
-import { GuestCredentials as IGuestCredentials } from '../../types/interfaces/Authentication';
+import { GuestCredentials as IGuestCredentials } from '../../types/Authentication';
 import { HttpStatus } from '../../enums/HTTP';
 import { AuthenticationErrors } from '../../enums/Errors';
 

@@ -1,7 +1,7 @@
 // SERVICES
-import { AccountService } from "../../services/accounts/AccountService";
-import { TweetService } from "../../services/data/TweetService";
-import { UserService } from "../../services/data/UserService";
+import { AccountService } from "../services/accounts/AccountService";
+import { TweetService } from "../services/data/TweetService";
+import { UserService } from "../services/data/UserService";
 
 /**
  * The data context from where data is to be fetched.

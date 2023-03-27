@@ -2,7 +2,7 @@
 import ResolverBase from './ResolverBase';
 
 // TYPES
-import { DataContext } from '../../types/interfaces/Rettiwt'
+import { DataContext } from '../../types/Rettiwt'
 import { Cursor } from '../../models/data/CursoredData';
 import { DataErrors, ValidationErrors } from '../enums/Errors';
 
