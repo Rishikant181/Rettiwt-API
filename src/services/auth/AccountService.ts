@@ -2,15 +2,17 @@
 import { curly, CurlyResult } from 'node-libcurl';
 
 // SERVICES
-import { AuthService } from '../AuthService';
+import { AuthService } from './AuthService';
 
 // TYPES
 import { GuestCredentials as IGuestCredentials } from '../../types/Authentication';
+
+// ENUMS
 import { HttpStatus } from '../../enums/HTTP';
 import { AuthenticationErrors } from '../../enums/Errors';
 
 // HELPERS
-import LoginFlows from './LoginFlows';
+import LoginFlows from '../helper/payloads/LoginFlows';
 import { loginHeader } from '../helper/Headers';
 import { Cookie, CookieJar } from 'cookiejar';
 
@@ -161,6 +163,13 @@ export class AccountService {
      * @internal
      */
     private async accountDuplicationCheck(): Promise<void> {
+        
+        /**
+         * Adding additional delay of 1 second before executing this step.
+         * This is done because if this step is executed too fast, the Twitter API throws error 400.
+         */
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
         // Executing the flow
         const res: CurlyResult = await curly.post(LoginFlows.AccountDuplicationCheck.url, {
             httpHeader: loginHeader(await this.getGuestCredentials(), this.cookies.join(';').toString()),

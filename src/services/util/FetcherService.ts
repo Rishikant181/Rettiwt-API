@@ -2,22 +2,22 @@
 import { curly, CurlyResult } from 'node-libcurl';
 
 // SERVICES
-import { AuthService } from './AuthService';
+import { AuthService } from '../auth/AuthService';
 import { CacheService } from './CacheService';
 
 // MODELS
-import { Tweet } from '../models/data/Tweet';
-import { User } from '../models/data/User';
+import { Tweet } from '../../models/data/Tweet';
+import { User } from '../../models/data/User';
 
 // TYPES
-import { Result as RawUser } from '../types/raw/user/User';
-import { Result as RawTweet } from '../types/raw/tweet/Tweet';
+import { Result as RawUser } from '../../types/raw/user/User';
+import { Result as RawTweet } from '../../types/raw/tweet/Tweet';
 
 // ENUMS
-import { HttpStatus } from "../enums/HTTP";
+import { HttpStatus } from "../../enums/HTTP";
 
 // HELPERS
-import * as Headers from './helper/Headers'
+import * as Headers from '../helper/Headers'
 import { CurlyOptions } from 'node-libcurl/dist/curly';
 
 /**

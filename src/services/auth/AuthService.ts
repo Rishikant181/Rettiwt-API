@@ -2,13 +2,13 @@
 import axios from 'axios';
 
 // URLS
-import { guestTokenUrl } from './helper/urls/Authentication';
+import { guestTokenUrl } from '../helper/urls/Authentication';
 
 // TYPES
-import { GuestCredentials as IGuestCredentials, AuthCredentials as IAuthCredentials } from '../types/Authentication';
+import { GuestCredentials as IGuestCredentials, AuthCredentials as IAuthCredentials } from '../../types/Authentication';
 
 // CONFIGS
-import { config } from '../config/env';
+import { config } from '../../config/env';
 
 /**
  * Handles authentication of http requests and other authentication related tasks.

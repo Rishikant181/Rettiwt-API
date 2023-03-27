@@ -7,8 +7,8 @@ import 'reflect-metadata';
 // Services
 import { UserService } from './services/data/UserService';
 import { TweetService } from './services/data/TweetService';
-import { AccountService } from './services/accounts/AccountService';
-import { AuthService } from './services/AuthService';
+import { AccountService } from './services/auth/AccountService';
+import { AuthService } from './services/auth/AuthService';
 
 // SCHEMA
 import { rootQuery } from './graphql/queries/RootQuery';
