@@ -1,6 +1,6 @@
 // SERVICES
-import { FetcherService } from "../FetcherService";
-import { AuthService } from "../AuthService";
+import { FetcherService } from "../util/FetcherService";
+import { AuthService } from "../auth/AuthService";
 
 // MODELS
 import { Tweet } from "../../models/data/Tweet";

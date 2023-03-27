@@ -1,5 +1,5 @@
 // SERVICES
-import { AccountService } from "../services/accounts/AccountService";
+import { AccountService } from "../services/auth/AccountService";
 import { TweetService } from "../services/data/TweetService";
 import { UserService } from "../services/data/UserService";
 

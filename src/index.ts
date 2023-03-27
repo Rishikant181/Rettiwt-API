@@ -2,10 +2,10 @@
 import 'reflect-metadata';
 
 // SERVICES
-import { AuthService } from "./services/AuthService";
+import { AuthService } from "./services/auth/AuthService";
 import { UserService } from "./services/data/UserService";
 import { TweetService } from "./services/data/TweetService";
-import { AccountService } from "./services/accounts/AccountService";
+import { AccountService } from "./services/auth/AccountService";
 
 /**
  * @param cookie The cookie string to use to fetch data
@@ -27,10 +27,10 @@ export const Rettiwt = (cookie: string = '') => {
 }
 
 // Exporting classes
-export * from './services/AuthService';
-export * from './services/CacheService';
-export * from './services/FetcherService';
-export * from './services/accounts/AccountService';
+export * from './services/auth/AuthService';
+export * from './services/util/CacheService';
+export * from './services/util/FetcherService';
+export * from './services/auth/AccountService';
 export * from './services/data/TweetService';
 export * from './services/data/UserService';
 

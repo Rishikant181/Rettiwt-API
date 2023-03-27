@@ -2,7 +2,7 @@
 import NodeCache from 'node-cache';
 
 // PARSERS
-import * as Parsers from './helper/Parser';
+import * as Parsers from '../helper/Parser';
 
 /**
  * Handles reading and writing of data from and to cache.
