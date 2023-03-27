@@ -19,25 +19,12 @@ export default class UserResolver extends ResolverBase {
     /**
      * @returns The details of the target twitter user
      * @param userName The user name of the target twitter user
-     * @param id The id of the target twitter user
+     * @param id The id/username of the target twitter user
      */
-    async resolveUserDetails(userName: string, id: string): Promise<any> {
-        // If user name is supplied
-        if (userName) {
-            return await this.context.users.getUserDetails(userName).catch(error => {
-                throw this.getGraphQLError(error);
-            });
-        }
-        // If id is supplied
-        else if (id) {
-            return await this.context.users.getUserDetailsById(id).catch(error => {
-                throw this.getGraphQLError(error);
-            });
-        }
-        // If neither userName nor id is supplied
-        else {
-            throw new Error(ValidationErrors.NoUserIdentification);
-        }
+    async resolveUserDetails(id: string): Promise<any> {
+        return await this.context.users.getUserDetails(id).catch(error => {
+            throw this.getGraphQLError(error);
+        });
     }
 
     /**

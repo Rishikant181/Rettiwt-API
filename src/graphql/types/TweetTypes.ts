@@ -17,7 +17,7 @@ export const TweetTokens: GraphQLObjectType = new GraphQLObjectType({
         urls: { type: new GraphQLList(GraphQLString) },
         mentionedUsers: {
             type: UserList,
-            resolve: (parent, args, context) => parent.mentionedUsers.map((user: string) => new UserResolver(context).resolveUserDetails('', user))
+            resolve: (parent, args, context) => parent.mentionedUsers.map((user: string) => new UserResolver(context).resolveUserDetails(user))
         },
         media: { type: new GraphQLList(GraphQLString) },
     })
@@ -30,7 +30,7 @@ export const Tweet: GraphQLObjectType = new GraphQLObjectType({
         id: { type: GraphQLString },
         tweetBy: {
             type: User,
-            resolve: (parent, args, context) => new UserResolver(context).resolveUserDetails('', parent.tweetBy)
+            resolve: (parent, args, context) => new UserResolver(context).resolveUserDetails(parent.tweetBy)
         },
         createdAt: { type: GraphQLString },
         entities: { type: TweetTokens },

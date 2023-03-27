@@ -16,7 +16,7 @@ import RawUserFollowing from '../../types/raw/user/Following';
 import RawUserLikes from '../../types/raw/user/Likes';
 
 // ENUMS
-import { AuthenticationErrors } from '../../enums/Errors';
+import { AuthenticationErrors, ValidationErrors } from '../../enums/Errors';
 
 // URLS
 import * as UserUrls from '../helper/urls/Users';
@@ -37,7 +37,7 @@ export class UserService extends FetcherService {
     }
 
     /**
-     * @param screenName The screen name of the target user.
+     * @param id The id/username of the target user.
      * 
      * @returns The details of the given user.
      * 
@@ -47,44 +47,31 @@ export class UserService extends FetcherService {
      * 
      * No cookies are required to use this method.
      */
-    async getUserDetails(screenName: string): Promise<User> {
-        // Fetching the raw data
-        let res: RawUser = await this.request<RawUser>(UserUrls.userDetailsUrl(screenName), false).then(res => res.data);
-        
-        // Extracting data
-        let data = UserExtractors.extractUserDetails(res);
+    async getUserDetails(id: string): Promise<User> {
+        let res: RawUser;
 
-        // Caching data
-        this.cacheData(data);
-
-        // Parsing data
-        let user = new User(data.required[0]);
-            
-        return user;
-    }
-
-    /**
-     * @param restId The screen name of the target user.
-     * 
-     * @returns The details of the user with given rest id.
-     * 
-     * @throws {@link Errors.DataErrors.UserNotFound} error, if no user with the given id was found.
-     * 
-     * @remarks
-     * 
-     * No cookies are required to use this method.
-     */
-    async getUserDetailsById(restId: string): Promise<User> {
-        // Getting data from cache
-        let cachedData = await this.readData(restId);
-
-        // If data exists in cache
-        if(cachedData) {
-            return cachedData;
+        // If id is not a numeric string => username is supplied
+        if (isNaN(Number(id))) {
+            // Fetching the raw data
+            res = await this.request<RawUser>(UserUrls.userDetailsUrl(id), false).then(res => res.data);
         }
-        
-        // Fetchin the raw data
-        let res = await this.request<RawUser>(UserUrls.userDetailsByIdUrl(restId), false).then(res => res.data);
+        // If id is a numeric string => id is supplied
+        else if (!isNaN(Number(id))) {
+            // Getting data from cache
+            let cachedData = await this.readData(id);
+
+            // If data exists in cache
+            if (cachedData) {
+                return cachedData;
+            }
+
+            // Fetching the raw data
+            res = await this.request<RawUser>(UserUrls.userDetailsByIdUrl(id), false).then(res => res.data);
+        }
+        // If neither userName nor id is supplied
+        else {
+            throw new Error(ValidationErrors.NoUserIdentification);
+        }
 
         // Extracting data
         let data = UserExtractors.extractUserDetails(res);
@@ -94,7 +81,7 @@ export class UserService extends FetcherService {
 
         // Parsing data
         let user = new User(data.required[0]);
-            
+
         return user;
     }
 
@@ -115,7 +102,7 @@ export class UserService extends FetcherService {
      */
     async getUserFollowing(userId: string, count?: number, cursor?: string): Promise<ICursoredData<User>> {
         // If user is not authenticated, abort
-        if(!this.isAuthenticated) {
+        if (!this.isAuthenticated) {
             throw new Error(AuthenticationErrors.NotAuthenticated);
         }
 
@@ -124,7 +111,7 @@ export class UserService extends FetcherService {
 
         // Fetchin the raw data
         let res = await this.request<RawUserFollowing>(UserUrls.userFollowingUrl(userId, args.count, args.cursor)).then(res => res.data);
-        
+
         // Extracting data
         let data = UserExtractors.extractUserFollow(res);
 
@@ -166,7 +153,7 @@ export class UserService extends FetcherService {
 
         // Fetching the raw data
         let res = await this.request<RawUserFollowers>(UserUrls.userFollowersUrl(userId, args.count, args.cursor)).then(res => res.data);
-        
+
         // Extracting data
         let data = UserExtractors.extractUserFollow(res);
 
@@ -202,13 +189,13 @@ export class UserService extends FetcherService {
         if (!this.isAuthenticated) {
             throw new Error(AuthenticationErrors.NotAuthenticated);
         }
-        
+
         // Objectifying parameters
         let args: UserListArgs = new UserListArgs(count, cursor);
 
         // Fetching the raw data
         let res = await this.request<RawUserLikes>(UserUrls.userLikesUrl(userId, args.count, args.cursor)).then(res => res.data);
-        
+
         // Extracting data
         let data = UserExtractors.extractUserLikes(res);
 
