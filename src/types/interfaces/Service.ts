@@ -7,7 +7,7 @@ import { Cursor } from '../../models/data/CursoredData';
  * @typeParam Type - The type of data present in the list.
  * @public
  */
-export interface CursoredDataInterface<Type> {
+export interface CursoredData<Type> {
     /** The list of data of the given type. */
     list: Type[];
 

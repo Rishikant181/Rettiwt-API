@@ -2,18 +2,22 @@
 import { FetcherService } from "../FetcherService";
 import { AuthService } from "../AuthService";
 
-// TYPES
+// MODELS
 import { Tweet } from "../../models/data/Tweet";
 import { User } from "../../models/data/User";
 import { TweetListArgs } from "../../models/args/TweetListArgs";
 import { TweetFilter } from "../../models/args/TweetFilter";
 import { CursoredData } from '../../models/data/CursoredData';
+
+// TYPES
 import RawTweet, { Result as TweetData } from '../../types/raw/tweet/Tweet';
 import { Result as UserData } from "../../types/raw/user/User";
 import RawTweets from '../../types/raw/tweet/Tweets';
 import RawLikers from '../../types/raw/tweet/Favouriters';
 import RawRetweeters from '../../types/raw/tweet/Retweeters';
-import { AuthenticationErrors, DataErrors } from '../../enums/Errors';
+
+// ENUMS
+import { AuthenticationErrors } from '../../enums/Errors';
 
 // URLS
 import * as TweetUrls from '../helper/urls/Tweets';

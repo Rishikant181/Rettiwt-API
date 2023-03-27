@@ -1,21 +1,20 @@
 // PACKAGES
 import { curly, CurlyResult } from 'node-libcurl';
-import { validate } from 'class-validator';
-import { plainToClass } from 'class-transformer';
 
 // SERVICES
 import { AuthService } from './AuthService';
 import { CacheService } from './CacheService';
 
-// ARGS
-import { TweetFilter } from '../models/args/TweetFilter';
-
-// TYPES
-import { HttpStatus } from "../enums/HTTP";
-import { Result as RawUser } from '../types/raw/user/User';
-import { Result as RawTweet } from '../types/raw/tweet/Tweet';
+// MODELS
 import { Tweet } from '../models/data/Tweet';
 import { User } from '../models/data/User';
+
+// TYPES
+import { Result as RawUser } from '../types/raw/user/User';
+import { Result as RawTweet } from '../types/raw/tweet/Tweet';
+
+// ENUMS
+import { HttpStatus } from "../enums/HTTP";
 
 // HELPERS
 import * as Headers from './helper/Headers'

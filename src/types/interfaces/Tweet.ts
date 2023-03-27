@@ -3,7 +3,7 @@
  * 
  * @internal
  */
-export interface TweetEntitiesInterface {
+export interface TweetEntities {
     /** The list of hashtags mentioned in the tweet. */
     hashtags: string[];
 
@@ -22,7 +22,7 @@ export interface TweetEntitiesInterface {
  * 
  * @internal
  */
-export interface TweetInterface {
+export interface Tweet {
     /** The rest id of the tweet. */
     id: string;
 
@@ -33,7 +33,7 @@ export interface TweetInterface {
     createdAt: string;
 
     /** Additional tweet entities like urls, mentions, etc. */
-    entities: TweetEntitiesInterface;
+    entities: TweetEntities;
 
     /** The rest id of the tweet which is quoted in the tweet. */
     quoted: string;

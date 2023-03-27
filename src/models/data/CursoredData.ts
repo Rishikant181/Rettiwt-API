@@ -1,5 +1,5 @@
 // TYPES
-import { CursoredDataInterface } from "../../types/interfaces/Service";
+import { CursoredData as ICursoredData } from "../../types/interfaces/Service";
 
 /**
  * The cursor to the batch of data to be fetched.
@@ -26,7 +26,7 @@ export class Cursor {
  * @typeParam Type - The type of data present in the list.
  * @public
  */
-export class CursoredData<T> implements CursoredDataInterface<T> {
+export class CursoredData<T> implements ICursoredData<T> {
     /** The list of data of the given type. */
     list: T[];
 

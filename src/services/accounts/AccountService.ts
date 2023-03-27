@@ -5,7 +5,7 @@ import { curly, CurlyResult } from 'node-libcurl';
 import { AuthService } from '../AuthService';
 
 // TYPES
-import { GuestCredentials } from '../../types/interfaces/Authentication';
+import { GuestCredentials as IGuestCredentials } from '../../types/interfaces/Authentication';
 import { HttpStatus } from '../../enums/HTTP';
 import { AuthenticationErrors } from '../../enums/Errors';
 
@@ -24,7 +24,7 @@ export class AccountService {
     private auth: AuthService;
     
     /** The current guest credentials to use. */
-    private guestCreds: GuestCredentials;
+    private guestCreds: IGuestCredentials;
 
     /** The cookies received from Twitter after logging in. */
     private cookies: Cookie[];
@@ -43,7 +43,7 @@ export class AccountService {
     /**
      * @returns The current guest credentials to use. If if does not exists, then a new one is created
      */
-    private async getGuestCredentials(): Promise<GuestCredentials> {
+    private async getGuestCredentials(): Promise<IGuestCredentials> {
         // If a guest credential has not been already set, get a new one
         if (!this.guestCreds.guestToken) {
             this.guestCreds = await this.auth.getGuestCredentials();

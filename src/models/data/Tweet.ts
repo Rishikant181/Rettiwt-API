@@ -1,5 +1,5 @@
 // TYPES
-import { TweetInterface, TweetEntitiesInterface } from '../../types/interfaces/Tweet';
+import { Tweet as ITweet, TweetEntities as ITweetEntities } from '../../types/interfaces/Tweet';
 import { Result as RawTweet, Entities2 as RawTweetEntities } from '../../types/raw/tweet/Tweet';
 
 // PARSERS
@@ -10,7 +10,7 @@ import * as Parsers from '../../services/helper/Parser';
  * 
  * @public
  */
-export class TweetEntities implements TweetEntitiesInterface {
+export class TweetEntities implements ITweetEntities {
     // MEMBER DATA
     /** The list of hashtags mentioned in the tweet. */
     hashtags: string[] = [];
@@ -61,7 +61,7 @@ export class TweetEntities implements TweetEntitiesInterface {
  * 
  * @public
  */
-export class Tweet implements TweetInterface {
+export class Tweet implements ITweet {
     /** The rest id of the tweet. */
     id: string;
 

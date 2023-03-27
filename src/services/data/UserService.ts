@@ -2,16 +2,20 @@
 import { FetcherService } from '../FetcherService';
 import { AuthService } from '../AuthService';
 
-// TYPES
+// MODELS
 import { User } from '../../models/data/User';
 import { UserListArgs } from '../../models/args/UserListArgs';
 import { Tweet } from '../../models/data/Tweet';
-import { CursoredDataInterface } from '../../types/interfaces/Service';
+
+// TYPES
+import { CursoredData as ICursoredData } from '../../types/interfaces/Service';
 import { Result as TweetData } from '../../types/raw/tweet/Tweet';
 import RawUser, { Result as UserData } from '../../types/raw/user/User';
 import RawUserFollowers from '../../types/raw/user/Followers';
 import RawUserFollowing from '../../types/raw/user/Following';
 import RawUserLikes from '../../types/raw/user/Likes';
+
+// ENUMS
 import { AuthenticationErrors } from '../../enums/Errors';
 
 // URLS
@@ -109,7 +113,7 @@ export class UserService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getUserFollowing(userId: string, count?: number, cursor?: string): Promise<CursoredDataInterface<User>> {
+    async getUserFollowing(userId: string, count?: number, cursor?: string): Promise<ICursoredData<User>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
             throw new Error(AuthenticationErrors.NotAuthenticated);
@@ -151,7 +155,7 @@ export class UserService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getUserFollowers(userId: string, count?: number, cursor?: string): Promise<CursoredDataInterface<User>> {
+    async getUserFollowers(userId: string, count?: number, cursor?: string): Promise<ICursoredData<User>> {
         // If user is not authenticated, abort
         if (!this.isAuthenticated) {
             throw new Error(AuthenticationErrors.NotAuthenticated);
@@ -193,7 +197,7 @@ export class UserService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getUserLikes(userId: string, count?: number, cursor?: string): Promise<CursoredDataInterface<Tweet>> {
+    async getUserLikes(userId: string, count?: number, cursor?: string): Promise<ICursoredData<Tweet>> {
         // If user is not authenticated, abort
         if (!this.isAuthenticated) {
             throw new Error(AuthenticationErrors.NotAuthenticated);

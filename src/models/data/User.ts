@@ -1,5 +1,5 @@
 // TYPES
-import { UserInterface } from '../../types/interfaces/User';
+import { User as IUser } from '../../types/interfaces/User';
 import { Result as RawUser } from '../../types/raw/User/User';
 
 /**
@@ -7,7 +7,7 @@ import { Result as RawUser } from '../../types/raw/User/User';
  * 
  * @public
  */
-export class User implements UserInterface {
+export class User implements IUser {
     /** The rest id of the user. */
     id: string;
 
