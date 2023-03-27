@@ -7,7 +7,7 @@ import { AuthService } from '../AuthService';
 // TYPES
 import { GuestCredentials } from '../../types/Authentication';
 import { HttpStatus } from '../../types/HTTP';
-import { AuthenticationErrors } from '../../types/data/Errors';
+import { AuthenticationErrors } from '../../enums/Errors';
 
 // HELPERS
 import LoginFlows from './LoginFlows';

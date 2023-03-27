@@ -12,7 +12,7 @@ import RawUser, { Result as UserData } from '../../types/raw/user/User';
 import RawUserFollowers from '../../types/raw/user/Followers';
 import RawUserFollowing from '../../types/raw/user/Following';
 import RawUserLikes from '../../types/raw/user/Likes';
-import * as Errors from '../../types/data/Errors';
+import { AuthenticationErrors } from '../../enums/Errors';
 
 // URLS
 import * as UserUrls from '../helper/urls/Users';
@@ -112,7 +112,7 @@ export class UserService extends FetcherService {
     async getUserFollowing(userId: string, count?: number, cursor?: string): Promise<CursoredDataInterface<User>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
-            throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
+            throw new Error(AuthenticationErrors.NotAuthenticated);
         }
 
         // Objectifying parameters
@@ -154,7 +154,7 @@ export class UserService extends FetcherService {
     async getUserFollowers(userId: string, count?: number, cursor?: string): Promise<CursoredDataInterface<User>> {
         // If user is not authenticated, abort
         if (!this.isAuthenticated) {
-            throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
+            throw new Error(AuthenticationErrors.NotAuthenticated);
         }
 
         // Objectifying parameters
@@ -196,7 +196,7 @@ export class UserService extends FetcherService {
     async getUserLikes(userId: string, count?: number, cursor?: string): Promise<CursoredDataInterface<Tweet>> {
         // If user is not authenticated, abort
         if (!this.isAuthenticated) {
-            throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
+            throw new Error(AuthenticationErrors.NotAuthenticated);
         }
         
         // Objectifying parameters

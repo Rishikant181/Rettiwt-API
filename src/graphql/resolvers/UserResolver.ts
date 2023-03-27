@@ -3,7 +3,7 @@ import ResolverBase from './ResolverBase';
 
 // TYPES
 import { Cursor, DataContext } from '../../types/data/Service';
-import { DataErrors, ValidationErrors } from '../../types/data/Errors';
+import { DataErrors, ValidationErrors } from '../enums/Errors';
 
 export default class UserResolver extends ResolverBase {
     // MEMBER DATA

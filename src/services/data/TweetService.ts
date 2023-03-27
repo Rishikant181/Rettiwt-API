@@ -13,7 +13,7 @@ import { Result as UserData } from "../../types/raw/user/User";
 import RawTweets from '../../types/raw/tweet/Tweets';
 import RawLikers from '../../types/raw/tweet/Favouriters';
 import RawRetweeters from '../../types/raw/tweet/Retweeters';
-import * as Errors from '../../types/data/Errors';
+import { AuthenticationErrors, DataErrors } from '../../enums/Errors';
 
 // URLS
 import * as TweetUrls from '../helper/urls/Tweets';
@@ -123,7 +123,7 @@ export class TweetService extends FetcherService {
     async getTweetLikers(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
-            throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
+            throw new Error(AuthenticationErrors.NotAuthenticated);
         }
 
         // Objectifying parameters
@@ -162,7 +162,7 @@ export class TweetService extends FetcherService {
     async getTweetRetweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
         if(!this.isAuthenticated) {
-            throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
+            throw new Error(AuthenticationErrors.NotAuthenticated);
         }
 
         // Objectifying parameters

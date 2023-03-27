@@ -4,7 +4,7 @@ import ResolverBase from './ResolverBase';
 // TYPES
 import { TweetFilter } from '../../types/args/TweetFilter';
 import { Cursor, DataContext } from '../../types/data/Service';
-import { DataErrors } from '../../types/data/Errors';
+import { DataErrors } from '../enums/Errors';
 
 export default class TweetResolver extends ResolverBase {
     // MEMBER DATA
