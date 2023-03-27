@@ -8,14 +8,14 @@ import { AuthService } from './AuthService';
 import { CacheService } from './CacheService';
 
 // ARGS
-import { TweetFilter } from '../types/args/TweetFilter';
+import { TweetFilter } from '../models/args/TweetFilter';
 
 // TYPES
-import { HttpStatus } from "../types/HTTP";
+import { HttpStatus } from "../enums/HTTP";
 import { Result as RawUser } from '../types/raw/user/User';
 import { Result as RawTweet } from '../types/raw/tweet/Tweet';
-import { Tweet } from '../types/data/Tweet';
-import { User } from '../types/data/User';
+import { Tweet } from '../models/data/Tweet';
+import { User } from '../models/data/User';
 
 // HELPERS
 import * as Headers from './helper/Headers'

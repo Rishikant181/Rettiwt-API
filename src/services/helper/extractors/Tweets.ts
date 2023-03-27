@@ -1,5 +1,5 @@
 // TYPES
-import { DataExtract } from '../../../types/Resolvers';
+import { DataExtract } from '../../../types/interfaces/Resolvers';
 import { DataErrors } from '../../../enums/Errors';
 import RawTweet from '../../../types/raw/tweet/Tweet';
 import RawTweets from '../../../types/raw/tweet/Tweets';

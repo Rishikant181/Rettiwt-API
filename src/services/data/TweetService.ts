@@ -3,11 +3,11 @@ import { FetcherService } from "../FetcherService";
 import { AuthService } from "../AuthService";
 
 // TYPES
-import { Tweet } from "../../types/data/Tweet";
-import { User } from "../../types/data/User";
-import { TweetListArgs } from "../../types/args/TweetListArgs";
-import { TweetFilter } from "../../types/args/TweetFilter";
-import { CursoredData } from '../../types/data/Service';
+import { Tweet } from "../../models/data/Tweet";
+import { User } from "../../models/data/User";
+import { TweetListArgs } from "../../models/args/TweetListArgs";
+import { TweetFilter } from "../../models/args/TweetFilter";
+import { CursoredData } from '../../models/data/CursoredData';
 import RawTweet, { Result as TweetData } from '../../types/raw/tweet/Tweet';
 import { Result as UserData } from "../../types/raw/user/User";
 import RawTweets from '../../types/raw/tweet/Tweets';

@@ -8,12 +8,13 @@ export interface GuestCredentials {
      * 
      * @remarks This is a static bearer token from twitter.com.
      */
-    authToken: string,
+    authToken: string;
+
     /** The guest token.
      * 
      * @remarks This is generated from twitter.com by calling GETTING https://api.twitter.com/1.1/guest/activate.json endpoint.
      */
-    guestToken: string
+    guestToken: string;
 };
 
 /**
@@ -26,16 +27,18 @@ export interface AuthCredentials {
      * 
      * @remarks This is a static bearer token from twitter.com.
      */
-    authToken: string,
+    authToken: string;
+
     /** The guest token.
      * 
      * @remarks This is generated from twitter.com by calling GETTING https://api.twitter.com/1.1/guest/activate.json endpoint.
      */
-    csrfToken: string,
+    csrfToken: string;
+
     /** The cookie of the twitter account, which is used to authenticate against twitter.
      * 
      * @remarks The cookie can be obtained/scraped from any one of the outgoing HTTP request headers to twitter.com.
      * It can also be obtained after logging in to twitter, from the 'set-cookie' field of response.
      */
-    cookie: string
+    cookie: string;
 };

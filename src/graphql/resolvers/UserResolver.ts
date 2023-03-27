@@ -2,7 +2,8 @@
 import ResolverBase from './ResolverBase';
 
 // TYPES
-import { Cursor, DataContext } from '../../types/data/Service';
+import { DataContext } from '../../types/interfaces/Rettiwt'
+import { Cursor } from '../../models/data/CursoredData';
 import { DataErrors, ValidationErrors } from '../enums/Errors';
 
 export default class UserResolver extends ResolverBase {

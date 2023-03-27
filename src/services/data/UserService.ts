@@ -3,9 +3,9 @@ import { FetcherService } from '../FetcherService';
 import { AuthService } from '../AuthService';
 
 // TYPES
-import { User } from '../../types/data/User';
-import { UserListArgs } from '../../types/args/UserListArgs';
-import { Tweet } from '../../types/data/Tweet';
+import { User } from '../../models/data/User';
+import { UserListArgs } from '../../models/args/UserListArgs';
+import { Tweet } from '../../models/data/Tweet';
 import { CursoredDataInterface } from '../../types/interfaces/Service';
 import { Result as TweetData } from '../../types/raw/tweet/Tweet';
 import RawUser, { Result as UserData } from '../../types/raw/user/User';

@@ -2,8 +2,8 @@
 import { IsInt, IsString, IsOptional, Min, validateSync, Max } from 'class-validator';
 
 // TYPES
-import { ListArgs } from '../interfaces/Args';
-import { DataValidationError } from '../data/Errors';
+import { ListArgs } from '../../types/interfaces/Args';
+import { DataValidationError } from '../errors/DataValidationError';
 
 /**
  * @param count The number of data items to fetch.

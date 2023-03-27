@@ -1,6 +1,6 @@
 // TYPES
-import { TweetInterface, TweetEntitiesInterface } from '../interfaces/Tweet';
-import { Result as RawTweet, Entities2 as RawTweetEntities } from '../raw/tweet/Tweet';
+import { TweetInterface, TweetEntitiesInterface } from '../../types/interfaces/Tweet';
+import { Result as RawTweet, Entities2 as RawTweetEntities } from '../../types/raw/tweet/Tweet';
 
 // PARSERS
 import * as Parsers from '../../services/helper/Parser';

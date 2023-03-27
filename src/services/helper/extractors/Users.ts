@@ -1,5 +1,5 @@
 // TYPES
-import { DataExtract } from '../../../types/Resolvers'
+import { DataExtract } from '../../../types/interfaces/Resolvers'
 import { DataErrors } from '../../../enums/Errors';
 import RawUser from '../../../types/raw/user/User';
 import RawUserFollowers from '../../../types/raw/user/Followers';

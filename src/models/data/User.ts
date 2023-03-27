@@ -1,6 +1,6 @@
 // TYPES
-import { UserInterface } from '../interfaces/User';
-import { Result as RawUser } from '../raw/User/User';
+import { UserInterface } from '../../types/interfaces/User';
+import { Result as RawUser } from '../../types/raw/User/User';
 
 /**
  * The details of a single user.

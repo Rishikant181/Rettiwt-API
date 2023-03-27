@@ -2,7 +2,7 @@
 import { GraphQLError } from 'graphql'
 
 // TYPES
-import { DataContext } from '../../types/data/Service';
+import { DataContext } from '../../types/interfaces/Rettiwt';
 
 export default class ResolverBase {
     /** The current data context that can used for fetching data from Twitter. */

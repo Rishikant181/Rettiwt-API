@@ -5,7 +5,7 @@ import axios from 'axios';
 import { guestTokenUrl } from './helper/urls/Authentication';
 
 // TYPES
-import { GuestCredentials, AuthCredentials } from '../types/Authentication';
+import { GuestCredentials, AuthCredentials } from '../types/interfaces/Authentication';
 
 // CONFIGS
 import { config } from '../config/env';

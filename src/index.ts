@@ -35,10 +35,10 @@ export * from './services/data/TweetService';
 export * from './services/data/UserService';
 
 // Exporting types
-export * from './types/data/Errors';
-export * from './types/data/Service';
+export * from './models/errors/DataValidationError';
+export * from './models/data/CursoredData';
 export * from './types/interfaces/Args';
 export * from './types/interfaces/Tweet';
 export * from './types/interfaces/User';
-export * from './types/Authentication';
-export * from './types/HTTP';
+export * from './types/interfaces/Authentication';
+export * from './enums/HTTP';

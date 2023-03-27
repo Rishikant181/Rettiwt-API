@@ -2,8 +2,9 @@
 import ResolverBase from './ResolverBase';
 
 // TYPES
-import { TweetFilter } from '../../types/args/TweetFilter';
-import { Cursor, DataContext } from '../../types/data/Service';
+import { DataContext } from '../../types/interfaces/Rettiwt'
+import { TweetFilter } from '../../models/args/TweetFilter';
+import { Cursor } from '../../models/data/CursoredData';
 import { DataErrors } from '../enums/Errors';
 
 export default class TweetResolver extends ResolverBase {
