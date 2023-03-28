@@ -54,7 +54,15 @@ export const rootQuery = new GraphQLObjectType({
             resolve: (parent, args, context) => new TweetResolver(context).resolveTweets(args as TweetFilter, args.count, args.cursor)
         },
         Login: {
-            type: GraphQLString,
+            type: new GraphQLObjectType({
+                name: 'AuthCookie',
+                fields: {
+                    auth_token: { type: GraphQLString },
+                    ct0: { type: GraphQLString },
+                    kdt: { type: GraphQLString },
+                    twid: { type: GraphQLString },
+                }
+            }),
             description: "Returns the cookies that can be used to fetch data from twitter",
             args: {
                 email: { type: GraphQLString },
