@@ -5,7 +5,7 @@ import { curly, CurlyResult } from 'node-libcurl';
 import { AuthService } from './AuthService';
 
 // TYPES
-import { GuestCredentials as IGuestCredentials } from '../../types/Authentication';
+import { GuestCredentials as IGuestCredentials, AuthCookie as IAuthCookie, AuthCookie } from '../../types/Authentication';
 
 // ENUMS
 import { HttpStatus } from '../../enums/HTTP';
@@ -163,13 +163,6 @@ export class AccountService {
      * @internal
      */
     private async accountDuplicationCheck(): Promise<void> {
-        
-        /**
-         * Adding additional delay of 5 second before executing this step.
-         * This is done because if this step is executed too fast, the Twitter API throws error 400.
-         */
-        await new Promise(resolve => setTimeout(resolve, 5000));
-
         // Executing the flow
         const res: CurlyResult = await curly.post(LoginFlows.AccountDuplicationCheck.url, {
             httpHeader: loginHeader(await this.getGuestCredentials(), this.cookies.join(';').toString()),
@@ -185,16 +178,15 @@ export class AccountService {
     }
 
     /**
-     * Login to Twitter using the given credentials and get back the cookies.
-     * @public
+     * Execute all the flows required to login to Twitter, using the given credentials, then set the response cookies.
+     * 
+     * @internal
      * 
      * @param email The email of the account to be logged into.
      * @param userName The username associated with the given account.
      * @param password The password to the account.
-     * 
-     * @returns The cookies for authenticating with the given account.
      */
-    public async login(email: string, userName: string, password: string): Promise<string> {
+    private async executeLoginFlows(email: string, userName: string, password: string): Promise<void> {
         /**
          * This works by sending a chain of request that are required for login to twitter.
          * Each method in the chain returns a flow token that must be provied as payload in the next method in the chain.
@@ -207,9 +199,60 @@ export class AccountService {
         await this.enterUserIdentifier(email);
         await this.enterAlternateUserIdentifier(userName);
         await this.enterPassword(password);
-        await this.accountDuplicationCheck();
+        await this.accountDuplicationCheck(); 
+    }
+
+    /**
+     * Parse the authentication cookies recieved from Twitter into known format.
+     * 
+     * @internal
+     * 
+     * @param cookies The raw cookies received from Twitter.
+     * 
+     * @returns The parsed cookies of type {@link AuthCookie}
+     */
+    private parseCookies(cookies: Cookie[]): AuthCookie {
+        /** The tempoorary parsed cookies. */
+        let tempCookies: any = {};
         
-        // Returning the final cookies
-        return this.cookies.join(';');
+        /**
+         * Parsing the cookies into a standard JSON format.
+         * The format is 'cookie_name': 'cookie_value'.
+         * All other cookie parameters like expiry, etc are dropped.
+         */
+        cookies.forEach(cookie => {
+            tempCookies[cookie.name] = cookie.value;
+        });
+
+        return {
+            kdt: tempCookies['kdt'],
+            twid: tempCookies['twid'],
+            ct0: tempCookies['ct0'],
+            auth_token: tempCookies['auth_token']
+        };
+    }
+
+    /**
+     * Login to Twitter using the given credentials and get back the cookies.
+     * @public
+     * 
+     * @param email The email of the account to be logged into.
+     * @param userName The username associated with the given account.
+     * @param password The password to the account.
+     * 
+     * @returns The cookies for authenticating with the given account.
+     */
+    public async login(email: string, userName: string, password: string): Promise<AuthCookie> {
+        /** The parsed cookies that will be returned. */
+        let parsedCookies: IAuthCookie;
+        
+        // Executing all login flows
+        await this.executeLoginFlows(email, userName, password);
+
+        // Parsing the cookies
+        parsedCookies = this.parseCookies(this.cookies);
+        
+        // Returning the final parsed cookies
+        return parsedCookies;
     }
 }

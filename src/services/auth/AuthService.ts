@@ -4,6 +4,9 @@ import axios from 'axios';
 // URLS
 import { guestTokenUrl } from '../helper/urls/Authentication';
 
+// MODELS
+import { AuthCookie } from '../../models/auth/AuthCookie';
+
 // TYPES
 import { GuestCredentials as IGuestCredentials, AuthCredentials as IAuthCredentials } from '../../types/Authentication';
 
@@ -15,7 +18,6 @@ import { config } from '../../config/env';
  * @internal
  */
 export class AuthService {
-    // MEMBER DATA
     /** The common bearer token for authentication. */
     private authToken: string;
 
@@ -25,23 +27,29 @@ export class AuthService {
     /** Whether instance has been authenticated or not. */
     public isAuthenticated: boolean;
 
-    // MEMBER METHODS
-    constructor(cookie: string = '') {
+    /**
+     * @param cookie The cookie to be used for authenticating.
+     */
+    constructor(cookie?: AuthCookie) {
         // Reading the auth token from the config, since it's always the same
         this.authToken = config.twitter_auth_token;
 
         // Setting authentication status
-        this.isAuthenticated = cookie != '';
+        this.isAuthenticated = (cookie?.auth_token && cookie?.ct0 && cookie?.kdt && cookie?.twid) ? true : false;
 
-        // Setting up the authenticated credentials
-        /**
-         * The following regex pattern is used to extract the csrfToken from the cookie string.
-         * This is done by matching any string between the characters 'ct0=' and nearest enclosing ';'.
-         * (?<=pattern) starts matching after the given pattern.
-         * (?=pattern) stops matching just before the pattern.
-         */
-        this.credentials = { authToken: this.authToken, csrfToken: cookie.match(/(?<=ct0=).+?(?=;)/) + '', cookie: cookie};
-        
+        // If a cookies is supplied, initializing authenticated credentials
+        if (this.isAuthenticated) {
+            // Converting the cookie from JSON to object
+            cookie = new AuthCookie(cookie);
+
+            // Setting up the authenticated credentials
+            this.credentials = { authToken: this.authToken, csrfToken: cookie.ct0, cookie: cookie.toString() };
+        }
+        // If no cookie has been supplied, initializing empty credentials
+        else {
+            // Setting up the authenticated credentials
+            this.credentials = { authToken: this.authToken, csrfToken: '', cookie: '' };
+        }
     }
     
     /**

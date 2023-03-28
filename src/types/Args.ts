@@ -1,7 +1,7 @@
 /**
  * The filter to be used for fetching tweets from Twitter.
  * 
- * @internal
+ * @public
  */
 export interface TweetFilter {
     /** The list of words to search. */
@@ -38,7 +38,7 @@ export interface TweetFilter {
 /**
  * The arguments for fetching cursored list.
  * 
- * @internal
+ * @public
  */
 export interface ListArgs {
     /** The number of data items to fetch. */
