@@ -36,4 +36,19 @@ export class AuthCookie implements IAuthCookie {
             throw new DataValidationError(validationResult);
         }
     }
+
+    /**
+     * @returns The string respresentation of this cookie in the valid cookie string format.
+     */
+    toString(): string {
+        /** The string representation of this cookie. */
+        let cookieString: string = '';
+        
+        // Iterating through the (key, value) pairs of this cookie
+        for (let [key, value] of Object.entries(this)) {
+            cookieString += `${key}=${value};`;
+        }
+
+        return cookieString;
+    }
 }
