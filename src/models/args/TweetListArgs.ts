@@ -1,5 +1,5 @@
 // PACKAGES
-import { IsInt, IsString, IsOptional, Min, validateSync, Max } from 'class-validator';
+import { IsInt, IsString, IsOptional, Min, validateSync, Max, ValidateIf } from 'class-validator';
 
 // TYPES
 import { ListArgs } from '../../types/Args';
@@ -17,8 +17,9 @@ export class TweetListArgs implements ListArgs {
      */
     @IsInt()
     @IsOptional()
-    @Min(10)
     @Max(100)
+    @ValidateIf(ob => ob.cursor.length == 0)
+    @Min(10)    
     count: number;
 
     /** The cursor to the batch of data to fetch. */
