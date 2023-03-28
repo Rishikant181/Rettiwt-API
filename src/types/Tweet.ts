@@ -1,7 +1,7 @@
 /**
  * The different types parsed entities like urls, media, mentions, hashtags, etc.
  * 
- * @internal
+ * @public
  */
 export interface TweetEntities {
     /** The list of hashtags mentioned in the tweet. */
@@ -20,7 +20,7 @@ export interface TweetEntities {
 /**
  * The details of a single Tweet.
  * 
- * @internal
+ * @public
  */
 export interface Tweet {
     /** The rest id of the tweet. */
