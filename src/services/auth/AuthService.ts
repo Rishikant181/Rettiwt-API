@@ -35,10 +35,10 @@ export class AuthService {
         this.authToken = config.twitter_auth_token;
 
         // Setting authentication status
-        this.isAuthenticated = cookie != undefined;
+        this.isAuthenticated = (cookie?.auth_token && cookie?.ct0 && cookie?.kdt && cookie?.twid) ? true : false;
 
         // If a cookies is supplied, initializing authenticated credentials
-        if (cookie) {
+        if (this.isAuthenticated) {
             // Converting the cookie from JSON to object
             cookie = new AuthCookie(cookie);
 
