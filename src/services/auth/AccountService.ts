@@ -165,10 +165,10 @@ export class AccountService {
     private async accountDuplicationCheck(): Promise<void> {
         
         /**
-         * Adding additional delay of 1 second before executing this step.
+         * Adding additional delay of 5 second before executing this step.
          * This is done because if this step is executed too fast, the Twitter API throws error 400.
          */
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 5000));
 
         // Executing the flow
         const res: CurlyResult = await curly.post(LoginFlows.AccountDuplicationCheck.url, {
