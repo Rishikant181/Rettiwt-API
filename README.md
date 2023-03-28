@@ -13,7 +13,7 @@ An API for fetching data from TwitterAPI, without any rate limits!
 Using the API as a GraphQL enables complex nested queries to fetch data from twitter.  
 To use the API as a server,
 
-1.  Clone the repo  
+1.  Clone the repo's release branch
 2.  Build the project using 'npm run build'  
 3.  Set the environment variables:  
         -   APP_PORT -> The port number where the server will listen to  
