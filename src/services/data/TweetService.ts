@@ -71,6 +71,9 @@ export class TweetService extends FetcherService {
         // Parsing data
         let tweets = data.required.map((item: TweetData) => new Tweet(item));
 
+        // Sorting the tweets by date, from recent to oldest
+        tweets.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
+
         return new CursoredData<Tweet>(tweets, data.cursor);
     }
 

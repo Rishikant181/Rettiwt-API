@@ -172,9 +172,7 @@ export class UserService extends FetcherService {
      * 
      * @returns The list of tweets liked by the target user.
      * 
-     * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
-     * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count has been provided.
-     * @throws {@link Errors.DataErrors.UserNotFound} error, if invalid count has been provided.
+     * @throws {@link AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
      * 
      * @remarks
      * 
