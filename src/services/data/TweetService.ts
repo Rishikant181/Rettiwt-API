@@ -43,7 +43,7 @@ export class TweetService extends FetcherService {
 
     /**
      * @param filter The filter be used for searching the tweets.
-     * @param count The number of tweets to fetch, must be >= 10 and <= 100
+     * @param count The number of tweets to fetch, must be >= 10 and <= 20
      * @param cursor The cursor to the next batch of tweets. If blank, first batch is fetched.
      * 
      * @returns The list of tweets that match the given filter.
@@ -71,11 +71,14 @@ export class TweetService extends FetcherService {
         // Parsing data
         let tweets = data.required.map((item: TweetData) => new Tweet(item));
 
+        // Sorting the tweets by date, from recent to oldest
+        tweets.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
+
         return new CursoredData<Tweet>(tweets, data.cursor);
     }
 
     /**
-     * @param tweetId The rest id of the target tweet.
+     * @param id The id of the target tweet.
      * 
      * @returns The details of a single tweet with the given tweet id.
      * 
@@ -85,9 +88,9 @@ export class TweetService extends FetcherService {
      * 
      * No cookies are required to use this method.
      */
-    async getTweetById(tweetId: string): Promise<Tweet> {
+    async getTweetDetails(id: string): Promise<Tweet> {
         // Getting data from cache
-        let cachedData = await this.readData(tweetId);
+        let cachedData = await this.readData(id);
 
         // If data exists in cache
         if (cachedData) {
@@ -95,10 +98,10 @@ export class TweetService extends FetcherService {
         }
         
         // Fetching the raw data
-        let res = await this.request<RawTweet>(TweetUrls.tweetDetailsUrl(tweetId), false).then(res => res.data);
+        let res = await this.request<RawTweet>(TweetUrls.tweetDetailsUrl(id), false).then(res => res.data);
 
         // Extracting data
-        let data = TweetExtractors.extractTweet(res, tweetId);
+        let data = TweetExtractors.extractTweet(res, id);
 
         // Caching data
         this.cacheData(data);
@@ -111,7 +114,7 @@ export class TweetService extends FetcherService {
 
     /**
      * @param tweetId The rest id of the target tweet.
-     * @param count The batch size of the list, must be >= 10 (when no cursor is provided) and <= 100.
+     * @param count The batch size of the list, must be >= 10 (when no cursor is provided) and <= 20.
      * @param cursor The cursor to the next batch of users. If blank, first batch is fetched.
      * 
      * @returns The list of users who liked the given tweet.

@@ -5,14 +5,14 @@
  */
 export interface DataExtract {
     /** The required data. */
-    required: any;
+    required: any[];
 
     /** The cursor string to the next batch of data. */
     cursor: string;
 
     /** Additional extracted user details. */
-    users: any;
+    users: any[];
 
     /** Additional extracted tweet details */
-    tweets: any;
+    tweets: any[];
 }
