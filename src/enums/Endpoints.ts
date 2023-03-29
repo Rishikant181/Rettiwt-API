@@ -1,5 +1,7 @@
 /**
  * The different endpoints for detching data from Twitter.
+ * 
+ * @internal
  */
 export enum Endpoints {
     /** The endpoint for fetching the details of a Tweet with the given id. */
