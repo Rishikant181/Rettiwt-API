@@ -1,5 +1,12 @@
-// TYPES
-import { Cursor } from '../models/data/CursoredData';
+/**
+ * The cursor to the batch of data to be fetched.
+ * 
+ * @public
+ */
+export interface Cursor {
+    /** The cursor string. */
+    value: string;
+};
 
 /**
  * The data that us fetched batch-wise along with a cursor.
@@ -14,4 +21,4 @@ export interface CursoredData<Type> {
 
     /** The cursor to the next batch of data. */
     next: Cursor;
-}
+};

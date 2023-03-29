@@ -37,17 +37,16 @@ export const Rettiwt = (cookie?: IAuthCookie) => {
 
 // Exporting classes
 export * from './services/auth/AuthService';
-export * from './services/util/CacheService';
-export * from './services/util/FetcherService';
 export * from './services/auth/AccountService';
 export * from './services/data/TweetService';
 export * from './services/data/UserService';
+export * from './services/util/CacheService';
+export * from './services/util/FetcherService';
 
 // Exporting types
-export * from './models/errors/DataValidationError';
-export * from './models/data/CursoredData';
 export * from './types/Args';
+export { AuthCookie } from './types/Authentication';
+export * from './types/Rettiwt';
+export * from './types/Service';
 export * from './types/Tweet';
 export * from './types/User';
-export * from './types/Authentication';
-export * from './enums/HTTP';

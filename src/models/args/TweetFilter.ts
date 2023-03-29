@@ -5,6 +5,11 @@ import { IsArray, IsBoolean, IsNumberString, IsString, IsOptional, IsDateString,
 import { TweetFilter as ITweetFilter } from '../../types/Args';
 import { DataValidationError } from '../errors/DataValidationError';
 
+/**
+ * The filter to be used for fetching tweets from Twitter.
+ * 
+ * @internal
+ */
 export class TweetFilter implements ITweetFilter {
     /** The list of words to search. */
     @IsArray()

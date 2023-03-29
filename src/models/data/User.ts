@@ -5,7 +5,7 @@ import { Result as RawUser } from '../../types/raw/User/User';
 /**
  * The details of a single user.
  * 
- * @public
+ * @internal
  */
 export class User implements IUser {
     /** The rest id of the user. */

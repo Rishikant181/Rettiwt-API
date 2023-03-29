@@ -1,12 +1,12 @@
 // TYPES
-import { CursoredData as ICursoredData } from "../../types/Service";
+import { Cursor as ICursor, CursoredData as ICursoredData } from "../../types/Service";
 
 /**
  * The cursor to the batch of data to be fetched.
  * 
- * @public
+ * @internal
  */
-export class Cursor {
+export class Cursor implements ICursor {
     /** The cursor string. */
     value: string;
 
@@ -23,8 +23,9 @@ export class Cursor {
 /**
  * The data that us fetched batch-wise along with a cursor.
  * 
+ * @internal
+ * 
  * @typeParam Type - The type of data present in the list.
- * @public
  */
 export class CursoredData<T> implements ICursoredData<T> {
     /** The list of data of the given type. */

@@ -5,6 +5,11 @@ import { IsInt, IsString, IsOptional, Min, validateSync, Max, ValidateIf } from 
 import { ListArgs } from '../../types/Args';
 import { DataValidationError } from '../errors/DataValidationError';
 
+/**
+ * The arguments for fetching cursored list in TweetService.
+ * 
+ * @internal
+ */
 export class UserListArgs implements ListArgs {
     /** The number of data items to fetch.
      * 

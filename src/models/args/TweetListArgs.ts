@@ -6,8 +6,9 @@ import { ListArgs } from '../../types/Args';
 import { DataValidationError } from '../errors/DataValidationError';
 
 /**
- * @param count The number of data items to fetch.
- * @param cursor The cursor to the next batch of data.
+ * The arguments for fetching cursored list in TweetService.
+ * 
+ * @internal
  */
 export class TweetListArgs implements ListArgs {
     /** The number of data items to fetch.

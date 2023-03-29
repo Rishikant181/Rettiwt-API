@@ -1,6 +1,11 @@
 // TYPES
 import { AuthCookie as IAuthCookie } from '../../types/Authentication';
 
+/**
+ * The cookie containing the tokens that are used to authenticate against Twitter.
+ * 
+ * @internal
+ */
 export class AuthCookie implements IAuthCookie {
     /** Token used to authenticate a device. */
     kdt: string;

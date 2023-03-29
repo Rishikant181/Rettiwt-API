@@ -8,7 +8,7 @@ import * as Parsers from '../../services/helper/Parser';
 /**
  * The different types parsed entities like urls, media, mentions, hashtags, etc.
  * 
- * @public
+ * @internal
  */
 export class TweetEntities implements ITweetEntities {
     // MEMBER DATA
@@ -59,7 +59,7 @@ export class TweetEntities implements ITweetEntities {
 /**
  * The details of a single Tweet.
  * 
- * @public
+ * @internal
  */
 export class Tweet implements ITweet {
     /** The rest id of the tweet. */
