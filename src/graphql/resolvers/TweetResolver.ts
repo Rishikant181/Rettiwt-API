@@ -13,7 +13,7 @@ export default class TweetResolver extends ResolverBase {
     // MEMBER METHODS
     constructor(context: DataContext) {
         super(context);
-        this.batchSize = 20;
+        this.batchSize = 100;
     }
     
     /**
@@ -22,7 +22,7 @@ export default class TweetResolver extends ResolverBase {
      */
     async resolveTweet(id: string): Promise<any> {
         // Getting the data
-        let res = await this.context.tweets.getTweetById(id).catch(error => {
+        let res = await this.context.tweets.getTweetDetails(id).catch(error => {
             throw this.getGraphQLError(error);
         });
 
@@ -40,17 +40,20 @@ export default class TweetResolver extends ResolverBase {
         let tweets: any[] = [];                                                     // To store the list of tweets
         let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
         let total: number = 0;                                                      // To store the total number of tweets fetched
+        
+        /** The batch size while fetching tweets is lower (=20), compared to other data related to a tweet (=100). */
+        let batchSize: number = 20;                                                 // 
 
         // If required count less than batch size, setting batch size to required count
-        this.batchSize = (count < this.batchSize) ? count : this.batchSize;
+        batchSize = (count < batchSize) ? count : batchSize;
 
         // Repeatedly fetching data as long as total data fetched is less than requried
         do {
             // If this is the last batch, change batch size to number of remaining tweets
-            this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
+            batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
 
             // Getting the data
-            const res = await this.context.tweets.getTweets(filter, this.batchSize, next.value ).catch(error => {
+            const res = await this.context.tweets.getTweets(filter, batchSize, next.value ).catch(error => {
                 throw this.getGraphQLError(error);
             });
 
