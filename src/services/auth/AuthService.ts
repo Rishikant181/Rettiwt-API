@@ -8,7 +8,7 @@ import { guestTokenUrl } from '../helper/urls/Authentication';
 import { AuthCookie } from '../../models/auth/AuthCookie';
 
 // TYPES
-import { GuestCredentials as IGuestCredentials, AuthCredentials as IAuthCredentials } from '../../types/Authentication';
+import { IGuestCredentials, IAuthCredentials } from '../../types/Authentication';
 
 // CONFIGS
 import { config } from '../../config/env';

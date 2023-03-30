@@ -2,7 +2,7 @@
 import { IsInt, IsString, IsOptional, Min, validateSync, Max, ValidateIf } from 'class-validator';
 
 // TYPES
-import { ListArgs } from '../../types/Args';
+import { IListArgs } from '../../types/Args';
 import { DataValidationError } from '../errors/DataValidationError';
 
 /**
@@ -10,7 +10,7 @@ import { DataValidationError } from '../errors/DataValidationError';
  * 
  * @internal
  */
-export class TweetListArgs implements ListArgs {
+export class TweetListArgs implements IListArgs {
     /** The number of data items to fetch.
      * 
      * @defaultValue 10

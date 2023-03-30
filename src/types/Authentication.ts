@@ -3,7 +3,7 @@
  * 
  * @internal
  */
-export interface GuestCredentials {
+export interface IGuestCredentials {
     /** The bearer token from twitter.com.
      * 
      * @remarks This is a static bearer token from twitter.com.
@@ -22,7 +22,7 @@ export interface GuestCredentials {
  * 
  * @internal
  */
-export interface AuthCredentials {
+export interface IAuthCredentials {
     /** The bearer token from twitter.com.
      * 
      * @remarks This is a static bearer token from twitter.com.
@@ -48,7 +48,7 @@ export interface AuthCredentials {
  * 
  * @public
  */
-export interface AuthCookie {
+export interface IAuthCookie {
     /** Token used to authenticate a device. */
     kdt: string;
 

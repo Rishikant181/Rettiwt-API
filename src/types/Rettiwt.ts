@@ -8,7 +8,7 @@ import { UserService } from "../services/data/UserService";
  * 
  * @public
  */
-export interface DataContext {
+export interface IDataContext {
     /** Handles data related to users. */
     users: UserService,
 

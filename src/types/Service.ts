@@ -3,7 +3,7 @@
  * 
  * @public
  */
-export interface Cursor {
+export interface ICursor {
     /** The cursor string. */
     value: string;
 };
@@ -15,10 +15,10 @@ export interface Cursor {
  * 
  * @public
  */
-export interface CursoredData<Type> {
+export interface ICursoredData<Type> {
     /** The list of data of the given type. */
     list: Type[];
 
     /** The cursor to the next batch of data. */
-    next: Cursor;
+    next: ICursor;
 };

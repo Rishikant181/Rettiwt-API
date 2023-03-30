@@ -2,7 +2,7 @@
 import ResolverBase from './ResolverBase';
 
 // TYPES
-import { DataContext } from '../../types/Rettiwt'
+import { IDataContext } from '../../types/Rettiwt'
 import { TweetFilter } from '../../models/args/TweetFilter';
 import { Cursor } from '../../models/data/CursoredData';
 import { DataErrors } from '../enums/Errors';
@@ -11,7 +11,7 @@ export default class TweetResolver extends ResolverBase {
     // MEMBER DATA
     private batchSize: number;                                              // To store the batch size while fetching data
     // MEMBER METHODS
-    constructor(context: DataContext) {
+    constructor(context: IDataContext) {
         super(context);
         this.batchSize = 100;
     }

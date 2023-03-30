@@ -1,5 +1,5 @@
 // TYPES
-import { User as IUser } from '../../types/User';
+import { IUser } from '../../types/User';
 import { Result as RawUser } from '../../types/raw/user/User';
 
 /**
