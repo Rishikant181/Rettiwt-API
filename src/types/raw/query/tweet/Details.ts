@@ -1,5 +1,8 @@
 export interface Variables {
+    tweetId: string
     focalTweetId: string
+    count: number
+    cursor: string
     referrer: string
     with_rux_injections: boolean
     includePromotedContent: boolean

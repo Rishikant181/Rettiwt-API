@@ -1,5 +1,6 @@
 export interface Variables {
-    tweetId: string
+    userId: string
+    screen_name: string
     count: number
     cursor: string
     includePromotedContent: boolean
@@ -8,6 +9,10 @@ export interface Variables {
     withReactionsMetadata: boolean
     withReactionsPerspective: boolean
     withSuperFollowsTweetFields: boolean
+    withClientEventToken: boolean
+    withBirdwatchNotes: boolean
+    withVoice: boolean
+    withV2Timeline: boolean
 }
 
 export interface Features {
