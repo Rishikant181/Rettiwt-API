@@ -2,18 +2,22 @@
 import { curly, CurlyResult } from 'node-libcurl';
 
 // SERVICES
-import { AuthService } from './AuthService';
+import { AuthService } from '../auth/AuthService';
 import { CacheService } from './CacheService';
 
+// MODELS
+import { Tweet } from '../../models/data/Tweet';
+import { User } from '../../models/data/User';
+
 // TYPES
-import { HttpStatus } from "../types/HTTP";
-import { Result as RawUser } from '../types/raw/user/User';
-import { Result as RawTweet } from '../types/raw/tweet/Tweet';
+import { Result as RawUser } from '../../types/raw/user/User';
+import { Result as RawTweet } from '../../types/raw/tweet/Tweet';
+
+// ENUMS
+import { HttpStatus } from "../../enums/HTTP";
 
 // HELPERS
-import * as Headers from './helper/Headers'
-import * as UserDeserializers from './helper/deserializers/Users';
-import * as TweetDeserializers from './helper/deserializers/Tweets';
+import * as Headers from '../helper/Headers'
 import { CurlyOptions } from 'node-libcurl/dist/curly';
 
 /**
@@ -55,8 +59,10 @@ export class FetcherService {
     * The middleware for handling any HTTP error.
     * 
     * @param res The response object received.
-    * @throws {@link HttpStatus}.
+    * 
     * @returns The received response, if no HTTP errors are found.
+    * 
+    * @throws {@link HttpStatus} error, if any HTTP error is found.
     */
     private handleHTTPError(res: CurlyResult): CurlyResult {
         /**
@@ -79,6 +85,7 @@ export class FetcherService {
      * @param authenticate Whether to authenticate requests or not.
      * @param method The HTTP method (from {@link HttpMethods}) to use.
      * @param data The data to be sent along with the request (for POST request).
+     * 
      * @returns The {@link CurlyResult} received.
      */
     protected async request<DataType>(url: string, authenticate: boolean = true, method: HttpMethods = HttpMethods.GET, data?: any): Promise<CurlyResult<DataType>> {
@@ -114,15 +121,15 @@ export class FetcherService {
     /**
      * Caches the extracted data into the {@link CacheService} instance.
      * 
-     * @param data The extracted data to be cached
+     * @param data The extracted data to be cached.
      */
     protected cacheData(data: any): void {
         /**
          * The extracted data is in raw form.
          * This raw data is deserialized into the respective known types.
          */
-        let users = data.users.map((user: RawUser) => UserDeserializers.toUser(user));
-        let tweets = data.tweets.map((tweet: RawTweet) => TweetDeserializers.toTweet(tweet));
+        let users = data.users.map((user: RawUser) => new User(user));
+        let tweets = data.tweets.map((tweet: RawTweet) => new Tweet(tweet));
 
         // Caching the data
         this.cache.write(users);
@@ -133,6 +140,7 @@ export class FetcherService {
      * Fetches the data with the given id from the cache.
      * 
      * @param id The id of the data to be read from cache.
+     * 
      * @returns The data with the given id. If does not exists, returns undefined.
      */
     protected readData(id: string): any {

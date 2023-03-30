@@ -2,8 +2,9 @@
 import ResolverBase from './ResolverBase';
 
 // TYPES
-import { Cursor, DataContext } from '../../types/data/Service';
-import { DataErrors, ValidationErrors } from '../../types/data/Errors';
+import { DataContext } from '../../types/Rettiwt'
+import { Cursor } from '../../models/data/CursoredData';
+import { DataErrors } from '../enums/Errors';
 
 export default class UserResolver extends ResolverBase {
     // MEMBER DATA
@@ -18,21 +19,12 @@ export default class UserResolver extends ResolverBase {
     /**
      * @returns The details of the target twitter user
      * @param userName The user name of the target twitter user
-     * @param id The id of the target twitter user
+     * @param id The id/username of the target twitter user
      */
-    async resolveUserDetails(userName: string, id: string): Promise<any> {
-        // If user name is supplied
-        if (userName) {
-            return await this.context.users.getUserDetails(userName);
-        }
-        // If id is supplied
-        else if (id) {
-            return await this.context.users.getUserDetailsById(id);
-        }
-        // If neither userName nor id is supplied
-        else {
-            throw new Error(ValidationErrors.NoUserIdentification);
-        }
+    async resolveUserDetails(id: string): Promise<any> {
+        return await this.context.users.getUserDetails(id).catch(error => {
+            throw this.getGraphQLError(error);
+        });
     }
 
     /**
@@ -60,7 +52,9 @@ export default class UserResolver extends ResolverBase {
             this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
 
             // Getting the data
-            const res = await this.context.users.getUserLikes(id, this.batchSize, next.value);
+            const res = await this.context.users.getUserLikes(id, this.batchSize, next.value).catch(error => {
+                throw this.getGraphQLError(error);
+            });
 
             // If data is available
             if (res.list?.length) {
@@ -115,7 +109,9 @@ export default class UserResolver extends ResolverBase {
             this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
 
             // Getting the data
-            const res = await this.context.users.getUserFollowers(id, this.batchSize, next.value);
+            const res = await this.context.users.getUserFollowers(id, this.batchSize, next.value).catch(error => {
+                throw this.getGraphQLError(error);
+            });
 
             // If data is available
             if (res.list?.length) {
@@ -170,7 +166,9 @@ export default class UserResolver extends ResolverBase {
             this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
 
             // Getting the data
-            const res = await this.context.users.getUserFollowing(id, this.batchSize, next.value);
+            const res = await this.context.users.getUserFollowing(id, this.batchSize, next.value).catch(error => {
+                throw this.getGraphQLError(error);
+            });
 
             // If data is available
             if (res.list?.length) {

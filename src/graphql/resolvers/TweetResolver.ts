@@ -2,9 +2,10 @@
 import ResolverBase from './ResolverBase';
 
 // TYPES
-import { TweetFilter } from '../../types/data/Tweet';
-import { Cursor, DataContext } from '../../types/data/Service';
-import { DataErrors, ValidationErrors } from '../../types/data/Errors';
+import { DataContext } from '../../types/Rettiwt'
+import { TweetFilter } from '../../models/args/TweetFilter';
+import { Cursor } from '../../models/data/CursoredData';
+import { DataErrors } from '../enums/Errors';
 
 export default class TweetResolver extends ResolverBase {
     // MEMBER DATA
@@ -12,7 +13,7 @@ export default class TweetResolver extends ResolverBase {
     // MEMBER METHODS
     constructor(context: DataContext) {
         super(context);
-        this.batchSize = 20;
+        this.batchSize = 100;
     }
     
     /**
@@ -21,7 +22,9 @@ export default class TweetResolver extends ResolverBase {
      */
     async resolveTweet(id: string): Promise<any> {
         // Getting the data
-        let res = await this.context.tweets.getTweetById(id);
+        let res = await this.context.tweets.getTweetDetails(id).catch(error => {
+            throw this.getGraphQLError(error);
+        });
 
         // Evaluating response
         return res;
@@ -37,22 +40,22 @@ export default class TweetResolver extends ResolverBase {
         let tweets: any[] = [];                                                     // To store the list of tweets
         let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
         let total: number = 0;                                                      // To store the total number of tweets fetched
-
-        // Checking if the given tweet filter is valid or not
-        if (!(filter.fromUsers || filter.toUsers || filter.words || filter.hashtags || filter.mentions || filter.quoted)) {
-            throw new Error(ValidationErrors.InvalidTweetFilter);
-        }
+        
+        /** The batch size while fetching tweets is lower (=20), compared to other data related to a tweet (=100). */
+        let batchSize: number = 20;                                                 // 
 
         // If required count less than batch size, setting batch size to required count
-        this.batchSize = (count < this.batchSize) ? count : this.batchSize;
+        batchSize = (count < batchSize) ? count : batchSize;
 
         // Repeatedly fetching data as long as total data fetched is less than requried
         do {
             // If this is the last batch, change batch size to number of remaining tweets
-            this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
+            batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
 
             // Getting the data
-            const res = await this.context.tweets.getTweets(filter, this.batchSize, next.value);
+            const res = await this.context.tweets.getTweets(filter, batchSize, next.value ).catch(error => {
+                throw this.getGraphQLError(error);
+            });
 
             // If data is available
             if (res.list?.length) {
@@ -109,7 +112,9 @@ export default class TweetResolver extends ResolverBase {
         };
 
         // Fetching the quotes using resolveTweets method
-        quotes = await this.resolveTweets(filter, count, cursor);
+        quotes = await this.resolveTweets(filter, count, cursor).catch(error => {
+            throw this.getGraphQLError(error);
+        });
 
         return quotes;
     }
@@ -139,7 +144,9 @@ export default class TweetResolver extends ResolverBase {
             this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
 
             // Getting the data
-            const res = await this.context.tweets.getTweetLikers(id, this.batchSize, next.value);
+            const res = await this.context.tweets.getTweetLikers(id, this.batchSize, next.value).catch(error => {
+                throw this.getGraphQLError(error);
+            });
 
             // If data is available
             if (res.list?.length) {
@@ -194,7 +201,9 @@ export default class TweetResolver extends ResolverBase {
             this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
 
             // Getting the data
-            const res = await this.context.tweets.getTweetRetweeters(id, this.batchSize, next.value);
+            const res = await this.context.tweets.getTweetRetweeters(id, this.batchSize, next.value).catch(error => {
+                throw this.getGraphQLError(error);
+            });
 
             // If data is available
             if (res.list?.length) {

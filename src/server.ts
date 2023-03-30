@@ -2,12 +2,10 @@
 import express from 'express';
 import { graphqlHTTP } from 'express-graphql';
 import { GraphQLSchema } from 'graphql';
+import 'reflect-metadata';
 
-// Services
-import { UserService } from './services/data/UserService';
-import { TweetService } from './services/data/TweetService';
-import { AccountService } from './services/accounts/AccountService';
-import { AuthService } from './services/AuthService';
+// SERVICES
+import { Rettiwt } from '.';
 
 // SCHEMA
 import { rootQuery } from './graphql/queries/RootQuery';
@@ -23,11 +21,12 @@ app.use('/graphql', graphqlHTTP(req => ({
     schema: new GraphQLSchema({
         query: rootQuery
     }),
-    context: {
-        users: new UserService(new AuthService(req.headers.cookie as string)),
-        tweets: new TweetService(new AuthService(req.headers.cookie as string)),
-        account: new AccountService()
-    },
+    context: Rettiwt({
+        auth_token: req.headers['auth_token'] as string,
+        ct0: req.headers['ct0'] as string,
+        kdt: req.headers['kdt'] as string,
+        twid: req.headers['twid'] as string,
+    }),
     // If app is running in development environment, enable graphiql
     graphiql: config.is_development
 })));

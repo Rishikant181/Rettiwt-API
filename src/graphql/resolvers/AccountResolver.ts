@@ -2,7 +2,7 @@
 import ResolverBase from './ResolverBase';
 
 // TYPES
-import { DataContext } from '../../types/data/Service';
+import { DataContext } from '../../types/Rettiwt';
 
 export default class AccountResolver extends ResolverBase {
     // MEMBER METHODS
@@ -16,7 +16,7 @@ export default class AccountResolver extends ResolverBase {
      * @param password The password to the account
      * @returns The cookie string that can be used to authenticate against twitter
      */
-    async resolveLogin(email: string, userName: string, password: string): Promise<string> {
+    async resolveLogin(email: string, userName: string, password: string): Promise<any> {
         return await this.context.account.login(email, userName, password);
     }
 }

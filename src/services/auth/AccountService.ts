@@ -2,15 +2,17 @@
 import { curly, CurlyResult } from 'node-libcurl';
 
 // SERVICES
-import { AuthService } from '../AuthService';
+import { AuthService } from './AuthService';
 
 // TYPES
-import { GuestCredentials } from '../../types/Authentication';
-import { HttpStatus } from '../../types/HTTP';
-import { AuthenticationErrors } from '../../types/data/Errors';
+import { GuestCredentials as IGuestCredentials, AuthCookie as IAuthCookie, AuthCookie } from '../../types/Authentication';
+
+// ENUMS
+import { HttpStatus } from '../../enums/HTTP';
+import { AuthenticationErrors } from '../../enums/Errors';
 
 // HELPERS
-import LoginFlows from './LoginFlows';
+import LoginFlows from '../helper/payloads/LoginFlows';
 import { loginHeader } from '../helper/Headers';
 import { Cookie, CookieJar } from 'cookiejar';
 
@@ -19,12 +21,11 @@ import { Cookie, CookieJar } from 'cookiejar';
  * @public
  */
 export class AccountService {
-    // MEMBER DATA
     /** The AuthService instance to use for authentication. */
     private auth: AuthService;
     
     /** The current guest credentials to use. */
-    private guestCreds: GuestCredentials;
+    private guestCreds: IGuestCredentials;
 
     /** The cookies received from Twitter after logging in. */
     private cookies: Cookie[];
@@ -32,7 +33,6 @@ export class AccountService {
     /** The flow token received after execution of current flow. */
     private flowToken: string;
 
-    // MEMBER METHODS
     constructor() {
         this.auth = new AuthService();
         this.guestCreds = { authToken: '', guestToken: '' };
@@ -43,7 +43,7 @@ export class AccountService {
     /**
      * @returns The current guest credentials to use. If if does not exists, then a new one is created
      */
-    private async getGuestCredentials(): Promise<GuestCredentials> {
+    private async getGuestCredentials(): Promise<IGuestCredentials> {
         // If a guest credential has not been already set, get a new one
         if (!this.guestCreds.guestToken) {
             this.guestCreds = await this.auth.getGuestCredentials();
@@ -176,15 +176,15 @@ export class AccountService {
     }
 
     /**
-     * Login to Twitter using the given credentials and get back the cookies.
-     * @public
+     * Execute all the flows required to login to Twitter, using the given credentials, then set the response cookies.
      * 
-     * @param email The email of the account to be logged into
-     * @param userName The username associated with the given account
-     * @param password The password to the account
-     * @returns The cookies for authenticating with the given account
+     * @internal
+     * 
+     * @param email The email of the account to be logged into.
+     * @param userName The username associated with the given account.
+     * @param password The password to the account.
      */
-    public async login(email: string, userName: string, password: string): Promise<string> {
+    private async executeLoginFlows(email: string, userName: string, password: string): Promise<void> {
         /**
          * This works by sending a chain of request that are required for login to twitter.
          * Each method in the chain returns a flow token that must be provied as payload in the next method in the chain.
@@ -197,9 +197,61 @@ export class AccountService {
         await this.enterUserIdentifier(email);
         await this.enterAlternateUserIdentifier(userName);
         await this.enterPassword(password);
-        await this.accountDuplicationCheck();
+        await this.accountDuplicationCheck(); 
+    }
+
+    /**
+     * Parse the authentication cookies recieved from Twitter into known format.
+     * 
+     * @internal
+     * 
+     * @param cookies The raw cookies received from Twitter.
+     * 
+     * @returns The parsed cookies of type {@link AuthCookie}
+     */
+    private parseCookies(cookies: Cookie[]): AuthCookie {
+        /** The tempoorary parsed cookies. */
+        let tempCookies: any = {};
         
-        // Returning the final cookies
-        return this.cookies.join(';');
+        /**
+         * Parsing the cookies into a standard JSON format.
+         * The format is 'cookie_name': 'cookie_value'.
+         * All other cookie parameters like expiry, etc are dropped.
+         */
+        cookies.forEach(cookie => {
+            tempCookies[cookie.name] = cookie.value;
+        });
+
+        return {
+            kdt: tempCookies['kdt'],
+            twid: tempCookies['twid'],
+            ct0: tempCookies['ct0'],
+            auth_token: tempCookies['auth_token']
+        };
+    }
+
+    /**
+     * Login to Twitter using the given credentials and get back the cookies.
+     * 
+     * @public
+     * 
+     * @param email The email of the account to be logged into.
+     * @param userName The username associated with the given account.
+     * @param password The password to the account.
+     * 
+     * @returns The cookies for authenticating with the given account.
+     */
+    public async login(email: string, userName: string, password: string): Promise<AuthCookie> {
+        /** The parsed cookies that will be returned. */
+        let parsedCookies: IAuthCookie;
+        
+        // Executing all login flows
+        await this.executeLoginFlows(email, userName, password);
+
+        // Parsing the cookies
+        parsedCookies = this.parseCookies(this.cookies);
+        
+        // Returning the final parsed cookies
+        return parsedCookies;
     }
 }

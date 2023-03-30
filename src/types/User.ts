@@ -31,10 +31,7 @@ export interface User {
     /** The number of following of the user. */
     followingsCount: number;
 
-    /** The number of tweets made by the user.
-     * 
-     * @remarks This includes original tweets along with retweets.
-     */
+    /** The number of tweets made by the user. */
     statusesCount: number;
 
     /** The location of user as provided by user. */

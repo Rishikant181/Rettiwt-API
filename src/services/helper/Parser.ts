@@ -1,5 +1,5 @@
 // TYPES
-import { TweetFilter } from '../../types/data/Tweet';
+import { TweetFilter as ITweetFilter } from '../../types/Args';
 
 /**
  * @returns Whether the given json object is empty or not
@@ -92,7 +92,7 @@ export function normalizeText(text: string): string {
  * @param filter The tweet filter to use for getting filtered tweets
  * @returns The same tweet filter, in a URL query format string
  */
-export function toQueryString(filter: TweetFilter): string {
+export function toQueryString(filter: ITweetFilter): string {
     // Concatenating the input filter arguments to a URL query formatted string
     return [
         filter.words ? filter.words.join(' ') : '',
