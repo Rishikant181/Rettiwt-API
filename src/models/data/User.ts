@@ -1,6 +1,6 @@
 // TYPES
 import { User as IUser } from '../../types/User';
-import { Result as RawUser } from '../../types/raw/User/User';
+import { Result as RawUser } from '../../types/raw/user/User';
 
 /**
  * The details of a single user.

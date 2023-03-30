@@ -43,7 +43,7 @@
 </a>
 <p>Using the API as a GraphQL enables complex nested queries to fetch data from twitter.<br>To use the API as a server,</p>
 <ol>
-<li>Clone the repo  </li>
+<li>Clone the repo&#39;s release branch</li>
 <li>Build the project using &#39;npm run build&#39;  </li>
 <li>Set the environment variables:<br>-   APP_PORT -&gt; The port number where the server will listen to<br>-   DEVELOPMENT -&gt; Whether to run the server in development mode or not  </li>
 <li>Start the server using &#39;npm run start&#39;  </li>
@@ -63,11 +63,39 @@ Further nested queries are not possible.<br>To use the API as an npm package,</p
 <li>Use the created <a href="https://rishikant181.github.io/Rettiwt-API/functions/Rettiwt.html">Rettiwt</a> instance to fetch data from Twitter.</li>
 </ol>
 <p>This creates an instance of Rettiwt which can be used to fetch data from Twitter. This instance works as guest and no form of authentication is used. However, guest mode implies functionalities such fetching of user followings, followers, likes and tweet likes, retweets, quotes and replies is not possible. Whatever data can be viewed in Twitter without loggin in, can be accessed this way.  </p>
-<p>If you wan&#39;t full functionality, you need to use the cookie of a logged in Twitter account, which can be retrieved from the browser.</p>
-<ul>
-<li>For GraphQL Server mode, you can get the cookie using the Login query and pass the received cookie-string in the header while making a request to the graphql server</li>
-<li>For npm library mode, you can get the cookie using the Rettiwt().account.login method and pass the received cookie-string to the constructor while creating instance of Rettiwt</li>
-</ul>
+<p>If you wan&#39;t full functionality, you need to use the cookie of a logged in Twitter account, which can be retrieved in the following way:</p>
+
+<a href="#a-graphql-server" id="a-graphql-server" style="color: inherit; text-decoration: none;">
+  <h4>A. GraphQL Server:</h4>
+</a>
+<ol>
+<li>Make the following query to the GraphQL server:
+query {
+        Login(email: &quot;your_twitter_email&quot;, userName: &quot;your_twitter_username&quot;, password: &quot;your_twitter_password&quot;) {
+                auth_token
+                ct0
+                kdt
+                twid
+        }
+}</li>
+<li>This will give you 4 tokens: &#39;auth_token&#39;, &#39;ct0&#39;, &#39;kdt&#39; and &#39;twid&#39;.</li>
+<li>Pass the four tokens in the headers while making any request made to the GraphQL server for fetching data.</li>
+</ol>
+
+<a href="#b-npm-library" id="b-npm-library" style="color: inherit; text-decoration: none;">
+  <h4>B. NPM Library:</h4>
+</a>
+<ol>
+<li>Use the <a href="https://rishikant181.github.io/Rettiwt-API/classes/AccountService.html#login">Rettiwt().account.login</a> method to get back 4 tokens: &#39;auth_token&#39;, &#39;ct0&#39;, &#39;kdt&#39; and &#39;twid&#39;.</li>
+<li>Use these four tokens to initialize a new <a href="https://rishikant181.github.io/Rettiwt-API/functions/Rettiwt.html">Rettiwt</a> instance as follows:
+const rettiwt = new Rettiwt({
+        auth_token: &quot;received_auth_token&quot;,
+        ct0: &quot;received_ct0_token&quot;,
+        kdt: &quot;received_kdt_token&quot;,
+        twid: &quot;received_twid_token&quot;
+});</li>
+<li>Use the created <a href="https://rishikant181.github.io/Rettiwt-API/functions/Rettiwt.html">Rettiwt</a> instance to fetch data.</li>
+</ol>
 
 <a href="#if-you-don39t-want-to-risk-your-twitter-account-getting-banned-using-cookies-is-completely-optional-and-you-can-omit-passing-cookie-and-use-the-api-as-guest" id="if-you-don39t-want-to-risk-your-twitter-account-getting-banned-using-cookies-is-completely-optional-and-you-can-omit-passing-cookie-and-use-the-api-as-guest" style="color: inherit; text-decoration: none;">
   <h3><strong>If you don&#39;t want to risk your twitter account getting banned, using cookies is completely optional and you can omit passing cookie and use the API as guest</strong></h3>
@@ -108,22 +136,18 @@ Further nested queries are not possible.<br>To use the API as an npm package,</p
 <ul></ul></li></ul></div></details></nav>
 <nav class="tsd-navigation secondary menu-sticky">
 <ul>
-<li class="tsd-kind-enum"><a href="enums/AuthenticationErrors.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-enum)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-8-path"></rect><path d="M9.45 16V7.24H14.49V8.224H10.518V10.936H14.07V11.908H10.518V15.016H14.49V16H9.45Z" fill="var(--color-text)" id="icon-8-text"></path></svg>Authentication<wbr/>Errors</a></li>
-<li class="tsd-kind-enum"><a href="enums/DataErrors.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Data<wbr/>Errors</a></li>
-<li class="tsd-kind-enum"><a href="enums/HttpMethods.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Http<wbr/>Methods</a></li>
-<li class="tsd-kind-enum"><a href="enums/HttpStatus.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Http<wbr/>Status</a></li>
-<li class="tsd-kind-enum"><a href="enums/ValidationErrors.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Validation<wbr/>Errors</a></li>
+<li class="tsd-kind-enum"><a href="enums/HttpMethods.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-enum)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-8-path"></rect><path d="M9.45 16V7.24H14.49V8.224H10.518V10.936H14.07V11.908H10.518V15.016H14.49V16H9.45Z" fill="var(--color-text)" id="icon-8-text"></path></svg>Http<wbr/>Methods</a></li>
 <li class="tsd-kind-class"><a href="classes/AccountService.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-128-path"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)" id="icon-128-text"></path></svg>Account<wbr/>Service</a></li>
 <li class="tsd-kind-class"><a href="classes/AuthService.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Auth<wbr/>Service</a></li>
 <li class="tsd-kind-class"><a href="classes/CacheService.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Cache<wbr/>Service</a></li>
-<li class="tsd-kind-class"><a href="classes/Cursor.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Cursor</a></li>
 <li class="tsd-kind-class"><a href="classes/FetcherService.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Fetcher<wbr/>Service</a></li>
 <li class="tsd-kind-class"><a href="classes/TweetService.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Tweet<wbr/>Service</a></li>
 <li class="tsd-kind-class"><a href="classes/UserService.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>User<wbr/>Service</a></li>
-<li class="tsd-kind-interface"><a href="interfaces/AuthCredentials.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg>Auth<wbr/>Credentials</a></li>
+<li class="tsd-kind-interface"><a href="interfaces/AuthCookie.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg>Auth<wbr/>Cookie</a></li>
+<li class="tsd-kind-interface"><a href="interfaces/Cursor.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Cursor</a></li>
 <li class="tsd-kind-interface"><a href="interfaces/CursoredData.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Cursored<wbr/>Data</a></li>
 <li class="tsd-kind-interface"><a href="interfaces/DataContext.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Data<wbr/>Context</a></li>
-<li class="tsd-kind-interface"><a href="interfaces/GuestCredentials.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Guest<wbr/>Credentials</a></li>
+<li class="tsd-kind-interface"><a href="interfaces/ListArgs.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>List<wbr/>Args</a></li>
 <li class="tsd-kind-interface"><a href="interfaces/Tweet.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Tweet</a></li>
 <li class="tsd-kind-interface"><a href="interfaces/TweetEntities.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Tweet<wbr/>Entities</a></li>
 <li class="tsd-kind-interface"><a href="interfaces/TweetFilter.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Tweet<wbr/>Filter</a></li>
