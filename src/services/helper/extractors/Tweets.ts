@@ -1,10 +1,10 @@
 // TYPES
 import { IDataExtract } from '../../../types/Resolvers';
 import { DataErrors } from '../../../enums/Errors';
-import RawTweet from '../../../types/raw/tweet/Tweet';
-import RawTweets from '../../../types/raw/tweet/Tweets';
-import RawRetweeters from '../../../types/raw/tweet/Retweeters';
-import RawLikers from '../../../types/raw/tweet/Favouriters';
+import RawTweet from '../../../types/raw/data/tweet/Tweet';
+import RawTweets from '../../../types/raw/data/tweet/Tweets';
+import RawRetweeters from '../../../types/raw/data/tweet/Retweeters';
+import RawLikers from '../../../types/raw/data/tweet/Favouriters';
 
 // PARSERS
 import * as Parsers from '../Parser';

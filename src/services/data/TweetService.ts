@@ -10,11 +10,11 @@ import { TweetFilter } from "../../models/args/TweetFilter";
 import { CursoredData } from '../../models/data/CursoredData';
 
 // TYPES
-import RawTweet, { Result as TweetData } from '../../types/raw/tweet/Tweet';
-import { Result as UserData } from "../../types/raw/user/User";
-import RawTweets from '../../types/raw/tweet/Tweets';
-import RawLikers from '../../types/raw/tweet/Favouriters';
-import RawRetweeters from '../../types/raw/tweet/Retweeters';
+import RawTweet, { Result as TweetData } from '../../types/raw/data/tweet/Tweet';
+import { Result as UserData } from "../../types/raw/data/user/User";
+import RawTweets from '../../types/raw/data/tweet/Tweets';
+import RawLikers from '../../types/raw/data/tweet/Favouriters';
+import RawRetweeters from '../../types/raw/data/tweet/Retweeters';
 
 // ENUMS
 import { AuthenticationErrors } from '../../enums/Errors';
