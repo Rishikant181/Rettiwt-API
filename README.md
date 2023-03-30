@@ -40,6 +40,7 @@ If you wan't full functionality, you need to use the cookie of a logged in Twitt
 
 #### A. GraphQL Server:  
 1.  Make the following query to the GraphQL server:  
+```
         query {  
                 Login(email: "your_twitter_email", userName: "your_twitter_username", password: "your_twitter_password") {  
                         auth_token  
@@ -48,18 +49,21 @@ If you wan't full functionality, you need to use the cookie of a logged in Twitt
                         twid  
                 }  
         }  
+```
 1.  This will give you 4 tokens: 'auth_token', 'ct0', 'kdt' and 'twid'.  
 2.  Pass the four tokens in the headers while making any request made to the GraphQL server for fetching data.  
 
 #### B. NPM Library:  
 1.  Use the [Rettiwt().account.login](https://rishikant181.github.io/Rettiwt-API/classes/AccountService.html#login) method to get back 4 tokens: 'auth_token', 'ct0', 'kdt' and 'twid'.  
 2.  Use these four tokens to initialize a new [Rettiwt](https://rishikant181.github.io/Rettiwt-API/functions/Rettiwt.html) instance as follows:  
+```
         const rettiwt = new Rettiwt({  
                 auth_token: "received_auth_token",  
                 ct0: "received_ct0_token",  
                 kdt: "received_kdt_token",  
                 twid: "received_twid_token"  
         });  
+```
 3.  Use the created [Rettiwt](https://rishikant181.github.io/Rettiwt-API/functions/Rettiwt.html) instance to fetch data.  
 
 ### **If you don't want to risk your twitter account getting banned, using cookies is completely optional and you can omit passing cookie and use the API as guest**  
