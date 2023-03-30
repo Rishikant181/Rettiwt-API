@@ -8,7 +8,7 @@ import { UserListArgs } from '../../models/args/UserListArgs';
 import { Tweet } from '../../models/data/Tweet';
 
 // TYPES
-import { CursoredData as ICursoredData } from '../../types/Service';
+import { CursoredData } from '../../models/data/CursoredData';
 import { Result as TweetData } from '../../types/raw/tweet/Tweet';
 import RawUser, { Result as UserData } from '../../types/raw/user/User';
 import RawUserFollowers from '../../types/raw/user/Followers';
@@ -28,7 +28,6 @@ import * as UserExtractors from '../helper/extractors/Users';
  * Handles fetching of data related to user account
  */
 export class UserService extends FetcherService {
-    // MEMBER METHODS
     /**
      * @param auth The AuthService instance to use for authentication.
      */
@@ -96,7 +95,7 @@ export class UserService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getUserFollowing(userId: string, count?: number, cursor?: string): Promise<ICursoredData<User>> {
+    async getUserFollowing(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
         if (!this.isAuthenticated) {
             throw new Error(AuthenticationErrors.NotAuthenticated);
@@ -117,10 +116,7 @@ export class UserService extends FetcherService {
         // Parsing data
         let users = data.required.map((item: UserData) => new User(item));
 
-        return {
-            list: users,
-            next: { value: data.cursor }
-        };
+        return new CursoredData<User>(users, data.cursor);
     }
 
     /**
@@ -138,7 +134,7 @@ export class UserService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getUserFollowers(userId: string, count?: number, cursor?: string): Promise<ICursoredData<User>> {
+    async getUserFollowers(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
         if (!this.isAuthenticated) {
             throw new Error(AuthenticationErrors.NotAuthenticated);
@@ -159,10 +155,7 @@ export class UserService extends FetcherService {
         // Parsing data
         let users = data.required.map((item: UserData) => new User(item));
 
-        return {
-            list: users,
-            next: { value: data.cursor }
-        };
+        return new CursoredData<User>(users, data.cursor);
     }
 
     /**
@@ -178,7 +171,7 @@ export class UserService extends FetcherService {
      * 
      * Cookies are required to use this method!
      */
-    async getUserLikes(userId: string, count?: number, cursor?: string): Promise<ICursoredData<Tweet>> {
+    async getUserLikes(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
         // If user is not authenticated, abort
         if (!this.isAuthenticated) {
             throw new Error(AuthenticationErrors.NotAuthenticated);
@@ -199,9 +192,6 @@ export class UserService extends FetcherService {
         // Parsing data
         let tweets = data.required.map((item: TweetData) => new Tweet(item));
 
-        return {
-            list: tweets,
-            next: { value: data.cursor }
-        };
+        return new CursoredData<Tweet>(tweets, data.cursor);
     }
 };

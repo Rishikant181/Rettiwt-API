@@ -1,5 +1,5 @@
 // TYPES
-import { DataExtract } from '../../../types/Resolvers'
+import { IDataExtract } from '../../../types/Resolvers'
 import { DataErrors } from '../../../enums/Errors';
 import RawUser from '../../../types/raw/user/User';
 import RawUserFollowers from '../../../types/raw/user/Followers';
@@ -13,7 +13,7 @@ import * as Parsers from '../Parser';
  * @returns The raw user account data formatted and sorted into required and additional data
  * @param res The raw response received from Twitter
  */
-export function extractUserDetails(res: RawUser): DataExtract {
+export function extractUserDetails(res: RawUser): IDataExtract {
     let required: any[] = [];                                               // To store the reqruied raw data
     let cursor: string = '';                                                // To store the cursor to next batch
     let users: any[] = [];                                                  // To store additional user data
@@ -41,7 +41,7 @@ export function extractUserDetails(res: RawUser): DataExtract {
  * @returns The raw user following/followers data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
-export function extractUserFollow(res: RawUserFollowers | RawUserFollowing): DataExtract {
+export function extractUserFollow(res: RawUserFollowers | RawUserFollowing): IDataExtract {
     let required: any[] = [];                                               // To store the reqruied raw data
     let cursor: string = '';                                                // To store the cursor to next batch
     let users: any[] = [];                                                  // To store additional user data
@@ -94,7 +94,7 @@ export function extractUserFollow(res: RawUserFollowers | RawUserFollowing): Dat
  * @returns The raw user likes data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
-export function extractUserLikes(res: RawUserLikes): DataExtract {
+export function extractUserLikes(res: RawUserLikes): IDataExtract {
     let required: any[] = [];                                               // To store the reqruied raw data
     let cursor: string = '';                                                // To store the cursor to next batch
     let users: any[] = [];                                                  // To store additional user data

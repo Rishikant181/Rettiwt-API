@@ -5,7 +5,7 @@ import { curly, CurlyResult } from 'node-libcurl';
 import { AuthService } from './AuthService';
 
 // TYPES
-import { GuestCredentials as IGuestCredentials, AuthCookie as IAuthCookie, AuthCookie } from '../../types/Authentication';
+import { IGuestCredentials, IAuthCookie } from '../../types/Authentication';
 
 // ENUMS
 import { HttpStatus } from '../../enums/HTTP';
@@ -21,7 +21,6 @@ import { Cookie, CookieJar } from 'cookiejar';
  * @public
  */
 export class AccountService {
-    // MEMBER DATA
     /** The AuthService instance to use for authentication. */
     private auth: AuthService;
     
@@ -34,7 +33,6 @@ export class AccountService {
     /** The flow token received after execution of current flow. */
     private flowToken: string;
 
-    // MEMBER METHODS
     constructor() {
         this.auth = new AuthService();
         this.guestCreds = { authToken: '', guestToken: '' };
@@ -211,7 +209,7 @@ export class AccountService {
      * 
      * @returns The parsed cookies of type {@link AuthCookie}
      */
-    private parseCookies(cookies: Cookie[]): AuthCookie {
+    private parseCookies(cookies: Cookie[]): IAuthCookie {
         /** The tempoorary parsed cookies. */
         let tempCookies: any = {};
         
@@ -234,6 +232,7 @@ export class AccountService {
 
     /**
      * Login to Twitter using the given credentials and get back the cookies.
+     * 
      * @public
      * 
      * @param email The email of the account to be logged into.
@@ -242,7 +241,7 @@ export class AccountService {
      * 
      * @returns The cookies for authenticating with the given account.
      */
-    public async login(email: string, userName: string, password: string): Promise<AuthCookie> {
+    public async login(email: string, userName: string, password: string): Promise<IAuthCookie> {
         /** The parsed cookies that will be returned. */
         let parsedCookies: IAuthCookie;
         

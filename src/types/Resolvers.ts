@@ -3,7 +3,7 @@
  * 
  * @internal
  */
-export interface DataExtract {
+export interface IDataExtract {
     /** The required data. */
     required: any[];
 

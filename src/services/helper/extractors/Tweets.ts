@@ -1,5 +1,5 @@
 // TYPES
-import { DataExtract } from '../../../types/Resolvers';
+import { IDataExtract } from '../../../types/Resolvers';
 import { DataErrors } from '../../../enums/Errors';
 import RawTweet from '../../../types/raw/tweet/Tweet';
 import RawTweets from '../../../types/raw/tweet/Tweets';
@@ -13,7 +13,7 @@ import * as Parsers from '../Parser';
  * @returns The raw tweets data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
-export function extractTweets(res: RawTweets): DataExtract {
+export function extractTweets(res: RawTweets): IDataExtract {
     let required: any[] = [];                                               // To store the reqruied raw data
     let cursor: string = '';                                                // To store the cursor to next batch
     let users: any[] = [];                                                  // To store additional user data
@@ -63,7 +63,7 @@ export function extractTweets(res: RawTweets): DataExtract {
  * @param res The raw response received from TwitterAPI
  * @param tweetId The rest id of the tweet to fetch
  */
-export function extractTweet(res: RawTweet, tweetId: string): DataExtract {
+export function extractTweet(res: RawTweet, tweetId: string): IDataExtract {
     let required: any[] = [];                                               // To store the reqruied raw data
     let cursor: string = '';                                                // To store the cursor to next batch
     let users: any[] = [];                                                  // To store additional user data
@@ -112,7 +112,7 @@ export function extractTweet(res: RawTweet, tweetId: string): DataExtract {
  * @returns The raw tweet likers data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
-export function extractTweetLikers(res: RawLikers): DataExtract {
+export function extractTweetLikers(res: RawLikers): IDataExtract {
     let required: any[] = [];                                               // To store the reqruied raw data
     let cursor: string = '';                                                // To store the cursor to next batch
     let users: any[] = [];                                                  // To store additional user data
@@ -152,7 +152,7 @@ export function extractTweetLikers(res: RawLikers): DataExtract {
  * @returns The raw tweet retweeters data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
-export function extractTweetRetweeters(res: RawRetweeters): DataExtract {
+export function extractTweetRetweeters(res: RawRetweeters): IDataExtract {
     let required: any[] = [];                                               // To store the reqruied raw data
     let cursor: string = '';                                                // To store the cursor to next batch
     let users: any[] = [];                                                  // To store additional user data
@@ -193,7 +193,7 @@ export function extractTweetRetweeters(res: RawRetweeters): DataExtract {
  * @param res The raw response received from TwitterAPI
  * @param tweetId The id of the tweet whose replies must be extracted
  */
-export function extractTweetReplies(res: RawTweet, tweetId: string): DataExtract {
+export function extractTweetReplies(res: RawTweet, tweetId: string): IDataExtract {
     let required: any[] = [];                                               // To store the reqruied raw data
     let cursor: string = '';                                                // To store the cursor to next batch
     let users: any[] = [];                                                  // To store additional user data

@@ -1,5 +1,5 @@
 // TYPES
-import { AuthCookie as IAuthCookie } from '../../types/Authentication';
+import { IAuthCookie } from '../../types/Authentication';
 
 /**
  * The cookie containing the tokens that are used to authenticate against Twitter.

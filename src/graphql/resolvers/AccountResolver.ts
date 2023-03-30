@@ -2,11 +2,11 @@
 import ResolverBase from './ResolverBase';
 
 // TYPES
-import { DataContext } from '../../types/Rettiwt';
+import { IDataContext } from '../../types/Rettiwt';
 
 export default class AccountResolver extends ResolverBase {
     // MEMBER METHODS
-    constructor(context: DataContext) {
+    constructor(context: IDataContext) {
         super(context);
     }
 
