@@ -33,7 +33,6 @@ import { toQueryString } from '../helper/Parser';
  * @public
  */
 export class TweetService extends FetcherService {
-    // MEMBER METHODS
     /**
      * @param auth The AuthService instance to use for authentication.
      */

@@ -15,6 +15,7 @@ import { config } from '../../config/env';
 
 /**
  * Handles authentication of http requests and other authentication related tasks.
+ * 
  * @internal
  */
 export class AuthService {
@@ -29,6 +30,10 @@ export class AuthService {
 
     /**
      * @param cookie The cookie to be used for authenticating.
+     * 
+     * @remarks
+     * 
+     * If no cookie is supplied, then guest authentication is used.
      */
     constructor(cookie?: AuthCookie) {
         // Reading the auth token from the config, since it's always the same

@@ -28,7 +28,6 @@ import * as UserExtractors from '../helper/extractors/Users';
  * Handles fetching of data related to user account
  */
 export class UserService extends FetcherService {
-    // MEMBER METHODS
     /**
      * @param auth The AuthService instance to use for authentication.
      */

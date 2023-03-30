@@ -36,10 +36,31 @@ To use the API as an npm package,
 
 This creates an instance of Rettiwt which can be used to fetch data from Twitter. This instance works as guest and no form of authentication is used. However, guest mode implies functionalities such fetching of user followings, followers, likes and tweet likes, retweets, quotes and replies is not possible. Whatever data can be viewed in Twitter without loggin in, can be accessed this way.  
 
-If you wan't full functionality, you need to use the cookie of a logged in Twitter account, which can be retrieved from the browser.
+If you wan't full functionality, you need to use the cookie of a logged in Twitter account, which can be retrieved in the following way:
 
--   For GraphQL Server mode, you can get the cookie using the Login query and pass the received cookie-string in the header while making a request to the graphql server
--   For npm library mode, you can get the cookie using the Rettiwt().account.login method and pass the received cookie-string to the constructor while creating instance of Rettiwt
+#### A. GraphQL Server:
+1.  Make the following query to the GraphQL server:
+        query {
+                Login(email: "your_twitter_email", userName: "your_twitter_username", password: "your_twitter_password") {
+                        auth_token
+                        ct0
+                        kdt
+                        twid
+                }
+        }
+1.  This will give you 4 tokens: 'auth_token', 'ct0', 'kdt' and 'twid'.
+2.  Pass the four tokens in the headers while making any request made to the GraphQL server for fetching data.
+
+#### B. NPM Library:
+1.  Use the [Rettiwt().account.login](https://rishikant181.github.io/Rettiwt-API/classes/AccountService.html#login) method to get back 4 tokens: 'auth_token', 'ct0', 'kdt' and 'twid'.
+2.  Use these four tokens to initialize a new [Rettiwt](https://rishikant181.github.io/Rettiwt-API/functions/Rettiwt.html) instance as follows:
+        const rettiwt = new Rettiwt({
+                auth_token: "received_auth_token",
+                ct0: "received_ct0_token",
+                kdt: "received_kdt_token",
+                twid: "received_twid_token"
+        });
+3.  Use the created [Rettiwt](https://rishikant181.github.io/Rettiwt-API/functions/Rettiwt.html) instance to fetch data.
 
 ### **If you don't want to risk your twitter account getting banned, using cookies is completely optional and you can omit passing cookie and use the API as guest**  
 ### **No likes, followers, followings, retweets, replies, tweet likes, quotes can be fetched without using cookie!**  
