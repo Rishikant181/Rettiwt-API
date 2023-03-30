@@ -3,7 +3,7 @@
  * 
  * @public
  */
-export interface User {
+export interface IUser {
     /** The rest id of the user. */
     id: string;
 

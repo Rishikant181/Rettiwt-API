@@ -2,16 +2,16 @@
 import { GraphQLError } from 'graphql'
 
 // TYPES
-import { DataContext } from '../../types/Rettiwt';
+import { IDataContext } from '../../types/Rettiwt';
 
 export default class ResolverBase {
     /** The current data context that can used for fetching data from Twitter. */
-    protected context: DataContext;
+    protected context: IDataContext;
 
     /**
      * @param context The data context that will be used for fetching data from Twitter.
      */
-    constructor(context: DataContext) {
+    constructor(context: IDataContext) {
         this.context = context;
     }
 

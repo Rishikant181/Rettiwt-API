@@ -3,7 +3,7 @@
  * 
  * @public
  */
-export interface TweetFilter {
+export interface ITweetFilter {
     /** The list of words to search. */
     words?: string[];
 
@@ -40,7 +40,7 @@ export interface TweetFilter {
  * 
  * @public
  */
-export interface ListArgs {
+export interface IListArgs {
     /** The number of data items to fetch. */
     count?: number;
 

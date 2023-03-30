@@ -8,7 +8,7 @@ import { TweetService } from "./services/data/TweetService";
 import { AccountService } from "./services/auth/AccountService";
 
 // TYPES
-import { AuthCookie as IAuthCookie } from './types/Authentication';
+import { IAuthCookie } from './types/Authentication';
 
 /**
  * The instance for fetching data from Twitter.
@@ -45,8 +45,18 @@ export * from './services/util/FetcherService';
 
 // Exporting types
 export * from './types/Args';
-export { AuthCookie } from './types/Authentication';
+export { IAuthCookie } from './types/Authentication';
 export * from './types/Rettiwt';
 export * from './types/Service';
 export * from './types/Tweet';
 export * from './types/User';
+
+// Exporting models
+export * from './models/args/TweetFilter';
+export * from './models/args/TweetListArgs';
+export * from './models/args/UserListArgs';
+export * from './models/auth/AuthCookie';
+export * from './models/data/CursoredData';
+export * from './models/data/Tweet';
+export * from './models/data/User';
+export * from './models/errors/DataValidationError';

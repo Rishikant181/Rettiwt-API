@@ -1,5 +1,5 @@
 // TYPES
-import { GuestCredentials as IGuestCredentials, AuthCredentials as IAuthCredentials } from '../../types/Authentication';
+import { IGuestCredentials, IAuthCredentials } from '../../types/Authentication';
 
 /**
  * @param authToken The authentication token received from Twitter
