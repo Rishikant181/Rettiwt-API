@@ -10,8 +10,8 @@ import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
 
 // TYPES
-import { Result as RawUser } from '../../types/raw/data/user/User';
-import { Result as RawTweet } from '../../types/raw/data/tweet/Tweet';
+import { Result as RawUser } from '../../types/raw/user/User';
+import { Result as RawTweet } from '../../types/raw/tweet/Tweet';
 
 // ENUMS
 import { HttpStatus } from "../../enums/HTTP";

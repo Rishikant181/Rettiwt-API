@@ -1,10 +1,10 @@
 // TYPES
 import { IDataExtract } from '../../../types/Resolvers'
 import { DataErrors } from '../../../enums/Errors';
-import RawUser from '../../../types/raw/data/user/User';
-import RawUserFollowers from '../../../types/raw/data/user/Followers';
-import RawUserFollowing from '../../../types/raw/data/user/Following';
-import RawUserLikes from '../../../types/raw/data/user/Likes';
+import RawUser from '../../../types/raw/user/User';
+import RawUserFollowers from '../../../types/raw/user/Followers';
+import RawUserFollowing from '../../../types/raw/user/Following';
+import RawUserLikes from '../../../types/raw/user/Likes';
 
 // PARSERS
 import * as Parsers from '../Parser';
