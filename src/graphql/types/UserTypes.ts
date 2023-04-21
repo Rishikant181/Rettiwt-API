@@ -113,7 +113,7 @@ export const User: GraphQLObjectType = new GraphQLObjectType({
                     defaultValue: ''
                 }
             },
-            resolve: (parent, args, context) => new TweetResolver(context).resolveTweets({ fromUsers: [parent.userName] } as TweetFilter, args.all ? parent.statusesCount : args.count, args.cursor)
+            resolve: (parent, args, context) => new UserResolver(context).resolveUserTweets(parent.id, args.count, args.all, args.cursor, parent.statusesCount)
         }
     })
 });
@@ -124,11 +124,11 @@ export const UserList: GraphQLList<GraphQLType> = new GraphQLList(new GraphQLUni
     types: [User, Cursor],
     resolveType: (data) => {
         // If it has a userName field => this is a User object
-        if(data.userName) {
+        if (data.userName) {
             return User;
         }
         // If it has a value field => this is a Cursor object
-        else if(data.value) {
+        else if (data.value) {
             return Cursor;
         }
     }
