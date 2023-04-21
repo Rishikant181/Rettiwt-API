@@ -35,3 +35,5 @@ app.use('/graphql', graphqlHTTP(req => ({
 app.listen(config.port, async () => {
     console.log(`Listening on port ${config.port}`);
 });
+
+Rettiwt().users.getUserTweets('44196397', 40).then(res => console.log(res))

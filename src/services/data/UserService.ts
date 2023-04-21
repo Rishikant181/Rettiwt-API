@@ -99,8 +99,8 @@ export class UserService extends FetcherService {
         // Objectifying parameters
         let args: UserListArgs = new UserListArgs(count, cursor);
 
-        // Fetchin the raw data
-        let res = await this.request<RawUserTweets>(UserUrls.userTweetsUrl(userId, args.count, args.cursor)).then(res => res.data);
+        // Fetching the raw data
+        let res = await this.request<RawUserTweets>(UserUrls.userTweetsUrl(userId, args.count, args.cursor), false).then(res => res.data);
 
         // Extracting data
         let data = UserExtractors.extractUserTweets(res);
