@@ -9,7 +9,7 @@ import { DataErrors } from '../enums/Errors';
 export default class UserResolver extends ResolverBase {
     // MEMBER DATA
     private batchSize: number;                                                // To store the batch size when fetching data
-    
+
     // MEMBER METHODS
     constructor(context: IDataContext) {
         super(context);
@@ -25,6 +25,63 @@ export default class UserResolver extends ResolverBase {
         return await this.context.users.getUserDetails(id).catch(error => {
             throw this.getGraphQLError(error);
         });
+    }
+
+    /**
+     * @returns The list of tweets made by the given user
+     * @param id The id of the user whose tweets are to be fetched
+     * @param count The number of tweets to fetch, must be >= 40
+     * @param all Whether to fetch list of all tweets made by user
+     * @param cursor The cursor to the batch of tweets to fetch
+     * @param statusesCount The total number of tweets made by target user
+     */
+    async resolveUserTweets(id: string, count: number, all: boolean, cursor: string, statusesCount: number): Promise<any> {
+        let likes: any[] = [];                                                      // To store the list of tweets
+        let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
+        let total: number = 0;                                                      // To store the total number of tweets fetched
+
+        // If all tweets are to be fetched
+        count = all ? statusesCount : count;
+
+        // If required count less than batch size, setting batch size to required count
+        this.batchSize = (count < this.batchSize) ? count : this.batchSize;
+
+        // Repeatedly fetching data as long as total data fetched is less than requried
+        do {
+            // If this is the last batch, change batch size to number of remaining tweets
+            this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
+
+            // Getting the data
+            const res = await this.context.users.getUserTweets(id, this.batchSize, next.value).catch(error => {
+                throw this.getGraphQLError(error);
+            });
+
+            // If data is available
+            if (res.list?.length) {
+                // Adding fetched tweets to list of tweets
+                likes = likes.concat(res.list);
+
+                // Updating total tweets fetched
+                total = likes.length;
+
+                // Getting cursor to next batch
+                next = res.next as Cursor;
+            }
+            // If no more data is available
+            else {
+                break;
+            }
+        } while (total < count);
+
+        // If no likes found
+        if (!likes.length) {
+            return new Error(DataErrors.NoTweetsFound);
+        }
+
+        // Adding the cursor to the end of list of data
+        likes.push(next);
+
+        return likes;
     }
 
     /**
