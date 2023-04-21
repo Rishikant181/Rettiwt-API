@@ -51,7 +51,7 @@ export class TweetService extends FetcherService {
      * 
      * @remarks
      * 
-     * If cookies have been provided, then authenticated requests are made. Else, guest requests are made.
+     * Cookies are required to use this method!
      */
     async getTweets(query: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
         // Objectifying parameters
@@ -95,7 +95,7 @@ export class TweetService extends FetcherService {
         if (cachedData) {
             return cachedData;
         }
-        
+
         // Fetching the raw data
         let res = await this.request<RawTweet>(TweetUrls.tweetDetailsUrl(id), false).then(res => res.data);
 
@@ -128,13 +128,13 @@ export class TweetService extends FetcherService {
      */
     async getTweetLikers(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
-        if(!this.isAuthenticated) {
+        if (!this.isAuthenticated) {
             throw new Error(AuthenticationErrors.NotAuthenticated);
         }
 
         // Objectifying parameters
         let args: TweetListArgs = new TweetListArgs(count, cursor);
-        
+
         // Fetching the raw data
         let res = await this.request<RawLikers>(TweetUrls.tweetLikesUrl(tweetId, args.count, args.cursor)).then(res => res.data);
 
@@ -167,7 +167,7 @@ export class TweetService extends FetcherService {
      */
     async getTweetRetweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
-        if(!this.isAuthenticated) {
+        if (!this.isAuthenticated) {
             throw new Error(AuthenticationErrors.NotAuthenticated);
         }
 
