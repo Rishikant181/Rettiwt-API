@@ -2,6 +2,7 @@
 import { IDataExtract } from '../../../types/Resolvers'
 import { DataErrors } from '../../../enums/Errors';
 import RawUser from '../../../types/raw/user/User';
+import RawUserTweets from '../../../types/raw/user/Tweets';
 import RawUserFollowers from '../../../types/raw/user/Followers';
 import RawUserFollowing from '../../../types/raw/user/Following';
 import RawUserLikes from '../../../types/raw/user/Likes';
@@ -35,6 +36,14 @@ export function extractUserDetails(res: RawUser): IDataExtract {
         users: users,
         tweets: tweets
     };
+}
+
+/**
+ * @returns The raw user tweet data formatted and sorted into required and additional data
+ * @param res The raw response received from Twitter
+ */
+export function extractUserTweets(res: RawUserTweets): IDataExtract {
+
 }
 
 /**

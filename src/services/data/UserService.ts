@@ -11,6 +11,7 @@ import { Tweet } from '../../models/data/Tweet';
 import { CursoredData } from '../../models/data/CursoredData';
 import { Result as TweetData } from '../../types/raw/tweet/Tweet';
 import RawUser, { Result as UserData } from '../../types/raw/user/User';
+import RawUserTweets from '../../types/raw/user/Tweets';
 import RawUserFollowers from '../../types/raw/user/Followers';
 import RawUserFollowing from '../../types/raw/user/Following';
 import RawUserLikes from '../../types/raw/user/Likes';
@@ -78,6 +79,39 @@ export class UserService extends FetcherService {
         let user = new User(data.required[0]);
 
         return user;
+    }
+
+    /**
+     * @param userId The rest id of the target user.
+     * @param count The number of tweets to fetch, must be >= 40 (when no cursor is provided) and <=100.
+     * @param cursor The cursor to next batch. If blank, first batch is fetched.
+     * 
+     * @returns The list of tweets nade by the target user.
+     * 
+     * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count has been provided.
+     * @throws {@link Errors.DataErrors.UserNotFound} error, if invalid count has been provided.
+     * 
+     * @remarks
+     * 
+     * No cookies are required to use this method.
+     */
+    async getUserTweets(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+        // Objectifying parameters
+        let args: UserListArgs = new UserListArgs(count, cursor);
+
+        // Fetchin the raw data
+        let res = await this.request<RawUserTweets>(UserUrls.userTweetsUrl(userId, args.count, args.cursor)).then(res => res.data);
+
+        // Extracting data
+        let data = UserExtractors.extractUserTweets(res);
+
+        // Caching data
+        this.cacheData(data);
+
+        // Parsing data
+        let tweets = data.required.map((item: TweetData) => new Tweet(item));
+
+        return new CursoredData<Tweet>(tweets, data.cursor);
     }
 
     /**
