@@ -75,7 +75,7 @@ export default class UserResolver extends ResolverBase {
 
         // If no likes found
         if (!likes.length) {
-            return new Error(DataErrors.NoTweetsFound);
+            return new Error(DataErrors.NoUserTweetsFound);
         }
 
         // Adding the cursor to the end of list of data
