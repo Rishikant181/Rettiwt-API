@@ -22,23 +22,25 @@ import { Cookie, CookieJar } from 'cookiejar';
  */
 export class AccountService {
     /** The AuthService instance to use for authentication. */
-    private auth: AuthService;
-    
+    private auth: AuthService = new AuthService();
+
     /** The current guest credentials to use. */
-    private guestCreds: IGuestCredentials;
+    private guestCreds: IGuestCredentials = { authToken: '', guestToken: '' };
+
+    /** The email id of Twitter account to be logged into. */
+    private email: string = '';
+
+    /** The user name of the Twitter account ot be logged into */
+    private userName: string = '';
+
+    /** The password to the Twitter account to be logged into. */
+    private password: string = '';
 
     /** The cookies received from Twitter after logging in. */
-    private cookies: Cookie[];
+    private cookies: Cookie[] = [];
 
     /** The flow token received after execution of current flow. */
-    private flowToken: string;
-
-    constructor() {
-        this.auth = new AuthService();
-        this.guestCreds = { authToken: '', guestToken: '' };
-        this.cookies = [];
-        this.flowToken = '';
-    }
+    private flowToken: string = '';
 
     /**
      * @returns The current guest credentials to use. If if does not exists, then a new one is created
@@ -69,6 +71,9 @@ export class AccountService {
 
         // Getting the flow token
         this.flowToken = res.data['flow_token'];
+
+        // Executing next subtask
+        await this.jsInstrumentationSubtask();
     }
 
     /**
@@ -76,7 +81,7 @@ export class AccountService {
      * @internal
      */
     private async jsInstrumentationSubtask(): Promise<void> {
-        // Executing the flow
+        // Executing the subtask
         const res: CurlyResult = await curly.post(LoginFlows.JsInstrumentationSubtask.url, {
             httpHeader: loginHeader(await this.getGuestCredentials(), this.cookies.join(';').toString()),
             sslVerifyPeer: false,
@@ -85,6 +90,9 @@ export class AccountService {
 
         // Getting the flow token
         this.flowToken = res.data['flow_token'];
+
+        // Executing next subtask
+        await this.enterUserIdentifier();
     }
 
     /**
@@ -93,12 +101,12 @@ export class AccountService {
      * 
      * @throws {@link AuthenticationErrors.InvalidEmail}, if email does not exist.
      */
-    private async enterUserIdentifier(email: string): Promise<void> {
-        // Executing the flow
+    private async enterUserIdentifier(): Promise<void> {
+        // Executing the subtask
         const res: CurlyResult = await curly.post(LoginFlows.EnterUserIdentifier.url, {
             httpHeader: loginHeader(await this.getGuestCredentials(), this.cookies.join(';').toString()),
             sslVerifyPeer: false,
-            postFields: JSON.stringify(LoginFlows.EnterUserIdentifier.body(this.flowToken, email))
+            postFields: JSON.stringify(LoginFlows.EnterUserIdentifier.body(this.flowToken, this.email))
         });
 
         // If no account found with given email
@@ -108,6 +116,24 @@ export class AccountService {
 
         // Getting the flow token
         this.flowToken = res.data['flow_token'];
+
+        // Checking the next available subtasks
+        for (let task of res.data.subtasks) {
+            // If next subtask is to enter username
+            if (task['subtask_id'] == 'LoginEnterAlternateIdentifierSubtask') {
+                // Executing next subtask
+                await this.enterAlternateUserIdentifier();
+
+                break;
+            }
+            // If next subtask is to enter password
+            else if (task['subtask_id'] == 'LoginEnterPassword') {
+                // Executing next subtask
+                await this.enterPassword();
+
+                break;
+            }
+        }
     }
 
     /**
@@ -116,12 +142,12 @@ export class AccountService {
      * 
      * @throws {@link AuthenticationErrors.InvalidUsername}, if wrong username entered.
      */
-    private async enterAlternateUserIdentifier(userName: string): Promise<void> {
-        // Executing the flow
+    private async enterAlternateUserIdentifier(): Promise<void> {
+        // Executing the subtask
         const res: CurlyResult = await curly.post(LoginFlows.EnterAlternateUserIdentifier.url, {
             httpHeader: loginHeader(await this.getGuestCredentials(), this.cookies.join(';').toString()),
             sslVerifyPeer: false,
-            postFields: JSON.stringify(LoginFlows.EnterAlternateUserIdentifier.body(this.flowToken, userName))
+            postFields: JSON.stringify(LoginFlows.EnterAlternateUserIdentifier.body(this.flowToken, this.userName))
         });
 
         // If invalid username for the given account
@@ -131,6 +157,9 @@ export class AccountService {
 
         // Getting the flow token
         this.flowToken = res.data['flow_token'];
+
+        // Executing next subtask
+        await this.enterPassword();
     }
 
     /**
@@ -139,12 +168,12 @@ export class AccountService {
      * 
      * @throws {@link AuthenticationErrors.InvalidPassword}, incorrect password entered.
      */
-    private async enterPassword(password: string): Promise<void> {
-        // Executing the flow
+    private async enterPassword(): Promise<void> {
+        // Executing the subtask
         const res: CurlyResult = await curly.post(LoginFlows.EnterPassword.url, {
             httpHeader: loginHeader(await this.getGuestCredentials(), this.cookies.join(';').toString()),
             sslVerifyPeer: false,
-            postFields: JSON.stringify(LoginFlows.EnterPassword.body(this.flowToken, password))
+            postFields: JSON.stringify(LoginFlows.EnterPassword.body(this.flowToken, this.password))
         });
 
         // If invalid password for the given account
@@ -154,6 +183,9 @@ export class AccountService {
 
         // Getting the flow token
         this.flowToken = res.data['flow_token'];
+
+        // Executing next subtask
+        await this.accountDuplicationCheck();
     }
 
     /**
@@ -161,7 +193,7 @@ export class AccountService {
      * @internal
      */
     private async accountDuplicationCheck(): Promise<void> {
-        // Executing the flow
+        // Executing the subtask
         const res: CurlyResult = await curly.post(LoginFlows.AccountDuplicationCheck.url, {
             httpHeader: loginHeader(await this.getGuestCredentials(), this.cookies.join(';').toString()),
             sslVerifyPeer: false,
@@ -193,11 +225,6 @@ export class AccountService {
          * The final subtask returns the headers which actually contains the cookie in the 'set-cookie' field.
          */
         await this.initiateLogin();
-        await this.jsInstrumentationSubtask();
-        await this.enterUserIdentifier(email);
-        await this.enterAlternateUserIdentifier(userName);
-        await this.enterPassword(password);
-        await this.accountDuplicationCheck(); 
     }
 
     /**
@@ -212,7 +239,7 @@ export class AccountService {
     private parseCookies(cookies: Cookie[]): IAuthCookie {
         /** The tempoorary parsed cookies. */
         let tempCookies: any = {};
-        
+
         /**
          * Parsing the cookies into a standard JSON format.
          * The format is 'cookie_name': 'cookie_value'.
@@ -244,13 +271,18 @@ export class AccountService {
     public async login(email: string, userName: string, password: string): Promise<IAuthCookie> {
         /** The parsed cookies that will be returned. */
         let parsedCookies: IAuthCookie;
-        
+
+        // Setting user credentials
+        this.email = email;
+        this.userName = userName;
+        this.password = password;
+
         // Executing all login flows
         await this.executeLoginFlows(email, userName, password);
 
         // Parsing the cookies
         parsedCookies = this.parseCookies(this.cookies);
-        
+
         // Returning the final parsed cookies
         return parsedCookies;
     }
