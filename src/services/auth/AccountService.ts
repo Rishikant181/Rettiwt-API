@@ -215,26 +215,6 @@ export class AccountService {
     }
 
     /**
-     * Execute all the flows required to login to Twitter, using the given credentials, then set the response cookies.
-     * 
-     * @internal
-     * 
-     * @param email The email of the account to be logged into.
-     * @param userName The username associated with the given account.
-     * @param password The password to the account.
-     */
-    private async executeLoginFlows(email: string, userName: string, password: string): Promise<void> {
-        /**
-         * This works by sending a chain of request that are required for login to twitter.
-         * Each method in the chain returns a flow token that must be provied as payload in the next method in the chain.
-         * Each such method is called a subtask.
-         * Each subtask sets the {@link flowToken} property of the class which is then given in the payload of the next subtask.
-         * The final subtask returns the headers which actually contains the cookie in the 'set-cookie' field.
-         */
-        await this.initiateLogin();
-    }
-
-    /**
      * Parse the authentication cookies recieved from Twitter into known format.
      * 
      * @internal
@@ -284,8 +264,15 @@ export class AccountService {
         this.userName = userName;
         this.password = password;
 
-        // Executing all login flows
-        await this.executeLoginFlows(email, userName, password);
+        // Initiating login
+        /**
+         * This works by sending a chain of request that are required for login to twitter.
+         * Each method in the chain returns a flow token that must be provied as payload in the next method in the chain.
+         * Each such method is called a subtask.
+         * Each subtask sets the {@link flowToken} property of the class which is used in the payload of the next subtask.
+         * The final subtask returns the headers which actually contains the cookie in the 'set-cookie' field.
+         */
+        await this.initiateLogin();
 
         // Parsing the cookies
         parsedCookies = this.parseCookies(this.cookies);
