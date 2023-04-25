@@ -118,6 +118,13 @@ export class AccountService {
         this.flowToken = res.data['flow_token'];
 
         // Checking the next available subtasks
+        /**
+         * This subtask has two possible outcomes.  
+         * 1. The server asks for a username next.
+         * 2. The server directly asks for password, skipping username check.
+         * 
+         * So, checking which is the subtask required by server, and executing that particular subtask.
+         */
         for (let task of res.data.subtasks) {
             // If next subtask is to enter username
             if (task['subtask_id'] == 'LoginEnterAlternateIdentifierSubtask') {
