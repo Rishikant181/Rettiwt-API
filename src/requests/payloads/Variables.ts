@@ -8,7 +8,13 @@ export enum ResourceType {
     'TWEET_DETAILS',
     'TWEET_REPLIES',
     'TWEET_LIKES',
-    'TWEET_RETWEETS'
+    'TWEET_RETWEETS',
+    'USER_DETAILS',
+    'USER_DETAILS_BY_ID',
+    'USER_TWEETS',
+    'USER_FOLLOWING',
+    'USER_FOLLOWERS',
+    'USER_LIKES'
 };
 
 export class Variables implements IVariables {
@@ -50,6 +56,17 @@ export class Variables implements IVariables {
         }
         else if (resourceType == (ResourceType.TWEET_LIKES || ResourceType.TWEET_RETWEETS)) {
             this.tweetId = params.id;
+            this.count = params.count;
+            this.cursor = params.cursor;
+        }
+        else if (resourceType == ResourceType.USER_DETAILS) {
+            this.screen_name = params.id;
+        }
+        else if (resourceType == ResourceType.USER_DETAILS_BY_ID) {
+            this.userId = params.id;
+        }
+        else if (resourceType == (ResourceType.USER_FOLLOWERS || ResourceType.USER_FOLLOWING || ResourceType.USER_LIKES || ResourceType.USER_TWEETS)) {
+            this.userId = params.id;
             this.count = params.count;
             this.cursor = params.cursor;
         }
