@@ -9,12 +9,12 @@ import { Tweet } from '../../models/data/Tweet';
 
 // TYPES
 import { CursoredData } from '../../models/data/CursoredData';
-import { Result as TweetData } from '../../types/raw/tweet/Tweet';
-import RawUser, { Result as UserData } from '../../types/raw/user/User';
-import RawUserTweets from '../../types/raw/user/Tweets';
-import RawUserFollowers from '../../types/raw/user/Followers';
-import RawUserFollowing from '../../types/raw/user/Following';
-import RawUserLikes from '../../types/raw/user/Likes';
+import { Result as TweetData } from '../../twitter/types/tweet/Tweet';
+import RawUser, { Result as UserData } from '../../twitter/types/user/User';
+import RawUserTweets from '../../twitter/types/user/Tweets';
+import RawUserFollowers from '../../twitter/types/user/Followers';
+import RawUserFollowing from '../../twitter/types/user/Following';
+import RawUserLikes from '../../twitter/types/user/Likes';
 
 // ENUMS
 import { AuthenticationErrors } from '../../enums/Errors';

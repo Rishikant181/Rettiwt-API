@@ -1,12 +1,12 @@
 // TYPES
-import { IQueryArgs } from '../../types/raw/requests/Query';
+import { IArgs } from '../types/request/Query';
 
 /**
  * The arguments for fetching cursored list.
  * 
  * @public
  */
-export class QueryArgs implements IQueryArgs {
+export class Args implements IArgs {
     /** The query string that may be used to filter data. */
     query?: string;
 

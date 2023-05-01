@@ -1,6 +1,6 @@
 // TYPES
 import { ITweet, ITweetEntities } from '../../types/Tweet';
-import { Result as RawTweet, Entities2 as RawTweetEntities } from '../../types/raw/tweet/Tweet';
+import { Result as RawTweet, Entities2 as RawTweetEntities } from '../../twitter/types/tweet/Tweet';
 
 // PARSERS
 import * as Parsers from '../../services/helper/Parser';

@@ -1,13 +1,13 @@
 // PAYLOADS
 import { Variables } from './Variables';
 import { Features } from './Features';
-import { QueryArgs } from './QueryArgs';
+import { Args } from './Args';
 
 // TYPES
-import { IParams } from '../../types/raw/requests/Query';
+import { IParams } from '../types/request/Query';
 
 // ENUMS
-import { ResourceType } from '../../enums/Resources';
+import { ResourceType } from '../enums/Resources';
 
 /**
  * The URL parameters that must be sent as payload while making requests to Twitter API.
@@ -68,7 +68,7 @@ export class Params implements IParams {
      * @param resourceType The type of resource requested.
      * @param args Additional user-defined arguments to be sent in the request.
      */
-    constructor(resourceType: ResourceType, args: QueryArgs) {
+    constructor(resourceType: ResourceType, args: Args) {
         /**
          * Only the endpoint for fetching tweets (using advanced search) requires the parameters defined in this class.
          * All other endpoints required only 'variables' and 'features' fields.

@@ -1,11 +1,11 @@
 // PAYLOADS
-import { QueryArgs } from './QueryArgs';
+import { Args } from './Args';
 
 // TYPES
-import { IVariables } from '../../types/raw/requests/Query';
+import { IVariables } from '../types/request/Query';
 
 // ENUMS
-import { ResourceType } from '../../enums/Resources';
+import { ResourceType } from '../enums/Resources';
 
 /**
  * The variables that must be sent as payload while making requests to Twitter API.
@@ -38,7 +38,7 @@ export class Variables implements IVariables {
      * @param resourceType The type of resource that is requested.
      * @param args The additional user-defined arguments for fetching the resource.
      */
-    constructor(resourceType: ResourceType, args: QueryArgs) {
+    constructor(resourceType: ResourceType, args: Args) {
         if (resourceType == ResourceType.TWEET_DETAILS) {
             this.focalTweetId = args.id;
         }

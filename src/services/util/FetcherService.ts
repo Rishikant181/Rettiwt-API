@@ -10,8 +10,8 @@ import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
 
 // TYPES
-import { Result as RawUser } from '../../types/raw/user/User';
-import { Result as RawTweet } from '../../types/raw/tweet/Tweet';
+import { Result as RawUser } from '../../twitter/types/user/User';
+import { Result as RawTweet } from '../../twitter/types/tweet/Tweet';
 
 // ENUMS
 import { HttpStatus } from "../../enums/HTTP";
@@ -71,7 +71,7 @@ export class FetcherService {
         if (res.statusCode != 200 && res.statusCode in HttpStatus) {
             throw new Error(HttpStatus[res.statusCode])
         }
-        
+
         return res;
     }
 
