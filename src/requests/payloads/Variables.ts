@@ -1,7 +1,12 @@
 // TYPES
 import { IVariables } from '../../types/Query';
+
+// ENUMS
 import { ResourceType } from '../../enums/Resources';
 
+/**
+ * The variables that must be sent as payload while making requests to Twitter API.
+ */
 export class Variables implements IVariables {
     tweetId?: string;
     focalTweetId?: string;
