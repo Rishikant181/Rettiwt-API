@@ -1,5 +1,5 @@
 // TYPES
-import { IFeatures } from '../../types/Query';
+import { IFeatures } from '../../types/raw/requests/Query';
 
 /**
  * The additional features that may be fetched while making requests to Twitter API.

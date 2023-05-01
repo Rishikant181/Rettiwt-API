@@ -12,7 +12,7 @@ export interface ITweetFilter {
 
     /** The list of usernames whose tweets are to be searched. */
     fromUsers?: string[];
-    
+
     /** The list of username to whom the tweets to be searched, are adressed. */
     toUsers?: string[];
 

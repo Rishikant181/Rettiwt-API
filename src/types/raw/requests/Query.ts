@@ -1,3 +1,10 @@
+export interface IQueryArgs {
+	query?: string;
+	id?: string;
+	count?: number;
+	cursor?: string;
+};
+
 export interface IVariables {
 	tweetId?: string;
 	focalTweetId?: string;
@@ -71,7 +78,7 @@ export interface IParams {
 	include_user_entities?: boolean;
 	include_want_retweets?: number;
 	pc?: number;
-	q: string;
+	q?: string;
 	query_source?: string;
 	send_error_codes?: boolean;
 	simple_quoted_tweet?: boolean;

@@ -2,6 +2,7 @@
  * The different types of resources that can be fetched.
  */
 export enum ResourceType {
+    'TWEETS',
     'TWEET_DETAILS',
     'TWEET_REPLIES',
     'TWEET_LIKES',

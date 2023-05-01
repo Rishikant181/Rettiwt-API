@@ -1,5 +1,8 @@
+// PAYLOADS
+import { QueryArgs } from './QueryArgs';
+
 // TYPES
-import { IVariables } from '../../types/Query';
+import { IVariables } from '../../types/raw/requests/Query';
 
 // ENUMS
 import { ResourceType } from '../../enums/Resources';
@@ -33,32 +36,32 @@ export class Variables implements IVariables {
      * Initializes the appropriate Variables object based on the requred resource type and parameters.
      * 
      * @param resourceType The type of resource that is requested.
-     * @param params The additional paramters for fetching the resource.
+     * @param args The additional user-defined arguments for fetching the resource.
      */
-    constructor(resourceType: ResourceType, params: { id?: string, count?: number, cursor?: string }) {
+    constructor(resourceType: ResourceType, args: QueryArgs) {
         if (resourceType == ResourceType.TWEET_DETAILS) {
-            this.focalTweetId = params.id;
+            this.focalTweetId = args.id;
         }
         else if (resourceType == ResourceType.TWEET_REPLIES) {
-            this.focalTweetId = params.id;
-            this.count = params.count;
-            this.cursor = params.cursor;
+            this.focalTweetId = args.id;
+            this.count = args.count;
+            this.cursor = args.cursor;
         }
         else if (resourceType == (ResourceType.TWEET_LIKES || ResourceType.TWEET_RETWEETS)) {
-            this.tweetId = params.id;
-            this.count = params.count;
-            this.cursor = params.cursor;
+            this.tweetId = args.id;
+            this.count = args.count;
+            this.cursor = args.cursor;
         }
         else if (resourceType == ResourceType.USER_DETAILS) {
-            this.screen_name = params.id;
+            this.screen_name = args.id;
         }
         else if (resourceType == ResourceType.USER_DETAILS_BY_ID) {
-            this.userId = params.id;
+            this.userId = args.id;
         }
         else if (resourceType == (ResourceType.USER_FOLLOWERS || ResourceType.USER_FOLLOWING || ResourceType.USER_LIKES || ResourceType.USER_TWEETS)) {
-            this.userId = params.id;
-            this.count = params.count;
-            this.cursor = params.cursor;
+            this.userId = args.id;
+            this.count = args.count;
+            this.cursor = args.cursor;
         }
     }
 

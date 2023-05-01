@@ -1,5 +1,13 @@
+// PAYLOADS
+import { Variables } from './Variables';
+import { Features } from './Features';
+import { QueryArgs } from './QueryArgs';
+
 // TYPES
-import { IParams } from '../../types/Query';
+import { IParams } from '../../types/raw/requests/Query';
+
+// ENUMS
+import { ResourceType } from '../../enums/Resources';
 
 /**
  * The URL parameters that must be sent as payload while making requests to Twitter API.
@@ -35,7 +43,7 @@ export class Params implements IParams {
     include_user_entities?: boolean = true;
     include_want_retweets?: number = 1;
     pc?: number;
-    q: string;
+    q?: string;
     query_source?: string;
     send_error_codes?: boolean;
     simple_quoted_tweet?: boolean;
@@ -45,12 +53,33 @@ export class Params implements IParams {
     tweet_search_mode?: string = 'live';
 
     /**
+     * Variables for fetching data.
+     */
+    variables?: string;
+
+    /**
+     * Additional data features that must be fetched.
+     */
+    features?: string;
+
+    /**
      * Initializes the URL parameters.
      * 
-     * @param query The search query (for searching Tweets).
+     * @param resourceType The type of resource requested.
+     * @param args Additional user-defined arguments to be sent in the request.
      */
-    constructor(query: string) {
-        this.q = query;
+    constructor(resourceType: ResourceType, args: QueryArgs) {
+        /**
+         * Only the endpoint for fetching tweets (using advanced search) requires the parameters defined in this class.
+         * All other endpoints required only 'variables' and 'features' fields.
+         */
+        if (resourceType == ResourceType.TWEETS) {
+            this.q = args.query;
+        }
+        else {
+            this.variables = new Variables(resourceType, args).toString();
+            this.features = new Features().toString();
+        }
     }
 
     /**
