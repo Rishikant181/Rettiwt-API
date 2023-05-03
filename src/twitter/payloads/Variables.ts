@@ -41,9 +41,6 @@ export class Variables implements IVariables {
     constructor(resourceType: ResourceType, args: Args) {
         if (resourceType == ResourceType.TWEET_DETAILS) {
             this.focalTweetId = args.id;
-        }
-        else if (resourceType == ResourceType.TWEET_REPLIES) {
-            this.focalTweetId = args.id;
             this.count = args.count;
             this.cursor = args.cursor;
         }
