@@ -85,7 +85,7 @@ export class Params implements IParams {
     /**
      * Converts this object to it's string representation.
      * 
-     * @returns 'this' object's string representation.
+     * @returns 'this' object's string representation;
      */
     toString(): string {
         let params: string = '';

@@ -68,6 +68,6 @@ export class Variables implements IVariables {
      * @returns 'this' object's string representation.
      */
     toString(): string {
-        return `variables=${encodeURIComponent(JSON.stringify(this))}`;
+        return `${encodeURIComponent(JSON.stringify(this))}`;
     }
 }

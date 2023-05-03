@@ -28,6 +28,6 @@ export class Features implements IFeatures {
      * @returns 'this' object's string representation.
      */
     toString(): string {
-        return `variables=${encodeURIComponent(JSON.stringify(this))}`;
+        return `${encodeURIComponent(JSON.stringify(this))}`;
     }
 }
