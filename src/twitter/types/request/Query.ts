@@ -12,20 +12,22 @@ export interface IVariables {
 	screen_name?: string;
 	count?: number;
 	cursor?: string;
-	referrer: string;
-	with_rux_injections: boolean;
 	includePromotedContent: boolean;
-	withCommunity: boolean;
-	withQuickPromoteEligibilityTweetFields: boolean;
+	referrer: string;
 	withBirdwatchNotes: boolean;
-	withSuperFollowsUserFields: boolean;
+	withCommunity: boolean;
 	withDownvotePerspective: boolean;
+	withQuickPromoteEligibilityTweetFields: boolean;
 	withReactionsMetadata: boolean;
 	withReactionsPerspective: boolean;
 	withSuperFollowsTweetFields: boolean;
-	withClientEventToken: boolean;
-	withVoice: boolean;
+	withSuperFollowsUserFields: boolean;
 	withV2Timeline: boolean;
+	withVoice: boolean;
+	with_rux_injections: boolean;
+	withClientEventToken: boolean;
+
+
 }
 
 export interface IFeatures {

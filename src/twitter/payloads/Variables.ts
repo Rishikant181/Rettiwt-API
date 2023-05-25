@@ -17,20 +17,20 @@ export class Variables implements IVariables {
     screen_name?: string;
     count?: number;
     cursor?: string;
-    referrer: string = '';
-    with_rux_injections: boolean = false;
     includePromotedContent: boolean = false;
-    withCommunity: boolean = false;
-    withQuickPromoteEligibilityTweetFields: boolean = false;
+    referrer: string = '';
     withBirdwatchNotes: boolean = false;
-    withSuperFollowsUserFields: boolean = false;
+    withCommunity: boolean = false;
     withDownvotePerspective: boolean = false;
+    withQuickPromoteEligibilityTweetFields: boolean = false;
     withReactionsMetadata: boolean = false;
     withReactionsPerspective: boolean = false;
     withSuperFollowsTweetFields: boolean = false;
-    withClientEventToken: boolean = false;
-    withVoice: boolean = false;
+    withSuperFollowsUserFields: boolean = false;
     withV2Timeline: boolean = true;
+    withVoice: boolean = false;
+    with_rux_injections: boolean = false;
+    withClientEventToken: boolean = false;
 
     /**
      * Initializes the appropriate Variables object based on the requred resource type and parameters.
