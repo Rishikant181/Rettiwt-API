@@ -24,9 +24,6 @@ import { AuthenticationErrors } from '../../enums/Errors';
 // EXTRACTORS
 import * as TweetExtractors from "../helper/extractors/Tweets";
 
-// PARSERS
-import { toQueryString } from '../helper/Parser';
-
 /**
  * Handles fetching of data related to tweets.
  * @public
@@ -58,7 +55,7 @@ export class TweetService extends FetcherService {
         let args: TweetListArgs = new TweetListArgs(count, cursor);
 
         // Preparing the URL
-        const url: string = new Url(ResourceType.TWEETS, { query: toQueryString(filter), count: args.count, cursor: args.cursor }).toString();
+        const url: string = new Url(ResourceType.TWEETS, { query: filter.toString(), count: args.count, cursor: args.cursor }).toString();
 
         // Getting the raw data
         let res = await this.request<RawTweets>(url, this.isAuthenticated).then(res => res.data);
