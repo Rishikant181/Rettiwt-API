@@ -7,6 +7,7 @@ import { IFeatures } from '../types/request/Query';
 export class Features implements IFeatures {
     graphql_is_translatable_rweb_tweet_is_translatable_enabled = false;
     interactive_text_enabled = false;
+    longform_notetweets_consumption_enabled = false;
     responsive_web_edit_tweet_api_enabled = false;
     responsive_web_enhance_cards_enabled = false;
     responsive_web_graphql_timeline_navigation_enabled = false;
@@ -20,7 +21,6 @@ export class Features implements IFeatures {
     vibe_api_enabled = false;
     view_counts_everywhere_api_enabled = false;
     view_counts_public_visibility_enabled = false;
-    longform_notetweets_consumption_enabled = false;
 
     /**
      * Converts this object to it's string representation.

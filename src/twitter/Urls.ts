@@ -25,7 +25,7 @@ export class Url {
         /**
          * Initializing full URL along with additional URL parameters.
          */
-        this.fullUrl = `${this.baseUrl}${resourceType}${new Params(resourceType, args).toString()}`;
+        this.fullUrl = `${this.baseUrl}${resourceType}?${new Params(resourceType, args).toString()}`;
     }
 
     /**

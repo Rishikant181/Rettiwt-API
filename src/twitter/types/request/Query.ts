@@ -33,6 +33,7 @@ export interface IVariables {
 export interface IFeatures {
 	graphql_is_translatable_rweb_tweet_is_translatable_enabled: boolean;
 	interactive_text_enabled: boolean;
+	longform_notetweets_consumption_enabled: boolean;
 	responsive_web_edit_tweet_api_enabled: boolean;
 	responsive_web_enhance_cards_enabled: boolean;
 	responsive_web_graphql_timeline_navigation_enabled: boolean;
@@ -46,7 +47,6 @@ export interface IFeatures {
 	vibe_api_enabled: boolean;
 	view_counts_everywhere_api_enabled: boolean;
 	view_counts_public_visibility_enabled: boolean;
-	longform_notetweets_consumption_enabled: boolean;
 }
 
 export interface IParams {

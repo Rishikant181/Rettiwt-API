@@ -88,16 +88,11 @@ export class Params implements IParams {
      * @returns 'this' object's string representation;
      */
     toString(): string {
-        let params: string = '';
-
-        // Iterating over the keys of this object
-        for (let [key, value] of Object.entries(this)) {
-            // Appending non-empty paramters to the parameter string
-            if (value) {
-                params += `?${key}=${value}`;
-            }
-        }
-
-        return params;
+        /**
+         * This first filters out all the empty paramters.
+         * Then it formats each parameter key value pair as 'key=value'.
+         * Then it joins the list of all formatted parameters using '&' as a separator.
+         */
+        return Object.entries(this).filter(([key, value]) => value).map(([key, value]) => `${key}=${value}`).join('&');
     }
 }
