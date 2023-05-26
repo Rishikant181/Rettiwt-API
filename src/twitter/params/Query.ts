@@ -1,18 +1,18 @@
 // PAYLOADS
-import { Variables } from './Variables';
-import { Features } from './Features';
-import { Args } from './Args';
+import { Variables } from '../payloads/Variables';
+import { Features } from '../payloads/Features';
+import { Args } from '../payloads/Args';
 
 // TYPES
-import { IParams } from '../types/request/Query';
+import { IQuery } from '../types/request/Query';
 
 // ENUMS
 import { ResourceType } from '../enums/Resources';
 
 /**
- * The URL parameters that must be sent as payload while making requests to Twitter API.
+ * The URL query parameters that must be sent while making requests to Twitter API.
  */
-export class Params implements IParams {
+export class Query implements IQuery {
     cards_platform?: string;
     count?: number;
     cursor?: string;

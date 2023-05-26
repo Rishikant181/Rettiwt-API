@@ -49,7 +49,7 @@ export interface IFeatures {
 	view_counts_public_visibility_enabled: boolean;
 }
 
-export interface IParams {
+export interface IQuery {
 	cards_platform?: string;
 	count?: number;
 	cursor?: string;

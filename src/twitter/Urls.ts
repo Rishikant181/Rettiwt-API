@@ -3,7 +3,7 @@ import { ResourceType } from "./enums/Resources";
 
 // PAYLOADS
 import { Args } from './payloads/Args';
-import { Params } from './payloads/Params';
+import { Query } from './params/Query';
 
 /**
  * A class that deals with generation of URLs to various resources on Twitter.
@@ -25,7 +25,7 @@ export class Url {
         /**
          * Initializing full URL along with additional URL parameters.
          */
-        this.fullUrl = `${this.baseUrl}${resourceType}?${new Params(resourceType, args).toString()}`;
+        this.fullUrl = `${this.baseUrl}${resourceType}?${new Query(resourceType, args).toString()}`;
     }
 
     /**
