@@ -3,6 +3,7 @@ import { FetcherService } from '../util/FetcherService';
 import { AuthService } from '../auth/AuthService';
 
 // MODELS
+import { Url } from '../../twitter/Url';
 import { User } from '../../models/data/User';
 import { UserListArgs } from '../../models/args/UserListArgs';
 import { Tweet } from '../../models/data/Tweet';
@@ -17,10 +18,8 @@ import RawUserFollowing from '../../twitter/types/user/Following';
 import RawUserLikes from '../../twitter/types/user/Likes';
 
 // ENUMS
+import { ResourceType } from '../../twitter/enums/Resources';
 import { AuthenticationErrors } from '../../enums/Errors';
-
-// URLS
-import * as UserUrls from '../helper/urls/Users';
 
 // EXTRACTORS
 import * as UserExtractors from '../helper/extractors/Users';
@@ -52,8 +51,11 @@ export class UserService extends FetcherService {
 
         // If id is not a numeric string => username is supplied
         if (isNaN(Number(id))) {
+            // Preparing the URL
+            const url: string = new Url(ResourceType.USER_DETAILS, { id: id }).toString();
+
             // Fetching the raw data
-            res = await this.request<RawUser>(UserUrls.userDetailsUrl(id), false).then(res => res.data);
+            res = await this.request<RawUser>(url, false).then(res => res.data);
         }
         // If id is a numeric string => id is supplied
         else {
@@ -65,8 +67,11 @@ export class UserService extends FetcherService {
                 return cachedData;
             }
 
+            // Preparing the URL
+            const url: string = new Url(ResourceType.USER_DETAILS_BY_ID, { id: id }).toString();
+
             // Fetching the raw data
-            res = await this.request<RawUser>(UserUrls.userDetailsByIdUrl(id), false).then(res => res.data);
+            res = await this.request<RawUser>(url, false).then(res => res.data);
         }
 
         // Extracting data
@@ -99,8 +104,11 @@ export class UserService extends FetcherService {
         // Objectifying parameters
         let args: UserListArgs = new UserListArgs(count, cursor);
 
+        // Preparing the URL
+        const url: string = new Url(ResourceType.USER_TWEETS, { id: userId, count: args.count, cursor: args.cursor }).toString();
+
         // Fetching the raw data
-        let res = await this.request<RawUserTweets>(UserUrls.userTweetsUrl(userId, args.count, args.cursor), false).then(res => res.data);
+        let res = await this.request<RawUserTweets>(url, false).then(res => res.data);
 
         // Extracting data
         let data = UserExtractors.extractUserTweets(res);
@@ -138,8 +146,11 @@ export class UserService extends FetcherService {
         // Objectifying parameters
         let args: UserListArgs = new UserListArgs(count, cursor);
 
+        // Preparing the URL
+        const url: string = new Url(ResourceType.USER_FOLLOWING, { id: userId, count: args.count, cursor: args.cursor }).toString();
+
         // Fetchin the raw data
-        let res = await this.request<RawUserFollowing>(UserUrls.userFollowingUrl(userId, args.count, args.cursor)).then(res => res.data);
+        let res = await this.request<RawUserFollowing>(url).then(res => res.data);
 
         // Extracting data
         let data = UserExtractors.extractUserFollow(res);
@@ -177,8 +188,11 @@ export class UserService extends FetcherService {
         // Objectifying parameters
         let args: UserListArgs = new UserListArgs(count, cursor);
 
+        // Preparing the URL
+        const url: string = new Url(ResourceType.USER_FOLLOWERS, { id: userId, count: args.count, cursor: args.cursor }).toString();
+
         // Fetching the raw data
-        let res = await this.request<RawUserFollowers>(UserUrls.userFollowersUrl(userId, args.count, args.cursor)).then(res => res.data);
+        let res = await this.request<RawUserFollowers>(url).then(res => res.data);
 
         // Extracting data
         let data = UserExtractors.extractUserFollow(res);
@@ -214,8 +228,11 @@ export class UserService extends FetcherService {
         // Objectifying parameters
         let args: UserListArgs = new UserListArgs(count, cursor);
 
+        // Preparing the URL
+        const url: string = new Url(ResourceType.USER_LIKES, { id: userId, count: args.count, cursor: args.cursor }).toString();
+
         // Fetching the raw data
-        let res = await this.request<RawUserLikes>(UserUrls.userLikesUrl(userId, args.count, args.cursor)).then(res => res.data);
+        let res = await this.request<RawUserLikes>(url).then(res => res.data);
 
         // Extracting data
         let data = UserExtractors.extractUserLikes(res);

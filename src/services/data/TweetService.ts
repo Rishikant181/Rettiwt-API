@@ -3,6 +3,7 @@ import { FetcherService } from "../util/FetcherService";
 import { AuthService } from "../auth/AuthService";
 
 // MODELS
+import { Url } from '../../twitter/Url';
 import { Tweet } from "../../models/data/Tweet";
 import { User } from "../../models/data/User";
 import { TweetListArgs } from "../../models/args/TweetListArgs";
@@ -17,10 +18,8 @@ import RawLikers from '../../twitter/types/tweet/Favouriters';
 import RawRetweeters from '../../twitter/types/tweet/Retweeters';
 
 // ENUMS
+import { ResourceType } from '../../twitter/enums/Resources';
 import { AuthenticationErrors } from '../../enums/Errors';
-
-// URLS
-import * as TweetUrls from '../helper/urls/Tweets';
 
 // EXTRACTORS
 import * as TweetExtractors from "../helper/extractors/Tweets";
@@ -58,8 +57,11 @@ export class TweetService extends FetcherService {
         let filter: TweetFilter = new TweetFilter(query);
         let args: TweetListArgs = new TweetListArgs(count, cursor);
 
+        // Preparing the URL
+        const url: string = new Url(ResourceType.TWEETS, { query: toQueryString(query), count: count, cursor: cursor }).toString();
+
         // Getting the raw data
-        let res = await this.request<RawTweets>(TweetUrls.tweetsUrl(toQueryString(filter), args.count, args.cursor), this.isAuthenticated).then(res => res.data);
+        let res = await this.request<RawTweets>(url, this.isAuthenticated).then(res => res.data);
 
         // Extracting data
         let data = TweetExtractors.extractTweets(res);
@@ -96,8 +98,11 @@ export class TweetService extends FetcherService {
             return cachedData;
         }
 
+        // Preparing the URL
+        const url: string = new Url(ResourceType.TWEET_DETAILS, { id: id }).toString();
+
         // Fetching the raw data
-        let res = await this.request<RawTweet>(TweetUrls.tweetDetailsUrl(id), false).then(res => res.data);
+        let res = await this.request<RawTweet>(url, false).then(res => res.data);
 
         // Extracting data
         let data = TweetExtractors.extractTweet(res, id);
@@ -135,8 +140,11 @@ export class TweetService extends FetcherService {
         // Objectifying parameters
         let args: TweetListArgs = new TweetListArgs(count, cursor);
 
+        // Preparing the URL
+        const url: string = new Url(ResourceType.TWEET_LIKES, { id: tweetId, count: args.count, cursor: args.cursor }).toString();
+
         // Fetching the raw data
-        let res = await this.request<RawLikers>(TweetUrls.tweetLikesUrl(tweetId, args.count, args.cursor)).then(res => res.data);
+        let res = await this.request<RawLikers>(url).then(res => res.data);
 
         // Extracting data
         let data = TweetExtractors.extractTweetLikers(res);
@@ -174,8 +182,11 @@ export class TweetService extends FetcherService {
         // Objectifying parameters
         let args: TweetListArgs = new TweetListArgs(count, cursor);
 
+        // Preparing the URL
+        const url: string = new Url(ResourceType.TWEET_RETWEETS, { id: tweetId, count: args.count, cursor: args.cursor }).toString();
+
         // Fetching the raw data
-        let res = await this.request<RawRetweeters>(TweetUrls.tweetRetweetUrl(tweetId, args.count, args.cursor)).then(res => res.data);
+        let res = await this.request<RawRetweeters>(url).then(res => res.data);
 
         // Extracting data
         let data = TweetExtractors.extractTweetRetweeters(res);
