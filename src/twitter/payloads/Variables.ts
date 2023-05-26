@@ -44,7 +44,7 @@ export class Variables implements IVariables {
             this.count = args.count;
             this.cursor = args.cursor;
         }
-        else if (resourceType == (ResourceType.TWEET_LIKES || ResourceType.TWEET_RETWEETS)) {
+        else if (resourceType == ResourceType.TWEET_LIKES || resourceType == ResourceType.TWEET_RETWEETS) {
             this.tweetId = args.id;
             this.count = args.count;
             this.cursor = args.cursor;
