@@ -58,7 +58,7 @@ export class TweetService extends FetcherService {
         let args: TweetListArgs = new TweetListArgs(count, cursor);
 
         // Preparing the URL
-        const url: string = new Url(ResourceType.TWEETS, { query: toQueryString(query), count: count, cursor: cursor }).toString();
+        const url: string = new Url(ResourceType.TWEETS, { query: toQueryString(filter), count: args.count, cursor: args.cursor }).toString();
 
         // Getting the raw data
         let res = await this.request<RawTweets>(url, this.isAuthenticated).then(res => res.data);

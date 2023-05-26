@@ -74,7 +74,9 @@ export class Query implements IQuery {
          * All other endpoints required only 'variables' and 'features' fields.
          */
         if (resourceType == ResourceType.TWEETS) {
-            this.q = args.query;
+            this.q = encodeURIComponent(args.query ?? '');
+            this.count = args.count;
+            this.cursor = args.cursor;
         }
         else {
             this.variables = new Variables(resourceType, args).toString();
