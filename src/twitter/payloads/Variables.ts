@@ -55,7 +55,7 @@ export class Variables implements IVariables {
         else if (resourceType == ResourceType.USER_DETAILS_BY_ID) {
             this.userId = args.id;
         }
-        else if (resourceType == (ResourceType.USER_FOLLOWERS || ResourceType.USER_FOLLOWING || ResourceType.USER_LIKES || ResourceType.USER_TWEETS)) {
+        else if (resourceType == ResourceType.USER_FOLLOWERS || resourceType == ResourceType.USER_FOLLOWING || resourceType == ResourceType.USER_LIKES || resourceType == ResourceType.USER_TWEETS) {
             this.userId = args.id;
             this.count = args.count;
             this.cursor = args.cursor;
