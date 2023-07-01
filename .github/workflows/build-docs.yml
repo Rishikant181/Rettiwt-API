@@ -1,27 +1,28 @@
 name: build-documentation
 run-name: Building the documentation for the release
 on:
-  push:
-    branches:
-      release
+    push:
+        branches: release
+
 jobs:
-  documentation:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '18.x'
-      # Installing dependencies
-      - run: npm install
+    # Creating the documentation
+    documentation:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: '18.x'
+            # Installing dependencies
+            - run: npm install
 
-      # Generating documentations
-      - run: npx typedoc src/index.ts
+            # Generating documentations
+            - run: npx typedoc src/index.ts
 
-      # Commiting the documentations
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Updated documentations
-          branch: release
+            # Commiting the documentations
+            - uses: stefanzweifel/git-auto-commit-action@v4
+              with:
+                  commit_message: Updated documentations
+                  branch: release

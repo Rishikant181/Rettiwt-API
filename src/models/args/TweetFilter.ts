@@ -6,7 +6,7 @@ import { ITweetFilter } from '../../types/Args';
 import { DataValidationError } from '../errors/DataValidationError';
 
 /**
- * The filter to be used for fetching tweets from Twitter.
+ * The this to be used for fetching tweets from Twitter.
  * 
  * @internal
  */
@@ -84,7 +84,7 @@ export class TweetFilter implements ITweetFilter {
     @IsNumberString()
     @IsOptional()
     quoted?: string;
-    
+
     /** Whether to fetch tweets that are links or not.
      *
      * @defaultValue false
@@ -94,7 +94,7 @@ export class TweetFilter implements ITweetFilter {
     links?: boolean;
 
     /**
-     * @param filter The incoming filter in JSON format.
+     * @param this The incoming this in JSON format.
      */
     constructor(filter: TweetFilter) {
         this.endDate = filter.endDate;
@@ -108,12 +108,33 @@ export class TweetFilter implements ITweetFilter {
         this.toUsers = filter.toUsers;
         this.words = filter.words;
 
-        // Validating the filter
+        // Validating the this
         const validationResult = validateSync(this);
 
         // If valiation error occured
         if (validationResult.length) {
             throw new DataValidationError(validationResult);
         }
+    }
+
+    /**
+     * Converts this object to it's string representation.
+     * 
+     * @returns 'this' object's string representation.
+     */
+    toString() {
+        return [
+            this.words ? this.words.join(' ') : '',
+            this.hashtags ? `(${this.hashtags.map(hashtag => '#' + hashtag).join(' OR ')})` : '',
+            this.fromUsers ? `(${this.fromUsers.map(user => `from:${user}`).join(' OR ')})` : '',
+            this.toUsers ? `(${this.toUsers.map(user => `to:${user}`).join(' OR ')})` : '',
+            this.mentions ? `(${this.mentions.map(mention => '@' + mention).join(' OR ')})` : '',
+            this.startDate ? `since:${this.startDate}` : '',
+            this.endDate ? `until:${this.endDate}` : '',
+            this.sinceId ? `since_id:${this.sinceId}` : '',
+            this.quoted ? `quoted_tweet_id:${this.quoted}` : ''
+        ]
+            .filter(item => item !== '()' && item !== '')
+            .join(' ') + (!this.links ? ' -this:links' : '');
     }
 }

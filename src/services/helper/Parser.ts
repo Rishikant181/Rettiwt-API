@@ -7,7 +7,7 @@ import { ITweetFilter } from '../../types/Args';
  */
 export function isJSONEmpty(data: any): boolean {
     // If the JSON has any keys, it's not empty
-    if(Object.keys(data).length == 0) {
+    if (Object.keys(data).length == 0) {
         return true;
     }
     // Else, it's empty
@@ -78,33 +78,12 @@ export function dataToList(data: any | any[]): any[] {
  */
 export function normalizeText(text: string): string {
     let normalizedText: string = '';                                                // To store the normalized text
-    
+
     // Removing unnecessary full stops, and other characters
     normalizedText = text.replace(/\n/g, '.').replace(/[.]+[\s+.\s+]+/g, '. ');
-    
+
     // Adding full-stop to the end if does not exist already
     normalizedText = normalizedText.endsWith('.') ? normalizedText : (normalizedText + '.');
 
     return normalizedText;
-}
-
-/**
- * @param filter The tweet filter to use for getting filtered tweets
- * @returns The same tweet filter, in a URL query format string
- */
-export function toQueryString(filter: ITweetFilter): string {
-    // Concatenating the input filter arguments to a URL query formatted string
-    return [
-        filter.words ? filter.words.join(' ') : '',
-        filter.hashtags ? `(${filter.hashtags.map(hashtag => '#' + hashtag).join(' OR ')})` : '',
-        filter.fromUsers ? `(${filter.fromUsers.map(user => `from:${user}`).join(' OR ')})` : '',
-        filter.toUsers ? `(${filter.toUsers.map(user => `to:${user}`).join(' OR ')})` : '',
-        filter.mentions ? `(${filter.mentions.map(mention => '@' + mention).join(' OR ')})` : '',
-        filter.startDate ? `since:${filter.startDate}` : '',
-        filter.endDate ? `until:${filter.endDate}` : '',
-        filter.sinceId ? `since_id:${filter.sinceId}` : '',
-        filter.quoted ? `quoted_tweet_id:${filter.quoted}` : ''
-    ]
-    .filter(item => item !== '()' && item !== '')
-    .join(' ') + (!filter.links ? ' -filter:links' : '');
 }

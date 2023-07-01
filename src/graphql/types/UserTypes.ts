@@ -113,7 +113,7 @@ export const User: GraphQLObjectType = new GraphQLObjectType({
                     defaultValue: ''
                 }
             },
-            resolve: (parent, args, context) => new UserResolver(context).resolveUserTweets(parent.id, args.count, args.all, args.cursor, parent.statusesCount)
+            resolve: (parent, args, context) => new UserResolver(context).resolveUserTweets(parent.userName, args.count, args.all, args.cursor, parent.statusesCount)
         }
     })
 });
