@@ -37,7 +37,7 @@ export enum HttpMethods {
 export class FetcherService {
     // MEMBER DATA
     /** The authentication service instance. */
-    private auth: AuthService;
+    protected auth: AuthService;
 
     /** The caching service instance. */
     private cache: CacheService;

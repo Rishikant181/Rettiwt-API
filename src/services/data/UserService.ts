@@ -12,7 +12,6 @@ import { Tweet } from '../../models/data/Tweet';
 import { CursoredData } from '../../models/data/CursoredData';
 import { Result as TweetData } from '../../twitter/types/tweet/Tweet';
 import RawUser, { Result as UserData } from '../../twitter/types/user/User';
-import RawUserTweets from '../../twitter/types/user/Tweets';
 import RawUserFollowers from '../../twitter/types/user/Followers';
 import RawUserFollowing from '../../twitter/types/user/Following';
 import RawUserLikes from '../../twitter/types/user/Likes';
@@ -23,6 +22,7 @@ import { AuthenticationErrors } from '../../enums/Errors';
 
 // EXTRACTORS
 import * as UserExtractors from '../helper/extractors/Users';
+import { TweetService } from './TweetService';
 
 /**
  * Handles fetching of data related to user account
@@ -40,13 +40,15 @@ export class UserService extends FetcherService {
      * 
      * @returns The details of the given user.
      * 
+     * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
      * @throws {@link Errors.DataErrors.UserNotFound} error, if no user with the given username was found.
-     * 
-     * @remarks
-     * 
-     * No cookies are required to use this method.
      */
     async getUserDetails(id: string): Promise<User> {
+        // If user is not authenticated, abort
+        if (!this.isAuthenticated) {
+            throw new Error(AuthenticationErrors.NotAuthenticated);
+        }
+
         let res: RawUser;
 
         // If id is not a numeric string => username is supplied
@@ -55,7 +57,7 @@ export class UserService extends FetcherService {
             const url: string = new Url(ResourceType.USER_DETAILS, { id: id }).toString();
 
             // Fetching the raw data
-            res = await this.request<RawUser>(url, false).then(res => res.data);
+            res = await this.request<RawUser>(url).then(res => res.data);
         }
         // If id is a numeric string => id is supplied
         else {
@@ -71,7 +73,7 @@ export class UserService extends FetcherService {
             const url: string = new Url(ResourceType.USER_DETAILS_BY_ID, { id: id }).toString();
 
             // Fetching the raw data
-            res = await this.request<RawUser>(url, false).then(res => res.data);
+            res = await this.request<RawUser>(url).then(res => res.data);
         }
 
         // Extracting data
@@ -93,33 +95,20 @@ export class UserService extends FetcherService {
      * 
      * @returns The list of tweets nade by the target user.
      * 
+     * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
      * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count has been provided.
      * @throws {@link Errors.DataErrors.UserNotFound} error, if invalid count has been provided.
      * 
-     * @remarks
-     * 
-     * No cookies are required to use this method.
+     * @deprecated Use [this](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#getTweets) method instead. It's better in every possible way!
      */
     async getUserTweets(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-        // Objectifying parameters
-        let args: UserListArgs = new UserListArgs(count, cursor);
+        // Getting the username of the target user
+        const userName: string = (await this.getUserDetails(userId)).userName;
 
-        // Preparing the URL
-        const url: string = new Url(ResourceType.USER_TWEETS, { id: userId, count: args.count, cursor: args.cursor }).toString();
-
-        // Fetching the raw data
-        let res = await this.request<RawUserTweets>(url, false).then(res => res.data);
-
-        // Extracting data
-        let data = UserExtractors.extractUserTweets(res);
-
-        // Caching data
-        this.cacheData(data);
-
-        // Parsing data
-        let tweets = data.required.map((item: TweetData) => new Tweet(item));
-
-        return new CursoredData<Tweet>(tweets, data.cursor);
+        // Getting the tweets of the target user
+        return new TweetService(this.auth).getTweets({
+            fromUsers: [userName]
+        }, count, cursor);
     }
 
     /**
@@ -132,10 +121,6 @@ export class UserService extends FetcherService {
      * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
      * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count has been provided.
      * @throws {@link Errors.DataErrors.UserNotFound} error, if invalid count has been provided.
-     * 
-     * @remarks
-     * 
-     * Cookies are required to use this method!
      */
     async getUserFollowing(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
@@ -174,10 +159,6 @@ export class UserService extends FetcherService {
      * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
      * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count has been provided.
      * @throws {@link Errors.DataErrors.UserNotFound} error, if invalid count has been provided.
-     * 
-     * @remarks
-     * 
-     * Cookies are required to use this method!
      */
     async getUserFollowers(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
@@ -214,10 +195,6 @@ export class UserService extends FetcherService {
      * @returns The list of tweets liked by the target user.
      * 
      * @throws {@link AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
-     * 
-     * @remarks
-     * 
-     * Cookies are required to use this method!
      */
     async getUserLikes(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
         // If user is not authenticated, abort
