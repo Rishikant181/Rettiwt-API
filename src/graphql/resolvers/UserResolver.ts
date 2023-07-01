@@ -29,13 +29,13 @@ export default class UserResolver extends ResolverBase {
 
     /**
      * @returns The list of tweets made by the given user
-     * @param id The id of the user whose tweets are to be fetched
-     * @param count The number of tweets to fetch, must be >= 40
+     * @param userName The username of the user whose tweets are to be fetched
+     * @param count The number of tweets to fetch, must be >= 10
      * @param all Whether to fetch list of all tweets made by user
      * @param cursor The cursor to the batch of tweets to fetch
      * @param statusesCount The total number of tweets made by target user
      */
-    async resolveUserTweets(id: string, count: number, all: boolean, cursor: string, statusesCount: number): Promise<any> {
+    async resolveUserTweets(userName: string, count: number, all: boolean, cursor: string, statusesCount: number): Promise<any> {
         let likes: any[] = [];                                                      // To store the list of tweets
         let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
         let total: number = 0;                                                      // To store the total number of tweets fetched
@@ -52,7 +52,7 @@ export default class UserResolver extends ResolverBase {
             this.batchSize = ((count - total) < this.batchSize) ? (count - total) : this.batchSize;
 
             // Getting the data
-            const res = await this.context.users.getUserTweets(id, this.batchSize, next.value).catch(error => {
+            const res = await this.context.tweets.getTweets({ fromUsers: [userName] }, this.batchSize, next.value).catch(error => {
                 throw this.getGraphQLError(error);
             });
 

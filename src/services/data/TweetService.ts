@@ -43,13 +43,15 @@ export class TweetService extends FetcherService {
      * 
      * @returns The list of tweets that match the given filter.
      * 
+     * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
      * @throws {@link Errors.ValidationErrors.InvalidCount} error, if an invalid count has been provided.
-     * 
-     * @remarks
-     * 
-     * Cookies are required to use this method!
      */
     async getTweets(query: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+        // If user is not authenticated, abort
+        if (!this.isAuthenticated) {
+            throw new Error(AuthenticationErrors.NotAuthenticated);
+        }
+
         // Objectifying parameters
         let filter: TweetFilter = new TweetFilter(query);
         let args: TweetListArgs = new TweetListArgs(count, cursor);
@@ -58,7 +60,7 @@ export class TweetService extends FetcherService {
         const url: string = new Url(ResourceType.TWEETS, { query: filter.toString(), count: args.count, cursor: args.cursor }).toString();
 
         // Getting the raw data
-        let res = await this.request<RawTweets>(url, this.isAuthenticated).then(res => res.data);
+        let res = await this.request<RawTweets>(url).then(res => res.data);
 
         // Extracting data
         let data = TweetExtractors.extractTweets(res);
@@ -80,13 +82,15 @@ export class TweetService extends FetcherService {
      * 
      * @returns The details of a single tweet with the given tweet id.
      * 
+     * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
      * @throws {@link Errors.DataErrors.TweetNotFound} error, if no tweet with the given id was found.
-     * 
-     * @remarks
-     * 
-     * No cookies are required to use this method.
      */
     async getTweetDetails(id: string): Promise<Tweet> {
+        // If user is not authenticated, abort
+        if (!this.isAuthenticated) {
+            throw new Error(AuthenticationErrors.NotAuthenticated);
+        }
+
         // Getting data from cache
         let cachedData = await this.readData(id);
 
@@ -99,7 +103,7 @@ export class TweetService extends FetcherService {
         const url: string = new Url(ResourceType.TWEET_DETAILS, { id: id }).toString();
 
         // Fetching the raw data
-        let res = await this.request<RawTweet>(url, false).then(res => res.data);
+        let res = await this.request<RawTweet>(url).then(res => res.data);
 
         // Extracting data
         let data = TweetExtractors.extractTweet(res, id);
@@ -123,10 +127,6 @@ export class TweetService extends FetcherService {
      * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
      * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count is provided.
      * @throws {@link Errors.DataErrors.TweetNotFound} error, if no tweet with the given id was found.
-     * 
-     * @remarks
-     * 
-     * Cookies are required to use this method!
      */
     async getTweetLikers(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
@@ -165,10 +165,6 @@ export class TweetService extends FetcherService {
      * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
      * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count is provided.
      * @throws {@link Errors.DataErrors.TweetNotFound} error, if no tweet with the given id was found.
-     * 
-     * @remarks
-     * 
-     * Cookies are required to use this method!
      */
     async getTweetRetweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
         // If user is not authenticated, abort
@@ -196,38 +192,4 @@ export class TweetService extends FetcherService {
 
         return new CursoredData<User>(users, data.cursor);
     }
-
-    /**
-     * THIS IS DISABLED FOR USE FOR NOW BECAUSE TWITTER DOESN'T HAVE ANY ENDPOINT FOR FETCHING REPLIES.
-     * THE DATA THIS RETURNS IS INCONSISTENT!
-     * 
-     * @param tweetId The rest id of the target tweet.
-     * @param cursor The cursor to the next batch of replies. If blank, first batch is fetched.
-     * @returns The list of replies to the given tweet.
-     */
-    /*
-    async getTweetReplies(tweetId: string, cursor: string): Promise<CursoredData<Tweet>> {
-        // If user is not authenticated, abort
-        if(!this.isAuthenticated) {
-            throw new Error(Errors.AuthenticationErrors.NotAuthenticated);
-        }
-
-        // Fetching the raw data
-        let res = await this.request<RawTweet>(TweetUrls.tweetRepliesUrl(tweetId, cursor)).then(res => res.data);
-
-        // Extracting data
-        let data = TweetExtractors.extractTweetReplies(res, tweetId);
-
-        // Caching data
-        this.cacheData(data);
-
-        // Parsing data
-        let tweets = data.required.map((item: TweetData) => TweetDeserializers.toTweet(item));
-
-        return {
-            list: tweets,
-            next: { value: data.cursor }
-        };
-    }
-    */
 }
