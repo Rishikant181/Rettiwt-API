@@ -1,5 +1,6 @@
 // PACKAGES
 import { curly, CurlyResult } from 'node-libcurl';
+import { ITweet as IRawTweet, IUser as IRawUser } from 'rettiwt-core';
 
 // SERVICES
 import { AuthService } from '../auth/AuthService';
@@ -8,10 +9,6 @@ import { CacheService } from './CacheService';
 // MODELS
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
-
-// TYPES
-import { Result as RawUser } from '../../twitter/types/user/User';
-import { Result as RawTweet } from '../../twitter/types/tweet/Tweet';
 
 // ENUMS
 import { HttpStatus } from "../../enums/HTTP";
@@ -128,8 +125,8 @@ export class FetcherService {
          * The extracted data is in raw form.
          * This raw data is deserialized into the respective known types.
          */
-        let users = data.users.map((user: RawUser) => new User(user));
-        let tweets = data.tweets.map((tweet: RawTweet) => new Tweet(tweet));
+        let users = data.users.map((user: IRawUser) => new User(user));
+        let tweets = data.tweets.map((tweet: IRawTweet) => new Tweet(tweet));
 
         // Caching the data
         this.cache.write(users);
