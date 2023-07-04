@@ -56,6 +56,8 @@ export class UserService extends FetcherService {
 
         let res: IUserDetailsResponse;
 
+        /*
+
         // If id is not a numeric string => username is supplied
         if (isNaN(Number(id))) {
             // Preparing the URL
@@ -80,6 +82,14 @@ export class UserService extends FetcherService {
             // Fetching the raw data
             res = await this.request<IUserDetailsResponse>(url).then(res => res.data);
         }
+
+        */
+
+        // Preparing the URL
+        const url: string = new Url(EResourceType.USER_DETAILS, { id: id }).toString();
+
+        // Fetching the raw data
+        res = await this.request<IUserDetailsResponse>(url).then(res => res.data);
 
         // Extracting data
         let data = UserExtractors.extractUserDetails(res);
