@@ -1,11 +1,14 @@
+// PACKAGE
+import {
+    IUserDetailsResponse,
+    IUserFollowersResponse,
+    IUserFollowingResponse,
+    IUserLikesResponse
+} from 'rettiwt-core';
+
 // TYPES
 import { IDataExtract } from '../../../types/Resolvers'
 import { DataErrors } from '../../../enums/Errors';
-import RawUser from '../../../twitter/types/user/User';
-import RawUserTweets from '../../../twitter/types/user/Tweets';
-import RawUserFollowers from '../../../twitter/types/user/Followers';
-import RawUserFollowing from '../../../twitter/types/user/Following';
-import RawUserLikes from '../../../twitter/types/user/Likes';
 
 // PARSERS
 import * as Parsers from '../Parser';
@@ -14,7 +17,7 @@ import * as Parsers from '../Parser';
  * @returns The raw user account data formatted and sorted into required and additional data
  * @param res The raw response received from Twitter
  */
-export function extractUserDetails(res: RawUser): IDataExtract {
+export function extractUserDetails(res: IUserDetailsResponse): IDataExtract {
     let required: any[] = [];                                               // To store the reqruied raw data
     let cursor: string = '';                                                // To store the cursor to next batch
     let users: any[] = [];                                                  // To store additional user data
@@ -39,64 +42,10 @@ export function extractUserDetails(res: RawUser): IDataExtract {
 }
 
 /**
- * @returns The raw user tweet data formatted and sorted into required and additional data
- * @param res The raw response received from Twitter
- */
-export function extractUserTweets(res: RawUserTweets): IDataExtract {
-    let required: any[] = [];                                               // To store the reqruied raw data
-    let cursor: string = '';                                                // To store the cursor to next batch
-    let users: any[] = [];                                                  // To store additional user data
-    let tweets: any[] = [];                                                 // To store additional tweet data
-
-    // If user does not exist
-    if (Parsers.isJSONEmpty(res.data.user)) {
-        throw new Error(DataErrors.UserNotFound);
-    }
-
-    // Extracting the raw list
-    res.data.user.result.timeline_v2.timeline.instructions.forEach(item => {
-        if (item.type === 'TimelineAddEntries') {
-            // If no tweets found
-            if (item.entries?.length == 2) {
-                // Returning the data
-                return {
-                    required: required,
-                    cursor: cursor,
-                    users: users,
-                    tweets: tweets
-                };
-            }
-
-            // Destructuring data
-            item.entries.forEach(entry => {
-                // If entry is of type tweet and tweet exists
-                if (entry.entryId.indexOf('tweet') != -1 && entry.content.itemContent?.tweet_results.result.__typename === 'Tweet') {
-                    required.push(entry.content.itemContent.tweet_results.result);
-                    users.push(entry.content.itemContent.tweet_results.result.core.user_results.result);
-                    tweets.push(entry.content.itemContent.tweet_results.result);
-                }
-                // If entry is of type cursor
-                else if (entry.entryId.indexOf('cursor-bottom') != -1) {
-                    cursor = entry.content.value ?? '';
-                }
-            });
-        }
-    });
-
-    // Returning the data
-    return {
-        required: required,
-        cursor: cursor,
-        users: users,
-        tweets: tweets
-    };
-}
-
-/**
  * @returns The raw user following/followers data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
-export function extractUserFollow(res: RawUserFollowers | RawUserFollowing): IDataExtract {
+export function extractUserFollow(res: IUserFollowersResponse | IUserFollowingResponse): IDataExtract {
     let required: any[] = [];                                               // To store the reqruied raw data
     let cursor: string = '';                                                // To store the cursor to next batch
     let users: any[] = [];                                                  // To store additional user data
@@ -149,7 +98,7 @@ export function extractUserFollow(res: RawUserFollowers | RawUserFollowing): IDa
  * @returns The raw user likes data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
-export function extractUserLikes(res: RawUserLikes): IDataExtract {
+export function extractUserLikes(res: IUserLikesResponse): IDataExtract {
     let required: any[] = [];                                               // To store the reqruied raw data
     let cursor: string = '';                                                // To store the cursor to next batch
     let users: any[] = [];                                                  // To store additional user data
