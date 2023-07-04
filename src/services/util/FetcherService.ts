@@ -1,5 +1,5 @@
 // PACKAGES
-import { curly, CurlyResult } from 'node-libcurl';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { ITweet as IRawTweet, IUser as IRawUser } from 'rettiwt-core';
 
 // SERVICES
@@ -61,12 +61,12 @@ export class FetcherService {
     * 
     * @throws {@link HttpStatus} error, if any HTTP error is found.
     */
-    private handleHTTPError(res: CurlyResult): CurlyResult {
+    private handleHTTPError(res: AxiosResponse): AxiosResponse {
         /**
          * If the status code is not 200 => the HTTP request was not successful. hence throwing error
          */
-        if (res.statusCode != 200 && res.statusCode in HttpStatus) {
-            throw new Error(HttpStatus[res.statusCode])
+        if (res.status != 200 && res.status in HttpStatus) {
+            throw new Error(HttpStatus[res.status])
         }
 
         return res;
@@ -83,22 +83,18 @@ export class FetcherService {
      * @param method The HTTP method (from {@link HttpMethods}) to use.
      * @param data The data to be sent along with the request (for POST request).
      * 
-     * @returns The {@link CurlyResult} received.
+     * @returns The {@link AxiosResponse} received.
      */
-    protected async request<DataType>(url: string, authenticate: boolean = true, method: HttpMethods = HttpMethods.GET, data?: any): Promise<CurlyResult<DataType>> {
+    protected async request<DataType>(url: string, authenticate: boolean = true, method: HttpMethods = HttpMethods.GET, data?: any): Promise<AxiosResponse<DataType>> {
         /**
          * Creating the request configuration based on the params
          */
-        let config: CurlyOptions = {
+        let config: AxiosRequestConfig = {
             /**
              * If authorization is required, using the authenticated header, using the authentication credentiials.
              * Else, using the guest header, using the guest credentials.
              */
-            httpHeader: authenticate ? Headers.authorizedHeader(await this.auth.getAuthCredentials()) : Headers.guestHeader(await this.auth.getGuestCredentials()),
-            /** 
-             * Disabling SSL peer verification because verification causes Error 404 (only while fetching tweets), likely because peer verification fails.
-             */
-            sslVerifyPeer: false,
+            headers: authenticate ? Headers.authorizedHeader(await this.auth.getAuthCredentials()) : Headers.guestHeader(await this.auth.getGuestCredentials()),
         };
 
         /**
@@ -107,11 +103,11 @@ export class FetcherService {
          */
         // If POST request is to be made
         if (method == HttpMethods.POST) {
-            return await curly.post(url, { ...config, postFields: JSON.stringify(data) }).then(res => this.handleHTTPError(res));
+            return await axios.post(url, data, config).then(res => this.handleHTTPError(res));
         }
         // If GET request is to be made
         else {
-            return await curly.get(url, config).then(res => this.handleHTTPError(res));
+            return await axios.get(url, config).then(res => this.handleHTTPError(res));
         }
     }
 
