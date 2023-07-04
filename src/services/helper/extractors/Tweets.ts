@@ -40,9 +40,11 @@ export function extractTweets(res: ITweetSearchResponse): IDataExtract {
                 users.push(entry.content.itemContent.tweet_results.result.core?.user_results.result);
                 tweets.push(entry.content.itemContent.tweet_results.result);
             }
+            // If entry is of type cursor
+            else if (entry.entryId.indexOf('cursor-bottom')) {
+                cursor = entry.content.value + '';
+            }
         });
-        // Getting the cursor to next batch of tweets
-        cursor = res.data.search_by_raw_query.search_timeline.timeline.instructions.filter(item => item.entry_id_to_replace?.indexOf('cursor-bottom'))[0].entry?.content.value + '';
     }
 
     // Returning the data
