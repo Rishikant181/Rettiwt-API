@@ -56,51 +56,32 @@ export class UserService extends FetcherService {
 
         let res: IUserDetailsResponse;
 
-        /*
+        // Getting data from cache
+        let cachedData = await this.readData(id);
 
-        // If id is not a numeric string => username is supplied
-        if (isNaN(Number(id))) {
+        // If data exists in cache
+        if (cachedData) {
+            return cachedData;
+        }
+        // Else, fetch the data from Twitter instead
+        else {
             // Preparing the URL
             const url: string = new Url(EResourceType.USER_DETAILS, { id: id }).toString();
 
             // Fetching the raw data
             res = await this.request<IUserDetailsResponse>(url).then(res => res.data);
+
+            // Extracting data
+            let data = UserExtractors.extractUserDetails(res);
+
+            // Caching data
+            this.cacheData(data);
+
+            // Parsing data
+            let user = new User(data.required[0]);
+
+            return user;
         }
-        // If id is a numeric string => id is supplied
-        else {
-            // Getting data from cache
-            let cachedData = await this.readData(id);
-
-            // If data exists in cache
-            if (cachedData) {
-                return cachedData;
-            }
-
-            // Preparing the URL
-            const url: string = new Url(EResourceType.USER_DETAILS_BY_ID, { id: id }).toString();
-
-            // Fetching the raw data
-            res = await this.request<IUserDetailsResponse>(url).then(res => res.data);
-        }
-
-        */
-
-        // Preparing the URL
-        const url: string = new Url(EResourceType.USER_DETAILS, { id: id }).toString();
-
-        // Fetching the raw data
-        res = await this.request<IUserDetailsResponse>(url).then(res => res.data);
-
-        // Extracting data
-        let data = UserExtractors.extractUserDetails(res);
-
-        // Caching data
-        this.cacheData(data);
-
-        // Parsing data
-        let user = new User(data.required[0]);
-
-        return user;
     }
 
     /**
