@@ -1,24 +1,27 @@
+// PACKAGES
+import {
+    Url,
+    EResourceType,
+    ITweetSearchResponse,
+    ITweetDetailsResponse,
+    ITweetFavoritersResponse,
+    ITweetRetweetersResponse,
+    ITweet as IRawTweet,
+    IUser as IRawUser
+} from 'rettiwt-core';
+
 // SERVICES
 import { FetcherService } from "../util/FetcherService";
 import { AuthService } from "../auth/AuthService";
 
 // MODELS
-import { Url } from '../../twitter/Url';
 import { Tweet } from "../../models/data/Tweet";
 import { User } from "../../models/data/User";
 import { TweetListArgs } from "../../models/args/TweetListArgs";
 import { TweetFilter } from "../../models/args/TweetFilter";
 import { CursoredData } from '../../models/data/CursoredData';
 
-// TYPES
-import RawTweet, { Result as TweetData } from '../../twitter/types/tweet/Tweet';
-import { Result as UserData } from "../../twitter/types/user/User";
-import RawTweets from '../../twitter/types/tweet/Tweets';
-import RawLikers from '../../twitter/types/tweet/Favouriters';
-import RawRetweeters from '../../twitter/types/tweet/Retweeters';
-
 // ENUMS
-import { ResourceType } from '../../twitter/enums/Resources';
 import { AuthenticationErrors } from '../../enums/Errors';
 
 // EXTRACTORS
@@ -57,10 +60,10 @@ export class TweetService extends FetcherService {
         let args: TweetListArgs = new TweetListArgs(count, cursor);
 
         // Preparing the URL
-        const url: string = new Url(ResourceType.TWEETS, { query: filter.toString(), count: args.count, cursor: args.cursor }).toString();
+        const url: string = new Url(EResourceType.TWEET_SEARCH, { filter: filter.toString(), count: args.count, cursor: args.cursor }).toString();
 
         // Getting the raw data
-        let res = await this.request<RawTweets>(url).then(res => res.data);
+        let res = await this.request<ITweetSearchResponse>(url).then(res => res.data);
 
         // Extracting data
         let data = TweetExtractors.extractTweets(res);
@@ -69,7 +72,7 @@ export class TweetService extends FetcherService {
         this.cacheData(data);
 
         // Parsing data
-        let tweets = data.required.map((item: TweetData) => new Tweet(item));
+        let tweets = data.required.map((item: IRawTweet) => new Tweet(item));
 
         // Sorting the tweets by date, from recent to oldest
         tweets.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
@@ -100,10 +103,10 @@ export class TweetService extends FetcherService {
         }
 
         // Preparing the URL
-        const url: string = new Url(ResourceType.TWEET_DETAILS, { id: id }).toString();
+        const url: string = new Url(EResourceType.TWEET_DETAILS, { id: id }).toString();
 
         // Fetching the raw data
-        let res = await this.request<RawTweet>(url).then(res => res.data);
+        let res = await this.request<ITweetDetailsResponse>(url).then(res => res.data);
 
         // Extracting data
         let data = TweetExtractors.extractTweet(res, id);
@@ -138,10 +141,10 @@ export class TweetService extends FetcherService {
         let args: TweetListArgs = new TweetListArgs(count, cursor);
 
         // Preparing the URL
-        const url: string = new Url(ResourceType.TWEET_LIKES, { id: tweetId, count: args.count, cursor: args.cursor }).toString();
+        const url: string = new Url(EResourceType.TWEET_FAVORITERS, { id: tweetId, count: args.count, cursor: args.cursor }).toString();
 
         // Fetching the raw data
-        let res = await this.request<RawLikers>(url).then(res => res.data);
+        let res = await this.request<ITweetFavoritersResponse>(url).then(res => res.data);
 
         // Extracting data
         let data = TweetExtractors.extractTweetLikers(res);
@@ -150,7 +153,7 @@ export class TweetService extends FetcherService {
         this.cacheData(data);
 
         // Parsing data
-        let users = data.required.map((item: UserData) => new User(item));
+        let users = data.required.map((item: IRawUser) => new User(item));
 
         return new CursoredData<User>(users, data.cursor);
     }
@@ -176,10 +179,10 @@ export class TweetService extends FetcherService {
         let args: TweetListArgs = new TweetListArgs(count, cursor);
 
         // Preparing the URL
-        const url: string = new Url(ResourceType.TWEET_RETWEETS, { id: tweetId, count: args.count, cursor: args.cursor }).toString();
+        const url: string = new Url(EResourceType.TWEET_RETWEETERS, { id: tweetId, count: args.count, cursor: args.cursor }).toString();
 
         // Fetching the raw data
-        let res = await this.request<RawRetweeters>(url).then(res => res.data);
+        let res = await this.request<ITweetRetweetersResponse>(url).then(res => res.data);
 
         // Extracting data
         let data = TweetExtractors.extractTweetRetweeters(res);
@@ -188,7 +191,7 @@ export class TweetService extends FetcherService {
         this.cacheData(data);
 
         // Parsing data
-        let users = data.required.map((item: UserData) => new User(item));
+        let users = data.required.map((item: IRawUser) => new User(item));
 
         return new CursoredData<User>(users, data.cursor);
     }

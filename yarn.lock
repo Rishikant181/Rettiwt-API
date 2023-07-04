@@ -1340,10 +1340,10 @@ retry@^0.12.0:
   resolved "https://registry.yarnpkg.com/retry/-/retry-0.12.0.tgz#1b42a6266a21f07421d1b0b54b7dc167b01c013b"
   integrity sha512-9LkiTwjUh6rT555DtE9rTX+BKByPfrMzEAtnlEtdEwr3Nkffwiihqe2bWADg+OQRjt9gl6ICdmB/ZFDCGAtSow==
 
-rettiwt-core@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/rettiwt-core/-/rettiwt-core-2.0.0.tgz#3613df5559cb30600e6b25d8c20141fddac82198"
-  integrity sha512-Q/J8NELzewJtrhyzn/LwSHsl8yRNLGfINaIbNLSMYNEKL+RHYjeWMLA/OjwkH+Rl8oViI7opxQqRK0nZiOnT8g==
+rettiwt-core@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/rettiwt-core/-/rettiwt-core-2.1.0.tgz#707f42c55c36c92d6ea88108f39ee07e1c5ba340"
+  integrity sha512-795MdjwCTCAU4ldldYMkqr7jRxDnZBteohsURkkS27X4k3sfRAq7vvDyd3gmI6/LVRqR6GVRbkw+jgRc07EUHw==
   dependencies:
     class-validator "0.14.0"
 
