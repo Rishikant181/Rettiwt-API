@@ -32,7 +32,8 @@
 		"graphql": "14.7.0",
 		"node-cache": "5.1.2",
 		"node-libcurl": "3.0.0",
-		"reflect-metadata": "0.1.13"
+		"reflect-metadata": "0.1.13",
+		"rettiwt-core": "2.3.0"
 	},
 	"devDependencies": {
 		"@types/cookiejar": "2.1.2",

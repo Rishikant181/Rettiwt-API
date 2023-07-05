@@ -1,9 +1,9 @@
 // PACKAGES
 import { IsInt, IsString, IsOptional, Min, validateSync, Max, ValidateIf } from 'class-validator';
+import { DataValidationError } from 'rettiwt-core';
 
 // TYPES
 import { IListArgs } from '../../types/Args';
-import { DataValidationError } from '../errors/DataValidationError';
 
 /**
  * The arguments for fetching cursored list in TweetService.
@@ -20,7 +20,7 @@ export class TweetListArgs implements IListArgs {
     @IsOptional()
     @Max(100)
     @ValidateIf(ob => ob.cursor.length == 0)
-    @Min(10)    
+    @Min(10)
     count: number;
 
     /** The cursor to the batch of data to fetch. */

@@ -1340,6 +1340,13 @@ retry@^0.12.0:
   resolved "https://registry.yarnpkg.com/retry/-/retry-0.12.0.tgz#1b42a6266a21f07421d1b0b54b7dc167b01c013b"
   integrity sha512-9LkiTwjUh6rT555DtE9rTX+BKByPfrMzEAtnlEtdEwr3Nkffwiihqe2bWADg+OQRjt9gl6ICdmB/ZFDCGAtSow==
 
+rettiwt-core@2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/rettiwt-core/-/rettiwt-core-2.3.0.tgz#8f316110132a4247c8761446252ae117e67b8465"
+  integrity sha512-mfyMRqMVtpQ7plxTL6mqhr2LWWS2YbO1owxz3FhE4r6y6DNJ7V9lRxtl+wTpqg7/SSrA5Q/ijTAPrztaQ7zoFQ==
+  dependencies:
+    class-validator "0.14.0"
+
 rimraf@3.0.2, rimraf@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-3.0.2.tgz#f1a5402ba6220ad52cc1282bac1ae3aa49fd061a"

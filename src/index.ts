@@ -44,19 +44,21 @@ export * from './services/util/CacheService';
 export * from './services/util/FetcherService';
 
 // Exporting types
+export { ITweetFilter } from 'rettiwt-core';
 export * from './types/Args';
 export { IAuthCookie } from './types/Authentication';
 export * from './types/Rettiwt';
 export * from './types/Service';
 export * from './types/Tweet';
 export * from './types/User';
+export { IDataValidationError } from 'rettiwt-core';
 
 // Exporting models
-export * from './models/args/TweetFilter';
+export { TweetFilter } from 'rettiwt-core';
 export * from './models/args/TweetListArgs';
 export * from './models/args/UserListArgs';
-export * from './models/auth/AuthCookie';
+export { AuthCookie } from './models/auth/AuthCookie';
 export * from './models/data/CursoredData';
 export * from './models/data/Tweet';
 export * from './models/data/User';
-export * from './models/errors/DataValidationError';
+export { DataValidationError } from 'rettiwt-core';
