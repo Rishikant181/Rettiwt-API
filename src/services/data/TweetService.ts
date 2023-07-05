@@ -41,7 +41,7 @@ export class TweetService extends FetcherService {
 
     /**
      * @param filter The filter be used for searching the tweets.
-     * @param count The number of tweets to fetch, must be >= 10 and <= 20
+     * @param count The number of tweets to fetch, must be >= 10 (when no cursor is provided) and <= 20
      * @param cursor The cursor to the next batch of tweets. If blank, first batch is fetched.
      * 
      * @returns The list of tweets that match the given filter.
