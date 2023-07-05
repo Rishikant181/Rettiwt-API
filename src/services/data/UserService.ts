@@ -1,23 +1,28 @@
+// PACKAGES
+import {
+    Url,
+    EResourceType,
+    IUserDetailsResponse,
+    IUserFollowersResponse,
+    IUserFollowingResponse,
+    IUserLikesResponse,
+    ITweet as IRawTweet,
+    IUser as IRawUser
+} from 'rettiwt-core';
+
 // SERVICES
 import { FetcherService } from '../util/FetcherService';
 import { AuthService } from '../auth/AuthService';
 
 // MODELS
-import { Url } from '../../twitter/Url';
 import { User } from '../../models/data/User';
 import { UserListArgs } from '../../models/args/UserListArgs';
 import { Tweet } from '../../models/data/Tweet';
 
 // TYPES
 import { CursoredData } from '../../models/data/CursoredData';
-import { Result as TweetData } from '../../twitter/types/tweet/Tweet';
-import RawUser, { Result as UserData } from '../../twitter/types/user/User';
-import RawUserFollowers from '../../twitter/types/user/Followers';
-import RawUserFollowing from '../../twitter/types/user/Following';
-import RawUserLikes from '../../twitter/types/user/Likes';
 
 // ENUMS
-import { ResourceType } from '../../twitter/enums/Resources';
 import { AuthenticationErrors } from '../../enums/Errors';
 
 // EXTRACTORS
@@ -49,43 +54,34 @@ export class UserService extends FetcherService {
             throw new Error(AuthenticationErrors.NotAuthenticated);
         }
 
-        let res: RawUser;
+        let res: IUserDetailsResponse;
 
-        // If id is not a numeric string => username is supplied
-        if (isNaN(Number(id))) {
-            // Preparing the URL
-            const url: string = new Url(ResourceType.USER_DETAILS, { id: id }).toString();
+        // Getting data from cache
+        let cachedData = await this.readData(id);
 
-            // Fetching the raw data
-            res = await this.request<RawUser>(url).then(res => res.data);
+        // If data exists in cache
+        if (cachedData) {
+            return cachedData;
         }
-        // If id is a numeric string => id is supplied
+        // Else, fetch the data from Twitter instead
         else {
-            // Getting data from cache
-            let cachedData = await this.readData(id);
-
-            // If data exists in cache
-            if (cachedData) {
-                return cachedData;
-            }
-
             // Preparing the URL
-            const url: string = new Url(ResourceType.USER_DETAILS_BY_ID, { id: id }).toString();
+            const url: string = new Url(EResourceType.USER_DETAILS, { id: id }).toString();
 
             // Fetching the raw data
-            res = await this.request<RawUser>(url).then(res => res.data);
+            res = await this.request<IUserDetailsResponse>(url).then(res => res.data);
+
+            // Extracting data
+            let data = UserExtractors.extractUserDetails(res);
+
+            // Caching data
+            this.cacheData(data);
+
+            // Parsing data
+            let user = new User(data.required[0]);
+
+            return user;
         }
-
-        // Extracting data
-        let data = UserExtractors.extractUserDetails(res);
-
-        // Caching data
-        this.cacheData(data);
-
-        // Parsing data
-        let user = new User(data.required[0]);
-
-        return user;
     }
 
     /**
@@ -132,10 +128,10 @@ export class UserService extends FetcherService {
         let args: UserListArgs = new UserListArgs(count, cursor);
 
         // Preparing the URL
-        const url: string = new Url(ResourceType.USER_FOLLOWING, { id: userId, count: args.count, cursor: args.cursor }).toString();
+        const url: string = new Url(EResourceType.USER_FOLLOWING, { id: userId, count: args.count, cursor: args.cursor }).toString();
 
         // Fetchin the raw data
-        let res = await this.request<RawUserFollowing>(url).then(res => res.data);
+        let res = await this.request<IUserFollowingResponse>(url).then(res => res.data);
 
         // Extracting data
         let data = UserExtractors.extractUserFollow(res);
@@ -144,7 +140,7 @@ export class UserService extends FetcherService {
         this.cacheData(data);
 
         // Parsing data
-        let users = data.required.map((item: UserData) => new User(item));
+        let users = data.required.map((item: IRawUser) => new User(item));
 
         return new CursoredData<User>(users, data.cursor);
     }
@@ -170,10 +166,10 @@ export class UserService extends FetcherService {
         let args: UserListArgs = new UserListArgs(count, cursor);
 
         // Preparing the URL
-        const url: string = new Url(ResourceType.USER_FOLLOWERS, { id: userId, count: args.count, cursor: args.cursor }).toString();
+        const url: string = new Url(EResourceType.USER_FOLLOWERS, { id: userId, count: args.count, cursor: args.cursor }).toString();
 
         // Fetching the raw data
-        let res = await this.request<RawUserFollowers>(url).then(res => res.data);
+        let res = await this.request<IUserFollowersResponse>(url).then(res => res.data);
 
         // Extracting data
         let data = UserExtractors.extractUserFollow(res);
@@ -182,7 +178,7 @@ export class UserService extends FetcherService {
         this.cacheData(data);
 
         // Parsing data
-        let users = data.required.map((item: UserData) => new User(item));
+        let users = data.required.map((item: IRawUser) => new User(item));
 
         return new CursoredData<User>(users, data.cursor);
     }
@@ -206,10 +202,10 @@ export class UserService extends FetcherService {
         let args: UserListArgs = new UserListArgs(count, cursor);
 
         // Preparing the URL
-        const url: string = new Url(ResourceType.USER_LIKES, { id: userId, count: args.count, cursor: args.cursor }).toString();
+        const url: string = new Url(EResourceType.USER_LIKES, { id: userId, count: args.count, cursor: args.cursor }).toString();
 
         // Fetching the raw data
-        let res = await this.request<RawUserLikes>(url).then(res => res.data);
+        let res = await this.request<IUserLikesResponse>(url).then(res => res.data);
 
         // Extracting data
         let data = UserExtractors.extractUserLikes(res);
@@ -218,7 +214,7 @@ export class UserService extends FetcherService {
         this.cacheData(data);
 
         // Parsing data
-        let tweets = data.required.map((item: TweetData) => new Tweet(item));
+        let tweets = data.required.map((item: IRawTweet) => new Tweet(item));
 
         return new CursoredData<Tweet>(tweets, data.cursor);
     }

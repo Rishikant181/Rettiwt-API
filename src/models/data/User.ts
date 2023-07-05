@@ -1,6 +1,6 @@
 // TYPES
 import { IUser } from '../../types/User';
-import { Result as RawUser } from '../../twitter/types/user/User';
+import { IUser as IRawUser } from 'rettiwt-core';
 
 /**
  * The details of a single user.
@@ -53,7 +53,7 @@ export class User implements IUser {
     /**
      * @param user The raw user data.
      */
-    constructor(user: RawUser) {
+    constructor(user: IRawUser) {
         this.id = user.rest_id;
         this.userName = user.legacy.screen_name;
         this.fullName = user.legacy.name;

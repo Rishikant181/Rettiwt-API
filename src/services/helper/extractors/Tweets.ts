@@ -1,10 +1,15 @@
+// PACKAGE
+import {
+    ITweetSearchResponse,
+    ITweetDetailsResponse,
+    ITweetFavoritersResponse,
+    ITweetRetweetersResponse,
+} from 'rettiwt-core';
+
+
 // TYPES
 import { IDataExtract } from '../../../types/Resolvers';
 import { DataErrors } from '../../../enums/Errors';
-import RawTweet from '../../../twitter/types/tweet/Tweet';
-import RawTweets from '../../../twitter/types/tweet/Tweets';
-import RawRetweeters from '../../../twitter/types/tweet/Retweeters';
-import RawLikers from '../../../twitter/types/tweet/Favouriters';
 
 // PARSERS
 import * as Parsers from '../Parser';
@@ -13,39 +18,35 @@ import * as Parsers from '../Parser';
  * @returns The raw tweets data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
-export function extractTweets(res: RawTweets): IDataExtract {
+export function extractTweets(res: ITweetSearchResponse): IDataExtract {
     let required: any[] = [];                                               // To store the reqruied raw data
     let cursor: string = '';                                                // To store the cursor to next batch
     let users: any[] = [];                                                  // To store additional user data
     let tweets: any[] = [];                                                 // To store additional tweet data
 
-    // Getting raw tweet list
-    let dataTweets = res.globalObjects.tweets;
+    // If tweet does not exist
+    if (Parsers.isJSONEmpty(res.data.search_by_raw_query)) {
+        throw new Error(DataErrors.NoMatchingTweetsFound);
+    }
 
-    // Getting raw users list
-    let dataUsers = res.globalObjects.users;
-
-    // If tweets found
-    if (!Parsers.isJSONEmpty(dataTweets)) {
-        // Destructuring the list of tweets
-        for (let key of Object.keys(dataTweets)) {
-            required.push({ rest_id: dataTweets[key].id_str, legacy: dataTweets[key] });
-            tweets.push({ rest_id: dataTweets[key].id_str, legacy: dataTweets[key] });
-        }
-
-        // Destructuring the list of users
-        for (let key of Object.keys(dataUsers)) {
-            users.push({ rest_id: dataUsers[key].id_str, legacy: dataUsers[key] });
-        }
-
-        // Getting the cursor to next batch
-        // If not first batch
-        if (res.timeline.instructions.length > 2) {
-            cursor = res.timeline.instructions[2]?.replaceEntry.entry.content.operation?.cursor.value ?? '';
-        }
-        // If first batch
-        else {
-            cursor = res.timeline.instructions[0].addEntries?.entries.filter(item => item.entryId.indexOf('cursor-bottom') != -1)[0].content.operation?.cursor.value ?? '';
+    // If tweets
+    if (res.data.search_by_raw_query.search_timeline.timeline.instructions.length) {
+        // Destructuring raw list of tweets
+        res.data.search_by_raw_query.search_timeline.timeline.instructions.filter(item => item.type === 'TimelineAddEntries')[0].entries?.forEach(entry => {
+            // If entry is of type tweet and tweet exists
+            if (entry.entryId.includes('tweet') && entry.content.itemContent?.tweet_results.result.__typename === 'Tweet') {
+                required.push(entry.content.itemContent.tweet_results.result);
+                users.push(entry.content.itemContent.tweet_results.result.core?.user_results.result);
+                tweets.push(entry.content.itemContent.tweet_results.result);
+            }
+            // If entry is of type cursor and cursor exists
+            else if (entry.entryId.includes('cursor-bottom')) {
+                cursor = entry.content.value ?? '';
+            }
+        });
+        // If cursor not found in 'TimelineAddEntries', getting cursor from 'TimlineReplaceEntry'
+        if (!cursor) {
+            cursor = res.data.search_by_raw_query.search_timeline.timeline.instructions.filter(item => item.entry_id_to_replace?.includes('cursor-bottom'))[0].entry?.content.value ?? '';
         }
     }
 
@@ -63,7 +64,7 @@ export function extractTweets(res: RawTweets): IDataExtract {
  * @param res The raw response received from TwitterAPI
  * @param tweetId The rest id of the tweet to fetch
  */
-export function extractTweet(res: RawTweet, tweetId: string): IDataExtract {
+export function extractTweet(res: ITweetDetailsResponse, tweetId: string): IDataExtract {
     let required: any[] = [];                                               // To store the reqruied raw data
     let cursor: string = '';                                                // To store the cursor to next batch
     let users: any[] = [];                                                  // To store additional user data
@@ -112,7 +113,7 @@ export function extractTweet(res: RawTweet, tweetId: string): IDataExtract {
  * @returns The raw tweet likers data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
-export function extractTweetLikers(res: RawLikers): IDataExtract {
+export function extractTweetLikers(res: ITweetFavoritersResponse): IDataExtract {
     let required: any[] = [];                                               // To store the reqruied raw data
     let cursor: string = '';                                                // To store the cursor to next batch
     let users: any[] = [];                                                  // To store additional user data
@@ -152,7 +153,7 @@ export function extractTweetLikers(res: RawLikers): IDataExtract {
  * @returns The raw tweet retweeters data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
-export function extractTweetRetweeters(res: RawRetweeters): IDataExtract {
+export function extractTweetRetweeters(res: ITweetRetweetersResponse): IDataExtract {
     let required: any[] = [];                                               // To store the reqruied raw data
     let cursor: string = '';                                                // To store the cursor to next batch
     let users: any[] = [];                                                  // To store additional user data
@@ -178,69 +179,6 @@ export function extractTweetRetweeters(res: RawRetweeters): IDataExtract {
             }
         });
     }
-
-    // Returning the data
-    return {
-        required: required,
-        cursor: cursor,
-        users: users,
-        tweets: tweets
-    };
-}
-
-/**
- * @returns The raw tweet replies data formatted and sorted into required and additional data
- * @param res The raw response received from TwitterAPI
- * @param tweetId The id of the tweet whose replies must be extracted
- */
-export function extractTweetReplies(res: RawTweet, tweetId: string): IDataExtract {
-    let required: any[] = [];                                               // To store the reqruied raw data
-    let cursor: string = '';                                                // To store the cursor to next batch
-    let users: any[] = [];                                                  // To store additional user data
-    let tweets: any[] = [];                                                 // To store additional tweet data
-
-    // If tweet does not exist
-    if (Parsers.isJSONEmpty(res.data)) {
-        throw new Error(DataErrors.TweetNotFound);
-    }
-
-    // Destructuring the received raw data
-    res.data.threaded_conversation_with_injections_v2.instructions.filter(item => item.type === 'TimelineAddEntries')[0].entries?.map(entry => {
-        // If entry is of type tweet
-        if (entry.entryId.indexOf('tweet') != -1) {
-            // If tweet exists
-            if (entry.content.itemContent?.tweet_results?.result.__typename === 'Tweet') {
-                tweets.push(entry.content.itemContent.tweet_results.result);
-                users.push(entry.content.itemContent.tweet_results.result.core.user_results.result);
-            }
-        }
-        // If entry if of type conversation/reply
-        else if (entry.entryId.indexOf('conversationthread') != -1) {
-            // If tweet exists
-            if (entry.content.items?.at(0)?.item.itemContent.tweet_results?.result.__typename === 'Tweet') {
-                // Adding the 1st entry, which is a reply, to required list
-                required.push(entry.content.items[0].item.itemContent.tweet_results?.result);
-                tweets.push(entry.content.items[0].item.itemContent.tweet_results?.result);
-                users.push(entry.content.items[0].item.itemContent.tweet_results?.result.core.user_results.result);
-            }
-
-            // Iterating over the rest of the conversation
-            entry.content.items?.forEach(item => {
-                // If item is of type tweet
-                if (item.entryId.indexOf('tweet') != -1) {
-                    // If tweet exists
-                    if (item.item.itemContent.tweet_results?.result.__typename === 'Tweet') {
-                        tweets.push(item.item.itemContent.tweet_results.result);
-                        users.push(item.item.itemContent.tweet_results.result.core.user_results.result);
-                    }
-                }
-            });
-        }
-        // If entry is of type bottom cursor
-        else if (entry.entryId.indexOf('cursor-bottom') != -1) {
-            cursor = entry.content.itemContent?.value ?? '';
-        }
-    });
 
     // Returning the data
     return {

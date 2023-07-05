@@ -1,6 +1,6 @@
 // TYPES
 import { ITweet, ITweetEntities } from '../../types/Tweet';
-import { Result as RawTweet, Entities2 as RawTweetEntities } from '../../twitter/types/tweet/Tweet';
+import { ITweet as IRawTweet, IEntities as IRawTweetEntities } from 'rettiwt-core';
 
 // PARSERS
 import * as Parsers from '../../services/helper/Parser';
@@ -25,7 +25,7 @@ export class TweetEntities implements ITweetEntities {
     media: string[] = [];
 
     // MEMBER METHODS
-    constructor(entities: RawTweetEntities) {
+    constructor(entities: IRawTweetEntities) {
         // Extracting user mentions
         if (entities.user_mentions) {
             for (let user of entities.user_mentions) {
@@ -101,7 +101,7 @@ export class Tweet implements ITweet {
     /**
      * @param tweet The raw tweet data.
      */
-    constructor(tweet: RawTweet) {
+    constructor(tweet: IRawTweet) {
         this.id = tweet.rest_id;
         this.createdAt = tweet.legacy.created_at;
         this.tweetBy = tweet.legacy.user_id_str;

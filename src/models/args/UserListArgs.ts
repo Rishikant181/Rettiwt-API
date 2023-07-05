@@ -1,9 +1,9 @@
 // PACKAGES
 import { IsInt, IsString, IsOptional, Min, validateSync, Max, ValidateIf } from 'class-validator';
+import { DataValidationError } from 'rettiwt-core';
 
 // TYPES
 import { IListArgs } from '../../types/Args';
-import { DataValidationError } from '../errors/DataValidationError';
 
 /**
  * The arguments for fetching cursored list in TweetService.

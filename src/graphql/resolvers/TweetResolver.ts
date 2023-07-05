@@ -1,9 +1,11 @@
+// PACKAGE
+import { TweetFilter } from 'rettiwt-core';
+
 // RESOLVERS
 import ResolverBase from './ResolverBase';
 
 // TYPES
-import { IDataContext } from '../../types/Rettiwt'
-import { TweetFilter } from '../../models/args/TweetFilter';
+import { IDataContext } from '../../types/Rettiwt';
 import { Cursor } from '../../models/data/CursoredData';
 import { DataErrors } from '../enums/Errors';
 
@@ -15,7 +17,7 @@ export default class TweetResolver extends ResolverBase {
         super(context);
         this.batchSize = 100;
     }
-    
+
     /**
      * @returns The details of the tweet with the given id
      * @param id The id of the tweet which is to be fetched
@@ -33,16 +35,16 @@ export default class TweetResolver extends ResolverBase {
     /**
      * @returns The list of tweets matching the given filter
      * @param filter The filter to be used for fetching matching tweets
-     * @param count The number of tweets to fetch, must be >= 1
+     * @param count The number of tweets to fetch, must be >= 20 (when no cursor if provided)
      * @param cursor The cursor to the batch of tweets to fetch
      */
     async resolveTweets(filter: TweetFilter, count: number, cursor: string): Promise<any> {
         let tweets: any[] = [];                                                     // To store the list of tweets
         let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
         let total: number = 0;                                                      // To store the total number of tweets fetched
-        
+
         /** The batch size while fetching tweets is lower (=20), compared to other data related to a tweet (=100). */
-        let batchSize: number = 20;                                                 // 
+        let batchSize: number = 20;
 
         // If required count less than batch size, setting batch size to required count
         batchSize = (count < batchSize) ? count : batchSize;
@@ -53,7 +55,7 @@ export default class TweetResolver extends ResolverBase {
             batchSize = ((count - total) < batchSize) ? (count - total) : batchSize;
 
             // Getting the data
-            const res = await this.context.tweets.getTweets(filter, batchSize, next.value ).catch(error => {
+            const res = await this.context.tweets.getTweets(filter, batchSize, next.value).catch(error => {
                 throw this.getGraphQLError(error);
             });
 
@@ -88,7 +90,7 @@ export default class TweetResolver extends ResolverBase {
     /**
      * @returns The list of quotes of the given tweet
      * @param id The id of the tweet whose quotes are to be fetched
-     * @param count The number of quotes to be fetched, must be >= 1 (when no cursor if provided)
+     * @param count The number of quotes to be fetched, must be >= 20 (when no cursor if provided)
      * @param all Whether to fetch all quotes or not
      * @param cursor The cursor to the batch of tweet quotes to fetch
      * @param quoteCount The total number of quotes of the given tweet
@@ -122,7 +124,7 @@ export default class TweetResolver extends ResolverBase {
     /**
      * @returns The list of likers of the given tweet
      * @param id The id of the tweet whose likers are to be fetched
-     * @param count The total number of likers to fetch, must be >= 10 (when no cursor if provided)
+     * @param count The total number of likers to fetch, must be >= 10 (when no cursor is provided)
      * @param all Whether to fetch all the likers of the tweet
      * @param cursor The cursor to the batch of likers to fetch
      * @param likesCount The total number of like of the tweet
@@ -179,7 +181,7 @@ export default class TweetResolver extends ResolverBase {
     /**
      * @returns The list of retweeters of the given tweet
      * @param id The id of the tweet whose retweeters are to be fetched
-     * @param count The total number of retweeters to fetch, must be >= 10 (when no cursor if provided)
+     * @param count The total number of retweeters to fetch, must be >= 10 (when no cursor is provided)
      * @param all Whether to fetch all retweeters
      * @param cursor The cursor to the batch of retweeters to fetch
      * @param retweetsCount The total number of retweets of the 
@@ -232,53 +234,4 @@ export default class TweetResolver extends ResolverBase {
 
         return retweeters;
     }
-
-    /**
-     * THIS IS DISABLED FOR USE FOR NOW BECAUSE TWITTER DOESN'T HAVE ANY ENDPOINT FOR FETCHING REPLIES.
-     * THE DATA THIS RETURNS IS INCONSISTENT!
-     * 
-     * @returns The list of replies of the given tweet
-     * @param id The id of the tweet whose replies are to be fetched
-     * @param count The total number of replies to fetch
-     * @param all Whether to fetch list of all replies
-     * @param cursor The cursor to the batch of replies to fetch
-     * @param repliesCount The total number of replies to the target tweet
-     */
-    /*
-    async resolveTweetReplies(id: string, count: number, all: boolean, cursor: string, repliesCount: number): Promise<any[]> {
-        let replies: any[] = [];                                                    // To store the list of replies
-        let next: Cursor = new Cursor(cursor);                                      // To store cursor to next batch
-        let total: number = 0;                                                      // To store the total number of replies fetched
-
-        // If all replies are to be fetched
-        count = (all || count > repliesCount) ? repliesCount : count;
-
-        // Repeatedly fetching data as long as total data fetched is less than requried
-        while (total < count) {
-            // Getting the data
-            const res = await this.context.tweets.getTweetReplies(id, next.value);
-
-            // If data is available
-            if (res.list?.length) {
-                // Adding fetched replies to list of replies
-                replies = replies.concat(res.list);
-
-                // Updating total replies fetched
-                total = replies.length;
-
-                // Getting cursor to next batch
-                next = res.next as Cursor;
-            }
-            // If no more data is available
-            else {
-                break;
-            }
-        }
-
-        // Adding the cursor to the end of list of data
-        replies.push(next);
-
-        return replies;
-    }
-    */
 }

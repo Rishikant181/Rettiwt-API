@@ -17,5 +17,6 @@ export enum AuthenticationErrors {
  */
 export enum DataErrors {
     UserNotFound = "An account with given username/id was not found",
-    TweetNotFound = "A tweet with the given id was not found"
+    TweetNotFound = "A tweet with the given id was not found",
+    NoMatchingTweetsFound = "No tweets matching the given filter were found"
 };
