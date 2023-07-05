@@ -44,6 +44,7 @@ export * from './services/util/CacheService';
 export * from './services/util/FetcherService';
 
 // Exporting types
+export { ITweetFilter } from 'rettiwt-core';
 export * from './types/Args';
 export { IAuthCookie } from './types/Authentication';
 export * from './types/Rettiwt';
@@ -52,7 +53,7 @@ export * from './types/Tweet';
 export * from './types/User';
 
 // Exporting models
-export * from './models/args/TweetFilter';
+export { TweetFilter } from 'rettiwt-core';
 export * from './models/args/TweetListArgs';
 export * from './models/args/UserListArgs';
 export * from './models/auth/AuthCookie';

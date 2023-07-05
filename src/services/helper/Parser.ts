@@ -1,5 +1,5 @@
-// TYPES
-import { ITweetFilter } from '../../types/Args';
+// PACKAGE
+import { ITweetFilter } from 'rettiwt-core';
 
 /**
  * @returns Whether the given json object is empty or not

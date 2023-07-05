@@ -1,10 +1,10 @@
 // PACKAGE
 import { GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql'
+import { TweetFilter } from 'rettiwt-core';
 
 // TYPES
 import { User } from '../types/UserTypes';
 import { Tweet, TweetList } from '../types/TweetTypes';
-import { TweetFilter } from '../../models/args/TweetFilter';
 
 // RESOLVERS
 import UserResolver from '../resolvers/UserResolver';

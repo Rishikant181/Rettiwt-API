@@ -7,7 +7,8 @@ import {
     ITweetFavoritersResponse,
     ITweetRetweetersResponse,
     ITweet as IRawTweet,
-    IUser as IRawUser
+    IUser as IRawUser,
+    TweetFilter
 } from 'rettiwt-core';
 
 // SERVICES
@@ -18,7 +19,6 @@ import { AuthService } from "../auth/AuthService";
 import { Tweet } from "../../models/data/Tweet";
 import { User } from "../../models/data/User";
 import { TweetListArgs } from "../../models/args/TweetListArgs";
-import { TweetFilter } from "../../models/args/TweetFilter";
 import { CursoredData } from '../../models/data/CursoredData';
 
 // ENUMS

@@ -1,9 +1,11 @@
+// PACKAGE
+import { TweetFilter } from 'rettiwt-core';
+
 // RESOLVERS
 import ResolverBase from './ResolverBase';
 
 // TYPES
-import { IDataContext } from '../../types/Rettiwt'
-import { TweetFilter } from '../../models/args/TweetFilter';
+import { IDataContext } from '../../types/Rettiwt';
 import { Cursor } from '../../models/data/CursoredData';
 import { DataErrors } from '../enums/Errors';
 
