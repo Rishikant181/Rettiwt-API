@@ -4,7 +4,6 @@ import {
     ITweetDetailsResponse,
     ITweetFavoritersResponse,
     ITweetRetweetersResponse,
-    EErrors
 } from 'rettiwt-core';
 
 
@@ -35,16 +34,20 @@ export function extractTweets(res: ITweetSearchResponse): IDataExtract {
         // Destructuring raw list of tweets
         res.data.search_by_raw_query.search_timeline.timeline.instructions.filter(item => item.type === 'TimelineAddEntries')[0].entries?.forEach(entry => {
             // If entry is of type tweet and tweet exists
-            if (entry.entryId.indexOf('tweet') != -1 && entry.content.itemContent?.tweet_results.result.__typename === 'Tweet') {
+            if (entry.entryId.includes('tweet') && entry.content.itemContent?.tweet_results.result.__typename === 'Tweet') {
                 required.push(entry.content.itemContent.tweet_results.result);
                 users.push(entry.content.itemContent.tweet_results.result.core?.user_results.result);
                 tweets.push(entry.content.itemContent.tweet_results.result);
             }
-            // If entry is of type cursor
-            else if (entry.entryId.indexOf('cursor-bottom')) {
-                cursor = entry.content.value + '';
+            // If entry is of type cursor and cursor exists
+            else if (entry.entryId.includes('cursor-bottom')) {
+                cursor = entry.content.value ?? '';
             }
         });
+        // If cursor not found in 'TimelineAddEntries', getting cursor from 'TimlineReplaceEntry'
+        if (!cursor) {
+            cursor = res.data.search_by_raw_query.search_timeline.timeline.instructions.filter(item => item.entry_id_to_replace?.includes('cursor-bottom'))[0].entry?.content.value ?? '';
+        }
     }
 
     // Returning the data
