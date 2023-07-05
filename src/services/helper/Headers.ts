@@ -43,18 +43,18 @@ export function guestHeader(guestCred: IGuestCredentials): any {
  * @returns The header for making HTTP request for logging in
  */
 export function loginHeader(guestCred: IGuestCredentials, cookie: string): any {
-    return {
-        'sec-ch-ua': '"Not_A Brand";v="99", "Microsoft Edge";v="109", "Chromium";v="109"',
-        'x-twitter-client-language': 'en',
-        'sec-ch-ua-mobile': '?0',
-        'authorization': guestCred.authToken,
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 Edg/109.0.1518.78',
-        'content-type': 'application/json',
-        'x-guest-token': guestCred.guestToken,
-        'x-twitter-active-user': 'yes',
-        'sec-ch-ua-platform': '"Windows"',
-        'Accept': '*/*',
-        'host': 'twitter.com',
-        'Cookie': cookie
-    };
+    return [
+        `sec-ch-ua: "Not_A Brand";v="99", "Microsoft Edge";v="109", "Chromium";v="109"`,
+        `x-twitter-client-language: en`,
+        `sec-ch-ua-mobile: ?0`,
+        `authorization: ${guestCred.authToken}`,
+        `User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 Edg/109.0.1518.78`,
+        `content-type: application/json`,
+        `x-guest-token: ${guestCred.guestToken}`,
+        `x-twitter-active-user: yes`,
+        `sec-ch-ua-platform: "Windows"`,
+        `Accept: */*`,
+        `host: api.twitter.com`,
+        `Cookie: ${cookie}`
+    ];
 }
