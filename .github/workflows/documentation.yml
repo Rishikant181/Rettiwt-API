@@ -1,11 +1,10 @@
-name: build-documentation
+name: Documentation
 run-name: Building the documentation for the release
 on:
     push:
         branches: release
 
 jobs:
-    # Creating the documentation
     documentation:
         runs-on: ubuntu-latest
         permissions:
@@ -16,7 +15,7 @@ jobs:
               with:
                   node-version: '18.x'
             # Installing dependencies
-            - run: npm install
+            - run: yarn
 
             # Generating documentations
             - run: npx typedoc src/index.ts
