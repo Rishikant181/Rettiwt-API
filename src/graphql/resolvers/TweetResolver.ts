@@ -101,20 +101,8 @@ export default class TweetResolver extends ResolverBase {
         // If all tweets are to be fetched
         count = all ? quoteCount : count;
 
-        // Preparing the filter to use
-        let filter = {
-            words: [],
-            hashtags: [],
-            fromUsers: [],
-            toUsers: [],
-            mentions: [],
-            startDate: '',
-            endDate: '',
-            quoted: id
-        };
-
         // Fetching the quotes using resolveTweets method
-        quotes = await this.resolveTweets(filter, count, cursor).catch(error => {
+        quotes = await this.resolveTweets({ quoted: id }, count, cursor).catch(error => {
             throw this.getGraphQLError(error);
         });
 

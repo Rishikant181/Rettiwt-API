@@ -56,11 +56,10 @@ export class TweetService extends FetcherService {
         }
 
         // Objectifying parameters
-        let filter: TweetFilter = new TweetFilter(query);
         let args: TweetListArgs = new TweetListArgs(count, cursor);
 
         // Preparing the URL
-        const url: string = new Url(EResourceType.TWEET_SEARCH, { filter: filter.toString(), count: args.count, cursor: args.cursor }).toString();
+        const url: string = new Url(EResourceType.TWEET_SEARCH, { filter: query, count: args.count, cursor: args.cursor }).toString();
 
         // Getting the raw data
         let res = await this.request<ITweetSearchResponse>(url).then(res => res.data);
