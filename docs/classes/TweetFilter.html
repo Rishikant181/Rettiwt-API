@@ -49,6 +49,7 @@
 <a href="TweetFilter.html#startDate" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>start<wbr/>Date?</span></a>
 <a href="TweetFilter.html#toUsers" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>to<wbr/>Users?</span></a>
 <a href="TweetFilter.html#words" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>words?</span></a>
+<a href="TweetFilter.html#dateToTwitterString" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>date<wbr/>To<wbr/>Twitter<wbr/>String</span></a>
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Methods</h3>
@@ -70,19 +71,17 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="TweetFilter.html" class="tsd-signature-type" data-tsd-kind="Class">TweetFilter</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/rettiwt-core/dist/models/payloads/TweetFilter.d.ts:58</li></ul></aside></li></ul></section></section>
+<li>Defined in node_modules/rettiwt-core/dist/models/payloads/TweetFilter.d.ts:50</li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-external"><a id="endDate" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>end<wbr/>Date</span><a href="#endDate" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature">end<wbr/>Date<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
+<div class="tsd-signature">end<wbr/>Date<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Date</span></div>
 <div class="tsd-comment tsd-typography"><p>The date upto which tweets are to be searched.</p>
-
-<h3>Remarks</h3><p>Must be in the format YYYY-MM-DD.</p>
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/ITweetFilter.html">ITweetFilter</a>.<a href="../interfaces/ITweetFilter.html#endDate">endDate</a></p>
 <ul>
-<li>Defined in node_modules/rettiwt-core/dist/models/payloads/TweetFilter.d.ts:45</li></ul></aside></section>
+<li>Defined in node_modules/rettiwt-core/dist/models/payloads/TweetFilter.d.ts:37</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-external"><a id="fromUsers" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>from<wbr/>Users</span><a href="#fromUsers" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">from<wbr/>Users<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
@@ -112,7 +111,7 @@
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/ITweetFilter.html">ITweetFilter</a>.<a href="../interfaces/ITweetFilter.html#links">links</a></p>
 <ul>
-<li>Defined in node_modules/rettiwt-core/dist/models/payloads/TweetFilter.d.ts:54</li></ul></aside></section>
+<li>Defined in node_modules/rettiwt-core/dist/models/payloads/TweetFilter.d.ts:46</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-external"><a id="mentions" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>mentions</span><a href="#mentions" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">mentions<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
@@ -130,7 +129,7 @@
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/ITweetFilter.html">ITweetFilter</a>.<a href="../interfaces/ITweetFilter.html#quoted">quoted</a></p>
 <ul>
-<li>Defined in node_modules/rettiwt-core/dist/models/payloads/TweetFilter.d.ts:49</li></ul></aside></section>
+<li>Defined in node_modules/rettiwt-core/dist/models/payloads/TweetFilter.d.ts:41</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-external"><a id="sinceId" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>since<wbr/>Id</span><a href="#sinceId" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">since<wbr/>Id<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -138,17 +137,15 @@
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/ITweetFilter.html">ITweetFilter</a>.<a href="../interfaces/ITweetFilter.html#sinceId">sinceId</a></p>
 <ul>
-<li>Defined in node_modules/rettiwt-core/dist/models/payloads/TweetFilter.d.ts:47</li></ul></aside></section>
+<li>Defined in node_modules/rettiwt-core/dist/models/payloads/TweetFilter.d.ts:39</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-external"><a id="startDate" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>start<wbr/>Date</span><a href="#startDate" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature">start<wbr/>Date<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
+<div class="tsd-signature">start<wbr/>Date<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Date</span></div>
 <div class="tsd-comment tsd-typography"><p>The date starting from which tweets are to be searched.</p>
-
-<h3>Remarks</h3><p>Must be in the format YYYY-MM-DD.</p>
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/ITweetFilter.html">ITweetFilter</a>.<a href="../interfaces/ITweetFilter.html#startDate">startDate</a></p>
 <ul>
-<li>Defined in node_modules/rettiwt-core/dist/models/payloads/TweetFilter.d.ts:39</li></ul></aside></section>
+<li>Defined in node_modules/rettiwt-core/dist/models/payloads/TweetFilter.d.ts:35</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-external"><a id="toUsers" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>to<wbr/>Users</span><a href="#toUsers" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">to<wbr/>Users<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
@@ -166,7 +163,19 @@
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/ITweetFilter.html">ITweetFilter</a>.<a href="../interfaces/ITweetFilter.html#words">words</a></p>
 <ul>
-<li>Defined in node_modules/rettiwt-core/dist/models/payloads/TweetFilter.d.ts:9</li></ul></aside></section></section>
+<li>Defined in node_modules/rettiwt-core/dist/models/payloads/TweetFilter.d.ts:9</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external"><a id="dateToTwitterString" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <code class="tsd-tag ts-flagPrivate">Private</code> <span>date<wbr/>To<wbr/>Twitter<wbr/>String</span><a href="#dateToTwitterString" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">date<wbr/>To<wbr/>Twitter<wbr/>String<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+<div class="tsd-comment tsd-typography"><p>Convert Date object to Twitter string representation.
+eg - 2023-06-23_11:21:06_UTC</p>
+
+<h3>Param</h3><p>The date object to convert.</p>
+
+<h3>Returns</h3><p>The Twitter string representation of the date.</p>
+</div><aside class="tsd-sources">
+<ul>
+<li>Defined in node_modules/rettiwt-core/dist/models/payloads/TweetFilter.d.ts:64</li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external"><a id="toString" class="tsd-anchor"></a>
@@ -180,7 +189,7 @@
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/rettiwt-core/dist/models/payloads/TweetFilter.d.ts:64</li></ul></aside></li></ul></section></section></div>
+<li>Defined in node_modules/rettiwt-core/dist/models/payloads/TweetFilter.d.ts:56</li></ul></aside></li></ul></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
@@ -217,6 +226,7 @@
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-external"><a href="TweetFilter.html#startDate" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>start<wbr/>Date?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-external"><a href="TweetFilter.html#toUsers" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>to<wbr/>Users?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-external"><a href="TweetFilter.html#words" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>words?</a></li>
+<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external"><a href="TweetFilter.html#dateToTwitterString" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>date<wbr/>To<wbr/>Twitter<wbr/>String</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="TweetFilter.html#toString" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>to<wbr/>String</a></li></ul></li></ul></nav></div></div>
 <div class="container tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
