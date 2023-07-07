@@ -1,6 +1,5 @@
 // PACKAGE
 import { GraphQLBoolean, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLUnionType, GraphQLType } from 'graphql';
-import { TweetFilter } from 'rettiwt-core';
 
 // TYPES
 import { Tweet, TweetList } from './TweetTypes'

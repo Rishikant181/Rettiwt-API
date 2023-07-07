@@ -51,7 +51,13 @@ export const rootQuery = new GraphQLObjectType({
                 count: { type: GraphQLInt, defaultValue: 10 },
                 cursor: { type: GraphQLString, defaultValue: '' }
             },
-            resolve: (parent, args, context) => new TweetResolver(context).resolveTweets(args as TweetFilter, args.count, args.cursor)
+            resolve: (parent, args, context) => {
+                // Converting string dates to Date objects
+                args.startDate = args.startDate ? new Date(args.startDate) : undefined;
+                args.endDate = args.endDate ? new Date(args.endDate) : undefined;
+
+                return new TweetResolver(context).resolveTweets(args as TweetFilter, args.count, args.cursor)
+            }
         },
         Login: {
             type: new GraphQLObjectType({

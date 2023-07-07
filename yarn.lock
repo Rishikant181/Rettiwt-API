@@ -1316,10 +1316,10 @@ retry@^0.12.0:
   resolved "https://registry.npmjs.org/retry/-/retry-0.12.0.tgz"
   integrity sha512-9LkiTwjUh6rT555DtE9rTX+BKByPfrMzEAtnlEtdEwr3Nkffwiihqe2bWADg+OQRjt9gl6ICdmB/ZFDCGAtSow==
 
-rettiwt-core@2.3.0:
-  version "2.3.0"
-  resolved "https://registry.npmjs.org/rettiwt-core/-/rettiwt-core-2.3.0.tgz"
-  integrity sha512-mfyMRqMVtpQ7plxTL6mqhr2LWWS2YbO1owxz3FhE4r6y6DNJ7V9lRxtl+wTpqg7/SSrA5Q/ijTAPrztaQ7zoFQ==
+rettiwt-core@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/rettiwt-core/-/rettiwt-core-2.4.0.tgz#dbd13814f738ba6cd65706e1d585292761d78b86"
+  integrity sha512-y130KHD/JD5ddaspCZOGP6GBH9JsRc+X5SUxXc/kMh9a4gJ8avb++V/PXFlVqo51KFz1DkyehFPlDeFzHNqDJg==
   dependencies:
     class-validator "0.14.0"
 
