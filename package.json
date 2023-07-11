@@ -6,7 +6,7 @@
 	"description": "An API for fetching data from TwitterAPI, without any rate limits!",
 	"scripts": {
 		"build": "tsc",
-		"debug": "nodemon ./dist/debug/index.js --inspect=0.0.0.0:9229"
+		"debug": "nodemon ./dist/index.js --inspect=0.0.0.0:9229"
 	},
 	"repository": {
 		"type": "git",
