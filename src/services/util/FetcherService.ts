@@ -40,15 +40,7 @@ export class FetcherService {
      * @param cred The credentials to use for authenticating against Twitter API.
      */
     constructor(cred: AuthCredential) {
-        // Initializing the credentials
-        this.cred = new AuthCredential();
-        this.cred.authToken = cred.authToken;
-        this.cred.authenticationType = cred.authenticationType;
-        this.cred.cookies = cred.cookies;
-        this.cred.csrfToken = cred.csrfToken;
-        this.cred.guestToken = cred.guestToken;
-
-        // Initialzing cache service instance
+        this.cred = cred;
         this.cache = CacheService.getInstance();
     }
 

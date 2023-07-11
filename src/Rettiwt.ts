@@ -10,10 +10,13 @@ import { TweetService } from "./services/data/TweetService";
  * 
  * @public
  * 
- * @param credential The credential to use to fetch data. * 
+ * @param apiKey The API key (cookie string) to use for fetching data.
  * @returns The API for fetching user and tweet data.
  */
-export const Rettiwt = (cred: AuthCredential) => {
+export const Rettiwt = (apiKey: string) => {
+    // Preparing auth credentials
+    const cred: AuthCredential = new AuthCredential(apiKey.split(';'));
+
     // Using the auth service instance to create data services instances
     return {
         users: new UserService(cred),
