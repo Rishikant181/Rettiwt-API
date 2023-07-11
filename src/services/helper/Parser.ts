@@ -1,6 +1,3 @@
-// PACKAGE
-import { ITweetFilter } from 'rettiwt-core';
-
 /**
  * @returns Whether the given json object is empty or not
  * @param data The input JSON object which needs to be checked

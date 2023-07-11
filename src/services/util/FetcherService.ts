@@ -1,9 +1,9 @@
 // PACKAGES
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosHeaders, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { ITweet as IRawTweet, IUser as IRawUser } from 'rettiwt-core';
+import { AuthCredential } from 'rettiwt-auth';
 
 // SERVICES
-import { AuthService } from '../auth/AuthService';
 import { CacheService } from './CacheService';
 
 // MODELS
@@ -12,10 +12,6 @@ import { User } from '../../models/data/User';
 
 // ENUMS
 import { HttpStatus } from "../../enums/HTTP";
-
-// HELPERS
-import * as Headers from '../helper/Headers'
-import { CurlyOptions } from 'node-libcurl/dist/curly';
 
 /**
  * The different types of http requests.
@@ -33,23 +29,19 @@ export enum HttpMethods {
  */
 export class FetcherService {
     // MEMBER DATA
-    /** The authentication service instance. */
-    protected auth: AuthService;
+    /** The credential to use for authenticating against Twitter API. */
+    protected cred: AuthCredential;
 
     /** The caching service instance. */
     private cache: CacheService;
 
-    /** Whether instance has been authenticated or not. */
-    protected isAuthenticated: boolean;
-
     // MEMBER METHODS
     /**
-     * @param auth The AuthService instance to use for authentication.
+     * @param cred The credentials to use for authenticating against Twitter API.
      */
-    constructor(auth: AuthService) {
-        this.auth = auth;
+    constructor(cred: AuthCredential) {
+        this.cred = cred;
         this.cache = CacheService.getInstance();
-        this.isAuthenticated = this.auth.isAuthenticated;
     }
 
     /**
@@ -90,15 +82,10 @@ export class FetcherService {
          * Creating the request configuration based on the params
          */
         let config: AxiosRequestConfig = {
-            /**
-             * If authorization is required, using the authenticated header, using the authentication credentiials.
-             * Else, using the guest header, using the guest credentials.
-             */
-            headers: authenticate ? Headers.authorizedHeader(await this.auth.getAuthCredentials()) : Headers.guestHeader(await this.auth.getGuestCredentials()),
+            headers: this.cred.toHeader() as AxiosHeaders,
         };
 
         /**
-         * While making requests, if data is to be sent, the JSON data first need to be stringified.
          * After making the request, the response is then passed to HTTP error handling middlware for HTTP error handling.
          */
         // If POST request is to be made

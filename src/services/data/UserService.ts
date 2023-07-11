@@ -9,10 +9,10 @@ import {
     ITweet as IRawTweet,
     IUser as IRawUser
 } from 'rettiwt-core';
+import { AuthCredential } from 'rettiwt-auth';
 
 // SERVICES
 import { FetcherService } from '../util/FetcherService';
-import { AuthService } from '../auth/AuthService';
 
 // MODELS
 import { User } from '../../models/data/User';
@@ -21,9 +21,6 @@ import { Tweet } from '../../models/data/Tweet';
 
 // TYPES
 import { CursoredData } from '../../models/data/CursoredData';
-
-// ENUMS
-import { AuthenticationErrors } from '../../enums/Errors';
 
 // EXTRACTORS
 import * as UserExtractors from '../helper/extractors/Users';
@@ -34,10 +31,10 @@ import { TweetService } from './TweetService';
  */
 export class UserService extends FetcherService {
     /**
-     * @param auth The AuthService instance to use for authentication.
+     * @param cred The credentials to use for authenticating against Twitter API.
      */
-    constructor(auth: AuthService) {
-        super(auth);
+    constructor(cred: AuthCredential) {
+        super(cred);
     }
 
     /**
@@ -45,15 +42,9 @@ export class UserService extends FetcherService {
      * 
      * @returns The details of the given user.
      * 
-     * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
      * @throws {@link Errors.DataErrors.UserNotFound} error, if no user with the given username was found.
      */
     async getUserDetails(id: string): Promise<User> {
-        // If user is not authenticated, abort
-        if (!this.isAuthenticated) {
-            throw new Error(AuthenticationErrors.NotAuthenticated);
-        }
-
         let res: IUserDetailsResponse;
 
         // Getting data from cache
@@ -86,44 +77,15 @@ export class UserService extends FetcherService {
 
     /**
      * @param userId The rest id of the target user.
-     * @param count The number of tweets to fetch, must be >= 40 (when no cursor is provided) and <=100.
-     * @param cursor The cursor to next batch. If blank, first batch is fetched.
-     * 
-     * @returns The list of tweets nade by the target user.
-     * 
-     * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
-     * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count has been provided.
-     * @throws {@link Errors.DataErrors.UserNotFound} error, if invalid count has been provided.
-     * 
-     * @deprecated Use [this](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#getTweets) method instead. It's better in every possible way!
-     */
-    async getUserTweets(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-        // Getting the username of the target user
-        const userName: string = (await this.getUserDetails(userId)).userName;
-
-        // Getting the tweets of the target user
-        return new TweetService(this.auth).getTweets({
-            fromUsers: [userName]
-        }, count, cursor);
-    }
-
-    /**
-     * @param userId The rest id of the target user.
      * @param count The number of following to fetch, must be >= 40 (when no cursor is provided) and <=100.
      * @param cursor The cursor to next batch. If blank, first batch is fetched.
      * 
      * @returns The list of users followed by the target user.
      * 
-     * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
      * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count has been provided.
      * @throws {@link Errors.DataErrors.UserNotFound} error, if invalid count has been provided.
      */
     async getUserFollowing(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-        // If user is not authenticated, abort
-        if (!this.isAuthenticated) {
-            throw new Error(AuthenticationErrors.NotAuthenticated);
-        }
-
         // Objectifying parameters
         let args: UserListArgs = new UserListArgs(count, cursor);
 
@@ -152,16 +114,10 @@ export class UserService extends FetcherService {
      * 
      * @returns The list of users following the target user.
      * 
-     * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
      * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count has been provided.
      * @throws {@link Errors.DataErrors.UserNotFound} error, if invalid count has been provided.
      */
     async getUserFollowers(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-        // If user is not authenticated, abort
-        if (!this.isAuthenticated) {
-            throw new Error(AuthenticationErrors.NotAuthenticated);
-        }
-
         // Objectifying parameters
         let args: UserListArgs = new UserListArgs(count, cursor);
 
@@ -189,15 +145,8 @@ export class UserService extends FetcherService {
      * @param cursor The cursor to next batch. If blank, first batch is fetched, must be >= 40 (when no cursor is provided) and <=100.
      * 
      * @returns The list of tweets liked by the target user.
-     * 
-     * @throws {@link AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
      */
     async getUserLikes(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-        // If user is not authenticated, abort
-        if (!this.isAuthenticated) {
-            throw new Error(AuthenticationErrors.NotAuthenticated);
-        }
-
         // Objectifying parameters
         let args: UserListArgs = new UserListArgs(count, cursor);
 

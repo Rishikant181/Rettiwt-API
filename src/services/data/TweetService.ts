@@ -10,19 +10,16 @@ import {
     IUser as IRawUser,
     TweetFilter
 } from 'rettiwt-core';
+import { AuthCredential } from 'rettiwt-auth';
 
 // SERVICES
 import { FetcherService } from "../util/FetcherService";
-import { AuthService } from "../auth/AuthService";
 
 // MODELS
 import { Tweet } from "../../models/data/Tweet";
 import { User } from "../../models/data/User";
 import { TweetListArgs } from "../../models/args/TweetListArgs";
 import { CursoredData } from '../../models/data/CursoredData';
-
-// ENUMS
-import { AuthenticationErrors } from '../../enums/Errors';
 
 // EXTRACTORS
 import * as TweetExtractors from "../helper/extractors/Tweets";
@@ -33,10 +30,10 @@ import * as TweetExtractors from "../helper/extractors/Tweets";
  */
 export class TweetService extends FetcherService {
     /**
-     * @param auth The AuthService instance to use for authentication.
+     * @param cred The credentials to use for authenticating against Twitter API.
      */
-    constructor(auth: AuthService) {
-        super(auth);
+    constructor(cred: AuthCredential) {
+        super(cred);
     }
 
     /**
@@ -46,15 +43,9 @@ export class TweetService extends FetcherService {
      * 
      * @returns The list of tweets that match the given filter.
      * 
-     * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
      * @throws {@link Errors.ValidationErrors.InvalidCount} error, if an invalid count has been provided.
      */
     async getTweets(query: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-        // If user is not authenticated, abort
-        if (!this.isAuthenticated) {
-            throw new Error(AuthenticationErrors.NotAuthenticated);
-        }
-
         // Objectifying parameters
         let args: TweetListArgs = new TweetListArgs(count, cursor);
 
@@ -84,15 +75,9 @@ export class TweetService extends FetcherService {
      * 
      * @returns The details of a single tweet with the given tweet id.
      * 
-     * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
      * @throws {@link Errors.DataErrors.TweetNotFound} error, if no tweet with the given id was found.
      */
     async getTweetDetails(id: string): Promise<Tweet> {
-        // If user is not authenticated, abort
-        if (!this.isAuthenticated) {
-            throw new Error(AuthenticationErrors.NotAuthenticated);
-        }
-
         // Getting data from cache
         let cachedData = await this.readData(id);
 
@@ -126,16 +111,10 @@ export class TweetService extends FetcherService {
      * 
      * @returns The list of users who liked the given tweet.
      * 
-     * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
      * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count is provided.
      * @throws {@link Errors.DataErrors.TweetNotFound} error, if no tweet with the given id was found.
      */
     async getTweetLikers(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-        // If user is not authenticated, abort
-        if (!this.isAuthenticated) {
-            throw new Error(AuthenticationErrors.NotAuthenticated);
-        }
-
         // Objectifying parameters
         let args: TweetListArgs = new TweetListArgs(count, cursor);
 
@@ -164,16 +143,10 @@ export class TweetService extends FetcherService {
      * 
      * @returns The list of users who retweeted the given tweet.
      * 
-     * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
      * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count is provided.
      * @throws {@link Errors.DataErrors.TweetNotFound} error, if no tweet with the given id was found.
      */
     async getTweetRetweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-        // If user is not authenticated, abort
-        if (!this.isAuthenticated) {
-            throw new Error(AuthenticationErrors.NotAuthenticated);
-        }
-
         // Objectifying parameters
         let args: TweetListArgs = new TweetListArgs(count, cursor);
 
