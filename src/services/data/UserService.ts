@@ -24,7 +24,6 @@ import { CursoredData } from '../../models/data/CursoredData';
 
 // EXTRACTORS
 import * as UserExtractors from '../helper/extractors/Users';
-import { TweetService } from './TweetService';
 
 /**
  * Handles fetching of data related to user account
@@ -39,9 +38,7 @@ export class UserService extends FetcherService {
 
     /**
      * @param id The id/username of the target user.
-     * 
      * @returns The details of the given user.
-     * 
      * @throws {@link Errors.DataErrors.UserNotFound} error, if no user with the given username was found.
      */
     async getUserDetails(id: string): Promise<User> {
@@ -79,9 +76,7 @@ export class UserService extends FetcherService {
      * @param userId The rest id of the target user.
      * @param count The number of following to fetch, must be >= 40 (when no cursor is provided) and <=100.
      * @param cursor The cursor to next batch. If blank, first batch is fetched.
-     * 
      * @returns The list of users followed by the target user.
-     * 
      * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count has been provided.
      * @throws {@link Errors.DataErrors.UserNotFound} error, if invalid count has been provided.
      */
@@ -111,9 +106,7 @@ export class UserService extends FetcherService {
      * @param userId The rest id of the target user.
      * @param count The number of followers to fetch, must be >= 40 (when no cursor is provided) and <=100.
      * @param cursor The cursor to next batch. If blank, first batch is fetched.
-     * 
      * @returns The list of users following the target user.
-     * 
      * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count has been provided.
      * @throws {@link Errors.DataErrors.UserNotFound} error, if invalid count has been provided.
      */
@@ -143,7 +136,6 @@ export class UserService extends FetcherService {
      * @param userId The rest id of the target user.
      * @param count The number of likes to fetch.
      * @param cursor The cursor to next batch. If blank, first batch is fetched, must be >= 40 (when no cursor is provided) and <=100.
-     * 
      * @returns The list of tweets liked by the target user.
      */
     async getUserLikes(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
