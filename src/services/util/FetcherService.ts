@@ -82,7 +82,7 @@ export class FetcherService {
          * Creating the request configuration based on the params
          */
         let config: AxiosRequestConfig = {
-            headers: this.cred.toHeader() as AxiosHeaders,
+            headers: JSON.parse(JSON.stringify(this.cred.toHeader()))
         };
 
         /**
