@@ -1,13 +1,12 @@
 {
 	"name": "rettiwt-api",
-	"version": "1.4.0",
+	"version": "2.0.0",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"description": "An API for fetching data from TwitterAPI, without any rate limits!",
 	"scripts": {
 		"build": "tsc",
-		"start": "node ./dist/server.js",
-		"debug": "nodemon ./dist/server.js --inspect=0.0.0.0:9229"
+		"debug": "nodemon ./dist/debug/index.js --inspect=0.0.0.0:9229"
 	},
 	"repository": {
 		"type": "git",
