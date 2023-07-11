@@ -32,6 +32,7 @@
 		"node-cache": "5.1.2",
 		"node-libcurl": "3.0.0",
 		"reflect-metadata": "0.1.13",
+		"rettiwt-auth": "^1.0.2",
 		"rettiwt-core": "2.4.0"
 	},
 	"devDependencies": {
