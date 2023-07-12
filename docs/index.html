@@ -16,92 +16,71 @@
 <a href="#rettiwt-api" id="rettiwt-api" style="color: inherit; text-decoration: none;">
   <h1>Rettiwt-API</h1>
 </a>
-<p>An API for fetching data from TwitterAPI, without any rate limits!</p>
+<p>An API for fetching data from Twitter for free!</p>
 
-<a href="#this-api-is-not-a-replacement-of-official-twitter-api-since-it-does-not-scale" id="this-api-is-not-a-replacement-of-official-twitter-api-since-it-does-not-scale" style="color: inherit; text-decoration: none;">
-  <h4><strong>This API is not a replacement of official Twitter API, since it does not scale</strong></h4>
+<a href="#prerequisites" id="prerequisites" style="color: inherit; text-decoration: none;">
+  <h2>Prerequisites</h2>
 </a>
+<ul>
+<li>NodeJS 18.14.2</li>
+<li>A working Twitter account</li>
+</ul>
 
-<a href="#it-works-well-for-small-applications-like-the-one-side-project-you-started-and-are-never-gonna-finish" id="it-works-well-for-small-applications-like-the-one-side-project-you-started-and-are-never-gonna-finish" style="color: inherit; text-decoration: none;">
-  <h4><strong>It works well for small applications like the one side project you started and are never gonna finish</strong></h4>
+<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
+  <h2>Installation</h2>
 </a>
-
-<a href="#if-you-want-something-that-will-scale-as-you-application-grows-twitter-api-is-the-way-to-go" id="if-you-want-something-that-will-scale-as-you-application-grows-twitter-api-is-the-way-to-go" style="color: inherit; text-decoration: none;">
-  <h4><strong>If you want something that will scale as you application grows, Twitter API is the way to go</strong></h4>
-</a>
-
-<a href="#the-api-can-either-be-used-as-a-graphql-server-or-as-a-standalone-npm-library" id="the-api-can-either-be-used-as-a-graphql-server-or-as-a-standalone-npm-library" style="color: inherit; text-decoration: none;">
-  <h4><strong>The API can either be used as a GraphQL Server or as a standalone npm library</strong></h4>
-</a>
-
-<a href="#for-complete-documentation-and-api-reference-head-over-to-the-documentation" id="for-complete-documentation-and-api-reference-head-over-to-the-documentation" style="color: inherit; text-decoration: none;">
-  <h4><strong>For complete documentation and API reference, head over to the <a href="https://rishikant181.github.io/Rettiwt-API/">documentation</a></strong></h4>
-</a>
-
-<a href="#1-graphql-server" id="1-graphql-server" style="color: inherit; text-decoration: none;">
-  <h2>1. GraphQL Server</h2>
-</a>
-<p>Using the API as a GraphQL enables complex nested queries to fetch data from twitter.<br>To use the API as a server,</p>
 <ol>
-<li>Clone the repo&#39;s release branch</li>
-<li>Build the project using &#39;npm run build&#39;</li>
-<li>Set the environment variables:<ul>
-<li>APP_PORT -&gt; The port number where the server will listen to</li>
-<li>DEVELOPMENT -&gt; Whether to run the server in development mode or not</li>
+<li>Initialize a new Node.JS project using the command <code>npm init</code>.</li>
+<li>Install the package either via npm or yarn:<ul>
+<li>For npm, use the command <code>npm install --save rettiwt-api</code></li>
+<li>For yarn, use the command <code>yarn add rettiwt-api</code></li>
 </ul>
 </li>
-<li>Start the server using &#39;npm run start&#39;</li>
-<li>Make graphql requests to server listening on localhost:port/graphql</li>
 </ol>
-<p><strong>You can go to localhost:port/graphql to see the graphql schema</strong></p>
+<p>Although the above process initializes a new project, that is, in fact, not necessary and you may add it to an existing Node.JS project and omit the first step altogether.</p>
 
-<a href="#2-npm-package" id="2-npm-package" style="color: inherit; text-decoration: none;">
-  <h2>2. NPM Package</h2>
+<a href="#getting-started" id="getting-started" style="color: inherit; text-decoration: none;">
+  <h2>Getting started</h2>
 </a>
-<p>The API can also be used as a standalone npm package.<br>The limitation is that, large number of data cannot be fetched automatically, and the data needs to fetched in batches, by using cursors.
-Further nested queries are not possible.<br>To use the API as an npm package,</p>
 <ol>
-<li>In your node project, install the package using &#39;npm install --save rettiwt-api&#39;.</li>
-<li>import { Rettiwt } from &#39;rettiwt-api&#39;.<pre><code><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">rettiwt</span><span class="hl-1"> = </span><span class="hl-3">Rettiwt</span><span class="hl-1">({</span><br/><span class="hl-1">    &lt;put your authentication tokens here. For </span><span class="hl-4">details</span><span class="hl-1">, refer to section below&gt;</span><br/><span class="hl-1">}).</span>
-</code></pre>
-</li>
+<li>Generate credentials using <a href="https://www.npmjs.com/package/rettiwt-auth">rettiwt-auth</a> package, by following these <a href="https://rishikant181.github.io/Rettiwt-Auth/#md:cli-usage">steps</a>.</li>
+<li>Copy the value of the &#39;cookies&#39; field from the generated credentials and store it somewhere safe. Let&#39;s call this our API_KEY.</li>
+<li>Create a new instance of Rettiwt, passing in the API key:<br><code>const rettiwt = Rettiwt(API_KEY);</code></li>
 <li>Use the created <a href="https://rishikant181.github.io/Rettiwt-API/functions/Rettiwt.html">Rettiwt</a> instance to fetch data from Twitter.</li>
 </ol>
-<p><strong>The authentication tokens can be generated in the following way:</strong></p>
+<p><strong>Note:</strong> The API_KEY (cookie) that we generated, is a very sensitive information and provides all access to the Twitter account. Therefore, it is generally recommended to store it as an environment variable and use it from there.</p>
 
-<a href="#a-graphql-server" id="a-graphql-server" style="color: inherit; text-decoration: none;">
-  <h4>A. GraphQL Server:</h4>
+<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+  <h2>Usage</h2>
 </a>
-<ol>
-<li>Make the following query to the GraphQL server:</li>
-</ol>
-<pre><code><span class="hl-1">        </span><span class="hl-4">query</span><span class="hl-1"> {</span><br/><span class="hl-1">                </span><span class="hl-3">Login</span><span class="hl-1">(</span><span class="hl-4">email</span><span class="hl-1">: </span><span class="hl-5">&quot;your_twitter_email&quot;</span><span class="hl-1">, </span><span class="hl-4">userName</span><span class="hl-1">: </span><span class="hl-5">&quot;your_twitter_username&quot;</span><span class="hl-1">, </span><span class="hl-4">password</span><span class="hl-1">: </span><span class="hl-5">&quot;your_twitter_password&quot;</span><span class="hl-1">) {</span><br/><span class="hl-1">                        </span><span class="hl-4">auth_token</span><br/><span class="hl-1">                        </span><span class="hl-4">ct0</span><br/><span class="hl-1">                        </span><span class="hl-4">kdt</span><br/><span class="hl-1">                        </span><span class="hl-4">twid</span><br/><span class="hl-1">                }</span><br/><span class="hl-1">        }</span>
+<p>The following examples may help you to get started using the library:</p>
+
+<a href="#1-getting-the-details-of-a-target-twitter-user" id="1-getting-the-details-of-a-target-twitter-user" style="color: inherit; text-decoration: none;">
+  <h3>1. Getting the details of a target Twitter user</h3>
+</a>
+<pre><code><span class="hl-0">// Creating a new Rettiwt instance using the API_KEY</span><br/><span class="hl-1">const</span><span class="hl-2"> </span><span class="hl-3">rettiwt</span><span class="hl-2"> = </span><span class="hl-4">Rettiwt</span><span class="hl-2">(</span><span class="hl-3">API_KEY</span><span class="hl-2">);</span><br/><br/><span class="hl-0">// Fetching the details of the user whose username is &lt;username&gt;</span><br/><span class="hl-5">rettiwt</span><span class="hl-2">.</span><span class="hl-5">users</span><span class="hl-2">.</span><span class="hl-4">getUserDetails</span><span class="hl-2">(</span><span class="hl-6">&#39;&lt;username&gt;&#39;</span><span class="hl-2">)</span><br/><span class="hl-2">.</span><span class="hl-4">then</span><span class="hl-2">(</span><span class="hl-5">details</span><span class="hl-2"> </span><span class="hl-1">=&gt;</span><span class="hl-2"> {</span><br/><span class="hl-2">    ...</span><br/><span class="hl-2">})</span><br/><span class="hl-2">.</span><span class="hl-4">catch</span><span class="hl-2">(</span><span class="hl-5">error</span><span class="hl-2"> </span><span class="hl-1">=&gt;</span><span class="hl-2"> {</span><br/><span class="hl-2">    ...</span><br/><span class="hl-2">});</span>
 </code></pre>
-<ol>
-<li>This will give you 4 tokens: &#39;auth_token&#39;, &#39;ct0&#39;, &#39;kdt&#39; and &#39;twid&#39;.</li>
-<li>Pass the four tokens in the headers while making any request made to the GraphQL server for fetching data.</li>
-</ol>
 
-<a href="#b-npm-library" id="b-npm-library" style="color: inherit; text-decoration: none;">
-  <h4>B. NPM Library:</h4>
+<a href="#2-getting-the-list-of-tweets-that-match-a-given-filter" id="2-getting-the-list-of-tweets-that-match-a-given-filter" style="color: inherit; text-decoration: none;">
+  <h3>2. Getting the list of tweets that match a given filter</h3>
 </a>
-<ol>
-<li>Use the <a href="https://rishikant181.github.io/Rettiwt-API/classes/AccountService.html#login">Rettiwt().account.login</a> method to get back 4 tokens: &#39;auth_token&#39;, &#39;ct0&#39;, &#39;kdt&#39; and &#39;twid&#39;.</li>
-<li>Use these four tokens to initialize a new <a href="https://rishikant181.github.io/Rettiwt-API/functions/Rettiwt.html">Rettiwt</a> instance as follows:</li>
-</ol>
-<pre><code><span class="hl-1">        </span><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">rettiwt</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">Rettiwt</span><span class="hl-1">({</span><br/><span class="hl-1">                </span><span class="hl-4">auth_token:</span><span class="hl-1"> </span><span class="hl-5">&quot;received_auth_token&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">                </span><span class="hl-4">ct0:</span><span class="hl-1"> </span><span class="hl-5">&quot;received_ct0_token&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">                </span><span class="hl-4">kdt:</span><span class="hl-1"> </span><span class="hl-5">&quot;received_kdt_token&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">                </span><span class="hl-4">twid:</span><span class="hl-1"> </span><span class="hl-5">&quot;received_twid_token&quot;</span><br/><span class="hl-1">        });</span>
+<pre><code><span class="hl-0">// Creating a new Rettiwt instance using the API_KEY</span><br/><span class="hl-1">const</span><span class="hl-2"> </span><span class="hl-3">rettiwt</span><span class="hl-2"> = </span><span class="hl-4">Rettiwt</span><span class="hl-2">(</span><span class="hl-3">API_KEY</span><span class="hl-2">);</span><br/><br/><span class="hl-0">/**</span><br/><span class="hl-0"> * Fetching the list of tweets that:</span><br/><span class="hl-0"> * 	- is made by a user with username &lt;username&gt;,</span><br/><span class="hl-0"> * 	- contains the words &lt;word1&gt; and &lt;word2&gt;</span><br/><span class="hl-0"> */</span><br/><span class="hl-5">rettiwt</span><span class="hl-2">.</span><span class="hl-5">tweets</span><span class="hl-2">.</span><span class="hl-4">getTweets</span><span class="hl-2">({</span><br/><span class="hl-2">    </span><span class="hl-5">fromUsers:</span><span class="hl-2"> [</span><span class="hl-6">&#39;&lt;username&gt;&#39;</span><span class="hl-2">],</span><br/><span class="hl-2">    </span><span class="hl-5">words:</span><span class="hl-2"> [</span><span class="hl-6">&#39;&lt;word1&gt;&#39;</span><span class="hl-2">, </span><span class="hl-6">&#39;&lt;word2&gt;&#39;</span><span class="hl-2">]</span><br/><span class="hl-2">})</span><br/><span class="hl-2">.</span><span class="hl-4">then</span><span class="hl-2">(</span><span class="hl-5">data</span><span class="hl-2"> </span><span class="hl-1">=&gt;</span><span class="hl-2"> {</span><br/><span class="hl-2">    ...</span><br/><span class="hl-2">})</span><br/><span class="hl-2">.</span><span class="hl-4">catch</span><span class="hl-2">(</span><span class="hl-5">err</span><span class="hl-2"> </span><span class="hl-1">=&gt;</span><span class="hl-2"> {</span><br/><span class="hl-2">    ...</span><br/><span class="hl-2">})</span>
 </code></pre>
-<ol start="3">
-<li>Use the created <a href="https://rishikant181.github.io/Rettiwt-API/functions/Rettiwt.html">Rettiwt</a> instance to fetch data.</li>
-</ol>
+<p>For more information regarding the different available filter options, please refer to <a href="https://rishikant181.github.io/Rettiwt-API/classes/TweetFilter.html">TweetFilter</a>.</p>
 
-<a href="#due-to-changes-in-twitter-api-all-methods-now-require-logging-in-and-using-the-tokens-for-authentication" id="due-to-changes-in-twitter-api-all-methods-now-require-logging-in-and-using-the-tokens-for-authentication" style="color: inherit; text-decoration: none;">
-  <h3><strong>Due to changes in Twitter API, all methods now require logging in and using the tokens for authentication</strong></h3>
+<a href="#api-reference" id="api-reference" style="color: inherit; text-decoration: none;">
+  <h2>API Reference</h2>
 </a>
+<p>The complete API reference can be found at <a href="https://rishikant181.github.io/Rettiwt-API/">this</a> page.</p>
 
-<a href="#i39m-not-responsible-if-you-get-your-twitter-account-banned" id="i39m-not-responsible-if-you-get-your-twitter-account-banned" style="color: inherit; text-decoration: none;">
-  <h3><strong>I&#39;M NOT RESPONSIBLE IF YOU GET YOUR TWITTER ACCOUNT BANNED!</strong></h3>
+<a href="#additional-information" id="additional-information" style="color: inherit; text-decoration: none;">
+  <h2>Additional information</h2>
 </a>
+<ul>
+<li>This API uses the cookies of a Twitter account to fetch data from Twitter and as such, there is always a chance (altough a measly one) of getting the account banned by Twitter algorithm.</li>
+<li>From personal experience, not a single one of my accounts has ever been banned by using this library, and this is coming from someone who has been using his primary Twitter account to fetch large amounts of data from Twitter for over 1.5 years now, since the conception of this project.</li>
+<li>There have been no reports of accounts getting banned, but you have been warned, even though the chances of getting banned is negligible, it is not zero!</li>
+</ul>
 </div></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
@@ -127,10 +106,7 @@ Further nested queries are not possible.<br>To use the API as an npm package,</p
 <nav class="tsd-navigation secondary menu-sticky">
 <ul>
 <li class="tsd-kind-enum"><a href="enums/HttpMethods.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-enum)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-8-path"></rect><path d="M9.45 16V7.24H14.49V8.224H10.518V10.936H14.07V11.908H10.518V15.016H14.49V16H9.45Z" fill="var(--color-text)" id="icon-8-text"></path></svg>Http<wbr/>Methods</a></li>
-<li class="tsd-kind-class"><a href="classes/AccountService.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-128-path"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)" id="icon-128-text"></path></svg>Account<wbr/>Service</a></li>
-<li class="tsd-kind-class"><a href="classes/AuthCookie.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Auth<wbr/>Cookie</a></li>
-<li class="tsd-kind-class"><a href="classes/AuthService.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Auth<wbr/>Service</a></li>
-<li class="tsd-kind-class"><a href="classes/CacheService.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Cache<wbr/>Service</a></li>
+<li class="tsd-kind-class"><a href="classes/CacheService.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-128-path"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)" id="icon-128-text"></path></svg>Cache<wbr/>Service</a></li>
 <li class="tsd-kind-class"><a href="classes/Cursor.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Cursor</a></li>
 <li class="tsd-kind-class"><a href="classes/CursoredData.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Cursored<wbr/>Data</a></li>
 <li class="tsd-kind-class tsd-is-external"><a href="classes/DataValidationError.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Data<wbr/>Validation<wbr/>Error</a></li>
@@ -143,8 +119,7 @@ Further nested queries are not possible.<br>To use the API as an npm package,</p
 <li class="tsd-kind-class"><a href="classes/User.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>User</a></li>
 <li class="tsd-kind-class"><a href="classes/UserListArgs.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>User<wbr/>List<wbr/>Args</a></li>
 <li class="tsd-kind-class"><a href="classes/UserService.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>User<wbr/>Service</a></li>
-<li class="tsd-kind-interface"><a href="interfaces/IAuthCookie.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg>IAuth<wbr/>Cookie</a></li>
-<li class="tsd-kind-interface"><a href="interfaces/ICursor.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>ICursor</a></li>
+<li class="tsd-kind-interface"><a href="interfaces/ICursor.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg>ICursor</a></li>
 <li class="tsd-kind-interface"><a href="interfaces/ICursoredData.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>ICursored<wbr/>Data</a></li>
 <li class="tsd-kind-interface"><a href="interfaces/IDataContext.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>IData<wbr/>Context</a></li>
 <li class="tsd-kind-interface tsd-is-external"><a href="interfaces/IDataValidationError.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>IData<wbr/>Validation<wbr/>Error</a></li>

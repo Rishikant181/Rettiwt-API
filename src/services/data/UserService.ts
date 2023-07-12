@@ -39,7 +39,6 @@ export class UserService extends FetcherService {
     /**
      * @param id The id/username of the target user.
      * @returns The details of the given user.
-     * @throws {@link Errors.DataErrors.UserNotFound} error, if no user with the given username was found.
      */
     async getUserDetails(id: string): Promise<User> {
         let res: IUserDetailsResponse;
@@ -77,8 +76,6 @@ export class UserService extends FetcherService {
      * @param count The number of following to fetch, must be >= 40 (when no cursor is provided) and <=100.
      * @param cursor The cursor to next batch. If blank, first batch is fetched.
      * @returns The list of users followed by the target user.
-     * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count has been provided.
-     * @throws {@link Errors.DataErrors.UserNotFound} error, if invalid count has been provided.
      */
     async getUserFollowing(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
         // Objectifying parameters
@@ -107,8 +104,6 @@ export class UserService extends FetcherService {
      * @param count The number of followers to fetch, must be >= 40 (when no cursor is provided) and <=100.
      * @param cursor The cursor to next batch. If blank, first batch is fetched.
      * @returns The list of users following the target user.
-     * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count has been provided.
-     * @throws {@link Errors.DataErrors.UserNotFound} error, if invalid count has been provided.
      */
     async getUserFollowers(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
         // Objectifying parameters

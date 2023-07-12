@@ -42,7 +42,6 @@ export class TweetService extends FetcherService {
      * @param count The number of tweets to fetch, must be >= 10 (when no cursor is provided) and <= 20
      * @param cursor The cursor to the next batch of tweets. If blank, first batch is fetched.
      * @returns The list of tweets that match the given filter.
-     * @throws {@link Errors.ValidationErrors.InvalidCount} error, if an invalid count has been provided.
      */
     async getTweets(query: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
         // Objectifying parameters
@@ -72,7 +71,6 @@ export class TweetService extends FetcherService {
     /**
      * @param id The id of the target tweet.
      * @returns The details of a single tweet with the given tweet id.
-     * @throws {@link Errors.DataErrors.TweetNotFound} error, if no tweet with the given id was found.
      */
     async getTweetDetails(id: string): Promise<Tweet> {
         // Getting data from cache
@@ -106,8 +104,6 @@ export class TweetService extends FetcherService {
      * @param count The batch size of the list, must be >= 10 (when no cursor is provided) and <= 20.
      * @param cursor The cursor to the next batch of users. If blank, first batch is fetched.
      * @returns The list of users who liked the given tweet.
-     * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count is provided.
-     * @throws {@link Errors.DataErrors.TweetNotFound} error, if no tweet with the given id was found.
      */
     async getTweetLikers(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
         // Objectifying parameters
@@ -136,8 +132,6 @@ export class TweetService extends FetcherService {
      * @param count The batch size of the list, must be >= 10 (when no cursor is provided) and <= 100.
      * @param cursor The cursor to the next batch of users. If blank, first batch is fetched.
      * @returns The list of users who retweeted the given tweet.
-     * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count is provided.
-     * @throws {@link Errors.DataErrors.TweetNotFound} error, if no tweet with the given id was found.
      */
     async getTweetRetweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
         // Objectifying parameters
