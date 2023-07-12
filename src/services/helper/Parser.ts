@@ -2,7 +2,7 @@
  * @returns Whether the given json object is empty or not
  * @param data The input JSON object which needs to be checked
  */
-export function isJSONEmpty(data: any): boolean {
+export function isJSONEmpty(data: object): boolean {
 	// If the JSON has any keys, it's not empty
 	if (Object.keys(data).length == 0) {
 		return true;
@@ -19,22 +19,22 @@ export function isJSONEmpty(data: any): boolean {
  * @param key The key to search for
  * @param last Whether to begin searching from the end
  */
-export function findJSONKey(data: any, key: string, last: boolean = false): any {
-	let jsonStr: string = JSON.stringify(data); // To store the input data as string
+export function findJSONKey(data: object, key: string, last: boolean = false): string {
+	const jsonStr: string = JSON.stringify(data); // To store the input data as string
 	let extStr: string = ''; // To store the extracted string
-	let len: number = jsonStr.length; // To store length of input data
+	const len: number = jsonStr.length; // To store length of input data
 
 	/**
 	 * Getting the position to start extracting data from
 	 * This the position just after the key plus ":"
 	 * */
-	let start: number = !last
+	const start: number = !last
 		? jsonStr.indexOf(`"${key}"`) + `"${key}":`.length
 		: jsonStr.lastIndexOf(`"${key}"`) + `"${key}":`.length;
 
 	for (let i = start; i < len; i++) {
 		// Getting each character
-		let char: string = jsonStr[i];
+		const char: string = jsonStr[i];
 
 		// If not ending of value
 		if (char != ',' && char != '\n') {
@@ -60,7 +60,7 @@ export function findJSONKey(data: any, key: string, last: boolean = false): any 
  * @returns A list of data from a singleton data
  * @param data The data to be converted to a list
  */
-export function dataToList(data: any | any[]): any[] {
+export function dataToList(data: object | object[]): object[] {
 	// If data is already a list
 	if (Array.isArray(data)) {
 		return data;

@@ -1,6 +1,5 @@
 // PACKAGES
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { ITweet as IRawTweet, IUser as IRawUser } from 'rettiwt-core';
+import axios, { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from 'axios';
 import { AuthCredential } from 'rettiwt-auth';
 
 // SERVICES
@@ -12,6 +11,7 @@ import { User } from '../../models/data/User';
 
 // ENUMS
 import { EHttpStatus } from '../../enums/HTTP';
+import { IDataExtract } from '../../types/Resolvers';
 
 /**
  * The base service that handles all HTTP requests.
@@ -60,8 +60,8 @@ export class FetcherService {
 		/**
 		 * Creating the request configuration based on the params
 		 */
-		let config: AxiosRequestConfig = {
-			headers: JSON.parse(JSON.stringify(this.cred.toHeader())),
+		const config: AxiosRequestConfig = {
+			headers: JSON.parse(JSON.stringify(this.cred.toHeader())) as AxiosRequestHeaders,
 		};
 
 		/**
@@ -75,13 +75,13 @@ export class FetcherService {
 	 *
 	 * @param data The extracted data to be cached.
 	 */
-	protected cacheData(data: any): void {
+	protected cacheData(data: IDataExtract<object>): void {
 		/**
 		 * The extracted data is in raw form.
 		 * This raw data is deserialized into the respective known types.
 		 */
-		const users = data.users.map((user: IRawUser) => new User(user));
-		const tweets = data.tweets.map((tweet: IRawTweet) => new Tweet(tweet));
+		const users = data.users.map((user) => new User(user));
+		const tweets = data.tweets.map((tweet) => new Tweet(tweet));
 
 		// Caching the data
 		this.cache.write(users);
@@ -94,8 +94,8 @@ export class FetcherService {
 	 * @param id The id of the data to be read from cache.
 	 * @returns The data with the given id. If does not exists, returns undefined.
 	 */
-	protected readData(id: string): any {
+	protected readData<T>(id: string): T {
 		// Reading data from cache
-		return this.cache.read(id);
+		return this.cache.read(id) as T;
 	}
 }

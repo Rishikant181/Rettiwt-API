@@ -41,12 +41,12 @@ export class CacheService {
 	 * @returns Whether writing to cache was successful or not.
 	 * @remarks In order to cache data, the data to be cached must have a unique 'id' field.
 	 */
-	public write(data: any): void {
+	public write(data: object): void {
 		// Converting the data to a list of data
-		data = Parsers.dataToList(data);
+		const dataList: object[] = Parsers.dataToList(data);
 
 		// Iterating over the list of data
-		for (const item of data) {
+		for (const item of dataList) {
 			// Storing whether data is already cached or not
 			const cached = this.client.has(Parsers.findJSONKey(item, 'id'));
 
@@ -64,7 +64,7 @@ export class CacheService {
 	 * @param id The id id of the data to be fetched from cache.
 	 * @returns The data with the given id.
 	 */
-	public read(id: string): any {
+	public read(id: string): unknown {
 		// Getting data from cache
 		const res = this.client.get(id);
 

@@ -1,3 +1,6 @@
+// PACKAGE
+import { ITweet, IUser } from 'rettiwt-core';
+
 /**
  * The data returned from extractor methods.
  *
@@ -11,8 +14,8 @@ export interface IDataExtract<T> {
 	cursor: string;
 
 	/** Additional extracted user details. */
-	users: unknown[];
+	users: IUser[];
 
 	/** Additional extracted tweet details */
-	tweets: unknown[];
+	tweets: ITweet[];
 }

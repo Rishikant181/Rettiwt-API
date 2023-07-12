@@ -44,7 +44,7 @@ export class UserService extends FetcherService {
 		let res: IUserDetailsResponse;
 
 		// Getting data from cache
-		let cachedData = await this.readData(id);
+		const cachedData = this.readData<User>(id);
 
 		// If data exists in cache
 		if (cachedData) {

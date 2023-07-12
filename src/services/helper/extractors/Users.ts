@@ -1,7 +1,14 @@
 /* eslint-disable */
 
 // PACKAGE
-import { ITweet, IUser, IUserDetailsResponse, IUserFollowersResponse, IUserFollowingResponse, IUserLikesResponse } from 'rettiwt-core';
+import {
+	ITweet,
+	IUser,
+	IUserDetailsResponse,
+	IUserFollowersResponse,
+	IUserFollowingResponse,
+	IUserLikesResponse,
+} from 'rettiwt-core';
 
 // TYPES
 import { IDataExtract } from '../../../types/Resolvers';

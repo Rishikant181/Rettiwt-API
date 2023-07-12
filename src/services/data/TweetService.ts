@@ -78,7 +78,7 @@ export class TweetService extends FetcherService {
 	 */
 	async getTweetDetails(id: string): Promise<Tweet> {
 		// Getting data from cache
-		let cachedData = await this.readData(id);
+		const cachedData = this.readData<Tweet>(id);
 
 		// If data exists in cache
 		if (cachedData) {
