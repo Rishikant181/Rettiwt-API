@@ -54,8 +54,8 @@ const rettiwt = Rettiwt(API_KEY);
 
 /**
  * Fetching the list of tweets that:
- * 	- is made by a user with username <username>,
- * 	- contains the words <word1> and <word2>
+ * 	- are made by a user with username <username>,
+ * 	- contain the words <word1> and <word2>
  */
 rettiwt.tweets.getTweets({
 	fromUsers: ['<username>'],
