@@ -32,9 +32,9 @@
 		"rettiwt-core": "2.4.0"
 	},
 	"devDependencies": {
-		"@types/node": "17.0.24",
+		"@types/node": "20.4.1",
 		"nodemon": "2.0.20",
-		"typedoc": "0.23.26",
-		"typescript": "4.6.4"
+		"typedoc": "0.24.8",
+		"typescript": "5.1.6"
 	}
 }
