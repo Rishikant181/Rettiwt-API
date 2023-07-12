@@ -96,10 +96,13 @@ export class FetcherService {
 			required = findByFilter<T>(data, '__typename', 'User');
 		}
 
+		/**
+		 * Returning the data after filtering out partial data.
+		 */
 		return {
 			required: required,
-			tweets: findByFilter<IRawTweet>(data, '__typename', 'Tweet'),
-			users: findByFilter<IRawUser>(data, '__typename', 'User'),
+			tweets: findByFilter<IRawTweet>(data, '__typename', 'Tweet').filter(tweet => tweet.rest_id),
+			users: findByFilter<IRawUser>(data, '__typename', 'User').filter(user => user.rest_id),
 			cursor: findByFilter<IRawCursor>(data, 'cursorType', 'Bottom')[0]?.value ?? ''
 		}
 	}
