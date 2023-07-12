@@ -59,13 +59,13 @@ export class UserService extends FetcherService {
 			res = await this.request<IUserDetailsResponse>(url).then((res) => res.data);
 
 			// Extracting data
-			let data = UserExtractors.extractUserDetails(res);
+			const data = UserExtractors.extractUserDetails(res);
 
 			// Caching data
 			this.cacheData(data);
 
 			// Parsing data
-			let user = new User(data.required[0]);
+			const user = new User(data.required[0]);
 
 			return user;
 		}
@@ -79,7 +79,7 @@ export class UserService extends FetcherService {
 	 */
 	async getUserFollowing(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Objectifying parameters
-		let args: UserListArgs = new UserListArgs(count, cursor);
+		const args: UserListArgs = new UserListArgs(count, cursor);
 
 		// Preparing the URL
 		const url: string = new Url(EResourceType.USER_FOLLOWING, {
@@ -89,16 +89,16 @@ export class UserService extends FetcherService {
 		}).toString();
 
 		// Fetchin the raw data
-		let res = await this.request<IUserFollowingResponse>(url).then((res) => res.data);
+		const res = await this.request<IUserFollowingResponse>(url).then((res) => res.data);
 
 		// Extracting data
-		let data = UserExtractors.extractUserFollow(res);
+		const data = UserExtractors.extractUserFollow(res);
 
 		// Caching data
 		this.cacheData(data);
 
 		// Parsing data
-		let users = data.required.map((item: IRawUser) => new User(item));
+		const users = data.required.map((item: IRawUser) => new User(item));
 
 		return new CursoredData<User>(users, data.cursor);
 	}
@@ -111,7 +111,7 @@ export class UserService extends FetcherService {
 	 */
 	async getUserFollowers(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Objectifying parameters
-		let args: UserListArgs = new UserListArgs(count, cursor);
+		const args: UserListArgs = new UserListArgs(count, cursor);
 
 		// Preparing the URL
 		const url: string = new Url(EResourceType.USER_FOLLOWERS, {
@@ -121,16 +121,16 @@ export class UserService extends FetcherService {
 		}).toString();
 
 		// Fetching the raw data
-		let res = await this.request<IUserFollowersResponse>(url).then((res) => res.data);
+		const res = await this.request<IUserFollowersResponse>(url).then((res) => res.data);
 
 		// Extracting data
-		let data = UserExtractors.extractUserFollow(res);
+		const data = UserExtractors.extractUserFollow(res);
 
 		// Caching data
 		this.cacheData(data);
 
 		// Parsing data
-		let users = data.required.map((item: IRawUser) => new User(item));
+		const users = data.required.map((item: IRawUser) => new User(item));
 
 		return new CursoredData<User>(users, data.cursor);
 	}
@@ -143,7 +143,7 @@ export class UserService extends FetcherService {
 	 */
 	async getUserLikes(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Objectifying parameters
-		let args: UserListArgs = new UserListArgs(count, cursor);
+		const args: UserListArgs = new UserListArgs(count, cursor);
 
 		// Preparing the URL
 		const url: string = new Url(EResourceType.USER_LIKES, {
@@ -153,16 +153,16 @@ export class UserService extends FetcherService {
 		}).toString();
 
 		// Fetching the raw data
-		let res = await this.request<IUserLikesResponse>(url).then((res) => res.data);
+		const res = await this.request<IUserLikesResponse>(url).then((res) => res.data);
 
 		// Extracting data
-		let data = UserExtractors.extractUserLikes(res);
+		const data = UserExtractors.extractUserLikes(res);
 
 		// Caching data
 		this.cacheData(data);
 
 		// Parsing data
-		let tweets = data.required.map((item: IRawTweet) => new Tweet(item));
+		const tweets = data.required.map((item: IRawTweet) => new Tweet(item));
 
 		return new CursoredData<Tweet>(tweets, data.cursor);
 	}

@@ -28,21 +28,21 @@ export class TweetEntities implements ITweetEntities {
 	constructor(entities: IRawTweetEntities) {
 		// Extracting user mentions
 		if (entities.user_mentions) {
-			for (let user of entities.user_mentions) {
+			for (const user of entities.user_mentions) {
 				this.mentionedUsers.push(user.id_str);
 			}
 		}
 
 		// Extracting urls
 		if (entities.urls) {
-			for (let url of entities.urls) {
+			for (const url of entities.urls) {
 				this.urls.push(url.expanded_url);
 			}
 		}
 
 		// Extracting hashtags
 		if (entities.hashtags) {
-			for (let hashtag of entities.hashtags) {
+			for (const hashtag of entities.hashtags) {
 				this.hashtags.push(hashtag.text);
 			}
 		}

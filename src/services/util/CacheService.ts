@@ -46,9 +46,9 @@ export class CacheService {
 		data = Parsers.dataToList(data);
 
 		// Iterating over the list of data
-		for (let item of data) {
+		for (const item of data) {
 			// Storing whether data is already cached or not
-			let cached = this.client.has(Parsers.findJSONKey(item, 'id'));
+			const cached = this.client.has(Parsers.findJSONKey(item, 'id'));
 
 			// If data does not already exist in cache
 			if (!cached) {
@@ -66,7 +66,7 @@ export class CacheService {
 	 */
 	public read(id: string): any {
 		// Getting data from cache
-		let res = this.client.get(id);
+		const res = this.client.get(id);
 
 		return res;
 	}

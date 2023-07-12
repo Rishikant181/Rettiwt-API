@@ -2,6 +2,8 @@
 
 // PACKAGE
 import {
+	ITweet,
+	IUser,
 	ITweetSearchResponse,
 	ITweetDetailsResponse,
 	ITweetFavoritersResponse,
@@ -19,7 +21,7 @@ import * as Parsers from '../Parser';
  * @returns The raw tweets data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
-export function extractTweets(res: ITweetSearchResponse): IDataExtract {
+export function extractTweets(res: ITweetSearchResponse): IDataExtract<ITweet> {
 	let required: any[] = []; // To store the reqruied raw data
 	let cursor: string = ''; // To store the cursor to next batch
 	let users: any[] = []; // To store additional user data
@@ -73,7 +75,7 @@ export function extractTweets(res: ITweetSearchResponse): IDataExtract {
  * @param res The raw response received from TwitterAPI
  * @param tweetId The rest id of the tweet to fetch
  */
-export function extractTweet(res: ITweetDetailsResponse, tweetId: string): IDataExtract {
+export function extractTweet(res: ITweetDetailsResponse, tweetId: string): IDataExtract<ITweet> {
 	let required: any[] = []; // To store the reqruied raw data
 	let cursor: string = ''; // To store the cursor to next batch
 	let users: any[] = []; // To store additional user data
@@ -130,7 +132,7 @@ export function extractTweet(res: ITweetDetailsResponse, tweetId: string): IData
  * @returns The raw tweet likers data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
-export function extractTweetLikers(res: ITweetFavoritersResponse): IDataExtract {
+export function extractTweetLikers(res: ITweetFavoritersResponse): IDataExtract<IUser> {
 	let required: any[] = []; // To store the reqruied raw data
 	let cursor: string = ''; // To store the cursor to next batch
 	let users: any[] = []; // To store additional user data
@@ -175,7 +177,7 @@ export function extractTweetLikers(res: ITweetFavoritersResponse): IDataExtract 
  * @returns The raw tweet retweeters data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
-export function extractTweetRetweeters(res: ITweetRetweetersResponse): IDataExtract {
+export function extractTweetRetweeters(res: ITweetRetweetersResponse): IDataExtract<IUser> {
 	let required: any[] = []; // To store the reqruied raw data
 	let cursor: string = ''; // To store the cursor to next batch
 	let users: any[] = []; // To store additional user data

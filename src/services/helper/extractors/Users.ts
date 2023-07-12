@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 // PACKAGE
-import { IUserDetailsResponse, IUserFollowersResponse, IUserFollowingResponse, IUserLikesResponse } from 'rettiwt-core';
+import { ITweet, IUser, IUserDetailsResponse, IUserFollowersResponse, IUserFollowingResponse, IUserLikesResponse } from 'rettiwt-core';
 
 // TYPES
 import { IDataExtract } from '../../../types/Resolvers';
@@ -14,7 +14,7 @@ import * as Parsers from '../Parser';
  * @returns The raw user account data formatted and sorted into required and additional data
  * @param res The raw response received from Twitter
  */
-export function extractUserDetails(res: IUserDetailsResponse): IDataExtract {
+export function extractUserDetails(res: IUserDetailsResponse): IDataExtract<IUser> {
 	let required: any[] = []; // To store the reqruied raw data
 	let cursor: string = ''; // To store the cursor to next batch
 	let users: any[] = []; // To store additional user data
@@ -42,7 +42,7 @@ export function extractUserDetails(res: IUserDetailsResponse): IDataExtract {
  * @returns The raw user following/followers data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
-export function extractUserFollow(res: IUserFollowersResponse | IUserFollowingResponse): IDataExtract {
+export function extractUserFollow(res: IUserFollowersResponse | IUserFollowingResponse): IDataExtract<IUser> {
 	let required: any[] = []; // To store the reqruied raw data
 	let cursor: string = ''; // To store the cursor to next batch
 	let users: any[] = []; // To store additional user data
@@ -98,7 +98,7 @@ export function extractUserFollow(res: IUserFollowersResponse | IUserFollowingRe
  * @returns The raw user likes data formatted and sorted into required and additional data
  * @param res The raw response received from TwitterAPI
  */
-export function extractUserLikes(res: IUserLikesResponse): IDataExtract {
+export function extractUserLikes(res: IUserLikesResponse): IDataExtract<ITweet> {
 	let required: any[] = []; // To store the reqruied raw data
 	let cursor: string = ''; // To store the cursor to next batch
 	let users: any[] = []; // To store additional user data

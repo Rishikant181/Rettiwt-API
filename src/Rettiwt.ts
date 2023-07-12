@@ -6,7 +6,7 @@ import { UserService } from './services/data/UserService';
 import { TweetService } from './services/data/TweetService';
 
 /**
- * The instance for fetching data from Twitter.
+ * The class for fetching data from Twitter.
  *
  * @public
  *

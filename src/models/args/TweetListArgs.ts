@@ -19,7 +19,7 @@ export class TweetListArgs implements IListArgs {
 	@IsInt()
 	@IsOptional()
 	@Max(100)
-	@ValidateIf((ob) => ob.cursor.length == 0)
+	@ValidateIf((ob: TweetListArgs) => ob.cursor.length == 0)
 	@Min(10)
 	count: number;
 

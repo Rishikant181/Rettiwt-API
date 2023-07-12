@@ -14,14 +14,6 @@ import { User } from '../../models/data/User';
 import { EHttpStatus } from '../../enums/HTTP';
 
 /**
- * The different types of http requests.
- */
-export enum HttpMethods {
-	POST = 'POST',
-	GET = 'GET',
-}
-
-/**
  * The base service that handles all HTTP requests.
  *
  * @internal
@@ -88,8 +80,8 @@ export class FetcherService {
 		 * The extracted data is in raw form.
 		 * This raw data is deserialized into the respective known types.
 		 */
-		let users = data.users.map((user: IRawUser) => new User(user));
-		let tweets = data.tweets.map((tweet: IRawTweet) => new Tweet(tweet));
+		const users = data.users.map((user: IRawUser) => new User(user));
+		const tweets = data.tweets.map((tweet: IRawTweet) => new Tweet(tweet));
 
 		// Caching the data
 		this.cache.write(users);

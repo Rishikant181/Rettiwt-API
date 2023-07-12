@@ -19,7 +19,7 @@ export class UserListArgs implements IListArgs {
 	@IsInt()
 	@IsOptional()
 	@Max(100)
-	@ValidateIf((ob) => ob.cursor.length == 0)
+	@ValidateIf((ob: UserListArgs) => ob.cursor.length == 0)
 	@Min(40)
 	count: number;
 

@@ -45,7 +45,7 @@ export class TweetService extends FetcherService {
 	 */
 	async getTweets(query: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Objectifying parameters
-		let args: TweetListArgs = new TweetListArgs(count, cursor);
+		const args: TweetListArgs = new TweetListArgs(count, cursor);
 
 		// Preparing the URL
 		const url: string = new Url(EResourceType.TWEET_SEARCH, {
@@ -55,16 +55,16 @@ export class TweetService extends FetcherService {
 		}).toString();
 
 		// Getting the raw data
-		let res = await this.request<ITweetSearchResponse>(url).then((res) => res.data);
+		const res = await this.request<ITweetSearchResponse>(url).then((res) => res.data);
 
 		// Extracting data
-		let data = TweetExtractors.extractTweets(res);
+		const data = TweetExtractors.extractTweets(res);
 
 		// Caching data
 		this.cacheData(data);
 
 		// Parsing data
-		let tweets = data.required.map((item: IRawTweet) => new Tweet(item));
+		const tweets = data.required.map((item: IRawTweet) => new Tweet(item));
 
 		// Sorting the tweets by date, from recent to oldest
 		tweets.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
@@ -89,16 +89,16 @@ export class TweetService extends FetcherService {
 		const url: string = new Url(EResourceType.TWEET_DETAILS, { id: id }).toString();
 
 		// Fetching the raw data
-		let res = await this.request<ITweetDetailsResponse>(url).then((res) => res.data);
+		const res = await this.request<ITweetDetailsResponse>(url).then((res) => res.data);
 
 		// Extracting data
-		let data = TweetExtractors.extractTweet(res, id);
+		const data = TweetExtractors.extractTweet(res, id);
 
 		// Caching data
 		this.cacheData(data);
 
 		// Parsing data
-		let tweet = new Tweet(data.required[0]);
+		const tweet = new Tweet(data.required[0]);
 
 		return tweet;
 	}
@@ -111,7 +111,7 @@ export class TweetService extends FetcherService {
 	 */
 	async getTweetLikers(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Objectifying parameters
-		let args: TweetListArgs = new TweetListArgs(count, cursor);
+		const args: TweetListArgs = new TweetListArgs(count, cursor);
 
 		// Preparing the URL
 		const url: string = new Url(EResourceType.TWEET_FAVORITERS, {
@@ -121,16 +121,16 @@ export class TweetService extends FetcherService {
 		}).toString();
 
 		// Fetching the raw data
-		let res = await this.request<ITweetFavoritersResponse>(url).then((res) => res.data);
+		const res = await this.request<ITweetFavoritersResponse>(url).then((res) => res.data);
 
 		// Extracting data
-		let data = TweetExtractors.extractTweetLikers(res);
+		const data = TweetExtractors.extractTweetLikers(res);
 
 		// Caching data
 		this.cacheData(data);
 
 		// Parsing data
-		let users = data.required.map((item: IRawUser) => new User(item));
+		const users = data.required.map((item: IRawUser) => new User(item));
 
 		return new CursoredData<User>(users, data.cursor);
 	}
@@ -143,7 +143,7 @@ export class TweetService extends FetcherService {
 	 */
 	async getTweetRetweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Objectifying parameters
-		let args: TweetListArgs = new TweetListArgs(count, cursor);
+		const args: TweetListArgs = new TweetListArgs(count, cursor);
 
 		// Preparing the URL
 		const url: string = new Url(EResourceType.TWEET_RETWEETERS, {
@@ -153,16 +153,16 @@ export class TweetService extends FetcherService {
 		}).toString();
 
 		// Fetching the raw data
-		let res = await this.request<ITweetRetweetersResponse>(url).then((res) => res.data);
+		const res = await this.request<ITweetRetweetersResponse>(url).then((res) => res.data);
 
 		// Extracting data
-		let data = TweetExtractors.extractTweetRetweeters(res);
+		const data = TweetExtractors.extractTweetRetweeters(res);
 
 		// Caching data
 		this.cacheData(data);
 
 		// Parsing data
-		let users = data.required.map((item: IRawUser) => new User(item));
+		const users = data.required.map((item: IRawUser) => new User(item));
 
 		return new CursoredData<User>(users, data.cursor);
 	}
