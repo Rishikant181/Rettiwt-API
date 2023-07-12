@@ -18,6 +18,7 @@ export * from './types/Service';
 export * from './types/Tweet';
 export * from './types/User';
 export { IDataValidationError } from 'rettiwt-core';
+export * from './types/Resolvers';
 
 // Exporting models
 export { TweetFilter } from 'rettiwt-core';

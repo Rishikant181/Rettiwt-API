@@ -92,9 +92,9 @@ export class FetcherService {
 	 * Fetches the data with the given id from the cache.
 	 *
 	 * @param id The id of the data to be read from cache.
-	 * @returns The data with the given id. If does not exists, returns undefined.
+	 * @returns The data with the given id. If does not exist, returns undefined.
 	 */
-	protected readData<T>(id: string): T {
+	protected readData<T>(id: string): T | undefined {
 		// Reading data from cache
 		return this.cache.read(id) as T;
 	}
