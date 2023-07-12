@@ -1,4 +1,5 @@
 // PACKAGES
+import { EResourceType, ITweet as IRawTweet, IUser as IRawUser, ICursor as IRawCursor } from 'rettiwt-core';
 import axios, { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from 'axios';
 import { AuthCredential } from 'rettiwt-auth';
 
@@ -12,6 +13,9 @@ import { User } from '../../models/data/User';
 // ENUMS
 import { EHttpStatus } from '../../enums/HTTP';
 import { IDataExtract } from '../../types/Resolvers';
+
+// HELPERS
+import { findByFilter } from '../../helper/JsonUtils';
 
 /**
  * The base service that handles all HTTP requests.
@@ -68,6 +72,36 @@ export class FetcherService {
 		 * After making the request, the response is then passed to HTTP error handling middlware for HTTP error handling.
 		 */
 		return await axios.get(url, config).then((res) => this.handleHTTPError(res));
+	}
+
+	/**
+	 * Extracts the required data based on the type of resource passed as argument.
+	 * 
+	 * @param data The data from which extraction is to be done.
+	 * @param type The type of data to extract.
+	 * @returns The extracted required data, along with additional data.
+	 */
+	protected extractData<T>(data: NonNullable<unknown>, type: EResourceType): IDataExtract<T> {
+		/**
+		 * The required extracted data.
+		 */
+		let required: T[] = [];
+
+		// For 'Tweet' resources
+		if (type == EResourceType.TWEET_DETAILS || type == EResourceType.TWEET_SEARCH || type == EResourceType.USER_LIKES) {
+			required = findByFilter<T>(data, '__typename', 'Tweet');
+		}
+		// For 'User' resources
+		else {
+			required = findByFilter<T>(data, '__typename', 'User');
+		}
+
+		return {
+			required: required,
+			tweets: findByFilter<IRawTweet>(data, '__typename', 'Tweet'),
+			users: findByFilter<IRawUser>(data, '__typename', 'User'),
+			cursor: findByFilter<IRawCursor>(data, 'cursorType', 'Bottom')[0]?.value ?? ''
+		}
 	}
 
 	/**
