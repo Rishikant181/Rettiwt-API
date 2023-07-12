@@ -5,8 +5,6 @@ import 'reflect-metadata';
 export * from './Rettiwt';
 
 // Exporting classes
-export * from './services/auth/AuthService';
-export * from './services/auth/AccountService';
 export * from './services/data/TweetService';
 export * from './services/data/UserService';
 export * from './services/util/CacheService';
@@ -15,7 +13,6 @@ export * from './services/util/FetcherService';
 // Exporting types
 export { ITweetFilter } from 'rettiwt-core';
 export * from './types/Args';
-export { IAuthCookie } from './types/Authentication';
 export * from './types/Rettiwt';
 export * from './types/Service';
 export * from './types/Tweet';
@@ -26,7 +23,6 @@ export { IDataValidationError } from 'rettiwt-core';
 export { TweetFilter } from 'rettiwt-core';
 export * from './models/args/TweetListArgs';
 export * from './models/args/UserListArgs';
-export { AuthCookie } from './models/auth/AuthCookie';
 export * from './models/data/CursoredData';
 export * from './models/data/Tweet';
 export * from './models/data/User';

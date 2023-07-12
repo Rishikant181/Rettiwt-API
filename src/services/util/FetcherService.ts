@@ -1,9 +1,9 @@
 // PACKAGES
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { ITweet as IRawTweet, IUser as IRawUser } from 'rettiwt-core';
+import { AuthCredential } from 'rettiwt-auth';
 
 // SERVICES
-import { AuthService } from '../auth/AuthService';
 import { CacheService } from './CacheService';
 
 // MODELS
@@ -12,10 +12,6 @@ import { User } from '../../models/data/User';
 
 // ENUMS
 import { HttpStatus } from "../../enums/HTTP";
-
-// HELPERS
-import * as Headers from '../helper/Headers'
-import { CurlyOptions } from 'node-libcurl/dist/curly';
 
 /**
  * The different types of http requests.
@@ -26,39 +22,30 @@ export enum HttpMethods {
 };
 
 /**
- * Handles all HTTP requests.
- * @internal
+ * The base service that handles all HTTP requests.
  * 
- * This serves as the base service from which all other data services derive their behaviour.
+ * @internal
  */
 export class FetcherService {
-    // MEMBER DATA
-    /** The authentication service instance. */
-    protected auth: AuthService;
+    /** The credential to use for authenticating against Twitter API. */
+    private cred: AuthCredential;
 
     /** The caching service instance. */
     private cache: CacheService;
 
-    /** Whether instance has been authenticated or not. */
-    protected isAuthenticated: boolean;
-
-    // MEMBER METHODS
     /**
-     * @param auth The AuthService instance to use for authentication.
+     * @param cred The credentials to use for authenticating against Twitter API.
      */
-    constructor(auth: AuthService) {
-        this.auth = auth;
+    constructor(cred: AuthCredential) {
+        this.cred = cred;
         this.cache = CacheService.getInstance();
-        this.isAuthenticated = this.auth.isAuthenticated;
     }
 
     /**
     * The middleware for handling any HTTP error.
     * 
     * @param res The response object received.
-    * 
     * @returns The received response, if no HTTP errors are found.
-    * 
     * @throws {@link HttpStatus} error, if any HTTP error is found.
     */
     private handleHTTPError(res: AxiosResponse): AxiosResponse {
@@ -81,34 +68,21 @@ export class FetcherService {
      * @param url The url to fetch data from.
      * @param authenticate Whether to authenticate requests or not.
      * @param method The HTTP method (from {@link HttpMethods}) to use.
-     * @param data The data to be sent along with the request (for POST request).
-     * 
+     * @param data The data to be sent along with the request (for POST request).     * 
      * @returns The {@link AxiosResponse} received.
      */
-    protected async request<DataType>(url: string, authenticate: boolean = true, method: HttpMethods = HttpMethods.GET, data?: any): Promise<AxiosResponse<DataType>> {
+    protected async request<DataType>(url: string): Promise<AxiosResponse<DataType>> {
         /**
          * Creating the request configuration based on the params
          */
         let config: AxiosRequestConfig = {
-            /**
-             * If authorization is required, using the authenticated header, using the authentication credentiials.
-             * Else, using the guest header, using the guest credentials.
-             */
-            headers: authenticate ? Headers.authorizedHeader(await this.auth.getAuthCredentials()) : Headers.guestHeader(await this.auth.getGuestCredentials()),
+            headers: JSON.parse(JSON.stringify(this.cred.toHeader()))
         };
 
         /**
-         * While making requests, if data is to be sent, the JSON data first need to be stringified.
          * After making the request, the response is then passed to HTTP error handling middlware for HTTP error handling.
          */
-        // If POST request is to be made
-        if (method == HttpMethods.POST) {
-            return await axios.post(url, data, config).then(res => this.handleHTTPError(res));
-        }
-        // If GET request is to be made
-        else {
-            return await axios.get(url, config).then(res => this.handleHTTPError(res));
-        }
+        return await axios.get(url, config).then(res => this.handleHTTPError(res));
     }
 
     /**
@@ -133,7 +107,6 @@ export class FetcherService {
      * Fetches the data with the given id from the cache.
      * 
      * @param id The id of the data to be read from cache.
-     * 
      * @returns The data with the given id. If does not exists, returns undefined.
      */
     protected readData(id: string): any {

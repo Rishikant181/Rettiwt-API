@@ -10,10 +10,10 @@ import {
     IUser as IRawUser,
     TweetFilter
 } from 'rettiwt-core';
+import { AuthCredential } from 'rettiwt-auth';
 
 // SERVICES
 import { FetcherService } from "../util/FetcherService";
-import { AuthService } from "../auth/AuthService";
 
 // MODELS
 import { Tweet } from "../../models/data/Tweet";
@@ -21,40 +21,30 @@ import { User } from "../../models/data/User";
 import { TweetListArgs } from "../../models/args/TweetListArgs";
 import { CursoredData } from '../../models/data/CursoredData';
 
-// ENUMS
-import { AuthenticationErrors } from '../../enums/Errors';
-
 // EXTRACTORS
 import * as TweetExtractors from "../helper/extractors/Tweets";
 
 /**
  * Handles fetching of data related to tweets.
+ * 
  * @public
  */
 export class TweetService extends FetcherService {
     /**
-     * @param auth The AuthService instance to use for authentication.
+     * @param cred The credentials to use for authenticating against Twitter API.
      */
-    constructor(auth: AuthService) {
-        super(auth);
+    constructor(cred: AuthCredential) {
+        super(cred);
     }
 
     /**
      * @param filter The filter be used for searching the tweets.
      * @param count The number of tweets to fetch, must be >= 10 (when no cursor is provided) and <= 20
      * @param cursor The cursor to the next batch of tweets. If blank, first batch is fetched.
-     * 
      * @returns The list of tweets that match the given filter.
-     * 
-     * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
      * @throws {@link Errors.ValidationErrors.InvalidCount} error, if an invalid count has been provided.
      */
     async getTweets(query: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-        // If user is not authenticated, abort
-        if (!this.isAuthenticated) {
-            throw new Error(AuthenticationErrors.NotAuthenticated);
-        }
-
         // Objectifying parameters
         let args: TweetListArgs = new TweetListArgs(count, cursor);
 
@@ -81,18 +71,10 @@ export class TweetService extends FetcherService {
 
     /**
      * @param id The id of the target tweet.
-     * 
      * @returns The details of a single tweet with the given tweet id.
-     * 
-     * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
      * @throws {@link Errors.DataErrors.TweetNotFound} error, if no tweet with the given id was found.
      */
     async getTweetDetails(id: string): Promise<Tweet> {
-        // If user is not authenticated, abort
-        if (!this.isAuthenticated) {
-            throw new Error(AuthenticationErrors.NotAuthenticated);
-        }
-
         // Getting data from cache
         let cachedData = await this.readData(id);
 
@@ -123,19 +105,11 @@ export class TweetService extends FetcherService {
      * @param tweetId The rest id of the target tweet.
      * @param count The batch size of the list, must be >= 10 (when no cursor is provided) and <= 20.
      * @param cursor The cursor to the next batch of users. If blank, first batch is fetched.
-     * 
      * @returns The list of users who liked the given tweet.
-     * 
-     * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
      * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count is provided.
      * @throws {@link Errors.DataErrors.TweetNotFound} error, if no tweet with the given id was found.
      */
     async getTweetLikers(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-        // If user is not authenticated, abort
-        if (!this.isAuthenticated) {
-            throw new Error(AuthenticationErrors.NotAuthenticated);
-        }
-
         // Objectifying parameters
         let args: TweetListArgs = new TweetListArgs(count, cursor);
 
@@ -161,19 +135,11 @@ export class TweetService extends FetcherService {
      * @param tweetId The rest id of the target tweet.
      * @param count The batch size of the list, must be >= 10 (when no cursor is provided) and <= 100.
      * @param cursor The cursor to the next batch of users. If blank, first batch is fetched.
-     * 
      * @returns The list of users who retweeted the given tweet.
-     * 
-     * @throws {@link Errors.AuthenticationErrors.NotAuthenticated} error, if no cookies have been provided.
      * @throws {@link Errors.ValidationErrors.InvalidCount} error, if invalid count is provided.
      * @throws {@link Errors.DataErrors.TweetNotFound} error, if no tweet with the given id was found.
      */
     async getTweetRetweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-        // If user is not authenticated, abort
-        if (!this.isAuthenticated) {
-            throw new Error(AuthenticationErrors.NotAuthenticated);
-        }
-
         // Objectifying parameters
         let args: TweetListArgs = new TweetListArgs(count, cursor);
 
