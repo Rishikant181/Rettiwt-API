@@ -6,6 +6,8 @@
 	"description": "An API for fetching data from TwitterAPI, without any rate limits!",
 	"scripts": {
 		"build": "tsc",
+		"format": "prettier --write",
+		"lint": "eslint .",
 		"docs": "typedoc src/index.ts",
 		"debug": "nodemon ./dist/index.js --inspect=0.0.0.0:9229"
 	},
@@ -33,7 +35,11 @@
 	},
 	"devDependencies": {
 		"@types/node": "20.4.1",
+		"@typescript-eslint/eslint-plugin": "^6.0.0",
+		"@typescript-eslint/parser": "^6.0.0",
+		"eslint": "^8.44.0",
 		"nodemon": "2.0.20",
+		"prettier": "^3.0.0",
 		"typedoc": "0.24.8",
 		"typescript": "5.1.6"
 	}
