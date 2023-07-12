@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>rettiwt-api</title><meta name="description" content="Documentation for rettiwt-api"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>rettiwt-api</title><meta name="description" content="Documentation for rettiwt-api"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/search.js" id="tsd-search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
 <div class="tsd-toolbar-contents container">
 <div class="table-cell" id="tsd-search" data-base=".">
 <div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
@@ -9,27 +9,15 @@
 <li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">rettiwt-api</a></div>
 <div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
 <div class="container container-main">
-<div class="col-8 col-content">
+<div class="col-content">
 <div class="tsd-page-title">
 <h2>rettiwt-api</h2></div>
-<div class="tsd-panel tsd-typography">
-<a href="#rettiwt-api" id="rettiwt-api" style="color: inherit; text-decoration: none;">
-  <h1>Rettiwt-API</h1>
-</a>
-<p>An API for fetching data from Twitter for free!</p>
-
-<a href="#prerequisites" id="prerequisites" style="color: inherit; text-decoration: none;">
-  <h2>Prerequisites</h2>
-</a>
-<ul>
+<div class="tsd-panel tsd-typography"><a id="md:rettiwt-api" class="tsd-anchor"></a><h1><a href="#md:rettiwt-api">Rettiwt-API</a></h1><p>An API for fetching data from Twitter for free!</p>
+<a id="md:prerequisites" class="tsd-anchor"></a><h2><a href="#md:prerequisites">Prerequisites</a></h2><ul>
 <li>NodeJS 18.14.2</li>
 <li>A working Twitter account</li>
 </ul>
-
-<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
-  <h2>Installation</h2>
-</a>
-<ol>
+<a id="md:installation" class="tsd-anchor"></a><h2><a href="#md:installation">Installation</a></h2><ol>
 <li>Initialize a new Node.JS project using the command <code>npm init</code>.</li>
 <li>Install the package either via npm or yarn:<ul>
 <li>For npm, use the command <code>npm install --save rettiwt-api</code></li>
@@ -38,54 +26,31 @@
 </li>
 </ol>
 <p>Although the above process initializes a new project, that is, in fact, not necessary and you may add it to an existing Node.JS project and omit the first step altogether.</p>
-
-<a href="#getting-started" id="getting-started" style="color: inherit; text-decoration: none;">
-  <h2>Getting started</h2>
-</a>
-<ol>
+<a id="md:getting-started" class="tsd-anchor"></a><h2><a href="#md:getting-started">Getting started</a></h2><ol>
 <li>Generate credentials using <a href="https://www.npmjs.com/package/rettiwt-auth">rettiwt-auth</a> package, by following these <a href="https://rishikant181.github.io/Rettiwt-Auth/#md:cli-usage">steps</a>.</li>
 <li>Copy the value of the &#39;cookies&#39; field from the generated credentials and store it somewhere safe. Let&#39;s call this our API_KEY.</li>
 <li>Create a new instance of Rettiwt, passing in the API key:<br><code>const rettiwt = Rettiwt(API_KEY);</code></li>
 <li>Use the created <a href="https://rishikant181.github.io/Rettiwt-API/functions/Rettiwt.html">Rettiwt</a> instance to fetch data from Twitter.</li>
 </ol>
 <p><strong>Note:</strong> The API_KEY (cookie) that we generated, is a very sensitive information and provides all access to the Twitter account. Therefore, it is generally recommended to store it as an environment variable and use it from there.</p>
-
-<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
-  <h2>Usage</h2>
-</a>
-<p>The following examples may help you to get started using the library:</p>
-
-<a href="#1-getting-the-details-of-a-target-twitter-user" id="1-getting-the-details-of-a-target-twitter-user" style="color: inherit; text-decoration: none;">
-  <h3>1. Getting the details of a target Twitter user</h3>
-</a>
-<pre><code><span class="hl-0">// Creating a new Rettiwt instance using the API_KEY</span><br/><span class="hl-1">const</span><span class="hl-2"> </span><span class="hl-3">rettiwt</span><span class="hl-2"> = </span><span class="hl-4">Rettiwt</span><span class="hl-2">(</span><span class="hl-3">API_KEY</span><span class="hl-2">);</span><br/><br/><span class="hl-0">// Fetching the details of the user whose username is &lt;username&gt;</span><br/><span class="hl-5">rettiwt</span><span class="hl-2">.</span><span class="hl-5">users</span><span class="hl-2">.</span><span class="hl-4">getUserDetails</span><span class="hl-2">(</span><span class="hl-6">&#39;&lt;username&gt;&#39;</span><span class="hl-2">)</span><br/><span class="hl-2">.</span><span class="hl-4">then</span><span class="hl-2">(</span><span class="hl-5">details</span><span class="hl-2"> </span><span class="hl-1">=&gt;</span><span class="hl-2"> {</span><br/><span class="hl-2">    ...</span><br/><span class="hl-2">})</span><br/><span class="hl-2">.</span><span class="hl-4">catch</span><span class="hl-2">(</span><span class="hl-5">error</span><span class="hl-2"> </span><span class="hl-1">=&gt;</span><span class="hl-2"> {</span><br/><span class="hl-2">    ...</span><br/><span class="hl-2">});</span>
-</code></pre>
-
-<a href="#2-getting-the-list-of-tweets-that-match-a-given-filter" id="2-getting-the-list-of-tweets-that-match-a-given-filter" style="color: inherit; text-decoration: none;">
-  <h3>2. Getting the list of tweets that match a given filter</h3>
-</a>
-<pre><code><span class="hl-0">// Creating a new Rettiwt instance using the API_KEY</span><br/><span class="hl-1">const</span><span class="hl-2"> </span><span class="hl-3">rettiwt</span><span class="hl-2"> = </span><span class="hl-4">Rettiwt</span><span class="hl-2">(</span><span class="hl-3">API_KEY</span><span class="hl-2">);</span><br/><br/><span class="hl-0">/**</span><br/><span class="hl-0"> * Fetching the list of tweets that:</span><br/><span class="hl-0"> * 	- are made by a user with username &lt;username&gt;,</span><br/><span class="hl-0"> * 	- contain the words &lt;word1&gt; and &lt;word2&gt;</span><br/><span class="hl-0"> */</span><br/><span class="hl-5">rettiwt</span><span class="hl-2">.</span><span class="hl-5">tweets</span><span class="hl-2">.</span><span class="hl-4">getTweets</span><span class="hl-2">({</span><br/><span class="hl-2">    </span><span class="hl-5">fromUsers:</span><span class="hl-2"> [</span><span class="hl-6">&#39;&lt;username&gt;&#39;</span><span class="hl-2">],</span><br/><span class="hl-2">    </span><span class="hl-5">words:</span><span class="hl-2"> [</span><span class="hl-6">&#39;&lt;word1&gt;&#39;</span><span class="hl-2">, </span><span class="hl-6">&#39;&lt;word2&gt;&#39;</span><span class="hl-2">]</span><br/><span class="hl-2">})</span><br/><span class="hl-2">.</span><span class="hl-4">then</span><span class="hl-2">(</span><span class="hl-5">data</span><span class="hl-2"> </span><span class="hl-1">=&gt;</span><span class="hl-2"> {</span><br/><span class="hl-2">    ...</span><br/><span class="hl-2">})</span><br/><span class="hl-2">.</span><span class="hl-4">catch</span><span class="hl-2">(</span><span class="hl-5">err</span><span class="hl-2"> </span><span class="hl-1">=&gt;</span><span class="hl-2"> {</span><br/><span class="hl-2">    ...</span><br/><span class="hl-2">})</span>
-</code></pre>
+<a id="md:usage" class="tsd-anchor"></a><h2><a href="#md:usage">Usage</a></h2><p>The following examples may help you to get started using the library:</p>
+<a id="md:1-getting-the-details-of-a-target-twitter-user" class="tsd-anchor"></a><h3><a href="#md:1-getting-the-details-of-a-target-twitter-user">1. Getting the details of a target Twitter user</a></h3><pre><code><span class="hl-0">// Creating a new Rettiwt instance using the API_KEY</span><br/><span class="hl-1">const</span><span class="hl-2"> </span><span class="hl-3">rettiwt</span><span class="hl-2"> = </span><span class="hl-4">Rettiwt</span><span class="hl-2">(</span><span class="hl-3">API_KEY</span><span class="hl-2">);</span><br/><br/><span class="hl-0">// Fetching the details of the user whose username is &lt;username&gt;</span><br/><span class="hl-5">rettiwt</span><span class="hl-2">.</span><span class="hl-5">users</span><span class="hl-2">.</span><span class="hl-4">getUserDetails</span><span class="hl-2">(</span><span class="hl-6">&#39;&lt;username&gt;&#39;</span><span class="hl-2">)</span><br/><span class="hl-2">.</span><span class="hl-4">then</span><span class="hl-2">(</span><span class="hl-5">details</span><span class="hl-2"> </span><span class="hl-1">=&gt;</span><span class="hl-2"> {</span><br/><span class="hl-2">    ...</span><br/><span class="hl-2">})</span><br/><span class="hl-2">.</span><span class="hl-4">catch</span><span class="hl-2">(</span><span class="hl-5">error</span><span class="hl-2"> </span><span class="hl-1">=&gt;</span><span class="hl-2"> {</span><br/><span class="hl-2">    ...</span><br/><span class="hl-2">});</span>
+</code><button>Copy</button></pre>
+<a id="md:2-getting-the-list-of-tweets-that-match-a-given-filter" class="tsd-anchor"></a><h3><a href="#md:2-getting-the-list-of-tweets-that-match-a-given-filter">2. Getting the list of tweets that match a given filter</a></h3><pre><code><span class="hl-0">// Creating a new Rettiwt instance using the API_KEY</span><br/><span class="hl-1">const</span><span class="hl-2"> </span><span class="hl-3">rettiwt</span><span class="hl-2"> = </span><span class="hl-4">Rettiwt</span><span class="hl-2">(</span><span class="hl-3">API_KEY</span><span class="hl-2">);</span><br/><br/><span class="hl-0">/**</span><br/><span class="hl-0"> * Fetching the list of tweets that:</span><br/><span class="hl-0"> * 	- are made by a user with username &lt;username&gt;,</span><br/><span class="hl-0"> * 	- contain the words &lt;word1&gt; and &lt;word2&gt;</span><br/><span class="hl-0"> */</span><br/><span class="hl-5">rettiwt</span><span class="hl-2">.</span><span class="hl-5">tweets</span><span class="hl-2">.</span><span class="hl-4">getTweets</span><span class="hl-2">({</span><br/><span class="hl-2">    </span><span class="hl-5">fromUsers:</span><span class="hl-2"> [</span><span class="hl-6">&#39;&lt;username&gt;&#39;</span><span class="hl-2">],</span><br/><span class="hl-2">    </span><span class="hl-5">words:</span><span class="hl-2"> [</span><span class="hl-6">&#39;&lt;word1&gt;&#39;</span><span class="hl-2">, </span><span class="hl-6">&#39;&lt;word2&gt;&#39;</span><span class="hl-2">]</span><br/><span class="hl-2">})</span><br/><span class="hl-2">.</span><span class="hl-4">then</span><span class="hl-2">(</span><span class="hl-5">data</span><span class="hl-2"> </span><span class="hl-1">=&gt;</span><span class="hl-2"> {</span><br/><span class="hl-2">    ...</span><br/><span class="hl-2">})</span><br/><span class="hl-2">.</span><span class="hl-4">catch</span><span class="hl-2">(</span><span class="hl-5">err</span><span class="hl-2"> </span><span class="hl-1">=&gt;</span><span class="hl-2"> {</span><br/><span class="hl-2">    ...</span><br/><span class="hl-2">})</span>
+</code><button>Copy</button></pre>
 <p>For more information regarding the different available filter options, please refer to <a href="https://rishikant181.github.io/Rettiwt-API/classes/TweetFilter.html">TweetFilter</a>.</p>
-
-<a href="#api-reference" id="api-reference" style="color: inherit; text-decoration: none;">
-  <h2>API Reference</h2>
-</a>
-<p>The complete API reference can be found at <a href="https://rishikant181.github.io/Rettiwt-API/">this</a> page.</p>
-
-<a href="#additional-information" id="additional-information" style="color: inherit; text-decoration: none;">
-  <h2>Additional information</h2>
-</a>
-<ul>
+<a id="md:api-reference" class="tsd-anchor"></a><h2><a href="#md:api-reference">API Reference</a></h2><p>The complete API reference can be found at <a href="https://rishikant181.github.io/Rettiwt-API/">this</a> page.</p>
+<a id="md:additional-information" class="tsd-anchor"></a><h2><a href="#md:additional-information">Additional information</a></h2><ul>
 <li>This API uses the cookies of a Twitter account to fetch data from Twitter and as such, there is always a chance (altough a measly one) of getting the account banned by Twitter algorithm.</li>
 <li>From personal experience, not a single one of my accounts has ever been banned by using this library, and this is coming from someone who has been using his primary Twitter account to fetch large amounts of data from Twitter for over 1.5 years now, since the conception of this project.</li>
 <li>There have been no reports of accounts getting banned, but you have been warned, even though the chances of getting banned is negligible, it is not zero!</li>
 </ul>
 </div></div>
-<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+<div class="col-sidebar">
+<div class="page-menu">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
-<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Settings</h3></summary>
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)" id="icon-chevronDown"></path></svg>Settings</h3></summary>
 <div class="tsd-accordion-details">
 <div class="tsd-filter-visibility">
 <h4 class="uppercase">Member Visibility</h4><form>
@@ -95,40 +60,53 @@
 <li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
 <li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div>
 <div class="tsd-theme-toggle">
-<h4 class="uppercase">Theme</h4><select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
-<nav class="tsd-navigation primary">
-<details class="tsd-index-accordion" open><summary class="tsd-accordion-summary">
-<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Modules</h3></summary>
+<h4 class="uppercase">Theme</h4><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<details open class="tsd-index-accordion tsd-page-navigation"><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><use href="#icon-chevronDown"></use></svg>On This Page</h3></summary>
 <div class="tsd-accordion-details">
 <ul>
-<li class="current selected"><a href="modules.html">rettiwt-<wbr/>api</a>
-<ul></ul></li></ul></div></details></nav>
-<nav class="tsd-navigation secondary menu-sticky">
+<li>
 <ul>
-<li class="tsd-kind-enum"><a href="enums/HttpMethods.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-enum)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-8-path"></rect><path d="M9.45 16V7.24H14.49V8.224H10.518V10.936H14.07V11.908H10.518V15.016H14.49V16H9.45Z" fill="var(--color-text)" id="icon-8-text"></path></svg>Http<wbr/>Methods</a></li>
-<li class="tsd-kind-class"><a href="classes/CacheService.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-128-path"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)" id="icon-128-text"></path></svg>Cache<wbr/>Service</a></li>
-<li class="tsd-kind-class"><a href="classes/Cursor.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Cursor</a></li>
-<li class="tsd-kind-class"><a href="classes/CursoredData.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Cursored<wbr/>Data</a></li>
-<li class="tsd-kind-class tsd-is-external"><a href="classes/DataValidationError.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Data<wbr/>Validation<wbr/>Error</a></li>
-<li class="tsd-kind-class"><a href="classes/FetcherService.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Fetcher<wbr/>Service</a></li>
-<li class="tsd-kind-class"><a href="classes/Tweet.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Tweet</a></li>
-<li class="tsd-kind-class"><a href="classes/TweetEntities.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Tweet<wbr/>Entities</a></li>
-<li class="tsd-kind-class tsd-is-external"><a href="classes/TweetFilter.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Tweet<wbr/>Filter</a></li>
-<li class="tsd-kind-class"><a href="classes/TweetListArgs.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Tweet<wbr/>List<wbr/>Args</a></li>
-<li class="tsd-kind-class"><a href="classes/TweetService.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Tweet<wbr/>Service</a></li>
-<li class="tsd-kind-class"><a href="classes/User.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>User</a></li>
-<li class="tsd-kind-class"><a href="classes/UserListArgs.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>User<wbr/>List<wbr/>Args</a></li>
-<li class="tsd-kind-class"><a href="classes/UserService.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>User<wbr/>Service</a></li>
-<li class="tsd-kind-interface"><a href="interfaces/ICursor.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg>ICursor</a></li>
-<li class="tsd-kind-interface"><a href="interfaces/ICursoredData.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>ICursored<wbr/>Data</a></li>
-<li class="tsd-kind-interface"><a href="interfaces/IDataContext.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>IData<wbr/>Context</a></li>
-<li class="tsd-kind-interface tsd-is-external"><a href="interfaces/IDataValidationError.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>IData<wbr/>Validation<wbr/>Error</a></li>
-<li class="tsd-kind-interface"><a href="interfaces/IListArgs.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>IList<wbr/>Args</a></li>
-<li class="tsd-kind-interface"><a href="interfaces/ITweet.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>ITweet</a></li>
-<li class="tsd-kind-interface"><a href="interfaces/ITweetEntities.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>ITweet<wbr/>Entities</a></li>
-<li class="tsd-kind-interface tsd-is-external"><a href="interfaces/ITweetFilter.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>ITweet<wbr/>Filter</a></li>
-<li class="tsd-kind-interface"><a href="interfaces/IUser.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>IUser</a></li>
-<li class="tsd-kind-function"><a href="functions/Rettiwt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-function)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-64-path"></rect><path d="M9.39 16V7.24H14.55V8.224H10.446V11.128H14.238V12.112H10.47V16H9.39Z" fill="var(--color-text)" id="icon-64-text"></path></svg>Rettiwt</a></li></ul></nav></div></div>
-<div class="container tsd-generator">
+<li><a href="#md:rettiwt-api"><span>Rettiwt-<wbr/>API</span></a></li>
+<li>
+<ul>
+<li><a href="#md:prerequisites"><span>Prerequisites</span></a></li>
+<li><a href="#md:installation"><span>Installation</span></a></li>
+<li><a href="#md:getting-started"><span>Getting started</span></a></li>
+<li><a href="#md:usage"><span>Usage</span></a></li>
+<li>
+<ul>
+<li><a href="#md:1-getting-the-details-of-a-target-twitter-user"><span>1. <wbr/>Getting the details of a target <wbr/>Twitter user</span></a></li>
+<li><a href="#md:2-getting-the-list-of-tweets-that-match-a-given-filter"><span>2. <wbr/>Getting the list of tweets that match a given filter</span></a></li></ul></li>
+<li><a href="#md:api-reference"><span>API <wbr/>Reference</span></a></li>
+<li><a href="#md:additional-information"><span>Additional information</span></a></li></ul></li></ul></li></ul></div></details></div>
+<div class="site-menu">
+<nav class="tsd-navigation"><a href="modules.html" class="current"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-4"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-namespace)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.33 16V7.24H10.77L13.446 14.74C13.43 14.54 13.41 14.296 13.386 14.008C13.37 13.712 13.354 13.404 13.338 13.084C13.33 12.756 13.326 12.448 13.326 12.16V7.24H14.37V16H12.93L10.266 8.5C10.282 8.692 10.298 8.936 10.314 9.232C10.33 9.52 10.342 9.828 10.35 10.156C10.366 10.476 10.374 10.784 10.374 11.08V16H9.33Z" fill="var(--color-text)"></path></g></svg><span>rettiwt-<wbr/>api</span></a>
+<ul class="tsd-small-nested-navigation">
+<li><a href="enums/HttpMethods.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-8"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-enum)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.45 16V7.24H14.49V8.224H10.518V10.936H14.07V11.908H10.518V15.016H14.49V16H9.45Z" fill="var(--color-text)"></path></g></svg><span>Http<wbr/>Methods</span></a></li>
+<li><a href="classes/CacheService.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-128"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)"></path></g></svg><span>Cache<wbr/>Service</span></a></li>
+<li><a href="classes/Cursor.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>Cursor</span></a></li>
+<li><a href="classes/CursoredData.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>Cursored<wbr/>Data</span></a></li>
+<li><a href="classes/DataValidationError.html" class="tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>Data<wbr/>Validation<wbr/>Error</span></a></li>
+<li><a href="classes/FetcherService.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>Fetcher<wbr/>Service</span></a></li>
+<li><a href="classes/Tweet.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>Tweet</span></a></li>
+<li><a href="classes/TweetEntities.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>Tweet<wbr/>Entities</span></a></li>
+<li><a href="classes/TweetFilter.html" class="tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>Tweet<wbr/>Filter</span></a></li>
+<li><a href="classes/TweetListArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>Tweet<wbr/>List<wbr/>Args</span></a></li>
+<li><a href="classes/TweetService.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>Tweet<wbr/>Service</span></a></li>
+<li><a href="classes/User.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>User</span></a></li>
+<li><a href="classes/UserListArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>User<wbr/>List<wbr/>Args</span></a></li>
+<li><a href="classes/UserService.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>User<wbr/>Service</span></a></li>
+<li><a href="interfaces/ICursor.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-256"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)"></path></g></svg><span>ICursor</span></a></li>
+<li><a href="interfaces/ICursoredData.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>ICursored<wbr/>Data</span></a></li>
+<li><a href="interfaces/IDataContext.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>IData<wbr/>Context</span></a></li>
+<li><a href="interfaces/IDataValidationError.html" class="tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>IData<wbr/>Validation<wbr/>Error</span></a></li>
+<li><a href="interfaces/IListArgs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>IList<wbr/>Args</span></a></li>
+<li><a href="interfaces/ITweet.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>ITweet</span></a></li>
+<li><a href="interfaces/ITweetEntities.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>ITweet<wbr/>Entities</span></a></li>
+<li><a href="interfaces/ITweetFilter.html" class="tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>ITweet<wbr/>Filter</span></a></li>
+<li><a href="interfaces/IUser.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>IUser</span></a></li>
+<li><a href="functions/Rettiwt.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-64"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-function)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.39 16V7.24H14.55V8.224H10.446V11.128H14.238V12.112H10.47V16H9.39Z" fill="var(--color-text)"></path></g></svg><span>Rettiwt</span></a></li></ul></nav></div></div></div>
+<div class="tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
-<div class="overlay"></div><script src="assets/main.js"></script></body></html>
+<div class="overlay"></div></body></html>
