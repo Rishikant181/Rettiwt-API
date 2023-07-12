@@ -21,9 +21,6 @@ import { User } from '../../models/data/User';
 import { TweetListArgs } from '../../models/args/TweetListArgs';
 import { CursoredData } from '../../models/data/CursoredData';
 
-// EXTRACTORS
-import * as TweetExtractors from '../helper/extractors/Tweets';
-
 /**
  * Handles fetching of data related to tweets.
  *
@@ -58,7 +55,7 @@ export class TweetService extends FetcherService {
 		const res = await this.request<ITweetSearchResponse>(url).then((res) => res.data);
 
 		// Extracting data
-		const data = TweetExtractors.extractTweets(res);
+		const data = this.extractData<IRawTweet>(res, EResourceType.TWEET_SEARCH);
 
 		// Caching data
 		this.cacheData(data);
@@ -92,7 +89,7 @@ export class TweetService extends FetcherService {
 		const res = await this.request<ITweetDetailsResponse>(url).then((res) => res.data);
 
 		// Extracting data
-		const data = TweetExtractors.extractTweet(res, id);
+		const data = this.extractData<IRawTweet>(res, EResourceType.TWEET_DETAILS);
 
 		// Caching data
 		this.cacheData(data);
@@ -124,7 +121,7 @@ export class TweetService extends FetcherService {
 		const res = await this.request<ITweetFavoritersResponse>(url).then((res) => res.data);
 
 		// Extracting data
-		const data = TweetExtractors.extractTweetLikers(res);
+		const data = this.extractData<IRawUser>(res, EResourceType.TWEET_FAVORITERS);
 
 		// Caching data
 		this.cacheData(data);
@@ -156,7 +153,7 @@ export class TweetService extends FetcherService {
 		const res = await this.request<ITweetRetweetersResponse>(url).then((res) => res.data);
 
 		// Extracting data
-		const data = TweetExtractors.extractTweetRetweeters(res);
+		const data = this.extractData<IRawUser>(res, EResourceType.TWEET_RETWEETERS);
 
 		// Caching data
 		this.cacheData(data);

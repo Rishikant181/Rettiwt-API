@@ -3,7 +3,7 @@ import { ITweet, ITweetEntities } from '../../types/Tweet';
 import { ITweet as IRawTweet, IEntities as IRawTweetEntities } from 'rettiwt-core';
 
 // PARSERS
-import * as Parsers from '../../services/helper/Parser';
+import { normalizeText } from '../../helper/JsonUtils';
 
 /**
  * The different types parsed entities like urls, media, mentions, hashtags, etc.
@@ -107,7 +107,7 @@ export class Tweet implements ITweet {
 		this.tweetBy = tweet.legacy.user_id_str;
 		this.entities = new TweetEntities(tweet.legacy.entities);
 		this.quoted = tweet.legacy.quoted_status_id_str;
-		this.fullText = Parsers.normalizeText(tweet.legacy.full_text);
+		this.fullText = normalizeText(tweet.legacy.full_text);
 		this.replyTo = tweet.legacy.in_reply_to_status_id_str;
 		this.lang = tweet.legacy.lang;
 		this.quoteCount = tweet.legacy.quote_count;
