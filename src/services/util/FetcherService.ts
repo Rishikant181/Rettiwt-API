@@ -46,7 +46,6 @@ export class FetcherService {
     * 
     * @param res The response object received.
     * @returns The received response, if no HTTP errors are found.
-    * @throws {@link HttpStatus} error, if any HTTP error is found.
     */
     private handleHTTPError(res: AxiosResponse): AxiosResponse {
         /**
@@ -60,16 +59,10 @@ export class FetcherService {
     }
 
     /**
-     * Creates an HTTP request according to the given parameters.
-     * 
-     * This method internally uses node-libcurl library to make curl requests to the URL, instead of node-fetch.
-     * This has been done since that way it better mimics the HTTP requests made from browser.
+     * Makes an HTTP request according to the given parameters.
      * 
      * @param url The url to fetch data from.
-     * @param authenticate Whether to authenticate requests or not.
-     * @param method The HTTP method (from {@link HttpMethods}) to use.
-     * @param data The data to be sent along with the request (for POST request).     * 
-     * @returns The {@link AxiosResponse} received.
+     * @returns The response received.
      */
     protected async request<DataType>(url: string): Promise<AxiosResponse<DataType>> {
         /**
@@ -86,7 +79,7 @@ export class FetcherService {
     }
 
     /**
-     * Caches the extracted data into the {@link CacheService} instance.
+     * Caches the extracted data into the cache instance.
      * 
      * @param data The extracted data to be cached.
      */
