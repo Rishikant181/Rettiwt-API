@@ -101,8 +101,8 @@ export class FetcherService {
 		 */
 		return {
 			required: required,
-			tweets: findByFilter<IRawTweet>(data, '__typename', 'Tweet').filter(tweet => tweet.rest_id),
-			users: findByFilter<IRawUser>(data, '__typename', 'User').filter(user => user.rest_id),
+			tweets: findByFilter<IRawTweet>(data, '__typename', 'Tweet'),
+			users: findByFilter<IRawUser>(data, '__typename', 'User'),
 			cursor: findByFilter<IRawCursor>(data, 'cursorType', 'Bottom')[0]?.value ?? ''
 		}
 	}
@@ -113,12 +113,25 @@ export class FetcherService {
 	 * @param data The extracted data to be cached.
 	 */
 	protected cacheData(data: IDataExtract<object>): void {
-		/**
-		 * The extracted data is in raw form.
-		 * This raw data is deserialized into the respective known types.
-		 */
-		const users = data.users.map((user) => new User(user));
-		const tweets = data.tweets.map((tweet) => new Tweet(tweet));
+		/** Deserialized user data. */
+		const users: User[] = [];
+
+		/** Deserialized tweet data. */
+		const tweets: Tweet[] = [];
+
+		// Deserializing non-empty user data
+		for (const user of data.users) {
+			if (user.rest_id) {
+				users.push(new User(user));
+			}
+		}
+
+		// Deserializing non-empty tweet data
+		for (const tweet of data.tweets) {
+			if (tweet.rest_id) {
+				tweets.push(new Tweet(tweet));
+			}
+		}
 
 		// Caching the data
 		this.cache.write(users);
