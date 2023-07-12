@@ -13,13 +13,19 @@ import { TweetService } from './services/data/TweetService';
  * @param apiKey The API key (cookie string) to use for fetching data.
  * @returns The API for fetching user and tweet data.
  */
-export const Rettiwt = (apiKey: string) => {
-	// Preparing auth credentials
-	const cred: AuthCredential = new AuthCredential(apiKey.split(';'));
+export class Rettiwt {
+	/** The instance used to fetch data related to users. */
+	users: UserService;
 
-	// Using the auth service instance to create data services instances
-	return {
-		users: new UserService(cred),
-		tweets: new TweetService(cred),
-	};
-};
+	/** The instance used to fetch data related to tweets. */
+	tweets: TweetService;
+
+	constructor(apiKey: string) {
+		// Preparing auth credentials
+		const cred: AuthCredential = new AuthCredential(apiKey.split(';'));
+
+		// Initalizing service instances
+		this.users = new UserService(cred);
+		this.tweets = new TweetService(cred);
+	}
+}
