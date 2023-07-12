@@ -14,13 +14,8 @@ jobs:
             - uses: actions/setup-node@v3
               with:
                   node-version: '18.x'
-            # Installing dependencies
             - run: yarn
-
-            # Generating documentations
             - run: npx typedoc src/index.ts
-
-            # Commiting the documentations
             - uses: stefanzweifel/git-auto-commit-action@v4
               with:
                   commit_message: Updated documentations
