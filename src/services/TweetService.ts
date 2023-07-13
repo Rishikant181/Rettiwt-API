@@ -13,13 +13,13 @@ import {
 import { AuthCredential } from 'rettiwt-auth';
 
 // SERVICES
-import { FetcherService } from '../util/FetcherService';
+import { FetcherService } from './FetcherService';
 
 // MODELS
-import { Tweet } from '../../models/data/Tweet';
-import { User } from '../../models/data/User';
-import { TweetListArgs } from '../../models/args/TweetListArgs';
-import { CursoredData } from '../../models/data/CursoredData';
+import { Tweet } from '../models/data/Tweet';
+import { User } from '../models/data/User';
+import { TweetListArgs } from '../models/args/TweetListArgs';
+import { CursoredData } from '../models/data/CursoredData';
 
 /**
  * Handles fetching of data related to tweets.
@@ -61,9 +61,6 @@ export class TweetService extends FetcherService {
 		// Extracting data
 		const data = this.extractData<IRawTweet>(res, EResourceType.TWEET_SEARCH);
 
-		// Caching data
-		this.cacheData(data);
-
 		// Parsing data
 		const tweets = data.required.map((item: IRawTweet) => new Tweet(item));
 
@@ -80,14 +77,6 @@ export class TweetService extends FetcherService {
 	 * @public
 	 */
 	async getTweetDetails(id: string): Promise<Tweet> {
-		// Getting data from cache
-		const cachedData = this.readData<Tweet>(id);
-
-		// If data exists in cache
-		if (cachedData) {
-			return cachedData;
-		}
-
 		// Preparing the URL
 		const url: string = new Url(EResourceType.TWEET_DETAILS, { id: id }).toString();
 
@@ -96,9 +85,6 @@ export class TweetService extends FetcherService {
 
 		// Extracting data
 		const data = this.extractData<IRawTweet>(res, EResourceType.TWEET_DETAILS);
-
-		// Caching data
-		this.cacheData(data);
 
 		// Parsing data
 		const tweet = new Tweet(data.required[0]);
@@ -131,9 +117,6 @@ export class TweetService extends FetcherService {
 		// Extracting data
 		const data = this.extractData<IRawUser>(res, EResourceType.TWEET_FAVORITERS);
 
-		// Caching data
-		this.cacheData(data);
-
 		// Parsing data
 		const users = data.required.map((item: IRawUser) => new User(item));
 
@@ -164,9 +147,6 @@ export class TweetService extends FetcherService {
 
 		// Extracting data
 		const data = this.extractData<IRawUser>(res, EResourceType.TWEET_RETWEETERS);
-
-		// Caching data
-		this.cacheData(data);
 
 		// Parsing data
 		const users = data.required.map((item: IRawUser) => new User(item));

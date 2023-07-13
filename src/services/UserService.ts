@@ -12,15 +12,15 @@ import {
 import { AuthCredential } from 'rettiwt-auth';
 
 // SERVICES
-import { FetcherService } from '../util/FetcherService';
+import { FetcherService } from './FetcherService';
 
 // MODELS
-import { User } from '../../models/data/User';
-import { UserListArgs } from '../../models/args/UserListArgs';
-import { Tweet } from '../../models/data/Tweet';
+import { User } from '../models/data/User';
+import { UserListArgs } from '../models/args/UserListArgs';
+import { Tweet } from '../models/data/Tweet';
 
 // TYPES
-import { CursoredData } from '../../models/data/CursoredData';
+import { CursoredData } from '../models/data/CursoredData';
 
 /**
  * Handles fetching of data related to user account
@@ -42,34 +42,19 @@ export class UserService extends FetcherService {
 	 * @public
 	 */
 	async getUserDetails(id: string): Promise<User> {
-		let res: IUserDetailsResponse;
+		// Preparing the URL
+		const url: string = new Url(EResourceType.USER_DETAILS, { id: id }).toString();
 
-		// Getting data from cache
-		const cachedData = this.readData<User>(id);
+		// Fetching the raw data
+		const res = await this.request<IUserDetailsResponse>(url).then((res) => res.data);
 
-		// If data exists in cache
-		if (cachedData) {
-			return cachedData;
-		}
-		// Else, fetch the data from Twitter instead
-		else {
-			// Preparing the URL
-			const url: string = new Url(EResourceType.USER_DETAILS, { id: id }).toString();
+		// Extracting data
+		const data = this.extractData<IRawUser>(res, EResourceType.USER_DETAILS);
 
-			// Fetching the raw data
-			res = await this.request<IUserDetailsResponse>(url).then((res) => res.data);
+		// Parsing data
+		const user = new User(data.required[0]);
 
-			// Extracting data
-			const data = this.extractData<IRawUser>(res, EResourceType.USER_DETAILS);
-
-			// Caching data
-			this.cacheData(data);
-
-			// Parsing data
-			const user = new User(data.required[0]);
-
-			return user;
-		}
+		return user;
 	}
 
 	/**
@@ -96,9 +81,6 @@ export class UserService extends FetcherService {
 
 		// Extracting data
 		const data = this.extractData<IRawUser>(res, EResourceType.USER_FOLLOWING);
-
-		// Caching data
-		this.cacheData(data);
 
 		// Parsing data
 		const users = data.required.map((item: IRawUser) => new User(item));
@@ -131,9 +113,6 @@ export class UserService extends FetcherService {
 		// Extracting data
 		const data = this.extractData<IRawUser>(res, EResourceType.USER_FOLLOWERS);
 
-		// Caching data
-		this.cacheData(data);
-
 		// Parsing data
 		const users = data.required.map((item: IRawUser) => new User(item));
 
@@ -164,9 +143,6 @@ export class UserService extends FetcherService {
 
 		// Extracting data
 		const data = this.extractData<IRawTweet>(res, EResourceType.USER_LIKES);
-
-		// Caching data
-		this.cacheData(data);
 
 		// Parsing data
 		const tweets = data.required.map((item: IRawTweet) => new Tweet(item));

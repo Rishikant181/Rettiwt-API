@@ -2,8 +2,8 @@
 import { AuthCredential } from 'rettiwt-auth';
 
 // SERVICES
-import { UserService } from './services/data/UserService';
-import { TweetService } from './services/data/TweetService';
+import { UserService } from './services/UserService';
+import { TweetService } from './services/TweetService';
 
 /**
  * The class for fetching data from Twitter.
