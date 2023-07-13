@@ -5,7 +5,9 @@ import { AuthCredential } from 'rettiwt-auth';
 
 // ENUMS
 import { EHttpStatus } from '../enums/HTTP';
-import { IDataExtract } from '../types/Resolvers';
+
+// MODELS
+import { CursoredData } from '../models/data/CursoredData';
 
 // HELPERS
 import { findByFilter } from '../helper/JsonUtils';
@@ -72,7 +74,7 @@ export class FetcherService {
 	 * @typeParam T Type of extracted data.
 	 * @returns The extracted required data, along with additional data.
 	 */
-	protected extractData<T>(data: NonNullable<unknown>, type: EResourceType): IDataExtract<T> {
+	protected extractData<T>(data: NonNullable<unknown>, type: EResourceType): CursoredData<T> {
 		/**
 		 * The required extracted data.
 		 */
@@ -91,12 +93,6 @@ export class FetcherService {
 			required = findByFilter<T>(data, '__typename', 'User');
 		}
 
-		/**
-		 * Returning the data after filtering out partial data.
-		 */
-		return {
-			required: required,
-			cursor: findByFilter<IRawCursor>(data, 'cursorType', 'Bottom')[0]?.value ?? '',
-		};
+		return new CursoredData(required, findByFilter<IRawCursor>(data, 'cursorType', 'Bottom')[0]?.value);
 	}
 }

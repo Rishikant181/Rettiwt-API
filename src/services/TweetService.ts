@@ -62,12 +62,12 @@ export class TweetService extends FetcherService {
 		const data = this.extractData<IRawTweet>(res, EResourceType.TWEET_SEARCH);
 
 		// Parsing data
-		const tweets = data.required.map((item: IRawTweet) => new Tweet(item));
+		const tweets = data.list.map((item: IRawTweet) => new Tweet(item));
 
 		// Sorting the tweets by date, from recent to oldest
 		tweets.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
 
-		return new CursoredData<Tweet>(tweets, data.cursor);
+		return new CursoredData<Tweet>(tweets, data.next.value);
 	}
 
 	/**
@@ -87,7 +87,7 @@ export class TweetService extends FetcherService {
 		const data = this.extractData<IRawTweet>(res, EResourceType.TWEET_DETAILS);
 
 		// Parsing data
-		const tweet = new Tweet(data.required[0]);
+		const tweet = new Tweet(data.list[0]);
 
 		return tweet;
 	}
@@ -118,9 +118,9 @@ export class TweetService extends FetcherService {
 		const data = this.extractData<IRawUser>(res, EResourceType.TWEET_FAVORITERS);
 
 		// Parsing data
-		const users = data.required.map((item: IRawUser) => new User(item));
+		const users = data.list.map((item: IRawUser) => new User(item));
 
-		return new CursoredData<User>(users, data.cursor);
+		return new CursoredData<User>(users, data.next.value);
 	}
 
 	/**
@@ -149,8 +149,8 @@ export class TweetService extends FetcherService {
 		const data = this.extractData<IRawUser>(res, EResourceType.TWEET_RETWEETERS);
 
 		// Parsing data
-		const users = data.required.map((item: IRawUser) => new User(item));
+		const users = data.list.map((item: IRawUser) => new User(item));
 
-		return new CursoredData<User>(users, data.cursor);
+		return new CursoredData<User>(users, data.next.value);
 	}
 }
