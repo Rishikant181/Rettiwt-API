@@ -28,6 +28,8 @@ import { CursoredData } from '../../models/data/CursoredData';
 export class UserService extends FetcherService {
 	/**
 	 * @param cred The credentials to use for authenticating against Twitter API.
+	 *
+	 * @internal
 	 */
 	constructor(cred: AuthCredential) {
 		super(cred);
@@ -36,6 +38,8 @@ export class UserService extends FetcherService {
 	/**
 	 * @param id The id/username of the target user.
 	 * @returns The details of the given user.
+	 *
+	 * @public
 	 */
 	async getUserDetails(id: string): Promise<User> {
 		let res: IUserDetailsResponse;
@@ -73,6 +77,8 @@ export class UserService extends FetcherService {
 	 * @param count The number of following to fetch, must be >= 40 (when no cursor is provided) and <=100.
 	 * @param cursor The cursor to next batch. If blank, first batch is fetched.
 	 * @returns The list of users followed by the target user.
+	 *
+	 * @public
 	 */
 	async getUserFollowing(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Objectifying parameters
@@ -105,6 +111,8 @@ export class UserService extends FetcherService {
 	 * @param count The number of followers to fetch, must be >= 40 (when no cursor is provided) and <=100.
 	 * @param cursor The cursor to next batch. If blank, first batch is fetched.
 	 * @returns The list of users following the target user.
+	 *
+	 * @public
 	 */
 	async getUserFollowers(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Objectifying parameters
@@ -137,6 +145,8 @@ export class UserService extends FetcherService {
 	 * @param count The number of likes to fetch.
 	 * @param cursor The cursor to next batch. If blank, first batch is fetched, must be >= 40 (when no cursor is provided) and <=100.
 	 * @returns The list of tweets liked by the target user.
+	 *
+	 * @public
 	 */
 	async getUserLikes(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Objectifying parameters

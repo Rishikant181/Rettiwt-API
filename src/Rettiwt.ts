@@ -8,10 +8,10 @@ import { TweetService } from './services/data/TweetService';
 /**
  * The class for fetching data from Twitter.
  *
- * @public
- *
  * @param apiKey The API key (cookie string) to use for fetching data.
  * @returns The API for fetching user and tweet data.
+ *
+ * @public
  */
 export class Rettiwt {
 	/** The instance used to fetch data related to users. */

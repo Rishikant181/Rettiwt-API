@@ -29,6 +29,8 @@ import { CursoredData } from '../../models/data/CursoredData';
 export class TweetService extends FetcherService {
 	/**
 	 * @param cred The credentials to use for authenticating against Twitter API.
+	 *
+	 * @internal
 	 */
 	constructor(cred: AuthCredential) {
 		super(cred);
@@ -39,6 +41,8 @@ export class TweetService extends FetcherService {
 	 * @param count The number of tweets to fetch, must be >= 10 (when no cursor is provided) and <= 20
 	 * @param cursor The cursor to the next batch of tweets. If blank, first batch is fetched.
 	 * @returns The list of tweets that match the given filter.
+	 *
+	 * @public
 	 */
 	async getTweets(query: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Objectifying parameters
@@ -72,6 +76,8 @@ export class TweetService extends FetcherService {
 	/**
 	 * @param id The id of the target tweet.
 	 * @returns The details of a single tweet with the given tweet id.
+	 *
+	 * @public
 	 */
 	async getTweetDetails(id: string): Promise<Tweet> {
 		// Getting data from cache
@@ -105,6 +111,8 @@ export class TweetService extends FetcherService {
 	 * @param count The batch size of the list, must be >= 10 (when no cursor is provided) and <= 20.
 	 * @param cursor The cursor to the next batch of users. If blank, first batch is fetched.
 	 * @returns The list of users who liked the given tweet.
+	 *
+	 * @public
 	 */
 	async getTweetLikers(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Objectifying parameters
@@ -137,6 +145,8 @@ export class TweetService extends FetcherService {
 	 * @param count The batch size of the list, must be >= 10 (when no cursor is provided) and <= 100.
 	 * @param cursor The cursor to the next batch of users. If blank, first batch is fetched.
 	 * @returns The list of users who retweeted the given tweet.
+	 *
+	 * @public
 	 */
 	async getTweetRetweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Objectifying parameters

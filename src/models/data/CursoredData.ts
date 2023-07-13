@@ -25,7 +25,7 @@ export class Cursor implements ICursor {
  *
  * @internal
  *
- * @typeParam Type - The type of data present in the list.
+ * @typeParam T - Type of data present in the list.
  */
 export class CursoredData<T> implements ICursoredData<T> {
 	/** The list of data of the given type. */

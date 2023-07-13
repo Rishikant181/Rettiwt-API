@@ -58,9 +58,10 @@ export class FetcherService {
 	 * Makes an HTTP request according to the given parameters.
 	 *
 	 * @param url The url to fetch data from.
+	 * @typeParam T - Type of response data.
 	 * @returns The response received.
 	 */
-	protected async request<DataType>(url: string): Promise<AxiosResponse<DataType>> {
+	protected async request<T>(url: string): Promise<AxiosResponse<T>> {
 		/**
 		 * Creating the request configuration based on the params
 		 */
@@ -76,9 +77,10 @@ export class FetcherService {
 
 	/**
 	 * Extracts the required data based on the type of resource passed as argument.
-	 * 
+	 *
 	 * @param data The data from which extraction is to be done.
 	 * @param type The type of data to extract.
+	 * @typeParam T Type of extracted data.
 	 * @returns The extracted required data, along with additional data.
 	 */
 	protected extractData<T>(data: NonNullable<unknown>, type: EResourceType): IDataExtract<T> {
@@ -88,7 +90,11 @@ export class FetcherService {
 		let required: T[] = [];
 
 		// For 'Tweet' resources
-		if (type == EResourceType.TWEET_DETAILS || type == EResourceType.TWEET_SEARCH || type == EResourceType.USER_LIKES) {
+		if (
+			type == EResourceType.TWEET_DETAILS ||
+			type == EResourceType.TWEET_SEARCH ||
+			type == EResourceType.USER_LIKES
+		) {
 			required = findByFilter<T>(data, '__typename', 'Tweet');
 		}
 		// For 'User' resources
@@ -103,8 +109,8 @@ export class FetcherService {
 			required: required,
 			tweets: findByFilter<IRawTweet>(data, '__typename', 'Tweet'),
 			users: findByFilter<IRawUser>(data, '__typename', 'User'),
-			cursor: findByFilter<IRawCursor>(data, 'cursorType', 'Bottom')[0]?.value ?? ''
-		}
+			cursor: findByFilter<IRawCursor>(data, 'cursorType', 'Bottom')[0]?.value ?? '',
+		};
 	}
 
 	/**
@@ -142,6 +148,7 @@ export class FetcherService {
 	 * Fetches the data with the given id from the cache.
 	 *
 	 * @param id The id of the data to be read from cache.
+	 * @typeParam T - Type of data read from cache.
 	 * @returns The data with the given id. If does not exist, returns undefined.
 	 */
 	protected readData<T>(id: string): T | undefined {
