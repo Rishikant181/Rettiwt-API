@@ -22,7 +22,7 @@ export class Rettiwt {
 
 	/**
 	 * Initializes a new Rettiwt instance using the given api key.
-	 * 
+	 *
 	 * @param apiKey The apiKey (cookie) to be used for authenticating Rettiwt against Twitter.
 	 */
 	constructor(apiKey: string) {
