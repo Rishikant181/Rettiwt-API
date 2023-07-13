@@ -37,7 +37,7 @@ The following examples may help you to get started using the library:
 const rettiwt = Rettiwt(API_KEY);
 
 // Fetching the details of the user whose username is <username>
-rettiwt.users.getUserDetails('<username>')
+rettiwt.user.details('<username>')
 .then(details => {
 	...
 })
@@ -57,7 +57,7 @@ const rettiwt = Rettiwt(API_KEY);
  * 	- are made by a user with username <username>,
  * 	- contain the words <word1> and <word2>
  */
-rettiwt.tweets.getTweets({
+rettiwt.tweet.search({
 	fromUsers: ['<username>'],
 	words: ['<word1>', '<word2>']
 })
