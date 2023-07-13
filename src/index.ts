@@ -5,10 +5,9 @@ import 'reflect-metadata';
 export * from './Rettiwt';
 
 // Exporting classes
-export * from './services/data/TweetService';
-export * from './services/data/UserService';
-export * from './services/util/CacheService';
-export * from './services/util/FetcherService';
+export * from './services/TweetService';
+export * from './services/UserService';
+export * from './services/FetcherService';
 
 // Exporting types
 export { ITweetFilter } from 'rettiwt-core';

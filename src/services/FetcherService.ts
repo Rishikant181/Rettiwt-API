@@ -1,21 +1,14 @@
 // PACKAGES
-import { EResourceType, ITweet as IRawTweet, IUser as IRawUser, ICursor as IRawCursor } from 'rettiwt-core';
+import { EResourceType, ICursor as IRawCursor } from 'rettiwt-core';
 import axios, { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from 'axios';
 import { AuthCredential } from 'rettiwt-auth';
 
-// SERVICES
-import { CacheService } from './CacheService';
-
-// MODELS
-import { Tweet } from '../../models/data/Tweet';
-import { User } from '../../models/data/User';
-
 // ENUMS
-import { EHttpStatus } from '../../enums/HTTP';
-import { IDataExtract } from '../../types/Resolvers';
+import { EHttpStatus } from '../enums/HTTP';
+import { IDataExtract } from '../types/Resolvers';
 
 // HELPERS
-import { findByFilter } from '../../helper/JsonUtils';
+import { findByFilter } from '../helper/JsonUtils';
 
 /**
  * The base service that handles all HTTP requests.
@@ -26,15 +19,11 @@ export class FetcherService {
 	/** The credential to use for authenticating against Twitter API. */
 	private cred: AuthCredential;
 
-	/** The caching service instance. */
-	private cache: CacheService;
-
 	/**
 	 * @param cred The credentials to use for authenticating against Twitter API.
 	 */
 	constructor(cred: AuthCredential) {
 		this.cred = cred;
-		this.cache = CacheService.getInstance();
 	}
 
 	/**
@@ -107,52 +96,7 @@ export class FetcherService {
 		 */
 		return {
 			required: required,
-			tweets: findByFilter<IRawTweet>(data, '__typename', 'Tweet'),
-			users: findByFilter<IRawUser>(data, '__typename', 'User'),
 			cursor: findByFilter<IRawCursor>(data, 'cursorType', 'Bottom')[0]?.value ?? '',
 		};
-	}
-
-	/**
-	 * Caches the extracted data into the cache instance.
-	 *
-	 * @param data The extracted data to be cached.
-	 */
-	protected cacheData(data: IDataExtract<object>): void {
-		/** Deserialized user data. */
-		const users: User[] = [];
-
-		/** Deserialized tweet data. */
-		const tweets: Tweet[] = [];
-
-		// Deserializing non-empty user data
-		for (const user of data.users) {
-			if (user.rest_id) {
-				users.push(new User(user));
-			}
-		}
-
-		// Deserializing non-empty tweet data
-		for (const tweet of data.tweets) {
-			if (tweet.rest_id) {
-				tweets.push(new Tweet(tweet));
-			}
-		}
-
-		// Caching the data
-		this.cache.write(users);
-		this.cache.write(tweets);
-	}
-
-	/**
-	 * Fetches the data with the given id from the cache.
-	 *
-	 * @param id The id of the data to be read from cache.
-	 * @typeParam T - Type of data read from cache.
-	 * @returns The data with the given id. If does not exist, returns undefined.
-	 */
-	protected readData<T>(id: string): T | undefined {
-		// Reading data from cache
-		return this.cache.read(id) as T;
 	}
 }

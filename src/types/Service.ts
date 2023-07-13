@@ -11,13 +11,13 @@ export interface ICursor {
 /**
  * The data that us fetched batch-wise along with a cursor.
  *
- * @typeParam Type - The type of data present in the list.
+ * @typeParam T - Type of data present in the list.
  *
  * @public
  */
-export interface ICursoredData<Type> {
+export interface ICursoredData<T> {
 	/** The list of data of the given type. */
-	list: Type[];
+	list: T[];
 
 	/** The cursor to the next batch of data. */
 	next: ICursor;
