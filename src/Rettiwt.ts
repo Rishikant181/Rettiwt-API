@@ -15,17 +15,17 @@ import { TweetService } from './services/TweetService';
  */
 export class Rettiwt {
 	/** The instance used to fetch data related to users. */
-	users: UserService;
+	user: UserService;
 
 	/** The instance used to fetch data related to tweets. */
-	tweets: TweetService;
+	tweet: TweetService;
 
 	constructor(apiKey: string) {
 		// Preparing auth credentials
 		const cred: AuthCredential = new AuthCredential(apiKey.split(';'));
 
 		// Initalizing service instances
-		this.users = new UserService(cred);
-		this.tweets = new TweetService(cred);
+		this.user = new UserService(cred);
+		this.tweet = new TweetService(cred);
 	}
 }
