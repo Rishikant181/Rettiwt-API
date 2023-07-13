@@ -1,4 +1,5 @@
 // PACKAGES
+import { EResourceType, ITweet as IRawTweet, IUser as IRawUser, ICursor as IRawCursor } from 'rettiwt-core';
 import axios, { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from 'axios';
 import { AuthCredential } from 'rettiwt-auth';
 
@@ -12,6 +13,9 @@ import { User } from '../../models/data/User';
 // ENUMS
 import { EHttpStatus } from '../../enums/HTTP';
 import { IDataExtract } from '../../types/Resolvers';
+
+// HELPERS
+import { findByFilter } from '../../helper/JsonUtils';
 
 /**
  * The base service that handles all HTTP requests.
@@ -71,17 +75,63 @@ export class FetcherService {
 	}
 
 	/**
+	 * Extracts the required data based on the type of resource passed as argument.
+	 * 
+	 * @param data The data from which extraction is to be done.
+	 * @param type The type of data to extract.
+	 * @returns The extracted required data, along with additional data.
+	 */
+	protected extractData<T>(data: NonNullable<unknown>, type: EResourceType): IDataExtract<T> {
+		/**
+		 * The required extracted data.
+		 */
+		let required: T[] = [];
+
+		// For 'Tweet' resources
+		if (type == EResourceType.TWEET_DETAILS || type == EResourceType.TWEET_SEARCH || type == EResourceType.USER_LIKES) {
+			required = findByFilter<T>(data, '__typename', 'Tweet');
+		}
+		// For 'User' resources
+		else {
+			required = findByFilter<T>(data, '__typename', 'User');
+		}
+
+		/**
+		 * Returning the data after filtering out partial data.
+		 */
+		return {
+			required: required,
+			tweets: findByFilter<IRawTweet>(data, '__typename', 'Tweet'),
+			users: findByFilter<IRawUser>(data, '__typename', 'User'),
+			cursor: findByFilter<IRawCursor>(data, 'cursorType', 'Bottom')[0]?.value ?? ''
+		}
+	}
+
+	/**
 	 * Caches the extracted data into the cache instance.
 	 *
 	 * @param data The extracted data to be cached.
 	 */
 	protected cacheData(data: IDataExtract<object>): void {
-		/**
-		 * The extracted data is in raw form.
-		 * This raw data is deserialized into the respective known types.
-		 */
-		const users = data.users.map((user) => new User(user));
-		const tweets = data.tweets.map((tweet) => new Tweet(tweet));
+		/** Deserialized user data. */
+		const users: User[] = [];
+
+		/** Deserialized tweet data. */
+		const tweets: Tweet[] = [];
+
+		// Deserializing non-empty user data
+		for (const user of data.users) {
+			if (user.rest_id) {
+				users.push(new User(user));
+			}
+		}
+
+		// Deserializing non-empty tweet data
+		for (const tweet of data.tweets) {
+			if (tweet.rest_id) {
+				tweets.push(new Tweet(tweet));
+			}
+		}
 
 		// Caching the data
 		this.cache.write(users);

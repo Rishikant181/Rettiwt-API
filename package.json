@@ -31,7 +31,7 @@
 		"node-cache": "5.1.2",
 		"reflect-metadata": "0.1.13",
 		"rettiwt-auth": "1.2.0",
-		"rettiwt-core": "2.4.0"
+		"rettiwt-core": "2.5.0"
 	},
 	"devDependencies": {
 		"@types/node": "20.4.1",

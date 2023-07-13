@@ -22,9 +22,6 @@ import { Tweet } from '../../models/data/Tweet';
 // TYPES
 import { CursoredData } from '../../models/data/CursoredData';
 
-// EXTRACTORS
-import * as UserExtractors from '../helper/extractors/Users';
-
 /**
  * Handles fetching of data related to user account
  */
@@ -59,7 +56,7 @@ export class UserService extends FetcherService {
 			res = await this.request<IUserDetailsResponse>(url).then((res) => res.data);
 
 			// Extracting data
-			const data = UserExtractors.extractUserDetails(res);
+			const data = this.extractData<IRawUser>(res, EResourceType.USER_DETAILS);
 
 			// Caching data
 			this.cacheData(data);
@@ -92,7 +89,7 @@ export class UserService extends FetcherService {
 		const res = await this.request<IUserFollowingResponse>(url).then((res) => res.data);
 
 		// Extracting data
-		const data = UserExtractors.extractUserFollow(res);
+		const data = this.extractData<IRawUser>(res, EResourceType.USER_FOLLOWING);
 
 		// Caching data
 		this.cacheData(data);
@@ -124,7 +121,7 @@ export class UserService extends FetcherService {
 		const res = await this.request<IUserFollowersResponse>(url).then((res) => res.data);
 
 		// Extracting data
-		const data = UserExtractors.extractUserFollow(res);
+		const data = this.extractData<IRawUser>(res, EResourceType.USER_FOLLOWERS);
 
 		// Caching data
 		this.cacheData(data);
@@ -156,7 +153,7 @@ export class UserService extends FetcherService {
 		const res = await this.request<IUserLikesResponse>(url).then((res) => res.data);
 
 		// Extracting data
-		const data = UserExtractors.extractUserLikes(res);
+		const data = this.extractData<IRawTweet>(res, EResourceType.USER_LIKES);
 
 		// Caching data
 		this.cacheData(data);

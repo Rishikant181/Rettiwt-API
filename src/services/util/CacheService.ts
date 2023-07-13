@@ -2,7 +2,7 @@
 import NodeCache from 'node-cache';
 
 // PARSERS
-import * as Parsers from '../helper/Parser';
+import { dataToList, findJSONKey } from '../../helper/JsonUtils';
 
 /**
  * Handles reading and writing of data from and to cache.
@@ -43,17 +43,17 @@ export class CacheService {
 	 */
 	public write(data: object): void {
 		// Converting the data to a list of data
-		const dataList: object[] = Parsers.dataToList(data);
+		const dataList: object[] = dataToList(data);
 
 		// Iterating over the list of data
 		for (const item of dataList) {
 			// Storing whether data is already cached or not
-			const cached = this.client.has(Parsers.findJSONKey(item, 'id'));
+			const cached = this.client.has(findJSONKey(item, 'id'));
 
 			// If data does not already exist in cache
 			if (!cached) {
 				// Adding data to cache
-				this.client.set(Parsers.findJSONKey(item, 'id'), item);
+				this.client.set(findJSONKey(item, 'id'), item);
 			}
 		}
 	}

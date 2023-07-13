@@ -99,7 +99,7 @@
   resolved "https://registry.npmjs.org/@types/validator/-/validator-13.7.17.tgz"
   integrity sha512-aqayTNmeWrZcvnG2MG9eGYI6b7S5fl+yKgPs6bAjOTwPS316R5SxBGKvtSExfyoJU7pIeHJfsHI0Ji41RVMkvQ==
 
-"@typescript-eslint/eslint-plugin@^6.0.0":
+"@typescript-eslint/eslint-plugin@6.0.0":
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-6.0.0.tgz#19ff4f1cab8d6f8c2c1825150f7a840bc5d9bdc4"
   integrity sha512-xuv6ghKGoiq856Bww/yVYnXGsKa588kY3M0XK7uUW/3fJNNULKRfZfSBkMTSpqGG/8ZCXCadfh8G/z/B4aqS/A==
@@ -118,7 +118,7 @@
     semver "^7.5.0"
     ts-api-utils "^1.0.1"
 
-"@typescript-eslint/parser@^6.0.0":
+"@typescript-eslint/parser@6.0.0":
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/parser/-/parser-6.0.0.tgz#46b2600fd1f67e62fc00a28093a75f41bf7effc4"
   integrity sha512-TNaufYSPrr1U8n+3xN+Yp9g31vQDJqhXzzPSHfQDLcaO4tU+mCfODPxCwf4H530zo7aUBE3QIdxCXamEnG04Tg==
@@ -451,7 +451,7 @@ eslint-visitor-keys@^3.3.0, eslint-visitor-keys@^3.4.1:
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-3.4.1.tgz#c22c48f48942d08ca824cc526211ae400478a994"
   integrity sha512-pZnmmLwYzf+kWaM/Qgrvpen51upAktaaiI01nsJD/Yr3lMOdNtq0cxkrrg16w64VtisN6okbs7Q8AfGqj4c9fA==
 
-eslint@^8.44.0:
+eslint@8.44.0:
   version "8.44.0"
   resolved "https://registry.yarnpkg.com/eslint/-/eslint-8.44.0.tgz#51246e3889b259bbcd1d7d736a0c10add4f0e500"
   integrity sha512-0wpHoUbDUHgNCyvFB5aXLiQVfK9B0at6gUvzy83k4kAsQ/u769TQDX6iKC+aO4upIHO9WSaA3QoXYQDHbNwf1A==
@@ -989,7 +989,7 @@ prelude-ls@^1.2.1:
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.2.1.tgz#debc6489d7a6e6b0e7611888cec880337d316396"
   integrity sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==
 
-prettier@^3.0.0:
+prettier@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.0.0.tgz#e7b19f691245a21d618c68bc54dc06122f6105ae"
   integrity sha512-zBf5eHpwHOGPC47h0zrPyNn+eAEIdEzfywMoYn2XPi0P44Zp0tSq64rq0xAREh4auw2cJZHo9QUob+NqCQky4g==
@@ -1039,10 +1039,10 @@ rettiwt-auth@1.2.0:
     axios "1.4.0"
     cookiejar "2.1.4"
 
-rettiwt-core@2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/rettiwt-core/-/rettiwt-core-2.4.0.tgz#dbd13814f738ba6cd65706e1d585292761d78b86"
-  integrity sha512-y130KHD/JD5ddaspCZOGP6GBH9JsRc+X5SUxXc/kMh9a4gJ8avb++V/PXFlVqo51KFz1DkyehFPlDeFzHNqDJg==
+rettiwt-core@2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/rettiwt-core/-/rettiwt-core-2.5.0.tgz#003f6f00d7f5284e292ae3a64b54d395e58b81cf"
+  integrity sha512-FpIuAJI0sorocqxcpK/gyVh47W5aDGo2vJFlwntFJ06R2VdLfFk7x0d4HtfvCstVM8oCz5a7TFApROYhEz3SNA==
   dependencies:
     class-validator "0.14.0"
 
