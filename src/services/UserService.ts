@@ -52,7 +52,7 @@ export class UserService extends FetcherService {
 		const data = this.extractData<IRawUser>(res, EResourceType.USER_DETAILS);
 
 		// Parsing data
-		const user = new User(data.required[0]);
+		const user = new User(data.list[0]);
 
 		return user;
 	}
@@ -83,9 +83,9 @@ export class UserService extends FetcherService {
 		const data = this.extractData<IRawUser>(res, EResourceType.USER_FOLLOWING);
 
 		// Parsing data
-		const users = data.required.map((item: IRawUser) => new User(item));
+		const users = data.list.map((item: IRawUser) => new User(item));
 
-		return new CursoredData<User>(users, data.cursor);
+		return new CursoredData<User>(users, data.next.value);
 	}
 
 	/**
@@ -114,9 +114,9 @@ export class UserService extends FetcherService {
 		const data = this.extractData<IRawUser>(res, EResourceType.USER_FOLLOWERS);
 
 		// Parsing data
-		const users = data.required.map((item: IRawUser) => new User(item));
+		const users = data.list.map((item: IRawUser) => new User(item));
 
-		return new CursoredData<User>(users, data.cursor);
+		return new CursoredData<User>(users, data.next.value);
 	}
 
 	/**
@@ -145,8 +145,8 @@ export class UserService extends FetcherService {
 		const data = this.extractData<IRawTweet>(res, EResourceType.USER_LIKES);
 
 		// Parsing data
-		const tweets = data.required.map((item: IRawTweet) => new Tweet(item));
+		const tweets = data.list.map((item: IRawTweet) => new Tweet(item));
 
-		return new CursoredData<Tweet>(tweets, data.cursor);
+		return new CursoredData<Tweet>(tweets, data.next.value);
 	}
 }
