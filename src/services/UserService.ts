@@ -36,14 +36,16 @@ export class UserService extends FetcherService {
 	}
 
 	/**
-	 * @param id The id/username of the target user.
+	 * Get the details of a user.
+	 * 
+	 * @param userName The username of the target user.
 	 * @returns The details of the given user.
 	 *
 	 * @public
 	 */
-	async getUserDetails(id: string): Promise<User> {
+	async details(userName: string): Promise<User> {
 		// Preparing the URL
-		const url: string = new Url(EResourceType.USER_DETAILS, { id: id }).toString();
+		const url: string = new Url(EResourceType.USER_DETAILS, { id: userName }).toString();
 
 		// Fetching the raw data
 		const res = await this.request<IUserDetailsResponse>(url).then((res) => res.data);
@@ -58,6 +60,8 @@ export class UserService extends FetcherService {
 	}
 
 	/**
+	 * Get the list of users who are followed by the given user.
+	 * 
 	 * @param userId The rest id of the target user.
 	 * @param count The number of following to fetch, must be >= 40 (when no cursor is provided) and <=100.
 	 * @param cursor The cursor to next batch. If blank, first batch is fetched.
@@ -65,7 +69,7 @@ export class UserService extends FetcherService {
 	 *
 	 * @public
 	 */
-	async getUserFollowing(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+	async following(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Objectifying parameters
 		const args: UserListArgs = new UserListArgs(count, cursor);
 
@@ -89,6 +93,8 @@ export class UserService extends FetcherService {
 	}
 
 	/**
+	 * Get the list followers of a given user.
+	 * 
 	 * @param userId The rest id of the target user.
 	 * @param count The number of followers to fetch, must be >= 40 (when no cursor is provided) and <=100.
 	 * @param cursor The cursor to next batch. If blank, first batch is fetched.
@@ -96,7 +102,7 @@ export class UserService extends FetcherService {
 	 *
 	 * @public
 	 */
-	async getUserFollowers(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+	async followers(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Objectifying parameters
 		const args: UserListArgs = new UserListArgs(count, cursor);
 
@@ -120,6 +126,8 @@ export class UserService extends FetcherService {
 	}
 
 	/**
+	 * Get the list of tweets liked by the given user.
+	 * 
 	 * @param userId The rest id of the target user.
 	 * @param count The number of likes to fetch.
 	 * @param cursor The cursor to next batch. If blank, first batch is fetched, must be >= 40 (when no cursor is provided) and <=100.
@@ -127,7 +135,7 @@ export class UserService extends FetcherService {
 	 *
 	 * @public
 	 */
-	async getUserLikes(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+	async likes(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Objectifying parameters
 		const args: UserListArgs = new UserListArgs(count, cursor);
 
