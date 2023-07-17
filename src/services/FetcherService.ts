@@ -1,5 +1,5 @@
 // PACKAGES
-import { EResourceType, ICursor as IRawCursor } from 'rettiwt-core';
+import { Url, Args, EResourceType, ICursor as IRawCursor } from 'rettiwt-core';
 import axios, { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from 'axios';
 import { AuthCredential } from 'rettiwt-auth';
 
@@ -52,7 +52,7 @@ export class FetcherService {
 	 * @typeParam T - Type of response data.
 	 * @returns The response received.
 	 */
-	protected async request<T>(url: string): Promise<AxiosResponse<T>> {
+	protected async request(url: string): Promise<AxiosResponse<NonNullable<unknown>>> {
 		/**
 		 * Creating the request configuration based on the params
 		 */
@@ -94,5 +94,26 @@ export class FetcherService {
 		}
 
 		return new CursoredData(required, findByFilter<IRawCursor>(data, 'cursorType', 'Bottom')[0]?.value);
+	}
+
+	/**
+	 * Fetches the requested resource from Twitter and returns it after processing.
+	 * 
+	 * @param resourceType The type of resource to fetch.
+	 * @param args Resource specific arguments.
+	 * @typeParam T The type of the base data present in the resource.
+	 * @returns The processed data requested from Twitter.
+	 */
+	protected async fetch<T>(resourceType: EResourceType, args: Args): Promise<CursoredData<T>> {
+		// Preparing the URL
+		const url: string = new Url(resourceType, args).toString();
+
+		// Getting the raw data
+		const res = await this.request(url).then((res) => res.data);
+
+		// Extracting data
+		const data = this.extractData<T>(res, resourceType);
+
+		return data;
 	}
 }

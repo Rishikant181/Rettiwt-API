@@ -2,10 +2,6 @@
 import {
 	Url,
 	EResourceType,
-	IUserDetailsResponse,
-	IUserFollowersResponse,
-	IUserFollowingResponse,
-	IUserLikesResponse,
 	ITweet as IRawTweet,
 	IUser as IRawUser,
 } from 'rettiwt-core';
@@ -47,7 +43,7 @@ export class UserService extends FetcherService {
 		const url: string = new Url(EResourceType.USER_DETAILS, { id: userName }).toString();
 
 		// Fetching the raw data
-		const res = await this.request<IUserDetailsResponse>(url).then((res) => res.data);
+		const res = await this.request(url).then((res) => res.data);
 
 		// Extracting data
 		const data = this.extractData<IRawUser>(res, EResourceType.USER_DETAILS);
@@ -77,7 +73,7 @@ export class UserService extends FetcherService {
 		}).toString();
 
 		// Fetchin the raw data
-		const res = await this.request<IUserFollowingResponse>(url).then((res) => res.data);
+		const res = await this.request(url).then((res) => res.data);
 
 		// Extracting data
 		const data = this.extractData<IRawUser>(res, EResourceType.USER_FOLLOWING);
@@ -107,7 +103,7 @@ export class UserService extends FetcherService {
 		}).toString();
 
 		// Fetching the raw data
-		const res = await this.request<IUserFollowersResponse>(url).then((res) => res.data);
+		const res = await this.request(url).then((res) => res.data);
 
 		// Extracting data
 		const data = this.extractData<IRawUser>(res, EResourceType.USER_FOLLOWERS);
@@ -137,7 +133,7 @@ export class UserService extends FetcherService {
 		}).toString();
 
 		// Fetching the raw data
-		const res = await this.request<IUserLikesResponse>(url).then((res) => res.data);
+		const res = await this.request(url).then((res) => res.data);
 
 		// Extracting data
 		const data = this.extractData<IRawTweet>(res, EResourceType.USER_LIKES);

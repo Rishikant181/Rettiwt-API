@@ -2,10 +2,6 @@
 import {
 	Url,
 	EResourceType,
-	ITweetSearchResponse,
-	ITweetDetailsResponse,
-	ITweetFavoritersResponse,
-	ITweetRetweetersResponse,
 	ITweet as IRawTweet,
 	IUser as IRawUser,
 	TweetFilter,
@@ -54,7 +50,7 @@ export class TweetService extends FetcherService {
 		}).toString();
 
 		// Getting the raw data
-		const res = await this.request<ITweetSearchResponse>(url).then((res) => res.data);
+		const res = await this.request(url).then((res) => res.data);
 
 		// Extracting data
 		const data = this.extractData<IRawTweet>(res, EResourceType.TWEET_SEARCH);
@@ -81,7 +77,7 @@ export class TweetService extends FetcherService {
 		const url: string = new Url(EResourceType.TWEET_DETAILS, { id: id }).toString();
 
 		// Fetching the raw data
-		const res = await this.request<ITweetDetailsResponse>(url).then((res) => res.data);
+		const res = await this.request(url).then((res) => res.data);
 
 		// Extracting data
 		const data = this.extractData<IRawTweet>(res, EResourceType.TWEET_DETAILS);
@@ -111,7 +107,7 @@ export class TweetService extends FetcherService {
 		}).toString();
 
 		// Fetching the raw data
-		const res = await this.request<ITweetFavoritersResponse>(url).then((res) => res.data);
+		const res = await this.request(url).then((res) => res.data);
 
 		// Extracting data
 		const data = this.extractData<IRawUser>(res, EResourceType.TWEET_FAVORITERS);
@@ -141,7 +137,7 @@ export class TweetService extends FetcherService {
 		}).toString();
 
 		// Fetching the raw data
-		const res = await this.request<ITweetRetweetersResponse>(url).then((res) => res.data);
+		const res = await this.request(url).then((res) => res.data);
 
 		// Extracting data
 		const data = this.extractData<IRawUser>(res, EResourceType.TWEET_RETWEETERS);
