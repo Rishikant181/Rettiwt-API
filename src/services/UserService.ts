@@ -1,6 +1,5 @@
 // PACKAGES
 import {
-	Url,
 	EResourceType,
 	ITweet as IRawTweet,
 	IUser as IRawUser,
@@ -39,16 +38,10 @@ export class UserService extends FetcherService {
 	 * @public
 	 */
 	async details(userName: string): Promise<User> {
-		// Preparing the URL
-		const url: string = new Url(EResourceType.USER_DETAILS, { id: userName }).toString();
+		// Fetching the requested data
+		const data = await this.fetch<IRawUser>(EResourceType.USER_DETAILS, { id: userName });
 
-		// Fetching the raw data
-		const res = await this.request(url).then((res) => res.data);
-
-		// Extracting data
-		const data = this.extractData<IRawUser>(res, EResourceType.USER_DETAILS);
-
-		// Parsing data
+		// Deserializing data
 		const user = new User(data.list[0]);
 
 		return user;
@@ -65,21 +58,11 @@ export class UserService extends FetcherService {
 	 * @public
 	 */
 	async following(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		// Preparing the URL
-		const url: string = new Url(EResourceType.USER_FOLLOWING, {
-			id: userId,
-			count: count,
-			cursor: cursor,
-		}).toString();
+		// Fetching the requested data
+		const data = await this.fetch<IRawUser>(EResourceType.USER_FOLLOWING, { id: userId, count: count, cursor: cursor });
 
-		// Fetchin the raw data
-		const res = await this.request(url).then((res) => res.data);
-
-		// Extracting data
-		const data = this.extractData<IRawUser>(res, EResourceType.USER_FOLLOWING);
-
-		// Parsing data
-		const users = data.list.map((item: IRawUser) => new User(item));
+		// Deserializing data
+		const users = data.list.map(item => new User(item));
 
 		return new CursoredData<User>(users, data.next.value);
 	}
@@ -95,21 +78,11 @@ export class UserService extends FetcherService {
 	 * @public
 	 */
 	async followers(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		// Preparing the URL
-		const url: string = new Url(EResourceType.USER_FOLLOWERS, {
-			id: userId,
-			count: count,
-			cursor: cursor,
-		}).toString();
+		// Fetching the requested data
+		const data = await this.fetch<IRawUser>(EResourceType.USER_FOLLOWERS, { id: userId, count: count, cursor: cursor });
 
-		// Fetching the raw data
-		const res = await this.request(url).then((res) => res.data);
-
-		// Extracting data
-		const data = this.extractData<IRawUser>(res, EResourceType.USER_FOLLOWERS);
-
-		// Parsing data
-		const users = data.list.map((item: IRawUser) => new User(item));
+		// Deserializing data
+		const users = data.list.map(item => new User(item));
 
 		return new CursoredData<User>(users, data.next.value);
 	}
@@ -125,21 +98,11 @@ export class UserService extends FetcherService {
 	 * @public
 	 */
 	async likes(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-		// Preparing the URL
-		const url: string = new Url(EResourceType.USER_LIKES, {
-			id: userId,
-			count: count,
-			cursor: cursor,
-		}).toString();
+		// Fetching the requested data
+		const data = await this.fetch<IRawTweet>(EResourceType.USER_LIKES, { id: userId, count: count, cursor: cursor });
 
-		// Fetching the raw data
-		const res = await this.request(url).then((res) => res.data);
-
-		// Extracting data
-		const data = this.extractData<IRawTweet>(res, EResourceType.USER_LIKES);
-
-		// Parsing data
-		const tweets = data.list.map((item: IRawTweet) => new Tweet(item));
+		// Deserializing data
+		const tweets = data.list.map(item => new Tweet(item));
 
 		return new CursoredData<Tweet>(tweets, data.next.value);
 	}

@@ -52,7 +52,7 @@ export class FetcherService {
 	 * @typeParam T - Type of response data.
 	 * @returns The response received.
 	 */
-	protected async request(url: string): Promise<AxiosResponse<NonNullable<unknown>>> {
+	private async request(url: string): Promise<AxiosResponse<NonNullable<unknown>>> {
 		/**
 		 * Creating the request configuration based on the params
 		 */
@@ -74,7 +74,7 @@ export class FetcherService {
 	 * @typeParam T Type of extracted data.
 	 * @returns The extracted required data, along with additional data.
 	 */
-	protected extractData<T>(data: NonNullable<unknown>, type: EResourceType): CursoredData<T> {
+	private extractData<T>(data: NonNullable<unknown>, type: EResourceType): CursoredData<T> {
 		/**
 		 * The required extracted data.
 		 */
