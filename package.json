@@ -7,7 +7,7 @@
 	"scripts": {
 		"build": "tsc",
 		"format": "prettier --write .",
-		"lint": "eslint .",
+		"lint": "eslint --max-warnings 0 .",
 		"docs": "typedoc src/index.ts",
 		"debug": "nodemon ./dist/index.js --inspect=0.0.0.0:9229"
 	},
