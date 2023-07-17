@@ -330,11 +330,6 @@ chokidar@^3.5.2:
   optionalDependencies:
     fsevents "~2.3.2"
 
-class-transformer@0.5.1:
-  version "0.5.1"
-  resolved "https://registry.npmjs.org/class-transformer/-/class-transformer-0.5.1.tgz"
-  integrity sha512-SQa1Ws6hUbfC98vKGxZH3KFY0Y1lm5Zm0SY8XX9zbK7FJCyVEac3ATW0RIpwzW+oOfmHE5PMPufDG9hCfoEOMw==
-
 class-validator@0.14.0:
   version "0.14.0"
   resolved "https://registry.npmjs.org/class-validator/-/class-validator-0.14.0.tgz"
@@ -1009,11 +1004,6 @@ readdirp@~3.6.0:
   dependencies:
     picomatch "^2.2.1"
 
-reflect-metadata@0.1.13:
-  version "0.1.13"
-  resolved "https://registry.npmjs.org/reflect-metadata/-/reflect-metadata-0.1.13.tgz"
-  integrity sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==
-
 resolve-from@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/resolve-from/-/resolve-from-4.0.0.tgz#4abcd852ad32dd7baabfe9b40e00a36db5f392e6"
@@ -1027,10 +1017,10 @@ rettiwt-auth@1.2.0:
     axios "1.4.0"
     cookiejar "2.1.4"
 
-rettiwt-core@2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/rettiwt-core/-/rettiwt-core-2.5.0.tgz#003f6f00d7f5284e292ae3a64b54d395e58b81cf"
-  integrity sha512-FpIuAJI0sorocqxcpK/gyVh47W5aDGo2vJFlwntFJ06R2VdLfFk7x0d4HtfvCstVM8oCz5a7TFApROYhEz3SNA==
+rettiwt-core@2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/rettiwt-core/-/rettiwt-core-2.5.1.tgz#e1bf9b01e6c798c4bba7a5f1707d5b8fa8259fc1"
+  integrity sha512-0dmc4/IdQNhr2Je/0b5JeHzXfhHMb+nyyPetzqNJFlOLyp8CKbzCSQW+6StGftqie3epNvFO19EGlFx5dfXTeQ==
   dependencies:
     class-validator "0.14.0"
 

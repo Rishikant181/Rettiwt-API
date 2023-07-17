@@ -7,7 +7,7 @@ import { AuthCredential } from 'rettiwt-auth';
 import { EHttpStatus } from '../enums/HTTP';
 
 // MODELS
-import { CursoredData } from '../models/data/CursoredData';
+import { CursoredData } from '../models/CursoredData';
 
 // HELPERS
 import { findByFilter } from '../helper/JsonUtils';

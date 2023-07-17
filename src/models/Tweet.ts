@@ -1,9 +1,9 @@
 // TYPES
-import { ITweet, ITweetEntities } from '../../types/Tweet';
+import { ITweet, ITweetEntities } from '../types/Tweet';
 import { ITweet as IRawTweet, IEntities as IRawTweetEntities } from 'rettiwt-core';
 
 // PARSERS
-import { normalizeText } from '../../helper/JsonUtils';
+import { normalizeText } from '../helper/JsonUtils';
 
 /**
  * The different types parsed entities like urls, media, mentions, hashtags, etc.

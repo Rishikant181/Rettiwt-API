@@ -1,5 +1,5 @@
 // TYPES
-import { IUser } from '../../types/User';
+import { IUser } from '../types/User';
 import { IUser as IRawUser } from 'rettiwt-core';
 
 /**
