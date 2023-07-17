@@ -98,7 +98,7 @@ export class FetcherService {
 
 	/**
 	 * Fetches the requested resource from Twitter and returns it after processing.
-	 * 
+	 *
 	 * @param resourceType The type of resource to fetch.
 	 * @param args Resource specific arguments.
 	 * @typeParam T The type of the base data present in the resource.

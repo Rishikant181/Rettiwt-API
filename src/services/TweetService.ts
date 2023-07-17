@@ -1,10 +1,5 @@
 // PACKAGES
-import {
-	EResourceType,
-	ITweet as IRawTweet,
-	IUser as IRawUser,
-	TweetFilter,
-} from 'rettiwt-core';
+import { EResourceType, ITweet as IRawTweet, IUser as IRawUser, TweetFilter } from 'rettiwt-core';
 import { AuthCredential } from 'rettiwt-auth';
 
 // SERVICES
@@ -42,10 +37,14 @@ export class TweetService extends FetcherService {
 	 */
 	async search(query: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Fetching the requested data
-		const data = await this.fetch<IRawTweet>(EResourceType.TWEET_SEARCH, { filter: query, count: count, cursor: cursor });
+		const data = await this.fetch<IRawTweet>(EResourceType.TWEET_SEARCH, {
+			filter: query,
+			count: count,
+			cursor: cursor,
+		});
 
 		// Deserializing data
-		const tweets = data.list.map(item => new Tweet(item));
+		const tweets = data.list.map((item) => new Tweet(item));
 
 		// Sorting the tweets by date, from recent to oldest
 		tweets.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
@@ -83,10 +82,14 @@ export class TweetService extends FetcherService {
 	 */
 	async favoriters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Fetching the requested data
-		const data = await this.fetch<IRawUser>(EResourceType.TWEET_FAVORITERS, { id: tweetId, count: count, cursor: cursor });
+		const data = await this.fetch<IRawUser>(EResourceType.TWEET_FAVORITERS, {
+			id: tweetId,
+			count: count,
+			cursor: cursor,
+		});
 
 		// Deserializing data
-		const users = data.list.map(item => new User(item));
+		const users = data.list.map((item) => new User(item));
 
 		return new CursoredData<User>(users, data.next.value);
 	}
@@ -103,10 +106,14 @@ export class TweetService extends FetcherService {
 	 */
 	async retweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Fetching the requested data
-		const data = await this.fetch<IRawUser>(EResourceType.TWEET_RETWEETERS, { id: tweetId, count: count, cursor: cursor });
+		const data = await this.fetch<IRawUser>(EResourceType.TWEET_RETWEETERS, {
+			id: tweetId,
+			count: count,
+			cursor: cursor,
+		});
 
 		// Deserializing data
-		const users = data.list.map(item => new User(item));
+		const users = data.list.map((item) => new User(item));
 
 		return new CursoredData<User>(users, data.next.value);
 	}

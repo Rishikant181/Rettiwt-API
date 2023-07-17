@@ -1,9 +1,5 @@
 // PACKAGES
-import {
-	EResourceType,
-	ITweet as IRawTweet,
-	IUser as IRawUser,
-} from 'rettiwt-core';
+import { EResourceType, ITweet as IRawTweet, IUser as IRawUser } from 'rettiwt-core';
 import { AuthCredential } from 'rettiwt-auth';
 
 // SERVICES
@@ -59,10 +55,14 @@ export class UserService extends FetcherService {
 	 */
 	async following(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Fetching the requested data
-		const data = await this.fetch<IRawUser>(EResourceType.USER_FOLLOWING, { id: userId, count: count, cursor: cursor });
+		const data = await this.fetch<IRawUser>(EResourceType.USER_FOLLOWING, {
+			id: userId,
+			count: count,
+			cursor: cursor,
+		});
 
 		// Deserializing data
-		const users = data.list.map(item => new User(item));
+		const users = data.list.map((item) => new User(item));
 
 		return new CursoredData<User>(users, data.next.value);
 	}
@@ -79,10 +79,14 @@ export class UserService extends FetcherService {
 	 */
 	async followers(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Fetching the requested data
-		const data = await this.fetch<IRawUser>(EResourceType.USER_FOLLOWERS, { id: userId, count: count, cursor: cursor });
+		const data = await this.fetch<IRawUser>(EResourceType.USER_FOLLOWERS, {
+			id: userId,
+			count: count,
+			cursor: cursor,
+		});
 
 		// Deserializing data
-		const users = data.list.map(item => new User(item));
+		const users = data.list.map((item) => new User(item));
 
 		return new CursoredData<User>(users, data.next.value);
 	}
@@ -99,10 +103,14 @@ export class UserService extends FetcherService {
 	 */
 	async likes(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Fetching the requested data
-		const data = await this.fetch<IRawTweet>(EResourceType.USER_LIKES, { id: userId, count: count, cursor: cursor });
+		const data = await this.fetch<IRawTweet>(EResourceType.USER_LIKES, {
+			id: userId,
+			count: count,
+			cursor: cursor,
+		});
 
 		// Deserializing data
-		const tweets = data.list.map(item => new Tweet(item));
+		const tweets = data.list.map((item) => new Tweet(item));
 
 		return new CursoredData<Tweet>(tweets, data.next.value);
 	}
