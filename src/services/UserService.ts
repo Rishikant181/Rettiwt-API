@@ -15,12 +15,11 @@ import { AuthCredential } from 'rettiwt-auth';
 import { FetcherService } from './FetcherService';
 
 // MODELS
-import { User } from '../models/data/User';
-import { UserListArgs } from '../models/args/UserListArgs';
-import { Tweet } from '../models/data/Tweet';
+import { User } from '../models/User';
+import { Tweet } from '../models/Tweet';
 
 // TYPES
-import { CursoredData } from '../models/data/CursoredData';
+import { CursoredData } from '../models/CursoredData';
 
 /**
  * Handles fetching of data related to user account
@@ -70,14 +69,11 @@ export class UserService extends FetcherService {
 	 * @public
 	 */
 	async following(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		// Objectifying parameters
-		const args: UserListArgs = new UserListArgs(count, cursor);
-
 		// Preparing the URL
 		const url: string = new Url(EResourceType.USER_FOLLOWING, {
 			id: userId,
-			count: args.count,
-			cursor: args.cursor,
+			count: count,
+			cursor: cursor,
 		}).toString();
 
 		// Fetchin the raw data
@@ -103,14 +99,11 @@ export class UserService extends FetcherService {
 	 * @public
 	 */
 	async followers(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		// Objectifying parameters
-		const args: UserListArgs = new UserListArgs(count, cursor);
-
 		// Preparing the URL
 		const url: string = new Url(EResourceType.USER_FOLLOWERS, {
 			id: userId,
-			count: args.count,
-			cursor: args.cursor,
+			count: count,
+			cursor: cursor,
 		}).toString();
 
 		// Fetching the raw data
@@ -136,14 +129,11 @@ export class UserService extends FetcherService {
 	 * @public
 	 */
 	async likes(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-		// Objectifying parameters
-		const args: UserListArgs = new UserListArgs(count, cursor);
-
 		// Preparing the URL
 		const url: string = new Url(EResourceType.USER_LIKES, {
 			id: userId,
-			count: args.count,
-			cursor: args.cursor,
+			count: count,
+			cursor: cursor,
 		}).toString();
 
 		// Fetching the raw data

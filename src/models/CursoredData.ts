@@ -1,5 +1,5 @@
 // TYPES
-import { ICursor, ICursoredData } from '../../types/Service';
+import { ICursor, ICursoredData } from '../types/Service';
 
 /**
  * The cursor to the batch of data to be fetched.

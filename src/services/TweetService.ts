@@ -16,10 +16,9 @@ import { AuthCredential } from 'rettiwt-auth';
 import { FetcherService } from './FetcherService';
 
 // MODELS
-import { Tweet } from '../models/data/Tweet';
-import { User } from '../models/data/User';
-import { TweetListArgs } from '../models/args/TweetListArgs';
-import { CursoredData } from '../models/data/CursoredData';
+import { Tweet } from '../models/Tweet';
+import { User } from '../models/User';
+import { CursoredData } from '../models/CursoredData';
 
 /**
  * Handles fetching of data related to tweets.
@@ -47,14 +46,11 @@ export class TweetService extends FetcherService {
 	 * @public
 	 */
 	async search(query: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-		// Objectifying parameters
-		const args: TweetListArgs = new TweetListArgs(count, cursor);
-
 		// Preparing the URL
 		const url: string = new Url(EResourceType.TWEET_SEARCH, {
 			filter: query,
-			count: args.count,
-			cursor: args.cursor,
+			count: count,
+			cursor: cursor,
 		}).toString();
 
 		// Getting the raw data
@@ -107,14 +103,11 @@ export class TweetService extends FetcherService {
 	 * @public
 	 */
 	async favoriters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		// Objectifying parameters
-		const args: TweetListArgs = new TweetListArgs(count, cursor);
-
 		// Preparing the URL
 		const url: string = new Url(EResourceType.TWEET_FAVORITERS, {
 			id: tweetId,
-			count: args.count,
-			cursor: args.cursor,
+			count: count,
+			cursor: cursor,
 		}).toString();
 
 		// Fetching the raw data
@@ -140,14 +133,11 @@ export class TweetService extends FetcherService {
 	 * @public
 	 */
 	async retweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		// Objectifying parameters
-		const args: TweetListArgs = new TweetListArgs(count, cursor);
-
 		// Preparing the URL
 		const url: string = new Url(EResourceType.TWEET_RETWEETERS, {
 			id: tweetId,
-			count: args.count,
-			cursor: args.cursor,
+			count: count,
+			cursor: cursor,
 		}).toString();
 
 		// Fetching the raw data
