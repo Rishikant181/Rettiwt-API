@@ -8,9 +8,6 @@ import { UserService } from './services/UserService';
 /**
  * The class for fetching data from Twitter.
  *
- * @param apiKey The API key (cookie string) to use for fetching data.
- * @returns The API for fetching user and tweet data.
- *
  * @public
  */
 export class Rettiwt {
@@ -23,7 +20,7 @@ export class Rettiwt {
 	/**
 	 * Initializes a new Rettiwt instance using the given api key.
 	 *
-	 * @param apiKey The apiKey (cookie) to be used for authenticating Rettiwt against Twitter.
+	 * @param apiKey - The apiKey (cookie) to be used for authenticating Rettiwt against Twitter.
 	 */
 	constructor(apiKey: string) {
 		// Preparing auth credentials

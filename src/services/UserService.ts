@@ -17,7 +17,7 @@ import { CursoredData } from '../models/CursoredData';
  */
 export class UserService extends FetcherService {
 	/**
-	 * @param cred The credentials to use for authenticating against Twitter API.
+	 * @param cred - The credentials to use for authenticating against Twitter API.
 	 *
 	 * @internal
 	 */
@@ -28,7 +28,7 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the details of a user.
 	 *
-	 * @param userName The username of the target user.
+	 * @param userName - The username of the target user.
 	 * @returns The details of the given user.
 	 *
 	 * @public
@@ -46,9 +46,9 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the list of users who are followed by the given user.
 	 *
-	 * @param userId The rest id of the target user.
-	 * @param count The number of following to fetch, must be >= 40 (when no cursor is provided) and <=100.
-	 * @param cursor The cursor to next batch. If blank, first batch is fetched.
+	 * @param userId - The rest id of the target user.
+	 * @param count - The number of following to fetch, must be \>= 40 (when no cursor is provided) and \<=100.
+	 * @param cursor - The cursor to next batch. If blank, first batch is fetched.
 	 * @returns The list of users followed by the target user.
 	 *
 	 * @public
@@ -70,9 +70,9 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the list followers of a given user.
 	 *
-	 * @param userId The rest id of the target user.
-	 * @param count The number of followers to fetch, must be >= 40 (when no cursor is provided) and <=100.
-	 * @param cursor The cursor to next batch. If blank, first batch is fetched.
+	 * @param userId - The rest id of the target user.
+	 * @param count - The number of followers to fetch, must be \>= 40 (when no cursor is provided) and \<=100.
+	 * @param cursor - The cursor to next batch. If blank, first batch is fetched.
 	 * @returns The list of users following the target user.
 	 *
 	 * @public
@@ -94,9 +94,9 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the list of tweets liked by the given user.
 	 *
-	 * @param userId The rest id of the target user.
-	 * @param count The number of likes to fetch.
-	 * @param cursor The cursor to next batch. If blank, first batch is fetched, must be >= 40 (when no cursor is provided) and <=100.
+	 * @param userId - The rest id of the target user.
+	 * @param count - The number of likes to fetch.
+	 * @param cursor - The cursor to next batch. If blank, first batch is fetched, must be \>= 40 (when no cursor is provided) and \<=100.
 	 * @returns The list of tweets liked by the target user.
 	 *
 	 * @public

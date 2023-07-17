@@ -17,7 +17,7 @@ import { CursoredData } from '../models/CursoredData';
  */
 export class TweetService extends FetcherService {
 	/**
-	 * @param cred The credentials to use for authenticating against Twitter API.
+	 * @param cred - The credentials to use for authenticating against Twitter API.
 	 *
 	 * @internal
 	 */
@@ -28,9 +28,9 @@ export class TweetService extends FetcherService {
 	/**
 	 * Search for tweets using a filter.
 	 *
-	 * @param filter The filter be used for searching the tweets.
-	 * @param count The number of tweets to fetch, must be >= 10 (when no cursor is provided) and <= 20
-	 * @param cursor The cursor to the next batch of tweets. If blank, first batch is fetched.
+	 * @param filter - The filter be used for searching the tweets.
+	 * @param count - The number of tweets to fetch, must be \>= 10 (when no cursor is provided) and \<= 20
+	 * @param cursor - The cursor to the next batch of tweets. If blank, first batch is fetched.
 	 * @returns The list of tweets that match the given filter.
 	 *
 	 * @public
@@ -55,7 +55,7 @@ export class TweetService extends FetcherService {
 	/**
 	 * Get the details of a tweet.
 	 *
-	 * @param id The id of the target tweet.
+	 * @param id - The id of the target tweet.
 	 * @returns The details of a single tweet with the given tweet id.
 	 *
 	 * @public
@@ -73,9 +73,9 @@ export class TweetService extends FetcherService {
 	/**
 	 * Get the list of users who liked a tweet.
 	 *
-	 * @param tweetId The rest id of the target tweet.
-	 * @param count The batch size of the list, must be >= 10 (when no cursor is provided) and <= 20.
-	 * @param cursor The cursor to the next batch of users. If blank, first batch is fetched.
+	 * @param tweetId - The rest id of the target tweet.
+	 * @param count - The batch size of the list, must be \>= 10 (when no cursor is provided) and \<= 20.
+	 * @param cursor - The cursor to the next batch of users. If blank, first batch is fetched.
 	 * @returns The list of users who liked the given tweet.
 	 *
 	 * @public
@@ -97,9 +97,9 @@ export class TweetService extends FetcherService {
 	/**
 	 * Get the list of users who retweeted a tweet.
 	 *
-	 * @param tweetId The rest id of the target tweet.
-	 * @param count The batch size of the list, must be >= 10 (when no cursor is provided) and <= 100.
-	 * @param cursor The cursor to the next batch of users. If blank, first batch is fetched.
+	 * @param tweetId - The rest id of the target tweet.
+	 * @param count - The batch size of the list, must be \>= 10 (when no cursor is provided) and \<= 100.
+	 * @param cursor - The cursor to the next batch of users. If blank, first batch is fetched.
 	 * @returns The list of users who retweeted the given tweet.
 	 *
 	 * @public
