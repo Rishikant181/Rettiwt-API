@@ -1,3 +1,10 @@
+// PACKAGES
+import { ITweet as IRawTweet, IUser as IRawUser } from 'rettiwt-core';
+
+// MODELS
+import { Tweet } from './Tweet';
+import { User } from './User';
+
 // TYPES
 import { ICursor, ICursoredData } from '../types/CursoredData';
 
@@ -25,11 +32,14 @@ export class Cursor implements ICursor {
  *
  * @internal
  *
- * @typeParam T - Type of data present in the list.
+ * @typeParam T - Type of data to be stored in the list.
  */
-export class CursoredData<T> implements ICursoredData<T> {
+export class CursoredData<T extends Tweet | User> implements ICursoredData<T> {
 	/** The list of data of the given type. */
-	list: T[];
+	list: T[] = [];
+
+	/** The cursor to the previous batch of data. */
+	prev: ICursor;
 
 	/** The cursor to the next batch of data. */
 	next: Cursor;
@@ -38,8 +48,21 @@ export class CursoredData<T> implements ICursoredData<T> {
 	 * @param list - The list of data item to store.
 	 * @param next - The cursor to the next batch of data.
 	 */
-	constructor(list: T[] = [], next: string = '') {
-		this.list = list;
+	constructor(list: (IRawTweet | IRawUser)[] = [], prev: string = '', next: string = '') {
+		// Deserializing the input raw data and storing it in the list
+		for (const item of list) {
+			// If the item is a raw tweet
+			if (item.__typename == 'Tweet') {
+				this.list.push(new Tweet(item as IRawTweet) as T);
+			}
+			// If the item is a raw user
+			else if (item.__typename == 'User') {
+				this.list.push(new User(item as IRawUser) as T);
+			}
+		}
+
+		// Initializing cursors
+		this.prev = new Cursor(prev);
 		this.next = new Cursor(next);
 	}
 }

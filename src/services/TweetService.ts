@@ -1,5 +1,5 @@
 // PACKAGES
-import { EResourceType, ITweet as IRawTweet, IUser as IRawUser, TweetFilter } from 'rettiwt-core';
+import { EResourceType, TweetFilter } from 'rettiwt-core';
 import { AuthCredential } from 'rettiwt-auth';
 
 // SERVICES
@@ -37,19 +37,16 @@ export class TweetService extends FetcherService {
 	 */
 	async search(query: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Fetching the requested data
-		const data = await this.fetch<IRawTweet>(EResourceType.TWEET_SEARCH, {
+		const data = await this.fetch<Tweet>(EResourceType.TWEET_SEARCH, {
 			filter: query,
 			count: count,
 			cursor: cursor,
 		});
 
-		// Deserializing data
-		const tweets = data.list.map((item) => new Tweet(item));
-
 		// Sorting the tweets by date, from recent to oldest
-		tweets.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
+		data.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
 
-		return new CursoredData<Tweet>(tweets, data.next.value);
+		return data;
 	}
 
 	/**
@@ -62,12 +59,9 @@ export class TweetService extends FetcherService {
 	 */
 	async details(id: string): Promise<Tweet> {
 		// Fetching the requested data
-		const data = await this.fetch<IRawTweet>(EResourceType.TWEET_DETAILS, { id: id });
+		const data = await this.fetch<Tweet>(EResourceType.TWEET_DETAILS, { id: id });
 
-		// Deserializing data
-		const tweet = new Tweet(data.list[0]);
-
-		return tweet;
+		return data.list[0];
 	}
 
 	/**
@@ -82,16 +76,13 @@ export class TweetService extends FetcherService {
 	 */
 	async favoriters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Fetching the requested data
-		const data = await this.fetch<IRawUser>(EResourceType.TWEET_FAVORITERS, {
+		const data = await this.fetch<User>(EResourceType.TWEET_FAVORITERS, {
 			id: tweetId,
 			count: count,
 			cursor: cursor,
 		});
 
-		// Deserializing data
-		const users = data.list.map((item) => new User(item));
-
-		return new CursoredData<User>(users, data.next.value);
+		return data;
 	}
 
 	/**
@@ -106,15 +97,12 @@ export class TweetService extends FetcherService {
 	 */
 	async retweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Fetching the requested data
-		const data = await this.fetch<IRawUser>(EResourceType.TWEET_RETWEETERS, {
+		const data = await this.fetch<User>(EResourceType.TWEET_RETWEETERS, {
 			id: tweetId,
 			count: count,
 			cursor: cursor,
 		});
 
-		// Deserializing data
-		const users = data.list.map((item) => new User(item));
-
-		return new CursoredData<User>(users, data.next.value);
+		return data;
 	}
 }
