@@ -77,7 +77,10 @@ export class FetcherService {
 	 * @typeParam DeserializedType - The type of data produced after deserialization of BaseType.
 	 * @returns The extracted data.
 	 */
-	private extractData<BaseType extends IRawTweet | IRawUser, DeserializedType extends Tweet | User>(data: NonNullable<unknown>, type: EResourceType): CursoredData<DeserializedType> {
+	private extractData<BaseType extends IRawTweet | IRawUser, DeserializedType extends Tweet | User>(
+		data: NonNullable<unknown>,
+		type: EResourceType,
+	): CursoredData<DeserializedType> {
 		/**
 		 * The required extracted data.
 		 */
@@ -107,7 +110,10 @@ export class FetcherService {
 	 * @typeParam OutType - The type of deserialized data returned.
 	 * @returns The processed data requested from Twitter.
 	 */
-	protected async fetch<OutType extends Tweet | User>(resourceType: EResourceType, args: Args): Promise<CursoredData<OutType>> {
+	protected async fetch<OutType extends Tweet | User>(
+		resourceType: EResourceType,
+		args: Args,
+	): Promise<CursoredData<OutType>> {
 		// Preparing the URL
 		const url: string = new Url(resourceType, args).toString();
 
