@@ -33,13 +33,13 @@ export function findByFilter<T>(data: NonNullable<unknown>, key: string, value: 
 		 */
 		if (Object.keys(data).includes(key) && data[key as keyof typeof data] == value) {
 			res.push(data as T);
-		} else {
-			/**
-			 * Else, recursively run the function on each value specified by each key in the object.
-			 */
-			for (const [, v] of Object.entries(data)) {
-				res = res.concat(findByFilter<T>(v as NonNullable<unknown>, key, value));
-			}
+		}
+
+		/**
+		 * Recursively run the function on each value specified by each key in the object, for subsequent matches.
+		 */
+		for (const [, v] of Object.entries(data)) {
+			res = res.concat(findByFilter<T>(v as NonNullable<unknown>, key, value));
 		}
 	}
 
