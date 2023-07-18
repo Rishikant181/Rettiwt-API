@@ -7,7 +7,7 @@ export * from './services/UserService';
 export * from './services/FetcherService';
 
 // Exporting types
-export * from './types/Service';
+export * from './types/CursoredData';
 export * from './types/Tweet';
 export * from './types/User';
 
