@@ -1,5 +1,5 @@
 // PACKAGES
-import { Url, Args, EResourceType, ICursor as IRawCursor } from 'rettiwt-core';
+import { Url, Args, EResourceType, ICursor as IRawCursor, ITweet as IRawTweet, IUser as IRawUser } from 'rettiwt-core';
 import axios, { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from 'axios';
 import { AuthCredential } from 'rettiwt-auth';
 
@@ -8,6 +8,8 @@ import { EHttpStatus } from '../enums/HTTP';
 
 // MODELS
 import { CursoredData } from '../models/CursoredData';
+import { Tweet } from '../models/Tweet';
+import { User } from '../models/User';
 
 // HELPERS
 import { findByFilter } from '../helper/JsonUtils';
@@ -71,14 +73,18 @@ export class FetcherService {
 	 *
 	 * @param data - The data from which extraction is to be done.
 	 * @param type - The type of data to extract.
-	 * @typeParam T - The type of extracted data.
-	 * @returns The extracted required data, along with additional data.
+	 * @typeParam BaseType - The base type of the raw data present in the input.
+	 * @typeParam DeserializedType - The type of data produced after deserialization of BaseType.
+	 * @returns The extracted data.
 	 */
-	private extractData<T>(data: NonNullable<unknown>, type: EResourceType): CursoredData<T> {
+	private extractData<BaseType extends IRawTweet | IRawUser, DeserializedType extends Tweet | User>(
+		data: NonNullable<unknown>,
+		type: EResourceType,
+	): CursoredData<DeserializedType> {
 		/**
 		 * The required extracted data.
 		 */
-		let required: T[] = [];
+		let required: BaseType[] = [];
 
 		// For 'Tweet' resources
 		if (
@@ -86,11 +92,11 @@ export class FetcherService {
 			type == EResourceType.TWEET_SEARCH ||
 			type == EResourceType.USER_LIKES
 		) {
-			required = findByFilter<T>(data, '__typename', 'Tweet');
+			required = findByFilter<BaseType>(data, '__typename', 'Tweet');
 		}
 		// For 'User' resources
 		else {
-			required = findByFilter<T>(data, '__typename', 'User');
+			required = findByFilter<BaseType>(data, '__typename', 'User');
 		}
 
 		return new CursoredData(required, findByFilter<IRawCursor>(data, 'cursorType', 'Bottom')[0]?.value);
@@ -101,10 +107,13 @@ export class FetcherService {
 	 *
 	 * @param resourceType - The type of resource to fetch.
 	 * @param args - Resource specific arguments.
-	 * @typeParam T - The type of the base data present in the resource.
+	 * @typeParam OutType - The type of deserialized data returned.
 	 * @returns The processed data requested from Twitter.
 	 */
-	protected async fetch<T>(resourceType: EResourceType, args: Args): Promise<CursoredData<T>> {
+	protected async fetch<OutType extends Tweet | User>(
+		resourceType: EResourceType,
+		args: Args,
+	): Promise<CursoredData<OutType>> {
 		// Preparing the URL
 		const url: string = new Url(resourceType, args).toString();
 
@@ -112,7 +121,7 @@ export class FetcherService {
 		const res = await this.request(url).then((res) => res.data);
 
 		// Extracting data
-		const data = this.extractData<T>(res, resourceType);
+		const data = this.extractData<IRawTweet | IRawUser, OutType>(res, resourceType);
 
 		return data;
 	}
