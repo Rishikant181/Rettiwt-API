@@ -99,7 +99,7 @@ export class Tweet implements ITweet {
 	likeCount: number;
 
 	/**
-	 * @param tweet The raw tweet data.
+	 * @param tweet - The raw tweet data.
 	 */
 	constructor(tweet: IRawTweet) {
 		this.id = tweet.rest_id;

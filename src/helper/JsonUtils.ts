@@ -1,9 +1,9 @@
 /**
  * Search for all the sub-objects (even deep-nested ones) that have the given key-value pair(filter).
  *
- * @param data The data on which search is to be performed.
- * @param key The key of the key-value pair to search.
- * @param value The value of the key-value pait to search.
+ * @param data - The data on which search is to be performed.
+ * @param key - The key of the key-value pair to search.
+ * @param value - The value of the key-value pait to search.
  * @returns The list of sub-objects from the given object, having the given key-value pair.
  *
  * @internal
@@ -21,7 +21,7 @@ export function findByFilter<T>(data: NonNullable<unknown>, key: string, value: 
 		/**
 		 * findByFilter returns an array.
 		 * map() also returns an array.
-		 * Therefore, map(item => findByFilter(.......)) returns an array of arrays.
+		 * Therefore, map(item =\> findByFilter(.......)) returns an array of arrays.
 		 * Therefore, using ... operator to spread the 2-D array in 1-D array.
 		 */
 		res = res.concat(...data.map((item) => findByFilter<T>(item as NonNullable<unknown>, key, value)));
@@ -47,7 +47,7 @@ export function findByFilter<T>(data: NonNullable<unknown>, key: string, value: 
 }
 
 /**
- * @param text The text to be normalized.
+ * @param text - The text to be normalized.
  * @returns The text after being formatted to remove unnecessary characters.
  *
  * @internal

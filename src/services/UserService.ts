@@ -1,14 +1,5 @@
 // PACKAGES
-import {
-	Url,
-	EResourceType,
-	IUserDetailsResponse,
-	IUserFollowersResponse,
-	IUserFollowingResponse,
-	IUserLikesResponse,
-	ITweet as IRawTweet,
-	IUser as IRawUser,
-} from 'rettiwt-core';
+import { EResourceType, ITweet as IRawTweet, IUser as IRawUser } from 'rettiwt-core';
 import { AuthCredential } from 'rettiwt-auth';
 
 // SERVICES
@@ -23,10 +14,12 @@ import { CursoredData } from '../models/CursoredData';
 
 /**
  * Handles fetching of data related to user account
+ *
+ * @public
  */
 export class UserService extends FetcherService {
 	/**
-	 * @param cred The credentials to use for authenticating against Twitter API.
+	 * @param cred - The credentials to use for authenticating against Twitter API.
 	 *
 	 * @internal
 	 */
@@ -37,22 +30,16 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the details of a user.
 	 *
-	 * @param userName The username of the target user.
+	 * @param userName - The username of the target user.
 	 * @returns The details of the given user.
 	 *
 	 * @public
 	 */
 	async details(userName: string): Promise<User> {
-		// Preparing the URL
-		const url: string = new Url(EResourceType.USER_DETAILS, { id: userName }).toString();
+		// Fetching the requested data
+		const data = await this.fetch<IRawUser>(EResourceType.USER_DETAILS, { id: userName });
 
-		// Fetching the raw data
-		const res = await this.request<IUserDetailsResponse>(url).then((res) => res.data);
-
-		// Extracting data
-		const data = this.extractData<IRawUser>(res, EResourceType.USER_DETAILS);
-
-		// Parsing data
+		// Deserializing data
 		const user = new User(data.list[0]);
 
 		return user;
@@ -61,29 +48,23 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the list of users who are followed by the given user.
 	 *
-	 * @param userId The rest id of the target user.
-	 * @param count The number of following to fetch, must be >= 40 (when no cursor is provided) and <=100.
-	 * @param cursor The cursor to next batch. If blank, first batch is fetched.
+	 * @param userId - The rest id of the target user.
+	 * @param count - The number of following to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of following to fetch.
 	 * @returns The list of users followed by the target user.
 	 *
 	 * @public
 	 */
 	async following(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		// Preparing the URL
-		const url: string = new Url(EResourceType.USER_FOLLOWING, {
+		// Fetching the requested data
+		const data = await this.fetch<IRawUser>(EResourceType.USER_FOLLOWING, {
 			id: userId,
 			count: count,
 			cursor: cursor,
-		}).toString();
+		});
 
-		// Fetchin the raw data
-		const res = await this.request<IUserFollowingResponse>(url).then((res) => res.data);
-
-		// Extracting data
-		const data = this.extractData<IRawUser>(res, EResourceType.USER_FOLLOWING);
-
-		// Parsing data
-		const users = data.list.map((item: IRawUser) => new User(item));
+		// Deserializing data
+		const users = data.list.map((item) => new User(item));
 
 		return new CursoredData<User>(users, data.next.value);
 	}
@@ -91,29 +72,23 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the list followers of a given user.
 	 *
-	 * @param userId The rest id of the target user.
-	 * @param count The number of followers to fetch, must be >= 40 (when no cursor is provided) and <=100.
-	 * @param cursor The cursor to next batch. If blank, first batch is fetched.
+	 * @param userId - The rest id of the target user.
+	 * @param count - The number of followers to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of followers to fetch.
 	 * @returns The list of users following the target user.
 	 *
 	 * @public
 	 */
 	async followers(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		// Preparing the URL
-		const url: string = new Url(EResourceType.USER_FOLLOWERS, {
+		// Fetching the requested data
+		const data = await this.fetch<IRawUser>(EResourceType.USER_FOLLOWERS, {
 			id: userId,
 			count: count,
 			cursor: cursor,
-		}).toString();
+		});
 
-		// Fetching the raw data
-		const res = await this.request<IUserFollowersResponse>(url).then((res) => res.data);
-
-		// Extracting data
-		const data = this.extractData<IRawUser>(res, EResourceType.USER_FOLLOWERS);
-
-		// Parsing data
-		const users = data.list.map((item: IRawUser) => new User(item));
+		// Deserializing data
+		const users = data.list.map((item) => new User(item));
 
 		return new CursoredData<User>(users, data.next.value);
 	}
@@ -121,29 +96,23 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the list of tweets liked by the given user.
 	 *
-	 * @param userId The rest id of the target user.
-	 * @param count The number of likes to fetch.
-	 * @param cursor The cursor to next batch. If blank, first batch is fetched, must be >= 40 (when no cursor is provided) and <=100.
+	 * @param userId - The rest id of the target user.
+	 * @param count - The number of likes to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of likes to fetch.
 	 * @returns The list of tweets liked by the target user.
 	 *
 	 * @public
 	 */
 	async likes(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-		// Preparing the URL
-		const url: string = new Url(EResourceType.USER_LIKES, {
+		// Fetching the requested data
+		const data = await this.fetch<IRawTweet>(EResourceType.USER_LIKES, {
 			id: userId,
 			count: count,
 			cursor: cursor,
-		}).toString();
+		});
 
-		// Fetching the raw data
-		const res = await this.request<IUserLikesResponse>(url).then((res) => res.data);
-
-		// Extracting data
-		const data = this.extractData<IRawTweet>(res, EResourceType.USER_LIKES);
-
-		// Parsing data
-		const tweets = data.list.map((item: IRawTweet) => new Tweet(item));
+		// Deserializing data
+		const tweets = data.list.map((item) => new Tweet(item));
 
 		return new CursoredData<Tweet>(tweets, data.next.value);
 	}

@@ -51,7 +51,7 @@ export class User implements IUser {
 	profileImage: string;
 
 	/**
-	 * @param user The raw user data.
+	 * @param user - The raw user data.
 	 */
 	constructor(user: IRawUser) {
 		this.id = user.rest_id;

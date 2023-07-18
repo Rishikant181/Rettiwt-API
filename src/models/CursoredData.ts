@@ -13,7 +13,7 @@ export class Cursor implements ICursor {
 	/**
 	 * Initializes a new cursor from the given cursor string.
 	 *
-	 * @param cursorStr The string representation of the cursor.
+	 * @param cursorStr - The string representation of the cursor.
 	 */
 	constructor(cursorStr: string) {
 		this.value = cursorStr;
@@ -35,8 +35,8 @@ export class CursoredData<T> implements ICursoredData<T> {
 	next: Cursor;
 
 	/**
-	 * @param list The list of data item to store.
-	 * @param next The cursor to the next batch of data.
+	 * @param list - The list of data item to store.
+	 * @param next - The cursor to the next batch of data.
 	 */
 	constructor(list: T[] = [], next: string = '') {
 		this.list = list;

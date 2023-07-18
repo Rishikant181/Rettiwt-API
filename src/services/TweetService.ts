@@ -1,15 +1,5 @@
 // PACKAGES
-import {
-	Url,
-	EResourceType,
-	ITweetSearchResponse,
-	ITweetDetailsResponse,
-	ITweetFavoritersResponse,
-	ITweetRetweetersResponse,
-	ITweet as IRawTweet,
-	IUser as IRawUser,
-	TweetFilter,
-} from 'rettiwt-core';
+import { EResourceType, ITweet as IRawTweet, IUser as IRawUser, TweetFilter } from 'rettiwt-core';
 import { AuthCredential } from 'rettiwt-auth';
 
 // SERVICES
@@ -27,7 +17,7 @@ import { CursoredData } from '../models/CursoredData';
  */
 export class TweetService extends FetcherService {
 	/**
-	 * @param cred The credentials to use for authenticating against Twitter API.
+	 * @param cred - The credentials to use for authenticating against Twitter API.
 	 *
 	 * @internal
 	 */
@@ -36,31 +26,25 @@ export class TweetService extends FetcherService {
 	}
 
 	/**
-	 * Search for tweets using a filter.
+	 * Search for tweets using a query.
 	 *
-	 * @param filter The filter be used for searching the tweets.
-	 * @param count The number of tweets to fetch, must be >= 10 (when no cursor is provided) and <= 20
-	 * @param cursor The cursor to the next batch of tweets. If blank, first batch is fetched.
+	 * @param query - The query be used for searching the tweets.
+	 * @param count - The number of tweets to fetch, must be \<= 20.
+	 * @param cursor - The cursor to the batch of tweets to fetch.
 	 * @returns The list of tweets that match the given filter.
 	 *
 	 * @public
 	 */
 	async search(query: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-		// Preparing the URL
-		const url: string = new Url(EResourceType.TWEET_SEARCH, {
+		// Fetching the requested data
+		const data = await this.fetch<IRawTweet>(EResourceType.TWEET_SEARCH, {
 			filter: query,
 			count: count,
 			cursor: cursor,
-		}).toString();
+		});
 
-		// Getting the raw data
-		const res = await this.request<ITweetSearchResponse>(url).then((res) => res.data);
-
-		// Extracting data
-		const data = this.extractData<IRawTweet>(res, EResourceType.TWEET_SEARCH);
-
-		// Parsing data
-		const tweets = data.list.map((item: IRawTweet) => new Tweet(item));
+		// Deserializing data
+		const tweets = data.list.map((item) => new Tweet(item));
 
 		// Sorting the tweets by date, from recent to oldest
 		tweets.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
@@ -71,22 +55,16 @@ export class TweetService extends FetcherService {
 	/**
 	 * Get the details of a tweet.
 	 *
-	 * @param id The id of the target tweet.
+	 * @param id - The id of the target tweet.
 	 * @returns The details of a single tweet with the given tweet id.
 	 *
 	 * @public
 	 */
 	async details(id: string): Promise<Tweet> {
-		// Preparing the URL
-		const url: string = new Url(EResourceType.TWEET_DETAILS, { id: id }).toString();
+		// Fetching the requested data
+		const data = await this.fetch<IRawTweet>(EResourceType.TWEET_DETAILS, { id: id });
 
-		// Fetching the raw data
-		const res = await this.request<ITweetDetailsResponse>(url).then((res) => res.data);
-
-		// Extracting data
-		const data = this.extractData<IRawTweet>(res, EResourceType.TWEET_DETAILS);
-
-		// Parsing data
+		// Deserializing data
 		const tweet = new Tweet(data.list[0]);
 
 		return tweet;
@@ -95,29 +73,23 @@ export class TweetService extends FetcherService {
 	/**
 	 * Get the list of users who liked a tweet.
 	 *
-	 * @param tweetId The rest id of the target tweet.
-	 * @param count The batch size of the list, must be >= 10 (when no cursor is provided) and <= 20.
-	 * @param cursor The cursor to the next batch of users. If blank, first batch is fetched.
+	 * @param tweetId - The rest id of the target tweet.
+	 * @param count - The number of favoriters to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of favoriters to fetch.
 	 * @returns The list of users who liked the given tweet.
 	 *
 	 * @public
 	 */
 	async favoriters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		// Preparing the URL
-		const url: string = new Url(EResourceType.TWEET_FAVORITERS, {
+		// Fetching the requested data
+		const data = await this.fetch<IRawUser>(EResourceType.TWEET_FAVORITERS, {
 			id: tweetId,
 			count: count,
 			cursor: cursor,
-		}).toString();
+		});
 
-		// Fetching the raw data
-		const res = await this.request<ITweetFavoritersResponse>(url).then((res) => res.data);
-
-		// Extracting data
-		const data = this.extractData<IRawUser>(res, EResourceType.TWEET_FAVORITERS);
-
-		// Parsing data
-		const users = data.list.map((item: IRawUser) => new User(item));
+		// Deserializing data
+		const users = data.list.map((item) => new User(item));
 
 		return new CursoredData<User>(users, data.next.value);
 	}
@@ -125,29 +97,23 @@ export class TweetService extends FetcherService {
 	/**
 	 * Get the list of users who retweeted a tweet.
 	 *
-	 * @param tweetId The rest id of the target tweet.
-	 * @param count The batch size of the list, must be >= 10 (when no cursor is provided) and <= 100.
-	 * @param cursor The cursor to the next batch of users. If blank, first batch is fetched.
+	 * @param tweetId - The rest id of the target tweet.
+	 * @param count - The number of retweeters to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of retweeters to fetch.
 	 * @returns The list of users who retweeted the given tweet.
 	 *
 	 * @public
 	 */
 	async retweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		// Preparing the URL
-		const url: string = new Url(EResourceType.TWEET_RETWEETERS, {
+		// Fetching the requested data
+		const data = await this.fetch<IRawUser>(EResourceType.TWEET_RETWEETERS, {
 			id: tweetId,
 			count: count,
 			cursor: cursor,
-		}).toString();
+		});
 
-		// Fetching the raw data
-		const res = await this.request<ITweetRetweetersResponse>(url).then((res) => res.data);
-
-		// Extracting data
-		const data = this.extractData<IRawUser>(res, EResourceType.TWEET_RETWEETERS);
-
-		// Parsing data
-		const users = data.list.map((item: IRawUser) => new User(item));
+		// Deserializing data
+		const users = data.list.map((item) => new User(item));
 
 		return new CursoredData<User>(users, data.next.value);
 	}
