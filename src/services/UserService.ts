@@ -14,6 +14,8 @@ import { CursoredData } from '../models/CursoredData';
 
 /**
  * Handles fetching of data related to user account
+ * 
+ * @public
  */
 export class UserService extends FetcherService {
 	/**
@@ -47,8 +49,8 @@ export class UserService extends FetcherService {
 	 * Get the list of users who are followed by the given user.
 	 *
 	 * @param userId - The rest id of the target user.
-	 * @param count - The number of following to fetch, must be \>= 40 (when no cursor is provided) and \<=100.
-	 * @param cursor - The cursor to next batch. If blank, first batch is fetched.
+	 * @param count - The number of following to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of following to fetch.
 	 * @returns The list of users followed by the target user.
 	 *
 	 * @public
@@ -71,8 +73,8 @@ export class UserService extends FetcherService {
 	 * Get the list followers of a given user.
 	 *
 	 * @param userId - The rest id of the target user.
-	 * @param count - The number of followers to fetch, must be \>= 40 (when no cursor is provided) and \<=100.
-	 * @param cursor - The cursor to next batch. If blank, first batch is fetched.
+	 * @param count - The number of followers to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of followers to fetch.
 	 * @returns The list of users following the target user.
 	 *
 	 * @public
@@ -95,8 +97,8 @@ export class UserService extends FetcherService {
 	 * Get the list of tweets liked by the given user.
 	 *
 	 * @param userId - The rest id of the target user.
-	 * @param count - The number of likes to fetch.
-	 * @param cursor - The cursor to next batch. If blank, first batch is fetched, must be \>= 40 (when no cursor is provided) and \<=100.
+	 * @param count - The number of likes to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of likes to fetch.
 	 * @returns The list of tweets liked by the target user.
 	 *
 	 * @public
