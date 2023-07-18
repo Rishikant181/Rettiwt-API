@@ -11,7 +11,6 @@ import { normalizeText } from '../helper/JsonUtils';
  * @internal
  */
 export class TweetEntities implements ITweetEntities {
-	// MEMBER DATA
 	/** The list of hashtags mentioned in the tweet. */
 	hashtags: string[] = [];
 
@@ -24,12 +23,11 @@ export class TweetEntities implements ITweetEntities {
 	/** The list of urls to various media mentioned in the tweet. */
 	media: string[] = [];
 
-	// MEMBER METHODS
 	constructor(entities: IRawTweetEntities) {
 		// Extracting user mentions
 		if (entities.user_mentions) {
 			for (const user of entities.user_mentions) {
-				this.mentionedUsers.push(user.id_str);
+				this.mentionedUsers.push(user.screen_name);
 			}
 		}
 
