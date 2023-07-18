@@ -38,9 +38,6 @@ export class CursoredData<T extends Tweet | User> implements ICursoredData<T> {
 	/** The list of data of the given type. */
 	list: T[] = [];
 
-	/** The cursor to the previous batch of data. */
-	prev: ICursor;
-
 	/** The cursor to the next batch of data. */
 	next: Cursor;
 
@@ -48,7 +45,7 @@ export class CursoredData<T extends Tweet | User> implements ICursoredData<T> {
 	 * @param list - The list of data item to store.
 	 * @param next - The cursor to the next batch of data.
 	 */
-	constructor(list: (IRawTweet | IRawUser)[] = [], prev: string = '', next: string = '') {
+	constructor(list: (IRawTweet | IRawUser)[] = [], next: string = '') {
 		// Deserializing the input raw data and storing it in the list
 		for (const item of list) {
 			// If the item is a raw tweet
@@ -62,7 +59,6 @@ export class CursoredData<T extends Tweet | User> implements ICursoredData<T> {
 		}
 
 		// Initializing cursors
-		this.prev = new Cursor(prev);
 		this.next = new Cursor(next);
 	}
 }
