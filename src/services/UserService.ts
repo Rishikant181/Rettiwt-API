@@ -14,7 +14,7 @@ import { CursoredData } from '../models/CursoredData';
 
 /**
  * Handles fetching of data related to user account
- * 
+ *
  * @public
  */
 export class UserService extends FetcherService {
