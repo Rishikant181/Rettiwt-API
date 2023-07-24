@@ -1,5 +1,12 @@
 // PACKAGES
-import { Request, Args, EResourceType, ICursor as IRawCursor, ITweet as IRawTweet, IUser as IRawUser } from 'rettiwt-core';
+import {
+	Request,
+	Args,
+	EResourceType,
+	ICursor as IRawCursor,
+	ITweet as IRawTweet,
+	IUser as IRawUser,
+} from 'rettiwt-core';
 import axios, { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from 'axios';
 import { AuthCredential } from 'rettiwt-auth';
 
@@ -134,15 +141,15 @@ export class FetcherService {
 	 *
 	 * @param resourceType - The type of resource to post.
 	 * @param args - Resource specific arguments.
-	 * @returns The response received from Twitter.
+	 * @returns Whether posting was successful or not.
 	 */
-	protected async post(resourceType: EResourceType, args: Args): Promise<unknown> {
+	protected async post(resourceType: EResourceType, args: Args): Promise<boolean> {
 		// Preparing the HTTP request
 		const request: Request = new Request(resourceType, args);
 
 		// Posting the data
 		const res = await this.request(request);
 
-		return (res.data);
+		return res.data ? true : false;
 	}
 }

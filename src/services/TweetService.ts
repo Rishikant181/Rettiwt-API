@@ -105,4 +105,19 @@ export class TweetService extends FetcherService {
 
 		return data;
 	}
+
+	/**
+	 * Post a tweet.
+	 *
+	 * @param text - The text to be posted, length must be \<= 280 characters.
+	 * @returns Whether posting was successful or not.
+	 *
+	 * @public
+	 */
+	async tweet(text: string): Promise<boolean> {
+		// Posting the tweet
+		const res = await this.post(EResourceType.CREATE_TWEET, { tweetText: text });
+
+		return res;
+	}
 }
