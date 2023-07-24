@@ -114,11 +114,9 @@ export class TweetService extends FetcherService {
 	 *
 	 * @public
 	 */
-	async tweet(tweetText: string): Promise<boolean> {
+	async tweet(tweetText: string): Promise<void> {
 		// Posting the tweet
-		const res = await this.post(EResourceType.CREATE_TWEET, { tweetText: tweetText });
-
-		return res;
+		await this.post(EResourceType.CREATE_TWEET, { tweetText: tweetText });
 	}
 
 	/**
@@ -127,11 +125,9 @@ export class TweetService extends FetcherService {
 	 * @param tweetId - The id of the tweet to be favorited.
 	 * @returns Whether favoriting was successful or not.
 	 */
-	async favorite(tweetId: string): Promise<boolean> {
+	async favorite(tweetId: string): Promise<void> {
 		// Favoriting the tweet
-		const res = await this.post(EResourceType.FAVORITE_TWEET, { id: tweetId });
-
-		return res;
+		await this.post(EResourceType.FAVORITE_TWEET, { id: tweetId });
 	}
 
 	/**
@@ -140,10 +136,8 @@ export class TweetService extends FetcherService {
 	 * @param tweetId - The id of the tweet with the given id.
 	 * @returns Whether retweeting was successful or not.
 	 */
-	async retweet(tweetId: string): Promise<boolean> {
+	async retweet(tweetId: string): Promise<void> {
 		// Retweeting the tweet
-		const res = await this.post(EResourceType.CREATE_RETWEET, { id: tweetId });
-
-		return res;
+		await this.post(EResourceType.CREATE_RETWEET, { id: tweetId });
 	}
 }
