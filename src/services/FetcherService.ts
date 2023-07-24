@@ -50,22 +50,25 @@ export class FetcherService {
 	/**
 	 * Makes an HTTP request according to the given parameters.
 	 *
-	 * @param url - The url to fetch data from.
+	 * @param config - The request configuration.
 	 * @typeParam T - Type of response data.
 	 * @returns The response received.
 	 */
-	private async request(url: string): Promise<AxiosResponse<NonNullable<unknown>>> {
+	private async request(config: Request): Promise<AxiosResponse<NonNullable<unknown>>> {
 		/**
-		 * Creating the request configuration based on the params
+		 * Creating axios request configuration from the input configuration.
 		 */
-		const config: AxiosRequestConfig = {
+		const axiosRequest: AxiosRequestConfig = {
+			url: config.url,
+			method: config.type,
+			data: config.payload,
 			headers: JSON.parse(JSON.stringify(this.cred.toHeader())) as AxiosRequestHeaders,
 		};
 
 		/**
 		 * After making the request, the response is then passed to HTTP error handling middlware for HTTP error handling.
 		 */
-		return await axios.get(url, config).then((res) => this.handleHTTPError(res));
+		return await axios(axiosRequest).then((res) => this.handleHTTPError(res));
 	}
 
 	/**
@@ -118,7 +121,7 @@ export class FetcherService {
 		const request: Request = new Request(resourceType, args);
 
 		// Getting the raw data
-		const res = await this.request(request.url).then((res) => res.data);
+		const res = await this.request(request).then((res) => res.data);
 
 		// Extracting data
 		const data = this.extractData<IRawTweet | IRawUser, OutType>(res, resourceType);
