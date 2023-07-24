@@ -1077,10 +1077,10 @@ rettiwt-auth@1.2.0:
     axios "1.4.0"
     cookiejar "2.1.4"
 
-rettiwt-core@2.5.2:
-  version "2.5.2"
-  resolved "https://registry.yarnpkg.com/rettiwt-core/-/rettiwt-core-2.5.2.tgz#a6041e1289343a331b73a7df7e528a7c0d574a74"
-  integrity sha512-dM+x29As/mDK8TaR1xrIhAJ3gP7AIdQSuXB4WDQ9gnBMaA+ra0ggud6dCoAz6M/6OYoPWWjsO0ZvgUrAOs1H5w==
+rettiwt-core@3.0.0-rc.1:
+  version "3.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/rettiwt-core/-/rettiwt-core-3.0.0-rc.1.tgz#fab95d171e29ed088b330af3a6302b58f7523fca"
+  integrity sha512-cLx9Tpqlsg948noGfPbMcYV+Sbj8S7BEktG2HaVlUxxowW46i3kNeuBl78bpiKcfKQG0O7SFvz7IAZl1b5DANA==
   dependencies:
     class-validator "0.14.0"
 

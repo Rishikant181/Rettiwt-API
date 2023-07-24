@@ -1,5 +1,5 @@
 // PACKAGES
-import { Url, Args, EResourceType, ICursor as IRawCursor, ITweet as IRawTweet, IUser as IRawUser } from 'rettiwt-core';
+import { Request, Args, EResourceType, ICursor as IRawCursor, ITweet as IRawTweet, IUser as IRawUser } from 'rettiwt-core';
 import axios, { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from 'axios';
 import { AuthCredential } from 'rettiwt-auth';
 
@@ -114,11 +114,11 @@ export class FetcherService {
 		resourceType: EResourceType,
 		args: Args,
 	): Promise<CursoredData<OutType>> {
-		// Preparing the URL
-		const url: string = new Url(resourceType, args).toString();
+		// Preparing the HTTP request
+		const request: Request = new Request(resourceType, args);
 
 		// Getting the raw data
-		const res = await this.request(url).then((res) => res.data);
+		const res = await this.request(request.url).then((res) => res.data);
 
 		// Extracting data
 		const data = this.extractData<IRawTweet | IRawUser, OutType>(res, resourceType);
