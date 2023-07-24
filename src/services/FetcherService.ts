@@ -128,4 +128,21 @@ export class FetcherService {
 
 		return data;
 	}
+
+	/**
+	 * Posts the requested resource to Twitter and returns the response.
+	 *
+	 * @param resourceType - The type of resource to post.
+	 * @param args - Resource specific arguments.
+	 * @returns The response received from Twitter.
+	 */
+	protected async post(resourceType: EResourceType, args: Args): Promise<unknown> {
+		// Preparing the HTTP request
+		const request: Request = new Request(resourceType, args);
+
+		// Posting the data
+		const res = await this.request(request);
+
+		return (res.data);
+	}
 }
