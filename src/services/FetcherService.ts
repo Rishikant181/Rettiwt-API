@@ -6,6 +6,7 @@ import {
 	ICursor as IRawCursor,
 	ITweet as IRawTweet,
 	IUser as IRawUser,
+	IResponse,
 } from 'rettiwt-core';
 import axios, { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from 'axios';
 import { AuthCredential } from 'rettiwt-auth';
@@ -43,7 +44,7 @@ export class FetcherService {
 	 * @param res - The response object received.
 	 * @returns The received response, if no HTTP errors are found.
 	 */
-	private handleHTTPError(res: AxiosResponse): AxiosResponse {
+	private handleHTTPError(res: AxiosResponse<IResponse<unknown>>): AxiosResponse<IResponse<unknown>> {
 		/**
 		 * If the status code is not 200 =\> the HTTP request was not successful. hence throwing error
 		 */
@@ -61,7 +62,7 @@ export class FetcherService {
 	 * @typeParam T - Type of response data.
 	 * @returns The response received.
 	 */
-	private async request(config: Request): Promise<AxiosResponse<NonNullable<unknown>>> {
+	private async request(config: Request): Promise<AxiosResponse<IResponse<unknown>>> {
 		/**
 		 * Creating axios request configuration from the input configuration.
 		 */
@@ -75,7 +76,7 @@ export class FetcherService {
 		/**
 		 * After making the request, the response is then passed to HTTP error handling middlware for HTTP error handling.
 		 */
-		return await axios(axiosRequest).then((res) => this.handleHTTPError(res));
+		return await axios<IResponse<unknown>>(axiosRequest).then((res) => this.handleHTTPError(res));
 	}
 
 	/**
