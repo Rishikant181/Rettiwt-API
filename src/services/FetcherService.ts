@@ -59,7 +59,6 @@ export class FetcherService {
 	 * Makes an HTTP request according to the given parameters.
 	 *
 	 * @param config - The request configuration.
-	 * @typeParam T - Type of response data.
 	 * @returns The response received.
 	 */
 	private async request(config: Request): Promise<AxiosResponse<IResponse<unknown>>> {
