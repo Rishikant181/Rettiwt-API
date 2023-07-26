@@ -167,13 +167,11 @@ export class FetcherService {
 	 * @param args - Resource specific arguments.
 	 * @returns Whether posting was successful or not.
 	 */
-	protected async post(resourceType: EResourceType, args: Args): Promise<boolean> {
+	protected async post(resourceType: EResourceType, args: Args): Promise<void> {
 		// Preparing the HTTP request
 		const request: Request = new Request(resourceType, args);
 
 		// Posting the data
-		const res = await this.request(request);
-
-		return !res.data.errors;
+		await this.request(request);
 	}
 }
