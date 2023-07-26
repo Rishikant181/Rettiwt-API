@@ -105,4 +105,49 @@ export class TweetService extends FetcherService {
 
 		return data;
 	}
+
+	/**
+	 * Post a tweet.
+	 *
+	 * @param tweetText - The text to be posted, length must be \<= 280 characters.
+	 * @returns Whether posting was successful or not.
+	 *
+	 * @public
+	 */
+	async tweet(tweetText: string): Promise<boolean> {
+		// Posting the tweet
+		const data = this.post(EResourceType.CREATE_TWEET, { tweetText: tweetText });
+
+		return data;
+	}
+
+	/**
+	 * Favorite the tweet with the given id.
+	 * 
+	 * @param tweetId - The id of the tweet to be favorited.
+	 * @returns Whether favoriting was successful or not.
+	 * 
+	 * @public
+	 */
+	async favorite(tweetId: string): Promise<boolean> {
+		// Favoriting the tweet
+		const data = await this.post(EResourceType.FAVORITE_TWEET, { id: tweetId });
+
+		return data;
+	}
+
+	/**
+	 * Retweet the tweet with the given id.
+	 * 
+	 * @param tweetId - The id of the tweet with the given id.
+	 * @returns Whether retweeting was successful or not.
+	 * 
+	 * @public
+	 */
+	async retweet(tweetId: string): Promise<boolean> {
+		// Retweeting the tweet
+		const data = await this.post(EResourceType.CREATE_RETWEET, { id: tweetId });
+
+		return data;
+	}
 }
