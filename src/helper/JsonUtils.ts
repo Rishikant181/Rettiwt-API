@@ -66,7 +66,7 @@ export function normalizeText(text: string): string {
 
 /**
  * Searches for the key which has the given value in the given object.
- * 
+ *
  * @param data - The data on which search is to be performed.
  * @param value - The value to search.
  * @returns The key with the given value.

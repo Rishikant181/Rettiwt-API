@@ -59,7 +59,7 @@ export class FetcherService {
 
 	/**
 	 * The middleware for handling any Twitter API-level errors.
-	 * 
+	 *
 	 * @param res - The response object received.
 	 * @returns The received response, if no API errors are found.
 	 */
@@ -70,7 +70,9 @@ export class FetcherService {
 			const code: number = res.data.errors[0].code;
 
 			// Getting the error message
-			const message: string = EApiErrors[findKeyByValue(EErrorCodes, `${code}`) as keyof typeof EApiErrors] as string;
+			const message: string = EApiErrors[
+				findKeyByValue(EErrorCodes, `${code}`) as keyof typeof EApiErrors
+			] as string;
 
 			// Throw the error
 			throw new Error(message);
@@ -99,7 +101,9 @@ export class FetcherService {
 		/**
 		 * After making the request, the response is then passed to HTTP error handling middlware for HTTP error handling.
 		 */
-		return await axios<IResponse<unknown>>(axiosRequest).then((res) => this.handleHttpError(res)).then((res) => this.handleApiError(res));
+		return await axios<IResponse<unknown>>(axiosRequest)
+			.then((res) => this.handleHttpError(res))
+			.then((res) => this.handleApiError(res));
 	}
 
 	/**
