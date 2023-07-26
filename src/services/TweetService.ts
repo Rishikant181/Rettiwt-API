@@ -114,9 +114,11 @@ export class TweetService extends FetcherService {
 	 *
 	 * @public
 	 */
-	async tweet(tweetText: string): Promise<void> {
+	async tweet(tweetText: string): Promise<boolean> {
 		// Posting the tweet
-		await this.post(EResourceType.CREATE_TWEET, { tweetText: tweetText });
+		const data = await this.post(EResourceType.CREATE_TWEET, { tweetText: tweetText });
+
+		return data;
 	}
 
 	/**
@@ -127,9 +129,11 @@ export class TweetService extends FetcherService {
 	 *
 	 * @public
 	 */
-	async favorite(tweetId: string): Promise<void> {
+	async favorite(tweetId: string): Promise<boolean> {
 		// Favoriting the tweet
-		await this.post(EResourceType.FAVORITE_TWEET, { id: tweetId });
+		const data = await this.post(EResourceType.FAVORITE_TWEET, { id: tweetId });
+
+		return data;
 	}
 
 	/**
@@ -140,8 +144,10 @@ export class TweetService extends FetcherService {
 	 *
 	 * @public
 	 */
-	async retweet(tweetId: string): Promise<void> {
+	async retweet(tweetId: string): Promise<boolean> {
 		// Retweeting the tweet
-		await this.post(EResourceType.CREATE_RETWEET, { id: tweetId });
+		const data = await this.post(EResourceType.CREATE_RETWEET, { id: tweetId });
+
+		return data;
 	}
 }
