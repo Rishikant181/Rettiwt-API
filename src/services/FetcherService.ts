@@ -7,12 +7,14 @@ import {
 	ITweet as IRawTweet,
 	IUser as IRawUser,
 	IResponse,
+	EErrorCodes,
 } from 'rettiwt-core';
 import axios, { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from 'axios';
 import { AuthCredential } from 'rettiwt-auth';
 
 // ENUMS
 import { EHttpStatus } from '../enums/HTTP';
+import { EApiErrors } from '../enums/ApiErrors';
 
 // MODELS
 import { CursoredData } from '../models/CursoredData';
@@ -20,7 +22,7 @@ import { Tweet } from '../models/Tweet';
 import { User } from '../models/User';
 
 // HELPERS
-import { findByFilter } from '../helper/JsonUtils';
+import { findByFilter, findKeyByValue } from '../helper/JsonUtils';
 
 /**
  * The base service that handles all HTTP requests.
@@ -39,17 +41,39 @@ export class FetcherService {
 	}
 
 	/**
-	 * The middleware for handling any HTTP error.
+	 * The middleware for handling any http error.
 	 *
 	 * @param res - The response object received.
 	 * @returns The received response, if no HTTP errors are found.
 	 */
-	private handleHTTPError(res: AxiosResponse<IResponse<unknown>>): AxiosResponse<IResponse<unknown>> {
+	private handleHttpError(res: AxiosResponse<IResponse<unknown>>): AxiosResponse<IResponse<unknown>> {
 		/**
 		 * If the status code is not 200 =\> the HTTP request was not successful. hence throwing error
 		 */
 		if (res.status != 200 && res.status in EHttpStatus) {
 			throw new Error(EHttpStatus[res.status]);
+		}
+
+		return res;
+	}
+
+	/**
+	 * The middleware for handling any Twitter API-level errors.
+	 * 
+	 * @param res - The response object received.
+	 * @returns The received response, if no API errors are found.
+	 */
+	private handleApiError(res: AxiosResponse<IResponse<unknown>>): AxiosResponse<IResponse<unknown>> {
+		// If error exists
+		if (res.data.errors && res.data.errors.length) {
+			// Getting the error code
+			const code: number = res.data.errors[0].code;
+
+			// Getting the error message
+			const message: string = EApiErrors[findKeyByValue(EErrorCodes, `${code}`) as keyof typeof EApiErrors] as string;
+
+			// Throw the error
+			throw new Error(message);
 		}
 
 		return res;
@@ -75,7 +99,7 @@ export class FetcherService {
 		/**
 		 * After making the request, the response is then passed to HTTP error handling middlware for HTTP error handling.
 		 */
-		return await axios<IResponse<unknown>>(axiosRequest).then((res) => this.handleHTTPError(res));
+		return await axios<IResponse<unknown>>(axiosRequest).then((res) => this.handleHttpError(res)).then((res) => this.handleApiError(res));
 	}
 
 	/**
@@ -143,13 +167,11 @@ export class FetcherService {
 	 * @param args - Resource specific arguments.
 	 * @returns Whether posting was successful or not.
 	 */
-	protected async post(resourceType: EResourceType, args: Args): Promise<boolean> {
+	protected async post(resourceType: EResourceType, args: Args): Promise<void> {
 		// Preparing the HTTP request
 		const request: Request = new Request(resourceType, args);
 
 		// Posting the data
-		const res = await this.request(request);
-
-		return !res.data.errors;
+		await this.request(request);
 	}
 }

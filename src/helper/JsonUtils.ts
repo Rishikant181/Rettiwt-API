@@ -63,3 +63,24 @@ export function normalizeText(text: string): string {
 
 	return normalizedText;
 }
+
+/**
+ * Searches for the key which has the given value in the given object.
+ * 
+ * @param data - The data on which search is to be performed.
+ * @param value - The value to search.
+ * @returns The key with the given value.
+ */
+export function findKeyByValue(data: NonNullable<unknown>, value: string): string | undefined {
+	// Finding the key-value pairs that have the given value
+	const kvPair = Object.entries(data).filter(([, v]) => v == value)[0];
+
+	// If a match is found
+	if (kvPair) {
+		return kvPair[0];
+	}
+	// If no match is found
+	else {
+		return undefined;
+	}
+}
