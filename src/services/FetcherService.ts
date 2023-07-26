@@ -150,6 +150,6 @@ export class FetcherService {
 		// Posting the data
 		const res = await this.request(request);
 
-		return (!(res.data.errors));
+		return !res.data.errors;
 	}
 }

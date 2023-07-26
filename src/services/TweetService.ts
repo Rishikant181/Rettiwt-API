@@ -123,10 +123,10 @@ export class TweetService extends FetcherService {
 
 	/**
 	 * Favorite the tweet with the given id.
-	 * 
+	 *
 	 * @param tweetId - The id of the tweet to be favorited.
 	 * @returns Whether favoriting was successful or not.
-	 * 
+	 *
 	 * @public
 	 */
 	async favorite(tweetId: string): Promise<boolean> {
@@ -138,10 +138,10 @@ export class TweetService extends FetcherService {
 
 	/**
 	 * Retweet the tweet with the given id.
-	 * 
+	 *
 	 * @param tweetId - The id of the tweet with the given id.
 	 * @returns Whether retweeting was successful or not.
-	 * 
+	 *
 	 * @public
 	 */
 	async retweet(tweetId: string): Promise<boolean> {
