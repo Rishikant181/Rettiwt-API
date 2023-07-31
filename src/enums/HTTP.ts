@@ -3,15 +3,15 @@
  *
  * @internal
  */
-export enum HttpStatus {
-    BadRequest = 400,
-    Unauthorized = 401,
-    Forbidden = 403,
-    NotFound = 404,
-    MethodNotAllowed = 405,
-    RequestTimeout = 408,
-    TooManyRequests = 429,
-    InternalServerError = 500,
-    BadGateway = 502,
-    ServiceUnavailable = 503
-};
+export enum EHttpStatus {
+	BAD_REQUEST = 400,
+	UNAUTHORIZED = 401,
+	FORBIDDEN = 403,
+	NOT_FOUND = 404,
+	METHOD_NOT_ALLOWED = 405,
+	REQUEST_TIMEOUT = 408,
+	TOO_MANY_REQUESTS = 429,
+	INTERNAL_SERVER_ERROR = 500,
+	BAD_GATEWAY = 502,
+	SERVICE_UNAVAILABLE = 503,
+}

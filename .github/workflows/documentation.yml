@@ -1,27 +1,47 @@
 name: Documentation
 run-name: Building the documentation for the release
+
 on:
     push:
         branches: release
 
 jobs:
-    documentation:
+    # Builds and packages the documentation
+    build:
         runs-on: ubuntu-latest
-        permissions:
-            contents: write
         steps:
+            # Setting up Node
             - uses: actions/checkout@v3
             - uses: actions/setup-node@v3
               with:
                   node-version: '18.x'
+
             # Installing dependencies
             - run: yarn
-
-            # Generating documentations
             - run: npx typedoc src/index.ts
 
-            # Commiting the documentations
-            - uses: stefanzweifel/git-auto-commit-action@v4
+            # Packaging the static site as artifact
+            - uses: actions/upload-pages-artifact@v2
               with:
-                  commit_message: Updated documentations
-                  branch: release
+                  path: ./docs
+
+    # Deploys the packaged documentation
+    deploy:
+        # Building and packaging the documentation
+        needs: build
+
+        # Granting necessary permissions
+        permissions:
+            pages: write
+            id-token: write
+
+        # Setting up GH pages environment
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+
+        runs-on: ubuntu-latest
+        steps:
+            # Deploying to gh pages
+            - id: deployment
+              uses: actions/deploy-pages@v2

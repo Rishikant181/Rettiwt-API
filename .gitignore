@@ -134,3 +134,6 @@ dist
 
 # Test files
 .test/
+
+# Documentation
+.docs
