@@ -30,14 +30,24 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the details of a user.
 	 *
-	 * @param userName - The username of the target user.
+	 * @param id - The username/id of the target user.
 	 * @returns The details of the given user.
 	 *
 	 * @public
 	 */
-	async details(userName: string): Promise<User> {
-		// Fetching the requested data
-		const data = await this.fetch<User>(EResourceType.USER_DETAILS, { id: userName });
+	async details(id: string): Promise<User> {
+		let data: CursoredData<User>;
+
+		// If username is given
+		if (isNaN(parseFloat(id))) {
+			// Fetching the requested data
+			data = await this.fetch<User>(EResourceType.USER_DETAILS, { id: id });
+		}
+		// If id is given
+		else {
+			// Fetching the requested data
+			data = await this.fetch<User>(EResourceType.USER_DETAILS_BY_ID, { id: id });
+		}
 
 		return data.list[0];
 	}
