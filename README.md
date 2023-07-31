@@ -1,84 +1,82 @@
 # Rettiwt-API
 
-An API for fetching data from TwitterAPI, without any rate limits!
+An API for fetching data from Twitter for free!
 
-#### **This API is not a replacement of official Twitter API, since it does not scale**
+## Prerequisites
 
-#### **It works well for small applications like the one side project you started and are never gonna finish**
+-   NodeJS 18.14.2
+-   A working Twitter account
 
-#### **If you want something that will scale as you application grows, Twitter API is the way to go**
+## Installation
 
-#### **The API can either be used as a GraphQL Server or as a standalone npm library**
+1. Initialize a new Node.JS project using the command `npm init`.
+2. Install the package either via npm or yarn:
+    - For npm, use the command `npm install --save rettiwt-api`
+    - For yarn, use the command `yarn add rettiwt-api`
 
-#### **For complete documentation and API reference, head over to the [documentation](https://rishikant181.github.io/Rettiwt-API/)**
+Although the above process initializes a new project, that is, in fact, not necessary and you may add it to an existing Node.JS project and omit the first step altogether.
 
-## 1. GraphQL Server
+## Getting started
 
-Using the API as a GraphQL enables complex nested queries to fetch data from twitter.  
-To use the API as a server,
+1. Generate credentials using [rettiwt-auth](https://www.npmjs.com/package/rettiwt-auth) package, by following these [steps](https://rishikant181.github.io/Rettiwt-Auth/#md:cli-usage).
+2. Copy the value of the 'cookies' field from the generated credentials and store it somewhere safe. Let's call this our API_KEY.
+3. Create a new instance of Rettiwt, passing in the API key:  
+   `const rettiwt = Rettiwt(API_KEY);`
+4. Use the created [Rettiwt](https://rishikant181.github.io/Rettiwt-API/classes/Rettiwt.html) instance to fetch data from Twitter.
 
-1.  Clone the repo's release branch
-2.  Build the project using 'npm run build'
-3.  Set the environment variables:
-    -   APP_PORT -> The port number where the server will listen to
-    -   DEVELOPMENT -> Whether to run the server in development mode or not
-4.  Start the server using 'npm run start'
-5.  Make graphql requests to server listening on localhost:port/graphql
+**Note:** The API_KEY (cookie) that we generated, is a very sensitive information and provides all access to the Twitter account. Therefore, it is generally recommended to store it as an environment variable and use it from there.
 
-**You can go to localhost:port/graphql to see the graphql schema**
+## Usage
 
-## 2. NPM Package
+The following examples may help you to get started using the library:
 
-The API can also be used as a standalone npm package.  
-The limitation is that, large number of data cannot be fetched automatically, and the data needs to fetched in batches, by using cursors.
-Further nested queries are not possible.  
-To use the API as an npm package,
-
-1.  In your node project, install the package using 'npm install --save rettiwt-api'.
-2.  import { Rettiwt } from 'rettiwt-api'.
-    ```
-    const rettiwt = Rettiwt({
-        <put your authentication tokens here. For details, refer to section below>
-    }).
-    ```
-3.  Use the created [Rettiwt](https://rishikant181.github.io/Rettiwt-API/functions/Rettiwt.html) instance to fetch data from Twitter.
-
-**The authentication tokens can be generated in the following way:**
-
-#### A. GraphQL Server:
-
-1.  Make the following query to the GraphQL server:
+### 1. Getting the details of a target Twitter user
 
 ```
-        query {
-                Login(email: "your_twitter_email", userName: "your_twitter_username", password: "your_twitter_password") {
-                        auth_token
-                        ct0
-                        kdt
-                        twid
-                }
-        }
+// Creating a new Rettiwt instance using the API_KEY
+const rettiwt = Rettiwt(API_KEY);
+
+// Fetching the details of the user whose username is <username>
+rettiwt.user.details('<username>')
+.then(details => {
+	...
+})
+.catch(error => {
+	...
+});
 ```
 
-1.  This will give you 4 tokens: 'auth_token', 'ct0', 'kdt' and 'twid'.
-2.  Pass the four tokens in the headers while making any request made to the GraphQL server for fetching data.
-
-#### B. NPM Library:
-
-1.  Use the [Rettiwt().account.login](https://rishikant181.github.io/Rettiwt-API/classes/AccountService.html#login) method to get back 4 tokens: 'auth_token', 'ct0', 'kdt' and 'twid'.
-2.  Use these four tokens to initialize a new [Rettiwt](https://rishikant181.github.io/Rettiwt-API/functions/Rettiwt.html) instance as follows:
+### 2. Getting the list of tweets that match a given filter
 
 ```
-        const rettiwt = new Rettiwt({
-                auth_token: "received_auth_token",
-                ct0: "received_ct0_token",
-                kdt: "received_kdt_token",
-                twid: "received_twid_token"
-        });
+// Creating a new Rettiwt instance using the API_KEY
+const rettiwt = Rettiwt(API_KEY);
+
+/**
+ * Fetching the list of tweets that:
+ * 	- are made by a user with username <username>,
+ * 	- contain the words <word1> and <word2>
+ */
+rettiwt.tweet.search({
+	fromUsers: ['<username>'],
+	words: ['<word1>', '<word2>']
+})
+.then(data => {
+	...
+})
+.catch(err => {
+	...
+})
 ```
 
-3.  Use the created [Rettiwt](https://rishikant181.github.io/Rettiwt-API/functions/Rettiwt.html) instance to fetch data.
+For more information regarding the different available filter options, please refer to [TweetFilter](https://rishikant181.github.io/Rettiwt-API/classes/TweetFilter.html).
 
-### **Due to changes in Twitter API, all methods now require logging in and using the tokens for authentication**
+## API Reference
 
-### **I'M NOT RESPONSIBLE IF YOU GET YOUR TWITTER ACCOUNT BANNED!**
+The complete API reference can be found at [this](https://rishikant181.github.io/Rettiwt-API/) page.
+
+## Additional information
+
+-   This API uses the cookies of a Twitter account to fetch data from Twitter and as such, there is always a chance (altough a measly one) of getting the account banned by Twitter algorithm.
+-   From personal experience, not a single one of my accounts has ever been banned by using this library, and this is coming from someone who has been using his primary Twitter account to fetch large amounts of data from Twitter for over 1.5 years now, since the conception of this project.
+-   There have been no reports of accounts getting banned, but you have been warned, even though the chances of getting banned is negligible, it is not zero!
