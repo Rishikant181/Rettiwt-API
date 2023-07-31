@@ -22,7 +22,7 @@ Although the above process initializes a new project, that is, in fact, not nece
 2. Copy the value of the 'cookies' field from the generated credentials and store it somewhere safe. Let's call this our API_KEY.
 3. Create a new instance of Rettiwt, passing in the API key:  
    `const rettiwt = Rettiwt(API_KEY);`
-4. Use the created [Rettiwt](https://rishikant181.github.io/Rettiwt-API/functions/Rettiwt.html) instance to fetch data from Twitter.
+4. Use the created [Rettiwt](https://rishikant181.github.io/Rettiwt-API/classes/Rettiwt.html) instance to fetch data from Twitter.
 
 **Note:** The API_KEY (cookie) that we generated, is a very sensitive information and provides all access to the Twitter account. Therefore, it is generally recommended to store it as an environment variable and use it from there.
 
