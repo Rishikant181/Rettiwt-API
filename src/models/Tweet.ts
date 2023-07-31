@@ -8,7 +8,7 @@ import { normalizeText } from '../helper/JsonUtils';
 /**
  * The different types parsed entities like urls, media, mentions, hashtags, etc.
  *
- * @internal
+ * @public
  */
 export class TweetEntities implements ITweetEntities {
 	/** The list of hashtags mentioned in the tweet. */
@@ -57,7 +57,7 @@ export class TweetEntities implements ITweetEntities {
 /**
  * The details of a single Tweet.
  *
- * @internal
+ * @public
  */
 export class Tweet implements ITweet {
 	/** The rest id of the tweet. */

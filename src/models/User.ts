@@ -5,7 +5,7 @@ import { IUser as IRawUser } from 'rettiwt-core';
 /**
  * The details of a single user.
  *
- * @internal
+ * @public
  */
 export class User implements IUser {
 	/** The rest id of the user. */

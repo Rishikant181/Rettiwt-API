@@ -11,7 +11,7 @@ import { ICursor, ICursoredData } from '../types/CursoredData';
 /**
  * The cursor to the batch of data to be fetched.
  *
- * @internal
+ * @public
  */
 export class Cursor implements ICursor {
 	/** The cursor string. */
@@ -30,9 +30,9 @@ export class Cursor implements ICursor {
 /**
  * The data that us fetched batch-wise along with a cursor.
  *
- * @internal
- *
  * @typeParam T - Type of data to be stored in the list.
+ * 
+ * @public
  */
 export class CursoredData<T extends Tweet | User> implements ICursoredData<T> {
 	/** The list of data of the given type. */
