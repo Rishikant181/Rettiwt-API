@@ -31,7 +31,7 @@ export class Cursor implements ICursor {
  * The data that us fetched batch-wise along with a cursor.
  *
  * @typeParam T - Type of data to be stored in the list.
- * 
+ *
  * @public
  */
 export class CursoredData<T extends Tweet | User> implements ICursoredData<T> {
