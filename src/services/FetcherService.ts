@@ -6,6 +6,8 @@ import {
 	ICursor as IRawCursor,
 	ITweet as IRawTweet,
 	IUser as IRawUser,
+	ITimelineTweet,
+	ITimelineUser,
 	IResponse,
 	EErrorCodes,
 } from 'rettiwt-core';
@@ -115,26 +117,27 @@ export class FetcherService {
 	 * @typeParam DeserializedType - The type of data produced after deserialization of BaseType.
 	 * @returns The extracted data.
 	 */
-	private extractData<BaseType extends IRawTweet | IRawUser, DeserializedType extends Tweet | User>(
+	private extractData<DeserializedType extends Tweet | User>(
 		data: NonNullable<unknown>,
 		type: EResourceType,
 	): CursoredData<DeserializedType> {
 		/**
 		 * The required extracted data.
 		 */
-		let required: BaseType[] = [];
+		let required = [];
 
-		// For 'Tweet' resources
-		if (
-			type == EResourceType.TWEET_DETAILS ||
-			type == EResourceType.TWEET_SEARCH ||
-			type == EResourceType.USER_LIKES
-		) {
-			required = findByFilter<BaseType>(data, '__typename', 'Tweet');
-		}
-		// For 'User' resources
-		else {
-			required = findByFilter<BaseType>(data, '__typename', 'User');
+		if (type == EResourceType.TWEET_DETAILS) {
+			required = findByFilter<IRawTweet>(data, '__typename', 'Tweet');
+		} else if (type == EResourceType.USER_DETAILS || type == EResourceType.USER_DETAILS_BY_ID) {
+			required = findByFilter<IRawUser>(data, '__typename', 'User');
+		} else if (type == EResourceType.TWEET_SEARCH || type == EResourceType.USER_LIKES) {
+			required = findByFilter<ITimelineTweet>(data, '__typename', 'TimelineTweet').map(
+				(item) => item.tweet_results.result,
+			);
+		} else {
+			required = findByFilter<ITimelineUser>(data, '__typename', 'TimelineUser').map(
+				(item) => item.user_results.result,
+			);
 		}
 
 		return new CursoredData(required, findByFilter<IRawCursor>(data, 'cursorType', 'Bottom')[0]?.value);
@@ -159,7 +162,7 @@ export class FetcherService {
 		const res = await this.request(request).then((res) => res.data);
 
 		// Extracting data
-		const data = this.extractData<IRawTweet | IRawUser, OutType>(res, resourceType);
+		const data = this.extractData<OutType>(res, resourceType);
 
 		return data;
 	}
