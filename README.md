@@ -34,7 +34,7 @@ The following examples may help you to get started using the library:
 
 ```
 // Creating a new Rettiwt instance using the API_KEY
-const rettiwt = Rettiwt(API_KEY);
+const rettiwt = new Rettiwt(API_KEY);
 
 // Fetching the details of the user whose username is <username>
 rettiwt.user.details('<username>')
@@ -50,7 +50,7 @@ rettiwt.user.details('<username>')
 
 ```
 // Creating a new Rettiwt instance using the API_KEY
-const rettiwt = Rettiwt(API_KEY);
+const rettiwt = new Rettiwt(API_KEY);
 
 /**
  * Fetching the list of tweets that:
