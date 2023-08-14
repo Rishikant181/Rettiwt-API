@@ -17,10 +17,10 @@ export interface IList {
     description: string;
 
     /** The number of memeber of the list. */
-    memberCount: string;
+    memberCount: number;
 
     /** The number of subscribers of the list. */
-    subscriberCount: string;
+    subscriberCount: number;
 
     /** The rest id of the user who created the list. */
     createdBy: string;

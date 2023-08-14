@@ -97,6 +97,8 @@ export class Tweet implements ITweet {
 	likeCount: number;
 
 	/**
+	 * Initializes a new Tweet from the given raw tweet data.
+	 * 
 	 * @param tweet - The raw tweet data.
 	 */
 	constructor(tweet: IRawTweet) {

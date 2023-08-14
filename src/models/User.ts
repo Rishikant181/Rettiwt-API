@@ -51,6 +51,8 @@ export class User implements IUser {
 	profileImage: string;
 
 	/**
+	 * Initializes a new User from the given raw user data.
+	 * 
 	 * @param user - The raw user data.
 	 */
 	constructor(user: IRawUser) {
