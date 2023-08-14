@@ -52,7 +52,7 @@ export class User implements IUser {
 
 	/**
 	 * Initializes a new User from the given raw user data.
-	 * 
+	 *
 	 * @param user - The raw user data.
 	 */
 	constructor(user: IRawUser) {
