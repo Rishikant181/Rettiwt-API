@@ -1,3 +1,6 @@
+// TYPES
+import { IUser } from './User';
+
 /**
  * The different types parsed entities like urls, media, mentions, hashtags, etc.
  *
@@ -26,8 +29,8 @@ export interface ITweet {
 	/** The rest id of the tweet. */
 	id: string;
 
-	/** The rest id of the user who made the tweet. */
-	tweetBy: string;
+	/** The details of the user who made the tweet. */
+	tweetBy: IUser;
 
 	/** The date and time of creation of the tweet, in UTC string format. */
 	createdAt: string;
