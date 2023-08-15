@@ -124,17 +124,26 @@ export class FetcherService {
 		/**
 		 * The required extracted data.
 		 */
-		let required = [];
+		let required: IRawTweet[] | IRawUser[] = [];
 
 		if (type == EResourceType.TWEET_DETAILS) {
 			required = findByFilter<IRawTweet>(data, '__typename', 'Tweet');
 		} else if (type == EResourceType.USER_DETAILS || type == EResourceType.USER_DETAILS_BY_ID) {
 			required = findByFilter<IRawUser>(data, '__typename', 'User');
-		} else if (type == EResourceType.TWEET_SEARCH || type == EResourceType.USER_LIKES) {
+		} else if (
+			type == EResourceType.TWEET_SEARCH ||
+			type == EResourceType.USER_LIKES ||
+			type == EResourceType.LIST_TWEETS
+		) {
 			required = findByFilter<ITimelineTweet>(data, '__typename', 'TimelineTweet').map(
 				(item) => item.tweet_results.result,
 			);
-		} else {
+		} else if (
+			type == EResourceType.TWEET_FAVORITERS ||
+			type == EResourceType.TWEET_RETWEETERS ||
+			type == EResourceType.USER_FOLLOWERS ||
+			type == EResourceType.USER_FOLLOWING
+		) {
 			required = findByFilter<ITimelineUser>(data, '__typename', 'TimelineUser').map(
 				(item) => item.user_results.result,
 			);

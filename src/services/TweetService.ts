@@ -26,6 +26,21 @@ export class TweetService extends FetcherService {
 	}
 
 	/**
+	 * Get the details of a tweet.
+	 *
+	 * @param id - The id of the target tweet.
+	 * @returns The details of a single tweet with the given tweet id.
+	 *
+	 * @public
+	 */
+	async details(id: string): Promise<Tweet> {
+		// Fetching the requested data
+		const data = await this.fetch<Tweet>(EResourceType.TWEET_DETAILS, { id: id });
+
+		return data.list[0];
+	}
+
+	/**
 	 * Search for tweets using a query.
 	 *
 	 * @param query - The query be used for searching the tweets.
@@ -50,18 +65,27 @@ export class TweetService extends FetcherService {
 	}
 
 	/**
-	 * Get the details of a tweet.
+	 * Get the tweets from the tweet list with the given id.
 	 *
-	 * @param id - The id of the target tweet.
-	 * @returns The details of a single tweet with the given tweet id.
+	 * @param listId - The id of list from where the tweets are to be fetched.
+	 * @param count - The number of tweets to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of tweets to fetch.
+	 * @returns The list tweets present in the given list.
 	 *
-	 * @public
+	 * @remarks Due a bug in Twitter API, the count is ignored when no cursor is provided and defaults to 100.
 	 */
-	async details(id: string): Promise<Tweet> {
+	async list(listId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Fetching the requested data
-		const data = await this.fetch<Tweet>(EResourceType.TWEET_DETAILS, { id: id });
+		const data = await this.fetch<Tweet>(EResourceType.LIST_TWEETS, {
+			id: listId,
+			count: count,
+			cursor: cursor,
+		});
 
-		return data.list[0];
+		// Sorting the tweets by date, from recent to oldest
+		data.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
+
+		return data;
 	}
 
 	/**

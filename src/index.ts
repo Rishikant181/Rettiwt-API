@@ -7,6 +7,7 @@ export * from './enums/HTTP';
 
 // Exporting models
 export * from './models/CursoredData';
+export * from './models/List';
 export * from './models/Tweet';
 export * from './models/User';
 
@@ -17,5 +18,6 @@ export * from './services/UserService';
 
 // Exporting types
 export * from './types/CursoredData';
+export * from './types/List';
 export * from './types/Tweet';
 export * from './types/User';
