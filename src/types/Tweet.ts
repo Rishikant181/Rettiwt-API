@@ -61,4 +61,10 @@ export interface ITweet {
 
 	/** The number of likes of the tweet. */
 	likeCount: number;
+
+	/** The number of views of a tweet. */
+	viewCount: number;
+
+	/** The number of bookmarks of a tweet. */
+	bookmarkCount: number;
 }

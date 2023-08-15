@@ -99,6 +99,12 @@ export class Tweet implements ITweet {
 	/** The number of likes of the tweet. */
 	likeCount: number;
 
+	/** The number of views of a tweet. */
+	viewCount: number;
+
+	/** The number of bookmarks of a tweet. */
+	bookmarkCount: number;
+
 	/**
 	 * Initializes a new Tweet from the given raw tweet data.
 	 *
@@ -117,5 +123,7 @@ export class Tweet implements ITweet {
 		this.replyCount = tweet.legacy.reply_count;
 		this.retweetCount = tweet.legacy.retweet_count;
 		this.likeCount = tweet.legacy.favorite_count;
+		this.viewCount = parseInt(tweet.views.count);
+		this.bookmarkCount = tweet.legacy.bookmark_count;
 	}
 }
