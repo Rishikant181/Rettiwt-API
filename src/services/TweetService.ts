@@ -66,12 +66,12 @@ export class TweetService extends FetcherService {
 
 	/**
 	 * Get the tweets from the tweet list with the given id.
-	 * 
+	 *
 	 * @param listId - The id of list from where the tweets are to be fetched.
 	 * @param count - The number of tweets to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of tweets to fetch.
 	 * @returns The list tweets present in the given list.
-	 * 
+	 *
 	 * @remarks Due a bug in Twitter API, the count is ignored when no cursor is provided and defaults to 100.
 	 */
 	async list(listId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
@@ -79,7 +79,7 @@ export class TweetService extends FetcherService {
 		const data = await this.fetch<Tweet>(EResourceType.LIST_TWEETS, {
 			id: listId,
 			count: count,
-			cursor: cursor
+			cursor: cursor,
 		});
 
 		// Sorting the tweets by date, from recent to oldest
