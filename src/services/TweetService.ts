@@ -72,7 +72,7 @@ export class TweetService extends FetcherService {
 	 * @param cursor - The cursor to the batch of tweets to fetch.
 	 * @returns The list tweets present in the given list.
 	 * 
-	 * @remarks Due a bug in Twitter API, the count is ignored when no cursor is provided.
+	 * @remarks Due a bug in Twitter API, the count is ignored when no cursor is provided and defaults to 100.
 	 */
 	async list(listId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Fetching the requested data
