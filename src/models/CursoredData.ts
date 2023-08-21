@@ -53,7 +53,7 @@ export class CursoredData<T extends Tweet | User> implements ICursoredData<T> {
 				this.list.push(new Tweet(item as IRawTweet) as T);
 			}
 			// If the item is a valid raw user
-			else if (item.__typename == 'User' && item.rest_id) {
+			else if (item.__typename == 'User' && item.rest_id && (item as IRawUser).id) {
 				this.list.push(new User(item as IRawUser) as T);
 			}
 		}
