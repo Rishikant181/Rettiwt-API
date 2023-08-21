@@ -33,6 +33,8 @@ The following examples may help you to get started using the library:
 ### 1. Getting the details of a target Twitter user
 
 ```
+const { Rettiwt } = require('rettiwt-api');
+
 // Creating a new Rettiwt instance using the API_KEY
 const rettiwt = new Rettiwt(API_KEY);
 
@@ -49,6 +51,8 @@ rettiwt.user.details('<username>')
 ### 2. Getting the list of tweets that match a given filter
 
 ```
+const { Rettiwt } = require('rettiwt-api');
+
 // Creating a new Rettiwt instance using the API_KEY
 const rettiwt = new Rettiwt(API_KEY);
 
@@ -66,10 +70,59 @@ rettiwt.tweet.search({
 })
 .catch(err => {
 	...
+});
+```
+
+### 3. Getting the next batch of data using a cursor
+
+The previous example fetches the the list of tweets matching the given filter. Since no count is specified, in this case, a default of 20 such Tweets are fetched initially. The following example demonstrates how to use the [cursor string](https://rishikant181.github.io/Rettiwt-API/classes/Cursor.html#value) obtained from the [response](https://rishikant181.github.io/Rettiwt-API/classes/CursoredData.html) object's [next](https://rishikant181.github.io/Rettiwt-API/classes/CursoredData.html#next) field, from the previous example, to fetch the next batch of tweets:
+
+```
+const { Rettiwt } = require('rettiwt-api');
+
+// Creating a new Rettiwt instance using the API_KEY
+const rettiwt = new Rettiwt(API_KEY);
+
+/**
+ * Fetching the list of tweets that:
+ * 	- are made by a user with username <username>,
+ * 	- contain the words <word1> and <word2>
+ *
+ * 'data' is the response object received in the previous example.
+ */
+rettiwt.tweet.search({
+	fromUsers: ['<username>'],
+	words: ['<word1>', '<word2>']
+}, data.next.value)
+.then(data => {
+	...
 })
+.catch(err => {
+	...
+});
 ```
 
 For more information regarding the different available filter options, please refer to [TweetFilter](https://rishikant181.github.io/Rettiwt-API/classes/TweetFilter.html).
+
+## Features
+
+So far, the following operations are supported:
+
+### Tweets
+- [Getting the details of a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#details)
+- [Favoriting/liking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#favorite)
+- [Getting the list of users who favorited/liked a given tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#favoriters)
+- [Getting the list of tweets from a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#list)
+- [Retweeting/reposting a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#retweet)
+- [Getting the list of users who retweeted/reposted a given tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#retweeters)
+- [Searching for the list of tweets that match a given filter](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#search)
+- [Posting a new tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#tweet)
+
+### Users
+- [Getting the details of a user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#details)
+- [Getting the list of users who follow the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#followers)
+- [Getting the list of users who are followed by the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#following)
+- [Getting the list of tweets favorited/liked by the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#likes)
 
 ## API Reference
 
