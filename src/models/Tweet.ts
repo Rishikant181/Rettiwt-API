@@ -2,6 +2,9 @@
 import { ITweet, ITweetEntities } from '../types/Tweet';
 import { ITweet as IRawTweet, IEntities as IRawTweetEntities } from 'rettiwt-core';
 
+// MODELS
+import { User } from './User';
+
 // PARSERS
 import { normalizeText } from '../helper/JsonUtils';
 
@@ -63,8 +66,8 @@ export class Tweet implements ITweet {
 	/** The rest id of the tweet. */
 	id: string;
 
-	/** The rest id of the user who made the tweet. */
-	tweetBy: string;
+	/** The details of the user who made the tweet. */
+	tweetBy: User;
 
 	/** The date and time of creation of the tweet, in UTC string format. */
 	createdAt: string;
@@ -96,13 +99,21 @@ export class Tweet implements ITweet {
 	/** The number of likes of the tweet. */
 	likeCount: number;
 
+	/** The number of views of a tweet. */
+	viewCount: number;
+
+	/** The number of bookmarks of a tweet. */
+	bookmarkCount: number;
+
 	/**
+	 * Initializes a new Tweet from the given raw tweet data.
+	 *
 	 * @param tweet - The raw tweet data.
 	 */
 	constructor(tweet: IRawTweet) {
 		this.id = tweet.rest_id;
 		this.createdAt = tweet.legacy.created_at;
-		this.tweetBy = tweet.legacy.user_id_str;
+		this.tweetBy = new User(tweet.core.user_results.result);
 		this.entities = new TweetEntities(tweet.legacy.entities);
 		this.quoted = tweet.legacy.quoted_status_id_str;
 		this.fullText = normalizeText(tweet.legacy.full_text);
@@ -112,5 +123,7 @@ export class Tweet implements ITweet {
 		this.replyCount = tweet.legacy.reply_count;
 		this.retweetCount = tweet.legacy.retweet_count;
 		this.likeCount = tweet.legacy.favorite_count;
+		this.viewCount = parseInt(tweet.views.count);
+		this.bookmarkCount = tweet.legacy.bookmark_count;
 	}
 }
