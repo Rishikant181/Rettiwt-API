@@ -76,7 +76,7 @@ export class Tweet implements ITweet {
 		this.createdAt = tweet.legacy.created_at;
 		this.tweetBy = new User(tweet.core.user_results.result);
 		this.entities = new TweetEntities(tweet.legacy.entities);
-		this.media = tweet.legacy.extended_entities?.media.map((media) => new TweetMedia(media));
+		this.media = tweet.legacy.extended_entities?.media?.map((media) => new TweetMedia(media));
 		this.quoted = tweet.legacy.quoted_status_id_str;
 		this.fullText = normalizeText(tweet.legacy.full_text);
 		this.replyTo = tweet.legacy.in_reply_to_status_id_str;
