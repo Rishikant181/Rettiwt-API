@@ -1,6 +1,5 @@
 // PACKAGES
 import { EResourceType, TweetFilter } from 'rettiwt-core';
-import { AuthCredential } from 'rettiwt-auth';
 
 // SERVICES
 import { FetcherService } from './FetcherService';
@@ -17,12 +16,13 @@ import { CursoredData } from '../models/CursoredData';
  */
 export class TweetService extends FetcherService {
 	/**
-	 * @param cred - The credentials to use for authenticating against Twitter API.
+	 * @param apiKey - The apiKey (cookie) to use for authenticating Rettiwt against Twitter API.
+	 * @param proxyUrl - Optional URL with proxy configuration to use for requests to Twitter API.
 	 *
 	 * @internal
 	 */
-	constructor(cred: AuthCredential) {
-		super(cred);
+	constructor(apiKey: string, proxyUrl?: URL) {
+		super(apiKey, proxyUrl);
 	}
 
 	/**
