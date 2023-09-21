@@ -20,9 +20,6 @@ jobs:
             # Installing dependencies
             - run: yarn
 
-            # Building the package
-            - run: yarn run build
-
             # Publishing to NPM
             - run: npm publish
               env:
