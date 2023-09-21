@@ -49,10 +49,22 @@ export class FetcherService {
 		this.httpsAgent = this.getHttpsAgent(proxyUrl);
 	}
 
+	/**
+	 * Returns an AuthCredential generated using the given API key.
+	 *
+	 * @param apiKey - The API key to use for authenticating.
+	 * @returns The generated AuthCredential.
+	 */
 	private getAuthCredential(apiKey: string): AuthCredential {
 		return new AuthCredential(apiKey.split(';'));
 	}
 
+	/**
+	 * Gets the HttpsAgent based on whether a proxy is used or not.
+	 *
+	 * @param proxyUrl - The optional proxy configuration to use.
+	 * @returns The HttpsAgent to use.
+	 */
 	private getHttpsAgent(proxyUrl?: URL): Agent {
 		if (proxyUrl) {
 			return new HttpsProxyAgent(proxyUrl);
