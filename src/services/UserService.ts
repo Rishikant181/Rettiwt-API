@@ -20,7 +20,7 @@ export class UserService extends FetcherService {
 	/**
 	 * @param apiKey - The apiKey (cookie) to use for authenticating Rettiwt against Twitter API.
 	 * @param proxyUrl - Optional URL with proxy configuration to use for requests to Twitter API.
-     *
+	 *
 	 * @internal
 	 */
 	constructor(apiKey: string, proxyUrl?: URL) {
