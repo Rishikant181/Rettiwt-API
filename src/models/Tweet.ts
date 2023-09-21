@@ -150,7 +150,10 @@ export class TweetMedia {
 		}
 		// If the media is a video
 		else {
-			this.url = media.video_info?.variants[0].url as string;
+			/**
+			 * The 2nd last variant is the highest bitrate format, so selecting that URL.
+			 */
+			this.url = media.video_info?.variants[media.video_info.variants.length - 2].url as string;
 		}
 	}
 }
