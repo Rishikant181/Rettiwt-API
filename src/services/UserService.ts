@@ -114,4 +114,25 @@ export class UserService extends FetcherService {
 
 		return data;
 	}
+
+	/**
+	 * Get the list of tweets liked by the given user.
+	 *
+	 * @param userId - The rest id of the target user.
+	 * @param count - The number of likes to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of likes to fetch.
+	 * @returns The list of tweets liked by the target user.
+	 *
+	 * @public
+	 */
+	async timeline(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+		// Fetching the requested data
+		const data = await this.fetch<Tweet>(EResourceType.USER_TWEETS, {
+			id: userId,
+			count: count,
+			cursor: cursor,
+		});
+
+		return data;
+	}
 }
