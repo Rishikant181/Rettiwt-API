@@ -1,3 +1,6 @@
+// PACKAGES
+import { EMediaType } from 'rettiwt-core';
+
 // TYPES
 import { IUser } from './User';
 
@@ -19,8 +22,8 @@ export interface ITweet {
 	/** Additional tweet entities like urls, mentions, etc. */
 	entities: ITweetEntities;
 
-	/** The media contents of the tweet (if any). */
-	media: string[];
+	/** The urls of the media contents of the tweet (if any). */
+	media: ITweetMedia[];
 
 	/** The rest id of the tweet which is quoted in the tweet. */
 	quoted: string;
@@ -67,7 +70,17 @@ export interface ITweetEntities {
 
 	/** The list of IDs of users mentioned in the tweet. */
 	mentionedUsers: string[];
+}
 
-	/** The list of urls to various media mentioned in the tweet. */
-	media: string[];
+/**
+ * The different media contents.
+ *
+ * @public
+ */
+export interface ITweetMedia {
+	/** The type of media. */
+	type: EMediaType;
+
+	/** The direct URL to the media. */
+	url: string;
 }

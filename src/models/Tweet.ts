@@ -9,55 +9,6 @@ import { User } from './User';
 import { normalizeText } from '../helper/JsonUtils';
 
 /**
- * The different types parsed entities like urls, media, mentions, hashtags, etc.
- *
- * @public
- */
-export class TweetEntities implements ITweetEntities {
-	/** The list of hashtags mentioned in the tweet. */
-	hashtags: string[] = [];
-
-	/** The list of urls mentioned in the tweet. */
-	urls: string[] = [];
-
-	/** The list of IDs of users mentioned in the tweet. */
-	mentionedUsers: string[] = [];
-
-	/** The list of urls to various media mentioned in the tweet. */
-	media: string[] = [];
-
-	constructor(entities: IRawTweetEntities) {
-		// Extracting user mentions
-		if (entities.user_mentions) {
-			for (const user of entities.user_mentions) {
-				this.mentionedUsers.push(user.screen_name);
-			}
-		}
-
-		// Extracting urls
-		if (entities.urls) {
-			for (const url of entities.urls) {
-				this.urls.push(url.expanded_url);
-			}
-		}
-
-		// Extracting hashtags
-		if (entities.hashtags) {
-			for (const hashtag of entities.hashtags) {
-				this.hashtags.push(hashtag.text);
-			}
-		}
-
-		// Extracting media urls (if any)
-		if (entities.media) {
-			for (const media of entities.media) {
-				this.media.push(media.media_url_https);
-			}
-		}
-	}
-}
-
-/**
  * The details of a single Tweet.
  *
  * @public
@@ -74,6 +25,9 @@ export class Tweet implements ITweet {
 
 	/** Additional tweet entities like urls, mentions, etc. */
 	entities: TweetEntities;
+
+	/** The urls of the media contents of the tweet (if any). */
+	media: string[];
 
 	/** The rest id of the tweet which is quoted in the tweet. */
 	quoted: string;
@@ -125,5 +79,44 @@ export class Tweet implements ITweet {
 		this.likeCount = tweet.legacy.favorite_count;
 		this.viewCount = parseInt(tweet.views.count);
 		this.bookmarkCount = tweet.legacy.bookmark_count;
+	}
+}
+
+/**
+ * The different types parsed entities like urls, media, mentions, hashtags, etc.
+ *
+ * @public
+ */
+export class TweetEntities implements ITweetEntities {
+	/** The list of hashtags mentioned in the tweet. */
+	hashtags: string[] = [];
+
+	/** The list of urls mentioned in the tweet. */
+	urls: string[] = [];
+
+	/** The list of IDs of users mentioned in the tweet. */
+	mentionedUsers: string[] = [];
+
+	constructor(entities: IRawTweetEntities) {
+		// Extracting user mentions
+		if (entities.user_mentions) {
+			for (const user of entities.user_mentions) {
+				this.mentionedUsers.push(user.screen_name);
+			}
+		}
+
+		// Extracting urls
+		if (entities.urls) {
+			for (const url of entities.urls) {
+				this.urls.push(url.expanded_url);
+			}
+		}
+
+		// Extracting hashtags
+		if (entities.hashtags) {
+			for (const hashtag of entities.hashtags) {
+				this.hashtags.push(hashtag.text);
+			}
+		}
 	}
 }
