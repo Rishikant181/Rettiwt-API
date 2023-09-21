@@ -62,7 +62,7 @@ export class FetcherService {
 	/**
 	 * Gets the HttpsAgent based on whether a proxy is used or not.
 	 *
-	 * @param proxyUrl - The optional proxy configuration to use.
+	 * @param proxyUrl - Optional URL with proxy configuration to use for requests to Twitter API.
 	 * @returns The HttpsAgent to use.
 	 */
 	private getHttpsAgent(proxyUrl?: URL): Agent {
