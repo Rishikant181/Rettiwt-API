@@ -133,7 +133,8 @@ export class FetcherService {
 		} else if (
 			type == EResourceType.TWEET_SEARCH ||
 			type == EResourceType.USER_LIKES ||
-			type == EResourceType.LIST_TWEETS
+			type == EResourceType.LIST_TWEETS ||
+			type == EResourceType.USER_TWEETS
 		) {
 			required = findByFilter<ITimelineTweet>(data, '__typename', 'TimelineTweet').map(
 				(item) => item.tweet_results.result,
