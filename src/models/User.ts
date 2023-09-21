@@ -1,6 +1,8 @@
+// PACKAGES
+import { IUser as IRawUser } from 'rettiwt-core';
+
 // TYPES
 import { IUser } from '../types/User';
-import { IUser as IRawUser } from 'rettiwt-core';
 
 /**
  * The details of a single user.

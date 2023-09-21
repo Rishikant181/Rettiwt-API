@@ -1,6 +1,13 @@
+// PACKAGES
+import {
+	ITweet as IRawTweet,
+	IEntities as IRawTweetEntities,
+	IExtendedMedia as IRawExtendedMedia,
+	EMediaType,
+} from 'rettiwt-core';
+
 // TYPES
 import { ITweet, ITweetEntities } from '../types/Tweet';
-import { ITweet as IRawTweet, IEntities as IRawTweetEntities } from 'rettiwt-core';
 
 // MODELS
 import { User } from './User';
@@ -27,7 +34,7 @@ export class Tweet implements ITweet {
 	entities: TweetEntities;
 
 	/** The urls of the media contents of the tweet (if any). */
-	media: string[];
+	media: TweetMedia[];
 
 	/** The rest id of the tweet which is quoted in the tweet. */
 	quoted: string;
@@ -69,6 +76,7 @@ export class Tweet implements ITweet {
 		this.createdAt = tweet.legacy.created_at;
 		this.tweetBy = new User(tweet.core.user_results.result);
 		this.entities = new TweetEntities(tweet.legacy.entities);
+		this.media = tweet.legacy.extended_entities?.media.map((media) => new TweetMedia(media));
 		this.quoted = tweet.legacy.quoted_status_id_str;
 		this.fullText = normalizeText(tweet.legacy.full_text);
 		this.replyTo = tweet.legacy.in_reply_to_status_id_str;
@@ -117,6 +125,32 @@ export class TweetEntities implements ITweetEntities {
 			for (const hashtag of entities.hashtags) {
 				this.hashtags.push(hashtag.text);
 			}
+		}
+	}
+}
+
+/**
+ * The different media contents.
+ *
+ * @public
+ */
+export class TweetMedia {
+	/** The type of media. */
+	type: EMediaType;
+
+	/** The direct URL to the media. */
+	url: string;
+
+	constructor(media: IRawExtendedMedia) {
+		this.type = media.type;
+
+		// If the media is a photo
+		if (media.type == EMediaType.PHOTO) {
+			this.url = media.media_url_https;
+		}
+		// If the media is a video
+		else {
+			this.url = media.video_info?.variants[0].url as string;
 		}
 	}
 }
