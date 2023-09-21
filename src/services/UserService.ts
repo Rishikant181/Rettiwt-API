@@ -116,12 +116,14 @@ export class UserService extends FetcherService {
 	}
 
 	/**
-	 * Get the list of tweets liked by the given user.
+	 * Get the timeline of the given user.
 	 *
 	 * @param userId - The rest id of the target user.
-	 * @param count - The number of likes to fetch, must be \<= 100.
-	 * @param cursor - The cursor to the batch of likes to fetch.
-	 * @returns The list of tweets liked by the target user.
+	 * @param count - The number of timeline items to fetch, must be \<= 20.
+	 * @param cursor - The cursor to the batch of timeline items to fetch.
+	 * @returns The timeline of the target user.
+	 *
+	 * @remarks If the target user has a pinned tweet, the returned timeline has one item extra and this is always the pinned tweet.
 	 *
 	 * @public
 	 */
