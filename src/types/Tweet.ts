@@ -73,7 +73,7 @@ export interface ITweetEntities {
 }
 
 /**
- * The different media contents.
+ * A single media content.
  *
  * @public
  */
