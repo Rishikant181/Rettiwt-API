@@ -105,6 +105,11 @@ export class TweetEntities implements ITweetEntities {
 	/** The list of IDs of users mentioned in the tweet. */
 	mentionedUsers: string[] = [];
 
+	/**
+	 * Initializes the TweetEntities from the raw tweet entities.
+	 *
+	 * @param entities - The raw tweet entities.
+	 */
 	constructor(entities: IRawTweetEntities) {
 		// Extracting user mentions
 		if (entities.user_mentions) {
@@ -141,6 +146,11 @@ export class TweetMedia {
 	/** The direct URL to the media. */
 	url: string;
 
+	/**
+	 * Initializes the TweetMedia from the raw tweet media.
+	 *
+	 * @param media - The raw tweet media.
+	 */
 	constructor(media: IRawExtendedMedia) {
 		this.type = media.type;
 
