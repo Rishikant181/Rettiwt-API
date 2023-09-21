@@ -9,25 +9,6 @@ import { User } from './User';
 import { ICursor, ICursoredData } from '../types/CursoredData';
 
 /**
- * The cursor to the batch of data to be fetched.
- *
- * @public
- */
-export class Cursor implements ICursor {
-	/** The cursor string. */
-	value: string;
-
-	/**
-	 * Initializes a new cursor from the given cursor string.
-	 *
-	 * @param cursorStr - The string representation of the cursor.
-	 */
-	constructor(cursorStr: string) {
-		this.value = cursorStr;
-	}
-}
-
-/**
  * The data that us fetched batch-wise along with a cursor.
  *
  * @typeParam T - Type of data to be stored in the list.
@@ -60,5 +41,24 @@ export class CursoredData<T extends Tweet | User> implements ICursoredData<T> {
 
 		// Initializing cursors
 		this.next = new Cursor(next);
+	}
+}
+
+/**
+ * The cursor to the batch of data to be fetched.
+ *
+ * @public
+ */
+export class Cursor implements ICursor {
+	/** The cursor string. */
+	value: string;
+
+	/**
+	 * Initializes a new cursor from the given cursor string.
+	 *
+	 * @param cursorStr - The string representation of the cursor.
+	 */
+	constructor(cursorStr: string) {
+		this.value = cursorStr;
 	}
 }

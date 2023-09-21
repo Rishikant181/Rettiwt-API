@@ -1,14 +1,4 @@
 /**
- * The cursor to the batch of data to be fetched.
- *
- * @public
- */
-export interface ICursor {
-	/** The cursor string. */
-	value: string;
-}
-
-/**
  * The data that us fetched batch-wise along with a cursor.
  *
  * @typeParam T - Type of data present in the list.
@@ -21,4 +11,14 @@ export interface ICursoredData<T> {
 
 	/** The cursor to the next batch of data. */
 	next: ICursor;
+}
+
+/**
+ * The cursor to the batch of data to be fetched.
+ *
+ * @public
+ */
+export interface ICursor {
+	/** The cursor string. */
+	value: string;
 }
