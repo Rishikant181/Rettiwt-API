@@ -144,7 +144,7 @@ export class TweetMedia {
 	type: EMediaType;
 
 	/** The direct URL to the media. */
-	url: string;
+	url: string = '';
 
 	/**
 	 * Initializes the TweetMedia from the raw tweet media.
@@ -161,9 +161,13 @@ export class TweetMedia {
 		// If the media is a video
 		else {
 			/**
-			 * The 1st variant is the highest bitrate format, so selecting that URL.
+			 * Filtering only the video variants (identified by those items having 'bitrate' field).
+			 * Then sorting the variants in descending order of bitrate.
+			 * After sorting, the element is index 0 is the highest bitrate variant.
 			 */
-			this.url = media.video_info?.variants[0].url as string;
+			this.url = media.video_info?.variants
+				.filter((variant) => variant.bitrate >= 0)
+				.sort((v1, v2) => v2.bitrate - v1.bitrate)[0].url as string;
 		}
 	}
 }
