@@ -158,16 +158,24 @@ export class TweetMedia {
 		if (media.type == EMediaType.PHOTO) {
 			this.url = media.media_url_https;
 		}
+		// If the media is a gif
+		else if (media.type == EMediaType.GIF) {
+			this.url = media.video_info?.variants[0].url as string;
+		}
 		// If the media is a video
 		else {
+			/** The highest bitrate of all variants. */
+			let highestRate: number = 0;
+
 			/**
-			 * Filtering only the video variants (identified by those items having 'bitrate' field).
-			 * Then sorting the variants in descending order of bitrate.
-			 * After sorting, the element is index 0 is the highest bitrate variant.
+			 * Selecting the URL of the video variant with the highest bitrate.
 			 */
-			this.url = media.video_info?.variants
-				.filter((variant) => variant.bitrate >= 0)
-				.sort((v1, v2) => v2.bitrate - v1.bitrate)[0].url as string;
+			media.video_info?.variants.forEach((variant) => {
+				if (variant.bitrate > highestRate) {
+					highestRate = variant.bitrate;
+					this.url = variant.url;
+				}
+			});
 		}
 	}
 }
