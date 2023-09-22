@@ -26,6 +26,19 @@ Although the above process initializes a new project, that is, in fact, not nece
 
 **Note:** The API_KEY (cookie) that we generated, is a very sensitive information and provides all access to the Twitter account. Therefore, it is generally recommended to store it as an environment variable and use it from there.
 
+## Using a proxy
+
+For masking of IP address using a proxy server, use the following code snippet for instantiation of Rettiwt:
+
+```
+/**
+ * proxyUrl is the URL or configuration for the proxy server you want to use.`
+ */
+const rettiwt = Rettiwt(API_KEY, proxyUrl);
+```
+
+This creates a Rettiwt instance which uses the given proxy server for making requests to Twitter.
+
 ## Usage
 
 The following examples may help you to get started using the library:
@@ -125,6 +138,7 @@ So far, the following operations are supported:
 -   [Getting the list of users who follow the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#followers)
 -   [Getting the list of users who are followed by the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#following)
 -   [Getting the list of tweets favorited/liked by the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#likes)
+-   [Getting the timeline of a user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#timeline)
 
 ## API Reference
 
