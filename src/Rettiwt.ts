@@ -1,6 +1,3 @@
-// PACKAGE
-import { AuthCredential } from 'rettiwt-auth';
-
 // SERVICES
 import { TweetService } from './services/TweetService';
 import { UserService } from './services/UserService';
@@ -20,14 +17,11 @@ export class Rettiwt {
 	/**
 	 * Initializes a new Rettiwt instance using the given api key.
 	 *
-	 * @param apiKey - The apiKey (cookie) to be used for authenticating Rettiwt against Twitter.
+	 * @param apiKey - The apiKey (cookie) to use for authenticating Rettiwt against Twitter API.
+	 * @param proxyUrl - Optional URL with proxy configuration to use for requests to Twitter API.
 	 */
-	constructor(apiKey: string) {
-		// Preparing auth credentials
-		const cred: AuthCredential = new AuthCredential(apiKey.split(';'));
-
-		// Initalizing service instances
-		this.tweet = new TweetService(cred);
-		this.user = new UserService(cred);
+	constructor(apiKey: string, proxyUrl?: URL) {
+		this.tweet = new TweetService(apiKey, proxyUrl);
+		this.user = new UserService(apiKey, proxyUrl);
 	}
 }

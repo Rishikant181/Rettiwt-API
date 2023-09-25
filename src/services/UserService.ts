@@ -1,6 +1,5 @@
 // PACKAGES
 import { EResourceType } from 'rettiwt-core';
-import { AuthCredential } from 'rettiwt-auth';
 
 // SERVICES
 import { FetcherService } from './FetcherService';
@@ -19,12 +18,13 @@ import { CursoredData } from '../models/CursoredData';
  */
 export class UserService extends FetcherService {
 	/**
-	 * @param cred - The credentials to use for authenticating against Twitter API.
+	 * @param apiKey - The apiKey (cookie) to use for authenticating Rettiwt against Twitter API.
+	 * @param proxyUrl - Optional URL with proxy configuration to use for requests to Twitter API.
 	 *
 	 * @internal
 	 */
-	constructor(cred: AuthCredential) {
-		super(cred);
+	constructor(apiKey: string, proxyUrl?: URL) {
+		super(apiKey, proxyUrl);
 	}
 
 	/**
@@ -107,6 +107,29 @@ export class UserService extends FetcherService {
 	async likes(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Fetching the requested data
 		const data = await this.fetch<Tweet>(EResourceType.USER_LIKES, {
+			id: userId,
+			count: count,
+			cursor: cursor,
+		});
+
+		return data;
+	}
+
+	/**
+	 * Get the timeline of the given user.
+	 *
+	 * @param userId - The rest id of the target user.
+	 * @param count - The number of timeline items to fetch, must be \<= 20.
+	 * @param cursor - The cursor to the batch of timeline items to fetch.
+	 * @returns The timeline of the target user.
+	 *
+	 * @remarks If the target user has a pinned tweet, the returned timeline has one item extra and this is always the pinned tweet.
+	 *
+	 * @public
+	 */
+	async timeline(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+		// Fetching the requested data
+		const data = await this.fetch<Tweet>(EResourceType.USER_TWEETS, {
 			id: userId,
 			count: count,
 			cursor: cursor,

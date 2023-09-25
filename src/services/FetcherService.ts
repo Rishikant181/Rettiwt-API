@@ -12,7 +12,9 @@ import {
 	EErrorCodes,
 } from 'rettiwt-core';
 import axios, { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from 'axios';
+import https, { Agent } from 'https';
 import { AuthCredential } from 'rettiwt-auth';
+import { HttpsProxyAgent } from 'https-proxy-agent';
 
 // ENUMS
 import { EHttpStatus } from '../enums/HTTP';
@@ -35,11 +37,40 @@ export class FetcherService {
 	/** The credential to use for authenticating against Twitter API. */
 	private cred: AuthCredential;
 
+	/** The HTTPS Agent to use for requests to Twitter API. */
+	private readonly httpsAgent: Agent;
+
 	/**
-	 * @param cred - The credentials to use for authenticating against Twitter API.
+	 * @param apiKey - The apiKey (cookie) to use for authenticating Rettiwt against Twitter API.
+	 * @param proxyUrl - Optional URL with proxy configuration to use for requests to Twitter API.
 	 */
-	constructor(cred: AuthCredential) {
-		this.cred = cred;
+	constructor(apiKey: string, proxyUrl?: URL) {
+		this.cred = this.getAuthCredential(apiKey);
+		this.httpsAgent = this.getHttpsAgent(proxyUrl);
+	}
+
+	/**
+	 * Returns an AuthCredential generated using the given API key.
+	 *
+	 * @param apiKey - The API key to use for authenticating.
+	 * @returns The generated AuthCredential.
+	 */
+	private getAuthCredential(apiKey: string): AuthCredential {
+		return new AuthCredential(apiKey.split(';'));
+	}
+
+	/**
+	 * Gets the HttpsAgent based on whether a proxy is used or not.
+	 *
+	 * @param proxyUrl - Optional URL with proxy configuration to use for requests to Twitter API.
+	 * @returns The HttpsAgent to use.
+	 */
+	private getHttpsAgent(proxyUrl?: URL): Agent {
+		if (proxyUrl) {
+			return new HttpsProxyAgent(proxyUrl);
+		}
+
+		return new https.Agent();
 	}
 
 	/**
@@ -98,10 +129,11 @@ export class FetcherService {
 			method: config.type,
 			data: config.payload,
 			headers: JSON.parse(JSON.stringify(this.cred.toHeader())) as AxiosRequestHeaders,
+			httpsAgent: this.httpsAgent,
 		};
 
 		/**
-		 * After making the request, the response is then passed to HTTP error handling middlware for HTTP error handling.
+		 * After making the request, the response is then passed to HTTP error handling middleware for HTTP error handling.
 		 */
 		return await axios<IResponse<unknown>>(axiosRequest)
 			.then((res) => this.handleHttpError(res))
@@ -133,7 +165,8 @@ export class FetcherService {
 		} else if (
 			type == EResourceType.TWEET_SEARCH ||
 			type == EResourceType.USER_LIKES ||
-			type == EResourceType.LIST_TWEETS
+			type == EResourceType.LIST_TWEETS ||
+			type == EResourceType.USER_TWEETS
 		) {
 			required = findByFilter<ITimelineTweet>(data, '__typename', 'TimelineTweet').map(
 				(item) => item.tweet_results.result,

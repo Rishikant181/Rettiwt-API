@@ -1,24 +1,8 @@
+// PACKAGES
+import { EMediaType } from 'rettiwt-core';
+
 // TYPES
 import { IUser } from './User';
-
-/**
- * The different types parsed entities like urls, media, mentions, hashtags, etc.
- *
- * @public
- */
-export interface ITweetEntities {
-	/** The list of hashtags mentioned in the tweet. */
-	hashtags: string[];
-
-	/** The list of urls mentioned in the tweet. */
-	urls: string[];
-
-	/** The list of IDs of users mentioned in the tweet. */
-	mentionedUsers: string[];
-
-	/** The list of urls to various media mentioned in the tweet. */
-	media: string[];
-}
 
 /**
  * The details of a single Tweet.
@@ -37,6 +21,9 @@ export interface ITweet {
 
 	/** Additional tweet entities like urls, mentions, etc. */
 	entities: ITweetEntities;
+
+	/** The urls of the media contents of the tweet (if any). */
+	media: ITweetMedia[];
 
 	/** The rest id of the tweet which is quoted in the tweet. */
 	quoted: string;
@@ -67,4 +54,33 @@ export interface ITweet {
 
 	/** The number of bookmarks of a tweet. */
 	bookmarkCount: number;
+}
+
+/**
+ * The different types parsed entities like urls, media, mentions, hashtags, etc.
+ *
+ * @public
+ */
+export interface ITweetEntities {
+	/** The list of hashtags mentioned in the tweet. */
+	hashtags: string[];
+
+	/** The list of urls mentioned in the tweet. */
+	urls: string[];
+
+	/** The list of IDs of users mentioned in the tweet. */
+	mentionedUsers: string[];
+}
+
+/**
+ * A single media content.
+ *
+ * @public
+ */
+export interface ITweetMedia {
+	/** The type of media. */
+	type: EMediaType;
+
+	/** The direct URL to the media. */
+	url: string;
 }
