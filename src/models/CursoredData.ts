@@ -30,11 +30,11 @@ export class CursoredData<T extends Tweet | User> implements ICursoredData<T> {
 		// Deserializing the input raw data and storing it in the list
 		for (const item of list) {
 			// If the item is a valid raw tweet
-			if (item.__typename == 'Tweet' && item.rest_id) {
+			if (item && item.__typename == 'Tweet' && item.rest_id) {
 				this.list.push(new Tweet(item as IRawTweet) as T);
 			}
 			// If the item is a valid raw user
-			else if (item.__typename == 'User' && item.rest_id && (item as IRawUser).id) {
+			else if (item && item.__typename == 'User' && item.rest_id && (item as IRawUser).id) {
 				this.list.push(new User(item as IRawUser) as T);
 			}
 		}
