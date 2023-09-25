@@ -39,7 +39,7 @@ export class UserService extends FetcherService {
 		let data: CursoredData<User>;
 
 		// If username is given
-		if (isNaN(parseFloat(id))) {
+		if (isNaN(Number(id))) {
 			// Fetching the requested data
 			data = await this.fetch<User>(EResourceType.USER_DETAILS, { id: id });
 		}
