@@ -1,3 +1,6 @@
+// ENUMS
+import { ELogActions } from '../enums/Logging';
+
 /**
  * Handles logging of data for debug purpose.
  *
@@ -16,10 +19,14 @@ export class LogService {
 	 *
 	 * @param data - The data to be logged.
 	 */
-	public log(data: NonNullable<unknown>): void {
+	public log(action: ELogActions, data: NonNullable<unknown>): void {
 		// Proceed to log only if logging is enabled
 		if (this.enabled) {
-			console.log(data);
+			// Preparing the log message
+			const logMessage: string = `[${action}] [${new Date().toISOString()}] ${JSON.stringify(data)}`;
+
+			// Logging
+			console.log(logMessage);
 		}
 	}
 }
