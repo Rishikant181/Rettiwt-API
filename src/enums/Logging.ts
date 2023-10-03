@@ -4,7 +4,8 @@
  * @internal
  */
 export enum ELogActions {
-	HTTP_REQUEST = 'HTTP_REQUEST',
+	FETCH = 'FETCH',
+	POST = 'POST',
 	EXTRACT = 'EXTRACT',
 	DESERIALIZE = 'DESERIALIZE',
 }
