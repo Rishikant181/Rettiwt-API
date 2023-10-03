@@ -23,7 +23,7 @@ export class LogService {
 		// Proceed to log only if logging is enabled
 		if (this.enabled) {
 			// Preparing the log message
-			const logMessage: string = `[${action}] [${new Date().toISOString()}] ${JSON.stringify(data)}`;
+			const logMessage: string = `[Rettiwt-API] [${action}] [${new Date().toString()}] ${JSON.stringify(data)}`;
 
 			// Logging
 			console.log(logMessage);
