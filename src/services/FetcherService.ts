@@ -44,7 +44,7 @@ export class FetcherService {
 	 * @param apiKey - The apiKey (cookie) to use for authenticating Rettiwt against Twitter API.
 	 * @param proxyUrl - Optional URL with proxy configuration to use for requests to Twitter API.
 	 */
-	constructor(apiKey: string, proxyUrl?: URL) {
+	public constructor(apiKey: string, proxyUrl?: URL) {
 		this.cred = this.getAuthCredential(apiKey);
 		this.httpsAgent = this.getHttpsAgent(proxyUrl);
 	}

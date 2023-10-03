@@ -23,7 +23,7 @@ export class UserService extends FetcherService {
 	 *
 	 * @internal
 	 */
-	constructor(apiKey: string, proxyUrl?: URL) {
+	public constructor(apiKey: string, proxyUrl?: URL) {
 		super(apiKey, proxyUrl);
 	}
 
@@ -35,7 +35,7 @@ export class UserService extends FetcherService {
 	 *
 	 * @public
 	 */
-	async details(id: string): Promise<User> {
+	public async details(id: string): Promise<User> {
 		let data: CursoredData<User>;
 
 		// If username is given
@@ -62,7 +62,7 @@ export class UserService extends FetcherService {
 	 *
 	 * @public
 	 */
-	async following(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+	public async following(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Fetching the requested data
 		const data = await this.fetch<User>(EResourceType.USER_FOLLOWING, {
 			id: userId,
@@ -83,7 +83,7 @@ export class UserService extends FetcherService {
 	 *
 	 * @public
 	 */
-	async followers(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+	public async followers(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Fetching the requested data
 		const data = await this.fetch<User>(EResourceType.USER_FOLLOWERS, {
 			id: userId,
@@ -104,7 +104,7 @@ export class UserService extends FetcherService {
 	 *
 	 * @public
 	 */
-	async likes(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+	public async likes(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Fetching the requested data
 		const data = await this.fetch<Tweet>(EResourceType.USER_LIKES, {
 			id: userId,
@@ -127,7 +127,7 @@ export class UserService extends FetcherService {
 	 *
 	 * @public
 	 */
-	async timeline(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+	public async timeline(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Fetching the requested data
 		const data = await this.fetch<Tweet>(EResourceType.USER_TWEETS, {
 			id: userId,
