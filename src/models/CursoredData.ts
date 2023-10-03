@@ -17,16 +17,16 @@ import { ICursor, ICursoredData } from '../types/CursoredData';
  */
 export class CursoredData<T extends Tweet | User> implements ICursoredData<T> {
 	/** The list of data of the given type. */
-	list: T[] = [];
+	public list: T[] = [];
 
 	/** The cursor to the next batch of data. */
-	next: Cursor;
+	public next: Cursor;
 
 	/**
 	 * @param list - The list of data item to store.
 	 * @param next - The cursor to the next batch of data.
 	 */
-	constructor(list: (IRawTweet | IRawUser)[] = [], next: string = '') {
+	public constructor(list: (IRawTweet | IRawUser)[] = [], next: string = '') {
 		// Deserializing the input raw data and storing it in the list
 		for (const item of list) {
 			// If the item is a valid raw tweet
@@ -51,14 +51,14 @@ export class CursoredData<T extends Tweet | User> implements ICursoredData<T> {
  */
 export class Cursor implements ICursor {
 	/** The cursor string. */
-	value: string;
+	public value: string;
 
 	/**
 	 * Initializes a new cursor from the given cursor string.
 	 *
 	 * @param cursorStr - The string representation of the cursor.
 	 */
-	constructor(cursorStr: string) {
+	public constructor(cursorStr: string) {
 		this.value = cursorStr;
 	}
 }

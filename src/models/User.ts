@@ -11,53 +11,53 @@ import { IUser } from '../types/User';
  */
 export class User implements IUser {
 	/** The rest id of the user. */
-	id: string;
+	public id: string;
 
 	/** The username/screenname of the user. */
-	userName: string;
+	public userName: string;
 
 	/** The full name of the user. */
-	fullName: string;
+	public fullName: string;
 
 	/** The creation date of user's account. */
-	createdAt: string;
+	public createdAt: string;
 
 	/** The user's description. */
-	description: string;
+	public description: string;
 
 	/** Whether the account is verified or not. */
-	isVerified: boolean;
+	public isVerified: boolean;
 
 	/** The number of tweets liked by the user. */
-	favouritesCount: number;
+	public favouritesCount: number;
 
 	/** The number of followers of the user. */
-	followersCount: number;
+	public followersCount: number;
 
 	/** The number of following of the user. */
-	followingsCount: number;
+	public followingsCount: number;
 
 	/** The number of tweets made by the user. */
-	statusesCount: number;
+	public statusesCount: number;
 
 	/** The location of user as provided by user. */
-	location: string;
+	public location: string;
 
 	/** The rest id of the tweet pinned in the user's profile. */
-	pinnedTweet: string;
+	public pinnedTweet: string;
 
 	/** The url of the profile banner image. */
-	profileBanner: string;
+	public profileBanner: string;
 
 	/** The url of the profile image. */
-	profileImage: string;
+	public profileImage: string;
 
 	/**
 	 * Initializes a new User from the given raw user data.
 	 *
 	 * @param user - The raw user data.
 	 */
-	constructor(user: IRawUser) {
+	public constructor(user: IRawUser) {
 		this.id = user.rest_id;
 		this.userName = user.legacy.screen_name;
 		this.fullName = user.legacy.name;

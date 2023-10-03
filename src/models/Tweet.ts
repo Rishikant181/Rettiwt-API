@@ -22,56 +22,56 @@ import { normalizeText } from '../helper/JsonUtils';
  */
 export class Tweet implements ITweet {
 	/** The rest id of the tweet. */
-	id: string;
+	public id: string;
 
 	/** The details of the user who made the tweet. */
-	tweetBy: User;
+	public tweetBy: User;
 
 	/** The date and time of creation of the tweet, in UTC string format. */
-	createdAt: string;
+	public createdAt: string;
 
 	/** Additional tweet entities like urls, mentions, etc. */
-	entities: TweetEntities;
+	public entities: TweetEntities;
 
 	/** The urls of the media contents of the tweet (if any). */
-	media: TweetMedia[];
+	public media: TweetMedia[];
 
 	/** The rest id of the tweet which is quoted in the tweet. */
-	quoted: string;
+	public quoted: string;
 
 	/** The full text content of the tweet. */
-	fullText: string;
+	public fullText: string;
 
 	/** The rest id of the user to which the tweet is a reply. */
-	replyTo: string;
+	public replyTo: string;
 
 	/** The language in which the tweet is written. */
-	lang: string;
+	public lang: string;
 
 	/** The number of quotes of the tweet. */
-	quoteCount: number;
+	public quoteCount: number;
 
 	/** The number of replies to the tweet. */
-	replyCount: number;
+	public replyCount: number;
 
 	/** The number of retweets of the tweet. */
-	retweetCount: number;
+	public retweetCount: number;
 
 	/** The number of likes of the tweet. */
-	likeCount: number;
+	public likeCount: number;
 
 	/** The number of views of a tweet. */
-	viewCount: number;
+	public viewCount: number;
 
 	/** The number of bookmarks of a tweet. */
-	bookmarkCount: number;
+	public bookmarkCount: number;
 
 	/**
 	 * Initializes a new Tweet from the given raw tweet data.
 	 *
 	 * @param tweet - The raw tweet data.
 	 */
-	constructor(tweet: IRawTweet) {
+	public constructor(tweet: IRawTweet) {
 		this.id = tweet.rest_id;
 		this.createdAt = tweet.legacy.created_at;
 		this.tweetBy = new User(tweet.core.user_results.result);
@@ -97,20 +97,20 @@ export class Tweet implements ITweet {
  */
 export class TweetEntities implements ITweetEntities {
 	/** The list of hashtags mentioned in the tweet. */
-	hashtags: string[] = [];
+	public hashtags: string[] = [];
 
 	/** The list of urls mentioned in the tweet. */
-	urls: string[] = [];
+	public urls: string[] = [];
 
 	/** The list of IDs of users mentioned in the tweet. */
-	mentionedUsers: string[] = [];
+	public mentionedUsers: string[] = [];
 
 	/**
 	 * Initializes the TweetEntities from the raw tweet entities.
 	 *
 	 * @param entities - The raw tweet entities.
 	 */
-	constructor(entities: IRawTweetEntities) {
+	public constructor(entities: IRawTweetEntities) {
 		// Extracting user mentions
 		if (entities.user_mentions) {
 			for (const user of entities.user_mentions) {
@@ -141,17 +141,17 @@ export class TweetEntities implements ITweetEntities {
  */
 export class TweetMedia {
 	/** The type of media. */
-	type: EMediaType;
+	public type: EMediaType;
 
 	/** The direct URL to the media. */
-	url: string = '';
+	public url: string = '';
 
 	/**
 	 * Initializes the TweetMedia from the raw tweet media.
 	 *
 	 * @param media - The raw tweet media.
 	 */
-	constructor(media: IRawExtendedMedia) {
+	public constructor(media: IRawExtendedMedia) {
 		this.type = media.type;
 
 		// If the media is a photo
