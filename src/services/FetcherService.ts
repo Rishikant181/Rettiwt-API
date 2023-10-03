@@ -145,14 +145,18 @@ export class FetcherService {
 	 *
 	 * @param data - The data from which extraction is to be done.
 	 * @param type - The type of data to extract.
-	 * @typeParam BaseType - The base type of the raw data present in the input.
-	 * @typeParam DeserializedType - The type of data produced after deserialization of BaseType.
 	 * @returns The extracted data.
 	 */
-	private extractData<DeserializedType extends Tweet | User>(
+	private extractData(
 		data: NonNullable<unknown>,
 		type: EResourceType,
-	): CursoredData<DeserializedType> {
+	): {
+		/** The required extracted data. */
+		required: (IRawTweet | IRawUser)[];
+
+		/** The cursor string to the next batch of data. */
+		next: string;
+	} {
 		/**
 		 * The required extracted data.
 		 */
@@ -182,7 +186,39 @@ export class FetcherService {
 			);
 		}
 
-		return new CursoredData(required, findByFilter<IRawCursor>(data, 'cursorType', 'Bottom')[0]?.value);
+		return {
+			required: required,
+			next: findByFilter<IRawCursor>(data, 'cursorType', 'Bottom')[0]?.value,
+		};
+	}
+
+	/**
+	 * Deserializes the extracted data into a cursored list.
+	 *
+	 * @param extractedData - The list of extracted data.
+	 * @param next - The cursor to the next batch of data.
+	 * @returns The cursored data object.
+	 */
+	private deserializeData<OutType extends Tweet | User>(
+		extractedData: (IRawTweet | IRawUser)[] = [],
+		next: string = '',
+	): CursoredData<OutType> {
+		/** The list of deserialized data. */
+		const deserializedList: OutType[] = [];
+
+		// Deserializing the extracted raw data and storing it in the list
+		for (const item of extractedData) {
+			// If the item is a valid raw tweet
+			if (item && item.__typename == 'Tweet' && item.rest_id) {
+				deserializedList.push(new Tweet(item as IRawTweet) as OutType);
+			}
+			// If the item is a valid raw user
+			else if (item && item.__typename == 'User' && item.rest_id && (item as IRawUser).id) {
+				deserializedList.push(new User(item as IRawUser) as OutType);
+			}
+		}
+
+		return new CursoredData<OutType>(deserializedList, next);
 	}
 
 	/**
@@ -204,9 +240,12 @@ export class FetcherService {
 		const res = await this.request(request).then((res) => res.data);
 
 		// Extracting data
-		const data = this.extractData<OutType>(res, resourceType);
+		const extractedData = this.extractData(res, resourceType);
 
-		return data;
+		// Deserializing data
+		const deserializedData = this.deserializeData<OutType>(extractedData.required, extractedData.next);
+
+		return deserializedData;
 	}
 
 	/**
