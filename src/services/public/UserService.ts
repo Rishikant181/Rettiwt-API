@@ -5,6 +5,7 @@ import { EResourceType } from 'rettiwt-core';
 import { FetcherService } from '../internal/FetcherService';
 
 // MODELS
+import { RettiwtConfig } from '../../models/internal/RettiwtConfig';
 import { User } from '../../models/public/User';
 import { Tweet } from '../../models/public/Tweet';
 
@@ -18,13 +19,12 @@ import { CursoredData } from '../../models/public/CursoredData';
  */
 export class UserService extends FetcherService {
 	/**
-	 * @param apiKey - The apiKey (cookie) to use for authenticating Rettiwt against Twitter API.
-	 * @param proxyUrl - Optional URL with proxy configuration to use for requests to Twitter API.
+	 * @param config - The config object for configuring the Rettiwt instance.
 	 *
 	 * @internal
 	 */
-	public constructor(apiKey: string, proxyUrl?: URL) {
-		super(apiKey, proxyUrl);
+	public constructor(config: RettiwtConfig) {
+		super(config);
 	}
 
 	/**

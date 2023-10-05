@@ -25,6 +25,7 @@ import { EApiErrors } from '../../enums/ApiErrors';
 import { ELogActions } from '../../enums/Logging';
 
 // MODELS
+import { RettiwtConfig } from '../../models/internal/RettiwtConfig';
 import { CursoredData } from '../../models/public/CursoredData';
 import { Tweet } from '../../models/public/Tweet';
 import { User } from '../../models/public/User';
@@ -48,13 +49,12 @@ export class FetcherService {
 	private readonly logger: LogService;
 
 	/**
-	 * @param apiKey - The apiKey (cookie) to use for authenticating Rettiwt against Twitter API.
-	 * @param proxyUrl - Optional URL with proxy configuration to use for requests to Twitter API.
+	 * @param config - The config object for configuring the Rettiwt instance.
 	 */
-	public constructor(apiKey: string, proxyUrl?: URL) {
-		this.cred = this.getAuthCredential(apiKey);
-		this.httpsAgent = this.getHttpsAgent(proxyUrl);
-		this.logger = new LogService();
+	public constructor(config: RettiwtConfig) {
+		this.cred = this.getAuthCredential(config.apiKey);
+		this.httpsAgent = this.getHttpsAgent(config.proxyUrl);
+		this.logger = new LogService(config.logging);
 	}
 
 	/**

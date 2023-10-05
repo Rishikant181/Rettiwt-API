@@ -10,8 +10,13 @@ export class LogService {
 	/** Whether logging is enabled or not. */
 	private readonly enabled: boolean;
 
-	public constructor() {
-		this.enabled = true;
+	/**
+	 * Initializes a new LogService instance.
+	 *
+	 * @param enable - Whether to enable logging or not.
+	 */
+	public constructor(enable?: boolean) {
+		this.enabled = enable ?? false;
 	}
 
 	/**

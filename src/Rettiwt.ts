@@ -2,6 +2,9 @@
 import { TweetService } from './services/public/TweetService';
 import { UserService } from './services/public/UserService';
 
+// MODELS
+import { RettiwtConfig } from './models/internal/RettiwtConfig';
+
 /**
  * The class for fetching data from Twitter.
  *
@@ -17,11 +20,10 @@ export class Rettiwt {
 	/**
 	 * Initializes a new Rettiwt instance using the given api key.
 	 *
-	 * @param apiKey - The apiKey (cookie) to use for authenticating Rettiwt against Twitter API.
-	 * @param proxyUrl - Optional URL with proxy configuration to use for requests to Twitter API.
+	 * @param config - The config object for configuring the Rettiwt instance.
 	 */
-	public constructor(apiKey: string, proxyUrl?: URL) {
-		this.tweet = new TweetService(apiKey, proxyUrl);
-		this.user = new UserService(apiKey, proxyUrl);
+	public constructor(config: RettiwtConfig) {
+		this.tweet = new TweetService(config);
+		this.user = new UserService(config);
 	}
 }

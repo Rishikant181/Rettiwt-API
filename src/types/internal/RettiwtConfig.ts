@@ -8,7 +8,7 @@ export interface IRettiwtConfig {
 	apiKey: string;
 
 	/** Optional URL with proxy configuration to use for requests to Twitter API. */
-	proxyUrl?: string;
+	proxyUrl?: URL;
 
 	/** Whether to write logs to console or not. */
 	logging?: boolean;

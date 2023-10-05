@@ -11,7 +11,7 @@ export class RettiwtConfig implements IRettiwtConfig {
 	public apiKey: string;
 
 	/** Optional URL with proxy configuration to use for requests to Twitter API. */
-	public proxyUrl?: string;
+	public proxyUrl?: URL;
 
 	/** Whether to write logs to console or not. */
 	public logging?: boolean;
