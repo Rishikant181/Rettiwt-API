@@ -7,13 +7,13 @@ import {
 } from 'rettiwt-core';
 
 // TYPES
-import { ITweet, ITweetEntities } from '../types/Tweet';
+import { ITweet, ITweetEntities } from '../../types/public/Tweet';
 
 // MODELS
 import { User } from './User';
 
 // PARSERS
-import { normalizeText } from '../helper/JsonUtils';
+import { normalizeText } from '../../helper/JsonUtils';
 
 /**
  * The details of a single Tweet.

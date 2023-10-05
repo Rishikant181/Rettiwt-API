@@ -2,7 +2,7 @@
 import { IUser as IRawUser } from 'rettiwt-core';
 
 // TYPES
-import { IUser } from '../types/User';
+import { IUser } from '../../types/public/User';
 
 /**
  * The details of a single user.

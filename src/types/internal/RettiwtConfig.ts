@@ -1,7 +1,7 @@
 /**
  * The configuration for initializing a new Rettiwt instance.
  *
- * @public
+ * @internal
  */
 export interface IRettiwtConfig {
 	/** The apiKey (cookie) to use for authenticating Rettiwt against Twitter API. */

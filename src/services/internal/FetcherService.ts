@@ -20,17 +20,17 @@ import { HttpsProxyAgent } from 'https-proxy-agent';
 import { LogService } from './LogService';
 
 // ENUMS
-import { EHttpStatus } from '../enums/HTTP';
-import { EApiErrors } from '../enums/ApiErrors';
-import { ELogActions } from '../enums/Logging';
+import { EHttpStatus } from '../../enums/HTTP';
+import { EApiErrors } from '../../enums/ApiErrors';
+import { ELogActions } from '../../enums/Logging';
 
 // MODELS
-import { CursoredData } from '../models/CursoredData';
-import { Tweet } from '../models/Tweet';
-import { User } from '../models/User';
+import { CursoredData } from '../../models/public/CursoredData';
+import { Tweet } from '../../models/public/Tweet';
+import { User } from '../../models/public/User';
 
 // HELPERS
-import { findByFilter, findKeyByValue } from '../helper/JsonUtils';
+import { findByFilter, findKeyByValue } from '../../helper/JsonUtils';
 
 /**
  * The base service that handles all HTTP requests.

@@ -2,14 +2,14 @@
 import { EResourceType } from 'rettiwt-core';
 
 // SERVICES
-import { FetcherService } from './FetcherService';
+import { FetcherService } from '../internal/FetcherService';
 
 // MODELS
-import { User } from '../models/User';
-import { Tweet } from '../models/Tweet';
+import { User } from '../../models/public/User';
+import { Tweet } from '../../models/public/Tweet';
 
 // TYPES
-import { CursoredData } from '../models/CursoredData';
+import { CursoredData } from '../../models/public/CursoredData';
 
 /**
  * Handles fetching of data related to user account

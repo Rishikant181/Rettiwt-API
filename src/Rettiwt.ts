@@ -1,6 +1,6 @@
 // SERVICES
-import { TweetService } from './services/TweetService';
-import { UserService } from './services/UserService';
+import { TweetService } from './services/public/TweetService';
+import { UserService } from './services/public/UserService';
 
 /**
  * The class for fetching data from Twitter.

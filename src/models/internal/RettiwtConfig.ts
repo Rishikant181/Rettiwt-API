@@ -1,10 +1,10 @@
 // TYPES
-import { IRettiwtConfig } from '../types/RettiwtConfig';
+import { IRettiwtConfig } from '../../types/internal/RettiwtConfig';
 
 /**
  * The configuration for initializing a new Rettiwt instance.
  *
- * @public
+ * @internal
  */
 export class RettiwtConfig implements IRettiwtConfig {
 	/** The apiKey (cookie) to use for authenticating Rettiwt against Twitter API. */

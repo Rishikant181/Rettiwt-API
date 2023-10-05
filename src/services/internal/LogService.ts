@@ -1,5 +1,5 @@
 // ENUMS
-import { ELogActions } from '../enums/Logging';
+import { ELogActions } from '../../enums/Logging';
 
 /**
  * Handles logging of data for debug purpose.

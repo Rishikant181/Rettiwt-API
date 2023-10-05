@@ -3,7 +3,7 @@ import { Tweet } from './Tweet';
 import { User } from './User';
 
 // TYPES
-import { ICursor, ICursoredData } from '../types/CursoredData';
+import { ICursor, ICursoredData } from '../../types/public/CursoredData';
 
 /**
  * The data that us fetched batch-wise along with a cursor.
