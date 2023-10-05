@@ -20,8 +20,9 @@ Although the above process initializes a new project, that is, in fact, not nece
 
 1. Generate credentials using [rettiwt-auth](https://www.npmjs.com/package/rettiwt-auth) package, by following these [steps](https://rishikant181.github.io/Rettiwt-Auth/#md:cli-usage).
 2. Copy the value of the 'cookies' field from the generated credentials and store it somewhere safe. Let's call this our API_KEY.
-3. Create a new instance of Rettiwt, passing in the API key:  
-   `const rettiwt = Rettiwt(API_KEY);`
+3. Create a new instance of Rettiwt, passing in the API key as a config object:  
+   `const rettiwt = Rettiwt({ apiKey: API_KEY });`  
+   The available options in the config object can be found [here](https://rishikant181.github.io/Rettiwt-API/classes/RettiwtConfig.html).
 4. Use the created [Rettiwt](https://rishikant181.github.io/Rettiwt-API/classes/Rettiwt.html) instance to fetch data from Twitter.
 
 **Note:** The API_KEY (cookie) that we generated, is a very sensitive information and provides all access to the Twitter account. Therefore, it is generally recommended to store it as an environment variable and use it from there.
@@ -32,12 +33,23 @@ For masking of IP address using a proxy server, use the following code snippet f
 
 ```
 /**
- * proxyUrl is the URL or configuration for the proxy server you want to use.`
+ * PROXY_URL is the URL or configuration for the proxy server you want to use.`
  */
-const rettiwt = Rettiwt(API_KEY, proxyUrl);
+const rettiwt = Rettiwt({ apiKey: API_KEY, proxyUrl: PROXY_URL });
 ```
 
 This creates a Rettiwt instance which uses the given proxy server for making requests to Twitter.
+
+## Debug logs
+
+Sometimes, when the library shows unexpected behaviour, for troubleshooting purposes, debug logs can be enabled which will help in tracking down the issue and working on a potential fix. Currently, debug logs are printed to the console and are enabled by setting the 'logging' property of the config to true, while creating an instance of Rettiwt:
+
+```
+/**
+ * By default, is no value for 'logging' is supplied, logging is disabled.
+ */
+const rettiwt = Rettiwt({ apiKey: API_KEY, logging: true });
+```
 
 ## Usage
 
@@ -49,7 +61,7 @@ The following examples may help you to get started using the library:
 const { Rettiwt } = require('rettiwt-api');
 
 // Creating a new Rettiwt instance using the API_KEY
-const rettiwt = new Rettiwt(API_KEY);
+const rettiwt = new Rettiwt({ apiKey: API_KEY });
 
 // Fetching the details of the user whose username is <username>
 rettiwt.user.details('<username>')
@@ -67,7 +79,7 @@ rettiwt.user.details('<username>')
 const { Rettiwt } = require('rettiwt-api');
 
 // Creating a new Rettiwt instance using the API_KEY
-const rettiwt = new Rettiwt(API_KEY);
+const rettiwt = new Rettiwt({ apiKey: API_KEY });
 
 /**
  * Fetching the list of tweets that:
@@ -94,7 +106,7 @@ The previous example fetches the the list of tweets matching the given filter. S
 const { Rettiwt } = require('rettiwt-api');
 
 // Creating a new Rettiwt instance using the API_KEY
-const rettiwt = new Rettiwt(API_KEY);
+const rettiwt = new Rettiwt({ apiKey: API_KEY });
 
 /**
  * Fetching the list of tweets that:
