@@ -16,9 +16,13 @@ import https, { Agent } from 'https';
 import { AuthCredential } from 'rettiwt-auth';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 
+// SERVICES
+import { LogService } from './LogService';
+
 // ENUMS
 import { EHttpStatus } from '../enums/HTTP';
 import { EApiErrors } from '../enums/ApiErrors';
+import { ELogActions } from '../enums/Logging';
 
 // MODELS
 import { CursoredData } from '../models/CursoredData';
@@ -40,6 +44,9 @@ export class FetcherService {
 	/** The HTTPS Agent to use for requests to Twitter API. */
 	private readonly httpsAgent: Agent;
 
+	/** The log service instance to use to logging. */
+	private readonly logger: LogService;
+
 	/**
 	 * @param apiKey - The apiKey (cookie) to use for authenticating Rettiwt against Twitter API.
 	 * @param proxyUrl - Optional URL with proxy configuration to use for requests to Twitter API.
@@ -47,6 +54,7 @@ export class FetcherService {
 	public constructor(apiKey: string, proxyUrl?: URL) {
 		this.cred = this.getAuthCredential(apiKey);
 		this.httpsAgent = this.getHttpsAgent(proxyUrl);
+		this.logger = new LogService();
 	}
 
 	/**
@@ -210,10 +218,18 @@ export class FetcherService {
 		for (const item of extractedData) {
 			// If the item is a valid raw tweet
 			if (item && item.__typename == 'Tweet' && item.rest_id) {
+				// Logging
+				this.logger.log(ELogActions.DESERIALIZE, { type: item.__typename, id: item.rest_id });
+
+				// Adding deserialized Tweet to list
 				deserializedList.push(new Tweet(item as IRawTweet) as OutType);
 			}
 			// If the item is a valid raw user
 			else if (item && item.__typename == 'User' && item.rest_id && (item as IRawUser).id) {
+				// Logging
+				this.logger.log(ELogActions.DESERIALIZE, { type: item.__typename, id: item.rest_id });
+
+				// Adding deserialized User to list
 				deserializedList.push(new User(item as IRawUser) as OutType);
 			}
 		}
@@ -233,6 +249,9 @@ export class FetcherService {
 		resourceType: EResourceType,
 		args: Args,
 	): Promise<CursoredData<OutType>> {
+		// Logging
+		this.logger.log(ELogActions.FETCH, { resourceType: resourceType, args: args });
+
 		// Preparing the HTTP request
 		const request: Request = new Request(resourceType, args);
 
@@ -256,6 +275,9 @@ export class FetcherService {
 	 * @returns Whether posting was successful or not.
 	 */
 	protected async post(resourceType: EResourceType, args: Args): Promise<boolean> {
+		// Logging
+		this.logger.log(ELogActions.POST, { resourceType: resourceType, args: args });
+
 		// Preparing the HTTP request
 		const request: Request = new Request(resourceType, args);
 
