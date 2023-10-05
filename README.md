@@ -27,30 +27,6 @@ Although the above process initializes a new project, that is, in fact, not nece
 
 **Note:** The API_KEY (cookie) that we generated, is a very sensitive information and provides all access to the Twitter account. Therefore, it is generally recommended to store it as an environment variable and use it from there.
 
-## Using a proxy
-
-For masking of IP address using a proxy server, use the following code snippet for instantiation of Rettiwt:
-
-```
-/**
- * PROXY_URL is the URL or configuration for the proxy server you want to use.`
- */
-const rettiwt = Rettiwt({ apiKey: API_KEY, proxyUrl: PROXY_URL });
-```
-
-This creates a Rettiwt instance which uses the given proxy server for making requests to Twitter.
-
-## Debug logs
-
-Sometimes, when the library shows unexpected behaviour, for troubleshooting purposes, debug logs can be enabled which will help in tracking down the issue and working on a potential fix. Currently, debug logs are printed to the console and are enabled by setting the 'logging' property of the config to true, while creating an instance of Rettiwt:
-
-```
-/**
- * By default, is no value for 'logging' is supplied, logging is disabled.
- */
-const rettiwt = Rettiwt({ apiKey: API_KEY, logging: true });
-```
-
 ## Usage
 
 The following examples may help you to get started using the library:
@@ -128,6 +104,30 @@ rettiwt.tweet.search({
 ```
 
 For more information regarding the different available filter options, please refer to [TweetFilter](https://rishikant181.github.io/Rettiwt-API/classes/TweetFilter.html).
+
+## Using a proxy
+
+For masking of IP address using a proxy server, use the following code snippet for instantiation of Rettiwt:
+
+```
+/**
+ * PROXY_URL is the URL or configuration for the proxy server you want to use.`
+ */
+const rettiwt = Rettiwt({ apiKey: API_KEY, proxyUrl: PROXY_URL });
+```
+
+This creates a Rettiwt instance which uses the given proxy server for making requests to Twitter.
+
+## Debug logs
+
+Sometimes, when the library shows unexpected behaviour, for troubleshooting purposes, debug logs can be enabled which will help in tracking down the issue and working on a potential fix. Currently, debug logs are printed to the console and are enabled by setting the 'logging' property of the config to true, while creating an instance of Rettiwt:
+
+```
+/**
+ * By default, is no value for 'logging' is supplied, logging is disabled.
+ */
+const rettiwt = Rettiwt({ apiKey: API_KEY, logging: true });
+```
 
 ## Features
 
