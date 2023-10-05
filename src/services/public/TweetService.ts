@@ -2,12 +2,13 @@
 import { EResourceType, TweetFilter } from 'rettiwt-core';
 
 // SERVICES
-import { FetcherService } from './FetcherService';
+import { FetcherService } from '../internal/FetcherService';
 
 // MODELS
-import { Tweet } from '../models/Tweet';
-import { User } from '../models/User';
-import { CursoredData } from '../models/CursoredData';
+import { RettiwtConfig } from '../../models/internal/RettiwtConfig';
+import { Tweet } from '../../models/public/Tweet';
+import { User } from '../../models/public/User';
+import { CursoredData } from '../../models/public/CursoredData';
 
 /**
  * Handles fetching of data related to tweets.
@@ -16,13 +17,12 @@ import { CursoredData } from '../models/CursoredData';
  */
 export class TweetService extends FetcherService {
 	/**
-	 * @param apiKey - The apiKey (cookie) to use for authenticating Rettiwt against Twitter API.
-	 * @param proxyUrl - Optional URL with proxy configuration to use for requests to Twitter API.
+	 * @param config - The config object for configuring the Rettiwt instance.
 	 *
 	 * @internal
 	 */
-	public constructor(apiKey: string, proxyUrl?: URL) {
-		super(apiKey, proxyUrl);
+	public constructor(config: RettiwtConfig) {
+		super(config);
 	}
 
 	/**

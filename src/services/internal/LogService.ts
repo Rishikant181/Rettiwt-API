@@ -1,5 +1,5 @@
 // ENUMS
-import { ELogActions } from '../enums/Logging';
+import { ELogActions } from '../../enums/Logging';
 
 /**
  * Handles logging of data for debug purpose.
@@ -10,8 +10,13 @@ export class LogService {
 	/** Whether logging is enabled or not. */
 	private readonly enabled: boolean;
 
-	public constructor() {
-		this.enabled = true;
+	/**
+	 * Initializes a new LogService instance.
+	 *
+	 * @param enable - Whether to enable logging or not.
+	 */
+	public constructor(enable?: boolean) {
+		this.enabled = enable ?? false;
 	}
 
 	/**
