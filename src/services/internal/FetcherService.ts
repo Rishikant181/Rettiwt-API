@@ -13,7 +13,7 @@ import {
 } from 'rettiwt-core';
 import axios, { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from 'axios';
 import https, { Agent } from 'https';
-import { AuthCredential } from 'rettiwt-auth';
+import { AuthCredential, Auth } from 'rettiwt-auth';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 
 // SERVICES
@@ -40,7 +40,10 @@ import { findByFilter, findKeyByValue } from '../../helper/JsonUtils';
  */
 export class FetcherService {
 	/** The credential to use for authenticating against Twitter API. */
-	private cred: AuthCredential;
+	private cred?: AuthCredential;
+
+	/** Whether the instance is authenticated or not. */
+	private readonly isAuthenticated: boolean;
 
 	/** The HTTPS Agent to use for requests to Twitter API. */
 	private readonly httpsAgent: Agent;
@@ -52,7 +55,8 @@ export class FetcherService {
 	 * @param config - The config object for configuring the Rettiwt instance.
 	 */
 	public constructor(config: RettiwtConfig) {
-		this.cred = this.getAuthCredential(config.apiKey);
+		this.cred = config.apiKey ? this.getAuthCredential(config.apiKey) : undefined;
+		this.isAuthenticated = config.apiKey ? true : false;
 		this.httpsAgent = this.getHttpsAgent(config.proxyUrl);
 		this.logger = new LogService(config.logging);
 	}
@@ -65,6 +69,27 @@ export class FetcherService {
 	 */
 	private getAuthCredential(apiKey: string): AuthCredential {
 		return new AuthCredential(apiKey.split(';'));
+	}
+
+	/**
+	 * Checks the authorization status based on the requested resource.
+	 *
+	 * @param resourceType - The type of resource to fetch.
+	 * @throws An error if not authorized to access the requested resource.
+	 */
+	private checkAuthorization(resourceType: EResourceType): void {
+		// Logging
+		this.logger.log(ELogActions.AUTHORIZATION, resourceType);
+
+		// Checking authorization status
+		if (
+			resourceType != EResourceType.TWEET_DETAILS &&
+			resourceType != EResourceType.USER_DETAILS &&
+			resourceType != EResourceType.USER_TWEETS &&
+			this.isAuthenticated == false
+		) {
+			throw new Error(EApiErrors.RESOURCE_NOT_ALLOWED);
+		}
 	}
 
 	/**
@@ -86,6 +111,7 @@ export class FetcherService {
 	 *
 	 * @param res - The response object received.
 	 * @returns The received response, if no HTTP errors are found.
+	 * @throws An error if any HTTP-related error has occured.
 	 */
 	private handleHttpError(res: AxiosResponse<IResponse<unknown>>): AxiosResponse<IResponse<unknown>> {
 		/**
@@ -103,6 +129,7 @@ export class FetcherService {
 	 *
 	 * @param res - The response object received.
 	 * @returns The received response, if no API errors are found.
+	 * @throws An error if any API-related error has occured.
 	 */
 	private handleApiError(res: AxiosResponse<IResponse<unknown>>): AxiosResponse<IResponse<unknown>> {
 		// If error exists
@@ -129,6 +156,12 @@ export class FetcherService {
 	 * @returns The response received.
 	 */
 	private async request(config: Request): Promise<AxiosResponse<IResponse<unknown>>> {
+		// Checking authorization for the requested resource
+		this.checkAuthorization(config.endpoint);
+
+		// If not authenticated, use guest authentication
+		this.cred = this.cred ?? (await new Auth().getGuestCredential());
+
 		/**
 		 * Creating axios request configuration from the input configuration.
 		 */
