@@ -25,7 +25,14 @@ Although the above process initializes a new project, that is, in fact, not nece
    The available options in the config object can be found [here](https://rishikant181.github.io/Rettiwt-API/classes/RettiwtConfig.html).
 4. Use the created [Rettiwt](https://rishikant181.github.io/Rettiwt-API/classes/Rettiwt.html) instance to fetch data from Twitter.
 
-**Note:** The API_KEY (cookie) that we generated, is a very sensitive information and provides all access to the Twitter account. Therefore, it is generally recommended to store it as an environment variable and use it from there.
+**Notes:**
+
+-   The API_KEY (cookie) that we generated, is a very sensitive information and provides all access to the Twitter account. Therefore, it is generally recommended to store it as an environment variable and use it from there.
+
+-   It's also possible to use this package without using a Twitter account, by omitting the 'apiKey' parameter in the config object. However, in this case, functionality is limited to accessing only the following resources:
+    -   Getting the details of a user (by username)
+    -   Getting the details of a tweet
+    -   Getting the timeline of a user
 
 ## Usage
 
