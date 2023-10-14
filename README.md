@@ -32,7 +32,7 @@ Although the above process initializes a new project, that is, in fact, not nece
 -   It's also possible to use this package without using a Twitter account, by omitting the 'apiKey' parameter in the config object. However, in this case, functionality is limited to accessing only the following resources:
     -   Getting the details of a user (by username)
     -   Getting the details of a tweet
-    -   Getting the timeline of a user
+    -   Getting the timeline of a user (only most recent 100 entries)
 
 ## Usage
 
