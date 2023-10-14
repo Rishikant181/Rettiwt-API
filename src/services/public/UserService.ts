@@ -23,7 +23,7 @@ export class UserService extends FetcherService {
 	 *
 	 * @internal
 	 */
-	public constructor(config: RettiwtConfig) {
+	public constructor(config?: RettiwtConfig) {
 		super(config);
 	}
 

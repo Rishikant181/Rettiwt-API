@@ -22,7 +22,7 @@ export class Rettiwt {
 	 *
 	 * @param config - The config object for configuring the Rettiwt instance.
 	 */
-	public constructor(config: RettiwtConfig) {
+	public constructor(config?: RettiwtConfig) {
 		this.tweet = new TweetService(config);
 		this.user = new UserService(config);
 	}

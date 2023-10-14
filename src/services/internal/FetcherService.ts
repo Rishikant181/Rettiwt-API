@@ -54,11 +54,11 @@ export class FetcherService {
 	/**
 	 * @param config - The config object for configuring the Rettiwt instance.
 	 */
-	public constructor(config: RettiwtConfig) {
-		this.cred = config.apiKey ? this.getAuthCredential(config.apiKey) : undefined;
-		this.isAuthenticated = config.apiKey ? true : false;
-		this.httpsAgent = this.getHttpsAgent(config.proxyUrl);
-		this.logger = new LogService(config.logging);
+	public constructor(config?: RettiwtConfig) {
+		this.cred = config?.apiKey ? this.getAuthCredential(config.apiKey) : undefined;
+		this.isAuthenticated = config?.apiKey ? true : false;
+		this.httpsAgent = this.getHttpsAgent(config?.proxyUrl);
+		this.logger = new LogService(config?.logging);
 	}
 
 	/**
