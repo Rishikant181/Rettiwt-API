@@ -8,7 +8,7 @@ import { IRettiwtConfig } from '../../types/internal/RettiwtConfig';
  */
 export class RettiwtConfig implements IRettiwtConfig {
 	/** The apiKey (cookie) to use for authenticating Rettiwt against Twitter API. */
-	public apiKey: string;
+	public apiKey?: string;
 
 	/** Optional URL with proxy configuration to use for requests to Twitter API. */
 	public proxyUrl?: URL;
