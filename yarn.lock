@@ -723,7 +723,7 @@ has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
-https-proxy-agent@^7.0.2:
+https-proxy-agent@7.0.2:
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/https-proxy-agent/-/https-proxy-agent-7.0.2.tgz#e2645b846b90e96c6e6f347fb5b2e41f1590b09b"
   integrity sha512-NmLNjm6ucYwtcUmL7JQC1ZQ57LmHP4lT15FQ8D61nak1rO6DH+fz5qNK2Ap5UN4ZapYICE3/0KodcLYSPsPbaA==
@@ -1092,10 +1092,10 @@ rettiwt-auth@1.2.0:
     axios "1.4.0"
     cookiejar "2.1.4"
 
-rettiwt-core@3.2.0-alpha.3:
-  version "3.2.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/rettiwt-core/-/rettiwt-core-3.2.0-alpha.3.tgz#0457fd7f7dfd245ecdea2adcbd7daed381bdfed8"
-  integrity sha512-mmaK+BcoT8H3tD6cA4j8BhIyxah5Xx7adrJIgl8C3CEvhEZbwzjIFBFbbVNnX+f6eQLJEkT/ud8qV+EJY5/seA==
+rettiwt-core@3.2.1-alpha.1:
+  version "3.2.1-alpha.1"
+  resolved "https://registry.yarnpkg.com/rettiwt-core/-/rettiwt-core-3.2.1-alpha.1.tgz#3b26f0a84b1467558e9131f9dfd6da3e78a2c194"
+  integrity sha512-UqFDvWDaHffbzVsXzMNn19ExGWSxMM17ccexSeeq165VMMK35+uTXzKtdzKw77V1gmO5WAnr1ogTaqwqy9GMaw==
   dependencies:
     class-validator "0.14.0"
 

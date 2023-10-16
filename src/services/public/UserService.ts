@@ -137,4 +137,30 @@ export class UserService extends FetcherService {
 
 		return data;
 	}
+
+	/**
+	 * Get the reply timeline of the given user.
+	 *
+	 * @param userId - The rest id of the target user.
+	 * @param count - The number of replies to fetch, must be \<= 20.
+	 * @param cursor - The cursor to the batch of replies to fetch.
+	 * @returns The reply timeline of the target user.
+	 *
+	 * @remarks If the target user has a pinned tweet, the returned reply timeline has one item extra and this is always the pinned tweet.
+	 *
+	 * @public
+	 */
+	public async replies(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+		// Fetching the requested data
+		const data = await this.fetch<Tweet>(EResourceType.USER_TWEETS_AND_REPLIES, {
+			id: userId,
+			count: count,
+			cursor: cursor,
+		});
+
+		// Filtering out other tweets made by other users in the same threads
+		data.list = data.list.filter((tweet) => tweet.tweetBy.id == userId);
+
+		return data;
+	}
 }
