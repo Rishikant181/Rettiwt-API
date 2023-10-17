@@ -79,7 +79,7 @@ export class FetcherService {
 	 */
 	private checkAuthorization(resourceType: EResourceType): void {
 		// Logging
-		this.logger.log(ELogActions.AUTHORIZATION, resourceType);
+		this.logger.log(ELogActions.AUTHORIZATION, { authenticated: this.isAuthenticated });
 
 		// Checking authorization status
 		if (
