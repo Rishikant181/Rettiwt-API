@@ -167,5 +167,4 @@ The complete API reference can be found at [this](https://rishikant181.github.io
 ## Additional information
 
 -   This API uses the cookies of a Twitter account to fetch data from Twitter and as such, there is always a chance (altough a measly one) of getting the account banned by Twitter algorithm.
--   From personal experience, not a single one of my accounts has ever been banned by using this library, and this is coming from someone who has been using his primary Twitter account to fetch large amounts of data from Twitter for over 1.5 years now, since the conception of this project.
 -   There have been no reports of accounts getting banned, but you have been warned, even though the chances of getting banned is negligible, it is not zero!
