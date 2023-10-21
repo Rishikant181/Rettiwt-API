@@ -110,7 +110,7 @@ rettiwt.tweet.search({
 });
 ```
 
-For more information regarding the different available filter options, please refer to [TweetFilter](https://rishikant181.github.io/Rettiwt-API/classes/TweetFilter.html).
+For more information regarding the different available filter options, please refer to [TweetFilter](https://rishikant181.github.io/Rettiwt-Core/classes/TweetFilter.html).
 
 ## Using a proxy
 
