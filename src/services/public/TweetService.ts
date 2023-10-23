@@ -2,12 +2,13 @@
 import { EResourceType, TweetFilter } from 'rettiwt-core';
 
 // SERVICES
-import { FetcherService } from './FetcherService';
+import { FetcherService } from '../internal/FetcherService';
 
 // MODELS
-import { Tweet } from '../models/Tweet';
-import { User } from '../models/User';
-import { CursoredData } from '../models/CursoredData';
+import { RettiwtConfig } from '../../models/internal/RettiwtConfig';
+import { Tweet } from '../../models/public/Tweet';
+import { User } from '../../models/public/User';
+import { CursoredData } from '../../models/public/CursoredData';
 
 /**
  * Handles fetching of data related to tweets.
@@ -16,13 +17,12 @@ import { CursoredData } from '../models/CursoredData';
  */
 export class TweetService extends FetcherService {
 	/**
-	 * @param apiKey - The apiKey (cookie) to use for authenticating Rettiwt against Twitter API.
-	 * @param proxyUrl - Optional URL with proxy configuration to use for requests to Twitter API.
+	 * @param config - The config object for configuring the Rettiwt instance.
 	 *
 	 * @internal
 	 */
-	constructor(apiKey: string, proxyUrl?: URL) {
-		super(apiKey, proxyUrl);
+	public constructor(config?: RettiwtConfig) {
+		super(config);
 	}
 
 	/**
@@ -33,7 +33,7 @@ export class TweetService extends FetcherService {
 	 *
 	 * @public
 	 */
-	async details(id: string): Promise<Tweet> {
+	public async details(id: string): Promise<Tweet> {
 		// Fetching the requested data
 		const data = await this.fetch<Tweet>(EResourceType.TWEET_DETAILS, { id: id });
 
@@ -50,7 +50,7 @@ export class TweetService extends FetcherService {
 	 *
 	 * @public
 	 */
-	async search(query: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+	public async search(query: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Fetching the requested data
 		const data = await this.fetch<Tweet>(EResourceType.TWEET_SEARCH, {
 			filter: query,
@@ -74,7 +74,7 @@ export class TweetService extends FetcherService {
 	 *
 	 * @remarks Due a bug in Twitter API, the count is ignored when no cursor is provided and defaults to 100.
 	 */
-	async list(listId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+	public async list(listId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Fetching the requested data
 		const data = await this.fetch<Tweet>(EResourceType.LIST_TWEETS, {
 			id: listId,
@@ -98,7 +98,7 @@ export class TweetService extends FetcherService {
 	 *
 	 * @public
 	 */
-	async favoriters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+	public async favoriters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Fetching the requested data
 		const data = await this.fetch<User>(EResourceType.TWEET_FAVORITERS, {
 			id: tweetId,
@@ -119,7 +119,7 @@ export class TweetService extends FetcherService {
 	 *
 	 * @public
 	 */
-	async retweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+	public async retweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Fetching the requested data
 		const data = await this.fetch<User>(EResourceType.TWEET_RETWEETERS, {
 			id: tweetId,
@@ -138,7 +138,7 @@ export class TweetService extends FetcherService {
 	 *
 	 * @public
 	 */
-	async tweet(tweetText: string): Promise<boolean> {
+	public async tweet(tweetText: string): Promise<boolean> {
 		// Posting the tweet
 		const data = await this.post(EResourceType.CREATE_TWEET, { tweetText: tweetText });
 
@@ -153,7 +153,7 @@ export class TweetService extends FetcherService {
 	 *
 	 * @public
 	 */
-	async favorite(tweetId: string): Promise<boolean> {
+	public async favorite(tweetId: string): Promise<boolean> {
 		// Favoriting the tweet
 		const data = await this.post(EResourceType.FAVORITE_TWEET, { id: tweetId });
 
@@ -168,7 +168,7 @@ export class TweetService extends FetcherService {
 	 *
 	 * @public
 	 */
-	async retweet(tweetId: string): Promise<boolean> {
+	public async retweet(tweetId: string): Promise<boolean> {
 		// Retweeting the tweet
 		const data = await this.post(EResourceType.CREATE_RETWEET, { id: tweetId });
 

@@ -2,14 +2,15 @@
 import { EResourceType } from 'rettiwt-core';
 
 // SERVICES
-import { FetcherService } from './FetcherService';
+import { FetcherService } from '../internal/FetcherService';
 
 // MODELS
-import { User } from '../models/User';
-import { Tweet } from '../models/Tweet';
+import { RettiwtConfig } from '../../models/internal/RettiwtConfig';
+import { User } from '../../models/public/User';
+import { Tweet } from '../../models/public/Tweet';
 
 // TYPES
-import { CursoredData } from '../models/CursoredData';
+import { CursoredData } from '../../models/public/CursoredData';
 
 /**
  * Handles fetching of data related to user account
@@ -18,13 +19,12 @@ import { CursoredData } from '../models/CursoredData';
  */
 export class UserService extends FetcherService {
 	/**
-	 * @param apiKey - The apiKey (cookie) to use for authenticating Rettiwt against Twitter API.
-	 * @param proxyUrl - Optional URL with proxy configuration to use for requests to Twitter API.
+	 * @param config - The config object for configuring the Rettiwt instance.
 	 *
 	 * @internal
 	 */
-	constructor(apiKey: string, proxyUrl?: URL) {
-		super(apiKey, proxyUrl);
+	public constructor(config?: RettiwtConfig) {
+		super(config);
 	}
 
 	/**
@@ -35,7 +35,7 @@ export class UserService extends FetcherService {
 	 *
 	 * @public
 	 */
-	async details(id: string): Promise<User> {
+	public async details(id: string): Promise<User> {
 		let data: CursoredData<User>;
 
 		// If username is given
@@ -62,7 +62,7 @@ export class UserService extends FetcherService {
 	 *
 	 * @public
 	 */
-	async following(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+	public async following(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Fetching the requested data
 		const data = await this.fetch<User>(EResourceType.USER_FOLLOWING, {
 			id: userId,
@@ -83,7 +83,7 @@ export class UserService extends FetcherService {
 	 *
 	 * @public
 	 */
-	async followers(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+	public async followers(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Fetching the requested data
 		const data = await this.fetch<User>(EResourceType.USER_FOLLOWERS, {
 			id: userId,
@@ -104,7 +104,7 @@ export class UserService extends FetcherService {
 	 *
 	 * @public
 	 */
-	async likes(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+	public async likes(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Fetching the requested data
 		const data = await this.fetch<Tweet>(EResourceType.USER_LIKES, {
 			id: userId,
@@ -127,13 +127,39 @@ export class UserService extends FetcherService {
 	 *
 	 * @public
 	 */
-	async timeline(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+	public async timeline(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Fetching the requested data
 		const data = await this.fetch<Tweet>(EResourceType.USER_TWEETS, {
 			id: userId,
 			count: count,
 			cursor: cursor,
 		});
+
+		return data;
+	}
+
+	/**
+	 * Get the reply timeline of the given user.
+	 *
+	 * @param userId - The rest id of the target user.
+	 * @param count - The number of replies to fetch, must be \<= 20.
+	 * @param cursor - The cursor to the batch of replies to fetch.
+	 * @returns The reply timeline of the target user.
+	 *
+	 * @remarks If the target user has a pinned tweet, the returned reply timeline has one item extra and this is always the pinned tweet.
+	 *
+	 * @public
+	 */
+	public async replies(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+		// Fetching the requested data
+		const data = await this.fetch<Tweet>(EResourceType.USER_TWEETS_AND_REPLIES, {
+			id: userId,
+			count: count,
+			cursor: cursor,
+		});
+
+		// Filtering out other tweets made by other users in the same threads
+		data.list = data.list.filter((tweet) => tweet.tweetBy.id == userId);
 
 		return data;
 	}

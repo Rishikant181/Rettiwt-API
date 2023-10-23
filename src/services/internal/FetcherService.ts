@@ -13,20 +13,25 @@ import {
 } from 'rettiwt-core';
 import axios, { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from 'axios';
 import https, { Agent } from 'https';
-import { AuthCredential } from 'rettiwt-auth';
+import { AuthCredential, Auth } from 'rettiwt-auth';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 
+// SERVICES
+import { LogService } from './LogService';
+
 // ENUMS
-import { EHttpStatus } from '../enums/HTTP';
-import { EApiErrors } from '../enums/ApiErrors';
+import { EHttpStatus } from '../../enums/HTTP';
+import { EApiErrors } from '../../enums/ApiErrors';
+import { ELogActions } from '../../enums/Logging';
 
 // MODELS
-import { CursoredData } from '../models/CursoredData';
-import { Tweet } from '../models/Tweet';
-import { User } from '../models/User';
+import { RettiwtConfig } from '../../models/internal/RettiwtConfig';
+import { CursoredData } from '../../models/public/CursoredData';
+import { Tweet } from '../../models/public/Tweet';
+import { User } from '../../models/public/User';
 
 // HELPERS
-import { findByFilter, findKeyByValue } from '../helper/JsonUtils';
+import { findByFilter, findKeyByValue } from '../../helper/JsonUtils';
 
 /**
  * The base service that handles all HTTP requests.
@@ -35,18 +40,25 @@ import { findByFilter, findKeyByValue } from '../helper/JsonUtils';
  */
 export class FetcherService {
 	/** The credential to use for authenticating against Twitter API. */
-	private cred: AuthCredential;
+	private cred?: AuthCredential;
+
+	/** Whether the instance is authenticated or not. */
+	private readonly isAuthenticated: boolean;
 
 	/** The HTTPS Agent to use for requests to Twitter API. */
 	private readonly httpsAgent: Agent;
 
+	/** The log service instance to use to logging. */
+	private readonly logger: LogService;
+
 	/**
-	 * @param apiKey - The apiKey (cookie) to use for authenticating Rettiwt against Twitter API.
-	 * @param proxyUrl - Optional URL with proxy configuration to use for requests to Twitter API.
+	 * @param config - The config object for configuring the Rettiwt instance.
 	 */
-	constructor(apiKey: string, proxyUrl?: URL) {
-		this.cred = this.getAuthCredential(apiKey);
-		this.httpsAgent = this.getHttpsAgent(proxyUrl);
+	public constructor(config?: RettiwtConfig) {
+		this.cred = config?.apiKey ? this.getAuthCredential(config.apiKey) : undefined;
+		this.isAuthenticated = config?.apiKey ? true : false;
+		this.httpsAgent = this.getHttpsAgent(config?.proxyUrl);
+		this.logger = new LogService(config?.logging);
 	}
 
 	/**
@@ -57,6 +69,27 @@ export class FetcherService {
 	 */
 	private getAuthCredential(apiKey: string): AuthCredential {
 		return new AuthCredential(apiKey.split(';'));
+	}
+
+	/**
+	 * Checks the authorization status based on the requested resource.
+	 *
+	 * @param resourceType - The type of resource to fetch.
+	 * @throws An error if not authorized to access the requested resource.
+	 */
+	private checkAuthorization(resourceType: EResourceType): void {
+		// Logging
+		this.logger.log(ELogActions.AUTHORIZATION, { authenticated: this.isAuthenticated });
+
+		// Checking authorization status
+		if (
+			resourceType != EResourceType.TWEET_DETAILS &&
+			resourceType != EResourceType.USER_DETAILS &&
+			resourceType != EResourceType.USER_TWEETS &&
+			this.isAuthenticated == false
+		) {
+			throw new Error(EApiErrors.RESOURCE_NOT_ALLOWED);
+		}
 	}
 
 	/**
@@ -78,6 +111,7 @@ export class FetcherService {
 	 *
 	 * @param res - The response object received.
 	 * @returns The received response, if no HTTP errors are found.
+	 * @throws An error if any HTTP-related error has occured.
 	 */
 	private handleHttpError(res: AxiosResponse<IResponse<unknown>>): AxiosResponse<IResponse<unknown>> {
 		/**
@@ -95,6 +129,7 @@ export class FetcherService {
 	 *
 	 * @param res - The response object received.
 	 * @returns The received response, if no API errors are found.
+	 * @throws An error if any API-related error has occured.
 	 */
 	private handleApiError(res: AxiosResponse<IResponse<unknown>>): AxiosResponse<IResponse<unknown>> {
 		// If error exists
@@ -121,6 +156,12 @@ export class FetcherService {
 	 * @returns The response received.
 	 */
 	private async request(config: Request): Promise<AxiosResponse<IResponse<unknown>>> {
+		// Checking authorization for the requested resource
+		this.checkAuthorization(config.endpoint);
+
+		// If not authenticated, use guest authentication
+		this.cred = this.cred ?? (await new Auth().getGuestCredential());
+
 		/**
 		 * Creating axios request configuration from the input configuration.
 		 */
@@ -145,14 +186,18 @@ export class FetcherService {
 	 *
 	 * @param data - The data from which extraction is to be done.
 	 * @param type - The type of data to extract.
-	 * @typeParam BaseType - The base type of the raw data present in the input.
-	 * @typeParam DeserializedType - The type of data produced after deserialization of BaseType.
 	 * @returns The extracted data.
 	 */
-	private extractData<DeserializedType extends Tweet | User>(
+	private extractData(
 		data: NonNullable<unknown>,
 		type: EResourceType,
-	): CursoredData<DeserializedType> {
+	): {
+		/** The required extracted data. */
+		required: (IRawTweet | IRawUser)[];
+
+		/** The cursor string to the next batch of data. */
+		next: string;
+	} {
 		/**
 		 * The required extracted data.
 		 */
@@ -166,7 +211,8 @@ export class FetcherService {
 			type == EResourceType.TWEET_SEARCH ||
 			type == EResourceType.USER_LIKES ||
 			type == EResourceType.LIST_TWEETS ||
-			type == EResourceType.USER_TWEETS
+			type == EResourceType.USER_TWEETS ||
+			type == EResourceType.USER_TWEETS_AND_REPLIES
 		) {
 			required = findByFilter<ITimelineTweet>(data, '__typename', 'TimelineTweet').map(
 				(item) => item.tweet_results.result,
@@ -182,7 +228,47 @@ export class FetcherService {
 			);
 		}
 
-		return new CursoredData(required, findByFilter<IRawCursor>(data, 'cursorType', 'Bottom')[0]?.value);
+		return {
+			required: required,
+			next: findByFilter<IRawCursor>(data, 'cursorType', 'Bottom')[0]?.value,
+		};
+	}
+
+	/**
+	 * Deserializes the extracted data into a cursored list.
+	 *
+	 * @param extractedData - The list of extracted data.
+	 * @param next - The cursor to the next batch of data.
+	 * @returns The cursored data object.
+	 */
+	private deserializeData<OutType extends Tweet | User>(
+		extractedData: (IRawTweet | IRawUser)[] = [],
+		next: string = '',
+	): CursoredData<OutType> {
+		/** The list of deserialized data. */
+		const deserializedList: OutType[] = [];
+
+		// Deserializing the extracted raw data and storing it in the list
+		for (const item of extractedData) {
+			// If the item is a valid raw tweet
+			if (item && item.__typename == 'Tweet' && item.rest_id) {
+				// Logging
+				this.logger.log(ELogActions.DESERIALIZE, { type: item.__typename, id: item.rest_id });
+
+				// Adding deserialized Tweet to list
+				deserializedList.push(new Tweet(item as IRawTweet) as OutType);
+			}
+			// If the item is a valid raw user
+			else if (item && item.__typename == 'User' && item.rest_id && (item as IRawUser).id) {
+				// Logging
+				this.logger.log(ELogActions.DESERIALIZE, { type: item.__typename, id: item.rest_id });
+
+				// Adding deserialized User to list
+				deserializedList.push(new User(item as IRawUser) as OutType);
+			}
+		}
+
+		return new CursoredData<OutType>(deserializedList, next);
 	}
 
 	/**
@@ -197,6 +283,9 @@ export class FetcherService {
 		resourceType: EResourceType,
 		args: Args,
 	): Promise<CursoredData<OutType>> {
+		// Logging
+		this.logger.log(ELogActions.FETCH, { resourceType: resourceType, args: args });
+
 		// Preparing the HTTP request
 		const request: Request = new Request(resourceType, args);
 
@@ -204,9 +293,12 @@ export class FetcherService {
 		const res = await this.request(request).then((res) => res.data);
 
 		// Extracting data
-		const data = this.extractData<OutType>(res, resourceType);
+		const extractedData = this.extractData(res, resourceType);
 
-		return data;
+		// Deserializing data
+		const deserializedData = this.deserializeData<OutType>(extractedData.required, extractedData.next);
+
+		return deserializedData;
 	}
 
 	/**
@@ -217,6 +309,9 @@ export class FetcherService {
 	 * @returns Whether posting was successful or not.
 	 */
 	protected async post(resourceType: EResourceType, args: Args): Promise<boolean> {
+		// Logging
+		this.logger.log(ELogActions.POST, { resourceType: resourceType, args: args });
+
 		// Preparing the HTTP request
 		const request: Request = new Request(resourceType, args);
 
