@@ -4,6 +4,9 @@
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"description": "An API for fetching data from TwitterAPI, without any rate limits!",
+	"bin": {
+		"rettiwt": "dist/cli.js"
+	},
 	"scripts": {
 		"build": "tsc",
 		"prepare": "tsc",
