@@ -23,6 +23,7 @@ const tweet = program.command('tweet').description('Command for accessing resour
 	// Details
 	tweet
 		.command('details')
+		.description('Fetch the details of tweet with the given id')
 		.argument('<id>', 'The id of the tweet whose details are to be fetched')
 		.action(async (id: string) => {
 			const details = await rettiwt.tweet.details(id);
@@ -34,7 +35,8 @@ const tweet = program.command('tweet').description('Command for accessing resour
 {
 	// Details
 	user.command('details')
-		.argument('<id>', 'The username/id of the Twitter user whose details are to be fetched')
+		.description('Fetch the details of the user with the given id/username')
+		.argument('<id>', 'The username/id of the user whose details are to be fetched')
 		.action(async (id: string) => {
 			const details = await rettiwt.user.details(id);
 			output(details);
