@@ -40,7 +40,7 @@ The following examples may help you to get started using the library:
 
 ### 1. Getting the details of a target Twitter user
 
-```
+```js
 const { Rettiwt } = require('rettiwt-api');
 
 // Creating a new Rettiwt instance using the API_KEY
@@ -58,7 +58,7 @@ rettiwt.user.details('<username>')
 
 ### 2. Getting the list of tweets that match a given filter
 
-```
+```js
 const { Rettiwt } = require('rettiwt-api');
 
 // Creating a new Rettiwt instance using the API_KEY
@@ -85,7 +85,7 @@ rettiwt.tweet.search({
 
 The previous example fetches the the list of tweets matching the given filter. Since no count is specified, in this case, a default of 20 such Tweets are fetched initially. The following example demonstrates how to use the [cursor string](https://rishikant181.github.io/Rettiwt-API/classes/Cursor.html#value) obtained from the [response](https://rishikant181.github.io/Rettiwt-API/classes/CursoredData.html) object's [next](https://rishikant181.github.io/Rettiwt-API/classes/CursoredData.html#next) field, from the previous example, to fetch the next batch of tweets:
 
-```
+```js
 const { Rettiwt } = require('rettiwt-api');
 
 // Creating a new Rettiwt instance using the API_KEY
@@ -116,7 +116,7 @@ For more information regarding the different available filter options, please re
 
 For masking of IP address using a proxy server, use the following code snippet for instantiation of Rettiwt:
 
-```
+```js
 /**
  * PROXY_URL is the URL or configuration for the proxy server you want to use.`
  */
@@ -129,7 +129,7 @@ This creates a Rettiwt instance which uses the given proxy server for making req
 
 Sometimes, when the library shows unexpected behaviour, for troubleshooting purposes, debug logs can be enabled which will help in tracking down the issue and working on a potential fix. Currently, debug logs are printed to the console and are enabled by setting the 'logging' property of the config to true, while creating an instance of Rettiwt:
 
-```
+```js
 /**
  * By default, is no value for 'logging' is supplied, logging is disabled.
  */
