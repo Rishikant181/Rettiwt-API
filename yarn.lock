@@ -380,7 +380,7 @@ combined-stream@^1.0.8:
   dependencies:
     delayed-stream "~1.0.0"
 
-commander@^11.1.0:
+commander@11.1.0:
   version "11.1.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-11.1.0.tgz#62fdce76006a68e5c1ab3314dc92e800eb83d906"
   integrity sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ==
@@ -1089,12 +1089,13 @@ resolve@~1.19.0:
     is-core-module "^2.1.0"
     path-parse "^1.0.6"
 
-rettiwt-auth@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/rettiwt-auth/-/rettiwt-auth-1.2.0.tgz#1906300b4bbbdfe9eb7e067c0e430276594f5c2f"
-  integrity sha512-EIcX3nLspsK0quFVC7LIFyS0c2Figa+oeGkfwhc430cEPb5o4oLpT/k0W/NviZiF9wiJTG2pBjJHcCg3q7QvMg==
+rettiwt-auth@2.0.0-alpha.1:
+  version "2.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/rettiwt-auth/-/rettiwt-auth-2.0.0-alpha.1.tgz#03ba6a37f3a35aa87b78295fc95f40db1e8fd1a3"
+  integrity sha512-1inFcVF64pLXTqN2y6U7bwO/3HPu3ZMlYE5WMGjl5KRhkJPCJlZV4ERDzYioWHLSe/psiMGZrFI8s11JyobzXA==
   dependencies:
     axios "1.4.0"
+    commander "11.1.0"
     cookiejar "2.1.4"
 
 rettiwt-core@3.2.1:
