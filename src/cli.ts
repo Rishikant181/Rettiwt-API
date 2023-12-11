@@ -7,6 +7,7 @@ import { Rettiwt } from './Rettiwt';
 // SUB-COMMANDS
 import tweet from './commands/Tweet';
 import user from './commands/User';
+import auth from './commands/Auth';
 
 // Creating a new commandline program
 const program = createCommand('rettiwt')
@@ -33,6 +34,7 @@ const rettiwt: Rettiwt = new Rettiwt({
 // Adding sub-commands
 program.addCommand(tweet(rettiwt));
 program.addCommand(user(rettiwt));
+program.addCommand(auth());
 
 // Finalizing the CLI
 program.parse();
