@@ -9,10 +9,26 @@ import tweet from './commands/Tweet';
 import user from './commands/User';
 
 // Creating a new commandline program
-const program = createCommand('rettiwt').description('A CLI tool for accessing the Twitter API for free!');
+const program = createCommand('rettiwt')
+	.description('A CLI tool for accessing the Twitter API for free!')
+	.passThroughOptions()
+	.enablePositionalOptions();
 
-// Initializing Rettiwt instance
-const rettiwt: Rettiwt = new Rettiwt({ apiKey: process.env.API_KEY });
+// Adding options
+program
+	.option('-k, --key <string>', 'The API key to use for authentication')
+	.option('-l, --log', 'Enable logging to console')
+	.option('-p, --proxy <string>', 'The URL to the proxy to use');
+
+// Parsing the program to get supplied options
+program.parse();
+
+// Initializing Rettiwt instance using the given options
+const rettiwt: Rettiwt = new Rettiwt({
+	apiKey: process.env.API_KEY ?? (program.opts().key as string),
+	logging: program.opts().log ? true : false,
+	proxyUrl: program.opts().proxy as URL,
+});
 
 // Adding sub-commands
 program.addCommand(tweet(rettiwt));

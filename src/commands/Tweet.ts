@@ -8,7 +8,7 @@ import { output } from '../helper/CliUtils';
 
 /**
  * Creates a new 'tweet' command which uses the given Rettiwt instance.
- * 
+ *
  * @param rettiwt - The Rettiwt instance to use.
  * @returns The created 'tweet' command.
  */
@@ -67,9 +67,9 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		.argument('[count]', 'The number of likers to fetch')
 		.argument('[cursor]', 'The cursor to the batch of likers to fetch')
 		.action(async (id: string, count?: string, cursor?: string) => {
-		const tweets = await rettiwt.tweet.favoriters(id, count ? parseInt(count) : undefined, cursor);
-		output(tweets);
-	});
+			const tweets = await rettiwt.tweet.favoriters(id, count ? parseInt(count) : undefined, cursor);
+			output(tweets);
+		});
 
 	// Retweets
 	tweet

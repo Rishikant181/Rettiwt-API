@@ -7,7 +7,7 @@ import { output } from '../helper/CliUtils';
 
 /**
  * Creates a new 'user' command which uses the given Rettiwt instance.
- * 
+ *
  * @param rettiwt - The Rettiwt instance to use.
  * @returns The created 'user' command.
  */
