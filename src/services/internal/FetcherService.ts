@@ -55,7 +55,18 @@ export class FetcherService {
 	 * @param config - The config object for configuring the Rettiwt instance.
 	 */
 	public constructor(config?: RettiwtConfig) {
-		this.cred = config?.apiKey ? this.getAuthCredential(config.apiKey) : undefined;
+		// If API key is supplied
+		if (config?.apiKey) {
+			this.cred = this.getAuthCredential(config.apiKey);
+		}
+		// If guest key is supplied
+		else if (config?.guestKey) {
+			this.cred = this.getGuestCredential(config.guestKey);
+		}
+		// If no key is supplied
+		else {
+			this.cred = undefined;
+		}
 		this.isAuthenticated = config?.apiKey ? true : false;
 		this.httpsAgent = this.getHttpsAgent(config?.proxyUrl);
 		this.logger = new LogService(config?.logging);
@@ -72,6 +83,19 @@ export class FetcherService {
 		apiKey = Buffer.from(apiKey, 'base64').toString('ascii');
 
 		return new AuthCredential(apiKey.split(';'));
+	}
+
+	/**
+	 * Returns an AuthCredential generated using the given guest key.
+	 *
+	 * @param guestKey - The guest key to use for authenticating as guest.
+	 * @returns The generated AuthCredential.
+	 */
+	private getGuestCredential(guestKey: string): AuthCredential {
+		// Converting guestKey from base64 to string
+		guestKey = Buffer.from(guestKey).toString('ascii');
+
+		return new AuthCredential(undefined, guestKey);
 	}
 
 	/**
