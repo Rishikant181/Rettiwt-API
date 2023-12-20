@@ -13,10 +13,7 @@ import { ICursor, ICursoredData } from '../../types/public/CursoredData';
  * @public
  */
 export class CursoredData<T extends Tweet | User> implements ICursoredData<T> {
-	/** The list of data of the given type. */
 	public list: T[] = [];
-
-	/** The cursor to the next batch of data. */
 	public next: Cursor;
 
 	/**
@@ -35,7 +32,6 @@ export class CursoredData<T extends Tweet | User> implements ICursoredData<T> {
  * @public
  */
 export class Cursor implements ICursor {
-	/** The cursor string. */
 	public value: string;
 
 	/**
