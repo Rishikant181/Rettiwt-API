@@ -1089,10 +1089,10 @@ resolve@~1.19.0:
     is-core-module "^2.1.0"
     path-parse "^1.0.6"
 
-rettiwt-auth@2.0.0-alpha.1:
-  version "2.0.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/rettiwt-auth/-/rettiwt-auth-2.0.0-alpha.1.tgz#03ba6a37f3a35aa87b78295fc95f40db1e8fd1a3"
-  integrity sha512-1inFcVF64pLXTqN2y6U7bwO/3HPu3ZMlYE5WMGjl5KRhkJPCJlZV4ERDzYioWHLSe/psiMGZrFI8s11JyobzXA==
+rettiwt-auth@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/rettiwt-auth/-/rettiwt-auth-2.0.0.tgz#e5eaa0cdb736acc52f9c1b6b31dae685f4d14073"
+  integrity sha512-zVEhc4Ce/5G6Rt53/nwCBnjgohmIBT+F7XMjgl0XjngwXFvUptSY5jISGzN6655teZBva92wAeupIkoSd0pxJg==
   dependencies:
     axios "1.4.0"
     commander "11.1.0"
