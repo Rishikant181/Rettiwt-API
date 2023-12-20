@@ -7,6 +7,9 @@ export interface IRettiwtConfig {
 	/** The apiKey (cookie) to use for authenticating Rettiwt against Twitter API. */
 	apiKey?: string;
 
+	/** The guestKey (guest token) to use for guest access to Twitter API. */
+	guestKey?: string;
+
 	/** Optional URL with proxy configuration to use for requests to Twitter API. */
 	proxyUrl?: URL;
 
