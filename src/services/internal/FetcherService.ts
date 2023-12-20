@@ -68,6 +68,9 @@ export class FetcherService {
 	 * @returns The generated AuthCredential.
 	 */
 	private getAuthCredential(apiKey: string): AuthCredential {
+		// Converting apiKey from base64 to string
+		apiKey = Buffer.from(apiKey, 'base64').toString('ascii');
+
 		return new AuthCredential(apiKey.split(';'));
 	}
 

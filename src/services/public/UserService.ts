@@ -123,7 +123,9 @@ export class UserService extends FetcherService {
 	 * @param cursor - The cursor to the batch of timeline items to fetch.
 	 * @returns The timeline of the target user.
 	 *
-	 * @remarks If the target user has a pinned tweet, the returned timeline has one item extra and this is always the pinned tweet.
+	 * @remarks
+	 * - If the target user has a pinned tweet, the returned timeline has one item extra and this is always the pinned tweet.
+	 * - If timeline is fetched without authenticating, then the most popular tweets of the target user are returned instead.
 	 *
 	 * @public
 	 */
