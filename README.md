@@ -18,8 +18,8 @@ Although the above process initializes a new project, that is, in fact, not nece
 
 ## Getting started
 
-1. Generate credentials using [rettiwt-auth](https://www.npmjs.com/package/rettiwt-auth) package, by following these [steps](https://rishikant181.github.io/Rettiwt-Auth/#md:cli-usage).
-2. Copy the value of the 'cookies' field from the generated credentials and store it somewhere safe. Let's call this our API_KEY.
+1. Generate credentials using [rettiwt-auth](https://www.npmjs.com/package/rettiwt-auth) package, by following these [steps](https://rishikant181.github.io/Rettiwt-Auth/#md:1-generating-credentials-as-an-api-key-for-use-with-rettiwt-api).
+2. The generated string is the API_KEY.
 3. Create a new instance of Rettiwt, passing in the API key as a config object:  
    `const rettiwt = Rettiwt({ apiKey: API_KEY });`  
    The available options in the config object can be found [here](https://rishikant181.github.io/Rettiwt-API/classes/RettiwtConfig.html).
@@ -27,7 +27,7 @@ Although the above process initializes a new project, that is, in fact, not nece
 
 **Notes:**
 
--   The API_KEY (cookie) that we generated, is a very sensitive information and provides all access to the Twitter account. Therefore, it is generally recommended to store it as an environment variable and use it from there.
+-   The API_KEY that we generated, is a very sensitive information and provides all access to the Twitter account. Therefore, it is generally recommended to store it as an environment variable and use it from there.
 
 -   It's also possible to use this package without using a Twitter account, by omitting the 'apiKey' parameter in the config object. However, in this case, functionality is limited to accessing only the following resources:
     -   Getting the details of a user (by username)
