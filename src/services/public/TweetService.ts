@@ -31,6 +31,23 @@ export class TweetService extends FetcherService {
 	 * @param id - The id of the target tweet.
 	 * @returns The details of a single tweet with the given tweet id.
 	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the details of the tweet with the id '12345678'
+	 * rettiwt.tweet.details('12345678')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
 	 * @public
 	 */
 	public async details(id: string): Promise<Tweet> {
@@ -47,6 +64,25 @@ export class TweetService extends FetcherService {
 	 * @param count - The number of tweets to fetch, must be \<= 20.
 	 * @param cursor - The cursor to the batch of tweets to fetch.
 	 * @returns The list of tweets that match the given filter.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the most recent 5 tweets from user 'user1'
+	 * rettiwt.tweet.search({ fromUsers: ['user1'] }, 5)
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @remarks For details about available filters, refer to {@link TweetFilter}
 	 *
 	 * @public
 	 */
@@ -72,6 +108,23 @@ export class TweetService extends FetcherService {
 	 * @param cursor - The cursor to the batch of tweets to fetch.
 	 * @returns The list tweets present in the given list.
 	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the most recent 100 tweets of the Twitter list with id '12345678'
+	 * rettiwt.tweet.list('12345678')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
 	 * @remarks Due a bug in Twitter API, the count is ignored when no cursor is provided and defaults to 100.
 	 */
 	public async list(listId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
@@ -96,6 +149,23 @@ export class TweetService extends FetcherService {
 	 * @param cursor - The cursor to the batch of favoriters to fetch.
 	 * @returns The list of users who liked the given tweet.
 	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the most recent 100 likers of the Tweet with id '12345678'
+	 * rettiwt.tweet.favoriters('12345678')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
 	 * @public
 	 */
 	public async favoriters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
@@ -117,6 +187,23 @@ export class TweetService extends FetcherService {
 	 * @param cursor - The cursor to the batch of retweeters to fetch.
 	 * @returns The list of users who retweeted the given tweet.
 	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the most recent 100 retweeters of the Tweet with id '12345678'
+	 * rettiwt.tweet.retweeters('12345678')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
 	 * @public
 	 */
 	public async retweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
@@ -136,6 +223,23 @@ export class TweetService extends FetcherService {
 	 * @param tweetText - The text to be posted, length must be \<= 280 characters.
 	 * @returns Whether posting was successful or not.
 	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Posting a tweet to twitter
+	 * rettiwt.tweet.tweet('Hello World!')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
 	 * @public
 	 */
 	public async tweet(tweetText: string): Promise<boolean> {
@@ -151,6 +255,23 @@ export class TweetService extends FetcherService {
 	 * @param tweetId - The id of the tweet to be favorited.
 	 * @returns Whether favoriting was successful or not.
 	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Liking the Tweet with id '12345678'
+	 * rettiwt.tweet.favorite('12345678')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
 	 * @public
 	 */
 	public async favorite(tweetId: string): Promise<boolean> {
@@ -165,6 +286,23 @@ export class TweetService extends FetcherService {
 	 *
 	 * @param tweetId - The id of the tweet with the given id.
 	 * @returns Whether retweeting was successful or not.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Retweeting the Tweet with id '12345678'
+	 * rettiwt.tweet.retweet('12345678')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * })
+	 * ```
 	 *
 	 * @public
 	 */
