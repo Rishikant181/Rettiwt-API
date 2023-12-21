@@ -301,7 +301,7 @@ export class TweetService extends FetcherService {
 	 * })
 	 * .catch(err => {
 	 * 	console.log(err);
-	 * })
+	 * });
 	 * ```
 	 *
 	 * @public
