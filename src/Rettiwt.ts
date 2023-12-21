@@ -20,6 +20,14 @@ import { RettiwtConfig } from './models/internal/RettiwtConfig';
  * const rettiwt = new Rettiwt();
  * ```
  *
+ * @example Creating a Rettiwt instance with 'guest' authentication, using a pre-generated guest key:
+ * ```
+ * import { Rettiwt } from 'rettiwt-api';
+ *
+ * // Creating a new Rettiwt instance
+ * const rettiwt = new Rettiwt({ guestKey: 'GUEST_KEY' });
+ * ```
+ *
  * @example Creating a Rettiwt instance with 'user' authentication:
  * ```
  * import { Rettiwt } from 'rettiwt-api';
