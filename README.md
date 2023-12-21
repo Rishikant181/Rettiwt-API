@@ -34,6 +34,42 @@ Although the above process initializes a new project, that is, in fact, not nece
     -   Getting the details of a tweet
     -   Getting the tweet timeline of a user (only most recent 100 entries)
 
+## The 'Rettiwt' class
+
+The 'Rettiwt' class is entry point for accessing the Twitter API.
+
+The 'Rettiwt' class has two members:
+
+-   'tweet' member, for accessing resources related to tweets
+-   'user' member, for accessing resources related to users
+
+For details regarding usage of these members for accessing the Twitter API, refer to the [features](https://rishikant181.github.io/Rettiwt-API/#md:features) section.
+
+## Types of authentication
+
+Rettiwt can be used with or without logging in to Twitter. As such, the two authentication strategies are:
+
+-   'guest' authentication (without logging in) grants access to the following resources:
+
+    -   Tweet Details
+    -   User Details
+    -   User Timeline (tweets timeline)
+    -   User Replies (replies timeline)
+
+-   'user' authentication (logging in) grants access to the following resources:
+
+    -   Tweet Details
+    -   Tweet Favoriters (likes)
+    -   Tweet Retweeters (retweets)
+    -   Tweet Search
+    -   Tweet List
+    -   User Details
+    -   User Followers
+    -   User Following
+    -   User Likes
+    -   User Timeline (tweets timeline)
+    -   User Replies (replies timeline)
+
 ## Usage
 
 The following examples may help you to get started using the library:
