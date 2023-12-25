@@ -60,10 +60,9 @@ Although the above process initializes a new project, that is, in fact, not nece
 
 -   The API_KEY that we generated, is a very sensitive information and provides all access to the Twitter account. Therefore, it is generally recommended to store it as an environment variable and use it from there.
 
--   It's also possible to use this package without using a Twitter account, by omitting the 'apiKey' parameter in the config object. However, in this case, functionality is limited to accessing only the following resources:
-    -   Getting the details of a user (by username)
-    -   Getting the details of a tweet
-    -   Getting the tweet timeline of a user (only most recent 100 entries)
+-   The given example above uses 'user' authentication by using an API_KEY generated from the Twitter account.
+
+-   It's also possible to use this package without using a Twitter account, by omitting the 'apiKey' parameter in the config object. However, in this case, 'guest' authentication is used.
 
 ## The 'Rettiwt' class
 
@@ -74,7 +73,7 @@ The 'Rettiwt' class has two members:
 -   'tweet' member, for accessing resources related to tweets
 -   'user' member, for accessing resources related to users
 
-For details regarding usage of these members for accessing the Twitter API, refer to the [features](https://rishikant181.github.io/Rettiwt-API/#md:features) section.
+For details regarding usage of these members for accessing the Twitter API, refer to the 'Features' section.
 
 ## Usage
 
