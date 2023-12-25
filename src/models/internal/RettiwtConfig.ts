@@ -7,13 +7,9 @@ import { IRettiwtConfig } from '../../types/internal/RettiwtConfig';
  * @internal
  */
 export class RettiwtConfig implements IRettiwtConfig {
-	/** The apiKey (cookie) to use for authenticating Rettiwt against Twitter API. */
 	public apiKey?: string;
-
-	/** Optional URL with proxy configuration to use for requests to Twitter API. */
+	public guestKey?: string;
 	public proxyUrl?: URL;
-
-	/** Whether to write logs to console or not. */
 	public logging?: boolean;
 
 	/**
@@ -23,6 +19,7 @@ export class RettiwtConfig implements IRettiwtConfig {
 	 */
 	public constructor(config: RettiwtConfig) {
 		this.apiKey = config.apiKey;
+		this.guestKey = config.guestKey;
 		this.proxyUrl = config.proxyUrl;
 		this.logging = config.logging;
 	}

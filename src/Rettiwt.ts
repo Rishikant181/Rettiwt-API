@@ -6,7 +6,43 @@ import { UserService } from './services/public/UserService';
 import { RettiwtConfig } from './models/internal/RettiwtConfig';
 
 /**
- * The class for fetching data from Twitter.
+ * The class for accessing Twitter API.
+ *
+ * The created Rettiwt instance can be configured by passing in a configuration object to the constructor.
+ *
+ * For details regarding the available configuration options, refer to {@link RettiwtConfig}
+ *
+ * @example Creating a Rettiwt instance with 'guest' authentication:
+ * ```
+ * import { Rettiwt } from 'rettiwt-api';
+ *
+ * // Creating a new Rettiwt instance
+ * const rettiwt = new Rettiwt();
+ * ```
+ *
+ * @example Creating a Rettiwt instance with 'guest' authentication, using a pre-generated guest key:
+ * ```
+ * import { Rettiwt } from 'rettiwt-api';
+ *
+ * // Creating a new Rettiwt instance
+ * const rettiwt = new Rettiwt({ guestKey: 'GUEST_KEY' });
+ * ```
+ *
+ * @example Creating a Rettiwt instance with 'user' authentication:
+ * ```
+ * import { Rettiwt } from 'rettiwt-api';
+ *
+ * // Creating a new Rettiwt instance
+ * const rettiwt = new Rettiwt({ apiKey: 'API_KEY' });
+ * ```
+ *
+ * @example Creating a Rettiwt instance with 'user'authentication, along with enabling debug logs and using a proxy:
+ * ```
+ * import { Rettiwt } from 'rettiwt-api';
+ *
+ * // Creating a new Rettiwt instance
+ * const rettiwt = new Rettiwt({ apiKey: 'API_KEY', loggin: true, proxyUrl: 'URL_TO_PROXY_SERVER' });
+ * ```
  *
  * @public
  */

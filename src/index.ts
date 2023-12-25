@@ -12,6 +12,7 @@ export * from './models/public/CursoredData';
 export * from './models/public/List';
 export * from './models/public/Tweet';
 export * from './models/public/User';
+export { TweetFilter } from 'rettiwt-core';
 
 // Exporting services
 export * from './services/internal/FetcherService';
@@ -25,3 +26,4 @@ export * from './types/public/CursoredData';
 export * from './types/public/List';
 export * from './types/public/Tweet';
 export * from './types/public/User';
+export { ITweetFilter } from 'rettiwt-core';
