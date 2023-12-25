@@ -33,6 +33,40 @@ export class UserService extends FetcherService {
 	 * @param id - The username/id of the target user.
 	 * @returns The details of the given user.
 	 *
+	 * @example Fetching the details of the Twitter user with username 'user1'
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the details of the User with username 'user1'
+	 * rettiwt.user.details('user1')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @example Fetching the details of the Twitter user with id '12345678'
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the details of the User with id '12345678'
+	 * rettiwt.user.details('12345678')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
 	 * @public
 	 */
 	public async details(id: string): Promise<User> {
@@ -60,6 +94,23 @@ export class UserService extends FetcherService {
 	 * @param cursor - The cursor to the batch of following to fetch.
 	 * @returns The list of users followed by the target user.
 	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the first 100 following of the User with id '12345678'
+	 * rettiwt.user.following('12345678')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
 	 * @public
 	 */
 	public async following(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
@@ -80,6 +131,23 @@ export class UserService extends FetcherService {
 	 * @param count - The number of followers to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of followers to fetch.
 	 * @returns The list of users following the target user.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the first 100 followers of the User with id '12345678'
+	 * rettiwt.user.followers('12345678')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
 	 *
 	 * @public
 	 */
@@ -102,6 +170,23 @@ export class UserService extends FetcherService {
 	 * @param cursor - The cursor to the batch of likes to fetch.
 	 * @returns The list of tweets liked by the target user.
 	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the most recent 100 liked Tweets of the User with id '12345678'
+	 * rettiwt.user.likes('12345678')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
 	 * @public
 	 */
 	public async likes(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
@@ -122,6 +207,23 @@ export class UserService extends FetcherService {
 	 * @param count - The number of timeline items to fetch, must be \<= 20.
 	 * @param cursor - The cursor to the batch of timeline items to fetch.
 	 * @returns The timeline of the target user.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the first 20 timeline tweets of the User with id '12345678'
+	 * rettiwt.user.timeline('12345678')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
 	 *
 	 * @remarks
 	 * - If the target user has a pinned tweet, the returned timeline has one item extra and this is always the pinned tweet.
@@ -147,6 +249,23 @@ export class UserService extends FetcherService {
 	 * @param count - The number of replies to fetch, must be \<= 20.
 	 * @param cursor - The cursor to the batch of replies to fetch.
 	 * @returns The reply timeline of the target user.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the first 100 timeline replies of the User with id '12345678'
+	 * rettiwt.user.replies('12345678')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
 	 *
 	 * @remarks If the target user has a pinned tweet, the returned reply timeline has one item extra and this is always the pinned tweet.
 	 *
