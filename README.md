@@ -17,7 +17,7 @@ It is recommended to install the package globally. Use the following steps to in
 
 ## Authentication
 
-Rettiwt can be used with or without logging in to Twitter. As such, the two authentication strategies are:
+Rettiwt-API can be used with or without logging in to Twitter. As such, the two authentication strategies are:
 
 -   'guest' authentication (without logging in) grants access to the following resources:
 
