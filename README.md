@@ -1,6 +1,6 @@
 # Rettiwt-API
 
-An API for fetching data from Twitter for free!
+A CLI tool and and API for fetching data from Twitter for free!
 
 ## Prerequisites
 
