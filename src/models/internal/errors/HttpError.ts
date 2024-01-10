@@ -1,15 +1,13 @@
 // ERRORS
 import { RettiwtError } from './RettiwtError';
 
-// TYPES
-import { IHttpError } from '../../../types/internal/errors/HttpError';
-
 /**
  * Represents an HTTP error that occues while making a request to Twitter API.
  *
  * @internal
  */
-export class HttpError extends RettiwtError implements IHttpError {
+export class HttpError extends RettiwtError {
+	/** The HTTP status code. */
 	public status: number;
 
 	/**

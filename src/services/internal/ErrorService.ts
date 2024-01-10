@@ -3,12 +3,12 @@ import axios, { AxiosResponse } from 'axios';
 import { findKeyByValue } from '../../helper/JsonUtils';
 
 // TYPES
-import { IErrorHandler } from '../../types/public/ErrorHandler';
+import { IErrorHandler } from '../../types/ErrorHandler';
 
 // ENUMS
-import { EApiErrors } from '../../enums/ApiErrors';
+import { EApiErrors } from '../../enums/Api';
+import { EHttpStatus } from '../../enums/Http';
 import { EErrorCodes } from 'rettiwt-core';
-import { EHttpStatus } from '../../enums/HTTP';
 
 // ERRORS
 import { ApiError } from '../../models/internal/errors/ApiError';

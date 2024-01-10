@@ -20,14 +20,14 @@ import { ErrorService } from './ErrorService';
 import { LogService } from './LogService';
 
 // TYPES
-import { IErrorHandler } from '../../types/public/ErrorHandler';
+import { IRettiwtConfig } from '../../types/RettiwtConfig';
+import { IErrorHandler } from '../../types/ErrorHandler';
 
 // ENUMS
-import { EApiErrors } from '../../enums/ApiErrors';
+import { EApiErrors } from '../../enums/Api';
 import { ELogActions } from '../../enums/Logging';
 
 // MODELS
-import { RettiwtConfig } from '../../models/internal/RettiwtConfig';
 import { CursoredData } from '../../models/public/CursoredData';
 import { Tweet } from '../../models/public/Tweet';
 import { User } from '../../models/public/User';
@@ -59,7 +59,7 @@ export class FetcherService {
 	/**
 	 * @param config - The config object for configuring the Rettiwt instance.
 	 */
-	public constructor(config?: RettiwtConfig) {
+	public constructor(config?: IRettiwtConfig) {
 		// If API key is supplied
 		if (config?.apiKey) {
 			this.cred = this.getAuthCredential(config.apiKey);

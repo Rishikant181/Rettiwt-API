@@ -2,9 +2,6 @@
 import { Tweet } from './Tweet';
 import { User } from './User';
 
-// TYPES
-import { ICursor, ICursoredData } from '../../types/public/CursoredData';
-
 /**
  * The data that us fetched batch-wise along with a cursor.
  *
@@ -12,8 +9,11 @@ import { ICursor, ICursoredData } from '../../types/public/CursoredData';
  *
  * @public
  */
-export class CursoredData<T extends Tweet | User> implements ICursoredData<T> {
+export class CursoredData<T extends Tweet | User> {
+	/** The list of data of the given type. */
 	public list: T[] = [];
+
+	/** The cursor to the next batch of data. */
 	public next: Cursor;
 
 	/**
@@ -31,7 +31,8 @@ export class CursoredData<T extends Tweet | User> implements ICursoredData<T> {
  *
  * @public
  */
-export class Cursor implements ICursor {
+export class Cursor {
+	/** The cursor string. */
 	public value: string;
 
 	/**

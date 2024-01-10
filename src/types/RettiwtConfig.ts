@@ -1,10 +1,10 @@
 // TYPES
-import { IErrorHandler } from '../public/ErrorHandler';
+import { IErrorHandler } from './ErrorHandler';
 
 /**
  * The configuration for initializing a new Rettiwt instance.
  *
- * @internal
+ * @public
  */
 export interface IRettiwtConfig {
 	/** The apiKey (cookie) to use for authenticating Rettiwt against Twitter API. */
@@ -19,6 +19,6 @@ export interface IRettiwtConfig {
 	/** Whether to write logs to console or not. */
 	logging?: boolean;
 
-	/** Optional custom error handler to define error conditions and process API/HTTP errors in axios responses. */
-	errorHandleService?: IErrorHandler;
+	/** Optional custom error handler to define error conditions and process API/HTTP errors in responses. */
+	errorHandler?: IErrorHandler;
 }

@@ -1,15 +1,13 @@
 // ERRORS
 import { RettiwtError } from './RettiwtError';
 
-// TYPES
-import { IApiError } from '../../../types/internal/errors/ApiError';
-
 /**
  * Represents an error that is thrown by Twitter API.
  *
  * @internal
  */
-export class ApiError extends RettiwtError implements IApiError {
+export class ApiError extends RettiwtError {
+	/** The error code thrown by Twitter API. */
 	public code: number;
 
 	/**
