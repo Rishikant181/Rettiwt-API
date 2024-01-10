@@ -11,8 +11,8 @@ import { EErrorCodes } from 'rettiwt-core';
 import { EHttpStatus } from '../../enums/HTTP';
 
 // ERRORS
-import ApiError from '../../errors/ApiError';
-import HttpError from '../../errors/HttpError';
+import { ApiError } from '../../models/internal/errors/ApiError';
+import { HttpError } from '../../models/internal/errors/HttpError';
 
 /**
  * Defines error conditions and processes API/HTTP errors in Axios responses.
