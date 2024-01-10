@@ -7,7 +7,6 @@ export * from './enums/HTTP';
 export * from './enums/Logging';
 
 // Exporting models
-export * from './models/internal/RettiwtConfig';
 export * from './models/public/CursoredData';
 export * from './models/public/List';
 export * from './models/public/Tweet';

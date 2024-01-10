@@ -4,8 +4,10 @@ import { EResourceType } from 'rettiwt-core';
 // SERVICES
 import { FetcherService } from '../internal/FetcherService';
 
+// TYPES
+import { IRettiwtConfig } from '../../types/internal/RettiwtConfig';
+
 // MODELS
-import { RettiwtConfig } from '../../models/internal/RettiwtConfig';
 import { User } from '../../models/public/User';
 import { Tweet } from '../../models/public/Tweet';
 
@@ -23,7 +25,7 @@ export class UserService extends FetcherService {
 	 *
 	 * @internal
 	 */
-	public constructor(config?: RettiwtConfig) {
+	public constructor(config?: IRettiwtConfig) {
 		super(config);
 	}
 

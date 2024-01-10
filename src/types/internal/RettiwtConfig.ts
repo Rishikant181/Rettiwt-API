@@ -19,6 +19,6 @@ export interface IRettiwtConfig {
 	/** Whether to write logs to console or not. */
 	logging?: boolean;
 
-	/** Optional custom error handler to define error conditions and process API/HTTP errors in axios responses. */
-	errorHandleService?: IErrorHandler;
+	/** Optional custom error handler to define error conditions and process API/HTTP errors in responses. */
+	errorHandler?: IErrorHandler;
 }

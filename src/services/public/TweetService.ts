@@ -4,8 +4,10 @@ import { EResourceType, TweetFilter } from 'rettiwt-core';
 // SERVICES
 import { FetcherService } from '../internal/FetcherService';
 
+// TYPES
+import { IRettiwtConfig } from '../../types/internal/RettiwtConfig';
+
 // MODELS
-import { RettiwtConfig } from '../../models/internal/RettiwtConfig';
 import { Tweet } from '../../models/public/Tweet';
 import { User } from '../../models/public/User';
 import { CursoredData } from '../../models/public/CursoredData';
@@ -21,7 +23,7 @@ export class TweetService extends FetcherService {
 	 *
 	 * @internal
 	 */
-	public constructor(config?: RettiwtConfig) {
+	public constructor(config?: IRettiwtConfig) {
 		super(config);
 	}
 

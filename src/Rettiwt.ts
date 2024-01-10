@@ -2,8 +2,8 @@
 import { TweetService } from './services/public/TweetService';
 import { UserService } from './services/public/UserService';
 
-// MODELS
-import { RettiwtConfig } from './models/internal/RettiwtConfig';
+// TYPES
+import { IRettiwtConfig } from './types/internal/RettiwtConfig';
 
 /**
  * The class for accessing Twitter API.
@@ -58,7 +58,7 @@ export class Rettiwt {
 	 *
 	 * @param config - The config object for configuring the Rettiwt instance.
 	 */
-	public constructor(config?: RettiwtConfig) {
+	public constructor(config?: IRettiwtConfig) {
 		this.tweet = new TweetService(config);
 		this.user = new UserService(config);
 	}
