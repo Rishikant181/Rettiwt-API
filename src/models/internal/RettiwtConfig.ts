@@ -1,5 +1,5 @@
 // TYPES
-import { IErrorHandleService } from "../../types/public/ErrorHandleService";
+import { IErrorHandleService } from '../../types/public/ErrorHandleService';
 import { IRettiwtConfig } from '../../types/internal/RettiwtConfig';
 
 /**

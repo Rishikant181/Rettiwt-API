@@ -1,18 +1,18 @@
 // PACKAGES
-import axios, { AxiosResponse} from "axios";
-import { findKeyByValue } from "../../helper/JsonUtils";
+import axios, { AxiosResponse } from 'axios';
+import { findKeyByValue } from '../../helper/JsonUtils';
 
 // TYPES
-import { IErrorHandleService } from "../../types/public/ErrorHandleService";
+import { IErrorHandleService } from '../../types/public/ErrorHandleService';
 
 // ENUMS
-import { EApiErrors } from "../../enums/ApiErrors";
-import { EErrorCodes } from "rettiwt-core";
-import { EHttpStatus } from "../../enums/HTTP";
+import { EApiErrors } from '../../enums/ApiErrors';
+import { EErrorCodes } from 'rettiwt-core';
+import { EHttpStatus } from '../../enums/HTTP';
 
 // ERRORS
-import ApiError from "../../errors/ApiError";
-import HttpError from "../../errors/HttpError";
+import ApiError from '../../errors/ApiError';
+import HttpError from '../../errors/HttpError';
 
 /**
  * Defines error conditions and processes API/HTTP errors in Axios responses.
@@ -28,9 +28,9 @@ export class ErrorHandleService implements IErrorHandleService {
 	/**
 	 * The method called when an error response is received from Twitter API.
 	 *
-	 * @param {unknown} error - The error caught while making Axios request to Twitter API.
+	 * @param error - The error caught while making Axios request to Twitter API.
 	 */
-	handle(error: unknown): void {
+	public handle(error: unknown): void {
 		const axiosResponse = this.getAxiosResponse(error);
 
 		this.handleApiError(axiosResponse);
@@ -40,10 +40,9 @@ export class ErrorHandleService implements IErrorHandleService {
 	/**
 	 * Retrieves the Axios response from the given error.
 	 *
-	 * @param {unknown} error - The error object.
-	 * @returns {AxiosResponse} The Axios response.
-	 * @throws {unknown} Throws the original error if it is not an Axios error with a response.
-	 * @protected
+	 * @param error - The error object.
+	 * @returns The Axios response.
+	 * @throws Throws the original error if it is not an Axios error with a response.
 	 */
 	protected getAxiosResponse(error: unknown): AxiosResponse {
 		if (axios.isAxiosError(error) && !!error.response) {
@@ -56,9 +55,8 @@ export class ErrorHandleService implements IErrorHandleService {
 	/**
 	 * Handles HTTP error in an Axios response.
 	 *
-	 * @param {AxiosResponse} axiosResponse - The response object received.
-	 * @throws {Error} An error with the corresponding HTTP status text if any HTTP-related error has occurred.
-	 * @protected
+	 * @param axiosResponse - The response object received.
+	 * @throws An error with the corresponding HTTP status text if any HTTP-related error has occurred.
 	 */
 	protected handleHttpError(axiosResponse: AxiosResponse): void {
 		throw this.createHttpError(axiosResponse.status);
@@ -67,9 +65,8 @@ export class ErrorHandleService implements IErrorHandleService {
 	/**
 	 * Handles API error in an Axios response.
 	 *
-	 * @param {AxiosResponse} axiosResponse - The response object received.
-	 * @throws {Error} An error with the corresponding API error message if any API-related error has occurred.
-	 * @protected
+	 * @param axiosResponse - The response object received.
+	 * @throws An error with the corresponding API error message if any API-related error has occurred.
 	 */
 	protected handleApiError(axiosResponse: AxiosResponse): void {
 		const errorCode = this.getErrorCode(axiosResponse);
@@ -84,9 +81,8 @@ export class ErrorHandleService implements IErrorHandleService {
 	/**
 	 * Creates an HTTP error instance based on the provided HTTP status.
 	 *
-	 * @param {number} httpStatus - The HTTP status code.
-	 * @returns {HttpError} An HTTP error instance.
-	 * @protected
+	 * @param httpStatus - The HTTP status code.
+	 * @returns An HTTP error instance.
 	 */
 	protected createHttpError(httpStatus: number): HttpError {
 		return new HttpError(httpStatus, this.getHttpErrorMessage(httpStatus));
@@ -95,9 +91,8 @@ export class ErrorHandleService implements IErrorHandleService {
 	/**
 	 * Retrieves the HTTP error message based on the provided HTTP status.
 	 *
-	 * @param {number} httpStatus - The HTTP status code.
-	 * @returns {string} The HTTP error message.
-	 * @protected
+	 * @param httpStatus - The HTTP status code.
+	 * @returns The HTTP error message.
 	 */
 	protected getHttpErrorMessage(httpStatus: number): string {
 		return Object.values(EHttpStatus).includes(httpStatus)
@@ -108,22 +103,20 @@ export class ErrorHandleService implements IErrorHandleService {
 	/**
 	 * Retrieves the API error code from the Axios response data.
 	 *
-	 * @param {AxiosResponse} axiosResponse - The response object received.
-	 * @returns {number | undefined} The error code, or undefined if not found.
-	 * @protected
+	 * @param axiosResponse - The response object received.
+	 * @returns The error code, or undefined if not found.
 	 */
 	protected getErrorCode(axiosResponse: AxiosResponse): number | undefined {
-		const errors = axiosResponse.data.errors;
+		const errors = (axiosResponse.data as { errors: { code: number }[] }).errors;
 
-		return (!!errors && errors.length) ? errors[0].code : undefined;
+		return !!errors && errors.length ? errors[0].code : undefined;
 	}
 
 	/**
 	 * Creates an API error instance based on the provided error code.
 	 *
-	 * @param {number} errorCode - The error code.
-	 * @returns {ApiError} An API error instance.
-	 * @protected
+	 * @param errorCode - The error code.
+	 * @returns An API error instance.
 	 */
 	protected createApiError(errorCode: number): ApiError {
 		return new ApiError(errorCode, this.getApiErrorMessage(errorCode));
@@ -132,14 +125,13 @@ export class ErrorHandleService implements IErrorHandleService {
 	/**
 	 * Retrieves the API error message based on the provided error code.
 	 *
-	 * @param {number} errorCode - The error code.
-	 * @returns {string} The API error message.
-	 * @protected
+	 * @param errorCode - The error code.
+	 * @returns The API error message.
 	 */
 	protected getApiErrorMessage(errorCode: number): string {
 		const errorCodeKey = findKeyByValue(EErrorCodes, errorCode.toString());
 
-		return (!!errorCodeKey && errorCodeKey in EApiErrors)
+		return !!errorCodeKey && errorCodeKey in EApiErrors
 			? EApiErrors[errorCodeKey as keyof typeof EApiErrors]
 			: ErrorHandleService.DEFAULT_ERROR_MESSAGE;
 	}

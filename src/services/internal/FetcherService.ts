@@ -16,11 +16,11 @@ import { AuthCredential, Auth } from 'rettiwt-auth';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 
 // SERVICES
-import { ErrorHandleService } from "../public/ErrorHandleService";
+import { ErrorHandleService } from '../public/ErrorHandleService';
 import { LogService } from './LogService';
 
 // TYPES
-import { IErrorHandleService } from "../../types/public/ErrorHandleService";
+import { IErrorHandleService } from '../../types/public/ErrorHandleService';
 
 // ENUMS
 import { EApiErrors } from '../../enums/ApiErrors';
@@ -166,12 +166,11 @@ export class FetcherService {
 		/**
 		 * If Axios request results in an error, catch it and rethrow a more specific error.
 		 */
-		return await axios<IResponse<unknown>>(axiosRequest)
-			.catch((error: unknown) => {
-				this.errorHandleService.handle(error);
+		return await axios<IResponse<unknown>>(axiosRequest).catch((error: unknown) => {
+			this.errorHandleService.handle(error);
 
-				throw error;
-			});
+			throw error;
+		});
 	}
 
 	/**

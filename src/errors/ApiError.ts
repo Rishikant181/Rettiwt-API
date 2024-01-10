@@ -1,14 +1,14 @@
 // ERRORS
-import RettiwtError from "./RettiwtError";
+import RettiwtError from './RettiwtError';
 
 class ApiError extends RettiwtError {
-    errorCode: number;
+	public errorCode: number;
 
-    constructor(errorCode: number, message?: string) {
-        super(message);
+	public constructor(errorCode: number, message?: string) {
+		super(message);
 
-        this.errorCode = errorCode;
-    }
+		this.errorCode = errorCode;
+	}
 }
 
 export default ApiError;

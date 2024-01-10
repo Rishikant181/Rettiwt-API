@@ -1,5 +1,5 @@
 // TYPES
-import { IErrorHandleService } from "../public/ErrorHandleService";
+import { IErrorHandleService } from '../public/ErrorHandleService';
 
 /**
  * The configuration for initializing a new Rettiwt instance.

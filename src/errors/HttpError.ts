@@ -1,14 +1,14 @@
 // ERRORS
-import RettiwtError from "./RettiwtError";
+import RettiwtError from './RettiwtError';
 
 class HttpError extends RettiwtError {
-    httpStatus: number;
+	public httpStatus: number;
 
-    constructor(httpStatus: number, message?: string) {
-        super(message);
+	public constructor(httpStatus: number, message?: string) {
+		super(message);
 
-        this.httpStatus = httpStatus;
-    }
+		this.httpStatus = httpStatus;
+	}
 }
 
 export default HttpError;
