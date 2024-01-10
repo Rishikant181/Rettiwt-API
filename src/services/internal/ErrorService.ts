@@ -15,7 +15,7 @@ import { ApiError } from '../../models/internal/errors/ApiError';
 import { HttpError } from '../../models/internal/errors/HttpError';
 
 /**
- * The basic service that handles any errors.
+ * The base service that handles any errors.
  *
  * @public
  */
@@ -28,7 +28,7 @@ export class ErrorService implements IErrorHandler {
 	/**
 	 * The method called when an error response is received from Twitter API.
 	 *
-	 * @param error - The error caught while making Axios request to Twitter API.
+	 * @param error - The error caught while making HTTP request to Twitter API.
 	 */
 	public handle(error: unknown): void {
 		const axiosResponse = this.getAxiosResponse(error);
@@ -38,11 +38,11 @@ export class ErrorService implements IErrorHandler {
 	}
 
 	/**
-	 * Retrieves the Axios response from the given error.
+	 * Retrieves the response data from the given error.
 	 *
 	 * @param error - The error object.
-	 * @returns The Axios response.
-	 * @throws Throws the original error if it is not an Axios error with a response.
+	 * @returns The response data.
+	 * @throws The original error if it is not an HTTP error with a response.
 	 */
 	protected getAxiosResponse(error: unknown): AxiosResponse {
 		if (axios.isAxiosError(error) && !!error.response) {
@@ -53,23 +53,23 @@ export class ErrorService implements IErrorHandler {
 	}
 
 	/**
-	 * Handles HTTP error in an Axios response.
+	 * Handles HTTP error in a response.
 	 *
-	 * @param axiosResponse - The response object received.
+	 * @param response - The response object received.
 	 * @throws An error with the corresponding HTTP status text if any HTTP-related error has occurred.
 	 */
-	protected handleHttpError(axiosResponse: AxiosResponse): void {
-		throw this.createHttpError(axiosResponse.status);
+	protected handleHttpError(response: AxiosResponse): void {
+		throw this.createHttpError(response.status);
 	}
 
 	/**
-	 * Handles API error in an Axios response.
+	 * Handles API error in a response.
 	 *
-	 * @param axiosResponse - The response object received.
+	 * @param response - The response object received.
 	 * @throws An error with the corresponding API error message if any API-related error has occurred.
 	 */
-	protected handleApiError(axiosResponse: AxiosResponse): void {
-		const errorCode = this.getErrorCode(axiosResponse);
+	protected handleApiError(response: AxiosResponse): void {
+		const errorCode = this.getErrorCode(response);
 
 		if (errorCode === undefined) {
 			return;
@@ -103,11 +103,11 @@ export class ErrorService implements IErrorHandler {
 	/**
 	 * Retrieves the API error code from the Axios response data.
 	 *
-	 * @param axiosResponse - The response object received.
+	 * @param response - The response object received.
 	 * @returns The error code, or undefined if not found.
 	 */
-	protected getErrorCode(axiosResponse: AxiosResponse): number | undefined {
-		const errors = (axiosResponse.data as { errors: { code: number }[] }).errors;
+	protected getErrorCode(response: AxiosResponse): number | undefined {
+		const errors = (response.data as { errors: { code: number }[] }).errors;
 
 		return !!errors && errors.length ? errors[0].code : undefined;
 	}
