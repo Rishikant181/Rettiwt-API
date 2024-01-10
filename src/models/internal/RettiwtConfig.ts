@@ -1,5 +1,5 @@
 // TYPES
-import { IErrorHandleService } from '../../types/public/ErrorHandleService';
+import { IErrorHandler } from '../../types/public/ErrorHandler';
 import { IRettiwtConfig } from '../../types/internal/RettiwtConfig';
 
 /**
@@ -12,7 +12,7 @@ export class RettiwtConfig implements IRettiwtConfig {
 	public guestKey?: string;
 	public proxyUrl?: URL;
 	public logging?: boolean;
-	public errorHandleService?: IErrorHandleService;
+	public errorHandler?: IErrorHandler;
 
 	/**
 	 * Initializes a new configuration object from the given config.
@@ -24,6 +24,6 @@ export class RettiwtConfig implements IRettiwtConfig {
 		this.guestKey = config.guestKey;
 		this.proxyUrl = config.proxyUrl;
 		this.logging = config.logging;
-		this.errorHandleService = config.errorHandleService;
+		this.errorHandler = config.errorHandler;
 	}
 }

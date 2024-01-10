@@ -1,5 +1,5 @@
 // TYPES
-import { IErrorHandleService } from '../public/ErrorHandleService';
+import { IErrorHandler } from '../public/ErrorHandler';
 
 /**
  * The configuration for initializing a new Rettiwt instance.
@@ -20,5 +20,5 @@ export interface IRettiwtConfig {
 	logging?: boolean;
 
 	/** Optional custom error handler to define error conditions and process API/HTTP errors in axios responses. */
-	errorHandleService?: IErrorHandleService;
+	errorHandleService?: IErrorHandler;
 }

@@ -20,7 +20,7 @@ import { ErrorHandleService } from '../public/ErrorHandleService';
 import { LogService } from './LogService';
 
 // TYPES
-import { IErrorHandleService } from '../../types/public/ErrorHandleService';
+import { IErrorHandler } from '../../types/public/ErrorHandler';
 
 // ENUMS
 import { EApiErrors } from '../../enums/ApiErrors';
@@ -54,7 +54,7 @@ export class FetcherService {
 	private readonly logger: LogService;
 
 	/** The service used to handle HTTP and API errors */
-	private readonly errorHandleService: IErrorHandleService;
+	private readonly errorHandler: IErrorHandler;
 
 	/**
 	 * @param config - The config object for configuring the Rettiwt instance.
@@ -75,7 +75,7 @@ export class FetcherService {
 		this.isAuthenticated = config?.apiKey ? true : false;
 		this.httpsAgent = this.getHttpsAgent(config?.proxyUrl);
 		this.logger = new LogService(config?.logging);
-		this.errorHandleService = config?.errorHandleService ?? new ErrorHandleService();
+		this.errorHandler = config?.errorHandler ?? new ErrorHandleService();
 	}
 
 	/**
@@ -167,7 +167,7 @@ export class FetcherService {
 		 * If Axios request results in an error, catch it and rethrow a more specific error.
 		 */
 		return await axios<IResponse<unknown>>(axiosRequest).catch((error: unknown) => {
-			this.errorHandleService.handle(error);
+			this.errorHandler.handle(error);
 
 			throw error;
 		});

@@ -3,7 +3,7 @@ import axios, { AxiosResponse } from 'axios';
 import { findKeyByValue } from '../../helper/JsonUtils';
 
 // TYPES
-import { IErrorHandleService } from '../../types/public/ErrorHandleService';
+import { IErrorHandler } from '../../types/public/ErrorHandler';
 
 // ENUMS
 import { EApiErrors } from '../../enums/ApiErrors';
@@ -19,7 +19,7 @@ import HttpError from '../../errors/HttpError';
  *
  * @public
  */
-export class ErrorHandleService implements IErrorHandleService {
+export class ErrorHandleService implements IErrorHandler {
 	/**
 	 * Error message used when the specific error type is not defined in the required enums.
 	 */
