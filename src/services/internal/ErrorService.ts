@@ -15,11 +15,11 @@ import { ApiError } from '../../models/internal/errors/ApiError';
 import { HttpError } from '../../models/internal/errors/HttpError';
 
 /**
- * Defines error conditions and processes API/HTTP errors in Axios responses.
+ * The basic service that handles any errors.
  *
  * @public
  */
-export class ErrorHandleService implements IErrorHandler {
+export class ErrorService implements IErrorHandler {
 	/**
 	 * Error message used when the specific error type is not defined in the required enums.
 	 */
@@ -97,7 +97,7 @@ export class ErrorHandleService implements IErrorHandler {
 	protected getHttpErrorMessage(httpStatus: number): string {
 		return Object.values(EHttpStatus).includes(httpStatus)
 			? EHttpStatus[httpStatus]
-			: ErrorHandleService.DEFAULT_ERROR_MESSAGE;
+			: ErrorService.DEFAULT_ERROR_MESSAGE;
 	}
 
 	/**
@@ -133,6 +133,6 @@ export class ErrorHandleService implements IErrorHandler {
 
 		return !!errorCodeKey && errorCodeKey in EApiErrors
 			? EApiErrors[errorCodeKey as keyof typeof EApiErrors]
-			: ErrorHandleService.DEFAULT_ERROR_MESSAGE;
+			: ErrorService.DEFAULT_ERROR_MESSAGE;
 	}
 }

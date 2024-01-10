@@ -16,7 +16,7 @@ import { AuthCredential, Auth } from 'rettiwt-auth';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 
 // SERVICES
-import { ErrorHandleService } from '../public/ErrorHandleService';
+import { ErrorService } from './ErrorService';
 import { LogService } from './LogService';
 
 // TYPES
@@ -75,7 +75,7 @@ export class FetcherService {
 		this.isAuthenticated = config?.apiKey ? true : false;
 		this.httpsAgent = this.getHttpsAgent(config?.proxyUrl);
 		this.logger = new LogService(config?.logging);
-		this.errorHandler = config?.errorHandler ?? new ErrorHandleService();
+		this.errorHandler = config?.errorHandler ?? new ErrorService();
 	}
 
 	/**
