@@ -9,7 +9,6 @@ import {
 	ITimelineTweet,
 	ITimelineUser,
 	IResponse,
-	EErrorCodes,
 } from 'rettiwt-core';
 import axios, { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from 'axios';
 import https, { Agent } from 'https';
@@ -17,10 +16,13 @@ import { AuthCredential, Auth } from 'rettiwt-auth';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 
 // SERVICES
+import { ErrorHandleService } from "../public/ErrorHandleService";
 import { LogService } from './LogService';
 
+// TYPES
+import { IErrorHandleService } from "../../types/public/ErrorHandleService";
+
 // ENUMS
-import { EHttpStatus } from '../../enums/HTTP';
 import { EApiErrors } from '../../enums/ApiErrors';
 import { ELogActions } from '../../enums/Logging';
 
@@ -31,7 +33,7 @@ import { Tweet } from '../../models/public/Tweet';
 import { User } from '../../models/public/User';
 
 // HELPERS
-import { findByFilter, findKeyByValue } from '../../helper/JsonUtils';
+import { findByFilter } from '../../helper/JsonUtils';
 
 /**
  * The base service that handles all HTTP requests.
@@ -50,6 +52,9 @@ export class FetcherService {
 
 	/** The log service instance to use to logging. */
 	private readonly logger: LogService;
+
+	/** The service used to handle HTTP and API errors */
+	private readonly errorHandleService: IErrorHandleService;
 
 	/**
 	 * @param config - The config object for configuring the Rettiwt instance.
@@ -70,6 +75,7 @@ export class FetcherService {
 		this.isAuthenticated = config?.apiKey ? true : false;
 		this.httpsAgent = this.getHttpsAgent(config?.proxyUrl);
 		this.logger = new LogService(config?.logging);
+		this.errorHandleService = config?.errorHandleService ?? new ErrorHandleService();
 	}
 
 	/**
@@ -134,49 +140,6 @@ export class FetcherService {
 	}
 
 	/**
-	 * The middleware for handling any http error.
-	 *
-	 * @param res - The response object received.
-	 * @returns The received response, if no HTTP errors are found.
-	 * @throws An error if any HTTP-related error has occured.
-	 */
-	private handleHttpError(res: AxiosResponse<IResponse<unknown>>): AxiosResponse<IResponse<unknown>> {
-		/**
-		 * If the status code is not 200 =\> the HTTP request was not successful. hence throwing error
-		 */
-		if (res.status != 200 && res.status in EHttpStatus) {
-			throw new Error(EHttpStatus[res.status]);
-		}
-
-		return res;
-	}
-
-	/**
-	 * The middleware for handling any Twitter API-level errors.
-	 *
-	 * @param res - The response object received.
-	 * @returns The received response, if no API errors are found.
-	 * @throws An error if any API-related error has occured.
-	 */
-	private handleApiError(res: AxiosResponse<IResponse<unknown>>): AxiosResponse<IResponse<unknown>> {
-		// If error exists
-		if (res.data.errors && res.data.errors.length) {
-			// Getting the error code
-			const code: number = res.data.errors[0].code;
-
-			// Getting the error message
-			const message: string = EApiErrors[
-				findKeyByValue(EErrorCodes, `${code}`) as keyof typeof EApiErrors
-			] as string;
-
-			// Throw the error
-			throw new Error(message);
-		}
-
-		return res;
-	}
-
-	/**
 	 * Makes an HTTP request according to the given parameters.
 	 *
 	 * @param config - The request configuration.
@@ -190,7 +153,7 @@ export class FetcherService {
 		this.cred = this.cred ?? (await new Auth().getGuestCredential());
 
 		/**
-		 * Creating axios request configuration from the input configuration.
+		 * Creating Axios request configuration from the input configuration.
 		 */
 		const axiosRequest: AxiosRequestConfig = {
 			url: config.url,
@@ -201,11 +164,14 @@ export class FetcherService {
 		};
 
 		/**
-		 * After making the request, the response is then passed to HTTP error handling middleware for HTTP error handling.
+		 * If Axios request results in an error, catch it and rethrow a more specific error.
 		 */
 		return await axios<IResponse<unknown>>(axiosRequest)
-			.then((res) => this.handleHttpError(res))
-			.then((res) => this.handleApiError(res));
+			.catch((error: unknown) => {
+				this.errorHandleService.handle(error);
+
+				throw error;
+			});
 	}
 
 	/**
