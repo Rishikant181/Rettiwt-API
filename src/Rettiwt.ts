@@ -3,7 +3,7 @@ import { TweetService } from './services/public/TweetService';
 import { UserService } from './services/public/UserService';
 
 // TYPES
-import { IRettiwtConfig } from './types/internal/RettiwtConfig';
+import { IRettiwtConfig } from './types/RettiwtConfig';
 
 /**
  * The class for accessing Twitter API.

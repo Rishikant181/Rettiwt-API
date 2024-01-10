@@ -1,28 +1,32 @@
 // MAIN
 export * from './Rettiwt';
 
-// Exporting enums
-export * from './enums/ApiErrors';
-export * from './enums/HTTP';
+// EXTERNAL
+export { TweetFilter } from 'rettiwt-core';
+
+// ENUMS
+export * from './enums/Api';
+export * from './enums/Http';
 export * from './enums/Logging';
 
-// Exporting models
+// ERROR MODELS
+export * from './models/internal/errors/ApiError';
+export * from './models/internal/errors/HttpError';
+export * from './models/internal/errors/RettiwtError';
+
+// DATA MODELS
 export * from './models/public/CursoredData';
 export * from './models/public/List';
 export * from './models/public/Tweet';
 export * from './models/public/User';
-export { TweetFilter } from 'rettiwt-core';
 
-// Exporting services
+// SERVICES
+export * from './services/internal/ErrorService';
 export * from './services/internal/FetcherService';
 export * from './services/internal/LogService';
 export * from './services/public/TweetService';
 export * from './services/public/UserService';
 
-// Exporting types
-export * from './types/internal/RettiwtConfig';
-export * from './types/public/CursoredData';
-export * from './types/public/List';
-export * from './types/public/Tweet';
-export * from './types/public/User';
-export { ITweetFilter } from 'rettiwt-core';
+// TYPES
+export * from './types/RettiwtConfig';
+export * from './types/ErrorHandler';

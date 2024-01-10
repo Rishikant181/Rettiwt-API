@@ -20,11 +20,11 @@ import { ErrorService } from './ErrorService';
 import { LogService } from './LogService';
 
 // TYPES
-import { IRettiwtConfig } from '../../types/internal/RettiwtConfig';
-import { IErrorHandler } from '../../types/public/ErrorHandler';
+import { IRettiwtConfig } from '../../types/RettiwtConfig';
+import { IErrorHandler } from '../../types/ErrorHandler';
 
 // ENUMS
-import { EApiErrors } from '../../enums/ApiErrors';
+import { EApiErrors } from '../../enums/Api';
 import { ELogActions } from '../../enums/Logging';
 
 // MODELS

@@ -1,10 +1,10 @@
 // TYPES
-import { IErrorHandler } from '../public/ErrorHandler';
+import { IErrorHandler } from './ErrorHandler';
 
 /**
  * The configuration for initializing a new Rettiwt instance.
  *
- * @internal
+ * @public
  */
 export interface IRettiwtConfig {
 	/** The apiKey (cookie) to use for authenticating Rettiwt against Twitter API. */

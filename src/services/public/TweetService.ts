@@ -5,7 +5,7 @@ import { EResourceType, TweetFilter } from 'rettiwt-core';
 import { FetcherService } from '../internal/FetcherService';
 
 // TYPES
-import { IRettiwtConfig } from '../../types/internal/RettiwtConfig';
+import { IRettiwtConfig } from '../../types/RettiwtConfig';
 
 // MODELS
 import { Tweet } from '../../models/public/Tweet';
