@@ -15,6 +15,8 @@ import { ApiError } from '../../models/errors/ApiError';
 import { HttpError } from '../../models/errors/HttpError';
 import { TimeoutError } from '../../models/errors/TimeoutError';
 
+// TODO Refactor and document this module
+
 /**
  * The base service that handles any errors.
  *
