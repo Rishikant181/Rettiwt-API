@@ -28,9 +28,9 @@ import { EApiErrors } from '../../enums/Api';
 import { ELogActions } from '../../enums/Logging';
 
 // MODELS
-import { CursoredData } from '../../models/public/CursoredData';
-import { Tweet } from '../../models/public/Tweet';
-import { User } from '../../models/public/User';
+import { CursoredData } from '../../models/data/CursoredData';
+import { Tweet } from '../../models/data/Tweet';
+import { User } from '../../models/data/User';
 
 // HELPERS
 import { findByFilter } from '../../helper/JsonUtils';
@@ -50,8 +50,8 @@ export class FetcherService {
 	/** The HTTPS Agent to use for requests to Twitter API. */
 	private readonly httpsAgent: Agent;
 
-	/** The max wait time for a response; if not set, Twitter server timeout is used. */
-	private readonly timeoutInMilliseconds: number;
+	/** The max wait time for a response. */
+	private readonly timeout: number;
 
 	/** The log service instance to use to logging. */
 	private readonly logger: LogService;
@@ -77,7 +77,7 @@ export class FetcherService {
 		}
 		this.isAuthenticated = config?.apiKey ? true : false;
 		this.httpsAgent = this.getHttpsAgent(config?.proxyUrl);
-		this.timeoutInMilliseconds = config?.timeoutInMilliseconds ?? 0;
+		this.timeout = config?.timeout ?? 0;
 		this.logger = new LogService(config?.logging);
 		this.errorHandler = config?.errorHandler ?? new ErrorService();
 	}
@@ -165,7 +165,7 @@ export class FetcherService {
 			data: config.payload,
 			headers: JSON.parse(JSON.stringify(this.cred.toHeader())) as AxiosRequestHeaders,
 			httpsAgent: this.httpsAgent,
-			timeout: this.timeoutInMilliseconds,
+			timeout: this.timeout,
 		};
 
 		/**

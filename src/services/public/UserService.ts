@@ -8,11 +8,11 @@ import { FetcherService } from '../internal/FetcherService';
 import { IRettiwtConfig } from '../../types/RettiwtConfig';
 
 // MODELS
-import { User } from '../../models/public/User';
-import { Tweet } from '../../models/public/Tweet';
+import { User } from '../../models/data/User';
+import { Tweet } from '../../models/data/Tweet';
 
 // TYPES
-import { CursoredData } from '../../models/public/CursoredData';
+import { CursoredData } from '../../models/data/CursoredData';
 
 /**
  * Handles fetching of data related to user account

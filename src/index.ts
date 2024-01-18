@@ -10,15 +10,15 @@ export * from './enums/Http';
 export * from './enums/Logging';
 
 // ERROR MODELS
-export * from './models/internal/errors/ApiError';
-export * from './models/internal/errors/HttpError';
-export * from './models/internal/errors/RettiwtError';
+export * from './models/errors/ApiError';
+export * from './models/errors/HttpError';
+export * from './models/errors/RettiwtError';
 
 // DATA MODELS
-export * from './models/public/CursoredData';
-export * from './models/public/List';
-export * from './models/public/Tweet';
-export * from './models/public/User';
+export * from './models/data/CursoredData';
+export * from './models/data/List';
+export * from './models/data/Tweet';
+export * from './models/data/User';
 
 // SERVICES
 export * from './services/internal/ErrorService';

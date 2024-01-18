@@ -11,9 +11,9 @@ import { EHttpStatus } from '../../enums/Http';
 import { EErrorCodes } from 'rettiwt-core';
 
 // ERRORS
-import { ApiError } from '../../models/public/errors/ApiError';
-import { HttpError } from '../../models/public/errors/HttpError';
-import { TimeoutError } from '../../models/public/errors/TimeoutError';
+import { ApiError } from '../../models/errors/ApiError';
+import { HttpError } from '../../models/errors/HttpError';
+import { TimeoutError } from '../../models/errors/TimeoutError';
 
 /**
  * The base service that handles any errors.
@@ -63,7 +63,7 @@ export class ErrorService implements IErrorHandler {
 	 * @throws The original error if it is not an HTTP error with a response.
 	 */
 	protected getAxiosResponse(error: AxiosError): AxiosResponse {
-		if (!!error.response) {
+		if (error.response) {
 			return error.response;
 		}
 
