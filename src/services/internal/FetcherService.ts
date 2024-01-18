@@ -50,6 +50,9 @@ export class FetcherService {
 	/** The HTTPS Agent to use for requests to Twitter API. */
 	private readonly httpsAgent: Agent;
 
+	/** The max wait time for a response; if not set, Twitter server timeout is used. */
+	private readonly timeoutInMilliseconds: number;
+
 	/** The log service instance to use to logging. */
 	private readonly logger: LogService;
 
@@ -74,6 +77,7 @@ export class FetcherService {
 		}
 		this.isAuthenticated = config?.apiKey ? true : false;
 		this.httpsAgent = this.getHttpsAgent(config?.proxyUrl);
+		this.timeoutInMilliseconds = config?.timeoutInMilliseconds ?? 0;
 		this.logger = new LogService(config?.logging);
 		this.errorHandler = config?.errorHandler ?? new ErrorService();
 	}
@@ -161,6 +165,7 @@ export class FetcherService {
 			data: config.payload,
 			headers: JSON.parse(JSON.stringify(this.cred.toHeader())) as AxiosRequestHeaders,
 			httpsAgent: this.httpsAgent,
+			timeout: this.timeoutInMilliseconds,
 		};
 
 		/**
