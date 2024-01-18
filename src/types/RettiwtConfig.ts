@@ -16,6 +16,9 @@ export interface IRettiwtConfig {
 	/** Optional URL with proxy configuration to use for requests to Twitter API. */
 	proxyUrl?: URL;
 
+	/** The max wait time for a response; if not set, Twitter server timeout is used. */
+	timeoutInMilliseconds?: number;
+
 	/** Whether to write logs to console or not. */
 	logging?: boolean;
 

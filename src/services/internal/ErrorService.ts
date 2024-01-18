@@ -1,5 +1,5 @@
 // PACKAGES
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import { findKeyByValue } from '../../helper/JsonUtils';
 
 // TYPES
@@ -11,8 +11,9 @@ import { EHttpStatus } from '../../enums/Http';
 import { EErrorCodes } from 'rettiwt-core';
 
 // ERRORS
-import { ApiError } from '../../models/internal/errors/ApiError';
-import { HttpError } from '../../models/internal/errors/HttpError';
+import { ApiError } from '../../models/public/errors/ApiError';
+import { HttpError } from '../../models/public/errors/HttpError';
+import { TimeoutError } from '../../models/public/errors/TimeoutError';
 
 /**
  * The base service that handles any errors.
@@ -31,10 +32,27 @@ export class ErrorService implements IErrorHandler {
 	 * @param error - The error caught while making HTTP request to Twitter API.
 	 */
 	public handle(error: unknown): void {
-		const axiosResponse = this.getAxiosResponse(error);
+		if (!axios.isAxiosError(error)) {
+			throw error;
+		}
 
+		this.handleTimeoutError(error);
+
+		const axiosResponse = this.getAxiosResponse(error);
 		this.handleApiError(axiosResponse);
 		this.handleHttpError(axiosResponse);
+	}
+
+	/**
+	 * Handles exceeded timeout, configured in RettiwtConfig.
+	 *
+	 * @param error - The error object.
+	 * @throws An error if the configured request timeout has been exceeded.
+	 */
+	protected handleTimeoutError(error: AxiosError): void {
+		if (error.code === 'ECONNABORTED') {
+			throw new TimeoutError(error.message);
+		}
 	}
 
 	/**
@@ -44,8 +62,8 @@ export class ErrorService implements IErrorHandler {
 	 * @returns The response data.
 	 * @throws The original error if it is not an HTTP error with a response.
 	 */
-	protected getAxiosResponse(error: unknown): AxiosResponse {
-		if (axios.isAxiosError(error) && !!error.response) {
+	protected getAxiosResponse(error: AxiosError): AxiosResponse {
+		if (!!error.response) {
 			return error.response;
 		}
 
