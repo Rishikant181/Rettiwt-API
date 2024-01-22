@@ -152,7 +152,7 @@ class TweetSearchOptions {
 		return new TweetFilter({
 			fromUsers: this.from ? this.from.split(';') : undefined,
 			toUsers: this.to ? this.to.split(';') : undefined,
-			words: this.words ? this.words.split(';') : undefined,
+			includeWords: this.words ? this.words.split(';') : undefined,
 			hashtags: this.hashtags ? this.hashtags.split(';') : undefined,
 			startDate: this.start ? new Date(this.start) : undefined,
 			endDate: this.end ? new Date(this.end) : undefined,

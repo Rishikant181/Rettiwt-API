@@ -246,7 +246,7 @@ export class TweetService extends FetcherService {
 	 */
 	public async tweet(tweetText: string): Promise<boolean> {
 		// Posting the tweet
-		const data = await this.post(EResourceType.CREATE_TWEET, { tweetText: tweetText });
+		const data = await this.post(EResourceType.CREATE_TWEET, { tweet: { text: tweetText } });
 
 		return data;
 	}

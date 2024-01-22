@@ -1,7 +1,8 @@
 // PACKAGES
 import {
 	Request,
-	Args,
+	FetchArgs,
+	PostArgs,
 	EResourceType,
 	ICursor as IRawCursor,
 	ITweet as IRawTweet,
@@ -149,29 +150,22 @@ export class FetcherService {
 	 * @param config - The request configuration.
 	 * @returns The response received.
 	 */
-	private async request(config: Request): Promise<AxiosResponse<IResponse<unknown>>> {
+	private async request(config: AxiosRequestConfig): Promise<AxiosResponse<IResponse<unknown>>> {
 		// Checking authorization for the requested resource
-		this.checkAuthorization(config.endpoint);
+		this.checkAuthorization(config.url as EResourceType);
 
 		// If not authenticated, use guest authentication
 		this.cred = this.cred ?? (await new Auth().getGuestCredential());
 
-		/**
-		 * Creating Axios request configuration from the input configuration.
-		 */
-		const axiosRequest: AxiosRequestConfig = {
-			url: config.url,
-			method: config.type,
-			data: config.payload,
-			headers: JSON.parse(JSON.stringify(this.cred.toHeader())) as AxiosRequestHeaders,
-			httpsAgent: this.httpsAgent,
-			timeout: this.timeout,
-		};
+		// Setting additional request parameters
+		config.headers = JSON.parse(JSON.stringify(this.cred.toHeader())) as AxiosRequestHeaders;
+		config.httpAgent = this.httpsAgent;
+		config.timeout = this.timeout;
 
 		/**
 		 * If Axios request results in an error, catch it and rethrow a more specific error.
 		 */
-		return await axios<IResponse<unknown>>(axiosRequest).catch((error: unknown) => {
+		return await axios<IResponse<unknown>>(config).catch((error: unknown) => {
 			this.errorHandler.handle(error);
 
 			throw error;
@@ -278,13 +272,13 @@ export class FetcherService {
 	 */
 	protected async fetch<OutType extends Tweet | User>(
 		resourceType: EResourceType,
-		args: Args,
+		args: FetchArgs,
 	): Promise<CursoredData<OutType>> {
 		// Logging
 		this.logger.log(ELogActions.FETCH, { resourceType: resourceType, args: args });
 
 		// Preparing the HTTP request
-		const request: Request = new Request(resourceType, args);
+		const request: AxiosRequestConfig = new Request(resourceType, args).toAxiosRequestConfig();
 
 		// Getting the raw data
 		const res = await this.request(request).then((res) => res.data);
@@ -305,12 +299,12 @@ export class FetcherService {
 	 * @param args - Resource specific arguments.
 	 * @returns Whether posting was successful or not.
 	 */
-	protected async post(resourceType: EResourceType, args: Args): Promise<boolean> {
+	protected async post(resourceType: EResourceType, args: PostArgs): Promise<boolean> {
 		// Logging
 		this.logger.log(ELogActions.POST, { resourceType: resourceType, args: args });
 
 		// Preparing the HTTP request
-		const request: Request = new Request(resourceType, args);
+		const request: AxiosRequestConfig = new Request(resourceType, args).toAxiosRequestConfig();
 
 		// Posting the data
 		await this.request(request);
