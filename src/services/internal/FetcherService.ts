@@ -48,8 +48,8 @@ export class FetcherService {
 	/** Whether the instance is authenticated or not. */
 	private readonly isAuthenticated: boolean;
 
-	/** The URL to the proxy server to use. */
-	private readonly proxyUrl?: URL;
+	/** The URL to the proxy server to use for authentication. */
+	private readonly authProxyUrl?: URL;
 
 	/** The HTTPS Agent to use for requests to Twitter API. */
 	private readonly httpsAgent: Agent;
@@ -80,7 +80,7 @@ export class FetcherService {
 			this.cred = undefined;
 		}
 		this.isAuthenticated = config?.apiKey ? true : false;
-		this.proxyUrl = config?.proxyUrl;
+		this.authProxyUrl = config?.authProxyUrl ?? config?.proxyUrl;
 		this.httpsAgent = this.getHttpsAgent(config?.proxyUrl);
 		this.timeout = config?.timeout ?? 0;
 		this.logger = new LogService(config?.logging);
@@ -159,7 +159,7 @@ export class FetcherService {
 		this.checkAuthorization(config.url as EResourceType);
 
 		// If not authenticated, use guest authentication
-		this.cred = this.cred ?? (await new Auth({ proxyUrl: this.proxyUrl }).getGuestCredential());
+		this.cred = this.cred ?? (await new Auth({ proxyUrl: this.authProxyUrl }).getGuestCredential());
 
 		// Setting additional request parameters
 		config.headers = JSON.parse(JSON.stringify(this.cred.toHeader())) as AxiosRequestHeaders;
