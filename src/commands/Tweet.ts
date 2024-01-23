@@ -141,21 +141,20 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
  * @remarks The search options are implementations of the ones offered by {@link TweetFilter}
  */
 class TweetSearchOptions {
-	/* eslint-disable @typescript-eslint/naming-convention */
 	public from?: string;
 	public to?: string;
 	public words?: string;
 	public phrase?: string;
-	public 'optional-words'?: string;
-	public 'exclude-words'?: string;
+	public optionalWords?: string;
+	public excludeWords?: string;
 	public hashtags?: string;
 	public mentions?: string;
-	public 'min-replies'?: number;
-	public 'min-likes'?: number;
-	public 'min-retweets'?: number;
+	public minReplies?: number;
+	public minLikes?: number;
+	public minRetweets?: number;
 	public quoted?: string;
-	public 'exclude-links'?: boolean;
-	public 'exclude-replies'?: boolean;
+	public excludeLinks?: boolean = false;
+	public excludeReplies?: boolean = false;
 	public start?: string;
 	public end?: string;
 
@@ -169,16 +168,16 @@ class TweetSearchOptions {
 		this.to = options?.to;
 		this.words = options?.words;
 		this.phrase = options?.phrase;
-		this['optional-words'] = options?.['optional-words'];
-		this['exclude-words'] = options?.['exclude-words'];
+		this.optionalWords = options?.optionalWords;
+		this.excludeWords = options?.excludeWords;
 		this.hashtags = options?.hashtags;
 		this.mentions = options?.mentions;
-		this['min-replies'] = options?.['min-replies'];
-		this['min-likes'] = options?.['min-likes'];
-		this['min-retweets'] = options?.['min-retweets'];
+		this.minReplies = options?.minReplies;
+		this.minLikes = options?.minLikes;
+		this.minRetweets = options?.minRetweets;
 		this.quoted = options?.quoted;
-		this['exclude-links'] = options?.['exclude-links'];
-		this['exclude-replies'] = options?.['exclude-replies'];
+		this.excludeLinks = options?.excludeLinks;
+		this.excludeReplies = options?.excludeReplies;
 		this.start = options?.start;
 		this.end = options?.end;
 	}
@@ -194,16 +193,16 @@ class TweetSearchOptions {
 			toUsers: this.to ? this.to.split(';') : undefined,
 			includeWords: this.words ? this.words.split(';') : undefined,
 			includePhrase: this.phrase,
-			optionalWords: this['optional-words'] ? this['optional-words'].split(';') : undefined,
-			excludeWords: this['exclude-words'] ? this['exclude-words'].split(';') : undefined,
+			optionalWords: this.optionalWords ? this.optionalWords.split(';') : undefined,
+			excludeWords: this.excludeWords ? this.excludeWords.split(';') : undefined,
 			hashtags: this.hashtags ? this.hashtags.split(';') : undefined,
 			mentions: this.mentions ? this.mentions.split(';') : undefined,
-			minReplies: this['min-replies'],
-			minLikes: this['min-likes'],
-			minRetweets: this['min-retweets'],
+			minReplies: this.minReplies,
+			minLikes: this.minLikes,
+			minRetweets: this.minRetweets,
 			quoted: this.quoted,
-			links: !this['exclude-links'],
-			replies: !this['exclude-replies'],
+			links: !this.excludeLinks,
+			replies: !this.excludeReplies,
 			startDate: this.start ? new Date(this.start) : undefined,
 			endDate: this.end ? new Date(this.end) : undefined,
 		});
