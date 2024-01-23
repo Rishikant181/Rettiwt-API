@@ -632,7 +632,7 @@ follow-redirects@^1.15.0:
   resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.15.2.tgz"
   integrity sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==
 
-form-data@^4.0.0:
+form-data@4.0.0, form-data@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/form-data/-/form-data-4.0.0.tgz"
   integrity sha512-ETEklSGi5t0QMZuiXoA/Q6vcnxcLQP5vdugSpuAyi6SVGi2clPPp+xgEhuMaHC+zGgn31Kd235W35f7Hykkaww==
@@ -1099,13 +1099,14 @@ rettiwt-auth@2.1.0-alpha.0:
     cookiejar "2.1.4"
     https-proxy-agent "7.0.2"
 
-rettiwt-core@3.3.0-alpha.2:
-  version "3.3.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/rettiwt-core/-/rettiwt-core-3.3.0-alpha.2.tgz#f62481e8a42a57d4d08c393036d1caf53de2f1ac"
-  integrity sha512-zS8YcdRxtB3HnCDy3VwJ2yiluJoaaYuSUWlfbNsuTYBMLfzyZ88OJdbmf+ZiV9+Eke/4ZKjTkA78QwTfYOxiOg==
+rettiwt-core@3.3.0-alpha.3:
+  version "3.3.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/rettiwt-core/-/rettiwt-core-3.3.0-alpha.3.tgz#a581bb60c4b06863b3aec2e31bcaf878c26b78cb"
+  integrity sha512-YSiQ057FdVL+QvyTtV7KjuHu3ug63VMsdMhgTau50US4dR+6H4MLUv6XdMJL4VCooGj0tRDNlVWOBhi5NWAbyQ==
   dependencies:
     axios "1.6.3"
     class-validator "0.14.0"
+    form-data "4.0.0"
 
 reusify@^1.0.4:
   version "1.0.4"
