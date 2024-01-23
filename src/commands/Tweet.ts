@@ -46,8 +46,7 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		)
 		.option('-h, --hashtags <string>', "Matches the tweets containing the given list of hashtags, separated by ';'")
 		.option(
-			'-m',
-			'--mentions <string>',
+			'-m, --mentions <string>',
 			"Matches the tweets that mention the give list of usernames, separated by ';'",
 		)
 		.option('-r, --min-replies <number>', 'Matches the tweets that have a minimum of given number of replies')
