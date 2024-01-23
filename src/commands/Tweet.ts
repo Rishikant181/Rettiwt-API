@@ -35,7 +35,27 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		.option('-f, --from <string>', "Matches the tweets made by list of given users, separated by ';'")
 		.option('-t, --to <string>', "Matches the tweets made to the list of given users, separated by ';'")
 		.option('-w, --words <string>', "Matches the tweets containing the given list of words, separated by ';'")
+		.option('-p, --phrase <string>', 'Matches the tweets containing the exact phrase')
+		.option(
+			'--optional-words <string>',
+			"Matches the tweets containing any of the given list of words, separated by ';'",
+		)
+		.option(
+			'--exclude-words <string>',
+			"Matches the tweets that do not contain any of the give list of words, separated by ';'",
+		)
 		.option('-h, --hashtags <string>', "Matches the tweets containing the given list of hashtags, separated by ';'")
+		.option(
+			'-m',
+			'--mentions <string>',
+			"Matches the tweets that mention the give list of usernames, separated by ';'",
+		)
+		.option('-r, --min-replies <number>', 'Matches the tweets that have a minimum of given number of replies')
+		.option('-l, --min-likes <number>', 'Matches the tweets that have a minimum of given number of likes')
+		.option('-x, --min-retweets <number>', 'Matches the tweets that have a minimum of given number of retweets')
+		.option('-q, --quoted <string>', 'Matches the tweets that quote the tweet with the given id')
+		.option('--exclude-links', 'Matches tweets that do not contain links')
+		.option('--exclude-replies', 'Matches the tweets that are not replies')
 		.option('-s, --start <string>', 'Matches the tweets made since the given date (valid date string)')
 		.option('-e, --end <string>', 'Matches the tweets made upto the given date (valid date string)')
 		.action(async (count?: string, cursor?: string, options?: TweetSearchOptions) => {
@@ -135,8 +155,8 @@ class TweetSearchOptions {
 	public 'min-likes'?: number;
 	public 'min-retweets'?: number;
 	public quoted?: string;
-	public links?: boolean;
-	public replies?: boolean;
+	public 'exclude-links'?: boolean;
+	public 'exclude-replies'?: boolean;
 	public start?: string;
 	public end?: string;
 
@@ -158,8 +178,8 @@ class TweetSearchOptions {
 		this['min-likes'] = options?.['min-likes'];
 		this['min-retweets'] = options?.['min-retweets'];
 		this.quoted = options?.quoted;
-		this.links = options?.links;
-		this.replies = options?.replies;
+		this['exclude-links'] = options?.['exclude-links'];
+		this['exclude-replies'] = options?.['exclude-replies'];
 		this.start = options?.start;
 		this.end = options?.end;
 	}
@@ -183,8 +203,8 @@ class TweetSearchOptions {
 			minLikes: this['min-likes'],
 			minRetweets: this['min-retweets'],
 			quoted: this.quoted,
-			links: this.links,
-			replies: this.replies,
+			links: !this['exclude-links'],
+			replies: !this['exclude-replies'],
 			startDate: this.start ? new Date(this.start) : undefined,
 			endDate: this.end ? new Date(this.end) : undefined,
 		});
