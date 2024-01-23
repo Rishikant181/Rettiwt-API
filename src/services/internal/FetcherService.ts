@@ -10,6 +10,8 @@ import {
 	ITimelineTweet,
 	ITimelineUser,
 	IResponse,
+	EUploadSteps,
+	IMediaUploadInitializeResponse,
 } from 'rettiwt-core';
 import axios, { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from 'axios';
 import https, { Agent } from 'https';
@@ -35,6 +37,7 @@ import { User } from '../../models/data/User';
 
 // HELPERS
 import { findByFilter } from '../../helper/JsonUtils';
+import { statSync } from 'fs';
 
 /**
  * The base service that handles all HTTP requests.
@@ -154,7 +157,7 @@ export class FetcherService {
 	 * @param config - The request configuration.
 	 * @returns The response received.
 	 */
-	private async request(config: AxiosRequestConfig): Promise<AxiosResponse<IResponse<unknown>>> {
+	private async request<ResType = IResponse<unknown>>(config: AxiosRequestConfig): Promise<AxiosResponse<ResType>> {
 		// Checking authorization for the requested resource
 		this.checkAuthorization(config.url as EResourceType);
 
@@ -169,7 +172,7 @@ export class FetcherService {
 		/**
 		 * If Axios request results in an error, catch it and rethrow a more specific error.
 		 */
-		return await axios<IResponse<unknown>>(config).catch((error: unknown) => {
+		return await axios<ResType>(config).catch((error: unknown) => {
 			this.errorHandler.handle(error);
 
 			throw error;
@@ -314,5 +317,36 @@ export class FetcherService {
 		await this.request(request);
 
 		return true;
+	}
+
+	/**
+	 * Uploads the given media file to Twitter
+	 *
+	 * @param media - The path to the media file to upload.
+	 * @returns The id of the uploaded media.
+	 */
+	protected async upload(media: string): Promise<string> {
+		// Logging
+		this.logger.log(ELogActions.POST, { resourceType: EResourceType.MEDIA_UPLOAD });
+
+		// Initializing upload
+		let request: AxiosRequestConfig = new Request(EResourceType.MEDIA_UPLOAD, {
+			upload: { step: EUploadSteps.INITIALIZE, size: statSync(media).size },
+		}).toAxiosRequestConfig();
+		const id: string = (await this.request<IMediaUploadInitializeResponse>(request)).data.media_id_string;
+
+		// Uploading the media
+		request = new Request(EResourceType.MEDIA_UPLOAD, {
+			upload: { step: EUploadSteps.APPEND, id: id, media: media },
+		}).toAxiosRequestConfig();
+		await this.request<unknown>(request);
+
+		// Finalizing the upload
+		request = new Request(EResourceType.MEDIA_UPLOAD, {
+			upload: { step: EUploadSteps.FINALIZE, id: id },
+		}).toAxiosRequestConfig();
+		await this.request<unknown>(request);
+
+		return id;
 	}
 }
