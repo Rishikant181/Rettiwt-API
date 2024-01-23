@@ -122,10 +122,21 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
  * @remarks The search options are implementations of the ones offered by {@link TweetFilter}
  */
 class TweetSearchOptions {
+	/* eslint-disable @typescript-eslint/naming-convention */
 	public from?: string;
 	public to?: string;
 	public words?: string;
+	public phrase?: string;
+	public 'optional-words'?: string;
+	public 'exclude-words'?: string;
 	public hashtags?: string;
+	public mentions?: string;
+	public 'min-replies'?: number;
+	public 'min-likes'?: number;
+	public 'min-retweets'?: number;
+	public quoted?: string;
+	public links?: boolean;
+	public replies?: boolean;
 	public start?: string;
 	public end?: string;
 
@@ -138,7 +149,17 @@ class TweetSearchOptions {
 		this.from = options?.from;
 		this.to = options?.to;
 		this.words = options?.words;
+		this.phrase = options?.phrase;
+		this['optional-words'] = options?.['optional-words'];
+		this['exclude-words'] = options?.['exclude-words'];
 		this.hashtags = options?.hashtags;
+		this.mentions = options?.mentions;
+		this['min-replies'] = options?.['min-replies'];
+		this['min-likes'] = options?.['min-likes'];
+		this['min-retweets'] = options?.['min-retweets'];
+		this.quoted = options?.quoted;
+		this.links = options?.links;
+		this.replies = options?.replies;
 		this.start = options?.start;
 		this.end = options?.end;
 	}
@@ -153,7 +174,17 @@ class TweetSearchOptions {
 			fromUsers: this.from ? this.from.split(';') : undefined,
 			toUsers: this.to ? this.to.split(';') : undefined,
 			includeWords: this.words ? this.words.split(';') : undefined,
+			includePhrase: this.phrase,
+			optionalWords: this['optional-words'] ? this['optional-words'].split(';') : undefined,
+			excludeWords: this['exclude-words'] ? this['exclude-words'].split(';') : undefined,
 			hashtags: this.hashtags ? this.hashtags.split(';') : undefined,
+			mentions: this.mentions ? this.mentions.split(';') : undefined,
+			minReplies: this['min-replies'],
+			minLikes: this['min-likes'],
+			minRetweets: this['min-retweets'],
+			quoted: this.quoted,
+			links: this.links,
+			replies: this.replies,
 			startDate: this.start ? new Date(this.start) : undefined,
 			endDate: this.end ? new Date(this.end) : undefined,
 		});
