@@ -244,7 +244,7 @@ export class TweetService extends FetcherService {
 	 * });
 	 * ```
 	 *
-	 * @example Postring a tweet with an image
+	 * @example Posting a tweet with an image
 	 * ```
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
