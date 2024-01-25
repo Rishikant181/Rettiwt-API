@@ -224,9 +224,10 @@ export class TweetService extends FetcherService {
 	 * Post a tweet.
 	 *
 	 * @param text - The text to be posted, length must be \<= 280 characters.
+	 * @param media - The list of media to post in the tweet.
 	 * @returns Whether posting was successful or not.
 	 *
-	 * @example
+	 * @example Posting a simple text
 	 * ```
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
@@ -235,6 +236,23 @@ export class TweetService extends FetcherService {
 	 *
 	 * // Posting a tweet to twitter
 	 * rettiwt.tweet.tweet('Hello World!')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @example Postring a tweet with an image
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Posting a tweet, containing an image called 'mountains.jpg', to twitter
+	 * rettiwt.tweet.tweet('What a nice view!', [{ path: 'mountains.jpg' }])
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
