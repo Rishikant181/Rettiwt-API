@@ -10,8 +10,10 @@ import {
 	ITimelineTweet,
 	ITimelineUser,
 	IResponse,
+	EUploadSteps,
+	IMediaUploadInitializeResponse,
 } from 'rettiwt-core';
-import axios, { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import https, { Agent } from 'https';
 import { AuthCredential, Auth } from 'rettiwt-auth';
 import { HttpsProxyAgent } from 'https-proxy-agent';
@@ -35,6 +37,7 @@ import { User } from '../../models/data/User';
 
 // HELPERS
 import { findByFilter } from '../../helper/JsonUtils';
+import { statSync } from 'fs';
 
 /**
  * The base service that handles all HTTP requests.
@@ -151,10 +154,11 @@ export class FetcherService {
 	/**
 	 * Makes an HTTP request according to the given parameters.
 	 *
+	 * @typeParam ResType - The type of the returned response data.
 	 * @param config - The request configuration.
 	 * @returns The response received.
 	 */
-	private async request(config: AxiosRequestConfig): Promise<AxiosResponse<IResponse<unknown>>> {
+	private async request<ResType>(config: AxiosRequestConfig): Promise<AxiosResponse<ResType>> {
 		// Checking authorization for the requested resource
 		this.checkAuthorization(config.url as EResourceType);
 
@@ -162,14 +166,14 @@ export class FetcherService {
 		this.cred = this.cred ?? (await new Auth({ proxyUrl: this.authProxyUrl }).getGuestCredential());
 
 		// Setting additional request parameters
-		config.headers = JSON.parse(JSON.stringify(this.cred.toHeader())) as AxiosRequestHeaders;
+		config.headers = { ...config.headers, ...this.cred.toHeader() };
 		config.httpAgent = this.httpsAgent;
 		config.timeout = this.timeout;
 
 		/**
 		 * If Axios request results in an error, catch it and rethrow a more specific error.
 		 */
-		return await axios<IResponse<unknown>>(config).catch((error: unknown) => {
+		return await axios<ResType>(config).catch((error: unknown) => {
 			this.errorHandler.handle(error);
 
 			throw error;
@@ -285,7 +289,7 @@ export class FetcherService {
 		const request: AxiosRequestConfig = new Request(resourceType, args).toAxiosRequestConfig();
 
 		// Getting the raw data
-		const res = await this.request(request).then((res) => res.data);
+		const res = await this.request<IResponse<unknown>>(request).then((res) => res.data);
 
 		// Extracting data
 		const extractedData = this.extractData(res, resourceType);
@@ -311,8 +315,53 @@ export class FetcherService {
 		const request: AxiosRequestConfig = new Request(resourceType, args).toAxiosRequestConfig();
 
 		// Posting the data
-		await this.request(request);
+		await this.request<unknown>(request);
 
 		return true;
+	}
+
+	/**
+	 * Uploads the given media file to Twitter
+	 *
+	 * @param media - The path to the media file to upload.
+	 * @returns The id of the uploaded media.
+	 */
+	protected async upload(media: string): Promise<string> {
+		// INITIALIZE
+
+		// Logging
+		this.logger.log(ELogActions.UPLOAD, { step: EUploadSteps.INITIALIZE });
+
+		const id: string = (
+			await this.request<IMediaUploadInitializeResponse>(
+				new Request(EResourceType.MEDIA_UPLOAD, {
+					upload: { step: EUploadSteps.INITIALIZE, size: statSync(media).size },
+				}).toAxiosRequestConfig(),
+			)
+		).data.media_id_string;
+
+		// APPEND
+
+		// Logging
+		this.logger.log(ELogActions.UPLOAD, { step: EUploadSteps.APPEND });
+
+		await this.request<unknown>(
+			new Request(EResourceType.MEDIA_UPLOAD, {
+				upload: { step: EUploadSteps.APPEND, id: id, media: media },
+			}).toAxiosRequestConfig(),
+		);
+
+		// FINALIZE
+
+		// Logging
+		this.logger.log(ELogActions.UPLOAD, { step: EUploadSteps.APPEND });
+
+		await this.request<unknown>(
+			new Request(EResourceType.MEDIA_UPLOAD, {
+				upload: { step: EUploadSteps.FINALIZE, id: id },
+			}).toAxiosRequestConfig(),
+		);
+
+		return id;
 	}
 }
