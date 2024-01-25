@@ -28,5 +28,6 @@ export * from './services/public/TweetService';
 export * from './services/public/UserService';
 
 // TYPES
+export * from './types/args/TweetMediaArgs';
 export * from './types/RettiwtConfig';
 export * from './types/ErrorHandler';

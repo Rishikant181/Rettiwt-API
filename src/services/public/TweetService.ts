@@ -1,5 +1,5 @@
 // PACKAGES
-import { EResourceType, TweetFilter } from 'rettiwt-core';
+import { EResourceType, MediaArgs, TweetFilter } from 'rettiwt-core';
 
 // SERVICES
 import { FetcherService } from '../internal/FetcherService';
@@ -11,6 +11,7 @@ import { IRettiwtConfig } from '../../types/RettiwtConfig';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
 import { CursoredData } from '../../models/data/CursoredData';
+import { ITweetMediaArgs } from '../../types/args/TweetMediaArgs';
 
 /**
  * Handles fetching of data related to tweets.
@@ -222,7 +223,7 @@ export class TweetService extends FetcherService {
 	/**
 	 * Post a tweet.
 	 *
-	 * @param tweetText - The text to be posted, length must be \<= 280 characters.
+	 * @param text - The text to be posted, length must be \<= 280 characters.
 	 * @returns Whether posting was successful or not.
 	 *
 	 * @example
@@ -244,9 +245,23 @@ export class TweetService extends FetcherService {
 	 *
 	 * @public
 	 */
-	public async tweet(tweetText: string): Promise<boolean> {
+	public async tweet(text: string, media?: ITweetMediaArgs[]): Promise<boolean> {
+		/** Stores the list of media that has been uploaded */
+		const uploadedMedia: MediaArgs[] = [];
+
+		// If tweet includes media, upload the media items
+		if (media) {
+			for (const item of media) {
+				// Uploading the media item and getting it's allocated id
+				const id: string = await this.upload(item.path);
+
+				// Storing the uploaded media item
+				uploadedMedia.push({ id: id, tags: item.tags });
+			}
+		}
+
 		// Posting the tweet
-		const data = await this.post(EResourceType.CREATE_TWEET, { tweet: { text: tweetText } });
+		const data = await this.post(EResourceType.CREATE_TWEET, { tweet: { text: text, media: uploadedMedia } });
 
 		return data;
 	}
