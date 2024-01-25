@@ -274,15 +274,6 @@ asynckit@^0.4.0:
   resolved "https://registry.npmjs.org/asynckit/-/asynckit-0.4.0.tgz"
   integrity sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==
 
-axios@1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.4.0.tgz#38a7bf1224cd308de271146038b551d725f0be1f"
-  integrity sha512-S4XCWMEmzvo64T9GfvQDOXgYRDJ/wsSZc7Jvdgx5u1sd0JwsuPLqb3SYmusag+edF6ziyMensPVqLTSc1PiSEA==
-  dependencies:
-    follow-redirects "^1.15.0"
-    form-data "^4.0.0"
-    proxy-from-env "^1.1.0"
-
 axios@1.6.3:
   version "1.6.3"
   resolved "https://registry.yarnpkg.com/axios/-/axios-1.6.3.tgz#7f50f23b3aa246eff43c54834272346c396613f4"
@@ -1089,20 +1080,20 @@ resolve@~1.19.0:
     is-core-module "^2.1.0"
     path-parse "^1.0.6"
 
-rettiwt-auth@2.1.0-alpha.0:
-  version "2.1.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/rettiwt-auth/-/rettiwt-auth-2.1.0-alpha.0.tgz#0552e21a16dfad64dcc81407363faf8ff14718c6"
-  integrity sha512-KGu7FTbZT5KXXHF0HJhZMG99o2V97IGHfsj/82s49Yv7nE8arcOKB4WTteFWWV9EIkbpjlJU93EmVd9vQCOYPg==
+rettiwt-auth@2.1.0-alpha.1:
+  version "2.1.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/rettiwt-auth/-/rettiwt-auth-2.1.0-alpha.1.tgz#4277f54828c6379184e93d0cd63bf97ec9908dca"
+  integrity sha512-/GJWsOCB7fytno0XJyP7rUdZ2hdNDd9qr3aUs/P9qDwPH0oq1TOC//X2Rycs6tjMb2uR5WmLRbR9GPSJp4zB2A==
   dependencies:
-    axios "1.4.0"
+    axios "1.6.3"
     commander "11.1.0"
     cookiejar "2.1.4"
     https-proxy-agent "7.0.2"
 
-rettiwt-core@3.3.0-alpha.3:
-  version "3.3.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/rettiwt-core/-/rettiwt-core-3.3.0-alpha.3.tgz#a581bb60c4b06863b3aec2e31bcaf878c26b78cb"
-  integrity sha512-YSiQ057FdVL+QvyTtV7KjuHu3ug63VMsdMhgTau50US4dR+6H4MLUv6XdMJL4VCooGj0tRDNlVWOBhi5NWAbyQ==
+rettiwt-core@3.3.0-alpha.5:
+  version "3.3.0-alpha.5"
+  resolved "https://registry.yarnpkg.com/rettiwt-core/-/rettiwt-core-3.3.0-alpha.5.tgz#d3e6e55f48369645e2ab109f6e61b55d23a7a6b8"
+  integrity sha512-PUIm1eIRvAZM2RoA4bRVPSmEgcUTD3ERitd84rbLAO0/lA4dg75rvBgtPnFhpJ/EquakfQgNZ9pvOhIZGGyj4A==
   dependencies:
     axios "1.6.3"
     class-validator "0.14.0"

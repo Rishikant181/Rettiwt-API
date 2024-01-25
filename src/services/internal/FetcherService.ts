@@ -13,7 +13,7 @@ import {
 	EUploadSteps,
 	IMediaUploadInitializeResponse,
 } from 'rettiwt-core';
-import axios, { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import https, { Agent } from 'https';
 import { AuthCredential, Auth } from 'rettiwt-auth';
 import { HttpsProxyAgent } from 'https-proxy-agent';
@@ -154,10 +154,11 @@ export class FetcherService {
 	/**
 	 * Makes an HTTP request according to the given parameters.
 	 *
+	 * @typeParam ResType - The type of the returned response data.
 	 * @param config - The request configuration.
 	 * @returns The response received.
 	 */
-	private async request<ResType = IResponse<unknown>>(config: AxiosRequestConfig): Promise<AxiosResponse<ResType>> {
+	private async request<ResType>(config: AxiosRequestConfig): Promise<AxiosResponse<ResType>> {
 		// Checking authorization for the requested resource
 		this.checkAuthorization(config.url as EResourceType);
 
@@ -165,7 +166,7 @@ export class FetcherService {
 		this.cred = this.cred ?? (await new Auth({ proxyUrl: this.authProxyUrl }).getGuestCredential());
 
 		// Setting additional request parameters
-		config.headers = JSON.parse(JSON.stringify(this.cred.toHeader())) as AxiosRequestHeaders;
+		config.headers = { ...config.headers, ...this.cred.toHeader() };
 		config.httpAgent = this.httpsAgent;
 		config.timeout = this.timeout;
 
@@ -288,7 +289,7 @@ export class FetcherService {
 		const request: AxiosRequestConfig = new Request(resourceType, args).toAxiosRequestConfig();
 
 		// Getting the raw data
-		const res = await this.request(request).then((res) => res.data);
+		const res = await this.request<IResponse<unknown>>(request).then((res) => res.data);
 
 		// Extracting data
 		const extractedData = this.extractData(res, resourceType);
@@ -314,7 +315,7 @@ export class FetcherService {
 		const request: AxiosRequestConfig = new Request(resourceType, args).toAxiosRequestConfig();
 
 		// Posting the data
-		await this.request(request);
+		await this.request<unknown>(request);
 
 		return true;
 	}
@@ -326,26 +327,40 @@ export class FetcherService {
 	 * @returns The id of the uploaded media.
 	 */
 	protected async upload(media: string): Promise<string> {
+		// INITIALIZE
+
 		// Logging
-		this.logger.log(ELogActions.POST, { resourceType: EResourceType.MEDIA_UPLOAD });
+		this.logger.log(ELogActions.UPLOAD, { step: EUploadSteps.INITIALIZE });
 
-		// Initializing upload
-		let request: AxiosRequestConfig = new Request(EResourceType.MEDIA_UPLOAD, {
-			upload: { step: EUploadSteps.INITIALIZE, size: statSync(media).size },
-		}).toAxiosRequestConfig();
-		const id: string = (await this.request<IMediaUploadInitializeResponse>(request)).data.media_id_string;
+		const id: string = (
+			await this.request<IMediaUploadInitializeResponse>(
+				new Request(EResourceType.MEDIA_UPLOAD, {
+					upload: { step: EUploadSteps.INITIALIZE, size: statSync(media).size },
+				}).toAxiosRequestConfig(),
+			)
+		).data.media_id_string;
 
-		// Uploading the media
-		request = new Request(EResourceType.MEDIA_UPLOAD, {
-			upload: { step: EUploadSteps.APPEND, id: id, media: media },
-		}).toAxiosRequestConfig();
-		await this.request<unknown>(request);
+		// APPEND
 
-		// Finalizing the upload
-		request = new Request(EResourceType.MEDIA_UPLOAD, {
-			upload: { step: EUploadSteps.FINALIZE, id: id },
-		}).toAxiosRequestConfig();
-		await this.request<unknown>(request);
+		// Logging
+		this.logger.log(ELogActions.UPLOAD, { step: EUploadSteps.APPEND });
+
+		await this.request<unknown>(
+			new Request(EResourceType.MEDIA_UPLOAD, {
+				upload: { step: EUploadSteps.APPEND, id: id, media: media },
+			}).toAxiosRequestConfig(),
+		);
+
+		// FINALIZE
+
+		// Logging
+		this.logger.log(ELogActions.UPLOAD, { step: EUploadSteps.APPEND });
+
+		await this.request<unknown>(
+			new Request(EResourceType.MEDIA_UPLOAD, {
+				upload: { step: EUploadSteps.FINALIZE, id: id },
+			}).toAxiosRequestConfig(),
+		);
 
 		return id;
 	}
