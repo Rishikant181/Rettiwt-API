@@ -48,7 +48,7 @@ By default, Rettiwt-API uses 'guest' authentication. If however, access to the f
     Here,
 
     - \<email\> is the email of the Twitter account to be used for authentication.
-    - \<username\> is the username associtated with the Twitter account.
+    - \<username\> is the username associated with the Twitter account.
     - \<password\> is the password to the Twitter account.
 
 3. The string returned after running the command is the API_KEY. Store it in a secure place for later use.
@@ -237,10 +237,10 @@ By default, the CLI operates in 'guest' authentication. If you want to use 'user
 
 1. Generate an API_KEY as described in 'Authentication' section.
 2. Store the output API_KEY as an environment variable with the name 'API_KEY'.
-    - Additionaly, store the API_KEY in a file for later use.
+    - Additionally, store the API_KEY in a file for later use.
     - Make sure to generate an API_KEY only once, and use it every time you need it.
 3. The CLI automatically reads this environment variable to authenticate against Twitter.
-    - Additionaly, the API_KEY can also be passed in manually using the '-k' option as follows: `rettiwt -k <API_KEY> <command>`
+    - Additionally, the API_KEY can also be passed in manually using the '-k' option as follows: `rettiwt -k <API_KEY> <command>`
 
 Help for the CLI can be obtained from the CLI itself:
 
@@ -253,5 +253,5 @@ The complete API reference can be found at [this](https://rishikant181.github.io
 
 ## Additional information
 
--   This API uses the cookies of a Twitter account to fetch data from Twitter and as such, there is always a chance (altough a measly one) of getting the account banned by Twitter algorithm.
+-   This API uses the cookies of a Twitter account to fetch data from Twitter and as such, there is always a chance (although a measly one) of getting the account banned by Twitter algorithm.
 -   There have been no reports of accounts getting banned, but you have been warned, even though the chances of getting banned is negligible, it is not zero!

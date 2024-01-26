@@ -41,7 +41,7 @@ import { IRettiwtConfig } from './types/RettiwtConfig';
  * import { Rettiwt } from 'rettiwt-api';
  *
  * // Creating a new Rettiwt instance
- * const rettiwt = new Rettiwt({ apiKey: 'API_KEY', loggin: true, proxyUrl: 'URL_TO_PROXY_SERVER' });
+ * const rettiwt = new Rettiwt({ apiKey: 'API_KEY', logging: true, proxyUrl: 'URL_TO_PROXY_SERVER' });
  * ```
  *
  * @public
