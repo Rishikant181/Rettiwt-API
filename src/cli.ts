@@ -34,7 +34,7 @@ const rettiwt: Rettiwt = new Rettiwt({
 // Adding sub-commands
 program.addCommand(tweet(rettiwt));
 program.addCommand(user(rettiwt));
-program.addCommand(auth());
+program.addCommand(auth(rettiwt));
 
 // Finalizing the CLI
 program.parse();

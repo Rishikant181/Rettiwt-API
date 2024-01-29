@@ -52,7 +52,7 @@ export class FetcherService {
 	private readonly isAuthenticated: boolean;
 
 	/** The URL to the proxy server to use for authentication. */
-	private readonly authProxyUrl?: URL;
+	protected readonly authProxyUrl?: URL;
 
 	/** The HTTPS Agent to use for requests to Twitter API. */
 	private readonly httpsAgent: Agent;
@@ -110,9 +110,6 @@ export class FetcherService {
 	 * @returns The generated AuthCredential.
 	 */
 	private getGuestCredential(guestKey: string): AuthCredential {
-		// Converting guestKey from base64 to string
-		guestKey = Buffer.from(guestKey).toString('ascii');
-
 		return new AuthCredential(undefined, guestKey);
 	}
 
