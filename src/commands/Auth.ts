@@ -22,7 +22,7 @@ function createAuthCommand(rettiwt: Rettiwt): Command {
 
 	// Guest
 	auth.command('guest')
-		.description('Generate a new guest API key')
+		.description('Generate a new guest key')
 		.action(async () => {
 			const guestKey: string = await rettiwt.auth.guest();
 			output(guestKey);

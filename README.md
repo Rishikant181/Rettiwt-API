@@ -47,9 +47,9 @@ By default, Rettiwt-API uses 'guest' authentication. If however, access to the f
 
     Here,
 
-    - \<email\> is the email of the Twitter account to be used for authentication.
-    - \<username\> is the username associated with the Twitter account.
-    - \<password\> is the password to the Twitter account.
+    - `<email>` is the email of the Twitter account to be used for authentication.
+    - `<username>` is the username associated with the Twitter account.
+    - `<password>` is the password to the Twitter account.
 
 3. The string returned after running the command is the API_KEY. Store it in a secure place for later use.
 
@@ -97,8 +97,8 @@ A new Rettiwt instance can be initialized using the following code snippets:
 
 The Rettiwt class has two members:
 
--   'tweet' member, for accessing resources related to tweets
--   'user' member, for accessing resources related to users
+-   `tweet` member, for accessing resources related to tweets
+-   `user` member, for accessing resources related to users
 
 For details regarding usage of these members for accessing the Twitter API, refer to the 'Features' section.
 
@@ -109,7 +109,7 @@ The following examples may help you to get started using the library:
 ### 1. Getting the details of a target Twitter user
 
 ```js
-const { Rettiwt } = require('rettiwt-api');
+import { Rettiwt } from 'rettiwt-api';
 
 // Creating a new Rettiwt instance
 // Note that for accessing user details, 'guest' authentication can be used
@@ -128,7 +128,7 @@ rettiwt.user.details('<username>')
 ### 2. Getting the list of tweets that match a given filter
 
 ```js
-const { Rettiwt } = require('rettiwt-api');
+import { Rettiwt } from 'rettiwt-api';
 
 // Creating a new Rettiwt instance using the API_KEY
 const rettiwt = new Rettiwt({ apiKey: API_KEY });
@@ -150,12 +150,14 @@ rettiwt.tweet.search({
 });
 ```
 
+For more information regarding the different available filter options, please refer to [TweetFilter](https://rishikant181.github.io/Rettiwt-API/classes/TweetFilter.html).
+
 ### 3. Getting the next batch of data using a cursor
 
 The previous example fetches the the list of tweets matching the given filter. Since no count is specified, in this case, a default of 20 such Tweets are fetched initially. The following example demonstrates how to use the [cursor string](https://rishikant181.github.io/Rettiwt-API/classes/Cursor.html#value) obtained from the [response](https://rishikant181.github.io/Rettiwt-API/classes/CursoredData.html) object's [next](https://rishikant181.github.io/Rettiwt-API/classes/CursoredData.html#next) field, from the previous example, to fetch the next batch of tweets:
 
 ```js
-const { Rettiwt } = require('rettiwt-api');
+import { Rettiwt } from 'rettiwt-api';
 
 // Creating a new Rettiwt instance using the API_KEY
 const rettiwt = new Rettiwt({ apiKey: API_KEY });
@@ -179,7 +181,32 @@ rettiwt.tweet.search({
 });
 ```
 
-For more information regarding the different available filter options, please refer to [TweetFilter](https://rishikant181.github.io/Rettiwt-API/classes/TweetFilter.html).
+### 4. Getting an API_KEY during runtime, using 'user' authentication
+
+Sometimes, you might want to generate an API_KEY on the fly, in situations such as implementing Twitter login in your application. The following example demonstrates how to generate an API_KEY during runtime:
+
+```js
+import { Rettiwt } from 'rettiwt-api';
+
+// Creating a new Rettiwt instance
+const rettiwt = new Rettiwt();
+
+// Logging in an getting the API_KEY
+rettiwt.auth.login({ email: '<email>', userName: '<username>', password: '<password>' })
+.then(apiKey => {
+    // Use the API_KEY
+	...
+})
+.catch(err => {
+	console.log(err);
+});
+```
+
+Where,
+
+-   `<email>` is the email associated with the Twitter account to be logged into.
+-   `<username>` is the username associated with the Twitter account.
+-   `<password>` is the password to the Twitter account.
 
 ## Using a proxy
 
@@ -196,9 +223,9 @@ This creates a Rettiwt instance which uses the given proxy server for making req
 
 ## Cloud environment
 
-When using this library in an application deployed to a cloud service, the library might throw error 429, even when under rate limits. This happens because Twitter's v1.1 API endpoints seemingly blocks access from cloud services' IP ranges. These v1.1 API endpoints are the ones used for authentication and as such, authentication tasks are blocked while deployed on cloud environments.
+When using this library in an application deployed in a cloud environment, the library might throw error 429, even when under rate limits. This happens because Twitter's v1.1 API endpoints seemingly blocks access from cloud services' IP ranges. These v1.1 API endpoints are the ones used for authentication and as such, authentication tasks are blocked while deployed on cloud environments.
 
-This issue can be bypassed by using a proxy only for authentication, using the following code snippet:
+This issue can be bypassed by using a proxy only for authentication, using the following code snippet for creating a new Rettiwt instance:
 
 `const rettiwt = new Rettiwt({ authProxyUrl: PROXY_URL });`
 
