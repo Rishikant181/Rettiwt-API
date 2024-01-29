@@ -189,10 +189,27 @@ For masking of IP address using a proxy server, use the following code snippet f
 /**
  * PROXY_URL is the URL or configuration for the proxy server you want to use.`
  */
-const rettiwt = Rettiwt({ apiKey: API_KEY, proxyUrl: PROXY_URL });
+const rettiwt = new Rettiwt({ apiKey: API_KEY, proxyUrl: PROXY_URL });
 ```
 
 This creates a Rettiwt instance which uses the given proxy server for making requests to Twitter.
+
+## Cloud environment
+
+When using this library in an application deployed to a cloud service, the library might throw error 429, even when under rate limits. This happens because Twitter's v1.1 API endpoints seemingly blocks access from cloud services' IP ranges. These v1.1 API endpoints are the ones used for authentication and as such, authentication tasks are blocked while deployed on cloud environments.
+
+This issue can be bypassed by using a proxy only for authentication, using the following code snippet:
+
+`const rettiwt = new Rettiwt({ authProxyUrl: PROXY_URL });`
+
+Where,
+
+-   `PROXY_URL` is the URL to the proxy server to use.
+
+Authentication proxy is required only in the following two scenarios:
+
+1.  While using 'guest' authentication.
+2.  While creating API_KEY by 'user' authentication.
 
 ## Debug logs
 
@@ -202,7 +219,7 @@ Sometimes, when the library shows unexpected behaviour, for troubleshooting purp
 /**
  * By default, is no value for 'logging' is supplied, logging is disabled.
  */
-const rettiwt = Rettiwt({ apiKey: API_KEY, logging: true });
+const rettiwt = new Rettiwt({ apiKey: API_KEY, logging: true });
 ```
 
 ## Features

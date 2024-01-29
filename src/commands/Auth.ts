@@ -18,9 +18,9 @@ function createAuthCommand(): Command {
 		.action(async (email: string, username: string, password: string) => {
 			// Logging in and getting the credentials
 			let apiKey: string =
-				(
+				((
 					await new Auth().getUserCredential({ email: email, userName: username, password: password })
-				).toHeader().cookie ?? '';
+				).toHeader().cookie as string) ?? '';
 
 			// Converting the credentials to base64 string
 			apiKey = Buffer.from(apiKey).toString('base64');
