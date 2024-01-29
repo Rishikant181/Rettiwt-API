@@ -16,7 +16,7 @@ function createAuthCommand(rettiwt: Rettiwt): Command {
 		.argument('<username>', 'The username associated with the Twitter account')
 		.argument('<password>', 'The password to the Twitter account')
 		.action(async (email: string, username: string, password: string) => {
-			const apiKey: string = await rettiwt.auth.login({ email: email, userName: username, password: password });
+			const apiKey: string = await rettiwt.auth.login(email, username, password);
 			output(apiKey);
 		});
 

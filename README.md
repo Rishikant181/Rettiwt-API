@@ -192,7 +192,7 @@ import { Rettiwt } from 'rettiwt-api';
 const rettiwt = new Rettiwt();
 
 // Logging in an getting the API_KEY
-rettiwt.auth.login({ email: '<email>', userName: '<username>', password: '<password>' })
+rettiwt.auth.login('<email>', '<username>', '<password>')
 .then(apiKey => {
     // Use the API_KEY
 	...

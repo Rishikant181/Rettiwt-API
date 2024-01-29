@@ -11,7 +11,7 @@ import { IRettiwtConfig } from './types/RettiwtConfig';
  *
  * The created Rettiwt instance can be configured by passing in a configuration object to the constructor.
  *
- * For details regarding the available configuration options, refer to {@link RettiwtConfig}
+ * For details regarding the available configuration options, refer to {@link IRettiwtConfig}
  *
  * @example Creating a Rettiwt instance with 'guest' authentication:
  * ```

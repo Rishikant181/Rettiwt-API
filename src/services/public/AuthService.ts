@@ -1,5 +1,5 @@
 // PACKAGES
-import { AccountCredential, Auth } from 'rettiwt-auth';
+import { Auth } from 'rettiwt-auth';
 
 // SERVICES
 import { FetcherService } from '../internal/FetcherService';
@@ -25,7 +25,9 @@ export class AuthService extends FetcherService {
 	/**
 	 * Login to twitter using account credentials.
 	 *
-	 * @param cred - The credentials of the Twitter account to be logged into.
+	 * @param email - The email id associated with the Twitter account.
+	 * @param userName - The username associated with the Twitter account.
+	 * @param password - The password to the Twitter account.
 	 * @returns The API_KEY for the Twitter account.
 	 *
 	 * @example
@@ -36,7 +38,7 @@ export class AuthService extends FetcherService {
 	 * const rettiwt = new Rettiwt();
 	 *
 	 * // Logging in an getting the API_KEY
-	 * rettiwt.auth.login({ email: "email@domain.com", userName: "username", password: "password" })
+	 * rettiwt.auth.login("email@domain.com", "username", "password")
 	 * .then(apiKey => {
 	 * 	// Use the API_KEY
 	 * 	...
@@ -46,11 +48,16 @@ export class AuthService extends FetcherService {
 	 * });
 	 * ```
 	 */
-	public async login(cred: AccountCredential): Promise<string> {
+	public async login(email: string, userName: string, password: string): Promise<string> {
 		// Logging in and getting the credentials
 		let apiKey: string =
-			((await new Auth({ proxyUrl: this.authProxyUrl }).getUserCredential(cred)).toHeader().cookie as string) ??
-			'';
+			((
+				await new Auth({ proxyUrl: this.authProxyUrl }).getUserCredential({
+					email: email,
+					userName: userName,
+					password: password,
+				})
+			).toHeader().cookie as string) ?? '';
 
 		// Converting the credentials to base64 string
 		apiKey = Buffer.from(apiKey).toString('base64');
