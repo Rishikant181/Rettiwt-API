@@ -6,9 +6,6 @@ import {
 	EMediaType,
 } from 'rettiwt-core';
 
-// TYPES
-import { ITweet, ITweetEntities } from '../../types/public/Tweet';
-
 // MODELS
 import { User } from './User';
 
@@ -20,21 +17,50 @@ import { normalizeText } from '../../helper/JsonUtils';
  *
  * @public
  */
-export class Tweet implements ITweet {
+export class Tweet {
+	/** The rest id of the tweet. */
 	public id: string;
+
+	/** The details of the user who made the tweet. */
 	public tweetBy: User;
+
+	/** The date and time of creation of the tweet, in UTC string format. */
 	public createdAt: string;
+
+	/** Additional tweet entities like urls, mentions, etc. */
 	public entities: TweetEntities;
+
+	/** The urls of the media contents of the tweet (if any). */
 	public media: TweetMedia[];
+
+	/** The rest id of the tweet which is quoted in the tweet. */
 	public quoted: string;
+
+	/** The full text content of the tweet. */
 	public fullText: string;
+
+	/** The rest id of the user to which the tweet is a reply. */
 	public replyTo: string;
+
+	/** The language in which the tweet is written. */
 	public lang: string;
+
+	/** The number of quotes of the tweet. */
 	public quoteCount: number;
+
+	/** The number of replies to the tweet. */
 	public replyCount: number;
+
+	/** The number of retweets of the tweet. */
 	public retweetCount: number;
+
+	/** The number of likes of the tweet. */
 	public likeCount: number;
+
+	/** The number of views of a tweet. */
 	public viewCount: number;
+
+	/** The number of bookmarks of a tweet. */
 	public bookmarkCount: number;
 
 	/**
@@ -66,9 +92,14 @@ export class Tweet implements ITweet {
  *
  * @public
  */
-export class TweetEntities implements ITweetEntities {
+export class TweetEntities {
+	/** The list of hashtags mentioned in the tweet. */
 	public hashtags: string[] = [];
+
+	/** The list of urls mentioned in the tweet. */
 	public urls: string[] = [];
+
+	/** The list of IDs of users mentioned in the tweet. */
 	public mentionedUsers: string[] = [];
 
 	/**
@@ -106,7 +137,10 @@ export class TweetEntities implements ITweetEntities {
  * @public
  */
 export class TweetMedia {
+	/** The type of media. */
 	public type: EMediaType;
+
+	/** The direct URL to the media. */
 	public url: string = '';
 
 	/**

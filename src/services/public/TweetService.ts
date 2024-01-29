@@ -1,14 +1,17 @@
 // PACKAGES
-import { EResourceType, TweetFilter } from 'rettiwt-core';
+import { EResourceType, MediaArgs, TweetFilter } from 'rettiwt-core';
 
 // SERVICES
 import { FetcherService } from '../internal/FetcherService';
 
+// TYPES
+import { IRettiwtConfig } from '../../types/RettiwtConfig';
+
 // MODELS
-import { RettiwtConfig } from '../../models/internal/RettiwtConfig';
-import { Tweet } from '../../models/public/Tweet';
-import { User } from '../../models/public/User';
-import { CursoredData } from '../../models/public/CursoredData';
+import { Tweet } from '../../models/data/Tweet';
+import { User } from '../../models/data/User';
+import { CursoredData } from '../../models/data/CursoredData';
+import { ITweetMediaArgs } from '../../types/args/TweetMediaArgs';
 
 /**
  * Handles fetching of data related to tweets.
@@ -21,7 +24,7 @@ export class TweetService extends FetcherService {
 	 *
 	 * @internal
 	 */
-	public constructor(config?: RettiwtConfig) {
+	public constructor(config?: IRettiwtConfig) {
 		super(config);
 	}
 
@@ -220,10 +223,11 @@ export class TweetService extends FetcherService {
 	/**
 	 * Post a tweet.
 	 *
-	 * @param tweetText - The text to be posted, length must be \<= 280 characters.
+	 * @param text - The text to be posted, length must be \<= 280 characters.
+	 * @param media - The list of media to post in the tweet.
 	 * @returns Whether posting was successful or not.
 	 *
-	 * @example
+	 * @example Posting a simple text
 	 * ```
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
@@ -240,11 +244,42 @@ export class TweetService extends FetcherService {
 	 * });
 	 * ```
 	 *
+	 * @example Posting a tweet with an image
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Posting a tweet, containing an image called 'mountains.jpg', to twitter
+	 * rettiwt.tweet.tweet('What a nice view!', [{ path: 'mountains.jpg' }])
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
 	 * @public
 	 */
-	public async tweet(tweetText: string): Promise<boolean> {
+	public async tweet(text: string, media?: ITweetMediaArgs[]): Promise<boolean> {
+		/** Stores the list of media that has been uploaded */
+		const uploadedMedia: MediaArgs[] = [];
+
+		// If tweet includes media, upload the media items
+		if (media) {
+			for (const item of media) {
+				// Uploading the media item and getting it's allocated id
+				const id: string = await this.upload(item.path);
+
+				// Storing the uploaded media item
+				uploadedMedia.push({ id: id, tags: item.tags });
+			}
+		}
+
 		// Posting the tweet
-		const data = await this.post(EResourceType.CREATE_TWEET, { tweetText: tweetText });
+		const data = await this.post(EResourceType.CREATE_TWEET, { tweet: { text: text, media: uploadedMedia } });
 
 		return data;
 	}

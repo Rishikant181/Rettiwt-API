@@ -133,7 +133,7 @@ dist
 .pnp.*
 
 # Test files
-.test/
+test
 
 # Documentation
-.docs
+docs

@@ -1,7 +1,8 @@
 // PACKAGES
 import {
 	Request,
-	Args,
+	FetchArgs,
+	PostArgs,
 	EResourceType,
 	ICursor as IRawCursor,
 	ITweet as IRawTweet,
@@ -9,29 +10,34 @@ import {
 	ITimelineTweet,
 	ITimelineUser,
 	IResponse,
-	EErrorCodes,
+	EUploadSteps,
+	IMediaUploadInitializeResponse,
 } from 'rettiwt-core';
-import axios, { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import https, { Agent } from 'https';
 import { AuthCredential, Auth } from 'rettiwt-auth';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 
 // SERVICES
+import { ErrorService } from './ErrorService';
 import { LogService } from './LogService';
 
+// TYPES
+import { IRettiwtConfig } from '../../types/RettiwtConfig';
+import { IErrorHandler } from '../../types/ErrorHandler';
+
 // ENUMS
-import { EHttpStatus } from '../../enums/HTTP';
-import { EApiErrors } from '../../enums/ApiErrors';
+import { EApiErrors } from '../../enums/Api';
 import { ELogActions } from '../../enums/Logging';
 
 // MODELS
-import { RettiwtConfig } from '../../models/internal/RettiwtConfig';
-import { CursoredData } from '../../models/public/CursoredData';
-import { Tweet } from '../../models/public/Tweet';
-import { User } from '../../models/public/User';
+import { CursoredData } from '../../models/data/CursoredData';
+import { Tweet } from '../../models/data/Tweet';
+import { User } from '../../models/data/User';
 
 // HELPERS
-import { findByFilter, findKeyByValue } from '../../helper/JsonUtils';
+import { findByFilter } from '../../helper/JsonUtils';
+import { statSync } from 'fs';
 
 /**
  * The base service that handles all HTTP requests.
@@ -45,16 +51,25 @@ export class FetcherService {
 	/** Whether the instance is authenticated or not. */
 	private readonly isAuthenticated: boolean;
 
+	/** The URL to the proxy server to use for authentication. */
+	protected readonly authProxyUrl?: URL;
+
 	/** The HTTPS Agent to use for requests to Twitter API. */
 	private readonly httpsAgent: Agent;
+
+	/** The max wait time for a response. */
+	private readonly timeout: number;
 
 	/** The log service instance to use to logging. */
 	private readonly logger: LogService;
 
+	/** The service used to handle HTTP and API errors */
+	private readonly errorHandler: IErrorHandler;
+
 	/**
 	 * @param config - The config object for configuring the Rettiwt instance.
 	 */
-	public constructor(config?: RettiwtConfig) {
+	public constructor(config?: IRettiwtConfig) {
 		// If API key is supplied
 		if (config?.apiKey) {
 			this.cred = this.getAuthCredential(config.apiKey);
@@ -68,8 +83,11 @@ export class FetcherService {
 			this.cred = undefined;
 		}
 		this.isAuthenticated = config?.apiKey ? true : false;
+		this.authProxyUrl = config?.authProxyUrl ?? config?.proxyUrl;
 		this.httpsAgent = this.getHttpsAgent(config?.proxyUrl);
+		this.timeout = config?.timeout ?? 0;
 		this.logger = new LogService(config?.logging);
+		this.errorHandler = config?.errorHandler ?? new ErrorService();
 	}
 
 	/**
@@ -92,9 +110,6 @@ export class FetcherService {
 	 * @returns The generated AuthCredential.
 	 */
 	private getGuestCredential(guestKey: string): AuthCredential {
-		// Converting guestKey from base64 to string
-		guestKey = Buffer.from(guestKey).toString('ascii');
-
 		return new AuthCredential(undefined, guestKey);
 	}
 
@@ -134,78 +149,32 @@ export class FetcherService {
 	}
 
 	/**
-	 * The middleware for handling any http error.
-	 *
-	 * @param res - The response object received.
-	 * @returns The received response, if no HTTP errors are found.
-	 * @throws An error if any HTTP-related error has occured.
-	 */
-	private handleHttpError(res: AxiosResponse<IResponse<unknown>>): AxiosResponse<IResponse<unknown>> {
-		/**
-		 * If the status code is not 200 =\> the HTTP request was not successful. hence throwing error
-		 */
-		if (res.status != 200 && res.status in EHttpStatus) {
-			throw new Error(EHttpStatus[res.status]);
-		}
-
-		return res;
-	}
-
-	/**
-	 * The middleware for handling any Twitter API-level errors.
-	 *
-	 * @param res - The response object received.
-	 * @returns The received response, if no API errors are found.
-	 * @throws An error if any API-related error has occured.
-	 */
-	private handleApiError(res: AxiosResponse<IResponse<unknown>>): AxiosResponse<IResponse<unknown>> {
-		// If error exists
-		if (res.data.errors && res.data.errors.length) {
-			// Getting the error code
-			const code: number = res.data.errors[0].code;
-
-			// Getting the error message
-			const message: string = EApiErrors[
-				findKeyByValue(EErrorCodes, `${code}`) as keyof typeof EApiErrors
-			] as string;
-
-			// Throw the error
-			throw new Error(message);
-		}
-
-		return res;
-	}
-
-	/**
 	 * Makes an HTTP request according to the given parameters.
 	 *
+	 * @typeParam ResType - The type of the returned response data.
 	 * @param config - The request configuration.
 	 * @returns The response received.
 	 */
-	private async request(config: Request): Promise<AxiosResponse<IResponse<unknown>>> {
+	private async request<ResType>(config: AxiosRequestConfig): Promise<AxiosResponse<ResType>> {
 		// Checking authorization for the requested resource
-		this.checkAuthorization(config.endpoint);
+		this.checkAuthorization(config.url as EResourceType);
 
 		// If not authenticated, use guest authentication
-		this.cred = this.cred ?? (await new Auth().getGuestCredential());
+		this.cred = this.cred ?? (await new Auth({ proxyUrl: this.authProxyUrl }).getGuestCredential());
+
+		// Setting additional request parameters
+		config.headers = { ...config.headers, ...this.cred.toHeader() };
+		config.httpAgent = this.httpsAgent;
+		config.timeout = this.timeout;
 
 		/**
-		 * Creating axios request configuration from the input configuration.
+		 * If Axios request results in an error, catch it and rethrow a more specific error.
 		 */
-		const axiosRequest: AxiosRequestConfig = {
-			url: config.url,
-			method: config.type,
-			data: config.payload,
-			headers: JSON.parse(JSON.stringify(this.cred.toHeader())) as AxiosRequestHeaders,
-			httpsAgent: this.httpsAgent,
-		};
+		return await axios<ResType>(config).catch((error: unknown) => {
+			this.errorHandler.handle(error);
 
-		/**
-		 * After making the request, the response is then passed to HTTP error handling middleware for HTTP error handling.
-		 */
-		return await axios<IResponse<unknown>>(axiosRequest)
-			.then((res) => this.handleHttpError(res))
-			.then((res) => this.handleApiError(res));
+			throw error;
+		});
 	}
 
 	/**
@@ -308,16 +277,16 @@ export class FetcherService {
 	 */
 	protected async fetch<OutType extends Tweet | User>(
 		resourceType: EResourceType,
-		args: Args,
+		args: FetchArgs,
 	): Promise<CursoredData<OutType>> {
 		// Logging
 		this.logger.log(ELogActions.FETCH, { resourceType: resourceType, args: args });
 
 		// Preparing the HTTP request
-		const request: Request = new Request(resourceType, args);
+		const request: AxiosRequestConfig = new Request(resourceType, args).toAxiosRequestConfig();
 
 		// Getting the raw data
-		const res = await this.request(request).then((res) => res.data);
+		const res = await this.request<IResponse<unknown>>(request).then((res) => res.data);
 
 		// Extracting data
 		const extractedData = this.extractData(res, resourceType);
@@ -335,16 +304,61 @@ export class FetcherService {
 	 * @param args - Resource specific arguments.
 	 * @returns Whether posting was successful or not.
 	 */
-	protected async post(resourceType: EResourceType, args: Args): Promise<boolean> {
+	protected async post(resourceType: EResourceType, args: PostArgs): Promise<boolean> {
 		// Logging
 		this.logger.log(ELogActions.POST, { resourceType: resourceType, args: args });
 
 		// Preparing the HTTP request
-		const request: Request = new Request(resourceType, args);
+		const request: AxiosRequestConfig = new Request(resourceType, args).toAxiosRequestConfig();
 
 		// Posting the data
-		await this.request(request);
+		await this.request<unknown>(request);
 
 		return true;
+	}
+
+	/**
+	 * Uploads the given media file to Twitter
+	 *
+	 * @param media - The path to the media file to upload.
+	 * @returns The id of the uploaded media.
+	 */
+	protected async upload(media: string): Promise<string> {
+		// INITIALIZE
+
+		// Logging
+		this.logger.log(ELogActions.UPLOAD, { step: EUploadSteps.INITIALIZE });
+
+		const id: string = (
+			await this.request<IMediaUploadInitializeResponse>(
+				new Request(EResourceType.MEDIA_UPLOAD, {
+					upload: { step: EUploadSteps.INITIALIZE, size: statSync(media).size },
+				}).toAxiosRequestConfig(),
+			)
+		).data.media_id_string;
+
+		// APPEND
+
+		// Logging
+		this.logger.log(ELogActions.UPLOAD, { step: EUploadSteps.APPEND });
+
+		await this.request<unknown>(
+			new Request(EResourceType.MEDIA_UPLOAD, {
+				upload: { step: EUploadSteps.APPEND, id: id, media: media },
+			}).toAxiosRequestConfig(),
+		);
+
+		// FINALIZE
+
+		// Logging
+		this.logger.log(ELogActions.UPLOAD, { step: EUploadSteps.APPEND });
+
+		await this.request<unknown>(
+			new Request(EResourceType.MEDIA_UPLOAD, {
+				upload: { step: EUploadSteps.FINALIZE, id: id },
+			}).toAxiosRequestConfig(),
+		);
+
+		return id;
 	}
 }

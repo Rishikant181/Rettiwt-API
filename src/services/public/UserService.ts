@@ -4,13 +4,15 @@ import { EResourceType } from 'rettiwt-core';
 // SERVICES
 import { FetcherService } from '../internal/FetcherService';
 
+// TYPES
+import { IRettiwtConfig } from '../../types/RettiwtConfig';
+
 // MODELS
-import { RettiwtConfig } from '../../models/internal/RettiwtConfig';
-import { User } from '../../models/public/User';
-import { Tweet } from '../../models/public/Tweet';
+import { User } from '../../models/data/User';
+import { Tweet } from '../../models/data/Tweet';
 
 // TYPES
-import { CursoredData } from '../../models/public/CursoredData';
+import { CursoredData } from '../../models/data/CursoredData';
 
 /**
  * Handles fetching of data related to user account
@@ -23,7 +25,7 @@ export class UserService extends FetcherService {
 	 *
 	 * @internal
 	 */
-	public constructor(config?: RettiwtConfig) {
+	public constructor(config?: IRettiwtConfig) {
 		super(config);
 	}
 

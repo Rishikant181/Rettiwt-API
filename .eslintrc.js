@@ -35,6 +35,11 @@ module.exports = {
 				format: ['camelCase'],
 			},
 			{
+				selector: ['variableLike', 'memberLike'],
+				modifiers: ['static', 'readonly'],
+				format: ['UPPER_CASE'],
+			},
+			{
 				selector: 'enumMember',
 				format: ['UPPER_CASE'],
 			},
