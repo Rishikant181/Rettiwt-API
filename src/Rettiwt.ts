@@ -1,4 +1,5 @@
 // SERVICES
+import { AuthService } from './services/public/AuthService';
 import { TweetService } from './services/public/TweetService';
 import { UserService } from './services/public/UserService';
 
@@ -10,7 +11,7 @@ import { IRettiwtConfig } from './types/RettiwtConfig';
  *
  * The created Rettiwt instance can be configured by passing in a configuration object to the constructor.
  *
- * For details regarding the available configuration options, refer to {@link RettiwtConfig}
+ * For details regarding the available configuration options, refer to {@link IRettiwtConfig}
  *
  * @example Creating a Rettiwt instance with 'guest' authentication:
  * ```
@@ -47,6 +48,9 @@ import { IRettiwtConfig } from './types/RettiwtConfig';
  * @public
  */
 export class Rettiwt {
+	/** The instance used to authenticate. */
+	public auth: AuthService;
+
 	/** The instance used to fetch data related to tweets. */
 	public tweet: TweetService;
 
@@ -59,6 +63,7 @@ export class Rettiwt {
 	 * @param config - The config object for configuring the Rettiwt instance.
 	 */
 	public constructor(config?: IRettiwtConfig) {
+		this.auth = new AuthService(config);
 		this.tweet = new TweetService(config);
 		this.user = new UserService(config);
 	}
