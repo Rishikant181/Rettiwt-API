@@ -109,10 +109,10 @@
   resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.5.0.tgz#591c1ce3a702c45ee15f47a42ade72c2fd78978a"
   integrity sha512-G8hZ6XJiHnuhQKR7ZmysCeJWE08o8T0AXtk5darsCaTVsYZhhgUrq53jizaR2FvsoeCwJhlmwTjkXBY5Pn/ZHw==
 
-"@types/validator@^13.7.10":
-  version "13.11.1"
-  resolved "https://registry.yarnpkg.com/@types/validator/-/validator-13.11.1.tgz#6560af76ed54490e68c42f717ab4e742ba7be74b"
-  integrity sha512-d/MUkJYdOeKycmm75Arql4M5+UuXmf4cHdHKsyw1GcvnNgL6s77UkgSgJ8TE/rI5PYsnwYq5jkcWBLuN/MpQ1A==
+"@types/validator@^13.11.8":
+  version "13.11.8"
+  resolved "https://registry.yarnpkg.com/@types/validator/-/validator-13.11.8.tgz#bb1162ec0fe6f87c95ca812f15b996fcc5e1e2dc"
+  integrity sha512-c/hzNDBh7eRF+KbCf+OoZxKbnkpaK/cKp9iLQWqB7muXtM+MtL9SUUH8vCFcLn6dH1Qm05jiexK0ofWY7TfOhQ==
 
 "@typescript-eslint/eslint-plugin@6.0.0":
   version "6.0.0"
@@ -343,14 +343,14 @@ chokidar@^3.5.2:
   optionalDependencies:
     fsevents "~2.3.2"
 
-class-validator@0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/class-validator/-/class-validator-0.14.0.tgz#40ed0ecf3c83b2a8a6a320f4edb607be0f0df159"
-  integrity sha512-ct3ltplN8I9fOwUd8GrP8UQixwff129BkEtuWDKL5W45cQuLd19xqmTLu5ge78YDm/fdje6FMt0hGOhl0lii3A==
+class-validator@0.14.1:
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/class-validator/-/class-validator-0.14.1.tgz#ff2411ed8134e9d76acfeb14872884448be98110"
+  integrity sha512-2VEG9JICxIqTpoK1eMzZqaV+u/EiwEJkMGzTrZf6sU/fwsnOITVgYJ8yojSy6CaXtO9V0Cc6ZQZ8h8m4UBuLwQ==
   dependencies:
-    "@types/validator" "^13.7.10"
-    libphonenumber-js "^1.10.14"
-    validator "^13.7.0"
+    "@types/validator" "^13.11.8"
+    libphonenumber-js "^1.10.53"
+    validator "^13.9.0"
 
 color-convert@^2.0.1:
   version "2.0.1"
@@ -839,10 +839,10 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
-libphonenumber-js@^1.10.14:
-  version "1.10.44"
-  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.10.44.tgz#6709722461173e744190494aaaec9c1c690d8ca8"
-  integrity sha512-svlRdNBI5WgBjRC20GrCfbFiclbF0Cx+sCcQob/C1r57nsoq0xg8r65QbTyVyweQIlB33P+Uahyho6EMYgcOyQ==
+libphonenumber-js@^1.10.53:
+  version "1.10.54"
+  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.10.54.tgz#8dfba112f49d1b9c2a160e55f9697f22e50f0841"
+  integrity sha512-P+38dUgJsmh0gzoRDoM4F5jLbyfztkU6PY6eSK6S5HwTi/LPvnwXqVCQZlAy1FxZ5c48q25QhxGQ0pq+WQcSlQ==
 
 locate-path@^6.0.0:
   version "6.0.0"
@@ -1080,23 +1080,23 @@ resolve@~1.19.0:
     is-core-module "^2.1.0"
     path-parse "^1.0.6"
 
-rettiwt-auth@2.1.0-alpha.1:
-  version "2.1.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/rettiwt-auth/-/rettiwt-auth-2.1.0-alpha.1.tgz#4277f54828c6379184e93d0cd63bf97ec9908dca"
-  integrity sha512-/GJWsOCB7fytno0XJyP7rUdZ2hdNDd9qr3aUs/P9qDwPH0oq1TOC//X2Rycs6tjMb2uR5WmLRbR9GPSJp4zB2A==
+rettiwt-auth@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/rettiwt-auth/-/rettiwt-auth-2.1.0.tgz#43fedd40cab5b775b92a1bef740d7b2a36553463"
+  integrity sha512-N3G1kX/4TFYvUumxcACHO9ngVnhM+DhpuRn2/JxWlgHuztAQShbO9ux3hfMducCqzzjdcMLPJhrEDt9fwSbpaQ==
   dependencies:
     axios "1.6.3"
     commander "11.1.0"
     cookiejar "2.1.4"
     https-proxy-agent "7.0.2"
 
-rettiwt-core@3.3.0-alpha.6:
-  version "3.3.0-alpha.6"
-  resolved "https://registry.yarnpkg.com/rettiwt-core/-/rettiwt-core-3.3.0-alpha.6.tgz#0d1c03b39c1c15d6ef562892085d697893032d63"
-  integrity sha512-nljy/IpXko4/7c4hv+30x8b/zp+HQft5Nyx5wnRBhuCJyiL4Xzx6GbltVSBZnUeVznnquqiaWvYqEwTmsUrfIg==
+rettiwt-core@3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/rettiwt-core/-/rettiwt-core-3.3.0.tgz#c856b1be47137c5289da65edd4560f2d95a76d73"
+  integrity sha512-m75NzF9eGO/2mxRJpakWF7nmSjXyaYuGLIxKlekP0xl5MNZNKlE3r/yV0lHADZOajCkW+XYXN7AbB0lphgOoMg==
   dependencies:
     axios "1.6.3"
-    class-validator "0.14.0"
+    class-validator "0.14.1"
     form-data "4.0.0"
 
 reusify@^1.0.4:
@@ -1258,7 +1258,7 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
-validator@^13.7.0:
+validator@^13.9.0:
   version "13.11.0"
   resolved "https://registry.yarnpkg.com/validator/-/validator-13.11.0.tgz#23ab3fd59290c61248364eabf4067f04955fbb1b"
   integrity sha512-Ii+sehpSfZy+At5nPdnyMhx78fEoPDkR2XW/zimHEL3MyGJQOCQ7WeP20jPYRz7ZCpcKLB21NxuXHF3bxjStBQ==
