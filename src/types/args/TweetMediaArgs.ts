@@ -11,6 +11,10 @@ export interface ITweetMediaArgs {
 	 */
 	path: string;
 
-	/** The list usernames of users to be tagged in the media. */
+	/**
+	 * The list of id of users to be tagged in the media.
+	 *
+	 * @remarks The number of tags must be \<= 10.
+	 */
 	tags?: string[];
 }

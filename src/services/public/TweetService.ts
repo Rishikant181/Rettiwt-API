@@ -224,7 +224,7 @@ export class TweetService extends FetcherService {
 	 * Post a tweet.
 	 *
 	 * @param text - The text to be posted, length must be \<= 280 characters.
-	 * @param media - The list of media to post in the tweet.
+	 * @param media - The list of media to post in the tweet, max number of media must be \<= 4.
 	 * @returns Whether posting was successful or not.
 	 *
 	 * @example Posting a simple text
@@ -274,7 +274,7 @@ export class TweetService extends FetcherService {
 				const id: string = await this.upload(item.path);
 
 				// Storing the uploaded media item
-				uploadedMedia.push({ id: id, tags: item.tags });
+				uploadedMedia.push(new MediaArgs({ id: id, tags: item.tags }));
 			}
 		}
 
