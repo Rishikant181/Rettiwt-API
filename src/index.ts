@@ -9,6 +9,9 @@ export * from './enums/Api';
 export * from './enums/Http';
 export * from './enums/Logging';
 
+// ARGS MODELS
+export * from './models/args/TweetArgs';
+
 // ERROR MODELS
 export * from './models/errors/ApiError';
 export * from './models/errors/HttpError';
@@ -29,6 +32,5 @@ export * from './services/public/TweetService';
 export * from './services/public/UserService';
 
 // TYPES
-export * from './types/args/TweetMediaArgs';
 export * from './types/RettiwtConfig';
 export * from './types/ErrorHandler';
