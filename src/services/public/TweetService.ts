@@ -11,7 +11,7 @@ import { IRettiwtConfig } from '../../types/RettiwtConfig';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
 import { CursoredData } from '../../models/data/CursoredData';
-import { ITweetMediaArgs } from '../../types/args/TweetMediaArgs';
+import { TweetArgs, TweetMediaArgs } from '../../models/args/TweetArgs';
 
 /**
  * Handles fetching of data related to tweets.
@@ -263,13 +263,16 @@ export class TweetService extends FetcherService {
 	 *
 	 * @public
 	 */
-	public async tweet(text: string, media?: ITweetMediaArgs[]): Promise<boolean> {
+	public async tweet(text: string, media?: TweetMediaArgs[]): Promise<boolean> {
+		// Converting  JSON args to object
+		const tweet: TweetArgs = new TweetArgs({ text: text, media: media });
+
 		/** Stores the list of media that has been uploaded */
 		const uploadedMedia: MediaArgs[] = [];
 
 		// If tweet includes media, upload the media items
-		if (media) {
-			for (const item of media) {
+		if (tweet.media) {
+			for (const item of tweet.media) {
 				// Uploading the media item and getting it's allocated id
 				const id: string = await this.upload(item.path);
 
