@@ -164,7 +164,7 @@ export class FetcherService {
 
 		// Setting additional request parameters
 		config.headers = { ...config.headers, ...this.cred.toHeader() };
-		config.httpsAgent = this.httpsAgent;
+		config.httpAgent = this.httpsAgent;
 		config.timeout = this.timeout;
 
 		/**
