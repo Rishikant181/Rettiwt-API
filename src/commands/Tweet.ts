@@ -32,22 +32,22 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		.description('Fetch the list of tweets that match the given filter options')
 		.argument('[count]', 'The number of tweets to fetch')
 		.argument('[cursor]', 'The cursor to the batch of tweets to fetch')
-		.option('-f, --from <string>', "Matches the tweets made by list of given users, separated by ';'")
-		.option('-t, --to <string>', "Matches the tweets made to the list of given users, separated by ';'")
-		.option('-w, --words <string>', "Matches the tweets containing the given list of words, separated by ';'")
+		.option('-f, --from <string>', 'Matches the tweets made by the comma-separated list of given users')
+		.option('-t, --to <string>', 'Matches the tweets made to the comma-separated list of given users')
+		.option('-w, --words <string>', 'Matches the tweets containing the given comma-separated list of words')
 		.option('-p, --phrase <string>', 'Matches the tweets containing the exact phrase')
 		.option(
 			'--optional-words <string>',
-			"Matches the tweets containing any of the given list of words, separated by ';'",
+			'Matches the tweets containing any of the given comma-separated list of words',
 		)
 		.option(
 			'--exclude-words <string>',
-			"Matches the tweets that do not contain any of the give list of words, separated by ';'",
+			'Matches the tweets that do not contain any of the give comma-separated list of words',
 		)
-		.option('-h, --hashtags <string>', "Matches the tweets containing the given list of hashtags, separated by ';'")
+		.option('-h, --hashtags <string>', 'Matches the tweets containing the given comma-separated list of hashtags')
 		.option(
 			'-m, --mentions <string>',
-			"Matches the tweets that mention the give list of usernames, separated by ';'",
+			'Matches the tweets that mention the given comma-separated list of usernames',
 		)
 		.option('-r, --min-replies <number>', 'Matches the tweets that have a minimum of given number of replies')
 		.option('-l, --min-likes <number>', 'Matches the tweets that have a minimum of given number of likes')
@@ -107,11 +107,11 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		.command('post')
 		.description('Post a tweet (text only)')
 		.argument('<text>', 'The text to post as a tweet')
-		.option('-m, --media [string]', "The path to the media item(s) to be posted, separated by ';'")
+		.option('-m, --media [string]', 'Comma-separated list of path(s) to the media item(s) to be posted')
 		.action(async (text: string, options?: { media?: string }) => {
 			const result = await rettiwt.tweet.tweet(
 				text,
-				options?.media ? options?.media.split(';').map((item) => ({ path: item })) : undefined,
+				options?.media ? options?.media.split(',').map((item) => ({ path: item })) : undefined,
 			);
 			output(result);
 		});
@@ -193,14 +193,14 @@ class TweetSearchOptions {
 	 */
 	public toTweetFilter(): TweetFilter {
 		return new TweetFilter({
-			fromUsers: this.from ? this.from.split(';') : undefined,
-			toUsers: this.to ? this.to.split(';') : undefined,
-			includeWords: this.words ? this.words.split(';') : undefined,
+			fromUsers: this.from ? this.from.split(',') : undefined,
+			toUsers: this.to ? this.to.split(',') : undefined,
+			includeWords: this.words ? this.words.split(',') : undefined,
 			includePhrase: this.phrase,
-			optionalWords: this.optionalWords ? this.optionalWords.split(';') : undefined,
-			excludeWords: this.excludeWords ? this.excludeWords.split(';') : undefined,
-			hashtags: this.hashtags ? this.hashtags.split(';') : undefined,
-			mentions: this.mentions ? this.mentions.split(';') : undefined,
+			optionalWords: this.optionalWords ? this.optionalWords.split(',') : undefined,
+			excludeWords: this.excludeWords ? this.excludeWords.split(',') : undefined,
+			hashtags: this.hashtags ? this.hashtags.split(',') : undefined,
+			mentions: this.mentions ? this.mentions.split(',') : undefined,
 			minReplies: this.minReplies,
 			minLikes: this.minLikes,
 			minRetweets: this.minRetweets,
