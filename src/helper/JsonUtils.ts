@@ -47,24 +47,6 @@ export function findByFilter<T>(data: NonNullable<unknown>, key: string, value: 
 }
 
 /**
- * @param text - The text to be normalized.
- * @returns The text after being formatted to remove unnecessary characters.
- *
- * @internal
- */
-export function normalizeText(text: string): string {
-	let normalizedText: string = ''; // To store the normalized text
-
-	// Removing unnecessary full stops, and other characters
-	normalizedText = text.replace(/\n/g, '.').replace(/[.]+[\s+.\s+]+/g, '. ');
-
-	// Adding full-stop to the end if does not exist already
-	normalizedText = normalizedText.endsWith('.') ? normalizedText : normalizedText + '.';
-
-	return normalizedText;
-}
-
-/**
  * Searches for the key which has the given value in the given object.
  *
  * @param data - The data on which search is to be performed.
