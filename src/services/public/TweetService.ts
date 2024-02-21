@@ -261,9 +261,26 @@ export class TweetService extends FetcherService {
 	 * });
 	 * ```
 	 *
+	 * @example Posting a reply to a tweet
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Posting a simple text reply, to a tweet with id "1234567890"
+	 * rettiwt.tweet.tweet('Hello!', undefined, "1234567890")
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
 	 * @public
 	 */
-	public async tweet(text: string, media?: TweetMediaArgs[]): Promise<boolean> {
+	public async tweet(text: string, media?: TweetMediaArgs[], replyTo?: string): Promise<boolean> {
 		// Converting  JSON args to object
 		const tweet: TweetArgs = new TweetArgs({ text: text, media: media });
 
@@ -282,7 +299,9 @@ export class TweetService extends FetcherService {
 		}
 
 		// Posting the tweet
-		const data = await this.post(EResourceType.CREATE_TWEET, { tweet: { text: text, media: uploadedMedia } });
+		const data = await this.post(EResourceType.CREATE_TWEET, {
+			tweet: { text: text, media: uploadedMedia, replyTo: replyTo },
+		});
 
 		return data;
 	}
