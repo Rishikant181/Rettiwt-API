@@ -129,6 +129,8 @@ export class TweetService extends FetcherService {
 	 *   }
 	 * })();
 	 * ```
+	 *
+	 * @public
 	 */
 	public async *stream(query: StreamFilter, pollingIntervalMs: number = 30000): AsyncGenerator<Tweet> {
 		const startDate = new Date();
