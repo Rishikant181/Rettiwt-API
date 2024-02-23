@@ -118,7 +118,7 @@ export class TweetService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Streaming all upcoming tweets that mention the user 'user1'
+	 * // Streaming all upcoming tweets from user 'user1'
 	 * (async () => {
 	 *   try {
 	 *     for await (const tweet of rettiwt.stream({ fromUsers: ['user1'] })) {
