@@ -36,7 +36,7 @@ export class Tweet {
 	/** The full text content of the tweet. */
 	public fullText: string;
 
-	/** The rest id of the user to which the tweet is a reply. */
+	/** The rest id of the tweet to which the tweet is a reply. */
 	public replyTo: string;
 
 	/** The language in which the tweet is written. */
