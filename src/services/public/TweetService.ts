@@ -6,6 +6,7 @@ import { FetcherService } from '../internal/FetcherService';
 
 // TYPES
 import { IRettiwtConfig } from '../../types/RettiwtConfig';
+import { StreamFilter } from '../../types/StreamFilter';
 
 // MODELS
 import { Tweet } from '../../models/data/Tweet';
@@ -101,6 +102,71 @@ export class TweetService extends FetcherService {
 		data.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
 
 		return data;
+	}
+
+	/**
+	 * Stream tweets in pseudo real-time using a query.
+	 *
+	 * @param query - The query be used for searching the tweets.
+	 * @param pollingIntervalMs - The interval in milliseconds to poll for new tweets.
+	 * @returns An async generator that yields matching tweets as they are found.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Streaming all upcoming tweets from user 'user1'
+	 * (async () => {
+	 *   try {
+	 *     for await (const tweet of rettiwt.tweet.stream({ fromUsers: ['user1'] })) {
+	 *       console.log(tweet.fullText);
+	 *     }
+	 *   } catch (err) {
+	 *     console.log(err);
+	 *   }
+	 * })();
+	 * ```
+	 *
+	 * @public
+	 */
+	public async *stream(query: StreamFilter, pollingIntervalMs: number = 30000): AsyncGenerator<Tweet> {
+		const startDate = new Date();
+
+		let cursor: string | undefined = undefined;
+		let sinceId: string | undefined = undefined;
+		let nextSinceId: string | undefined = undefined;
+
+		while (true) {
+			// Pause execution for the specified polling interval before proceeding to the next iteration
+			await new Promise(resolve => setTimeout(resolve, pollingIntervalMs));
+
+			// Search for tweets
+			const tweets = await this.search({ ...query, startDate, sinceId }, undefined, cursor);
+
+			// Yield the matching tweets
+			for (const tweet of tweets.list) {
+				yield tweet;
+			}
+
+			// Store the most recent tweet ID from this batch
+			if (tweets.list.length > 0 && cursor === undefined) {
+				nextSinceId = tweets.list[0].id;
+			}
+
+			// If there are more tweets to fetch, adjust the cursor value
+			if (tweets.list.length > 0 && tweets.next) {
+				cursor = tweets.next.value;
+			}
+			// Else, start the next iteration from this batch's most recent tweet
+			else {
+				sinceId = nextSinceId;
+				nextSinceId = undefined;
+				cursor = undefined;
+			}
+		}
 	}
 
 	/**
