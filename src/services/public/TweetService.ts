@@ -163,7 +163,6 @@ export class TweetService extends FetcherService {
 			// Else, start the next iteration from this batch's most recent tweet
 			else {
 				sinceId = nextSinceId;
-				nextSinceId = undefined;
 				cursor = undefined;
 			}
 		}
