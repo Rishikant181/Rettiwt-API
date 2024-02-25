@@ -1,6 +1,6 @@
 {
 	"name": "rettiwt-api",
-	"version": "2.5.2",
+	"version": "2.5.3",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"description": "An API for fetching data from TwitterAPI, without any rate limits!",
@@ -34,7 +34,7 @@
 		"commander": "11.1.0",
 		"https-proxy-agent": "7.0.2",
 		"rettiwt-auth": "2.1.0",
-		"rettiwt-core": "3.3.1"
+		"rettiwt-core": "3.3.2"
 	},
 	"devDependencies": {
 		"@types/node": "20.4.1",
