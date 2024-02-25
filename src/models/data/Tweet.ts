@@ -75,7 +75,9 @@ export class Tweet {
 		this.entities = new TweetEntities(tweet.legacy.entities);
 		this.media = tweet.legacy.extended_entities?.media?.map((media) => new TweetMedia(media));
 		this.quoted = tweet.legacy.quoted_status_id_str;
-		this.fullText = normalizeText(tweet.legacy.full_text);
+		this.fullText = tweet.note_tweet
+			? tweet.note_tweet.note_tweet_results.result.text
+			: normalizeText(tweet.legacy.full_text);
 		this.replyTo = tweet.legacy.in_reply_to_status_id_str;
 		this.lang = tweet.legacy.lang;
 		this.quoteCount = tweet.legacy.quote_count;
