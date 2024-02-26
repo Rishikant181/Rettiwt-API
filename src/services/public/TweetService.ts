@@ -6,7 +6,6 @@ import { FetcherService } from '../internal/FetcherService';
 
 // TYPES
 import { IRettiwtConfig } from '../../types/RettiwtConfig';
-import { StreamFilter } from '../../types/StreamFilter';
 
 // MODELS
 import { Tweet } from '../../models/data/Tweet';
@@ -132,7 +131,7 @@ export class TweetService extends FetcherService {
 	 *
 	 * @public
 	 */
-	public async *stream(query: StreamFilter, pollingIntervalMs: number = 30000): AsyncGenerator<Tweet> {
+	public async *stream(filter: TweetFilter, pollingInterval: number = 60000): AsyncGenerator<Tweet> {
 		const startDate = new Date();
 
 		let cursor: string | undefined = undefined;
@@ -141,10 +140,10 @@ export class TweetService extends FetcherService {
 
 		while (true) {
 			// Pause execution for the specified polling interval before proceeding to the next iteration
-			await new Promise(resolve => setTimeout(resolve, pollingIntervalMs));
+			await new Promise((resolve) => setTimeout(resolve, pollingInterval));
 
 			// Search for tweets
-			const tweets = await this.search({ ...query, startDate, sinceId }, undefined, cursor);
+			const tweets = await this.search({ ...filter, startDate: startDate, sinceId: sinceId }, undefined, cursor);
 
 			// Yield the matching tweets
 			for (const tweet of tweets.list) {
