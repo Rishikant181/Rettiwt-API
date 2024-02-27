@@ -85,7 +85,7 @@ However, in this case, for accessing the CLI, you will be required to prepend th
 
 For example, for generating the API_KEY, the command will be modified as follows:
 
-`npx rettiwt auth login <email> <username> <password>`
+`npx rettiwt-api auth login <email> <username> <password>`
 
 ## The Rettiwt class
 
