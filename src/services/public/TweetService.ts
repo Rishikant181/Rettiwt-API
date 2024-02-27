@@ -118,7 +118,7 @@ export class TweetService extends FetcherService {
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
 	 * // Streaming all upcoming tweets from user 'user1'
-	 * async () => {
+	 * (async () => {
 	 * 	try {
 	 * 		for await (const tweet of rettiwt.tweet.stream({ fromUsers: ['user1'] }, 1000)) {
 	 * 			console.log(tweet.fullText);
@@ -127,7 +127,7 @@ export class TweetService extends FetcherService {
 	 * 	catch (err) {
 	 * 		console.log(err);
 	 * 	}
-	 * }();
+	 * })();
 	 * ```
 	 *
 	 * @public
