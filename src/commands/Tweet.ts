@@ -57,13 +57,27 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		.option('--exclude-replies', 'Matches the tweets that are not replies')
 		.option('-s, --start <string>', 'Matches the tweets made since the given date (valid date string)')
 		.option('-e, --end <string>', 'Matches the tweets made upto the given date (valid date string)')
+		.option('--stream', 'Stream the filtered tweets in pseudo-realtime')
+		.option('-i, --interval <number>', 'The polling interval (in ms) to use for streaming. Default is 60000')
 		.action(async (count?: string, cursor?: string, options?: TweetSearchOptions) => {
-			const tweets = await rettiwt.tweet.search(
-				new TweetSearchOptions(options).toTweetFilter(),
-				count ? parseInt(count) : undefined,
-				cursor,
-			);
-			output(tweets);
+			// If search results are to be streamed
+			if (options?.stream) {
+				for await (const tweet of rettiwt.tweet.stream(
+					new TweetSearchOptions(options).toTweetFilter(),
+					options?.interval,
+				)) {
+					output(tweet);
+				}
+			}
+			// If a normal search is to be done
+			else {
+				const tweets = await rettiwt.tweet.search(
+					new TweetSearchOptions(options).toTweetFilter(),
+					count ? parseInt(count) : undefined,
+					cursor,
+				);
+				output(tweets);
+			}
 		});
 
 	// List
@@ -166,6 +180,8 @@ class TweetSearchOptions {
 	public excludeReplies?: boolean = false;
 	public start?: string;
 	public end?: string;
+	public stream?: boolean;
+	public interval?: number;
 
 	/**
 	 * Initializes a new object from the given options.
@@ -189,6 +205,8 @@ class TweetSearchOptions {
 		this.excludeReplies = options?.excludeReplies;
 		this.start = options?.start;
 		this.end = options?.end;
+		this.stream = options?.stream;
+		this.interval = options?.interval;
 	}
 
 	/**

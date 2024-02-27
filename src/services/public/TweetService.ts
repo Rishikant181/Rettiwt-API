@@ -104,9 +104,9 @@ export class TweetService extends FetcherService {
 	}
 
 	/**
-	 * Stream tweets in pseudo real-time using a query.
+	 * Stream tweets in pseudo real-time using a filter.
 	 *
-	 * @param query - The query be used for searching the tweets.
+	 * @param filter - The filter to be used for searching the tweets.
 	 * @param pollingIntervalMs - The interval in milliseconds to poll for new tweets.
 	 * @returns An async generator that yields matching tweets as they are found.
 	 *
@@ -118,15 +118,16 @@ export class TweetService extends FetcherService {
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
 	 * // Streaming all upcoming tweets from user 'user1'
-	 * (async () => {
-	 *   try {
-	 *     for await (const tweet of rettiwt.tweet.stream({ fromUsers: ['user1'] })) {
-	 *       console.log(tweet.fullText);
-	 *     }
-	 *   } catch (err) {
-	 *     console.log(err);
-	 *   }
-	 * })();
+	 * async () => {
+	 * 	try {
+	 * 		for await (const tweet of rettiwt.tweet.stream({ fromUsers: ['user1'] })) {
+	 * 			console.log(tweet.fullText);
+	 * 		}
+	 * 	}
+	 * 	catch (err) {
+	 * 		console.log(err);
+	 * 	}
+	 * }();
 	 * ```
 	 *
 	 * @public
