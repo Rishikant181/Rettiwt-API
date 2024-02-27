@@ -9,9 +9,6 @@ import {
 // MODELS
 import { User } from './User';
 
-// PARSERS
-import { normalizeText } from '../../helper/JsonUtils';
-
 /**
  * The details of a single Tweet.
  *
@@ -39,7 +36,7 @@ export class Tweet {
 	/** The full text content of the tweet. */
 	public fullText: string;
 
-	/** The rest id of the user to which the tweet is a reply. */
+	/** The rest id of the tweet to which the tweet is a reply. */
 	public replyTo: string;
 
 	/** The language in which the tweet is written. */
@@ -75,9 +72,7 @@ export class Tweet {
 		this.entities = new TweetEntities(tweet.legacy.entities);
 		this.media = tweet.legacy.extended_entities?.media?.map((media) => new TweetMedia(media));
 		this.quoted = tweet.legacy.quoted_status_id_str;
-		this.fullText = tweet.note_tweet
-			? tweet.note_tweet.note_tweet_results.result.text
-			: normalizeText(tweet.legacy.full_text);
+		this.fullText = tweet.note_tweet ? tweet.note_tweet.note_tweet_results.result.text : tweet.legacy.full_text;
 		this.replyTo = tweet.legacy.in_reply_to_status_id_str;
 		this.lang = tweet.legacy.lang;
 		this.quoteCount = tweet.legacy.quote_count;

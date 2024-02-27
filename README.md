@@ -268,6 +268,7 @@ So far, the following operations are supported:
 -   [Retweeting/reposting a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#retweet)
 -   [Getting the list of users who retweeted/reposted a given tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#retweeters)
 -   [Searching for the list of tweets that match a given filter](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#search)
+-   [Streaming filtered tweets in pseudo-realtime](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#stream)
 -   [Posting a new tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#tweet)
 
 ### Users

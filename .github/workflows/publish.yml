@@ -3,7 +3,7 @@ run-name: Publishing the package to NPM
 
 on:
     release:
-        types: [created]
+        types: [released]
 
 jobs:
     # Packages and publishes the package to NPM

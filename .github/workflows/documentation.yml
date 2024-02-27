@@ -2,8 +2,8 @@ name: Documentation
 run-name: Building the documentation for the release
 
 on:
-    push:
-        branches: release
+    release:
+        types: [released]
 
 jobs:
     # Builds and packages the documentation
