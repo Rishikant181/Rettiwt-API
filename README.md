@@ -32,6 +32,7 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     -   Tweet Favoriters (likes)
     -   Tweet Retweeters (retweets)
     -   Tweet Search
+    -   Tweet Stream
     -   Tweet List
     -   User Details
     -   User Followers
