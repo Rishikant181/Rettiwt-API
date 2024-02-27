@@ -85,6 +85,10 @@ However, in this case, for accessing the CLI, you will be required to prepend th
 
 For example, for generating the API_KEY, the command will be modified as follows:
 
+`npx rettiwt auth login <email> <username> <password>`
+
+In case you do not have the package installed or you run the command outside a node project, you can use `rettiwt-api`.
+
 `npx rettiwt-api auth login <email> <username> <password>`
 
 ## The Rettiwt class
