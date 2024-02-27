@@ -290,6 +290,7 @@ export class TweetService extends FetcherService {
 	 *
 	 * @param text - The text to be posted, length must be \<= 280 characters.
 	 * @param media - The list of media to post in the tweet, max number of media must be \<= 4.
+	 * @param replyTo - The id of the tweet to which the reply is to be made.
 	 * @returns Whether posting was successful or not.
 	 *
 	 * @example Posting a simple text
