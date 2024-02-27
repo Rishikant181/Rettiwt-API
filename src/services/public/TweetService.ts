@@ -107,7 +107,7 @@ export class TweetService extends FetcherService {
 	 * Stream tweets in pseudo real-time using a filter.
 	 *
 	 * @param filter - The filter to be used for searching the tweets.
-	 * @param pollingIntervalMs - The interval in milliseconds to poll for new tweets. Default interval is 60000 ms.
+	 * @param pollingInterval - The interval in milliseconds to poll for new tweets. Default interval is 60000 ms.
 	 * @returns An async generator that yields matching tweets as they are found.
 	 *
 	 * @example
