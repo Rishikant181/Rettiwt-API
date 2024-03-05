@@ -321,10 +321,10 @@ export class FetcherService {
 	/**
 	 * Uploads the given media file to Twitter
 	 *
-	 * @param media - The path to the media file to upload.
+	 * @param media - The path or ArrayBuffer to the media file to upload.
 	 * @returns The id of the uploaded media.
 	 */
-	protected async upload(media: string): Promise<string> {
+	protected async upload(media: string | ArrayBuffer): Promise<string> {
 		// INITIALIZE
 
 		// Logging
@@ -333,7 +333,10 @@ export class FetcherService {
 		const id: string = (
 			await this.request<IMediaUploadInitializeResponse>(
 				new Request(EResourceType.MEDIA_UPLOAD, {
-					upload: { step: EUploadSteps.INITIALIZE, size: statSync(media).size },
+					upload: {
+						step: EUploadSteps.INITIALIZE,
+						size: typeof media == 'string' ? statSync(media).size : media.byteLength,
+					},
 				}).toAxiosRequestConfig(),
 			)
 		).data.media_id_string;
