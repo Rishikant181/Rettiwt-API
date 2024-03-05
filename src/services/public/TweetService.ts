@@ -310,7 +310,7 @@ export class TweetService extends FetcherService {
 	 * });
 	 * ```
 	 *
-	 * @example Posting a tweet with an image
+	 * @example Posting a tweet with an image stored locally
 	 * ```
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
@@ -321,6 +321,30 @@ export class TweetService extends FetcherService {
 	 * rettiwt.tweet.tweet('What a nice view!', [{ path: 'mountains.jpg' }])
 	 * .then(res => {
 	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @example Posting a tweet with an image from the web
+	 * ```
+	 * import axios from 'axios';
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the image from the web
+	 * axios.get('<url_to_cool_image>', {
+	 * 	responseType: 'arraybuffer'
+	 * })
+	 * .then(image => {
+	 * 	// Posting a tweet, containing the image as an ArrayBuffer, to twitter
+	 * 	rettiwt.tweet.tweet('What a nice view!', [{ path: image.data }])
+	 * 	.then(res => {
+	 * 		console.log(res);
+	 * 	})
 	 * })
 	 * .catch(err => {
 	 * 	console.log(err);
