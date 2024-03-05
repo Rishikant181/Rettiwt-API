@@ -209,6 +209,7 @@ export class FetcherService {
 			type == EResourceType.USER_LIKES ||
 			type == EResourceType.LIST_TWEETS ||
 			type == EResourceType.USER_HIGHLIGHTS ||
+			type == EResourceType.USER_MEDIA ||
 			type == EResourceType.USER_TWEETS ||
 			type == EResourceType.USER_TWEETS_AND_REPLIES
 		) {

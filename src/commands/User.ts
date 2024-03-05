@@ -68,6 +68,17 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			output(tweets);
 		});
 
+	// Media
+	user.command('media')
+		.description('Fetch the media timeline the given user')
+		.argument('<id>', 'The id of the user')
+		.argument('[count]', 'The number of media to fetch')
+		.argument('[cursor]', 'The cursor to the batch of media to fetch')
+		.action(async (id: string, count?: string, cursor?: string) => {
+			const media = await rettiwt.user.media(id, count ? parseInt(count) : undefined, cursor);
+			output(media);
+		});
+
 	// Timeline
 	user.command('timeline')
 		.description('Fetch the tweets timeline the given user')

@@ -165,7 +165,7 @@ export class UserService extends FetcherService {
 	}
 
 	/**
-	 * Get the list of highlighted tweets of the given user.
+	 * Get the highlighted tweets of the given user.
 	 *
 	 * @param userId - The rest id of the target user.
 	 * @param count - The number of followers to fetch, must be \<= 100.
@@ -241,7 +241,45 @@ export class UserService extends FetcherService {
 	}
 
 	/**
-	 * Get the timeline of the given user.
+	 * Get the media timeline of the given user
+	 *
+	 * @param userId - The rest id of the target user.
+	 * @param count - The number of media to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of media to fetch
+	 * @returns The media timeline of the target user.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the first 100 timeline media tweets of the User with id '12345678'
+	 * rettiwt.user.timeline('12345678')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @public
+	 */
+	public async media(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+		// Fetching the requested data
+		const data = await this.fetch<Tweet>(EResourceType.USER_MEDIA, {
+			id: userId,
+			count: count,
+			cursor: cursor,
+		});
+
+		return data;
+	}
+
+	/**
+	 * Get the tweet timeline of the given user.
 	 *
 	 * @param userId - The rest id of the target user.
 	 * @param count - The number of timeline items to fetch, must be \<= 20.
