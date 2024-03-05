@@ -94,19 +94,19 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 
 	// Likes
 	tweet
-		.command('likes')
+		.command('likers')
 		.description('Fetch the list of users who liked the given tweets')
 		.argument('<id>', 'The id of the tweet')
 		.argument('[count]', 'The number of likers to fetch')
 		.argument('[cursor]', 'The cursor to the batch of likers to fetch')
 		.action(async (id: string, count?: string, cursor?: string) => {
-			const tweets = await rettiwt.tweet.favoriters(id, count ? parseInt(count) : undefined, cursor);
+			const tweets = await rettiwt.tweet.likers(id, count ? parseInt(count) : undefined, cursor);
 			output(tweets);
 		});
 
 	// Retweets
 	tweet
-		.command('retweets')
+		.command('retweeters')
 		.description('Fetch the list of users who retweeted the given tweets')
 		.argument('<id>', 'The id of the tweet')
 		.argument('[count]', 'The number of retweeters to fetch')
@@ -143,7 +143,7 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		.description('Like a tweet')
 		.argument('<id>', 'The tweet to like')
 		.action(async (id: string) => {
-			const result = await rettiwt.tweet.favorite(id);
+			const result = await rettiwt.tweet.like(id);
 			output(result);
 		});
 
