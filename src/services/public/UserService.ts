@@ -127,7 +127,7 @@ export class UserService extends FetcherService {
 	}
 
 	/**
-	 * Get the list followers of a given user.
+	 * Get the list followers of the given user.
 	 *
 	 * @param userId - The rest id of the target user.
 	 * @param count - The number of followers to fetch, must be \<= 100.
@@ -156,6 +156,44 @@ export class UserService extends FetcherService {
 	public async followers(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Fetching the requested data
 		const data = await this.fetch<User>(EResourceType.USER_FOLLOWERS, {
+			id: userId,
+			count: count,
+			cursor: cursor,
+		});
+
+		return data;
+	}
+
+	/**
+	 * Get the list of highlighted tweets of the given user.
+	 *
+	 * @param userId - The rest id of the target user.
+	 * @param count - The number of followers to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of followers to fetch.
+	 * @returns The list of highlighted tweets of the target user.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the top 100 highlights of the User with id '12345678'
+	 * rettiwt.user.highlights('12345678')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @public
+	 */
+	public async highlights(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+		// Fetching the requested data
+		const data = await this.fetch<Tweet>(EResourceType.USER_HIGHLIGHTS, {
 			id: userId,
 			count: count,
 			cursor: cursor,
