@@ -281,9 +281,10 @@ So far, the following operations are supported:
 -   [Getting the list of users who are followed by the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#following)
 -   [Getting the list of highlighted tweets of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#highlights)
 -   [Getting the list of tweets favorited/liked by the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#likes)
--   [Getting the media timeline of a user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#media)
--   [Getting the tweet timeline of a user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#timeline)
--   [Getting the reply timeline of a user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#replies)
+-   [Getting the media timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#media)
+-   [Getting the list of subscriptions of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#subscriptions)
+-   [Getting the tweet timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#timeline)
+-   [Getting the reply timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#replies)
 
 ## CLI Usage
 

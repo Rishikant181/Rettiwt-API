@@ -279,12 +279,12 @@ export class UserService extends FetcherService {
 	}
 
 	/**
-	 * Get the list of users subscribed by the given user.
+	 * Get the list of subscriptions of the given user.
 	 *
 	 * @param userId - The rest id of the target user.
 	 * @param count - The number of subscriptions to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of subscriptions to fetch.
-	 * @returns The list of users subscribed by the target user.
+	 * @returns The list of subscriptions by the target user.
 	 *
 	 * @example
 	 * ```
