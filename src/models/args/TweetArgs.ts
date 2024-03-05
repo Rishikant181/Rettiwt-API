@@ -61,13 +61,14 @@ export class TweetArgs {
  */
 export class TweetMediaArgs {
 	/**
-	 * The path to the media file.
+	 * The media file to be posted.
+	 * Can be either a path to the media file or an ArrayBuffer containing the media file.
 	 *
 	 * @remarks The size of the media file must be \<= 5242880 bytes.
 	 */
 	@IsNotEmpty()
-	@IsString()
-	public path: string;
+	@IsObject()
+	public path: string | ArrayBuffer;
 
 	/**
 	 * The list of id of users to be tagged in the media.
