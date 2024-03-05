@@ -37,12 +37,24 @@ export class TweetArgs {
 	@IsObject({ each: true })
 	public media?: TweetMediaArgs[];
 
+	/**	The id of the tweet to which the reply is to be made. */
+	@IsOptional()
+	@IsNumberString()
+	public replyTo?: string;
+
+	/**	The id of the tweet to quote. */
+	@IsOptional()
+	@IsNumberString()
+	public quote?: string;
+
 	/**
 	 * @param tweet - The tweet arguments specifying the tweet.
 	 */
 	public constructor(tweet: TweetArgs) {
 		this.text = tweet.text;
 		this.media = tweet.media ? tweet.media.map((item) => new TweetMediaArgs(item)) : undefined;
+		this.replyTo = tweet.replyTo;
+		this.quote = tweet.quote;
 
 		// Validating this object
 		const validationResult = validateSync(this);

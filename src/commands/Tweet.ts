@@ -122,16 +122,18 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		.description('Post a tweet (text only)')
 		.argument('<text>', 'The text to post as a tweet')
 		.option('-m, --media [string]', 'Comma-separated list of path(s) to the media item(s) to be posted')
+		.option('-q, --quote [string]', 'The id of the tweet to quote in the tweet to be posted')
 		.option(
 			'-r, --reply [string]',
 			'The id of the tweet to which the reply is to be made, if the tweet is to be a reply',
 		)
-		.action(async (text: string, options?: { media?: string; reply?: string }) => {
-			const result = await rettiwt.tweet.tweet(
-				text,
-				options?.media ? options?.media.split(',').map((item) => ({ path: item })) : undefined,
-				options?.reply,
-			);
+		.action(async (text: string, options?: { media?: string; quote?: string; reply?: string }) => {
+			const result = await rettiwt.tweet.tweet({
+				text: text,
+				media: options?.media ? options?.media.split(',').map((item) => ({ path: item })) : undefined,
+				quote: options?.quote,
+				replyTo: options?.reply,
+			});
 			output(result);
 		});
 

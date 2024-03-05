@@ -11,7 +11,7 @@ import { IRettiwtConfig } from '../../types/RettiwtConfig';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
 import { CursoredData } from '../../models/data/CursoredData';
-import { TweetArgs, TweetMediaArgs } from '../../models/args/TweetArgs';
+import { TweetArgs } from '../../models/args/TweetArgs';
 
 /**
  * Handles fetching of data related to tweets.
@@ -288,9 +288,7 @@ export class TweetService extends FetcherService {
 	/**
 	 * Post a tweet.
 	 *
-	 * @param text - The text to be posted, length must be \<= 280 characters.
-	 * @param media - The list of media to post in the tweet, max number of media must be \<= 4.
-	 * @param replyTo - The id of the tweet to which the reply is to be made.
+	 * @param options - The options describing the tweet to be posted.
 	 * @returns Whether posting was successful or not.
 	 *
 	 * @example Posting a simple text
@@ -301,7 +299,7 @@ export class TweetService extends FetcherService {
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
 	 * // Posting a tweet to twitter
-	 * rettiwt.tweet.tweet('Hello World!')
+	 * rettiwt.tweet.tweet({ text: 'Hello World!' })
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -318,7 +316,7 @@ export class TweetService extends FetcherService {
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
 	 * // Posting a tweet, containing an image called 'mountains.jpg', to twitter
-	 * rettiwt.tweet.tweet('What a nice view!', [{ path: 'mountains.jpg' }])
+	 * rettiwt.tweet.tweet({ text: 'What a nice view!', media: [{ path: 'mountains.jpg' }] })
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -341,7 +339,7 @@ export class TweetService extends FetcherService {
 	 * })
 	 * .then(image => {
 	 * 	// Posting a tweet, containing the image as an ArrayBuffer, to twitter
-	 * 	rettiwt.tweet.tweet('What a nice view!', [{ path: image.data }])
+	 * 	rettiwt.tweet.tweet({ text: 'What a nice view!', media: [{ path: image.data }] })
 	 * 	.then(res => {
 	 * 		console.log(res);
 	 * 	})
@@ -359,7 +357,24 @@ export class TweetService extends FetcherService {
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
 	 * // Posting a simple text reply, to a tweet with id "1234567890"
-	 * rettiwt.tweet.tweet('Hello!', undefined, "1234567890")
+	 * rettiwt.tweet.tweet({ text: 'Hello!', replyTo: "1234567890" })
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * * @example Posting a reply to a tweet with a quoted tweet
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Posting a simple text tweet, quoting a tweet with id "1234567890"
+	 * rettiwt.tweet.tweet({ text: 'Hello!', quote: "1234567890" })
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -370,9 +385,9 @@ export class TweetService extends FetcherService {
 	 *
 	 * @public
 	 */
-	public async tweet(text: string, media?: TweetMediaArgs[], replyTo?: string): Promise<boolean> {
+	public async tweet(options: TweetArgs): Promise<boolean> {
 		// Converting  JSON args to object
-		const tweet: TweetArgs = new TweetArgs({ text: text, media: media });
+		const tweet: TweetArgs = new TweetArgs(options);
 
 		/** Stores the list of media that has been uploaded */
 		const uploadedMedia: MediaArgs[] = [];
@@ -390,7 +405,12 @@ export class TweetService extends FetcherService {
 
 		// Posting the tweet
 		const data = await this.post(EResourceType.CREATE_TWEET, {
-			tweet: { text: text, media: uploadedMedia, replyTo: replyTo },
+			tweet: {
+				text: options.text,
+				media: uploadedMedia,
+				quote: options.quote,
+				replyTo: options.replyTo,
+			},
 		});
 
 		return data;
