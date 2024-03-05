@@ -279,6 +279,7 @@ So far, the following operations are supported:
 -   [Getting the details of a user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#details)
 -   [Getting the list of users who follow the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#followers)
 -   [Getting the list of users who are followed by the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#following)
+-   [Getting the list of highlighted tweets of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#highlights)
 -   [Getting the list of tweets favorited/liked by the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#likes)
 -   [Getting the tweet timeline of a user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#timeline)
 -   [Getting the reply timeline of a user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#replies)
