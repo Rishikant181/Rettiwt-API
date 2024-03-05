@@ -263,16 +263,16 @@ So far, the following operations are supported:
 ### Tweets
 
 -   [Getting the details of a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#details)
--   [Favoriting/liking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#favorite)
--   [Getting the list of users who favorited/liked a given tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#favoriters)
+-   [Liking/favoriting a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#like)
+-   [Getting the list of users who liked/favorited a given tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#likers)
 -   [Getting the list of tweets from a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#list)
 -   [Retweeting/reposting a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#retweet)
 -   [Getting the list of users who retweeted/reposted a given tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#retweeters)
 -   [Searching for the list of tweets that match a given filter](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#search)
 -   [Streaming filtered tweets in pseudo-realtime](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#stream)
--   [Posting a new tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#tweet)
--   [Posting a reply](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#tweet)
--   [Posting a quote tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#tweet)
+-   [Tweeting/posting a new tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#tweet)
+-   [Replying to a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#tweet)
+-   [Tweeting a quote tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#tweet)
 
 ### Users
 
