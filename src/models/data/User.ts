@@ -60,7 +60,7 @@ export class User {
 		this.fullName = user.legacy.name;
 		this.createdAt = user.legacy.created_at;
 		this.description = user.legacy.description;
-		this.isVerified = user.legacy.verified;
+		this.isVerified = user.is_blue_verified;
 		this.favouritesCount = user.legacy.favourites_count;
 		this.followersCount = user.legacy.followers_count;
 		this.followingsCount = user.legacy.friends_count;
