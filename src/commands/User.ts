@@ -46,6 +46,17 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			output(users);
 		});
 
+	// Highlights
+	user.command('highlights')
+		.description('Fetch the list of highlighted tweets of the given user')
+		.argument('<id>', 'The id of the user')
+		.argument('[count]', 'The number of highlighted tweets to fetch')
+		.argument('[cursor]', 'The cursor to the batch of highlights to fetch')
+		.action(async (id: string, count?: string, cursor?: string) => {
+			const tweets = await rettiwt.user.highlights(id, count ? parseInt(count) : undefined, cursor);
+			output(tweets);
+		});
+
 	// Likes
 	user.command('likes')
 		.description('Fetch the list of tweets liked by the given user')
@@ -53,8 +64,8 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 		.argument('[count]', 'The number of liked tweets to fetch')
 		.argument('[cursor]', 'The cursor to the batch of liked tweets to fetch')
 		.action(async (id: string, count?: string, cursor?: string) => {
-			const users = await rettiwt.user.likes(id, count ? parseInt(count) : undefined, cursor);
-			output(users);
+			const tweets = await rettiwt.user.likes(id, count ? parseInt(count) : undefined, cursor);
+			output(tweets);
 		});
 
 	// Timeline
@@ -64,8 +75,8 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 		.argument('[count]', 'The number of tweets to fetch')
 		.argument('[cursor]', 'The cursor to the batch of tweets to fetch')
 		.action(async (id: string, count?: string, cursor?: string) => {
-			const users = await rettiwt.user.timeline(id, count ? parseInt(count) : undefined, cursor);
-			output(users);
+			const tweets = await rettiwt.user.timeline(id, count ? parseInt(count) : undefined, cursor);
+			output(tweets);
 		});
 
 	// Replies
@@ -75,8 +86,8 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 		.argument('[count]', 'The number of replies to fetch')
 		.argument('[cursor]', 'The cursor to the batch of replies to fetch')
 		.action(async (id: string, count?: string, cursor?: string) => {
-			const users = await rettiwt.user.replies(id, count ? parseInt(count) : undefined, cursor);
-			output(users);
+			const replies = await rettiwt.user.replies(id, count ? parseInt(count) : undefined, cursor);
+			output(replies);
 		});
 
 	return user;
