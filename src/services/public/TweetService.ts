@@ -236,7 +236,7 @@ export class TweetService extends FetcherService {
 	 *
 	 * @public
 	 */
-	public async favoriters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+	public async likers(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Fetching the requested data
 		const data = await this.fetch<User>(EResourceType.TWEET_FAVORITERS, {
 			id: tweetId,
@@ -417,10 +417,10 @@ export class TweetService extends FetcherService {
 	}
 
 	/**
-	 * Favorite the tweet with the given id.
+	 * Like the tweet with the given id.
 	 *
-	 * @param tweetId - The id of the tweet to be favorited.
-	 * @returns Whether favoriting was successful or not.
+	 * @param tweetId - The id of the tweet to be liked.
+	 * @returns Whether liking was successful or not.
 	 *
 	 * @example
 	 * ```
@@ -441,7 +441,7 @@ export class TweetService extends FetcherService {
 	 *
 	 * @public
 	 */
-	public async favorite(tweetId: string): Promise<boolean> {
+	public async like(tweetId: string): Promise<boolean> {
 		// Favoriting the tweet
 		const data = await this.post(EResourceType.FAVORITE_TWEET, { id: tweetId });
 
