@@ -279,6 +279,44 @@ export class UserService extends FetcherService {
 	}
 
 	/**
+	 * Get the list of users subscribed by the given user.
+	 *
+	 * @param userId - The rest id of the target user.
+	 * @param count - The number of subscriptions to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of subscriptions to fetch.
+	 * @returns The list of users subscribed by the target user.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the first 100 subscriptions of the User with id '12345678'
+	 * rettiwt.user.subscriptions('12345678')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @public
+	 */
+	public async subscriptions(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+		// Fetching the requested data
+		const data = await this.fetch<User>(EResourceType.USER_SUBSCRIPTIONS, {
+			id: userId,
+			count: count,
+			cursor: cursor,
+		});
+
+		return data;
+	}
+
+	/**
 	 * Get the tweet timeline of the given user.
 	 *
 	 * @param userId - The rest id of the target user.

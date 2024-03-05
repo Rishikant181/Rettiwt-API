@@ -220,7 +220,8 @@ export class FetcherService {
 			type == EResourceType.TWEET_FAVORITERS ||
 			type == EResourceType.TWEET_RETWEETERS ||
 			type == EResourceType.USER_FOLLOWERS ||
-			type == EResourceType.USER_FOLLOWING
+			type == EResourceType.USER_FOLLOWING ||
+			type == EResourceType.USER_SUBSCRIPTIONS
 		) {
 			required = findByFilter<ITimelineUser>(data, '__typename', 'TimelineUser').map(
 				(item) => item.user_results.result,
