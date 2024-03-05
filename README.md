@@ -271,6 +271,8 @@ So far, the following operations are supported:
 -   [Searching for the list of tweets that match a given filter](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#search)
 -   [Streaming filtered tweets in pseudo-realtime](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#stream)
 -   [Posting a new tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#tweet)
+-   [Posting a reply](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#tweet)
+-   [Posting a quote tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#tweet)
 
 ### Users
 
