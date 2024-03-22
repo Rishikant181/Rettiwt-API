@@ -1,17 +1,13 @@
 // PACKAGES
 import {
 	Request,
-	FetchArgs,
-	PostArgs,
-	EResourceType,
 	ICursor as IRawCursor,
 	ITweet as IRawTweet,
 	IUser as IRawUser,
 	ITimelineTweet,
 	ITimelineUser,
 	IResponse,
-	EUploadSteps,
-	IMediaUploadInitializeResponse,
+	IInitializeMediaUploadResponse,
 } from 'rettiwt-core';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import https, { Agent } from 'https';
@@ -29,8 +25,11 @@ import { IErrorHandler } from '../../types/ErrorHandler';
 // ENUMS
 import { EApiErrors } from '../../enums/Api';
 import { ELogActions } from '../../enums/Logging';
+import { EResourceType, EUploadSteps } from '../../enums/Resource';
 
 // MODELS
+import { FetchArgs } from '../../models/args/FetchArgs';
+import { PostArgs, UploadArgs } from '../../models/args/PostArgs';
 import { CursoredData } from '../../models/data/CursoredData';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
@@ -152,12 +151,16 @@ export class FetcherService {
 	 * Makes an HTTP request according to the given parameters.
 	 *
 	 * @typeParam ResType - The type of the returned response data.
+	 * @param resourceType - The type of resource to fetch.
 	 * @param config - The request configuration.
 	 * @returns The response received.
 	 */
-	private async request<ResType>(config: AxiosRequestConfig): Promise<AxiosResponse<ResType>> {
+	private async request<ResType>(
+		resourceType: EResourceType,
+		config: AxiosRequestConfig,
+	): Promise<AxiosResponse<ResType>> {
 		// Checking authorization for the requested resource
-		this.checkAuthorization(config.url as EResourceType);
+		this.checkAuthorization(resourceType);
 
 		// If not authenticated, use guest authentication
 		this.cred = this.cred ?? (await new Auth({ proxyUrl: this.authProxyUrl }).getGuestCredential());
@@ -276,21 +279,23 @@ export class FetcherService {
 	 *
 	 * @param resourceType - The type of resource to fetch.
 	 * @param args - Resource specific arguments.
+	 * @param config - The generated request configuration.
 	 * @typeParam OutType - The type of deserialized data returned.
 	 * @returns The processed data requested from Twitter.
 	 */
 	protected async fetch<OutType extends Tweet | User>(
 		resourceType: EResourceType,
 		args: FetchArgs,
+		config: AxiosRequestConfig,
 	): Promise<CursoredData<OutType>> {
 		// Logging
 		this.logger.log(ELogActions.FETCH, { resourceType: resourceType, args: args });
 
-		// Preparing the HTTP request
-		const request: AxiosRequestConfig = new Request(resourceType, args).toAxiosRequestConfig();
+		// Validating args
+		new FetchArgs(resourceType, args);
 
 		// Getting the raw data
-		const res = await this.request<IResponse<unknown>>(request).then((res) => res.data);
+		const res = await this.request<IResponse<unknown>>(resourceType, config).then((res) => res.data);
 
 		// Extracting data
 		const extractedData = this.extractData(res, resourceType);
@@ -306,17 +311,18 @@ export class FetcherService {
 	 *
 	 * @param resourceType - The type of resource to post.
 	 * @param args - Resource specific arguments.
+	 * @param config - The generated request configuration.
 	 * @returns Whether posting was successful or not.
 	 */
-	protected async post(resourceType: EResourceType, args: PostArgs): Promise<boolean> {
+	protected async post(resourceType: EResourceType, args: PostArgs, config: AxiosRequestConfig): Promise<boolean> {
 		// Logging
 		this.logger.log(ELogActions.POST, { resourceType: resourceType, args: args });
 
-		// Preparing the HTTP request
-		const request: AxiosRequestConfig = new Request(resourceType, args).toAxiosRequestConfig();
+		// Validating args
+		new PostArgs(resourceType, args);
 
 		// Posting the data
-		await this.request<unknown>(request);
+		await this.request<unknown>(resourceType, config);
 
 		return true;
 	}
@@ -333,14 +339,16 @@ export class FetcherService {
 		// Logging
 		this.logger.log(ELogActions.UPLOAD, { step: EUploadSteps.INITIALIZE });
 
+		// Getting media size
+		const size = typeof media == 'string' ? statSync(media).size : media.byteLength;
+
+		// Validating args
+		new UploadArgs({ step: EUploadSteps.INITIALIZE, size: size });
+
 		const id: string = (
-			await this.request<IMediaUploadInitializeResponse>(
-				new Request(EResourceType.MEDIA_UPLOAD, {
-					upload: {
-						step: EUploadSteps.INITIALIZE,
-						size: typeof media == 'string' ? statSync(media).size : media.byteLength,
-					},
-				}).toAxiosRequestConfig(),
+			await this.request<IInitializeMediaUploadResponse>(
+				EResourceType.MEDIA_UPLOAD,
+				new Request().media.initializeUpload(size),
 			)
 		).data.media_id_string;
 
@@ -349,22 +357,20 @@ export class FetcherService {
 		// Logging
 		this.logger.log(ELogActions.UPLOAD, { step: EUploadSteps.APPEND });
 
-		await this.request<unknown>(
-			new Request(EResourceType.MEDIA_UPLOAD, {
-				upload: { step: EUploadSteps.APPEND, id: id, media: media },
-			}).toAxiosRequestConfig(),
-		);
+		// Validating args
+		new UploadArgs({ step: EUploadSteps.APPEND, id: id, media: media });
+
+		await this.request<unknown>(EResourceType.MEDIA_UPLOAD, new Request().media.appendUpload(id, media));
 
 		// FINALIZE
 
 		// Logging
 		this.logger.log(ELogActions.UPLOAD, { step: EUploadSteps.APPEND });
 
-		await this.request<unknown>(
-			new Request(EResourceType.MEDIA_UPLOAD, {
-				upload: { step: EUploadSteps.FINALIZE, id: id },
-			}).toAxiosRequestConfig(),
-		);
+		// Validating args
+		new UploadArgs({ step: EUploadSteps.FINALIZE, id: id });
+
+		await this.request<unknown>(EResourceType.MEDIA_UPLOAD, new Request().media.finalizeUpload(id));
 
 		return id;
 	}

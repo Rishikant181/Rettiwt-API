@@ -1,5 +1,5 @@
 // PACKAGES
-import { IMediaUploadInitializeResponse } from 'rettiwt-core';
+import { IInitializeMediaUploadResponse } from 'rettiwt-core';
 
 /**
  * The details of a single media file.
@@ -13,7 +13,7 @@ export class Media {
 	/**
 	 * @param media - The raw media data.
 	 */
-	public constructor(media: IMediaUploadInitializeResponse) {
+	public constructor(media: IInitializeMediaUploadResponse) {
 		this.id = media.media_id_string;
 	}
 }

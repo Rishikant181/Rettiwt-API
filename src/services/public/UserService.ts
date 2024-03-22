@@ -1,11 +1,14 @@
 // PACKAGES
-import { EResourceType } from 'rettiwt-core';
+import { Request } from 'rettiwt-core';
 
 // SERVICES
 import { FetcherService } from '../internal/FetcherService';
 
 // TYPES
 import { IRettiwtConfig } from '../../types/RettiwtConfig';
+
+// ENUMS
+import { EResourceType } from '../../enums/Resource';
 
 // MODELS
 import { User } from '../../models/data/User';
@@ -77,12 +80,20 @@ export class UserService extends FetcherService {
 		// If username is given
 		if (isNaN(Number(id))) {
 			// Fetching the requested data
-			data = await this.fetch<User>(EResourceType.USER_DETAILS, { id: id });
+			data = await this.fetch<User>(
+				EResourceType.USER_DETAILS,
+				{ id: id },
+				new Request().user.detailsByUsername(id),
+			);
 		}
 		// If id is given
 		else {
 			// Fetching the requested data
-			data = await this.fetch<User>(EResourceType.USER_DETAILS_BY_ID, { id: id });
+			data = await this.fetch<User>(
+				EResourceType.USER_DETAILS_BY_ID,
+				{ id: id },
+				new Request().user.detailsById(id),
+			);
 		}
 
 		return data.list[0];
@@ -117,11 +128,15 @@ export class UserService extends FetcherService {
 	 */
 	public async following(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Fetching the requested data
-		const data = await this.fetch<User>(EResourceType.USER_FOLLOWING, {
-			id: userId,
-			count: count,
-			cursor: cursor,
-		});
+		const data = await this.fetch<User>(
+			EResourceType.USER_FOLLOWING,
+			{
+				id: userId,
+				count: count,
+				cursor: cursor,
+			},
+			new Request().user.following(userId, count, cursor),
+		);
 
 		return data;
 	}
@@ -155,11 +170,15 @@ export class UserService extends FetcherService {
 	 */
 	public async followers(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Fetching the requested data
-		const data = await this.fetch<User>(EResourceType.USER_FOLLOWERS, {
-			id: userId,
-			count: count,
-			cursor: cursor,
-		});
+		const data = await this.fetch<User>(
+			EResourceType.USER_FOLLOWERS,
+			{
+				id: userId,
+				count: count,
+				cursor: cursor,
+			},
+			new Request().user.followers(userId, count, cursor),
+		);
 
 		return data;
 	}
@@ -193,11 +212,15 @@ export class UserService extends FetcherService {
 	 */
 	public async highlights(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Fetching the requested data
-		const data = await this.fetch<Tweet>(EResourceType.USER_HIGHLIGHTS, {
-			id: userId,
-			count: count,
-			cursor: cursor,
-		});
+		const data = await this.fetch<Tweet>(
+			EResourceType.USER_HIGHLIGHTS,
+			{
+				id: userId,
+				count: count,
+				cursor: cursor,
+			},
+			new Request().user.highlights(userId, count, cursor),
+		);
 
 		return data;
 	}
@@ -231,11 +254,15 @@ export class UserService extends FetcherService {
 	 */
 	public async likes(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Fetching the requested data
-		const data = await this.fetch<Tweet>(EResourceType.USER_LIKES, {
-			id: userId,
-			count: count,
-			cursor: cursor,
-		});
+		const data = await this.fetch<Tweet>(
+			EResourceType.USER_LIKES,
+			{
+				id: userId,
+				count: count,
+				cursor: cursor,
+			},
+			new Request().user.likes(userId, count, cursor),
+		);
 
 		return data;
 	}
@@ -269,11 +296,15 @@ export class UserService extends FetcherService {
 	 */
 	public async media(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Fetching the requested data
-		const data = await this.fetch<Tweet>(EResourceType.USER_MEDIA, {
-			id: userId,
-			count: count,
-			cursor: cursor,
-		});
+		const data = await this.fetch<Tweet>(
+			EResourceType.USER_MEDIA,
+			{
+				id: userId,
+				count: count,
+				cursor: cursor,
+			},
+			new Request().user.media(userId, count, cursor),
+		);
 
 		return data;
 	}
@@ -307,11 +338,15 @@ export class UserService extends FetcherService {
 	 */
 	public async subscriptions(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Fetching the requested data
-		const data = await this.fetch<User>(EResourceType.USER_SUBSCRIPTIONS, {
-			id: userId,
-			count: count,
-			cursor: cursor,
-		});
+		const data = await this.fetch<User>(
+			EResourceType.USER_SUBSCRIPTIONS,
+			{
+				id: userId,
+				count: count,
+				cursor: cursor,
+			},
+			new Request().user.subscriptions(userId, count, cursor),
+		);
 
 		return data;
 	}
@@ -349,11 +384,15 @@ export class UserService extends FetcherService {
 	 */
 	public async timeline(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Fetching the requested data
-		const data = await this.fetch<Tweet>(EResourceType.USER_TWEETS, {
-			id: userId,
-			count: count,
-			cursor: cursor,
-		});
+		const data = await this.fetch<Tweet>(
+			EResourceType.USER_TWEETS,
+			{
+				id: userId,
+				count: count,
+				cursor: cursor,
+			},
+			new Request().user.tweets(userId, count, cursor),
+		);
 
 		return data;
 	}
@@ -389,11 +428,15 @@ export class UserService extends FetcherService {
 	 */
 	public async replies(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Fetching the requested data
-		const data = await this.fetch<Tweet>(EResourceType.USER_TWEETS_AND_REPLIES, {
-			id: userId,
-			count: count,
-			cursor: cursor,
-		});
+		const data = await this.fetch<Tweet>(
+			EResourceType.USER_TWEETS_AND_REPLIES,
+			{
+				id: userId,
+				count: count,
+				cursor: cursor,
+			},
+			new Request().user.tweetsAndReplies(userId, count, cursor),
+		);
 
 		// Filtering out other tweets made by other users in the same threads
 		data.list = data.list.filter((tweet) => tweet.tweetBy.id == userId);

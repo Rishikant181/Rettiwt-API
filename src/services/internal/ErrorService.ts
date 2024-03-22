@@ -6,9 +6,8 @@ import { findKeyByValue } from '../../helper/JsonUtils';
 import { IErrorHandler } from '../../types/ErrorHandler';
 
 // ENUMS
-import { EApiErrors } from '../../enums/Api';
+import { EApiErrors, EErrorCodes } from '../../enums/Api';
 import { EHttpStatus } from '../../enums/Http';
-import { EErrorCodes } from 'rettiwt-core';
 
 // ERRORS
 import { ApiError } from '../../models/errors/ApiError';

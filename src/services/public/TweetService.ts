@@ -1,5 +1,5 @@
 // PACKAGES
-import { EResourceType, MediaArgs, TweetFilter } from 'rettiwt-core';
+import { Request, TweetFilter } from 'rettiwt-core';
 
 // SERVICES
 import { FetcherService } from '../internal/FetcherService';
@@ -7,10 +7,14 @@ import { FetcherService } from '../internal/FetcherService';
 // TYPES
 import { IRettiwtConfig } from '../../types/RettiwtConfig';
 
+// ENUMS
+import { EResourceType } from '../../enums/Resource';
+
 // MODELS
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
 import { CursoredData } from '../../models/data/CursoredData';
+import { MediaArgs } from '../../models/args/PostArgs';
 import { TweetArgs } from '../../models/args/TweetArgs';
 
 /**
@@ -55,7 +59,7 @@ export class TweetService extends FetcherService {
 	 */
 	public async details(id: string): Promise<Tweet> {
 		// Fetching the requested data
-		const data = await this.fetch<Tweet>(EResourceType.TWEET_DETAILS, { id: id });
+		const data = await this.fetch<Tweet>(EResourceType.TWEET_DETAILS, { id: id }, new Request().tweet.details(id));
 
 		return data.list[0];
 	}
@@ -91,11 +95,15 @@ export class TweetService extends FetcherService {
 	 */
 	public async search(query: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Fetching the requested data
-		const data = await this.fetch<Tweet>(EResourceType.TWEET_SEARCH, {
-			filter: query,
-			count: count,
-			cursor: cursor,
-		});
+		const data = await this.fetch<Tweet>(
+			EResourceType.TWEET_SEARCH,
+			{
+				filter: query,
+				count: count,
+				cursor: cursor,
+			},
+			new Request().tweet.search(query),
+		);
 
 		// Sorting the tweets by date, from recent to oldest
 		data.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
@@ -197,11 +205,15 @@ export class TweetService extends FetcherService {
 	 */
 	public async list(listId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Fetching the requested data
-		const data = await this.fetch<Tweet>(EResourceType.LIST_TWEETS, {
-			id: listId,
-			count: count,
-			cursor: cursor,
-		});
+		const data = await this.fetch<Tweet>(
+			EResourceType.LIST_TWEETS,
+			{
+				id: listId,
+				count: count,
+				cursor: cursor,
+			},
+			new Request().list.tweets(listId, count, cursor),
+		);
 
 		// Sorting the tweets by date, from recent to oldest
 		data.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
@@ -238,11 +250,15 @@ export class TweetService extends FetcherService {
 	 */
 	public async likers(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Fetching the requested data
-		const data = await this.fetch<User>(EResourceType.TWEET_FAVORITERS, {
-			id: tweetId,
-			count: count,
-			cursor: cursor,
-		});
+		const data = await this.fetch<User>(
+			EResourceType.TWEET_FAVORITERS,
+			{
+				id: tweetId,
+				count: count,
+				cursor: cursor,
+			},
+			new Request().tweet.likers(tweetId, count, cursor),
+		);
 
 		return data;
 	}
@@ -276,11 +292,15 @@ export class TweetService extends FetcherService {
 	 */
 	public async retweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Fetching the requested data
-		const data = await this.fetch<User>(EResourceType.TWEET_RETWEETERS, {
-			id: tweetId,
-			count: count,
-			cursor: cursor,
-		});
+		const data = await this.fetch<User>(
+			EResourceType.TWEET_RETWEETERS,
+			{
+				id: tweetId,
+				count: count,
+				cursor: cursor,
+			},
+			new Request().tweet.retweeters(tweetId, count, cursor),
+		);
 
 		return data;
 	}
@@ -404,14 +424,23 @@ export class TweetService extends FetcherService {
 		}
 
 		// Posting the tweet
-		const data = await this.post(EResourceType.CREATE_TWEET, {
-			tweet: {
+		const data = await this.post(
+			EResourceType.CREATE_TWEET,
+			{
+				tweet: {
+					text: options.text,
+					media: uploadedMedia,
+					quote: options.quote,
+					replyTo: options.replyTo,
+				},
+			},
+			new Request().tweet.post({
 				text: options.text,
 				media: uploadedMedia,
 				quote: options.quote,
 				replyTo: options.replyTo,
-			},
-		});
+			}),
+		);
 
 		return data;
 	}
@@ -443,7 +472,7 @@ export class TweetService extends FetcherService {
 	 */
 	public async like(tweetId: string): Promise<boolean> {
 		// Favoriting the tweet
-		const data = await this.post(EResourceType.FAVORITE_TWEET, { id: tweetId });
+		const data = await this.post(EResourceType.FAVORITE_TWEET, { id: tweetId }, new Request().tweet.like(tweetId));
 
 		return data;
 	}
@@ -475,7 +504,11 @@ export class TweetService extends FetcherService {
 	 */
 	public async retweet(tweetId: string): Promise<boolean> {
 		// Retweeting the tweet
-		const data = await this.post(EResourceType.CREATE_RETWEET, { id: tweetId });
+		const data = await this.post(
+			EResourceType.CREATE_RETWEET,
+			{ id: tweetId },
+			new Request().tweet.retweet(tweetId),
+		);
 
 		return data;
 	}

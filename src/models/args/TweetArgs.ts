@@ -10,7 +10,9 @@ import {
 	MaxLength,
 	validateSync,
 } from 'class-validator';
-import { DataValidationError } from 'rettiwt-core';
+
+// MODELS
+import { DataValidationError } from '../errors/DataValidationError';
 
 /**
  * The arguments specifying the tweet to be posted.
