@@ -38,6 +38,9 @@ import { User } from '../../models/data/User';
 import { findByFilter } from '../../helper/JsonUtils';
 import { statSync } from 'fs';
 
+// COLLECTIONS
+import { requests } from '../../collections/Requests';
+
 /**
  * The base service that handles all HTTP requests.
  *
@@ -279,20 +282,21 @@ export class FetcherService {
 	 *
 	 * @param resourceType - The type of resource to fetch.
 	 * @param args - Resource specific arguments.
-	 * @param config - The generated request configuration.
 	 * @typeParam OutType - The type of deserialized data returned.
 	 * @returns The processed data requested from Twitter.
 	 */
 	protected async fetch<OutType extends Tweet | User>(
 		resourceType: EResourceType,
 		args: FetchArgs,
-		config: AxiosRequestConfig,
 	): Promise<CursoredData<OutType>> {
 		// Logging
 		this.logger.log(ELogActions.FETCH, { resourceType: resourceType, args: args });
 
 		// Validating args
-		new FetchArgs(resourceType, args);
+		args = new FetchArgs(resourceType, args);
+
+		// Getting the request config
+		const config = requests[resourceType](args);
 
 		// Getting the raw data
 		const res = await this.request<IResponse<unknown>>(resourceType, config).then((res) => res.data);
@@ -311,15 +315,17 @@ export class FetcherService {
 	 *
 	 * @param resourceType - The type of resource to post.
 	 * @param args - Resource specific arguments.
-	 * @param config - The generated request configuration.
 	 * @returns Whether posting was successful or not.
 	 */
-	protected async post(resourceType: EResourceType, args: PostArgs, config: AxiosRequestConfig): Promise<boolean> {
+	protected async post(resourceType: EResourceType, args: PostArgs): Promise<boolean> {
 		// Logging
 		this.logger.log(ELogActions.POST, { resourceType: resourceType, args: args });
 
 		// Validating args
-		new PostArgs(resourceType, args);
+		args = new PostArgs(resourceType, args);
+
+		// Getting the request config
+		const config = requests[resourceType](args);
 
 		// Posting the data
 		await this.request<unknown>(resourceType, config);
