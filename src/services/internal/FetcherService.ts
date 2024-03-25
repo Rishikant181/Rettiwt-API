@@ -1,6 +1,5 @@
 // PACKAGES
 import {
-	Request,
 	ICursor as IRawCursor,
 	ITweet as IRawTweet,
 	IUser as IRawUser,
@@ -9,7 +8,7 @@ import {
 	IResponse,
 	IInitializeMediaUploadResponse,
 } from 'rettiwt-core';
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import https, { Agent } from 'https';
 import { AuthCredential, Auth } from 'rettiwt-auth';
 import { HttpsProxyAgent } from 'https-proxy-agent';
@@ -29,7 +28,7 @@ import { EResourceType } from '../../enums/Resource';
 
 // MODELS
 import { FetchArgs } from '../../models/args/FetchArgs';
-import { PostArgs, UploadArgs } from '../../models/args/PostArgs';
+import { PostArgs } from '../../models/args/PostArgs';
 import { CursoredData } from '../../models/data/CursoredData';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
@@ -160,13 +159,16 @@ export class FetcherService {
 	 */
 	private async request<ResType>(
 		resourceType: EResourceType,
-		config: AxiosRequestConfig,
+		args: FetchArgs | PostArgs,
 	): Promise<AxiosResponse<ResType>> {
 		// Checking authorization for the requested resource
 		this.checkAuthorization(resourceType);
 
 		// If not authenticated, use guest authentication
 		this.cred = this.cred ?? (await new Auth({ proxyUrl: this.authProxyUrl }).getGuestCredential());
+
+		// Getting request configuration
+		const config = requests[resourceType](args);
 
 		// Setting additional request parameters
 		config.headers = { ...config.headers, ...this.cred.toHeader() };
@@ -295,11 +297,8 @@ export class FetcherService {
 		// Validating args
 		args = new FetchArgs(resourceType, args);
 
-		// Getting the request config
-		const config = requests[resourceType](args);
-
 		// Getting the raw data
-		const res = await this.request<IResponse<unknown>>(resourceType, config).then((res) => res.data);
+		const res = await this.request<IResponse<unknown>>(resourceType, args).then((res) => res.data);
 
 		// Extracting data
 		const extractedData = this.extractData(res, resourceType);
@@ -324,11 +323,8 @@ export class FetcherService {
 		// Validating args
 		args = new PostArgs(resourceType, args);
 
-		// Getting the request config
-		const config = requests[resourceType](args);
-
 		// Posting the data
-		await this.request<unknown>(resourceType, config);
+		await this.request<unknown>(resourceType, args);
 
 		return true;
 	}
@@ -349,13 +345,10 @@ export class FetcherService {
 		const size = typeof media == 'string' ? statSync(media).size : media.byteLength;
 
 		// Validating args
-		new UploadArgs(EResourceType.MEDIA_UPLOAD_INITIALIZE, { size: size });
+		let args = new PostArgs(EResourceType.MEDIA_UPLOAD_INITIALIZE, { upload: { size: size } });
 
 		const id: string = (
-			await this.request<IInitializeMediaUploadResponse>(
-				EResourceType.MEDIA_UPLOAD_INITIALIZE,
-				new Request().media.initializeUpload(size),
-			)
+			await this.request<IInitializeMediaUploadResponse>(EResourceType.MEDIA_UPLOAD_INITIALIZE, args)
 		).data.media_id_string;
 
 		// APPEND
@@ -364,9 +357,9 @@ export class FetcherService {
 		this.logger.log(ELogActions.UPLOAD, { step: EResourceType.MEDIA_UPLOAD_APPEND });
 
 		// Validating args
-		new UploadArgs(EResourceType.MEDIA_UPLOAD_APPEND, { id: id, media: media });
+		args = new PostArgs(EResourceType.MEDIA_UPLOAD_APPEND, { upload: { id: id, media: media } });
 
-		await this.request<unknown>(EResourceType.MEDIA_UPLOAD_APPEND, new Request().media.appendUpload(id, media));
+		await this.request<unknown>(EResourceType.MEDIA_UPLOAD_APPEND, args);
 
 		// FINALIZE
 
@@ -374,9 +367,9 @@ export class FetcherService {
 		this.logger.log(ELogActions.UPLOAD, { step: EResourceType.MEDIA_UPLOAD_INITIALIZE });
 
 		// Validating args
-		new UploadArgs(EResourceType.MEDIA_UPLOAD_FINALIZE, { id: id });
+		args = new PostArgs(EResourceType.MEDIA_UPLOAD_FINALIZE, { upload: { id: id } });
 
-		await this.request<unknown>(EResourceType.MEDIA_UPLOAD_FINALIZE, new Request().media.finalizeUpload(id));
+		await this.request<unknown>(EResourceType.MEDIA_UPLOAD_FINALIZE, args);
 
 		return id;
 	}
