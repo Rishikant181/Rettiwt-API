@@ -62,7 +62,6 @@ export class FetchArgs {
 			EResourceType.USER_TWEETS,
 			EResourceType.USER_TWEETS_AND_REPLIES,
 			EResourceType.SPACE_DETAILS_BY_ID,
-			EResourceType.MEDIA_VIDEO_STREAM,
 		],
 	})
 	@IsNumberString(undefined, {
@@ -84,7 +83,7 @@ export class FetchArgs {
 		],
 	})
 	@IsString({
-		groups: [EResourceType.SPACE_DETAILS_BY_ID, EResourceType.MEDIA_VIDEO_STREAM],
+		groups: [EResourceType.SPACE_DETAILS_BY_ID],
 	})
 	public id?: string;
 
