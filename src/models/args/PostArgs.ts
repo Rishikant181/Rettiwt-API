@@ -42,14 +42,14 @@ export class PostArgs {
 		groups: [
 			EResourceType.MEDIA_UPLOAD_INITIALIZE,
 			EResourceType.MEDIA_UPLOAD_APPEND,
-			EResourceType.MEDIA_UPLOAD_INITIALIZE,
+			EResourceType.MEDIA_UPLOAD_FINALIZE,
 		],
 	})
 	@IsObject({
 		groups: [
 			EResourceType.MEDIA_UPLOAD_INITIALIZE,
 			EResourceType.MEDIA_UPLOAD_APPEND,
-			EResourceType.MEDIA_UPLOAD_INITIALIZE,
+			EResourceType.MEDIA_UPLOAD_FINALIZE,
 		],
 	})
 	public upload?: UploadArgs;

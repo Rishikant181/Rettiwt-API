@@ -364,7 +364,7 @@ export class FetcherService {
 		// FINALIZE
 
 		// Logging
-		this.logger.log(ELogActions.UPLOAD, { step: EResourceType.MEDIA_UPLOAD_INITIALIZE });
+		this.logger.log(ELogActions.UPLOAD, { step: EResourceType.MEDIA_UPLOAD_FINALIZE });
 
 		// Validating args
 		args = new PostArgs(EResourceType.MEDIA_UPLOAD_FINALIZE, { upload: { id: id } });

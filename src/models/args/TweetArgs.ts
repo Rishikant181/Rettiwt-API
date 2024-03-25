@@ -81,7 +81,6 @@ export class TweetMediaArgs {
 	 * @remarks The size of the media file must be \<= 5242880 bytes.
 	 */
 	@IsNotEmpty()
-	@IsObject()
 	public path: string | ArrayBuffer;
 
 	/**
