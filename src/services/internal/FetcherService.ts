@@ -25,7 +25,7 @@ import { IErrorHandler } from '../../types/ErrorHandler';
 // ENUMS
 import { EApiErrors } from '../../enums/Api';
 import { ELogActions } from '../../enums/Logging';
-import { EResourceType, EUploadSteps } from '../../enums/Resource';
+import { EResourceType } from '../../enums/Resource';
 
 // MODELS
 import { FetchArgs } from '../../models/args/FetchArgs';
@@ -125,7 +125,7 @@ export class FetcherService {
 		// Checking authorization status
 		if (
 			resourceType != EResourceType.TWEET_DETAILS &&
-			resourceType != EResourceType.USER_DETAILS &&
+			resourceType != EResourceType.USER_DETAILS_BY_USERNAME &&
 			resourceType != EResourceType.USER_TWEETS &&
 			this.isAuthenticated == false
 		) {
@@ -205,7 +205,7 @@ export class FetcherService {
 
 		if (type == EResourceType.TWEET_DETAILS) {
 			required = findByFilter<IRawTweet>(data, '__typename', 'Tweet');
-		} else if (type == EResourceType.USER_DETAILS || type == EResourceType.USER_DETAILS_BY_ID) {
+		} else if (type == EResourceType.USER_DETAILS_BY_USERNAME || type == EResourceType.USER_DETAILS_BY_ID) {
 			required = findByFilter<IRawUser>(data, '__typename', 'User');
 		} else if (
 			type == EResourceType.TWEET_SEARCH ||
@@ -337,17 +337,17 @@ export class FetcherService {
 		// INITIALIZE
 
 		// Logging
-		this.logger.log(ELogActions.UPLOAD, { step: EUploadSteps.INITIALIZE });
+		this.logger.log(ELogActions.UPLOAD, { step: EResourceType.MEDIA_UPLOAD_INITIALIZE });
 
 		// Getting media size
 		const size = typeof media == 'string' ? statSync(media).size : media.byteLength;
 
 		// Validating args
-		new UploadArgs({ step: EUploadSteps.INITIALIZE, size: size });
+		new UploadArgs(EResourceType.MEDIA_UPLOAD_INITIALIZE, { size: size });
 
 		const id: string = (
 			await this.request<IInitializeMediaUploadResponse>(
-				EResourceType.MEDIA_UPLOAD,
+				EResourceType.MEDIA_UPLOAD_INITIALIZE,
 				new Request().media.initializeUpload(size),
 			)
 		).data.media_id_string;
@@ -355,22 +355,22 @@ export class FetcherService {
 		// APPEND
 
 		// Logging
-		this.logger.log(ELogActions.UPLOAD, { step: EUploadSteps.APPEND });
+		this.logger.log(ELogActions.UPLOAD, { step: EResourceType.MEDIA_UPLOAD_APPEND });
 
 		// Validating args
-		new UploadArgs({ step: EUploadSteps.APPEND, id: id, media: media });
+		new UploadArgs(EResourceType.MEDIA_UPLOAD_APPEND, { id: id, media: media });
 
-		await this.request<unknown>(EResourceType.MEDIA_UPLOAD, new Request().media.appendUpload(id, media));
+		await this.request<unknown>(EResourceType.MEDIA_UPLOAD_APPEND, new Request().media.appendUpload(id, media));
 
 		// FINALIZE
 
 		// Logging
-		this.logger.log(ELogActions.UPLOAD, { step: EUploadSteps.APPEND });
+		this.logger.log(ELogActions.UPLOAD, { step: EResourceType.MEDIA_UPLOAD_INITIALIZE });
 
 		// Validating args
-		new UploadArgs({ step: EUploadSteps.FINALIZE, id: id });
+		new UploadArgs(EResourceType.MEDIA_UPLOAD_FINALIZE, { id: id });
 
-		await this.request<unknown>(EResourceType.MEDIA_UPLOAD, new Request().media.finalizeUpload(id));
+		await this.request<unknown>(EResourceType.MEDIA_UPLOAD_FINALIZE, new Request().media.finalizeUpload(id));
 
 		return id;
 	}

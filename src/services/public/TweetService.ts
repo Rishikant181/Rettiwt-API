@@ -425,7 +425,7 @@ export class TweetService extends FetcherService {
 
 		// Posting the tweet
 		const data = await this.post(
-			EResourceType.CREATE_TWEET,
+			EResourceType.TWEET_CREATE,
 			{
 				tweet: {
 					text: options.text,
@@ -472,7 +472,7 @@ export class TweetService extends FetcherService {
 	 */
 	public async like(tweetId: string): Promise<boolean> {
 		// Favoriting the tweet
-		const data = await this.post(EResourceType.FAVORITE_TWEET, { id: tweetId }, new Request().tweet.like(tweetId));
+		const data = await this.post(EResourceType.TWEET_FAVORITE, { id: tweetId }, new Request().tweet.like(tweetId));
 
 		return data;
 	}
@@ -505,7 +505,7 @@ export class TweetService extends FetcherService {
 	public async retweet(tweetId: string): Promise<boolean> {
 		// Retweeting the tweet
 		const data = await this.post(
-			EResourceType.CREATE_RETWEET,
+			EResourceType.TWEET_RETWEET,
 			{ id: tweetId },
 			new Request().tweet.retweet(tweetId),
 		);

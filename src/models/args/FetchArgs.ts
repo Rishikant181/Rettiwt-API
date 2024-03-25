@@ -51,7 +51,7 @@ export class FetchArgs {
 			EResourceType.TWEET_DETAILS,
 			EResourceType.TWEET_FAVORITERS,
 			EResourceType.TWEET_RETWEETERS,
-			EResourceType.USER_DETAILS,
+			EResourceType.USER_DETAILS_BY_USERNAME,
 			EResourceType.USER_DETAILS_BY_ID,
 			EResourceType.USER_FOLLOWERS,
 			EResourceType.USER_FOLLOWING,
@@ -62,7 +62,7 @@ export class FetchArgs {
 			EResourceType.USER_TWEETS,
 			EResourceType.USER_TWEETS_AND_REPLIES,
 			EResourceType.SPACE_DETAILS_BY_ID,
-			EResourceType.VIDEO_STREAM,
+			EResourceType.MEDIA_VIDEO_STREAM,
 		],
 	})
 	@IsNumberString(undefined, {
@@ -84,7 +84,7 @@ export class FetchArgs {
 		],
 	})
 	@IsString({
-		groups: [EResourceType.SPACE_DETAILS_BY_ID, EResourceType.VIDEO_STREAM],
+		groups: [EResourceType.SPACE_DETAILS_BY_ID, EResourceType.MEDIA_VIDEO_STREAM],
 	})
 	public id?: string;
 

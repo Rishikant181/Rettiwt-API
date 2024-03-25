@@ -13,7 +13,7 @@ import {
 } from 'class-validator';
 
 // ENUMS
-import { EResourceType, EUploadSteps } from '../../enums/Resource';
+import { EResourceType } from '../../enums/Resource';
 
 // MODELS
 import { DataValidationError } from '../errors/DataValidationError';
@@ -26,20 +26,32 @@ import { DataValidationError } from '../errors/DataValidationError';
 export class PostArgs {
 	/** The id of the target resource. */
 	@IsOptional()
-	@IsNotEmpty({ groups: [EResourceType.FAVORITE_TWEET, EResourceType.CREATE_RETWEET] })
-	@IsNumberString(undefined, { groups: [EResourceType.FAVORITE_TWEET, EResourceType.CREATE_RETWEET] })
+	@IsNotEmpty({ groups: [EResourceType.TWEET_FAVORITE, EResourceType.TWEET_RETWEET] })
+	@IsNumberString(undefined, { groups: [EResourceType.TWEET_FAVORITE, EResourceType.TWEET_RETWEET] })
 	public id?: string;
 
 	/** The tweet that is to be posted. */
 	@IsOptional()
-	@IsNotEmpty({ groups: [EResourceType.CREATE_TWEET] })
-	@IsObject({ groups: [EResourceType.CREATE_TWEET] })
+	@IsNotEmpty({ groups: [EResourceType.TWEET_CREATE] })
+	@IsObject({ groups: [EResourceType.TWEET_CREATE] })
 	public tweet?: TweetArgs;
 
 	/** The media file to be uploaded. */
 	@IsOptional()
-	@IsNotEmpty({ groups: [EResourceType.MEDIA_UPLOAD] })
-	@IsObject({ groups: [EResourceType.MEDIA_UPLOAD] })
+	@IsNotEmpty({
+		groups: [
+			EResourceType.MEDIA_UPLOAD_INITIALIZE,
+			EResourceType.MEDIA_UPLOAD_APPEND,
+			EResourceType.MEDIA_UPLOAD_INITIALIZE,
+		],
+	})
+	@IsObject({
+		groups: [
+			EResourceType.MEDIA_UPLOAD_INITIALIZE,
+			EResourceType.MEDIA_UPLOAD_APPEND,
+			EResourceType.MEDIA_UPLOAD_INITIALIZE,
+		],
+	})
 	public upload?: UploadArgs;
 
 	/**
@@ -49,7 +61,7 @@ export class PostArgs {
 	public constructor(resourceType: EResourceType, args: PostArgs) {
 		this.id = args.id;
 		this.tweet = args.tweet ? new TweetArgs(args.tweet) : undefined;
-		this.upload = args.upload ? new UploadArgs(args.upload) : undefined;
+		this.upload = args.upload ? new UploadArgs(resourceType, args.upload) : undefined;
 
 		// Validating this object
 		const validationResult = validateSync(this, { groups: [resourceType] });
@@ -167,42 +179,38 @@ export class MediaArgs {
  * @public
  */
 export class UploadArgs {
-	/** The name of the step of the upload process to be executed. */
-	@IsNotEmpty()
-	public step: EUploadSteps;
-
 	/**
 	 * The size (in bytes) of the media file to be uploaded.
 	 *
 	 * @remarks The size must be \<= 5242880 bytes.
 	 */
 	@IsOptional()
-	@IsNotEmpty({ groups: [EUploadSteps.INITIALIZE] })
-	@Max(5242880, { groups: [EUploadSteps.INITIALIZE] })
+	@IsNotEmpty({ groups: [EResourceType.MEDIA_UPLOAD_INITIALIZE] })
+	@Max(5242880, { groups: [EResourceType.MEDIA_UPLOAD_INITIALIZE] })
 	public size?: number;
 
 	/** The media file to be uploaded. */
 	@IsOptional()
-	@IsNotEmpty({ groups: [EUploadSteps.APPEND] })
+	@IsNotEmpty({ groups: [EResourceType.MEDIA_UPLOAD_APPEND] })
 	public media?: string | ArrayBuffer;
 
 	/** The id allocated to the media file to be uploaded. */
 	@IsOptional()
-	@IsNotEmpty({ groups: [EUploadSteps.APPEND, EUploadSteps.FINALIZE] })
-	@IsNumberString(undefined, { groups: [EUploadSteps.APPEND, EUploadSteps.FINALIZE] })
+	@IsNotEmpty({ groups: [EResourceType.MEDIA_UPLOAD_APPEND, EResourceType.MEDIA_UPLOAD_FINALIZE] })
+	@IsNumberString(undefined, { groups: [EResourceType.MEDIA_UPLOAD_APPEND, EResourceType.MEDIA_UPLOAD_FINALIZE] })
 	public id?: string;
 
 	/**
+	 * @param step - The upload step.
 	 * @param args - The upload arguments for uploading the media file.
 	 */
-	public constructor(args: UploadArgs) {
-		this.step = args.step;
+	public constructor(step: EResourceType, args: UploadArgs) {
 		this.size = args.size;
 		this.media = args.media;
 		this.id = args.id;
 
 		// Validating this object
-		const validationResult = validateSync(this, { groups: [args.step] });
+		const validationResult = validateSync(this, { groups: [step] });
 
 		// If validation error occured
 		if (validationResult.length) {

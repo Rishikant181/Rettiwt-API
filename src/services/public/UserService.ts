@@ -81,7 +81,7 @@ export class UserService extends FetcherService {
 		if (isNaN(Number(id))) {
 			// Fetching the requested data
 			data = await this.fetch<User>(
-				EResourceType.USER_DETAILS,
+				EResourceType.USER_DETAILS_BY_USERNAME,
 				{ id: id },
 				new Request().user.detailsByUsername(id),
 			);
