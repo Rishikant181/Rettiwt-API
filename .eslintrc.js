@@ -116,17 +116,18 @@ module.exports = {
 				ignoreDeclarationSort: true,
 				ignoreMemberSort: false,
 				memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single'],
-				allowSeparatedGroups: true,
+				allowSeparatedGroups: false,
 			},
 		],
 		'import/order': [
 			'warn',
 			{
-				groups: [['builtin', 'external'], 'internal', ['sibling', 'parent'], 'index', 'unknown'],
+				groups: ["builtin", "external", "internal", "parent", "sibling", "index", "object", "type"],
 				alphabetize: {
 					order: 'asc',
 					caseInsensitive: true,
 				},
+				'newlines-between': 'always-and-inside-groups',
 			},
 		],
 	},

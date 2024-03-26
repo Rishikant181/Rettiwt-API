@@ -1,9 +1,6 @@
-// SERVICES
 import { AuthService } from './services/public/AuthService';
 import { TweetService } from './services/public/TweetService';
 import { UserService } from './services/public/UserService';
-
-// TYPES
 import { IRettiwtConfig } from './types/RettiwtConfig';
 
 /**

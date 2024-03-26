@@ -1,4 +1,3 @@
-// ERRORS
 import { RettiwtError } from './RettiwtError';
 
 /**

@@ -1,10 +1,7 @@
-// PACKAGES
 import { Command, createCommand } from 'commander';
 
 import { output } from '../helper/CliUtils';
 import { Rettiwt } from '../Rettiwt';
-
-// UTILITY
 
 /**
  * Creates a new 'user' command which uses the given Rettiwt instance.

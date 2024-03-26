@@ -1,4 +1,3 @@
-// ENUMS
 import { ELogActions } from '../../enums/Logging';
 
 /**

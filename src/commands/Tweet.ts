@@ -1,8 +1,6 @@
-// PACKAGES
 import { Command, createCommand } from 'commander';
 import { TweetFilter } from 'rettiwt-core';
 
-// UTILITY
 import { output } from '../helper/CliUtils';
 import { Rettiwt } from '../Rettiwt';
 

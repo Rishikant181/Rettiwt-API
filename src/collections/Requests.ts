@@ -1,11 +1,7 @@
-// PACKAGES
 import { AxiosRequestConfig } from 'axios';
 import { Request } from 'rettiwt-core';
 
-// ENUMS
 import { EResourceType } from '../enums/Resource';
-
-// MODELS
 import { FetchArgs } from '../models/args/FetchArgs';
 import { PostArgs } from '../models/args/PostArgs';
 

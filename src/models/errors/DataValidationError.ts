@@ -1,4 +1,3 @@
-// PACKAGES
 import { ValidationError } from 'class-validator';
 
 /**

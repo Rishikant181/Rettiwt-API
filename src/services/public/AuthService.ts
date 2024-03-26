@@ -1,11 +1,7 @@
-// PACKAGES
 import { Auth } from 'rettiwt-auth';
 
-// SERVICES
 import { IRettiwtConfig } from '../../types/RettiwtConfig';
 import { FetcherService } from '../internal/FetcherService';
-
-// TYPES
 
 /**
  * Handles authentication.

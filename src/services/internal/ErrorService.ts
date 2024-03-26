@@ -1,20 +1,12 @@
-// PACKAGES
 import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 
-// TYPES
-
-// ENUMS
 import { EApiErrors, EErrorCodes } from '../../enums/Api';
 import { EHttpStatus } from '../../enums/Http';
 import { findKeyByValue } from '../../helper/JsonUtils';
-
-// ERRORS
 import { ApiError } from '../../models/errors/ApiError';
 import { HttpError } from '../../models/errors/HttpError';
 import { TimeoutError } from '../../models/errors/TimeoutError';
 import { IErrorHandler } from '../../types/ErrorHandler';
-
-// TODO Refactor and document this module
 
 /**
  * The base service that handles any errors.

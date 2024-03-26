@@ -1,14 +1,6 @@
-// PACKAGES
 import { TweetFilter } from 'rettiwt-core';
 
-// SERVICES
-
-// TYPES
-
-// ENUMS
 import { EResourceType } from '../../enums/Resource';
-
-// MODELS
 import { MediaArgs } from '../../models/args/PostArgs';
 import { TweetArgs } from '../../models/args/TweetArgs';
 import { CursoredData } from '../../models/data/CursoredData';

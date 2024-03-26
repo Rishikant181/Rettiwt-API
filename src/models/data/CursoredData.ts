@@ -1,4 +1,3 @@
-// MODELS
 import { Tweet } from './Tweet';
 import { User } from './User';
 

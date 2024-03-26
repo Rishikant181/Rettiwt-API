@@ -1,4 +1,3 @@
-// PACKAGES
 import { IList as IRawList } from 'rettiwt-core';
 
 /**

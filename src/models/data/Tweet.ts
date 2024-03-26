@@ -1,4 +1,3 @@
-// PACKAGES
 import {
 	EMediaType,
 	IExtendedMedia as IRawExtendedMedia,
@@ -6,7 +5,6 @@ import {
 	IEntities as IRawTweetEntities,
 } from 'rettiwt-core';
 
-// MODELS
 import { User } from './User';
 
 /**

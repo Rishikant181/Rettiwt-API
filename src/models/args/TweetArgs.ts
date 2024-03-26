@@ -1,4 +1,3 @@
-// PACKAGES
 import {
 	ArrayMaxSize,
 	IsArray,
@@ -11,7 +10,6 @@ import {
 	validateSync,
 } from 'class-validator';
 
-// MODELS
 import { DataValidationError } from '../errors/DataValidationError';
 
 /**

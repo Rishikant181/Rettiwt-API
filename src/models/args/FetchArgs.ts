@@ -1,4 +1,3 @@
-// PACKAGES
 import {
 	IsArray,
 	IsBoolean,
@@ -13,10 +12,7 @@ import {
 	validateSync,
 } from 'class-validator';
 
-// ENUMS
 import { EResourceType } from '../../enums/Resource';
-
-// MODELS
 import { DataValidationError } from '../errors/DataValidationError';
 
 /**

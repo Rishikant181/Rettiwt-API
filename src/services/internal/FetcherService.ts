@@ -1,7 +1,7 @@
-// PACKAGES
-import axios, { AxiosResponse } from 'axios';
 import { statSync } from 'fs';
 import https, { Agent } from 'https';
+
+import axios, { AxiosResponse } from 'axios';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import { Auth, AuthCredential } from 'rettiwt-auth';
 import {
@@ -14,21 +14,12 @@ import {
 	ITimelineUser,
 } from 'rettiwt-core';
 
-// SERVICES
-import { ErrorService } from './ErrorService';
-import { LogService } from './LogService';
-
-// TYPES
 import { requests } from '../../collections/Requests';
 import { EApiErrors } from '../../enums/Api';
 import { ELogActions } from '../../enums/Logging';
 import { EResourceType } from '../../enums/Resource';
 import { findByFilter } from '../../helper/JsonUtils';
 import { FetchArgs } from '../../models/args/FetchArgs';
-
-// ENUMS
-
-// MODELS
 import { PostArgs } from '../../models/args/PostArgs';
 import { CursoredData } from '../../models/data/CursoredData';
 import { Tweet } from '../../models/data/Tweet';
@@ -36,9 +27,8 @@ import { User } from '../../models/data/User';
 import { IErrorHandler } from '../../types/ErrorHandler';
 import { IRettiwtConfig } from '../../types/RettiwtConfig';
 
-// HELPERS
-
-// COLLECTIONS
+import { ErrorService } from './ErrorService';
+import { LogService } from './LogService';
 
 /**
  * The base service that handles all HTTP requests.

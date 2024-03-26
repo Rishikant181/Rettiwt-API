@@ -7,8 +7,6 @@ import tweet from './commands/Tweet';
 import user from './commands/User';
 import { Rettiwt } from './Rettiwt';
 
-// SUB-COMMANDS
-
 // Creating a new commandline program
 const program = createCommand('rettiwt')
 	.description('A CLI tool for accessing the Twitter API for free!')

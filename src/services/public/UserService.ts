@@ -1,16 +1,7 @@
-// SERVICES
-
-// TYPES
-
-// ENUMS
 import { EResourceType } from '../../enums/Resource';
-
-// MODELS
 import { CursoredData } from '../../models/data/CursoredData';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
-
-// TYPES
 import { IRettiwtConfig } from '../../types/RettiwtConfig';
 import { FetcherService } from '../internal/FetcherService';
 

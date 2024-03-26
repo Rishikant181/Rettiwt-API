@@ -1,4 +1,3 @@
-// PACKAGES
 import { IInitializeMediaUploadResponse } from 'rettiwt-core';
 
 /**

@@ -1,4 +1,3 @@
-// PACKAGES
 import { IUser as IRawUser } from 'rettiwt-core';
 
 /**
