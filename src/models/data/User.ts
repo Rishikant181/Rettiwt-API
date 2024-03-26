@@ -12,9 +12,6 @@ export class User {
 	/** The user's description. */
 	public description: string;
 
-	/** The number of tweets liked by the user. */
-	public favouritesCount: number;
-
 	/** The number of followers of the user. */
 	public followersCount: number;
 
@@ -29,6 +26,9 @@ export class User {
 
 	/** Whether the account is verified or not. */
 	public isVerified: boolean;
+
+	/** The number of tweets liked by the user. */
+	public likeCount: number;
 
 	/** The location of user as provided by user. */
 	public location: string;
@@ -60,7 +60,7 @@ export class User {
 		this.createdAt = user.legacy.created_at;
 		this.description = user.legacy.description;
 		this.isVerified = user.is_blue_verified;
-		this.favouritesCount = user.legacy.favourites_count;
+		this.likeCount = user.legacy.favourites_count;
 		this.followersCount = user.legacy.followers_count;
 		this.followingsCount = user.legacy.friends_count;
 		this.statusesCount = user.legacy.statuses_count;
