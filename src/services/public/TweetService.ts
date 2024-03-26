@@ -51,7 +51,7 @@ export class TweetService extends FetcherService {
 	 */
 	public async details(id: string): Promise<Tweet> {
 		// Fetching the requested data
-		const data = await this.fetch<Tweet>(EResourceType.TWEET_DETAILS, { id: id });
+		const data = await this.fetchResource<Tweet>(EResourceType.TWEET_DETAILS, { id: id });
 
 		return data.list[0];
 	}
@@ -83,7 +83,7 @@ export class TweetService extends FetcherService {
 	 */
 	public async like(tweetId: string): Promise<boolean> {
 		// Favoriting the tweet
-		const data = await this.post(EResourceType.TWEET_FAVORITE, { id: tweetId });
+		const data = await this.postResource(EResourceType.TWEET_FAVORITE, { id: tweetId });
 
 		return data;
 	}
@@ -117,7 +117,7 @@ export class TweetService extends FetcherService {
 	 */
 	public async likers(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Fetching the requested data
-		const data = await this.fetch<User>(EResourceType.TWEET_FAVORITERS, {
+		const data = await this.fetchResource<User>(EResourceType.TWEET_FAVORITERS, {
 			id: tweetId,
 			count: count,
 			cursor: cursor,
@@ -155,7 +155,7 @@ export class TweetService extends FetcherService {
 	 */
 	public async list(listId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Fetching the requested data
-		const data = await this.fetch<Tweet>(EResourceType.LIST_TWEETS, {
+		const data = await this.fetchResource<Tweet>(EResourceType.LIST_TWEETS, {
 			id: listId,
 			count: count,
 			cursor: cursor,
@@ -163,6 +163,137 @@ export class TweetService extends FetcherService {
 
 		// Sorting the tweets by date, from recent to oldest
 		data.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
+
+		return data;
+	}
+
+	/**
+	 * Post a tweet.
+	 *
+	 * @param options - The options describing the tweet to be posted.
+	 * @returns Whether posting was successful or not.
+	 *
+	 * @example Posting a simple text
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Posting a tweet to twitter
+	 * rettiwt.tweet.post({ text: 'Hello World!' })
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @example Posting a tweet with an image stored locally
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Posting a tweet, containing an image called 'mountains.jpg', to twitter
+	 * rettiwt.tweet.post({ text: 'What a nice view!', media: [{ path: 'mountains.jpg' }] })
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @example Posting a tweet with an image from the web
+	 * ```
+	 * import axios from 'axios';
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the image from the web
+	 * axios.get('<url_to_cool_image>', {
+	 * 	responseType: 'arraybuffer'
+	 * })
+	 * .then(image => {
+	 * 	// Posting a tweet, containing the image as an ArrayBuffer, to twitter
+	 * 	rettiwt.tweet.post({ text: 'What a nice view!', media: [{ path: image.data }] })
+	 * 	.then(res => {
+	 * 		console.log(res);
+	 * 	})
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @example Posting a reply to a tweet
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Posting a simple text reply, to a tweet with id "1234567890"
+	 * rettiwt.tweet.post({ text: 'Hello!', replyTo: "1234567890" })
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * * @example Posting a reply to a tweet with a quoted tweet
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Posting a simple text tweet, quoting a tweet with id "1234567890"
+	 * rettiwt.tweet.post({ text: 'Hello!', quote: "1234567890" })
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @public
+	 */
+	public async post(options: TweetArgs): Promise<boolean> {
+		// Converting  JSON args to object
+		const tweet: TweetArgs = new TweetArgs(options);
+
+		/** Stores the list of media that has been uploaded */
+		const uploadedMedia: TweetMediaArgs[] = [];
+
+		// If tweet includes media, upload the media items
+		if (tweet.media) {
+			for (const item of tweet.media) {
+				// Uploading the media item and getting it's allocated id
+				const id: string = await this.upload(item.path);
+
+				// Storing the uploaded media item
+				uploadedMedia.push(new TweetMediaArgs({ id: id, tags: item.tags }));
+			}
+		}
+
+		// Posting the tweet
+		const data = await this.postResource(EResourceType.TWEET_CREATE, {
+			tweet: {
+				text: options.text,
+				media: uploadedMedia,
+				quote: options.quote,
+				replyTo: options.replyTo,
+			},
+		});
 
 		return data;
 	}
@@ -194,7 +325,7 @@ export class TweetService extends FetcherService {
 	 */
 	public async retweet(tweetId: string): Promise<boolean> {
 		// Retweeting the tweet
-		const data = await this.post(EResourceType.TWEET_RETWEET, { id: tweetId });
+		const data = await this.postResource(EResourceType.TWEET_RETWEET, { id: tweetId });
 
 		return data;
 	}
@@ -228,7 +359,7 @@ export class TweetService extends FetcherService {
 	 */
 	public async retweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Fetching the requested data
-		const data = await this.fetch<User>(EResourceType.TWEET_RETWEETERS, {
+		const data = await this.fetchResource<User>(EResourceType.TWEET_RETWEETERS, {
 			id: tweetId,
 			count: count,
 			cursor: cursor,
@@ -268,7 +399,7 @@ export class TweetService extends FetcherService {
 	 */
 	public async search(query: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Fetching the requested data
-		const data = await this.fetch<Tweet>(EResourceType.TWEET_SEARCH, {
+		const data = await this.fetchResource<Tweet>(EResourceType.TWEET_SEARCH, {
 			filter: query,
 			count: count,
 			cursor: cursor,
@@ -343,136 +474,5 @@ export class TweetService extends FetcherService {
 				cursor = undefined;
 			}
 		}
-	}
-
-	/**
-	 * Post a tweet.
-	 *
-	 * @param options - The options describing the tweet to be posted.
-	 * @returns Whether posting was successful or not.
-	 *
-	 * @example Posting a simple text
-	 * ```
-	 * import { Rettiwt } from 'rettiwt-api';
-	 *
-	 * // Creating a new Rettiwt instance using the given 'API_KEY'
-	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
-	 *
-	 * // Posting a tweet to twitter
-	 * rettiwt.tweet.tweet({ text: 'Hello World!' })
-	 * .then(res => {
-	 * 	console.log(res);
-	 * })
-	 * .catch(err => {
-	 * 	console.log(err);
-	 * });
-	 * ```
-	 *
-	 * @example Posting a tweet with an image stored locally
-	 * ```
-	 * import { Rettiwt } from 'rettiwt-api';
-	 *
-	 * // Creating a new Rettiwt instance using the given 'API_KEY'
-	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
-	 *
-	 * // Posting a tweet, containing an image called 'mountains.jpg', to twitter
-	 * rettiwt.tweet.tweet({ text: 'What a nice view!', media: [{ path: 'mountains.jpg' }] })
-	 * .then(res => {
-	 * 	console.log(res);
-	 * })
-	 * .catch(err => {
-	 * 	console.log(err);
-	 * });
-	 * ```
-	 *
-	 * @example Posting a tweet with an image from the web
-	 * ```
-	 * import axios from 'axios';
-	 * import { Rettiwt } from 'rettiwt-api';
-	 *
-	 * // Creating a new Rettiwt instance using the given 'API_KEY'
-	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
-	 *
-	 * // Fetching the image from the web
-	 * axios.get('<url_to_cool_image>', {
-	 * 	responseType: 'arraybuffer'
-	 * })
-	 * .then(image => {
-	 * 	// Posting a tweet, containing the image as an ArrayBuffer, to twitter
-	 * 	rettiwt.tweet.tweet({ text: 'What a nice view!', media: [{ path: image.data }] })
-	 * 	.then(res => {
-	 * 		console.log(res);
-	 * 	})
-	 * })
-	 * .catch(err => {
-	 * 	console.log(err);
-	 * });
-	 * ```
-	 *
-	 * @example Posting a reply to a tweet
-	 * ```
-	 * import { Rettiwt } from 'rettiwt-api';
-	 *
-	 * // Creating a new Rettiwt instance using the given 'API_KEY'
-	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
-	 *
-	 * // Posting a simple text reply, to a tweet with id "1234567890"
-	 * rettiwt.tweet.tweet({ text: 'Hello!', replyTo: "1234567890" })
-	 * .then(res => {
-	 * 	console.log(res);
-	 * })
-	 * .catch(err => {
-	 * 	console.log(err);
-	 * });
-	 * ```
-	 *
-	 * * @example Posting a reply to a tweet with a quoted tweet
-	 * ```
-	 * import { Rettiwt } from 'rettiwt-api';
-	 *
-	 * // Creating a new Rettiwt instance using the given 'API_KEY'
-	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
-	 *
-	 * // Posting a simple text tweet, quoting a tweet with id "1234567890"
-	 * rettiwt.tweet.tweet({ text: 'Hello!', quote: "1234567890" })
-	 * .then(res => {
-	 * 	console.log(res);
-	 * })
-	 * .catch(err => {
-	 * 	console.log(err);
-	 * });
-	 * ```
-	 *
-	 * @public
-	 */
-	public async tweet(options: TweetArgs): Promise<boolean> {
-		// Converting  JSON args to object
-		const tweet: TweetArgs = new TweetArgs(options);
-
-		/** Stores the list of media that has been uploaded */
-		const uploadedMedia: TweetMediaArgs[] = [];
-
-		// If tweet includes media, upload the media items
-		if (tweet.media) {
-			for (const item of tweet.media) {
-				// Uploading the media item and getting it's allocated id
-				const id: string = await this.upload(item.path);
-
-				// Storing the uploaded media item
-				uploadedMedia.push(new TweetMediaArgs({ id: id, tags: item.tags }));
-			}
-		}
-
-		// Posting the tweet
-		const data = await this.post(EResourceType.TWEET_CREATE, {
-			tweet: {
-				text: options.text,
-				media: uploadedMedia,
-				quote: options.quote,
-				replyTo: options.replyTo,
-			},
-		});
-
-		return data;
 	}
 }
