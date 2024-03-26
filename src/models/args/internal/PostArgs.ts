@@ -11,13 +11,15 @@ import {
 	validateSync,
 } from 'class-validator';
 
-import { EResourceType } from '../../enums/Resource';
-import { DataValidationError } from '../errors/DataValidationError';
+import { NewTweet, NewTweetMedia } from 'rettiwt-core';
+
+import { EResourceType } from '../../../enums/Resource';
+import { DataValidationError } from '../../errors/DataValidationError';
 
 /**
  * User set query parameters that are used to specify the data that is to be posted.
  *
- * @public
+ * @internal
  */
 export class PostArgs {
 	/** The id of the target resource. */
@@ -72,9 +74,9 @@ export class PostArgs {
 /**
  * User set query parameters that are used to specify the tweet that is to be posted.
  *
- * @public
+ * @internal
  */
-export class TweetArgs {
+export class TweetArgs extends NewTweet {
 	/**
 	 * The list of media to be uploaded.
 	 *
@@ -87,7 +89,7 @@ export class TweetArgs {
 	@IsArray()
 	@ArrayMaxSize(4)
 	@IsObject({ each: true })
-	public media?: MediaArgs[];
+	public media?: TweetMediaArgs[];
 
 	/** The id of the tweet to quote. */
 	@IsOptional()
@@ -114,9 +116,10 @@ export class TweetArgs {
 	 * @param args - The additional user-defined arguments for posting the resource.
 	 */
 	public constructor(args: TweetArgs) {
+		super();
 		this.text = args.text;
 		this.quote = args.quote;
-		this.media = args.media ? args.media.map((item) => new MediaArgs(item)) : undefined;
+		this.media = args.media ? args.media.map((item) => new TweetMediaArgs(item)) : undefined;
 		this.replyTo = args.replyTo;
 
 		// Validating this object
@@ -132,9 +135,9 @@ export class TweetArgs {
 /**
  * User set query parameters that are used to specify the details of the media to be uploaded.
  *
- * @public
+ * @internal
  */
-export class MediaArgs {
+export class TweetMediaArgs extends NewTweetMedia {
 	/** The id of the media to upload. */
 	@IsNotEmpty()
 	@IsNumberString()
@@ -155,7 +158,8 @@ export class MediaArgs {
 	/**
 	 * @param args - The media arguments specifying the media.
 	 */
-	public constructor(args: MediaArgs) {
+	public constructor(args: TweetMediaArgs) {
+		super();
 		this.id = args.id;
 		this.tags = args.tags ?? [];
 
@@ -172,7 +176,7 @@ export class MediaArgs {
 /**
  * User set query parameters that are used while uploading a media file.
  *
- * @public
+ * @internal
  */
 export class UploadArgs {
 	/** The id allocated to the media file to be uploaded. */

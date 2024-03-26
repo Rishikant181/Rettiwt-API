@@ -10,7 +10,7 @@ import {
 	validateSync,
 } from 'class-validator';
 
-import { DataValidationError } from '../errors/DataValidationError';
+import { DataValidationError } from '../../errors/DataValidationError';
 
 /**
  * The arguments specifying the tweet to be posted.

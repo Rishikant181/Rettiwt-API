@@ -1,8 +1,8 @@
 import { TweetFilter } from 'rettiwt-core';
 
 import { EResourceType } from '../../enums/Resource';
-import { MediaArgs } from '../../models/args/PostArgs';
-import { TweetArgs } from '../../models/args/TweetArgs';
+import { TweetMediaArgs } from '../../models/args/internal/PostArgs';
+import { TweetArgs } from '../../models/args/public/TweetArgs';
 import { CursoredData } from '../../models/data/CursoredData';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
@@ -450,7 +450,7 @@ export class TweetService extends FetcherService {
 		const tweet: TweetArgs = new TweetArgs(options);
 
 		/** Stores the list of media that has been uploaded */
-		const uploadedMedia: MediaArgs[] = [];
+		const uploadedMedia: TweetMediaArgs[] = [];
 
 		// If tweet includes media, upload the media items
 		if (tweet.media) {
@@ -459,7 +459,7 @@ export class TweetService extends FetcherService {
 				const id: string = await this.upload(item.path);
 
 				// Storing the uploaded media item
-				uploadedMedia.push(new MediaArgs({ id: id, tags: item.tags }));
+				uploadedMedia.push(new TweetMediaArgs({ id: id, tags: item.tags }));
 			}
 		}
 

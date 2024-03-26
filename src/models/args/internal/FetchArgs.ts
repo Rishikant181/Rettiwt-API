@@ -12,13 +12,15 @@ import {
 	validateSync,
 } from 'class-validator';
 
-import { EResourceType } from '../../enums/Resource';
-import { DataValidationError } from '../errors/DataValidationError';
+import { TweetFilter as TweetFilterCore } from 'rettiwt-core';
+
+import { EResourceType } from '../../../enums/Resource';
+import { DataValidationError } from '../../errors/DataValidationError';
 
 /**
  * User set query parameters that are used to specify the data that is to be fetched.
  *
- * @public
+ * @internal
  */
 export class FetchArgs {
 	/**
@@ -154,7 +156,7 @@ export class FetchArgs {
  *
  * @public
  */
-export class TweetFilter {
+export class TweetFilter extends TweetFilterCore {
 	/** The date upto which tweets are to be searched. */
 	@IsOptional()
 	@IsDate()
@@ -289,25 +291,7 @@ export class TweetFilter {
 	 * @param filter - The filter to use for searching tweets.
 	 */
 	public constructor(filter: TweetFilter) {
-		this.endDate = filter.endDate;
-		this.excludeWords = filter.excludeWords;
-		this.fromUsers = filter.fromUsers;
-		this.hashtags = filter.hashtags;
-		this.includePhrase = filter.includePhrase;
-		this.language = filter.language;
-		this.links = filter.links;
-		this.replies = filter.replies;
-		this.mentions = filter.mentions;
-		this.quoted = filter.quoted;
-		this.sinceId = filter.sinceId;
-		this.maxId = filter.maxId;
-		this.minLikes = filter.minLikes;
-		this.minReplies = filter.minReplies;
-		this.minRetweets = filter.minRetweets;
-		this.optionalWords = filter.optionalWords;
-		this.startDate = filter.startDate;
-		this.toUsers = filter.toUsers;
-		this.includeWords = filter.includeWords;
+		super(filter);
 
 		// Validating this object
 		const validationResult = validateSync(this);
@@ -316,70 +300,5 @@ export class TweetFilter {
 		if (validationResult.length) {
 			throw new DataValidationError(validationResult);
 		}
-	}
-
-	/**
-	 * Convert Date object to Twitter string representation.
-	 * eg - 2023-06-23_11:21:06_UTC
-	 *
-	 * @param date - The date object to convert.
-	 * @returns The Twitter string representation of the date.
-	 *
-	 * @internal
-	 */
-	private static dateToTwitterString(date: Date): string {
-		// Converting localized date to UTC date
-		const utc = new Date(
-			Date.UTC(
-				date.getUTCFullYear(),
-				date.getUTCMonth(),
-				date.getUTCDate(),
-				date.getUTCHours(),
-				date.getUTCMinutes(),
-				date.getUTCSeconds(),
-			),
-		);
-
-		/**
-		 * To convert ISO 8601 date string to Twitter date string:
-		 *
-		 * - 'T' between date and time substring is replace with '_'.
-		 * - Milliseconds substring is omitted.
-		 * - '_UTC' is appended as suffix.
-		 */
-		return utc.toISOString().replace(/T/, '_').replace(/\..+/, '') + '_UTC';
-	}
-
-	/**
-	 * @returns The string representation of 'this' object.
-	 *
-	 * @internal
-	 */
-	public toString(): string {
-		return (
-			[
-				this.includeWords ? this.includeWords.join(' ') : '',
-				this.includePhrase ? `"${this.includePhrase}"` : '',
-				this.optionalWords ? `(${this.optionalWords.join(' OR ')})` : '',
-				this.excludeWords ? `${this.excludeWords.map((word) => '-' + word).join(' ')}` : '',
-				this.hashtags ? `(${this.hashtags.map((hashtag) => '#' + hashtag).join(' OR ')})` : '',
-				this.fromUsers ? `(${this.fromUsers.map((user) => `from:${user}`).join(' OR ')})` : '',
-				this.toUsers ? `(${this.toUsers.map((user) => `to:${user}`).join(' OR ')})` : '',
-				this.mentions ? `(${this.mentions.map((mention) => '@' + mention).join(' OR ')})` : '',
-				this.minReplies ? `min_replies:${this.minReplies}` : '',
-				this.minLikes ? `min_faves:${this.minLikes}` : '',
-				this.minRetweets ? `min_retweets:${this.minRetweets}` : '',
-				this.language ? `lang:${this.language}` : '',
-				this.startDate ? `since:${TweetFilter.dateToTwitterString(this.startDate)}` : '',
-				this.endDate ? `until:${TweetFilter.dateToTwitterString(this.endDate)}` : '',
-				this.sinceId ? `since_id:${this.sinceId}` : '',
-				this.maxId ? `max_id:${this.maxId}` : '',
-				this.quoted ? `quoted_tweet_id:${this.quoted}` : '',
-			]
-				.filter((item) => item !== '()' && item !== '')
-				.join(' ') +
-			(this.links == false ? ' -filter:links' : '') +
-			(this.replies == false ? ' -filter:replies' : '')
-		);
 	}
 }
