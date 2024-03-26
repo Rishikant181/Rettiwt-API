@@ -1,10 +1,10 @@
 // PACKAGES
 import { Command, createCommand } from 'commander';
-import { Rettiwt } from '../Rettiwt';
 import { TweetFilter } from 'rettiwt-core';
 
 // UTILITY
 import { output } from '../helper/CliUtils';
+import { Rettiwt } from '../Rettiwt';
 
 /**
  * Creates a new 'tweet' command which uses the given Rettiwt instance.
@@ -166,24 +166,24 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
  * @remarks The search options are implementations of the ones offered by {@link TweetFilter}
  */
 class TweetSearchOptions {
-	public from?: string;
-	public to?: string;
-	public words?: string;
-	public phrase?: string;
-	public optionalWords?: string;
-	public excludeWords?: string;
-	public hashtags?: string;
-	public mentions?: string;
-	public minReplies?: number;
-	public minLikes?: number;
-	public minRetweets?: number;
-	public quoted?: string;
+	public end?: string;
 	public excludeLinks?: boolean = false;
 	public excludeReplies?: boolean = false;
-	public start?: string;
-	public end?: string;
-	public stream?: boolean;
+	public excludeWords?: string;
+	public from?: string;
+	public hashtags?: string;
 	public interval?: number;
+	public mentions?: string;
+	public minLikes?: number;
+	public minReplies?: number;
+	public minRetweets?: number;
+	public optionalWords?: string;
+	public phrase?: string;
+	public quoted?: string;
+	public start?: string;
+	public stream?: boolean;
+	public to?: string;
+	public words?: string;
 
 	/**
 	 * Initializes a new object from the given options.

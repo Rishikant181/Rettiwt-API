@@ -1,9 +1,10 @@
 // PACKAGES
 import { Command, createCommand } from 'commander';
+
+import { output } from '../helper/CliUtils';
 import { Rettiwt } from '../Rettiwt';
 
 // UTILITY
-import { output } from '../helper/CliUtils';
 
 function createAuthCommand(rettiwt: Rettiwt): Command {
 	// Creating the 'auth' command

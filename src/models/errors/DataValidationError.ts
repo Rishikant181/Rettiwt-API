@@ -7,14 +7,14 @@ import { ValidationError } from 'class-validator';
  * @public
  */
 export class DataValidationError {
-	/** The name of the error. */
-	public name: string;
+	/** The error data. */
+	public data: ValidationError[];
 
 	/** The user-friendly error message. */
 	public message: string;
 
-	/** The error data. */
-	public data: ValidationError[];
+	/** The name of the error. */
+	public name: string;
 
 	/**
 	 * @param data - The error details, as a list of type {@link ValidationError}

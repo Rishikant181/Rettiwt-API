@@ -19,16 +19,6 @@ import { DataValidationError } from '../errors/DataValidationError';
  */
 export class TweetArgs {
 	/**
-	 * The text content of the tweet.
-	 *
-	 * @remarks Length must be \<= 280 characters.
-	 */
-	@IsNotEmpty()
-	@IsString()
-	@MaxLength(280)
-	public text: string;
-
-	/**
 	 * The media content of the tweet.
 	 *
 	 * @remarks Max number of media that can be posted is 4.
@@ -39,15 +29,25 @@ export class TweetArgs {
 	@IsObject({ each: true })
 	public media?: TweetMediaArgs[];
 
+	/**	The id of the tweet to quote. */
+	@IsOptional()
+	@IsNumberString()
+	public quote?: string;
+
 	/**	The id of the tweet to which the reply is to be made. */
 	@IsOptional()
 	@IsNumberString()
 	public replyTo?: string;
 
-	/**	The id of the tweet to quote. */
-	@IsOptional()
-	@IsNumberString()
-	public quote?: string;
+	/**
+	 * The text content of the tweet.
+	 *
+	 * @remarks Length must be \<= 280 characters.
+	 */
+	@IsNotEmpty()
+	@IsString()
+	@MaxLength(280)
+	public text: string;
 
 	/**
 	 * @param tweet - The tweet arguments specifying the tweet.

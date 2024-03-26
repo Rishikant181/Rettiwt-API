@@ -80,22 +80,6 @@ export class PostArgs {
  */
 export class TweetArgs {
 	/**
-	 * The text for the tweet to be created.
-	 *
-	 * @remarks
-	 * Length of the tweet must be \<= 280 characters.
-	 */
-	@IsNotEmpty()
-	@IsString()
-	@MaxLength(280)
-	public text: string;
-
-	/** The id of the tweet to quote. */
-	@IsOptional()
-	@IsNumberString()
-	public quote?: string;
-
-	/**
 	 * The list of media to be uploaded.
 	 *
 	 * @remarks
@@ -109,10 +93,26 @@ export class TweetArgs {
 	@IsObject({ each: true })
 	public media?: MediaArgs[];
 
+	/** The id of the tweet to quote. */
+	@IsOptional()
+	@IsNumberString()
+	public quote?: string;
+
 	/** The id of the Tweet to which the given Tweet must be a reply. */
 	@IsOptional()
 	@IsNumberString()
 	public replyTo?: string;
+
+	/**
+	 * The text for the tweet to be created.
+	 *
+	 * @remarks
+	 * Length of the tweet must be \<= 280 characters.
+	 */
+	@IsNotEmpty()
+	@IsString()
+	@MaxLength(280)
+	public text: string;
 
 	/**
 	 * @param args - The additional user-defined arguments for posting the resource.
@@ -179,6 +179,17 @@ export class MediaArgs {
  * @public
  */
 export class UploadArgs {
+	/** The id allocated to the media file to be uploaded. */
+	@IsOptional()
+	@IsNotEmpty({ groups: [EResourceType.MEDIA_UPLOAD_APPEND, EResourceType.MEDIA_UPLOAD_FINALIZE] })
+	@IsNumberString(undefined, { groups: [EResourceType.MEDIA_UPLOAD_APPEND, EResourceType.MEDIA_UPLOAD_FINALIZE] })
+	public id?: string;
+
+	/** The media file to be uploaded. */
+	@IsOptional()
+	@IsNotEmpty({ groups: [EResourceType.MEDIA_UPLOAD_APPEND] })
+	public media?: string | ArrayBuffer;
+
 	/**
 	 * The size (in bytes) of the media file to be uploaded.
 	 *
@@ -188,17 +199,6 @@ export class UploadArgs {
 	@IsNotEmpty({ groups: [EResourceType.MEDIA_UPLOAD_INITIALIZE] })
 	@Max(5242880, { groups: [EResourceType.MEDIA_UPLOAD_INITIALIZE] })
 	public size?: number;
-
-	/** The media file to be uploaded. */
-	@IsOptional()
-	@IsNotEmpty({ groups: [EResourceType.MEDIA_UPLOAD_APPEND] })
-	public media?: string | ArrayBuffer;
-
-	/** The id allocated to the media file to be uploaded. */
-	@IsOptional()
-	@IsNotEmpty({ groups: [EResourceType.MEDIA_UPLOAD_APPEND, EResourceType.MEDIA_UPLOAD_FINALIZE] })
-	@IsNumberString(undefined, { groups: [EResourceType.MEDIA_UPLOAD_APPEND, EResourceType.MEDIA_UPLOAD_FINALIZE] })
-	public id?: string;
 
 	/**
 	 * @param step - The upload step.

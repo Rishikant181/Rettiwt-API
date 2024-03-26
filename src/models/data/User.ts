@@ -7,23 +7,11 @@ import { IUser as IRawUser } from 'rettiwt-core';
  * @public
  */
 export class User {
-	/** The rest id of the user. */
-	public id: string;
-
-	/** The username/screenname of the user. */
-	public userName: string;
-
-	/** The full name of the user. */
-	public fullName: string;
-
 	/** The creation date of user's account. */
 	public createdAt: string;
 
 	/** The user's description. */
 	public description: string;
-
-	/** Whether the account is verified or not. */
-	public isVerified: boolean;
 
 	/** The number of tweets liked by the user. */
 	public favouritesCount: number;
@@ -34,8 +22,14 @@ export class User {
 	/** The number of following of the user. */
 	public followingsCount: number;
 
-	/** The number of tweets made by the user. */
-	public statusesCount: number;
+	/** The full name of the user. */
+	public fullName: string;
+
+	/** The rest id of the user. */
+	public id: string;
+
+	/** Whether the account is verified or not. */
+	public isVerified: boolean;
 
 	/** The location of user as provided by user. */
 	public location: string;
@@ -48,6 +42,12 @@ export class User {
 
 	/** The url of the profile image. */
 	public profileImage: string;
+
+	/** The number of tweets made by the user. */
+	public statusesCount: number;
+
+	/** The username/screenname of the user. */
+	public userName: string;
 
 	/**
 	 * Initializes a new User from the given raw user data.

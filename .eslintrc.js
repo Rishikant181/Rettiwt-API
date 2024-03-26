@@ -40,6 +40,11 @@ module.exports = {
 				format: ['camelCase'],
 			},
 			{
+				selector: ['variableLike', 'memberLike'],
+				modifiers: ['static', 'readonly'],
+				format: ['UPPER_CASE'],
+			},
+			{
 				selector: 'enumMember',
 				format: ['UPPER_CASE'],
 			},
@@ -57,16 +62,19 @@ module.exports = {
 						// PRIVATE
 						'private-static-readonly-field',
 						'private-static-field',
+						'private-readonly-field',
 						'private-field',
 
 						// PROTECTED
 						'protected-static-readonly-field',
 						'protected-static-field',
+						'protected-readonly-field',
 						'protected-field',
 
 						// PUBLIC
 						'public-static-readonly-field',
 						'public-static-field',
+						'public-readonly-field',
 						'public-field',
 
 						// CONSTRUCTORS

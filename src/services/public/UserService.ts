@@ -1,18 +1,18 @@
 // SERVICES
-import { FetcherService } from '../internal/FetcherService';
 
 // TYPES
-import { IRettiwtConfig } from '../../types/RettiwtConfig';
 
 // ENUMS
 import { EResourceType } from '../../enums/Resource';
 
 // MODELS
-import { User } from '../../models/data/User';
+import { CursoredData } from '../../models/data/CursoredData';
 import { Tweet } from '../../models/data/Tweet';
+import { User } from '../../models/data/User';
 
 // TYPES
-import { CursoredData } from '../../models/data/CursoredData';
+import { IRettiwtConfig } from '../../types/RettiwtConfig';
+import { FetcherService } from '../internal/FetcherService';
 
 /**
  * Handles fetching of data related to user account
@@ -89,44 +89,6 @@ export class UserService extends FetcherService {
 	}
 
 	/**
-	 * Get the list of users who are followed by the given user.
-	 *
-	 * @param userId - The rest id of the target user.
-	 * @param count - The number of following to fetch, must be \<= 100.
-	 * @param cursor - The cursor to the batch of following to fetch.
-	 * @returns The list of users followed by the target user.
-	 *
-	 * @example
-	 * ```
-	 * import { Rettiwt } from 'rettiwt-api';
-	 *
-	 * // Creating a new Rettiwt instance using the given 'API_KEY'
-	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
-	 *
-	 * // Fetching the first 100 following of the User with id '12345678'
-	 * rettiwt.user.following('12345678')
-	 * .then(res => {
-	 * 	console.log(res);
-	 * })
-	 * .catch(err => {
-	 * 	console.log(err);
-	 * });
-	 * ```
-	 *
-	 * @public
-	 */
-	public async following(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		// Fetching the requested data
-		const data = await this.fetch<User>(EResourceType.USER_FOLLOWING, {
-			id: userId,
-			count: count,
-			cursor: cursor,
-		});
-
-		return data;
-	}
-
-	/**
 	 * Get the list followers of the given user.
 	 *
 	 * @param userId - The rest id of the target user.
@@ -156,6 +118,44 @@ export class UserService extends FetcherService {
 	public async followers(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Fetching the requested data
 		const data = await this.fetch<User>(EResourceType.USER_FOLLOWERS, {
+			id: userId,
+			count: count,
+			cursor: cursor,
+		});
+
+		return data;
+	}
+
+	/**
+	 * Get the list of users who are followed by the given user.
+	 *
+	 * @param userId - The rest id of the target user.
+	 * @param count - The number of following to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of following to fetch.
+	 * @returns The list of users followed by the target user.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the first 100 following of the User with id '12345678'
+	 * rettiwt.user.following('12345678')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @public
+	 */
+	public async following(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+		// Fetching the requested data
+		const data = await this.fetch<User>(EResourceType.USER_FOLLOWING, {
 			id: userId,
 			count: count,
 			cursor: cursor,
@@ -279,6 +279,49 @@ export class UserService extends FetcherService {
 	}
 
 	/**
+	 * Get the reply timeline of the given user.
+	 *
+	 * @param userId - The rest id of the target user.
+	 * @param count - The number of replies to fetch, must be \<= 20.
+	 * @param cursor - The cursor to the batch of replies to fetch.
+	 * @returns The reply timeline of the target user.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the first 100 timeline replies of the User with id '12345678'
+	 * rettiwt.user.replies('12345678')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @remarks If the target user has a pinned tweet, the returned reply timeline has one item extra and this is always the pinned tweet.
+	 *
+	 * @public
+	 */
+	public async replies(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+		// Fetching the requested data
+		const data = await this.fetch<Tweet>(EResourceType.USER_TWEETS_AND_REPLIES, {
+			id: userId,
+			count: count,
+			cursor: cursor,
+		});
+
+		// Filtering out other tweets made by other users in the same threads
+		data.list = data.list.filter((tweet) => tweet.tweetBy.id == userId);
+
+		return data;
+	}
+
+	/**
 	 * Get the list of subscriptions of the given user.
 	 *
 	 * @param userId - The rest id of the target user.
@@ -354,49 +397,6 @@ export class UserService extends FetcherService {
 			count: count,
 			cursor: cursor,
 		});
-
-		return data;
-	}
-
-	/**
-	 * Get the reply timeline of the given user.
-	 *
-	 * @param userId - The rest id of the target user.
-	 * @param count - The number of replies to fetch, must be \<= 20.
-	 * @param cursor - The cursor to the batch of replies to fetch.
-	 * @returns The reply timeline of the target user.
-	 *
-	 * @example
-	 * ```
-	 * import { Rettiwt } from 'rettiwt-api';
-	 *
-	 * // Creating a new Rettiwt instance using the given 'API_KEY'
-	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
-	 *
-	 * // Fetching the first 100 timeline replies of the User with id '12345678'
-	 * rettiwt.user.replies('12345678')
-	 * .then(res => {
-	 * 	console.log(res);
-	 * })
-	 * .catch(err => {
-	 * 	console.log(err);
-	 * });
-	 * ```
-	 *
-	 * @remarks If the target user has a pinned tweet, the returned reply timeline has one item extra and this is always the pinned tweet.
-	 *
-	 * @public
-	 */
-	public async replies(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-		// Fetching the requested data
-		const data = await this.fetch<Tweet>(EResourceType.USER_TWEETS_AND_REPLIES, {
-			id: userId,
-			count: count,
-			cursor: cursor,
-		});
-
-		// Filtering out other tweets made by other users in the same threads
-		data.list = data.list.filter((tweet) => tweet.tweetBy.id == userId);
 
 		return data;
 	}

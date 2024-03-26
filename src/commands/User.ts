@@ -1,9 +1,10 @@
 // PACKAGES
 import { Command, createCommand } from 'commander';
+
+import { output } from '../helper/CliUtils';
 import { Rettiwt } from '../Rettiwt';
 
 // UTILITY
-import { output } from '../helper/CliUtils';
 
 /**
  * Creates a new 'user' command which uses the given Rettiwt instance.
