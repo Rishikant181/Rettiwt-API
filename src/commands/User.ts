@@ -22,17 +22,6 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			output(details);
 		});
 
-	// Following
-	user.command('following')
-		.description('Fetch the list of users who are followed by the given user')
-		.argument('<id>', 'The id of the user')
-		.argument('[count]', 'The number of following to fetch')
-		.argument('[cursor]', 'The cursor to the batch of following to fetch')
-		.action(async (id: string, count?: string, cursor?: string) => {
-			const users = await rettiwt.user.following(id, count ? parseInt(count) : undefined, cursor);
-			output(users);
-		});
-
 	// Followers
 	user.command('followers')
 		.description('Fetch the list of users who follow the given user')
@@ -41,6 +30,17 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 		.argument('[cursor]', 'The cursor to the batch of followers to fetch')
 		.action(async (id: string, count?: string, cursor?: string) => {
 			const users = await rettiwt.user.followers(id, count ? parseInt(count) : undefined, cursor);
+			output(users);
+		});
+
+	// Following
+	user.command('following')
+		.description('Fetch the list of users who are followed by the given user')
+		.argument('<id>', 'The id of the user')
+		.argument('[count]', 'The number of following to fetch')
+		.argument('[cursor]', 'The cursor to the batch of following to fetch')
+		.action(async (id: string, count?: string, cursor?: string) => {
+			const users = await rettiwt.user.following(id, count ? parseInt(count) : undefined, cursor);
 			output(users);
 		});
 
@@ -77,6 +77,17 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			output(media);
 		});
 
+	// Replies
+	user.command('replies')
+		.description('Fetch the replies timeline the given user')
+		.argument('<id>', 'The id of the user')
+		.argument('[count]', 'The number of replies to fetch')
+		.argument('[cursor]', 'The cursor to the batch of replies to fetch')
+		.action(async (id: string, count?: string, cursor?: string) => {
+			const replies = await rettiwt.user.replies(id, count ? parseInt(count) : undefined, cursor);
+			output(replies);
+		});
+
 	// Subscriptions
 	user.command('subscriptions')
 		.description('Fetch the list of users who are subscribed by the given user')
@@ -97,17 +108,6 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 		.action(async (id: string, count?: string, cursor?: string) => {
 			const tweets = await rettiwt.user.timeline(id, count ? parseInt(count) : undefined, cursor);
 			output(tweets);
-		});
-
-	// Replies
-	user.command('replies')
-		.description('Fetch the replies timeline the given user')
-		.argument('<id>', 'The id of the user')
-		.argument('[count]', 'The number of replies to fetch')
-		.argument('[cursor]', 'The cursor to the batch of replies to fetch')
-		.action(async (id: string, count?: string, cursor?: string) => {
-			const replies = await rettiwt.user.replies(id, count ? parseInt(count) : undefined, cursor);
-			output(replies);
 		});
 
 	return user;

@@ -24,6 +24,62 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 			output(details);
 		});
 
+	// Like
+	tweet
+		.command('like')
+		.description('Like a tweet')
+		.argument('<id>', 'The tweet to like')
+		.action(async (id: string) => {
+			const result = await rettiwt.tweet.like(id);
+			output(result);
+		});
+
+	// Likes
+	tweet
+		.command('likers')
+		.description('Fetch the list of users who liked the given tweets')
+		.argument('<id>', 'The id of the tweet')
+		.argument('[count]', 'The number of likers to fetch')
+		.argument('[cursor]', 'The cursor to the batch of likers to fetch')
+		.action(async (id: string, count?: string, cursor?: string) => {
+			const tweets = await rettiwt.tweet.likers(id, count ? parseInt(count) : undefined, cursor);
+			output(tweets);
+		});
+
+	// List
+	tweet
+		.command('list')
+		.description('Fetch the list of tweets in the tweet list with the given id')
+		.argument('<id>', 'The id of the tweet list')
+		.argument('[count]', 'The number of tweets to fetch')
+		.argument('[cursor]', 'The cursor to the batch of tweets to fetch')
+		.action(async (id: string, count?: string, cursor?: string) => {
+			const tweets = await rettiwt.tweet.list(id, count ? parseInt(count) : undefined, cursor);
+			output(tweets);
+		});
+
+	// Retweet
+	tweet
+		.command('retweet')
+		.description('Retweet a tweet')
+		.argument('<id>', 'The tweet to retweet')
+		.action(async (id: string) => {
+			const result = await rettiwt.tweet.retweet(id);
+			output(result);
+		});
+
+	// Retweeters
+	tweet
+		.command('retweeters')
+		.description('Fetch the list of users who retweeted the given tweets')
+		.argument('<id>', 'The id of the tweet')
+		.argument('[count]', 'The number of retweeters to fetch')
+		.argument('[cursor]', 'The cursor to the batch of retweeters to fetch')
+		.action(async (id: string, count?: string, cursor?: string) => {
+			const tweets = await rettiwt.tweet.retweeters(id, count ? parseInt(count) : undefined, cursor);
+			output(tweets);
+		});
+
 	// Search
 	tweet
 		.command('search')
@@ -78,42 +134,6 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
-	// List
-	tweet
-		.command('list')
-		.description('Fetch the list of tweets in the tweet list with the given id')
-		.argument('<id>', 'The id of the tweet list')
-		.argument('[count]', 'The number of tweets to fetch')
-		.argument('[cursor]', 'The cursor to the batch of tweets to fetch')
-		.action(async (id: string, count?: string, cursor?: string) => {
-			const tweets = await rettiwt.tweet.list(id, count ? parseInt(count) : undefined, cursor);
-			output(tweets);
-		});
-
-	// Likes
-	tweet
-		.command('likers')
-		.description('Fetch the list of users who liked the given tweets')
-		.argument('<id>', 'The id of the tweet')
-		.argument('[count]', 'The number of likers to fetch')
-		.argument('[cursor]', 'The cursor to the batch of likers to fetch')
-		.action(async (id: string, count?: string, cursor?: string) => {
-			const tweets = await rettiwt.tweet.likers(id, count ? parseInt(count) : undefined, cursor);
-			output(tweets);
-		});
-
-	// Retweets
-	tweet
-		.command('retweeters')
-		.description('Fetch the list of users who retweeted the given tweets')
-		.argument('<id>', 'The id of the tweet')
-		.argument('[count]', 'The number of retweeters to fetch')
-		.argument('[cursor]', 'The cursor to the batch of retweeters to fetch')
-		.action(async (id: string, count?: string, cursor?: string) => {
-			const tweets = await rettiwt.tweet.retweeters(id, count ? parseInt(count) : undefined, cursor);
-			output(tweets);
-		});
-
 	// Post
 	tweet
 		.command('post')
@@ -132,26 +152,6 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 				quote: options?.quote,
 				replyTo: options?.reply,
 			});
-			output(result);
-		});
-
-	// Like
-	tweet
-		.command('like')
-		.description('Like a tweet')
-		.argument('<id>', 'The tweet to like')
-		.action(async (id: string) => {
-			const result = await rettiwt.tweet.like(id);
-			output(result);
-		});
-
-	// Retweet
-	tweet
-		.command('retweet')
-		.description('Retweet a tweet')
-		.argument('<id>', 'The tweet to retweet')
-		.action(async (id: string) => {
-			const result = await rettiwt.tweet.retweet(id);
 			output(result);
 		});
 
