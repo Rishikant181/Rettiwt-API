@@ -277,7 +277,7 @@ export class FetcherService {
 	 * @typeParam OutType - The type of deserialized data returned.
 	 * @returns The processed data requested from Twitter.
 	 */
-	protected async fetch<OutType extends Tweet | User>(
+	protected async fetchResource<OutType extends Tweet | User>(
 		resourceType: EResourceType,
 		args: FetchArgs,
 	): Promise<CursoredData<OutType>> {
@@ -306,7 +306,7 @@ export class FetcherService {
 	 * @param args - Resource specific arguments.
 	 * @returns Whether posting was successful or not.
 	 */
-	protected async post(resourceType: EResourceType, args: PostArgs): Promise<boolean> {
+	protected async postResource(resourceType: EResourceType, args: PostArgs): Promise<boolean> {
 		// Logging
 		this.logger.log(ELogActions.POST, { resourceType: resourceType, args: args });
 

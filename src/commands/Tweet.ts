@@ -146,7 +146,7 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 			'The id of the tweet to which the reply is to be made, if the tweet is to be a reply',
 		)
 		.action(async (text: string, options?: { media?: string; quote?: string; reply?: string }) => {
-			const result = await rettiwt.tweet.tweet({
+			const result = await rettiwt.tweet.post({
 				text: text,
 				media: options?.media ? options?.media.split(',').map((item) => ({ path: item })) : undefined,
 				quote: options?.quote,
