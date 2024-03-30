@@ -68,7 +68,7 @@ export class Tweet {
 	 *
 	 * @param tweet - The raw tweet data.
 	 */
-	private constructor(tweet: IRawTweet) {
+	public constructor(tweet: IRawTweet) {
 		this.id = tweet.rest_id;
 		this.createdAt = tweet.legacy.created_at;
 		this.tweetBy = new User(tweet.core.user_results.result);

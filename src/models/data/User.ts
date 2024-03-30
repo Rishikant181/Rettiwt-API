@@ -55,7 +55,7 @@ export class User {
 	 *
 	 * @param user - The raw user data.
 	 */
-	private constructor(user: IRawUser) {
+	public constructor(user: IRawUser) {
 		this.id = user.rest_id;
 		this.userName = user.legacy.screen_name;
 		this.fullName = user.legacy.name;
