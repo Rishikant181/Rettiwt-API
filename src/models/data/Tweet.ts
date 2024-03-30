@@ -3,7 +3,12 @@ import {
 	IExtendedMedia as IRawExtendedMedia,
 	ITweet as IRawTweet,
 	IEntities as IRawTweetEntities,
+	IResponse,
+	ITimelineTweet,
+	ITweet,
 } from 'rettiwt-core';
+
+import { findByFilter } from '../../helper/JsonUtils';
 
 import { User } from './User';
 
@@ -63,7 +68,7 @@ export class Tweet {
 	 *
 	 * @param tweet - The raw tweet data.
 	 */
-	public constructor(tweet: IRawTweet) {
+	private constructor(tweet: IRawTweet) {
 		this.id = tweet.rest_id;
 		this.createdAt = tweet.legacy.created_at;
 		this.tweetBy = new User(tweet.core.user_results.result);
@@ -79,6 +84,54 @@ export class Tweet {
 		this.likeCount = tweet.legacy.favorite_count;
 		this.viewCount = parseInt(tweet.views.count);
 		this.bookmarkCount = tweet.legacy.bookmark_count;
+	}
+
+	/**
+	 * Extracts and deserializes the list of tweets from the given raw response data.
+	 *
+	 * @param response - The raw response data.
+	 * @returns The deserialized list of tweets.
+	 *
+	 * @internal
+	 */
+	public static list(response: IResponse<unknown>): Tweet[] {
+		const tweets: Tweet[] = [];
+
+		// Extracting the matching data
+		const extract = findByFilter<ITimelineTweet>(response, '__typename', 'TimelineTweet');
+
+		// Deserializing valid data
+		for (const item of extract) {
+			if (item.tweet_results.result.rest_id) {
+				tweets.push(new Tweet(item.tweet_results.result));
+			}
+		}
+
+		return tweets;
+	}
+
+	/**
+	 * Extracts and deserializes a single target tweet from the given raw response data.
+	 *
+	 * @param response - The raw response data.
+	 * @returns The target deserialized tweet.
+	 *
+	 * @internal
+	 */
+	public static single(response: IResponse<unknown>): Tweet | undefined {
+		const tweets: Tweet[] = [];
+
+		// Extracting the matching data
+		const extract = findByFilter<ITweet>(response, '__typename', 'Tweet');
+
+		// Deserializing valid data
+		for (const item of extract) {
+			if (item.rest_id) {
+				tweets.push(new Tweet(item));
+			}
+		}
+
+		return tweets.length ? tweets[0] : undefined;
 	}
 }
 

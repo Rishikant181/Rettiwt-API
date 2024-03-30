@@ -1,4 +1,6 @@
-import { IUser as IRawUser } from 'rettiwt-core';
+import { IUser as IRawUser, IResponse, ITimelineUser, IUser } from 'rettiwt-core';
+
+import { findByFilter } from '../../helper/JsonUtils';
 
 /**
  * The details of a single user.
@@ -53,7 +55,7 @@ export class User {
 	 *
 	 * @param user - The raw user data.
 	 */
-	public constructor(user: IRawUser) {
+	private constructor(user: IRawUser) {
 		this.id = user.rest_id;
 		this.userName = user.legacy.screen_name;
 		this.fullName = user.legacy.name;
@@ -68,5 +70,53 @@ export class User {
 		this.pinnedTweet = user.legacy.pinned_tweet_ids_str[0];
 		this.profileBanner = user.legacy.profile_banner_url;
 		this.profileImage = user.legacy.profile_image_url_https;
+	}
+
+	/**
+	 * Extracts and deserializes the list of users from the given raw response data.
+	 *
+	 * @param response - The raw response data.
+	 * @returns The deserialized list of users.
+	 *
+	 * @internal
+	 */
+	public static list(response: IResponse<unknown>): User[] {
+		const users: User[] = [];
+
+		// Extracting the matching data
+		const extract = findByFilter<ITimelineUser>(response, '__typename', 'TimelineUser');
+
+		// Deserializing valid data
+		for (const item of extract) {
+			if (item.user_results.result.rest_id && item.user_results.result.id) {
+				users.push(new User(item.user_results.result));
+			}
+		}
+
+		return users;
+	}
+
+	/**
+	 * Extracts and deserializes a single target user from the given raw response data.
+	 *
+	 * @param response - The raw response data.
+	 * @returns The target deserialized user.
+	 *
+	 * @internal
+	 */
+	public static single(response: IResponse<unknown>): User | undefined {
+		const users: User[] = [];
+
+		// Extracting the matching data
+		const extract = findByFilter<IUser>(response, '__typename', 'User');
+
+		// Deserializing valid data
+		for (const item of extract) {
+			if (item.rest_id && item.id) {
+				users.push(new User(item));
+			}
+		}
+
+		return users.length ? users[0] : undefined;
 	}
 }
