@@ -4,21 +4,13 @@ import https, { Agent } from 'https';
 import axios, { AxiosResponse } from 'axios';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import { Auth, AuthCredential } from 'rettiwt-auth';
-import {
-	IInitializeMediaUploadResponse,
-	ICursor as IRawCursor,
-	ITweet as IRawTweet,
-	IUser as IRawUser,
-	IResponse,
-	ITimelineTweet,
-	ITimelineUser,
-} from 'rettiwt-core';
+import { IInitializeMediaUploadResponse, IResponse } from 'rettiwt-core';
 
 import { requests } from '../../collections/Requests';
 import { EApiErrors } from '../../enums/Api';
+import { EBaseType } from '../../enums/Data';
 import { ELogActions } from '../../enums/Logging';
 import { EResourceType } from '../../enums/Resource';
-import { findByFilter } from '../../helper/JsonUtils';
 import { FetchArgs } from '../../models/args/internal/FetchArgs';
 import { PostArgs } from '../../models/args/internal/PostArgs';
 import { CursoredData } from '../../models/data/CursoredData';
@@ -103,68 +95,17 @@ export class FetcherService {
 	}
 
 	/**
-	 * Deserializes the extracted data into a cursored list.
+	 * Extracts and deserializes the required data based on the type of resource.
 	 *
-	 * @param extractedData - The list of extracted data.
-	 * @param next - The cursor to the next batch of data.
-	 * @returns The cursored data object.
-	 */
-	private deserializeData<OutType extends Tweet | User>(
-		extractedData: (IRawTweet | IRawUser)[] = [],
-		next: string = '',
-	): CursoredData<OutType> {
-		/** The list of deserialized data. */
-		const deserializedList: OutType[] = [];
-
-		// Deserializing the extracted raw data and storing it in the list
-		for (const item of extractedData) {
-			// If the item is a valid raw tweet
-			if (item && item.__typename == 'Tweet' && item.rest_id) {
-				// Logging
-				this.logger.log(ELogActions.DESERIALIZE, { type: item.__typename, id: item.rest_id });
-
-				// Adding deserialized Tweet to list
-				deserializedList.push(new Tweet(item as IRawTweet) as OutType);
-			}
-			// If the item is a valid raw user
-			else if (item && item.__typename == 'User' && item.rest_id && (item as IRawUser).id) {
-				// Logging
-				this.logger.log(ELogActions.DESERIALIZE, { type: item.__typename, id: item.rest_id });
-
-				// Adding deserialized User to list
-				deserializedList.push(new User(item as IRawUser) as OutType);
-			}
-		}
-
-		return new CursoredData<OutType>(deserializedList, next);
-	}
-
-	/**
-	 * Extracts the required data based on the type of resource passed as argument.
-	 *
-	 * @param data - The data from which extraction is to be done.
+	 * @param data - The raw response data from which extraction is to be done.
 	 * @param type - The type of data to extract.
-	 * @returns The extracted data.
+	 * @returns The extracted and deserialized data.
 	 */
-	private extractData(
-		data: NonNullable<unknown>,
-		type: EResourceType,
-	): {
-		/** The required extracted data. */
-		required: (IRawTweet | IRawUser)[];
-
-		/** The cursor string to the next batch of data. */
-		next: string;
-	} {
-		/**
-		 * The required extracted data.
-		 */
-		let required: IRawTweet[] | IRawUser[] = [];
-
+	private extract<T>(response: IResponse<unknown>, type: EResourceType): T | undefined {
 		if (type == EResourceType.TWEET_DETAILS) {
-			required = findByFilter<IRawTweet>(data, '__typename', 'Tweet');
+			return Tweet.single(response) as T;
 		} else if (type == EResourceType.USER_DETAILS_BY_USERNAME || type == EResourceType.USER_DETAILS_BY_ID) {
-			required = findByFilter<IRawUser>(data, '__typename', 'User');
+			return User.single(response) as T;
 		} else if (
 			type == EResourceType.TWEET_SEARCH ||
 			type == EResourceType.USER_LIKES ||
@@ -174,9 +115,7 @@ export class FetcherService {
 			type == EResourceType.USER_TWEETS ||
 			type == EResourceType.USER_TWEETS_AND_REPLIES
 		) {
-			required = findByFilter<ITimelineTweet>(data, '__typename', 'TimelineTweet').map(
-				(item) => item.tweet_results.result,
-			);
+			return new CursoredData<Tweet>(response, EBaseType.TWEET) as T;
 		} else if (
 			type == EResourceType.TWEET_FAVORITERS ||
 			type == EResourceType.TWEET_RETWEETERS ||
@@ -184,15 +123,8 @@ export class FetcherService {
 			type == EResourceType.USER_FOLLOWING ||
 			type == EResourceType.USER_SUBSCRIPTIONS
 		) {
-			required = findByFilter<ITimelineUser>(data, '__typename', 'TimelineUser').map(
-				(item) => item.user_results.result,
-			);
+			return new CursoredData<User>(response, EBaseType.USER) as T;
 		}
-
-		return {
-			required: required,
-			next: findByFilter<IRawCursor>(data, 'cursorType', 'Bottom')[0]?.value,
-		};
 	}
 
 	/**
@@ -274,13 +206,10 @@ export class FetcherService {
 	 *
 	 * @param resourceType - The type of resource to fetch.
 	 * @param args - Resource specific arguments.
-	 * @typeParam OutType - The type of deserialized data returned.
+	 * @typeParam T - The type of data returned.
 	 * @returns The processed data requested from Twitter.
 	 */
-	protected async fetchResource<OutType extends Tweet | User>(
-		resourceType: EResourceType,
-		args: FetchArgs,
-	): Promise<CursoredData<OutType>> {
+	protected async fetchResource<T>(resourceType: EResourceType, args: FetchArgs): Promise<T | undefined> {
 		// Logging
 		this.logger.log(ELogActions.FETCH, { resourceType: resourceType, args: args });
 
@@ -290,13 +219,10 @@ export class FetcherService {
 		// Getting the raw data
 		const res = await this.request<IResponse<unknown>>(resourceType, args).then((res) => res.data);
 
-		// Extracting data
-		const extractedData = this.extractData(res, resourceType);
+		// Extracting and deserializing data
+		const extractedData = this.extract<T>(res, resourceType);
 
-		// Deserializing data
-		const deserializedData = this.deserializeData<OutType>(extractedData.required, extractedData.next);
-
-		return deserializedData;
+		return extractedData;
 	}
 
 	/**

@@ -49,11 +49,11 @@ export class TweetService extends FetcherService {
 	 *
 	 * @public
 	 */
-	public async details(id: string): Promise<Tweet> {
+	public async details(id: string): Promise<Tweet | undefined> {
 		// Fetching the requested data
 		const data = await this.fetchResource<Tweet>(EResourceType.TWEET_DETAILS, { id: id });
 
-		return data.list[0];
+		return data;
 	}
 
 	/**
@@ -117,13 +117,13 @@ export class TweetService extends FetcherService {
 	 */
 	public async likers(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Fetching the requested data
-		const data = await this.fetchResource<User>(EResourceType.TWEET_FAVORITERS, {
+		const data = await this.fetchResource<CursoredData<User>>(EResourceType.TWEET_FAVORITERS, {
 			id: tweetId,
 			count: count,
 			cursor: cursor,
 		});
 
-		return data;
+		return data!;
 	}
 
 	/**
@@ -155,16 +155,16 @@ export class TweetService extends FetcherService {
 	 */
 	public async list(listId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Fetching the requested data
-		const data = await this.fetchResource<Tweet>(EResourceType.LIST_TWEETS, {
+		const data = await this.fetchResource<CursoredData<Tweet>>(EResourceType.LIST_TWEETS, {
 			id: listId,
 			count: count,
 			cursor: cursor,
 		});
 
 		// Sorting the tweets by date, from recent to oldest
-		data.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
+		data!.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
 
-		return data;
+		return data!;
 	}
 
 	/**
@@ -359,13 +359,13 @@ export class TweetService extends FetcherService {
 	 */
 	public async retweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		// Fetching the requested data
-		const data = await this.fetchResource<User>(EResourceType.TWEET_RETWEETERS, {
+		const data = await this.fetchResource<CursoredData<User>>(EResourceType.TWEET_RETWEETERS, {
 			id: tweetId,
 			count: count,
 			cursor: cursor,
 		});
 
-		return data;
+		return data!;
 	}
 
 	/**
@@ -399,16 +399,16 @@ export class TweetService extends FetcherService {
 	 */
 	public async search(query: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		// Fetching the requested data
-		const data = await this.fetchResource<Tweet>(EResourceType.TWEET_SEARCH, {
+		const data = await this.fetchResource<CursoredData<Tweet>>(EResourceType.TWEET_SEARCH, {
 			filter: query,
 			count: count,
 			cursor: cursor,
 		});
 
 		// Sorting the tweets by date, from recent to oldest
-		data.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
+		data!.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
 
-		return data;
+		return data!;
 	}
 
 	/**
