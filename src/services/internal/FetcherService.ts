@@ -6,6 +6,8 @@ import { HttpsProxyAgent } from 'https-proxy-agent';
 import { Auth, AuthCredential } from 'rettiwt-auth';
 import { IInitializeMediaUploadResponse, IResponse } from 'rettiwt-core';
 
+import { allowGuestAuthentication } from '../../collections/Authentication';
+import { returnTweet, returnTweets, returnUser, returnUsers } from '../../collections/Data';
 import { requests } from '../../collections/Requests';
 import { EApiErrors } from '../../enums/Api';
 import { EBaseType } from '../../enums/Data';
@@ -84,12 +86,7 @@ export class FetcherService {
 		this.logger.log(ELogActions.AUTHORIZATION, { authenticated: this.isAuthenticated });
 
 		// Checking authorization status
-		if (
-			resourceType != EResourceType.TWEET_DETAILS &&
-			resourceType != EResourceType.USER_DETAILS_BY_USERNAME &&
-			resourceType != EResourceType.USER_TWEETS &&
-			this.isAuthenticated == false
-		) {
+		if (!allowGuestAuthentication.includes(resourceType) && this.isAuthenticated == false) {
 			throw new Error(EApiErrors.RESOURCE_NOT_ALLOWED);
 		}
 	}
@@ -102,27 +99,20 @@ export class FetcherService {
 	 * @returns The extracted and deserialized data.
 	 */
 	private extract<T>(response: IResponse<unknown>, type: EResourceType): T | undefined {
-		if (type == EResourceType.TWEET_DETAILS) {
+		// For resources that return a single tweet
+		if (returnTweet.includes(type)) {
 			return Tweet.single(response) as T;
-		} else if (type == EResourceType.USER_DETAILS_BY_USERNAME || type == EResourceType.USER_DETAILS_BY_ID) {
+		}
+		// For resources that return a single user
+		else if (returnUser.includes(type)) {
 			return User.single(response) as T;
-		} else if (
-			type == EResourceType.TWEET_SEARCH ||
-			type == EResourceType.USER_LIKES ||
-			type == EResourceType.LIST_TWEETS ||
-			type == EResourceType.USER_HIGHLIGHTS ||
-			type == EResourceType.USER_MEDIA ||
-			type == EResourceType.USER_TWEETS ||
-			type == EResourceType.USER_TWEETS_AND_REPLIES
-		) {
+		}
+		// For resources that return a list of tweets
+		else if (returnTweets.includes(type)) {
 			return new CursoredData<Tweet>(response, EBaseType.TWEET) as T;
-		} else if (
-			type == EResourceType.TWEET_FAVORITERS ||
-			type == EResourceType.TWEET_RETWEETERS ||
-			type == EResourceType.USER_FOLLOWERS ||
-			type == EResourceType.USER_FOLLOWING ||
-			type == EResourceType.USER_SUBSCRIPTIONS
-		) {
+		}
+		// For resources that return a list of users
+		else if (returnUsers.includes(type)) {
 			return new CursoredData<User>(response, EBaseType.USER) as T;
 		}
 	}
