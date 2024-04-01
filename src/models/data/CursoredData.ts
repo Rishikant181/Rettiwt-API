@@ -1,8 +1,14 @@
+import { ICursor, IResponse } from 'rettiwt-core';
+
+import { EBaseType } from '../../enums/Data';
+
+import { findByFilter } from '../../helper/JsonUtils';
+
 import { Tweet } from './Tweet';
 import { User } from './User';
 
 /**
- * The data that us fetched batch-wise along with a cursor.
+ * The data that is fetched batch-wise along with a cursor.
  *
  * @typeParam T - Type of data to be stored in the list.
  *
@@ -16,12 +22,19 @@ export class CursoredData<T extends Tweet | User> {
 	public next: Cursor;
 
 	/**
-	 * @param list - The list of data item to store.
-	 * @param next - The cursor to the next batch of data.
+	 * Initializes a new CursoredData object from the given raw reponse data.
+	 *
+	 * @param response - The raw response.
+	 * @param type - The base type of the required data.
 	 */
-	public constructor(list: T[] = [], next: string = '') {
-		this.list = list;
-		this.next = new Cursor(next);
+	public constructor(response: IResponse<unknown>, type: EBaseType) {
+		if (type == EBaseType.TWEET) {
+			this.list = Tweet.list(response) as T[];
+		} else {
+			this.list = User.list(response) as T[];
+		}
+
+		this.next = new Cursor(findByFilter<ICursor>(response, 'cursorType', 'Bottom')[0].value);
 	}
 }
 
