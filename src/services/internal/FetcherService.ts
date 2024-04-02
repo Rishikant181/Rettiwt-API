@@ -7,8 +7,9 @@ import { Auth, AuthCredential } from 'rettiwt-auth';
 import { IInitializeMediaUploadResponse, IResponse } from 'rettiwt-core';
 
 import { allowGuestAuthentication } from '../../collections/Authentication';
-import { returnTweet, returnTweets, returnUser, returnUsers } from '../../collections/Data';
+import { returnStatus, returnTweet, returnTweets, returnUser, returnUsers } from '../../collections/Data';
 import { requests } from '../../collections/Requests';
+import { postResponseValidators } from '../../collections/Validators';
 import { EApiErrors } from '../../enums/Api';
 import { EBaseType } from '../../enums/Data';
 import { ELogActions } from '../../enums/Logging';
@@ -114,6 +115,10 @@ export class FetcherService {
 		// For resources that return a list of users
 		else if (returnUsers.includes(type)) {
 			return new CursoredData<User>(response, EBaseType.USER) as T;
+		}
+		// For resources that return a status
+		else if (returnStatus.includes(type)) {
+			return postResponseValidators[type]?.(response) as T;
 		}
 	}
 
@@ -222,7 +227,7 @@ export class FetcherService {
 	 * @param args - Resource specific arguments.
 	 * @returns Whether posting was successful or not.
 	 */
-	protected async postResource(resourceType: EResourceType, args: PostArgs): Promise<boolean> {
+	protected async postResource<T>(resourceType: EResourceType, args: PostArgs): Promise<T> {
 		// Logging
 		this.logger.log(ELogActions.POST, { resourceType: resourceType, args: args });
 
@@ -230,9 +235,12 @@ export class FetcherService {
 		args = new PostArgs(resourceType, args);
 
 		// Posting the data
-		await this.request<unknown>(resourceType, args);
+		const res = await this.request<unknown>(resourceType, args);
 
-		return true;
+		// Extracting and deserializing data
+		const extractedData = this.extract<T>(res, resourceType) as T;
+
+		return extractedData;
 	}
 
 	/**

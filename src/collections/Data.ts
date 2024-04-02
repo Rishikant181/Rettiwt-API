@@ -1,6 +1,13 @@
 import { EResourceType } from '../enums/Resource';
 
 /**
+ * Collection of resources that return a status.
+ *
+ * @internal
+ */
+export const returnStatus = [EResourceType.TWEET_CREATE, EResourceType.TWEET_FAVORITE, EResourceType.TWEET_RETWEET];
+
+/**
  * Collection of resources which return a single tweet.
  *
  * @internal
