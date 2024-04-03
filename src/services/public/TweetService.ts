@@ -278,7 +278,7 @@ export class TweetService extends FetcherService {
 		if (tweet.media) {
 			for (const item of tweet.media) {
 				// Uploading the media item and getting it's allocated id
-				const id: string = await this.upload(item.path);
+				const id: string = await this.uploadMedia(item.path);
 
 				// Storing the uploaded media item
 				uploadedMedia.push(new TweetMediaArgs({ id: id, tags: item.tags }));

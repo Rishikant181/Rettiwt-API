@@ -22,6 +22,8 @@ import { User } from '../../models/data/User';
 import { IErrorHandler } from '../../types/ErrorHandler';
 import { IRettiwtConfig } from '../../types/RettiwtConfig';
 
+import { FetchReturnType, PostReturnType } from '../../types/ReturnTypes';
+
 import { ErrorService } from './ErrorService';
 import { LogService } from './LogService';
 
@@ -79,46 +81,46 @@ export class FetcherService {
 	/**
 	 * Checks the authorization status based on the requested resource.
 	 *
-	 * @param resourceType - The type of resource to fetch.
+	 * @param resource - The requested resource.
 	 * @throws An error if not authorized to access the requested resource.
 	 */
-	private checkAuthorization(resourceType: EResourceType): void {
+	private checkAuthorization(resource: EResourceType): void {
 		// Logging
 		this.logger.log(ELogActions.AUTHORIZATION, { authenticated: this.isAuthenticated });
 
 		// Checking authorization status
-		if (!allowGuestAuthentication.includes(resourceType) && this.isAuthenticated == false) {
+		if (!allowGuestAuthentication.includes(resource) && this.isAuthenticated == false) {
 			throw new Error(EApiErrors.RESOURCE_NOT_ALLOWED);
 		}
 	}
 
 	/**
-	 * Extracts and deserializes the required data based on the type of resource.
+	 * Extracts and deserializes the required data based on the requested resource.
 	 *
 	 * @param data - The raw response data from which extraction is to be done.
-	 * @param type - The type of data to extract.
+	 * @param resource - The requested resource.
 	 * @returns The extracted and deserialized data.
 	 */
-	private extract<T>(response: IResponse<unknown>, type: EResourceType): T | undefined {
+	private extract<T>(response: IResponse<unknown>, resource: EResourceType): T | undefined {
 		// For resources that return a single tweet
-		if (returnTweet.includes(type)) {
+		if (returnTweet.includes(resource)) {
 			return Tweet.single(response) as T;
 		}
 		// For resources that return a single user
-		else if (returnUser.includes(type)) {
+		else if (returnUser.includes(resource)) {
 			return User.single(response) as T;
 		}
 		// For resources that return a list of tweets
-		else if (returnTweets.includes(type)) {
+		else if (returnTweets.includes(resource)) {
 			return new CursoredData<Tweet>(response, EBaseType.TWEET) as T;
 		}
 		// For resources that return a list of users
-		else if (returnUsers.includes(type)) {
+		else if (returnUsers.includes(resource)) {
 			return new CursoredData<User>(response, EBaseType.USER) as T;
 		}
 		// For resources that return a status
-		else if (returnStatus.includes(type)) {
-			return postResponseValidators[type]?.(response) as T;
+		else if (returnStatus.includes(resource)) {
+			return postResponseValidators[resource]?.(response) as T;
 		}
 	}
 
@@ -146,7 +148,7 @@ export class FetcherService {
 	}
 
 	/**
-	 * Gets the HttpsAgent based on whether a proxy is used or not.
+	 * Get the HttpsAgent based on whether a proxy is used or not.
 	 *
 	 * @param proxyUrl - Optional URL with proxy configuration to use for requests to Twitter API.
 	 * @returns The HttpsAgent to use.
@@ -162,23 +164,20 @@ export class FetcherService {
 	/**
 	 * Makes an HTTP request according to the given parameters.
 	 *
-	 * @typeParam ResType - The type of the returned response data.
-	 * @param resourceType - The type of resource to fetch.
+	 * @typeParam T - The type of the returned response data.
+	 * @param resource - The requested resource.
 	 * @param config - The request configuration.
 	 * @returns The response received.
 	 */
-	private async request<ResType>(
-		resourceType: EResourceType,
-		args: FetchArgs | PostArgs,
-	): Promise<AxiosResponse<ResType>> {
+	private async request<T>(resource: EResourceType, args: FetchArgs | PostArgs): Promise<AxiosResponse<T>> {
 		// Checking authorization for the requested resource
-		this.checkAuthorization(resourceType);
+		this.checkAuthorization(resource);
 
 		// If not authenticated, use guest authentication
 		this.cred = this.cred ?? (await new Auth({ proxyUrl: this.authProxyUrl }).getGuestCredential());
 
 		// Getting request configuration
-		const config = requests[resourceType](args);
+		const config = requests[resource](args);
 
 		// Setting additional request parameters
 		config.headers = { ...config.headers, ...this.cred.toHeader() };
@@ -189,7 +188,7 @@ export class FetcherService {
 		/**
 		 * If Axios request results in an error, catch it and rethrow a more specific error.
 		 */
-		return await axios<ResType>(config).catch((error: unknown) => {
+		return await axios<T>(config).catch((error: unknown) => {
 			this.errorHandler.handle(error);
 
 			throw error;
@@ -197,25 +196,28 @@ export class FetcherService {
 	}
 
 	/**
-	 * Fetches the requested resource from Twitter and returns it after processing.
+	 * Fetches the requested resource from Twitter and returns it after deserialization.
 	 *
-	 * @param resourceType - The type of resource to fetch.
-	 * @param args - Resource specific arguments.
 	 * @typeParam T - The type of data returned.
-	 * @returns The processed data requested from Twitter.
+	 * @param resource - The resource to fetch.
+	 * @param args - Resource specific arguments.
+	 * @returns The deserialized data requested from Twitter.
 	 */
-	protected async fetchResource<T>(resourceType: EResourceType, args: FetchArgs): Promise<T | undefined> {
+	protected async fetchResource<T extends FetchReturnType>(
+		resource: EResourceType,
+		args: FetchArgs,
+	): Promise<T | undefined> {
 		// Logging
-		this.logger.log(ELogActions.FETCH, { resourceType: resourceType, args: args });
+		this.logger.log(ELogActions.FETCH, { resource: resource, args: args });
 
 		// Validating args
-		args = new FetchArgs(resourceType, args);
+		args = new FetchArgs(resource, args);
 
 		// Getting the raw data
-		const res = await this.request<IResponse<unknown>>(resourceType, args).then((res) => res.data);
+		const res = await this.request<IResponse<unknown>>(resource, args).then((res) => res.data);
 
 		// Extracting and deserializing data
-		const extractedData = this.extract<T>(res, resourceType);
+		const extractedData = this.extract<T>(res, resource);
 
 		return extractedData;
 	}
@@ -223,11 +225,12 @@ export class FetcherService {
 	/**
 	 * Posts the requested resource to Twitter and returns the response.
 	 *
-	 * @param resourceType - The type of resource to post.
+	 * @typeParam T - The type of data returned.
+	 * @param resource - The resource to post.
 	 * @param args - Resource specific arguments.
-	 * @returns Whether posting was successful or not.
+	 * @returns The deserialized response.
 	 */
-	protected async postResource<T>(resourceType: EResourceType, args: PostArgs): Promise<T> {
+	protected async postResource<T extends PostReturnType>(resourceType: EResourceType, args: PostArgs): Promise<T> {
 		// Logging
 		this.logger.log(ELogActions.POST, { resourceType: resourceType, args: args });
 
@@ -249,7 +252,7 @@ export class FetcherService {
 	 * @param media - The path or ArrayBuffer to the media file to upload.
 	 * @returns The id of the uploaded media.
 	 */
-	protected async upload(media: string | ArrayBuffer): Promise<string> {
+	protected async uploadMedia(media: string | ArrayBuffer): Promise<string> {
 		// INITIALIZE
 
 		// Logging
