@@ -9,7 +9,7 @@ import { IInitializeMediaUploadResponse, IResponse } from 'rettiwt-core';
 import { allowGuestAuthentication } from '../../collections/Authentication';
 import { requests } from '../../collections/Requests';
 import { returnStatus, returnTweet, returnTweets, returnUser, returnUsers } from '../../collections/Resources';
-import { postResponseValidators } from '../../collections/Validators';
+import { postValidators } from '../../collections/Validators';
 import { EApiErrors } from '../../enums/Api';
 import { EBaseType } from '../../enums/Data';
 import { ELogActions } from '../../enums/Logging';
@@ -120,7 +120,7 @@ export class FetcherService {
 		}
 		// For resources that return a status
 		else if (returnStatus.includes(resource)) {
-			return postResponseValidators[resource]?.(response) as T;
+			return postValidators[resource]?.(response) as T;
 		}
 	}
 
