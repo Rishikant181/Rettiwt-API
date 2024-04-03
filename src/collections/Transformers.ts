@@ -3,11 +3,11 @@ import { IResponse, ITweetLikeResponse, ITweetPostResponse, ITweetRetweetRespons
 import { EResourceType } from '../enums/Resource';
 
 /**
- * Collection of validators that validate if post was successful or not.
+ * Collection of transformers that simplyfy the responses that return a status.
  *
  * @internal
  */
-export const postValidators: {
+export const simplifyStatus: {
 	[key in keyof typeof EResourceType]?: (response: IResponse<unknown>) => boolean;
 } = {
 	/* eslint-disable @typescript-eslint/naming-convention */
