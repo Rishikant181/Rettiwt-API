@@ -7,8 +7,8 @@ import { Auth, AuthCredential } from 'rettiwt-auth';
 import { IInitializeMediaUploadResponse, IResponse } from 'rettiwt-core';
 
 import { allowGuestAuthentication } from '../../collections/Authentication';
-import { returnStatus, returnTweet, returnTweets, returnUser, returnUsers } from '../../collections/Data';
 import { requests } from '../../collections/Requests';
+import { returnStatus, returnTweet, returnTweets, returnUser, returnUsers } from '../../collections/Resources';
 import { postResponseValidators } from '../../collections/Validators';
 import { EApiErrors } from '../../enums/Api';
 import { EBaseType } from '../../enums/Data';
