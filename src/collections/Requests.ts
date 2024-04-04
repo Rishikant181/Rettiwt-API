@@ -19,14 +19,11 @@ const request = new Request();
  */
 export const requests: { [key in keyof typeof EResourceType]: (args: FetchArgs | PostArgs) => AxiosRequestConfig } = {
 	/* eslint-disable @typescript-eslint/naming-convention */
-	LIST_DETAILS: (args: FetchArgs) => request.list.details(args.id!),
 	LIST_TWEETS: (args: FetchArgs) => request.list.tweets(args.id!, args.count, args.cursor),
 
 	MEDIA_UPLOAD_APPEND: (args: PostArgs) => request.media.appendUpload(args.upload!.id!, args.upload!.media!),
 	MEDIA_UPLOAD_FINALIZE: (args: PostArgs) => request.media.finalizeUpload(args.upload!.id!),
 	MEDIA_UPLOAD_INITIALIZE: (args: PostArgs) => request.media.initializeUpload(args.upload!.size!),
-
-	SPACE_DETAILS_BY_ID: (args: FetchArgs) => request.space.details(args.id!),
 
 	TWEET_RETWEET: (args: PostArgs) => request.tweet.retweet(args.id!),
 	TWEET_CREATE: (args: PostArgs) => request.tweet.post(args.tweet!),

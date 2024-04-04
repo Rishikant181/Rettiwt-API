@@ -6,9 +6,9 @@ import { HttpsProxyAgent } from 'https-proxy-agent';
 import { Auth, AuthCredential } from 'rettiwt-auth';
 import { IInitializeMediaUploadResponse, IResponse } from 'rettiwt-core';
 
-import { allowGuestAuthentication } from '../../collections/Authentication';
 import { extractors } from '../../collections/Extractors';
 import { requests } from '../../collections/Requests';
+import { allowGuestAuthentication } from '../../collections/Resources';
 import { EApiErrors } from '../../enums/Api';
 import { ELogActions } from '../../enums/Logging';
 import { EResourceType } from '../../enums/Resource';
@@ -97,7 +97,7 @@ export class FetcherService {
 	 * @returns The extracted and deserialized data.
 	 */
 	private extract<T extends AllReturnTypes>(response: IResponse<unknown>, resource: EResourceType): T | undefined {
-		return extractors[resource]?.(response) as T;
+		return extractors[resource](response) as T;
 	}
 
 	/**

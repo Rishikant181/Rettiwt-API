@@ -84,7 +84,6 @@ export class FetchArgs {
 	@IsOptional()
 	@IsNotEmpty({
 		groups: [
-			EResourceType.LIST_DETAILS,
 			EResourceType.LIST_TWEETS,
 			EResourceType.TWEET_DETAILS,
 			EResourceType.TWEET_FAVORITERS,
@@ -99,12 +98,10 @@ export class FetchArgs {
 			EResourceType.USER_SUBSCRIPTIONS,
 			EResourceType.USER_TWEETS,
 			EResourceType.USER_TWEETS_AND_REPLIES,
-			EResourceType.SPACE_DETAILS_BY_ID,
 		],
 	})
 	@IsNumberString(undefined, {
 		groups: [
-			EResourceType.LIST_DETAILS,
 			EResourceType.LIST_TWEETS,
 			EResourceType.TWEET_DETAILS,
 			EResourceType.TWEET_FAVORITERS,
@@ -119,9 +116,6 @@ export class FetchArgs {
 			EResourceType.USER_TWEETS,
 			EResourceType.USER_TWEETS_AND_REPLIES,
 		],
-	})
-	@IsString({
-		groups: [EResourceType.SPACE_DETAILS_BY_ID],
 	})
 	public id?: string;
 

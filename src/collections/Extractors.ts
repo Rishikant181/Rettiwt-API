@@ -14,11 +14,13 @@ import { User } from '../models/data/User';
 import { AllReturnTypes } from '../types/ReturnTypes';
 
 export const extractors: {
-	[key in keyof typeof EResourceType]?: (response: IResponse<unknown>) => AllReturnTypes | undefined;
+	[key in keyof typeof EResourceType]: (response: IResponse<unknown>) => AllReturnTypes | undefined;
 } = {
 	/* eslint-disable @typescript-eslint/naming-convention */
 	LIST_TWEETS: (response) => new CursoredData<Tweet>(response, EBaseType.TWEET),
 
+	MEDIA_UPLOAD_APPEND: () => undefined,
+	MEDIA_UPLOAD_FINALIZE: () => undefined,
 	MEDIA_UPLOAD_INITIALIZE: (response) =>
 		(response as IResponse<IInitializeMediaUploadResponse>).data?.media_id_string ?? undefined,
 
