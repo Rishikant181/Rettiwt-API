@@ -7,22 +7,17 @@ import { Auth, AuthCredential } from 'rettiwt-auth';
 import { IInitializeMediaUploadResponse, IResponse } from 'rettiwt-core';
 
 import { allowGuestAuthentication } from '../../collections/Authentication';
+import { extractors } from '../../collections/Extractors';
 import { requests } from '../../collections/Requests';
-import { returnStatus, returnTweet, returnTweets, returnUser, returnUsers } from '../../collections/Resources';
-import { simplifyStatus } from '../../collections/Transformers';
 import { EApiErrors } from '../../enums/Api';
-import { EBaseType } from '../../enums/Data';
 import { ELogActions } from '../../enums/Logging';
 import { EResourceType } from '../../enums/Resource';
 import { FetchArgs } from '../../models/args/internal/FetchArgs';
 import { PostArgs } from '../../models/args/internal/PostArgs';
-import { CursoredData } from '../../models/data/CursoredData';
-import { Tweet } from '../../models/data/Tweet';
-import { User } from '../../models/data/User';
 import { IErrorHandler } from '../../types/ErrorHandler';
 import { IRettiwtConfig } from '../../types/RettiwtConfig';
 
-import { FetchReturnType, PostReturnType } from '../../types/ReturnTypes';
+import { AllReturnTypes, FetchReturnType, PostReturnType } from '../../types/ReturnTypes';
 
 import { ErrorService } from './ErrorService';
 import { LogService } from './LogService';
@@ -101,27 +96,8 @@ export class FetcherService {
 	 * @param resource - The requested resource.
 	 * @returns The extracted and deserialized data.
 	 */
-	private extract<T>(response: IResponse<unknown>, resource: EResourceType): T | undefined {
-		// For resources that return a single tweet
-		if (returnTweet.includes(resource)) {
-			return Tweet.single(response) as T;
-		}
-		// For resources that return a single user
-		else if (returnUser.includes(resource)) {
-			return User.single(response) as T;
-		}
-		// For resources that return a list of tweets
-		else if (returnTweets.includes(resource)) {
-			return new CursoredData<Tweet>(response, EBaseType.TWEET) as T;
-		}
-		// For resources that return a list of users
-		else if (returnUsers.includes(resource)) {
-			return new CursoredData<User>(response, EBaseType.USER) as T;
-		}
-		// For resources that return a status
-		else if (returnStatus.includes(resource)) {
-			return simplifyStatus[resource]?.(response) as T;
-		}
+	private extract<T extends AllReturnTypes>(response: IResponse<unknown>, resource: EResourceType): T | undefined {
+		return extractors[resource]?.(response) as T;
 	}
 
 	/**
@@ -230,7 +206,10 @@ export class FetcherService {
 	 * @param args - Resource specific arguments.
 	 * @returns The deserialized response.
 	 */
-	protected async postResource<T extends PostReturnType>(resourceType: EResourceType, args: PostArgs): Promise<T> {
+	protected async postResource<T extends PostReturnType>(
+		resourceType: EResourceType,
+		args: PostArgs,
+	): Promise<T | undefined> {
 		// Logging
 		this.logger.log(ELogActions.POST, { resourceType: resourceType, args: args });
 
@@ -241,7 +220,7 @@ export class FetcherService {
 		const res = await this.request<unknown>(resourceType, args);
 
 		// Extracting and deserializing data
-		const extractedData = this.extract<T>(res, resourceType) as T;
+		const extractedData = this.extract<T>(res, resourceType);
 
 		return extractedData;
 	}

@@ -83,7 +83,7 @@ export class TweetService extends FetcherService {
 	 */
 	public async like(tweetId: string): Promise<boolean> {
 		// Favoriting the tweet
-		const data = await this.postResource<boolean>(EResourceType.TWEET_FAVORITE, { id: tweetId });
+		const data = (await this.postResource<boolean>(EResourceType.TWEET_FAVORITE, { id: tweetId })) ?? false;
 
 		return data;
 	}
@@ -286,16 +286,16 @@ export class TweetService extends FetcherService {
 		}
 
 		// Posting the tweet
-		const data = await this.postResource<boolean>(EResourceType.TWEET_CREATE, {
-			tweet: {
-				text: options.text,
-				media: uploadedMedia,
-				quote: options.quote,
-				replyTo: options.replyTo,
-			},
-		});
-
-		return data;
+		return (
+			(await this.postResource<boolean>(EResourceType.TWEET_CREATE, {
+				tweet: {
+					text: options.text,
+					media: uploadedMedia,
+					quote: options.quote,
+					replyTo: options.replyTo,
+				},
+			})) ?? false
+		);
 	}
 
 	/**
@@ -327,7 +327,7 @@ export class TweetService extends FetcherService {
 		// Retweeting the tweet
 		const data = await this.postResource<boolean>(EResourceType.TWEET_RETWEET, { id: tweetId });
 
-		return data;
+		return data ?? false;
 	}
 
 	/**

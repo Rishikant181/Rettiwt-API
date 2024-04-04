@@ -3,6 +3,13 @@ import { Tweet } from '../models/data/Tweet';
 import { User } from '../models/data/User';
 
 /**
+ * Collection of all return types.
+ *
+ * @internal
+ */
+export type AllReturnTypes = boolean | CursoredData<Tweet> | CursoredData<User> | string | Tweet | User;
+
+/**
  * Return type of fetch requests.
  *
  * @internal
