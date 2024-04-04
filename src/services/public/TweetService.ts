@@ -297,7 +297,7 @@ export class TweetService extends FetcherService {
 	 *
 	 * @public
 	 */
-	public async post(options: TweetArgs): Promise<boolean> {
+	public async post(options: TweetArgs): Promise<string | undefined> {
 		const resource = EResourceType.TWEET_CREATE;
 
 		// Converting  JSON args to object
@@ -328,7 +328,7 @@ export class TweetService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = this.extract<boolean>(response, resource) ?? false;
+		const data = this.extract<string>(response, resource);
 
 		return data;
 	}
