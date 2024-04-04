@@ -1,4 +1,15 @@
-import { TweetFilter } from 'rettiwt-core';
+import {
+	IListTweetsResponse,
+	IResponse,
+	ITweetDetailsResponse,
+	ITweetLikeResponse,
+	ITweetLikersResponse,
+	ITweetPostResponse,
+	ITweetRetweetersResponse,
+	ITweetRetweetResponse,
+	ITweetSearchResponse,
+	TweetFilter,
+} from 'rettiwt-core';
 
 import { EResourceType } from '../../enums/Resource';
 import { TweetMediaArgs } from '../../models/args/internal/PostArgs';
@@ -50,8 +61,13 @@ export class TweetService extends FetcherService {
 	 * @public
 	 */
 	public async details(id: string): Promise<Tweet | undefined> {
-		// Fetching the requested data
-		const data = await this.fetchResource<Tweet>(EResourceType.TWEET_DETAILS, { id: id });
+		const resource = EResourceType.TWEET_DETAILS;
+
+		// Fetching raw tweet details
+		const response = await this.request<IResponse<ITweetDetailsResponse>>(resource, { id: id });
+
+		// Deserializing response
+		const data = this.extract<Tweet>(response, resource);
 
 		return data;
 	}
@@ -83,7 +99,12 @@ export class TweetService extends FetcherService {
 	 */
 	public async like(tweetId: string): Promise<boolean> {
 		// Favoriting the tweet
-		const data = (await this.postResource<boolean>(EResourceType.TWEET_FAVORITE, { id: tweetId })) ?? false;
+		const response = await this.request<IResponse<ITweetLikeResponse>>(EResourceType.TWEET_FAVORITE, {
+			id: tweetId,
+		});
+
+		// Deserializing response
+		const data = this.extract<boolean>(response, EResourceType.TWEET_FAVORITE) ?? false;
 
 		return data;
 	}
@@ -116,14 +137,19 @@ export class TweetService extends FetcherService {
 	 * @public
 	 */
 	public async likers(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		// Fetching the requested data
-		const data = await this.fetchResource<CursoredData<User>>(EResourceType.TWEET_FAVORITERS, {
+		const resource = EResourceType.TWEET_FAVORITERS;
+
+		// Fetching raw likers
+		const response = await this.request<IResponse<ITweetLikersResponse>>(resource, {
 			id: tweetId,
 			count: count,
 			cursor: cursor,
 		});
 
-		return data!;
+		// Deserializing response
+		const data = this.extract<CursoredData<User>>(response, resource)!;
+
+		return data;
 	}
 
 	/**
@@ -154,17 +180,22 @@ export class TweetService extends FetcherService {
 	 * @remarks Due a bug in Twitter API, the count is ignored when no cursor is provided and defaults to 100.
 	 */
 	public async list(listId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-		// Fetching the requested data
-		const data = await this.fetchResource<CursoredData<Tweet>>(EResourceType.LIST_TWEETS, {
+		const resource = EResourceType.LIST_TWEETS;
+
+		// Fetching raw list tweets
+		const response = await this.request<IResponse<IListTweetsResponse>>(resource, {
 			id: listId,
 			count: count,
 			cursor: cursor,
 		});
 
-		// Sorting the tweets by date, from recent to oldest
-		data!.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
+		// Deserializing response
+		const data = this.extract<CursoredData<Tweet>>(response, resource)!;
 
-		return data!;
+		// Sorting the tweets by date, from recent to oldest
+		data.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
+
+		return data;
 	}
 
 	/**
@@ -268,6 +299,8 @@ export class TweetService extends FetcherService {
 	 * @public
 	 */
 	public async post(options: TweetArgs): Promise<boolean> {
+		const resource = EResourceType.TWEET_CREATE;
+
 		// Converting  JSON args to object
 		const tweet: TweetArgs = new TweetArgs(options);
 
@@ -286,16 +319,19 @@ export class TweetService extends FetcherService {
 		}
 
 		// Posting the tweet
-		return (
-			(await this.postResource<boolean>(EResourceType.TWEET_CREATE, {
-				tweet: {
-					text: options.text,
-					media: uploadedMedia,
-					quote: options.quote,
-					replyTo: options.replyTo,
-				},
-			})) ?? false
-		);
+		const response = await this.request<IResponse<ITweetPostResponse>>(resource, {
+			tweet: {
+				text: options.text,
+				media: uploadedMedia,
+				quote: options.quote,
+				replyTo: options.replyTo,
+			},
+		});
+
+		// Deserializing response
+		const data = this.extract<boolean>(response, resource) ?? false;
+
+		return data;
 	}
 
 	/**
@@ -324,10 +360,15 @@ export class TweetService extends FetcherService {
 	 * @public
 	 */
 	public async retweet(tweetId: string): Promise<boolean> {
-		// Retweeting the tweet
-		const data = await this.postResource<boolean>(EResourceType.TWEET_RETWEET, { id: tweetId });
+		const resource = EResourceType.TWEET_RETWEET;
 
-		return data ?? false;
+		// Retweeting the tweet
+		const response = await this.request<IResponse<ITweetRetweetResponse>>(resource, { id: tweetId });
+
+		// Deserializing response
+		const data = this.extract<boolean>(response, resource) ?? false;
+
+		return data;
 	}
 
 	/**
@@ -358,14 +399,19 @@ export class TweetService extends FetcherService {
 	 * @public
 	 */
 	public async retweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		// Fetching the requested data
-		const data = await this.fetchResource<CursoredData<User>>(EResourceType.TWEET_RETWEETERS, {
+		const resource = EResourceType.TWEET_RETWEETERS;
+
+		// Fetching raw list of retweeters
+		const response = await this.request<IResponse<ITweetRetweetersResponse>>(resource, {
 			id: tweetId,
 			count: count,
 			cursor: cursor,
 		});
 
-		return data!;
+		// Deserializing response
+		const data = this.extract<CursoredData<User>>(response, resource)!;
+
+		return data;
 	}
 
 	/**
@@ -398,17 +444,22 @@ export class TweetService extends FetcherService {
 	 * @public
 	 */
 	public async search(query: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-		// Fetching the requested data
-		const data = await this.fetchResource<CursoredData<Tweet>>(EResourceType.TWEET_SEARCH, {
+		const resource = EResourceType.TWEET_SEARCH;
+
+		// Fetching raw list of queried tweets
+		const response = await this.request<IResponse<ITweetSearchResponse>>(resource, {
 			filter: query,
 			count: count,
 			cursor: cursor,
 		});
 
-		// Sorting the tweets by date, from recent to oldest
-		data!.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
+		// Deserializing response
+		const data = this.extract<CursoredData<Tweet>>(response, resource)!;
 
-		return data!;
+		// Sorting the tweets by date, from recent to oldest
+		data.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
+
+		return data;
 	}
 
 	/**

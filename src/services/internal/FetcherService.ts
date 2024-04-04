@@ -1,14 +1,14 @@
 import { statSync } from 'fs';
 import https, { Agent } from 'https';
 
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import { Auth, AuthCredential } from 'rettiwt-auth';
 import { IInitializeMediaUploadResponse, IResponse } from 'rettiwt-core';
 
 import { extractors } from '../../collections/Extractors';
+import { allowGuestAuthentication, fetchResources, postResources } from '../../collections/Groups';
 import { requests } from '../../collections/Requests';
-import { allowGuestAuthentication } from '../../collections/Resources';
 import { EApiErrors } from '../../enums/Api';
 import { ELogActions } from '../../enums/Logging';
 import { EResourceType } from '../../enums/Resource';
@@ -17,7 +17,7 @@ import { PostArgs } from '../../models/args/internal/PostArgs';
 import { IErrorHandler } from '../../types/ErrorHandler';
 import { IRettiwtConfig } from '../../types/RettiwtConfig';
 
-import { AllReturnTypes, FetchReturnType, PostReturnType } from '../../types/ReturnTypes';
+import { AllReturnTypes } from '../../types/ReturnTypes';
 
 import { ErrorService } from './ErrorService';
 import { LogService } from './LogService';
@@ -90,17 +90,6 @@ export class FetcherService {
 	}
 
 	/**
-	 * Extracts and deserializes the required data based on the requested resource.
-	 *
-	 * @param data - The raw response data from which extraction is to be done.
-	 * @param resource - The requested resource.
-	 * @returns The extracted and deserialized data.
-	 */
-	private extract<T extends AllReturnTypes>(response: IResponse<unknown>, resource: EResourceType): T | undefined {
-		return extractors[resource](response) as T;
-	}
-
-	/**
 	 * Returns an AuthCredential generated using the given API key.
 	 *
 	 * @param apiKey - The API key to use for authenticating.
@@ -138,6 +127,17 @@ export class FetcherService {
 	}
 
 	/**
+	 * Extracts and deserializes the required data based on the requested resource.
+	 *
+	 * @param data - The raw response data from which extraction is to be done.
+	 * @param resource - The requested resource.
+	 * @returns The extracted and deserialized data.
+	 */
+	protected extract<T extends AllReturnTypes>(response: IResponse<unknown>, resource: EResourceType): T | undefined {
+		return extractors[resource](response) as T;
+	}
+
+	/**
 	 * Makes an HTTP request according to the given parameters.
 	 *
 	 * @typeParam T - The type of the returned response data.
@@ -145,12 +145,19 @@ export class FetcherService {
 	 * @param config - The request configuration.
 	 * @returns The response received.
 	 */
-	private async request<T>(resource: EResourceType, args: FetchArgs | PostArgs): Promise<AxiosResponse<T>> {
+	public async request<T>(resource: EResourceType, args: FetchArgs | PostArgs): Promise<T> {
 		// Checking authorization for the requested resource
 		this.checkAuthorization(resource);
 
 		// If not authenticated, use guest authentication
 		this.cred = this.cred ?? (await new Auth({ proxyUrl: this.authProxyUrl }).getGuestCredential());
+
+		// Validating args
+		if (fetchResources.includes(resource)) {
+			args = new FetchArgs(resource, args);
+		} else if (postResources.includes(resource)) {
+			args = new PostArgs(resource, args);
+		}
 
 		// Getting request configuration
 		const config = requests[resource](args);
@@ -161,68 +168,15 @@ export class FetcherService {
 		config.httpsAgent = this.httpsAgent;
 		config.timeout = this.timeout;
 
-		/**
-		 * If Axios request results in an error, catch it and rethrow a more specific error.
-		 */
-		return await axios<T>(config).catch((error: unknown) => {
+		// Sending the request
+		try {
+			// Returning the reponse body
+			return (await axios<T>(config)).data;
+		} catch (error) {
+			// If error, delegate handling to error handler
 			this.errorHandler.handle(error);
-
 			throw error;
-		});
-	}
-
-	/**
-	 * Fetches the requested resource from Twitter and returns it after deserialization.
-	 *
-	 * @typeParam T - The type of data returned.
-	 * @param resource - The resource to fetch.
-	 * @param args - Resource specific arguments.
-	 * @returns The deserialized data requested from Twitter.
-	 */
-	protected async fetchResource<T extends FetchReturnType>(
-		resource: EResourceType,
-		args: FetchArgs,
-	): Promise<T | undefined> {
-		// Logging
-		this.logger.log(ELogActions.FETCH, { resource: resource, args: args });
-
-		// Validating args
-		args = new FetchArgs(resource, args);
-
-		// Getting the raw data
-		const res = await this.request<IResponse<unknown>>(resource, args).then((res) => res.data);
-
-		// Extracting and deserializing data
-		const extractedData = this.extract<T>(res, resource);
-
-		return extractedData;
-	}
-
-	/**
-	 * Posts the requested resource to Twitter and returns the response.
-	 *
-	 * @typeParam T - The type of data returned.
-	 * @param resource - The resource to post.
-	 * @param args - Resource specific arguments.
-	 * @returns The deserialized response.
-	 */
-	protected async postResource<T extends PostReturnType>(
-		resourceType: EResourceType,
-		args: PostArgs,
-	): Promise<T | undefined> {
-		// Logging
-		this.logger.log(ELogActions.POST, { resourceType: resourceType, args: args });
-
-		// Validating args
-		args = new PostArgs(resourceType, args);
-
-		// Posting the data
-		const res = await this.request<unknown>(resourceType, args);
-
-		// Extracting and deserializing data
-		const extractedData = this.extract<T>(res, resourceType);
-
-		return extractedData;
+		}
 	}
 
 	/**
@@ -231,7 +185,7 @@ export class FetcherService {
 	 * @param media - The path or ArrayBuffer to the media file to upload.
 	 * @returns The id of the uploaded media.
 	 */
-	protected async uploadMedia(media: string | ArrayBuffer): Promise<string> {
+	public async uploadMedia(media: string | ArrayBuffer): Promise<string> {
 		// INITIALIZE
 
 		// Logging
@@ -245,7 +199,7 @@ export class FetcherService {
 
 		const id: string = (
 			await this.request<IInitializeMediaUploadResponse>(EResourceType.MEDIA_UPLOAD_INITIALIZE, args)
-		).data.media_id_string;
+		).media_id_string;
 
 		// APPEND
 
