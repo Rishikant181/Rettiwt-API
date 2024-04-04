@@ -25,7 +25,8 @@ export const extractors: {
 	MEDIA_UPLOAD_INITIALIZE: (response) => (response as IInitializeMediaUploadResponse).media_id_string ?? undefined,
 
 	TWEET_RETWEET: (response) => ((response as ITweetRetweetResponse)?.data?.create_retweet ? true : false),
-	TWEET_CREATE: (response) => ((response as ITweetPostResponse)?.data?.create_tweet ? true : false),
+	TWEET_CREATE: (response) =>
+		(response as ITweetPostResponse)?.data?.create_tweet?.tweet_results?.result?.rest_id ?? undefined,
 	TWEET_FAVORITE: (response) => ((response as ITweetLikeResponse)?.data?.favorite_tweet ? true : false),
 	TWEET_SEARCH: (response) => new CursoredData<Tweet>(response as IResponse<unknown>, EBaseType.TWEET),
 	TWEET_DETAILS: (response) => Tweet.single(response as IResponse<unknown>),
