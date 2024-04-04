@@ -1,6 +1,5 @@
 import {
 	IListTweetsResponse,
-	IResponse,
 	ITweetDetailsResponse,
 	ITweetLikeResponse,
 	ITweetLikersResponse,
@@ -64,7 +63,7 @@ export class TweetService extends FetcherService {
 		const resource = EResourceType.TWEET_DETAILS;
 
 		// Fetching raw tweet details
-		const response = await this.request<IResponse<ITweetDetailsResponse>>(resource, { id: id });
+		const response = await this.request<ITweetDetailsResponse>(resource, { id: id });
 
 		// Deserializing response
 		const data = this.extract<Tweet>(response, resource);
@@ -99,7 +98,7 @@ export class TweetService extends FetcherService {
 	 */
 	public async like(tweetId: string): Promise<boolean> {
 		// Favoriting the tweet
-		const response = await this.request<IResponse<ITweetLikeResponse>>(EResourceType.TWEET_FAVORITE, {
+		const response = await this.request<ITweetLikeResponse>(EResourceType.TWEET_FAVORITE, {
 			id: tweetId,
 		});
 
@@ -140,7 +139,7 @@ export class TweetService extends FetcherService {
 		const resource = EResourceType.TWEET_FAVORITERS;
 
 		// Fetching raw likers
-		const response = await this.request<IResponse<ITweetLikersResponse>>(resource, {
+		const response = await this.request<ITweetLikersResponse>(resource, {
 			id: tweetId,
 			count: count,
 			cursor: cursor,
@@ -183,7 +182,7 @@ export class TweetService extends FetcherService {
 		const resource = EResourceType.LIST_TWEETS;
 
 		// Fetching raw list tweets
-		const response = await this.request<IResponse<IListTweetsResponse>>(resource, {
+		const response = await this.request<IListTweetsResponse>(resource, {
 			id: listId,
 			count: count,
 			cursor: cursor,
@@ -319,7 +318,7 @@ export class TweetService extends FetcherService {
 		}
 
 		// Posting the tweet
-		const response = await this.request<IResponse<ITweetPostResponse>>(resource, {
+		const response = await this.request<ITweetPostResponse>(resource, {
 			tweet: {
 				text: options.text,
 				media: uploadedMedia,
@@ -363,7 +362,7 @@ export class TweetService extends FetcherService {
 		const resource = EResourceType.TWEET_RETWEET;
 
 		// Retweeting the tweet
-		const response = await this.request<IResponse<ITweetRetweetResponse>>(resource, { id: tweetId });
+		const response = await this.request<ITweetRetweetResponse>(resource, { id: tweetId });
 
 		// Deserializing response
 		const data = this.extract<boolean>(response, resource) ?? false;
@@ -402,7 +401,7 @@ export class TweetService extends FetcherService {
 		const resource = EResourceType.TWEET_RETWEETERS;
 
 		// Fetching raw list of retweeters
-		const response = await this.request<IResponse<ITweetRetweetersResponse>>(resource, {
+		const response = await this.request<ITweetRetweetersResponse>(resource, {
 			id: tweetId,
 			count: count,
 			cursor: cursor,
@@ -447,7 +446,7 @@ export class TweetService extends FetcherService {
 		const resource = EResourceType.TWEET_SEARCH;
 
 		// Fetching raw list of queried tweets
-		const response = await this.request<IResponse<ITweetSearchResponse>>(resource, {
+		const response = await this.request<ITweetSearchResponse>(resource, {
 			filter: query,
 			count: count,
 			cursor: cursor,

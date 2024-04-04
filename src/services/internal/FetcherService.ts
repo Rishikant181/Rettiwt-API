@@ -4,7 +4,7 @@ import https, { Agent } from 'https';
 import axios from 'axios';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import { Auth, AuthCredential } from 'rettiwt-auth';
-import { IInitializeMediaUploadResponse, IResponse } from 'rettiwt-core';
+import { IInitializeMediaUploadResponse } from 'rettiwt-core';
 
 import { extractors } from '../../collections/Extractors';
 import { allowGuestAuthentication, fetchResources, postResources } from '../../collections/Groups';
@@ -133,7 +133,10 @@ export class FetcherService {
 	 * @param resource - The requested resource.
 	 * @returns The extracted and deserialized data.
 	 */
-	protected extract<T extends AllReturnTypes>(response: IResponse<unknown>, resource: EResourceType): T | undefined {
+	protected extract<T extends AllReturnTypes>(
+		response: NonNullable<unknown>,
+		resource: EResourceType,
+	): T | undefined {
 		return extractors[resource](response) as T;
 	}
 

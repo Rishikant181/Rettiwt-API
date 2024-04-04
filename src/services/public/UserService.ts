@@ -1,5 +1,4 @@
 import {
-	IResponse,
 	IUserDetailsResponse,
 	IUserFollowersResponse,
 	IUserFollowingResponse,
@@ -88,7 +87,7 @@ export class UserService extends FetcherService {
 		}
 
 		// Fetching raw details
-		const response = await this.request<IResponse<IUserDetailsResponse>>(resource, { id: id });
+		const response = await this.request<IUserDetailsResponse>(resource, { id: id });
 
 		// Deserializing response
 		const data = this.extract<User>(response, resource);
@@ -127,7 +126,7 @@ export class UserService extends FetcherService {
 		const resource = EResourceType.USER_FOLLOWERS;
 
 		// Fetching raw list of followers
-		const response = await this.request<IResponse<IUserFollowersResponse>>(resource, {
+		const response = await this.request<IUserFollowersResponse>(resource, {
 			id: userId,
 			count: count,
 			cursor: cursor,
@@ -170,7 +169,7 @@ export class UserService extends FetcherService {
 		const resource = EResourceType.USER_FOLLOWING;
 
 		// Fetching raw list of following
-		const response = await this.request<IResponse<IUserFollowingResponse>>(resource, {
+		const response = await this.request<IUserFollowingResponse>(resource, {
 			id: userId,
 			count: count,
 			cursor: cursor,
@@ -213,7 +212,7 @@ export class UserService extends FetcherService {
 		const resource = EResourceType.USER_HIGHLIGHTS;
 
 		// Fetching raw list of highlights
-		const response = await this.request<IResponse<IUserHighlightsResponse>>(resource, {
+		const response = await this.request<IUserHighlightsResponse>(resource, {
 			id: userId,
 			count: count,
 			cursor: cursor,
@@ -256,7 +255,7 @@ export class UserService extends FetcherService {
 		const resource = EResourceType.USER_LIKES;
 
 		// Fetching raw list of likes
-		const response = await this.request<IResponse<IUserLikesResponse>>(resource, {
+		const response = await this.request<IUserLikesResponse>(resource, {
 			id: userId,
 			count: count,
 			cursor: cursor,
@@ -299,7 +298,7 @@ export class UserService extends FetcherService {
 		const resource = EResourceType.USER_MEDIA;
 
 		// Fetching raw list of media
-		const response = await this.request<IResponse<IUserMediaResponse>>(resource, {
+		const response = await this.request<IUserMediaResponse>(resource, {
 			id: userId,
 			count: count,
 			cursor: cursor,
@@ -344,7 +343,7 @@ export class UserService extends FetcherService {
 		const resource = EResourceType.USER_TWEETS_AND_REPLIES;
 
 		// Fetching raw list of replies
-		const response = await this.request<IResponse<IUserTweetsAndRepliesResponse>>(resource, {
+		const response = await this.request<IUserTweetsAndRepliesResponse>(resource, {
 			id: userId,
 			count: count,
 			cursor: cursor,
@@ -387,7 +386,7 @@ export class UserService extends FetcherService {
 		const resource = EResourceType.USER_SUBSCRIPTIONS;
 
 		// Fetching raw list of subscriptions
-		const response = await this.request<IResponse<IUserSubscriptionsResponse>>(resource, {
+		const response = await this.request<IUserSubscriptionsResponse>(resource, {
 			id: userId,
 			count: count,
 			cursor: cursor,
@@ -434,7 +433,7 @@ export class UserService extends FetcherService {
 		const resource = EResourceType.TWEET_RETWEETERS;
 
 		// Fetching raw list of tweets
-		const response = await this.request<IResponse<IUserTweetsResponse>>(resource, {
+		const response = await this.request<IUserTweetsResponse>(resource, {
 			id: userId,
 			count: count,
 			cursor: cursor,
