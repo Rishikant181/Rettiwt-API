@@ -10,8 +10,8 @@ import { requests } from '../../collections/Requests';
 import { EApiErrors } from '../../enums/Api';
 import { ELogActions } from '../../enums/Logging';
 import { EResourceType } from '../../enums/Resource';
-import { FetchArgs } from '../../models/args/internal/FetchArgs';
-import { PostArgs } from '../../models/args/internal/PostArgs';
+import { FetchArgs } from '../../models/args/FetchArgs';
+import { PostArgs } from '../../models/args/PostArgs';
 import { IErrorHandler } from '../../types/ErrorHandler';
 import { IRettiwtConfig } from '../../types/RettiwtConfig';
 

@@ -9,9 +9,6 @@ export * from './enums/Api';
 export * from './enums/Http';
 export * from './enums/Logging';
 
-// ARGS MODELS
-export * from './models/args/public/TweetArgs';
-
 // ERROR MODELS
 export * from './models/errors/ApiError';
 export * from './models/errors/HttpError';

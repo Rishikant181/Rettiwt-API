@@ -58,6 +58,27 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 			output(tweets);
 		});
 
+	// Post
+	tweet
+		.command('post')
+		.description('Post a tweet (text only)')
+		.argument('<text>', 'The text to post as a tweet')
+		.option('-m, --media [string]', 'Comma-separated list of ids of the media item(s) to be posted')
+		.option('-q, --quote [string]', 'The id of the tweet to quote in the tweet to be posted')
+		.option(
+			'-r, --reply [string]',
+			'The id of the tweet to which the reply is to be made, if the tweet is to be a reply',
+		)
+		.action(async (text: string, options?: { media?: string; quote?: string; reply?: string }) => {
+			const result = await rettiwt.tweet.post({
+				text: text,
+				media: options?.media ? options?.media.split(',').map((item) => ({ id: item })) : undefined,
+				quote: options?.quote,
+				replyTo: options?.reply,
+			});
+			output(result);
+		});
+
 	// Retweet
 	tweet
 		.command('retweet')
@@ -134,25 +155,14 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
-	// Post
+	// Upload
 	tweet
-		.command('post')
-		.description('Post a tweet (text only)')
-		.argument('<text>', 'The text to post as a tweet')
-		.option('-m, --media [string]', 'Comma-separated list of path(s) to the media item(s) to be posted')
-		.option('-q, --quote [string]', 'The id of the tweet to quote in the tweet to be posted')
-		.option(
-			'-r, --reply [string]',
-			'The id of the tweet to which the reply is to be made, if the tweet is to be a reply',
-		)
-		.action(async (text: string, options?: { media?: string; quote?: string; reply?: string }) => {
-			const result = await rettiwt.tweet.post({
-				text: text,
-				media: options?.media ? options?.media.split(',').map((item) => ({ path: item })) : undefined,
-				quote: options?.quote,
-				replyTo: options?.reply,
-			});
-			output(result);
+		.command('upload')
+		.description('Upload a media file and returns the alloted id (valid for 24 hrs)')
+		.argument('<path>', 'The path to the media to upload')
+		.action(async (path: string) => {
+			const id = await rettiwt.tweet.upload(path);
+			output(id);
 		});
 
 	return tweet;

@@ -14,8 +14,7 @@ import {
 } from 'rettiwt-core';
 
 import { EResourceType } from '../../enums/Resource';
-import { TweetMediaArgs } from '../../models/args/internal/PostArgs';
-import { TweetArgs } from '../../models/args/public/TweetArgs';
+import { TweetArgs } from '../../models/args/PostArgs';
 import { CursoredData } from '../../models/data/CursoredData';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
@@ -303,32 +302,8 @@ export class TweetService extends FetcherService {
 	public async post(options: TweetArgs): Promise<string | undefined> {
 		const resource = EResourceType.TWEET_CREATE;
 
-		// Converting  JSON args to object
-		const tweet: TweetArgs = new TweetArgs(options);
-
-		/** Stores the list of media that has been uploaded */
-		const uploadedMedia: TweetMediaArgs[] = [];
-
-		// If tweet includes media, upload the media items
-		if (tweet.media) {
-			for (const item of tweet.media) {
-				// Uploading the media item and getting it's allocated id
-				const id: string = await this.upload(item.path);
-
-				// Storing the uploaded media item
-				uploadedMedia.push(new TweetMediaArgs({ id: id, tags: item.tags }));
-			}
-		}
-
 		// Posting the tweet
-		const response = await this.request<ITweetPostResponse>(resource, {
-			tweet: {
-				text: options.text,
-				media: uploadedMedia,
-				quote: options.quote,
-				replyTo: options.replyTo,
-			},
-		});
+		const response = await this.request<ITweetPostResponse>(resource, { tweet: options });
 
 		// Deserializing response
 		const data = this.extract<string>(response, resource);
