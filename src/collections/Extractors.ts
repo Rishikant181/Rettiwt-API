@@ -27,11 +27,11 @@ export const extractors: {
 	TWEET_RETWEET: (response) => ((response as ITweetRetweetResponse)?.data?.create_retweet ? true : false),
 	TWEET_CREATE: (response) =>
 		(response as ITweetPostResponse)?.data?.create_tweet?.tweet_results?.result?.rest_id ?? undefined,
-	TWEET_FAVORITE: (response) => ((response as ITweetLikeResponse)?.data?.favorite_tweet ? true : false),
-	TWEET_SEARCH: (response) => new CursoredData<Tweet>(response as IResponse<unknown>, EBaseType.TWEET),
 	TWEET_DETAILS: (response) => Tweet.single(response as IResponse<unknown>),
-	TWEET_FAVORITERS: (response) => new CursoredData<User>(response as IResponse<unknown>, EBaseType.USER),
+	TWEET_LIKE: (response) => ((response as ITweetLikeResponse)?.data?.favorite_tweet ? true : false),
+	TWEET_LIKERS: (response) => new CursoredData<User>(response as IResponse<unknown>, EBaseType.USER),
 	TWEET_RETWEETERS: (response) => new CursoredData<User>(response as IResponse<unknown>, EBaseType.USER),
+	TWEET_SEARCH: (response) => new CursoredData<Tweet>(response as IResponse<unknown>, EBaseType.TWEET),
 
 	USER_DETAILS_BY_USERNAME: (response) => User.single(response as IResponse<unknown>),
 	USER_DETAILS_BY_ID: (response) => User.single(response as IResponse<unknown>),

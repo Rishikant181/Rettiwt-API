@@ -25,13 +25,13 @@ export const requests: { [key in keyof typeof EResourceType]: (args: FetchArgs |
 	MEDIA_UPLOAD_FINALIZE: (args: PostArgs) => request.media.finalizeUpload(args.upload!.id!),
 	MEDIA_UPLOAD_INITIALIZE: (args: PostArgs) => request.media.initializeUpload(args.upload!.size!),
 
-	TWEET_RETWEET: (args: PostArgs) => request.tweet.retweet(args.id!),
-	TWEET_CREATE: (args: PostArgs) => request.tweet.post(args.tweet!),
-	TWEET_FAVORITE: (args: PostArgs) => request.tweet.like(args.id!),
-	TWEET_SEARCH: (args: FetchArgs) => request.tweet.search(args.filter!, args.count, args.cursor),
 	TWEET_DETAILS: (args: FetchArgs) => request.tweet.details(args.id!),
-	TWEET_FAVORITERS: (args: FetchArgs) => request.tweet.likers(args.id!, args.count, args.cursor),
+	TWEET_CREATE: (args: PostArgs) => request.tweet.post(args.tweet!),
+	TWEET_LIKE: (args: PostArgs) => request.tweet.like(args.id!),
+	TWEET_LIKERS: (args: FetchArgs) => request.tweet.likers(args.id!, args.count, args.cursor),
+	TWEET_RETWEET: (args: PostArgs) => request.tweet.retweet(args.id!),
 	TWEET_RETWEETERS: (args: FetchArgs) => request.tweet.retweeters(args.id!, args.count, args.cursor),
+	TWEET_SEARCH: (args: FetchArgs) => request.tweet.search(args.filter!, args.count, args.cursor),
 
 	USER_DETAILS_BY_USERNAME: (args: FetchArgs) => request.user.detailsByUsername(args.id!),
 	USER_DETAILS_BY_ID: (args: FetchArgs) => request.user.detailsById(args.id!),

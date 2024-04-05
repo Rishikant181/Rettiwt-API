@@ -24,8 +24,8 @@ import { DataValidationError } from '../../errors/DataValidationError';
 export class PostArgs {
 	/** The id of the target resource. */
 	@IsOptional()
-	@IsNotEmpty({ groups: [EResourceType.TWEET_FAVORITE, EResourceType.TWEET_RETWEET] })
-	@IsNumberString(undefined, { groups: [EResourceType.TWEET_FAVORITE, EResourceType.TWEET_RETWEET] })
+	@IsNotEmpty({ groups: [EResourceType.TWEET_LIKE, EResourceType.TWEET_RETWEET] })
+	@IsNumberString(undefined, { groups: [EResourceType.TWEET_LIKE, EResourceType.TWEET_RETWEET] })
 	public id?: string;
 
 	/** The tweet that is to be posted. */

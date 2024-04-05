@@ -18,10 +18,10 @@ export const allowGuestAuthentication = [
  */
 export const fetchResources = [
 	EResourceType.LIST_TWEETS,
-	EResourceType.TWEET_SEARCH,
 	EResourceType.TWEET_DETAILS,
-	EResourceType.TWEET_FAVORITERS,
+	EResourceType.TWEET_LIKERS,
 	EResourceType.TWEET_RETWEETERS,
+	EResourceType.TWEET_SEARCH,
 	EResourceType.USER_DETAILS_BY_USERNAME,
 	EResourceType.USER_DETAILS_BY_ID,
 	EResourceType.USER_FOLLOWING,
@@ -45,5 +45,5 @@ export const postResources = [
 	EResourceType.MEDIA_UPLOAD_INITIALIZE,
 	EResourceType.TWEET_RETWEET,
 	EResourceType.TWEET_CREATE,
-	EResourceType.TWEET_FAVORITE,
+	EResourceType.TWEET_LIKE,
 ];

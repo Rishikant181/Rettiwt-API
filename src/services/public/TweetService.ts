@@ -98,12 +98,12 @@ export class TweetService extends FetcherService {
 	 */
 	public async like(tweetId: string): Promise<boolean> {
 		// Favoriting the tweet
-		const response = await this.request<ITweetLikeResponse>(EResourceType.TWEET_FAVORITE, {
+		const response = await this.request<ITweetLikeResponse>(EResourceType.TWEET_LIKE, {
 			id: tweetId,
 		});
 
 		// Deserializing response
-		const data = this.extract<boolean>(response, EResourceType.TWEET_FAVORITE) ?? false;
+		const data = this.extract<boolean>(response, EResourceType.TWEET_LIKE) ?? false;
 
 		return data;
 	}
@@ -136,7 +136,7 @@ export class TweetService extends FetcherService {
 	 * @public
 	 */
 	public async likers(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		const resource = EResourceType.TWEET_FAVORITERS;
+		const resource = EResourceType.TWEET_LIKERS;
 
 		// Fetching raw likers
 		const response = await this.request<ITweetLikersResponse>(resource, {

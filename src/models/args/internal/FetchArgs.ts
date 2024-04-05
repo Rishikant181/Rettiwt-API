@@ -37,7 +37,7 @@ export class FetchArgs {
 	@Max(100, {
 		groups: [
 			EResourceType.LIST_TWEETS,
-			EResourceType.TWEET_FAVORITERS,
+			EResourceType.TWEET_LIKERS,
 			EResourceType.TWEET_RETWEETERS,
 			EResourceType.USER_FOLLOWERS,
 			EResourceType.USER_FOLLOWING,
@@ -86,7 +86,7 @@ export class FetchArgs {
 		groups: [
 			EResourceType.LIST_TWEETS,
 			EResourceType.TWEET_DETAILS,
-			EResourceType.TWEET_FAVORITERS,
+			EResourceType.TWEET_LIKERS,
 			EResourceType.TWEET_RETWEETERS,
 			EResourceType.USER_DETAILS_BY_USERNAME,
 			EResourceType.USER_DETAILS_BY_ID,
@@ -104,7 +104,7 @@ export class FetchArgs {
 		groups: [
 			EResourceType.LIST_TWEETS,
 			EResourceType.TWEET_DETAILS,
-			EResourceType.TWEET_FAVORITERS,
+			EResourceType.TWEET_LIKERS,
 			EResourceType.TWEET_RETWEETERS,
 			EResourceType.USER_DETAILS_BY_ID,
 			EResourceType.USER_FOLLOWERS,
