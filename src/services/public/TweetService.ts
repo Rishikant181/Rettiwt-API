@@ -528,8 +528,9 @@ export class TweetService extends FetcherService {
 	 * ```
 	 *
 	 * @remarks
-	 * The uploaded media exists for 24 hrs within which it can be included in a tweet to be posted.
+	 * - The uploaded media exists for 24 hrs within which it can be included in a tweet to be posted.
 	 * If not posted in a tweet within this period, the uploaded media is removed.
+	 * - Instead of a path to the media, an ArrayBuffer containing the media can also be uploaded.
 	 */
 	public async upload(media: string | ArrayBuffer): Promise<string> {
 		// INITIALIZE
