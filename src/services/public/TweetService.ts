@@ -1,4 +1,7 @@
+import { statSync } from 'fs';
+
 import {
+	IInitializeMediaUploadResponse,
 	IListTweetsResponse,
 	ITweetDetailsResponse,
 	ITweetLikeResponse,
@@ -310,7 +313,7 @@ export class TweetService extends FetcherService {
 		if (tweet.media) {
 			for (const item of tweet.media) {
 				// Uploading the media item and getting it's allocated id
-				const id: string = await this.uploadMedia(item.path);
+				const id: string = await this.upload(item.path);
 
 				// Storing the uploaded media item
 				uploadedMedia.push(new TweetMediaArgs({ id: id, tags: item.tags }));
@@ -524,5 +527,50 @@ export class TweetService extends FetcherService {
 				cursor = undefined;
 			}
 		}
+	}
+
+	/**
+	 * Uploads the given media file to Twitter
+	 *
+	 * @param media - The path or ArrayBuffer to the media file to upload.
+	 * @returns The id of the uploaded media.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Uploading a file called mountains.jpg
+	 * rettiwt.tweet.upload('mountains.jpg')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @remarks
+	 * The uploaded media exists for 24 hrs within which it can be included in a tweet to be posted.
+	 * If not posted in a tweet within this period, the uploaded media is removed.
+	 */
+	public async upload(media: string | ArrayBuffer): Promise<string> {
+		// INITIALIZE
+		const size = typeof media == 'string' ? statSync(media).size : media.byteLength;
+		const id: string = (
+			await this.request<IInitializeMediaUploadResponse>(EResourceType.MEDIA_UPLOAD_INITIALIZE, {
+				upload: { size: size },
+			})
+		).media_id_string;
+
+		// APPEND
+		await this.request<unknown>(EResourceType.MEDIA_UPLOAD_APPEND, { upload: { id: id, media: media } });
+
+		// FINALIZE
+		await this.request<unknown>(EResourceType.MEDIA_UPLOAD_FINALIZE, { upload: { id: id } });
+
+		return id;
 	}
 }
