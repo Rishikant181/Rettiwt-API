@@ -2,8 +2,8 @@ import { AxiosRequestConfig } from 'axios';
 import { Request } from 'rettiwt-core';
 
 import { EResourceType } from '../enums/Resource';
-import { FetchArgs } from '../models/args/internal/FetchArgs';
-import { PostArgs } from '../models/args/internal/PostArgs';
+import { FetchArgs } from '../models/args/FetchArgs';
+import { PostArgs } from '../models/args/PostArgs';
 
 /**
  * The request generator from rettiwt-core.

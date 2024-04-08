@@ -1,10 +1,8 @@
-import { statSync } from 'fs';
 import https, { Agent } from 'https';
 
 import axios from 'axios';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import { Auth, AuthCredential } from 'rettiwt-auth';
-import { IInitializeMediaUploadResponse } from 'rettiwt-core';
 
 import { extractors } from '../../collections/Extractors';
 import { allowGuestAuthentication, fetchResources, postResources } from '../../collections/Groups';
@@ -12,8 +10,8 @@ import { requests } from '../../collections/Requests';
 import { EApiErrors } from '../../enums/Api';
 import { ELogActions } from '../../enums/Logging';
 import { EResourceType } from '../../enums/Resource';
-import { FetchArgs } from '../../models/args/internal/FetchArgs';
-import { PostArgs } from '../../models/args/internal/PostArgs';
+import { FetchArgs } from '../../models/args/FetchArgs';
+import { PostArgs } from '../../models/args/PostArgs';
 import { IErrorHandler } from '../../types/ErrorHandler';
 import { IRettiwtConfig } from '../../types/RettiwtConfig';
 
@@ -180,50 +178,5 @@ export class FetcherService {
 			this.errorHandler.handle(error);
 			throw error;
 		}
-	}
-
-	/**
-	 * Uploads the given media file to Twitter
-	 *
-	 * @param media - The path or ArrayBuffer to the media file to upload.
-	 * @returns The id of the uploaded media.
-	 */
-	public async uploadMedia(media: string | ArrayBuffer): Promise<string> {
-		// INITIALIZE
-
-		// Logging
-		this.logger.log(ELogActions.UPLOAD, { step: EResourceType.MEDIA_UPLOAD_INITIALIZE });
-
-		// Getting media size
-		const size = typeof media == 'string' ? statSync(media).size : media.byteLength;
-
-		// Validating args
-		let args = new PostArgs(EResourceType.MEDIA_UPLOAD_INITIALIZE, { upload: { size: size } });
-
-		const id: string = (
-			await this.request<IInitializeMediaUploadResponse>(EResourceType.MEDIA_UPLOAD_INITIALIZE, args)
-		).media_id_string;
-
-		// APPEND
-
-		// Logging
-		this.logger.log(ELogActions.UPLOAD, { step: EResourceType.MEDIA_UPLOAD_APPEND });
-
-		// Validating args
-		args = new PostArgs(EResourceType.MEDIA_UPLOAD_APPEND, { upload: { id: id, media: media } });
-
-		await this.request<unknown>(EResourceType.MEDIA_UPLOAD_APPEND, args);
-
-		// FINALIZE
-
-		// Logging
-		this.logger.log(ELogActions.UPLOAD, { step: EResourceType.MEDIA_UPLOAD_FINALIZE });
-
-		// Validating args
-		args = new PostArgs(EResourceType.MEDIA_UPLOAD_FINALIZE, { upload: { id: id } });
-
-		await this.request<unknown>(EResourceType.MEDIA_UPLOAD_FINALIZE, args);
-
-		return id;
 	}
 }

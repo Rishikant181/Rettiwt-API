@@ -1,4 +1,7 @@
+import { statSync } from 'fs';
+
 import {
+	IInitializeMediaUploadResponse,
 	IListTweetsResponse,
 	ITweetDetailsResponse,
 	ITweetLikeResponse,
@@ -11,8 +14,7 @@ import {
 } from 'rettiwt-core';
 
 import { EResourceType } from '../../enums/Resource';
-import { TweetMediaArgs } from '../../models/args/internal/PostArgs';
-import { TweetArgs } from '../../models/args/public/TweetArgs';
+import { TweetArgs } from '../../models/args/PostArgs';
 import { CursoredData } from '../../models/data/CursoredData';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
@@ -300,32 +302,8 @@ export class TweetService extends FetcherService {
 	public async post(options: TweetArgs): Promise<string | undefined> {
 		const resource = EResourceType.TWEET_CREATE;
 
-		// Converting  JSON args to object
-		const tweet: TweetArgs = new TweetArgs(options);
-
-		/** Stores the list of media that has been uploaded */
-		const uploadedMedia: TweetMediaArgs[] = [];
-
-		// If tweet includes media, upload the media items
-		if (tweet.media) {
-			for (const item of tweet.media) {
-				// Uploading the media item and getting it's allocated id
-				const id: string = await this.uploadMedia(item.path);
-
-				// Storing the uploaded media item
-				uploadedMedia.push(new TweetMediaArgs({ id: id, tags: item.tags }));
-			}
-		}
-
 		// Posting the tweet
-		const response = await this.request<ITweetPostResponse>(resource, {
-			tweet: {
-				text: options.text,
-				media: uploadedMedia,
-				quote: options.quote,
-				replyTo: options.replyTo,
-			},
-		});
+		const response = await this.request<ITweetPostResponse>(resource, { tweet: options });
 
 		// Deserializing response
 		const data = this.extract<string>(response, resource);
@@ -524,5 +502,51 @@ export class TweetService extends FetcherService {
 				cursor = undefined;
 			}
 		}
+	}
+
+	/**
+	 * Uploads the given media file to Twitter
+	 *
+	 * @param media - The path or ArrayBuffer to the media file to upload.
+	 * @returns The id of the uploaded media.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Uploading a file called mountains.jpg
+	 * rettiwt.tweet.upload('mountains.jpg')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @remarks
+	 * - The uploaded media exists for 24 hrs within which it can be included in a tweet to be posted.
+	 * If not posted in a tweet within this period, the uploaded media is removed.
+	 * - Instead of a path to the media, an ArrayBuffer containing the media can also be uploaded.
+	 */
+	public async upload(media: string | ArrayBuffer): Promise<string> {
+		// INITIALIZE
+		const size = typeof media == 'string' ? statSync(media).size : media.byteLength;
+		const id: string = (
+			await this.request<IInitializeMediaUploadResponse>(EResourceType.MEDIA_UPLOAD_INITIALIZE, {
+				upload: { size: size },
+			})
+		).media_id_string;
+
+		// APPEND
+		await this.request<unknown>(EResourceType.MEDIA_UPLOAD_APPEND, { upload: { id: id, media: media } });
+
+		// FINALIZE
+		await this.request<unknown>(EResourceType.MEDIA_UPLOAD_FINALIZE, { upload: { id: id } });
+
+		return id;
 	}
 }
