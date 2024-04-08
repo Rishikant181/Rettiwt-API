@@ -22,19 +22,39 @@ import { DataValidationError } from '../errors/DataValidationError';
  * @internal
  */
 export class PostArgs {
-	/** The id of the target resource. */
+	/**
+	 * The id of the target resource.
+	 *
+	 * @remarks
+	 * Required only when posting using the following resources:
+	 * - {@link EResourceType.TWEET_LIKE}
+	 * - {@link EResourceType.TWEET_RETWEET}
+	 */
 	@IsOptional()
 	@IsNotEmpty({ groups: [EResourceType.TWEET_LIKE, EResourceType.TWEET_RETWEET] })
 	@IsNumberString(undefined, { groups: [EResourceType.TWEET_LIKE, EResourceType.TWEET_RETWEET] })
 	public id?: string;
 
-	/** The tweet that is to be posted. */
+	/**
+	 * The tweet that is to be posted.
+	 *
+	 * @remarks
+	 * Required only when posting a tweet using {@link EResourceType.TWEET_POST}
+	 */
 	@IsOptional()
-	@IsNotEmpty({ groups: [EResourceType.TWEET_CREATE] })
-	@IsObject({ groups: [EResourceType.TWEET_CREATE] })
+	@IsNotEmpty({ groups: [EResourceType.TWEET_POST] })
+	@IsObject({ groups: [EResourceType.TWEET_POST] })
 	public tweet?: TweetArgs;
 
-	/** The media file to be uploaded. */
+	/**
+	 * The media file to be uploaded.
+	 *
+	 * @remarks
+	 * Required only when uploading a media using the following resources:
+	 * - {@link EResourceType.MEDIA_UPLOAD_APPEND}
+	 * - {@link EResourceType.MEDIA_UPLOAD_FINALIZE}
+	 * - {@link EResourceType.MEDIA_UPLOAD_INITIALIZE}
+	 */
 	@IsOptional()
 	@IsNotEmpty({
 		groups: [
@@ -53,16 +73,16 @@ export class PostArgs {
 	public upload?: UploadArgs;
 
 	/**
-	 * @param resourceType - The type of resource that is targeted.
-	 * @param args - The additional user-defined arguments for posting the resource.
+	 * @param resource - The resource to be posted.
+	 * @param args - Additional user-defined arguments for posting the resource.
 	 */
-	public constructor(resourceType: EResourceType, args: PostArgs) {
+	public constructor(resource: EResourceType, args: PostArgs) {
 		this.id = args.id;
 		this.tweet = args.tweet ? new TweetArgs(args.tweet) : undefined;
-		this.upload = args.upload ? new UploadArgs(resourceType, args.upload) : undefined;
+		this.upload = args.upload ? new UploadArgs(resource, args.upload) : undefined;
 
 		// Validating this object
-		const validationResult = validateSync(this, { groups: [resourceType] });
+		const validationResult = validateSync(this, { groups: [resource] });
 
 		// If valiation error occured
 		if (validationResult.length) {
@@ -74,16 +94,14 @@ export class PostArgs {
 /**
  * User set query parameters that are used to specify the tweet that is to be posted.
  *
- * @internal
+ * @public
  */
 export class TweetArgs extends NewTweet {
 	/**
 	 * The list of media to be uploaded.
 	 *
 	 * @remarks
-	 * - The media first needs to be uploaded using the {@link EResourceType.MEDIA_UPLOAD} resource.
-	 * - After uploading, the returned id(s) can be used to reference the media here.
-	 * - Maximum number of media items that can be posted is 4.
+	 * Maximum number of media items that can be posted is 4.
 	 */
 	@IsOptional()
 	@IsArray()
@@ -96,7 +114,7 @@ export class TweetArgs extends NewTweet {
 	@IsNumberString()
 	public quote?: string;
 
-	/** The id of the Tweet to which the given Tweet must be a reply. */
+	/** The id of the tweet to which the given tweet must be a reply. */
 	@IsOptional()
 	@IsNumberString()
 	public replyTo?: string;
@@ -113,7 +131,7 @@ export class TweetArgs extends NewTweet {
 	public text: string;
 
 	/**
-	 * @param args - The additional user-defined arguments for posting the resource.
+	 * @param args - Arguments specifying the tweet to be posted.
 	 */
 	public constructor(args: TweetArgs) {
 		super();
@@ -133,12 +151,12 @@ export class TweetArgs extends NewTweet {
 }
 
 /**
- * User set query parameters that are used to specify the details of the media to be uploaded.
+ * User set query parameters that are used to specify the media to be posted.
  *
  * @internal
  */
 export class TweetMediaArgs extends NewTweetMedia {
-	/** The id of the media to upload. */
+	/** The id of the media to post. */
 	@IsNotEmpty()
 	@IsNumberString()
 	public id: string;
@@ -156,7 +174,7 @@ export class TweetMediaArgs extends NewTweetMedia {
 	public tags?: string[];
 
 	/**
-	 * @param args - The media arguments specifying the media.
+	 * @param args - Arguments specifying the media to be posted.
 	 */
 	public constructor(args: TweetMediaArgs) {
 		super();
@@ -174,7 +192,7 @@ export class TweetMediaArgs extends NewTweetMedia {
 }
 
 /**
- * User set query parameters that are used while uploading a media file.
+ * Query parameters that are used while uploading a media file.
  *
  * @internal
  */

@@ -29,12 +29,12 @@ export const extractors: {
 	MEDIA_UPLOAD_FINALIZE: () => undefined,
 	MEDIA_UPLOAD_INITIALIZE: (response) => (response as IInitializeMediaUploadResponse).media_id_string ?? undefined,
 
-	TWEET_RETWEET: (response) => ((response as ITweetRetweetResponse)?.data?.create_retweet ? true : false),
-	TWEET_CREATE: (response) =>
-		(response as ITweetPostResponse)?.data?.create_tweet?.tweet_results?.result?.rest_id ?? undefined,
 	TWEET_DETAILS: (response) => Tweet.single(response as IResponse<unknown>),
 	TWEET_LIKE: (response) => ((response as ITweetLikeResponse)?.data?.favorite_tweet ? true : false),
 	TWEET_LIKERS: (response) => new CursoredData<User>(response as IResponse<unknown>, EBaseType.USER),
+	TWEET_POST: (response) =>
+		(response as ITweetPostResponse)?.data?.create_tweet?.tweet_results?.result?.rest_id ?? undefined,
+	TWEET_RETWEET: (response) => ((response as ITweetRetweetResponse)?.data?.create_retweet ? true : false),
 	TWEET_RETWEETERS: (response) => new CursoredData<User>(response as IResponse<unknown>, EBaseType.USER),
 	TWEET_SEARCH: (response) => new CursoredData<Tweet>(response as IResponse<unknown>, EBaseType.TWEET),
 

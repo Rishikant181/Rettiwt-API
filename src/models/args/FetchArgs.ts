@@ -28,7 +28,7 @@ export class FetchArgs {
 	 *
 	 * @remarks
 	 * - Works only for cursored resources.
-	 * - Must be \<= 20 for {@link EResourceType.TWEET_SEARCH} and {@link EResourceType.USER_TWEETS}.
+	 * - Must be \<= 20 for {@link EResourceType.USER_TIMELINE}.
 	 * - Must be \<= 100 for all other cursored resources.
 	 *
 	 * @defaultValue 20
@@ -53,21 +53,21 @@ export class FetchArgs {
 	public count?: number;
 
 	/**
-	 * The cursor string to the batch of data to fetch.
+	 * The cursor to the batch of data to fetch.
 	 *
 	 * @remarks
 	 * - May be used for cursored resources.
-	 * - Has no effect for all other resources.
+	 * - Has no effect for other resources.
 	 */
 	@IsOptional()
 	@IsString()
 	public cursor?: string;
 
 	/**
-	 * The filter for searching.
+	 * The filter for searching tweets.
 	 *
 	 * @remarks
-	 * Required when resource type is {@link EResourceType.TWEET_SEARCH}
+	 * Required when searching for tweets using {@link EResourceType.TWEET_SEARCH}.
 	 */
 	@IsOptional()
 	@IsNotEmpty({ groups: [EResourceType.TWEET_SEARCH] })
@@ -79,7 +79,7 @@ export class FetchArgs {
 	 *
 	 * @remarks
 	 * - Required for all resources except {@link EResourceType.TWEET_SEARCH}.
-	 * - For {@link EResourceType.USER_DETAILS}, can be alphanumeric, while for others, is strictly numeric.
+	 * - For {@link EResourceType.USER_DETAILS_BY_USERNAME}, can be alphanumeric, while for others, is strictly numeric.
 	 */
 	@IsOptional()
 	@IsNotEmpty({
@@ -120,23 +120,17 @@ export class FetchArgs {
 	public id?: string;
 
 	/**
-	 * @param resourceType - The type of resource that is requested.
-	 * @param args - The additional user-defined arguments for fetching the resource.
+	 * @param resource - The resource to be fetched.
+	 * @param args - Additional user-defined arguments for fetching the resource.
 	 */
-	public constructor(resourceType: EResourceType, args: FetchArgs) {
+	public constructor(resource: EResourceType, args: FetchArgs) {
 		this.id = args.id;
 		this.count = args.count ?? 20;
 		this.cursor = args.cursor;
-
-		/**
-		 * Initializing filter only if resource type is TWEET_SEARCH
-		 */
-		if (resourceType == EResourceType.TWEET_SEARCH && args.filter) {
-			this.filter = new TweetFilter(args.filter);
-		}
+		this.filter = args.filter ? new TweetFilter(args.filter) : undefined;
 
 		// Validating this object
-		const validationResult = validateSync(this, { groups: [resourceType] });
+		const validationResult = validateSync(this, { groups: [resource] });
 
 		// If valiation error occured
 		if (validationResult.length) {
@@ -146,7 +140,7 @@ export class FetchArgs {
 }
 
 /**
- * The filter to be used for fetching tweets from Twitter.
+ * The filter to be used for searching tweets.
  *
  * @public
  */

@@ -43,7 +43,7 @@ export const postResources = [
 	EResourceType.MEDIA_UPLOAD_APPEND,
 	EResourceType.MEDIA_UPLOAD_FINALIZE,
 	EResourceType.MEDIA_UPLOAD_INITIALIZE,
-	EResourceType.TWEET_RETWEET,
-	EResourceType.TWEET_CREATE,
 	EResourceType.TWEET_LIKE,
+	EResourceType.TWEET_POST,
+	EResourceType.TWEET_RETWEET,
 ];

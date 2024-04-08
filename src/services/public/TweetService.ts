@@ -300,7 +300,7 @@ export class TweetService extends FetcherService {
 	 * @public
 	 */
 	public async post(options: TweetArgs): Promise<string | undefined> {
-		const resource = EResourceType.TWEET_CREATE;
+		const resource = EResourceType.TWEET_POST;
 
 		// Posting the tweet
 		const response = await this.request<ITweetPostResponse>(resource, { tweet: options });
