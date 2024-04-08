@@ -48,7 +48,7 @@ export class FetchArgs {
 		],
 	})
 	@Max(20, {
-		groups: [EResourceType.TWEET_SEARCH, EResourceType.USER_TWEETS, EResourceType.USER_TWEETS_AND_REPLIES],
+		groups: [EResourceType.TWEET_SEARCH, EResourceType.USER_TIMELINE, EResourceType.USER_TIMELINE_AND_REPLIES],
 	})
 	public count?: number;
 
@@ -96,8 +96,8 @@ export class FetchArgs {
 			EResourceType.USER_LIKES,
 			EResourceType.USER_MEDIA,
 			EResourceType.USER_SUBSCRIPTIONS,
-			EResourceType.USER_TWEETS,
-			EResourceType.USER_TWEETS_AND_REPLIES,
+			EResourceType.USER_TIMELINE,
+			EResourceType.USER_TIMELINE_AND_REPLIES,
 		],
 	})
 	@IsNumberString(undefined, {
@@ -113,8 +113,8 @@ export class FetchArgs {
 			EResourceType.USER_LIKES,
 			EResourceType.USER_MEDIA,
 			EResourceType.USER_SUBSCRIPTIONS,
-			EResourceType.USER_TWEETS,
-			EResourceType.USER_TWEETS_AND_REPLIES,
+			EResourceType.USER_TIMELINE,
+			EResourceType.USER_TIMELINE_AND_REPLIES,
 		],
 	})
 	public id?: string;

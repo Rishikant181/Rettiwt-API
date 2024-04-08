@@ -8,7 +8,7 @@ import { EResourceType } from '../enums/Resource';
 export const allowGuestAuthentication = [
 	EResourceType.TWEET_DETAILS,
 	EResourceType.USER_DETAILS_BY_USERNAME,
-	EResourceType.USER_TWEETS,
+	EResourceType.USER_TIMELINE,
 ];
 
 /**
@@ -30,8 +30,8 @@ export const fetchResources = [
 	EResourceType.USER_LIKES,
 	EResourceType.USER_MEDIA,
 	EResourceType.USER_SUBSCRIPTIONS,
-	EResourceType.USER_TWEETS,
-	EResourceType.USER_TWEETS_AND_REPLIES,
+	EResourceType.USER_TIMELINE,
+	EResourceType.USER_TIMELINE_AND_REPLIES,
 ];
 
 /**

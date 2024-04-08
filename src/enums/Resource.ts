@@ -1,7 +1,7 @@
 /**
- * The different types of resources that can be fetched.
+ * The different types of resources that can be interacted with.
  *
- * @public
+ * @internal
  */
 export enum EResourceType {
 	// LIST
@@ -30,6 +30,6 @@ export enum EResourceType {
 	USER_LIKES = 'USER_LIKES',
 	USER_MEDIA = 'USER_MEDIA',
 	USER_SUBSCRIPTIONS = 'USER_SUBSCRIPTIONS',
-	USER_TWEETS = 'USER_TWEETS',
-	USER_TWEETS_AND_REPLIES = 'USER_TWEETS_AND_REPLIES',
+	USER_TIMELINE = 'USER_TIMELINE',
+	USER_TIMELINE_AND_REPLIES = 'USER_TIMELINE_AND_REPLIES',
 }

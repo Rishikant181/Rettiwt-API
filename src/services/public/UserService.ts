@@ -340,7 +340,7 @@ export class UserService extends FetcherService {
 	 * @public
 	 */
 	public async replies(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-		const resource = EResourceType.USER_TWEETS_AND_REPLIES;
+		const resource = EResourceType.USER_TIMELINE_AND_REPLIES;
 
 		// Fetching raw list of replies
 		const response = await this.request<IUserTweetsAndRepliesResponse>(resource, {
@@ -430,7 +430,7 @@ export class UserService extends FetcherService {
 	 * @public
 	 */
 	public async timeline(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-		const resource = EResourceType.TWEET_RETWEETERS;
+		const resource = EResourceType.USER_TIMELINE;
 
 		// Fetching raw list of tweets
 		const response = await this.request<IUserTweetsResponse>(resource, {

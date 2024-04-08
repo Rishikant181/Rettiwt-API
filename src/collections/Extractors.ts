@@ -14,6 +14,11 @@ import { Tweet } from '../models/data/Tweet';
 import { User } from '../models/data/User';
 import { AllReturnTypes } from '../types/ReturnTypes';
 
+/**
+ * Collection of data extractors for each resource.
+ *
+ * @internal
+ */
 export const extractors: {
 	[key in keyof typeof EResourceType]: (response: NonNullable<unknown>) => AllReturnTypes | undefined;
 } = {
@@ -41,7 +46,7 @@ export const extractors: {
 	USER_LIKES: (response) => new CursoredData<Tweet>(response as IResponse<unknown>, EBaseType.TWEET),
 	USER_MEDIA: (response) => new CursoredData<Tweet>(response as IResponse<unknown>, EBaseType.TWEET),
 	USER_SUBSCRIPTIONS: (response) => new CursoredData<User>(response as IResponse<unknown>, EBaseType.USER),
-	USER_TWEETS: (response) => new CursoredData<Tweet>(response as IResponse<unknown>, EBaseType.TWEET),
-	USER_TWEETS_AND_REPLIES: (response) => new CursoredData<Tweet>(response as IResponse<unknown>, EBaseType.TWEET),
+	USER_TIMELINE: (response) => new CursoredData<Tweet>(response as IResponse<unknown>, EBaseType.TWEET),
+	USER_TIMELINE_AND_REPLIES: (response) => new CursoredData<Tweet>(response as IResponse<unknown>, EBaseType.TWEET),
 	/* eslint-enable @typescript-eslint/naming-convention */
 };
