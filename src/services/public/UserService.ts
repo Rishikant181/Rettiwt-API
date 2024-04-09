@@ -18,7 +18,7 @@ import { IRettiwtConfig } from '../../types/RettiwtConfig';
 import { FetcherService } from '../internal/FetcherService';
 
 /**
- * Handles fetching of data related to user account
+ * Handles interacting with resources related to user account
  *
  * @public
  */
@@ -36,7 +36,9 @@ export class UserService extends FetcherService {
 	 * Get the details of a user.
 	 *
 	 * @param id - The username/id of the target user.
-	 * @returns The details of the given user.
+	 * @returns
+	 * The details of the given user.
+	 * If no user matches the given id, returns `undefined`.
 	 *
 	 * @example Fetching the details of the Twitter user with username 'user1'
 	 * ```
@@ -96,9 +98,9 @@ export class UserService extends FetcherService {
 	}
 
 	/**
-	 * Get the list followers of the given user.
+	 * Get the list followers of a user.
 	 *
-	 * @param userId - The rest id of the target user.
+	 * @param userId - The id of the target user.
 	 * @param count - The number of followers to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of followers to fetch.
 	 * @returns The list of users following the target user.
@@ -110,8 +112,8 @@ export class UserService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Fetching the first 100 followers of the User with id '12345678'
-	 * rettiwt.user.followers('12345678')
+	 * // Fetching the first 100 followers of the User with id '1234567890'
+	 * rettiwt.user.followers('1234567890')
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -139,9 +141,9 @@ export class UserService extends FetcherService {
 	}
 
 	/**
-	 * Get the list of users who are followed by the given user.
+	 * Get the list of users who are followed by a user.
 	 *
-	 * @param userId - The rest id of the target user.
+	 * @param userId - The id of the target user.
 	 * @param count - The number of following to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of following to fetch.
 	 * @returns The list of users followed by the target user.
@@ -153,8 +155,8 @@ export class UserService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Fetching the first 100 following of the User with id '12345678'
-	 * rettiwt.user.following('12345678')
+	 * // Fetching the first 100 following of the User with id '1234567890'
+	 * rettiwt.user.following('1234567890')
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -182,9 +184,9 @@ export class UserService extends FetcherService {
 	}
 
 	/**
-	 * Get the highlighted tweets of the given user.
+	 * Get the highlighted tweets of a user.
 	 *
-	 * @param userId - The rest id of the target user.
+	 * @param userId - The id of the target user.
 	 * @param count - The number of followers to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of followers to fetch.
 	 * @returns The list of highlighted tweets of the target user.
@@ -196,8 +198,8 @@ export class UserService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Fetching the top 100 highlights of the User with id '12345678'
-	 * rettiwt.user.highlights('12345678')
+	 * // Fetching the top 100 highlights of the User with id '1234567890'
+	 * rettiwt.user.highlights('1234567890')
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -225,9 +227,9 @@ export class UserService extends FetcherService {
 	}
 
 	/**
-	 * Get the list of tweets liked by the given user.
+	 * Get the list of tweets liked by a user.
 	 *
-	 * @param userId - The rest id of the target user.
+	 * @param userId - The id of the target user.
 	 * @param count - The number of likes to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of likes to fetch.
 	 * @returns The list of tweets liked by the target user.
@@ -239,8 +241,8 @@ export class UserService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Fetching the most recent 100 liked Tweets of the User with id '12345678'
-	 * rettiwt.user.likes('12345678')
+	 * // Fetching the most recent 100 liked Tweets of the User with id '1234567890'
+	 * rettiwt.user.likes('1234567890')
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -268,9 +270,9 @@ export class UserService extends FetcherService {
 	}
 
 	/**
-	 * Get the media timeline of the given user
+	 * Get the media timeline of a user
 	 *
-	 * @param userId - The rest id of the target user.
+	 * @param userId - The id of the target user.
 	 * @param count - The number of media to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of media to fetch
 	 * @returns The media timeline of the target user.
@@ -282,8 +284,8 @@ export class UserService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Fetching the first 100 timeline media tweets of the User with id '12345678'
-	 * rettiwt.user.timeline('12345678')
+	 * // Fetching the first 100 timeline media tweets of the User with id '1234567890'
+	 * rettiwt.user.timeline('1234567890')
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -311,9 +313,9 @@ export class UserService extends FetcherService {
 	}
 
 	/**
-	 * Get the reply timeline of the given user.
+	 * Get the reply timeline of a user.
 	 *
-	 * @param userId - The rest id of the target user.
+	 * @param userId - The id of the target user.
 	 * @param count - The number of replies to fetch, must be \<= 20.
 	 * @param cursor - The cursor to the batch of replies to fetch.
 	 * @returns The reply timeline of the target user.
@@ -325,8 +327,8 @@ export class UserService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Fetching the first 100 timeline replies of the User with id '12345678'
-	 * rettiwt.user.replies('12345678')
+	 * // Fetching the first 100 timeline replies of the User with id '1234567890'
+	 * rettiwt.user.replies('1234567890')
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -356,9 +358,9 @@ export class UserService extends FetcherService {
 	}
 
 	/**
-	 * Get the list of subscriptions of the given user.
+	 * Get the list of subscriptions of a user.
 	 *
-	 * @param userId - The rest id of the target user.
+	 * @param userId - The id of the target user.
 	 * @param count - The number of subscriptions to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of subscriptions to fetch.
 	 * @returns The list of subscriptions by the target user.
@@ -370,8 +372,8 @@ export class UserService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Fetching the first 100 subscriptions of the User with id '12345678'
-	 * rettiwt.user.subscriptions('12345678')
+	 * // Fetching the first 100 subscriptions of the User with id '1234567890'
+	 * rettiwt.user.subscriptions('1234567890')
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -399,9 +401,9 @@ export class UserService extends FetcherService {
 	}
 
 	/**
-	 * Get the tweet timeline of the given user.
+	 * Get the tweet timeline of a user.
 	 *
-	 * @param userId - The rest id of the target user.
+	 * @param userId - The id of the target user.
 	 * @param count - The number of timeline items to fetch, must be \<= 20.
 	 * @param cursor - The cursor to the batch of timeline items to fetch.
 	 * @returns The timeline of the target user.
@@ -413,8 +415,8 @@ export class UserService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Fetching the first 20 timeline tweets of the User with id '12345678'
-	 * rettiwt.user.timeline('12345678')
+	 * // Fetching the first 20 timeline tweets of the User with id '1234567890'
+	 * rettiwt.user.timeline('1234567890')
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })

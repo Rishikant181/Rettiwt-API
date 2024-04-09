@@ -8,24 +8,22 @@ import { Tweet } from './Tweet';
 import { User } from './User';
 
 /**
- * The data that is fetched batch-wise along with a cursor.
+ * The data that is fetched batch-wise using a cursor.
  *
- * @typeParam T - Type of data to be stored in the list.
+ * @typeParam T - Type of data to be stored.
  *
  * @public
  */
 export class CursoredData<T extends Tweet | User> {
-	/** The list of data of the given type. */
+	/** The batch of data of the given type. */
 	public list: T[] = [];
 
 	/** The cursor to the next batch of data. */
 	public next: Cursor;
 
 	/**
-	 * Initializes a new CursoredData object from the given raw reponse data.
-	 *
 	 * @param response - The raw response.
-	 * @param type - The base type of the required data.
+	 * @param type - The base type of the data included in the batch.
 	 */
 	public constructor(response: IResponse<unknown>, type: EBaseType) {
 		if (type == EBaseType.TWEET) {
@@ -39,7 +37,7 @@ export class CursoredData<T extends Tweet | User> {
 }
 
 /**
- * The cursor to the batch of data to be fetched.
+ * The cursor to the batch of data to fetch.
  *
  * @public
  */
@@ -48,11 +46,9 @@ export class Cursor {
 	public value: string;
 
 	/**
-	 * Initializes a new cursor from the given cursor string.
-	 *
-	 * @param cursorStr - The string representation of the cursor.
+	 * @param cursor - The cursor string.
 	 */
-	public constructor(cursorStr: string) {
-		this.value = cursorStr;
+	public constructor(cursor: string) {
+		this.value = cursor;
 	}
 }

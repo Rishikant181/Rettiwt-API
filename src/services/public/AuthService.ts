@@ -4,13 +4,13 @@ import { IRettiwtConfig } from '../../types/RettiwtConfig';
 import { FetcherService } from '../internal/FetcherService';
 
 /**
- * Handles authentication.
+ * The services that handles authentication.
  *
  * @public
  */
 export class AuthService extends FetcherService {
 	/**
-	 * @param config - The config object for configuring the Rettiwt instance.
+	 * @param config - The config object for configuring the `Rettiwt` instance.
 	 *
 	 * @internal
 	 */
@@ -54,7 +54,10 @@ export class AuthService extends FetcherService {
 	 * @param email - The email id associated with the Twitter account.
 	 * @param userName - The username associated with the Twitter account.
 	 * @param password - The password to the Twitter account.
-	 * @returns The API_KEY for the Twitter account.
+	 * @returns The `API_KEY` for the Twitter account.
+	 *
+	 * @remarks
+	 * Interchanging `email` and `userName` works too.
 	 *
 	 * @example
 	 * ```

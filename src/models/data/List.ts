@@ -28,9 +28,7 @@ export class List {
 	public subscriberCount: number;
 
 	/**
-	 * Initializes a new Tweet List from the given raw list data.
-	 *
-	 * @param list - list The raw tweet list data.
+	 * @param list - The raw list details.
 	 */
 	public constructor(list: IRawList) {
 		this.id = list.id_str;

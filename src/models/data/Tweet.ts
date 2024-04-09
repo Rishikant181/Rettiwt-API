@@ -13,7 +13,7 @@ import { findByFilter } from '../../helper/JsonUtils';
 import { User } from './User';
 
 /**
- * The details of a single Tweet.
+ * The details of a single tweet.
  *
  * @public
  */
@@ -64,9 +64,7 @@ export class Tweet {
 	public viewCount: number;
 
 	/**
-	 * Initializes a new Tweet from the given raw tweet data.
-	 *
-	 * @param tweet - The raw tweet data.
+	 * @param tweet - The raw tweet details.
 	 */
 	public constructor(tweet: IRawTweet) {
 		this.id = tweet.rest_id;
@@ -151,8 +149,6 @@ export class TweetEntities {
 	public urls: string[] = [];
 
 	/**
-	 * Initializes the TweetEntities from the raw tweet entities.
-	 *
 	 * @param entities - The raw tweet entities.
 	 */
 	public constructor(entities: IRawTweetEntities) {
@@ -180,7 +176,7 @@ export class TweetEntities {
 }
 
 /**
- * A single media content.
+ * The details of a single media content included in a tweet.
  *
  * @public
  */
@@ -192,9 +188,7 @@ export class TweetMedia {
 	public url: string = '';
 
 	/**
-	 * Initializes the TweetMedia from the raw tweet media.
-	 *
-	 * @param media - The raw tweet media.
+	 * @param media - The raw media details.
 	 */
 	public constructor(media: IRawExtendedMedia) {
 		this.type = media.type;

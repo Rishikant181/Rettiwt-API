@@ -1,7 +1,7 @@
 import { ValidationError } from 'class-validator';
 
 /**
- * Error when any fields of a JSON data fails to validate.
+ * Represents and error when any fields of a validation-enabled class fails to validate.
  *
  * @public
  */

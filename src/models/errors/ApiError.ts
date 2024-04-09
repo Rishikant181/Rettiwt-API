@@ -10,8 +10,6 @@ export class ApiError extends RettiwtError {
 	public code: number;
 
 	/**
-	 * Initializes a new ApiError based on the given error details.
-	 *
 	 * @param errorCode - The error code thrown by Twitter API.
 	 * @param message - Any additional error message.
 	 */

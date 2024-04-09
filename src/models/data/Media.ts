@@ -10,7 +10,7 @@ export class Media {
 	public id: string;
 
 	/**
-	 * @param media - The raw media data.
+	 * @param media - The raw media details.
 	 */
 	public constructor(media: IInitializeMediaUploadResponse) {
 		this.id = media.media_id_string;

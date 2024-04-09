@@ -10,8 +10,6 @@ export class LogService {
 	private readonly enabled: boolean;
 
 	/**
-	 * Initializes a new LogService instance.
-	 *
 	 * @param enable - Whether to enable logging or not.
 	 */
 	public constructor(enable?: boolean) {

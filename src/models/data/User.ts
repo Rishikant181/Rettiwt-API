@@ -51,9 +51,7 @@ export class User {
 	public userName: string;
 
 	/**
-	 * Initializes a new User from the given raw user data.
-	 *
-	 * @param user - The raw user data.
+	 * @param user - The raw user details.
 	 */
 	public constructor(user: IRawUser) {
 		this.id = user.rest_id;

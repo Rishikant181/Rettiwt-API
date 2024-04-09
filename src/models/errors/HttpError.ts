@@ -10,8 +10,6 @@ export class HttpError extends RettiwtError {
 	public status: number;
 
 	/**
-	 * Initializes a new HttpError based on the given error details.
-	 *
 	 * @param httpStatus - The HTTP status code received upon making the request
 	 * @param message - Any additional error message.
 	 */

@@ -111,10 +111,10 @@ export class FetcherService {
 	}
 
 	/**
-	 * Get the HttpsAgent based on whether a proxy is used or not.
+	 * Gets the https agent based on whether a proxy is used or not.
 	 *
 	 * @param proxyUrl - Optional URL with proxy configuration to use for requests to Twitter API.
-	 * @returns The HttpsAgent to use.
+	 * @returns The https agent to use.
 	 */
 	private getHttpsAgent(proxyUrl?: URL): Agent {
 		if (proxyUrl) {
@@ -144,7 +144,7 @@ export class FetcherService {
 	 * @typeParam T - The type of the returned response data.
 	 * @param resource - The requested resource.
 	 * @param config - The request configuration.
-	 * @returns The response received.
+	 * @returns The raw data response received.
 	 */
 	public async request<T>(resource: EResourceType, args: FetchArgs | PostArgs): Promise<T> {
 		// Checking authorization for the requested resource
