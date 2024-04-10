@@ -14,16 +14,24 @@ function createAuthCommand(rettiwt: Rettiwt): Command {
 		.argument('<username>', 'The username associated with the Twitter account')
 		.argument('<password>', 'The password to the Twitter account')
 		.action(async (email: string, username: string, password: string) => {
-			const apiKey: string = await rettiwt.auth.login(email, username, password);
-			output(apiKey);
+			try {
+				const apiKey: string = await rettiwt.auth.login(email, username, password);
+				output(apiKey);
+			} catch (error) {
+				output(error);
+			}
 		});
 
 	// Guest
 	auth.command('guest')
 		.description('Generate a new guest key')
 		.action(async () => {
-			const guestKey: string = await rettiwt.auth.guest();
-			output(guestKey);
+			try {
+				const guestKey: string = await rettiwt.auth.guest();
+				output(guestKey);
+			} catch (error) {
+				output(error);
+			}
 		});
 
 	return auth;

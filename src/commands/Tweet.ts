@@ -20,8 +20,12 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		.description('Fetch the details of tweet with the given id')
 		.argument('<id>', 'The id of the tweet whose details are to be fetched')
 		.action(async (id: string) => {
-			const details = await rettiwt.tweet.details(id);
-			output(details);
+			try {
+				const details = await rettiwt.tweet.details(id);
+				output(details);
+			} catch (error) {
+				output(error);
+			}
 		});
 
 	// Like
@@ -30,8 +34,12 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		.description('Like a tweet')
 		.argument('<id>', 'The tweet to like')
 		.action(async (id: string) => {
-			const result = await rettiwt.tweet.like(id);
-			output(result);
+			try {
+				const result = await rettiwt.tweet.like(id);
+				output(result);
+			} catch (error) {
+				output(error);
+			}
 		});
 
 	// Likes
@@ -42,8 +50,12 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		.argument('[count]', 'The number of likers to fetch')
 		.argument('[cursor]', 'The cursor to the batch of likers to fetch')
 		.action(async (id: string, count?: string, cursor?: string) => {
-			const tweets = await rettiwt.tweet.likers(id, count ? parseInt(count) : undefined, cursor);
-			output(tweets);
+			try {
+				const tweets = await rettiwt.tweet.likers(id, count ? parseInt(count) : undefined, cursor);
+				output(tweets);
+			} catch (error) {
+				output(error);
+			}
 		});
 
 	// List
@@ -54,8 +66,12 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		.argument('[count]', 'The number of tweets to fetch')
 		.argument('[cursor]', 'The cursor to the batch of tweets to fetch')
 		.action(async (id: string, count?: string, cursor?: string) => {
-			const tweets = await rettiwt.tweet.list(id, count ? parseInt(count) : undefined, cursor);
-			output(tweets);
+			try {
+				const tweets = await rettiwt.tweet.list(id, count ? parseInt(count) : undefined, cursor);
+				output(tweets);
+			} catch (error) {
+				output(error);
+			}
 		});
 
 	// Post
@@ -70,13 +86,17 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 			'The id of the tweet to which the reply is to be made, if the tweet is to be a reply',
 		)
 		.action(async (text: string, options?: { media?: string; quote?: string; reply?: string }) => {
-			const result = await rettiwt.tweet.post({
-				text: text,
-				media: options?.media ? options?.media.split(',').map((item) => ({ id: item })) : undefined,
-				quote: options?.quote,
-				replyTo: options?.reply,
-			});
-			output(result);
+			try {
+				const result = await rettiwt.tweet.post({
+					text: text,
+					media: options?.media ? options?.media.split(',').map((item) => ({ id: item })) : undefined,
+					quote: options?.quote,
+					replyTo: options?.reply,
+				});
+				output(result);
+			} catch (error) {
+				output(error);
+			}
 		});
 
 	// Retweet
@@ -85,8 +105,12 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		.description('Retweet a tweet')
 		.argument('<id>', 'The tweet to retweet')
 		.action(async (id: string) => {
-			const result = await rettiwt.tweet.retweet(id);
-			output(result);
+			try {
+				const result = await rettiwt.tweet.retweet(id);
+				output(result);
+			} catch (error) {
+				output(error);
+			}
 		});
 
 	// Retweeters
@@ -97,8 +121,12 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		.argument('[count]', 'The number of retweeters to fetch')
 		.argument('[cursor]', 'The cursor to the batch of retweeters to fetch')
 		.action(async (id: string, count?: string, cursor?: string) => {
-			const tweets = await rettiwt.tweet.retweeters(id, count ? parseInt(count) : undefined, cursor);
-			output(tweets);
+			try {
+				const tweets = await rettiwt.tweet.retweeters(id, count ? parseInt(count) : undefined, cursor);
+				output(tweets);
+			} catch (error) {
+				output(error);
+			}
 		});
 
 	// Search
@@ -135,23 +163,27 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		.option('--stream', 'Stream the filtered tweets in pseudo-realtime')
 		.option('-i, --interval <number>', 'The polling interval (in ms) to use for streaming. Default is 60000')
 		.action(async (count?: string, cursor?: string, options?: TweetSearchOptions) => {
-			// If search results are to be streamed
-			if (options?.stream) {
-				for await (const tweet of rettiwt.tweet.stream(
-					new TweetSearchOptions(options).toTweetFilter(),
-					options?.interval,
-				)) {
-					output(tweet);
+			try {
+				// If search results are to be streamed
+				if (options?.stream) {
+					for await (const tweet of rettiwt.tweet.stream(
+						new TweetSearchOptions(options).toTweetFilter(),
+						options?.interval,
+					)) {
+						output(tweet);
+					}
 				}
-			}
-			// If a normal search is to be done
-			else {
-				const tweets = await rettiwt.tweet.search(
-					new TweetSearchOptions(options).toTweetFilter(),
-					count ? parseInt(count) : undefined,
-					cursor,
-				);
-				output(tweets);
+				// If a normal search is to be done
+				else {
+					const tweets = await rettiwt.tweet.search(
+						new TweetSearchOptions(options).toTweetFilter(),
+						count ? parseInt(count) : undefined,
+						cursor,
+					);
+					output(tweets);
+				}
+			} catch (error) {
+				output(error);
 			}
 		});
 
@@ -161,8 +193,12 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		.description('Upload a media file and returns the alloted id (valid for 24 hrs)')
 		.argument('<path>', 'The path to the media to upload')
 		.action(async (path: string) => {
-			const id = await rettiwt.tweet.upload(path);
-			output(id);
+			try {
+				const id = await rettiwt.tweet.upload(path);
+				output(id);
+			} catch (error) {
+				output(error);
+			}
 		});
 
 	return tweet;

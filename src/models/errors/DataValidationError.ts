@@ -6,8 +6,8 @@ import { ValidationError } from 'class-validator';
  * @public
  */
 export class DataValidationError {
-	/** The error data. */
-	public data: ValidationError[];
+	/** The detaied error message(s). */
+	public details: ValidationErrorDetails[];
 
 	/** The user-friendly error message. */
 	public message: string;
@@ -20,7 +20,25 @@ export class DataValidationError {
 	 */
 	public constructor(errorDetails: ValidationError[]) {
 		this.name = 'VALIDATION_ERROR';
-		this.message = 'One or more validation error(s) occured, check data field for details.';
-		this.data = errorDetails;
+		this.message = 'One or more validation error(s) occured, check details field.';
+		this.details = errorDetails.map((error) => new ValidationErrorDetails(error));
+	}
+}
+
+/**
+ * Represents the validation error details of a single field.
+ *
+ * @public
+ */
+export class ValidationErrorDetails {
+	/** The constraints which failed to be validated for the given field. */
+	public constraints: string[];
+
+	/** The name of the field which failed validation. */
+	public field: string;
+
+	public constructor(details: ValidationError) {
+		this.field = details.property;
+		this.constraints = Object.values(details.constraints!);
 	}
 }
