@@ -39,7 +39,7 @@ export class TweetService extends FetcherService {
 	/**
 	 * Get the details of a tweet.
 	 *
-	 * @param tweetId - The id of the target tweet.
+	 * @param id - The id of the target tweet.
 	 * @returns
 	 * The details of the tweet with the given id.
 	 * If no tweet matches the given id, returns `undefined`.
@@ -63,11 +63,11 @@ export class TweetService extends FetcherService {
 	 *
 	 * @public
 	 */
-	public async details(tweetId: string): Promise<Tweet | undefined> {
+	public async details(id: string): Promise<Tweet | undefined> {
 		const resource = EResourceType.TWEET_DETAILS;
 
 		// Fetching raw tweet details
-		const response = await this.request<ITweetDetailsResponse>(resource, { id: tweetId });
+		const response = await this.request<ITweetDetailsResponse>(resource, { id: id });
 
 		// Deserializing response
 		const data = this.extract<Tweet>(response, resource);
@@ -78,7 +78,7 @@ export class TweetService extends FetcherService {
 	/**
 	 * Like a tweet.
 	 *
-	 * @param tweetId - The id of the tweet to be liked.
+	 * @param id - The id of the tweet to be liked.
 	 * @returns Whether liking was successful or not.
 	 *
 	 * @example
@@ -100,10 +100,10 @@ export class TweetService extends FetcherService {
 	 *
 	 * @public
 	 */
-	public async like(tweetId: string): Promise<boolean> {
+	public async like(id: string): Promise<boolean> {
 		// Favoriting the tweet
 		const response = await this.request<ITweetLikeResponse>(EResourceType.TWEET_LIKE, {
-			id: tweetId,
+			id: id,
 		});
 
 		// Deserializing response
@@ -115,7 +115,7 @@ export class TweetService extends FetcherService {
 	/**
 	 * Get the list of users who liked a tweet.
 	 *
-	 * @param tweetId - The id of the target tweet.
+	 * @param id - The id of the target tweet.
 	 * @param count - The number of likers to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of likers to fetch.
 	 * @returns The list of users who liked the given tweet.
@@ -139,12 +139,12 @@ export class TweetService extends FetcherService {
 	 *
 	 * @public
 	 */
-	public async likers(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+	public async likers(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		const resource = EResourceType.TWEET_LIKERS;
 
 		// Fetching raw likers
 		const response = await this.request<ITweetLikersResponse>(resource, {
-			id: tweetId,
+			id: id,
 			count: count,
 			cursor: cursor,
 		});
@@ -158,7 +158,7 @@ export class TweetService extends FetcherService {
 	/**
 	 * Get the list of tweets from a tweet list.
 	 *
-	 * @param listId - The id of target list.
+	 * @param id - The id of target list.
 	 * @param count - The number of tweets to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of tweets to fetch.
 	 * @returns The list tweets in the given list.
@@ -182,12 +182,12 @@ export class TweetService extends FetcherService {
 	 *
 	 * @remarks Due a bug in Twitter API, the count is ignored when no cursor is provided and defaults to 100.
 	 */
-	public async list(listId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+	public async list(id: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		const resource = EResourceType.LIST_TWEETS;
 
 		// Fetching raw list tweets
 		const response = await this.request<IListTweetsResponse>(resource, {
-			id: listId,
+			id: id,
 			count: count,
 			cursor: cursor,
 		});
@@ -292,7 +292,7 @@ export class TweetService extends FetcherService {
 	/**
 	 * Retweet a tweet.
 	 *
-	 * @param tweetId - The id of the target tweet.
+	 * @param id - The id of the target tweet.
 	 * @returns Whether retweeting was successful or not.
 	 *
 	 * @example
@@ -314,11 +314,11 @@ export class TweetService extends FetcherService {
 	 *
 	 * @public
 	 */
-	public async retweet(tweetId: string): Promise<boolean> {
+	public async retweet(id: string): Promise<boolean> {
 		const resource = EResourceType.TWEET_RETWEET;
 
 		// Retweeting the tweet
-		const response = await this.request<ITweetRetweetResponse>(resource, { id: tweetId });
+		const response = await this.request<ITweetRetweetResponse>(resource, { id: id });
 
 		// Deserializing response
 		const data = this.extract<boolean>(response, resource) ?? false;
@@ -329,7 +329,7 @@ export class TweetService extends FetcherService {
 	/**
 	 * Get the list of users who retweeted a tweet.
 	 *
-	 * @param tweetId - The id of the target tweet.
+	 * @param id - The id of the target tweet.
 	 * @param count - The number of retweeters to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of retweeters to fetch.
 	 * @returns The list of users who retweeted the given tweet.
@@ -353,12 +353,12 @@ export class TweetService extends FetcherService {
 	 *
 	 * @public
 	 */
-	public async retweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+	public async retweeters(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		const resource = EResourceType.TWEET_RETWEETERS;
 
 		// Fetching raw list of retweeters
 		const response = await this.request<ITweetRetweetersResponse>(resource, {
-			id: tweetId,
+			id: id,
 			count: count,
 			cursor: cursor,
 		});

@@ -100,7 +100,7 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the list followers of a user.
 	 *
-	 * @param userId - The id of the target user.
+	 * @param id - The id of the target user.
 	 * @param count - The number of followers to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of followers to fetch.
 	 * @returns The list of users following the target user.
@@ -124,12 +124,12 @@ export class UserService extends FetcherService {
 	 *
 	 * @public
 	 */
-	public async followers(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+	public async followers(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		const resource = EResourceType.USER_FOLLOWERS;
 
 		// Fetching raw list of followers
 		const response = await this.request<IUserFollowersResponse>(resource, {
-			id: userId,
+			id: id,
 			count: count,
 			cursor: cursor,
 		});
@@ -143,7 +143,7 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the list of users who are followed by a user.
 	 *
-	 * @param userId - The id of the target user.
+	 * @param id - The id of the target user.
 	 * @param count - The number of following to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of following to fetch.
 	 * @returns The list of users followed by the target user.
@@ -167,12 +167,12 @@ export class UserService extends FetcherService {
 	 *
 	 * @public
 	 */
-	public async following(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+	public async following(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		const resource = EResourceType.USER_FOLLOWING;
 
 		// Fetching raw list of following
 		const response = await this.request<IUserFollowingResponse>(resource, {
-			id: userId,
+			id: id,
 			count: count,
 			cursor: cursor,
 		});
@@ -186,7 +186,7 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the highlighted tweets of a user.
 	 *
-	 * @param userId - The id of the target user.
+	 * @param id - The id of the target user.
 	 * @param count - The number of followers to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of followers to fetch.
 	 * @returns The list of highlighted tweets of the target user.
@@ -210,12 +210,12 @@ export class UserService extends FetcherService {
 	 *
 	 * @public
 	 */
-	public async highlights(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+	public async highlights(id: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		const resource = EResourceType.USER_HIGHLIGHTS;
 
 		// Fetching raw list of highlights
 		const response = await this.request<IUserHighlightsResponse>(resource, {
-			id: userId,
+			id: id,
 			count: count,
 			cursor: cursor,
 		});
@@ -229,7 +229,7 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the list of tweets liked by a user.
 	 *
-	 * @param userId - The id of the target user.
+	 * @param id - The id of the target user.
 	 * @param count - The number of likes to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of likes to fetch.
 	 * @returns The list of tweets liked by the target user.
@@ -253,12 +253,12 @@ export class UserService extends FetcherService {
 	 *
 	 * @public
 	 */
-	public async likes(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+	public async likes(id: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		const resource = EResourceType.USER_LIKES;
 
 		// Fetching raw list of likes
 		const response = await this.request<IUserLikesResponse>(resource, {
-			id: userId,
+			id: id,
 			count: count,
 			cursor: cursor,
 		});
@@ -272,7 +272,7 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the media timeline of a user
 	 *
-	 * @param userId - The id of the target user.
+	 * @param id - The id of the target user.
 	 * @param count - The number of media to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of media to fetch
 	 * @returns The media timeline of the target user.
@@ -296,12 +296,12 @@ export class UserService extends FetcherService {
 	 *
 	 * @public
 	 */
-	public async media(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+	public async media(id: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		const resource = EResourceType.USER_MEDIA;
 
 		// Fetching raw list of media
 		const response = await this.request<IUserMediaResponse>(resource, {
-			id: userId,
+			id: id,
 			count: count,
 			cursor: cursor,
 		});
@@ -315,7 +315,7 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the reply timeline of a user.
 	 *
-	 * @param userId - The id of the target user.
+	 * @param id - The id of the target user.
 	 * @param count - The number of replies to fetch, must be \<= 20.
 	 * @param cursor - The cursor to the batch of replies to fetch.
 	 * @returns The reply timeline of the target user.
@@ -341,12 +341,12 @@ export class UserService extends FetcherService {
 	 *
 	 * @public
 	 */
-	public async replies(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+	public async replies(id: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		const resource = EResourceType.USER_TIMELINE_AND_REPLIES;
 
 		// Fetching raw list of replies
 		const response = await this.request<IUserTweetsAndRepliesResponse>(resource, {
-			id: userId,
+			id: id,
 			count: count,
 			cursor: cursor,
 		});
@@ -360,7 +360,7 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the list of subscriptions of a user.
 	 *
-	 * @param userId - The id of the target user.
+	 * @param id - The id of the target user.
 	 * @param count - The number of subscriptions to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of subscriptions to fetch.
 	 * @returns The list of subscriptions by the target user.
@@ -384,12 +384,12 @@ export class UserService extends FetcherService {
 	 *
 	 * @public
 	 */
-	public async subscriptions(userId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+	public async subscriptions(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		const resource = EResourceType.USER_SUBSCRIPTIONS;
 
 		// Fetching raw list of subscriptions
 		const response = await this.request<IUserSubscriptionsResponse>(resource, {
-			id: userId,
+			id: id,
 			count: count,
 			cursor: cursor,
 		});
@@ -403,7 +403,7 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the tweet timeline of a user.
 	 *
-	 * @param userId - The id of the target user.
+	 * @param id - The id of the target user.
 	 * @param count - The number of timeline items to fetch, must be \<= 20.
 	 * @param cursor - The cursor to the batch of timeline items to fetch.
 	 * @returns The timeline of the target user.
@@ -431,12 +431,12 @@ export class UserService extends FetcherService {
 	 *
 	 * @public
 	 */
-	public async timeline(userId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+	public async timeline(id: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		const resource = EResourceType.USER_TIMELINE;
 
 		// Fetching raw list of tweets
 		const response = await this.request<IUserTweetsResponse>(resource, {
-			id: userId,
+			id: id,
 			count: count,
 			cursor: cursor,
 		});
