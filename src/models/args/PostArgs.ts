@@ -29,10 +29,13 @@ export class PostArgs {
 	 * Required only when posting using the following resources:
 	 * - {@link EResourceType.TWEET_LIKE}
 	 * - {@link EResourceType.TWEET_RETWEET}
+	 * - {@link EResourceType.TWEET_UNPOST}
 	 */
 	@IsOptional()
-	@IsNotEmpty({ groups: [EResourceType.TWEET_LIKE, EResourceType.TWEET_RETWEET] })
-	@IsNumberString(undefined, { groups: [EResourceType.TWEET_LIKE, EResourceType.TWEET_RETWEET] })
+	@IsNotEmpty({ groups: [EResourceType.TWEET_LIKE, EResourceType.TWEET_RETWEET, EResourceType.TWEET_UNPOST] })
+	@IsNumberString(undefined, {
+		groups: [EResourceType.TWEET_LIKE, EResourceType.TWEET_RETWEET, EResourceType.TWEET_UNPOST],
+	})
 	public id?: string;
 
 	/**
