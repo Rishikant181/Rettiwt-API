@@ -10,6 +10,7 @@ import {
 	ITweetRetweetersResponse,
 	ITweetRetweetResponse,
 	ITweetSearchResponse,
+	ITweetUnpostResponse,
 	TweetFilter,
 } from 'rettiwt-core';
 
@@ -480,6 +481,41 @@ export class TweetService extends FetcherService {
 				cursor = undefined;
 			}
 		}
+	}
+
+	/**
+	 * Unpost a tweet.
+	 *
+	 * @param id - The id of the target tweet.
+	 * @returns Whether unposting was successful or not.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Unposting the Tweet with id '1234567890'
+	 * rettiwt.tweet.unpost('1234567890')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async unpost(id: string): Promise<boolean> {
+		const resource = EResourceType.TWEET_UNPOST;
+
+		// Unposting the tweet
+		const response = await this.request<ITweetUnpostResponse>(resource, { id: id });
+
+		// Deserializing the response
+		const data = this.extract<boolean>(response, resource) ?? false;
+
+		return data;
 	}
 
 	/**

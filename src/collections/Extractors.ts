@@ -5,6 +5,7 @@ import {
 	ITweetLikeResponse,
 	ITweetPostResponse,
 	ITweetRetweetResponse,
+	ITweetUnpostResponse,
 } from 'rettiwt-core';
 
 import { EBaseType } from '../enums/Data';
@@ -37,6 +38,7 @@ export const extractors: {
 	TWEET_RETWEET: (response) => ((response as ITweetRetweetResponse)?.data?.create_retweet ? true : false),
 	TWEET_RETWEETERS: (response) => new CursoredData<User>(response as IResponse<unknown>, EBaseType.USER),
 	TWEET_SEARCH: (response) => new CursoredData<Tweet>(response as IResponse<unknown>, EBaseType.TWEET),
+	TWEET_UNPOST: (response) => ((response as ITweetUnpostResponse)?.data?.delete_tweet ? true : false),
 
 	USER_DETAILS_BY_USERNAME: (response) => User.single(response as IResponse<unknown>),
 	USER_DETAILS_BY_ID: (response) => User.single(response as IResponse<unknown>),

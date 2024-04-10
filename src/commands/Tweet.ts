@@ -187,6 +187,20 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// Unpost
+	tweet
+		.command('unpost')
+		.description('Unpost a tweet')
+		.argument('<id>', 'The id of the tweet')
+		.action(async (id: string) => {
+			try {
+				const result = await rettiwt.tweet.unpost(id);
+				output(result);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Upload
 	tweet
 		.command('upload')
