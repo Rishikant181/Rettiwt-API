@@ -36,6 +36,7 @@ export class PostArgs {
 		groups: [
 			EResourceType.TWEET_LIKE,
 			EResourceType.TWEET_RETWEET,
+			EResourceType.TWEET_UNLIKE,
 			EResourceType.TWEET_UNPOST,
 			EResourceType.TWEET_UNRETWEET,
 		],
@@ -44,6 +45,7 @@ export class PostArgs {
 		groups: [
 			EResourceType.TWEET_LIKE,
 			EResourceType.TWEET_RETWEET,
+			EResourceType.TWEET_UNLIKE,
 			EResourceType.TWEET_UNPOST,
 			EResourceType.TWEET_UNRETWEET,
 		],

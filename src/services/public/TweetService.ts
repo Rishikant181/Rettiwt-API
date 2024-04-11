@@ -10,6 +10,7 @@ import {
 	ITweetRetweetersResponse,
 	ITweetRetweetResponse,
 	ITweetSearchResponse,
+	ITweetUnlikeResponse,
 	ITweetUnpostResponse,
 	ITweetUnretweetResponse,
 	TweetFilter,
@@ -482,6 +483,41 @@ export class TweetService extends FetcherService {
 				cursor = undefined;
 			}
 		}
+	}
+
+	/**
+	 * Unlike a tweet.
+	 *
+	 * @param id - The id of the target tweet.
+	 * @returns Whether unliking was successful or not.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Unliking the Tweet with id '1234567890'
+	 * rettiwt.tweet.unlike('1234567890')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async unlike(id: string): Promise<boolean> {
+		const resource = EResourceType.TWEET_UNLIKE;
+
+		// Unliking the tweet
+		const response = await this.request<ITweetUnlikeResponse>(resource, { id: id });
+
+		// Deserializing the response
+		const data = this.extract<boolean>(response, resource) ?? false;
+
+		return data;
 	}
 
 	/**
