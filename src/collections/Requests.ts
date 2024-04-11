@@ -32,6 +32,7 @@ export const requests: { [key in keyof typeof EResourceType]: (args: FetchArgs |
 	TWEET_RETWEET: (args: PostArgs) => request.tweet.retweet(args.id!),
 	TWEET_RETWEETERS: (args: FetchArgs) => request.tweet.retweeters(args.id!, args.count, args.cursor),
 	TWEET_SEARCH: (args: FetchArgs) => request.tweet.search(args.filter!, args.count, args.cursor),
+	TWEET_UNLIKE: (args: PostArgs) => request.tweet.unlike(args.id!),
 	TWEET_UNPOST: (args: PostArgs) => request.tweet.unpost(args.id!),
 	TWEET_UNRETWEET: (args: PostArgs) => request.tweet.unretweet(args.id!),
 

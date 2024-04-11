@@ -5,6 +5,7 @@ import {
 	ITweetLikeResponse,
 	ITweetPostResponse,
 	ITweetRetweetResponse,
+	ITweetUnlikeResponse,
 	ITweetUnpostResponse,
 	ITweetUnretweetResponse,
 } from 'rettiwt-core';
@@ -39,6 +40,7 @@ export const extractors: {
 	TWEET_RETWEET: (response) => ((response as ITweetRetweetResponse)?.data?.create_retweet ? true : false),
 	TWEET_RETWEETERS: (response) => new CursoredData<User>(response as IResponse<unknown>, EBaseType.USER),
 	TWEET_SEARCH: (response) => new CursoredData<Tweet>(response as IResponse<unknown>, EBaseType.TWEET),
+	TWEET_UNLIKE: (response) => ((response as ITweetUnlikeResponse)?.data?.unfavorite_tweet ? true : false),
 	TWEET_UNPOST: (response) => ((response as ITweetUnpostResponse)?.data?.delete_tweet ? true : false),
 	TWEET_UNRETWEET: (response) =>
 		(response as ITweetUnretweetResponse)?.data?.unretweet?.source_tweet_results?.result ? true : false,

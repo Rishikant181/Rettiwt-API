@@ -187,6 +187,20 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// Unlike
+	tweet
+		.command('unlike')
+		.description('Unlike a tweet')
+		.argument('<id>', 'The id of the tweet')
+		.action(async (id: string) => {
+			try {
+				const result = await rettiwt.tweet.unlike(id);
+				output(result);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Unpost
 	tweet
 		.command('unpost')
