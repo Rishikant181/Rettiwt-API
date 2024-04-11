@@ -201,6 +201,20 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// Unretweet
+	tweet
+		.command('unretweet')
+		.description('Unretweet a tweet')
+		.argument('<id>', 'The id of the tweet')
+		.action(async (id: string) => {
+			try {
+				const result = await rettiwt.tweet.unretweet(id);
+				output(result);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Upload
 	tweet
 		.command('upload')
