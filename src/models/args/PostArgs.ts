@@ -32,9 +32,21 @@ export class PostArgs {
 	 * - {@link EResourceType.TWEET_UNPOST}
 	 */
 	@IsOptional()
-	@IsNotEmpty({ groups: [EResourceType.TWEET_LIKE, EResourceType.TWEET_RETWEET, EResourceType.TWEET_UNPOST] })
+	@IsNotEmpty({
+		groups: [
+			EResourceType.TWEET_LIKE,
+			EResourceType.TWEET_RETWEET,
+			EResourceType.TWEET_UNPOST,
+			EResourceType.TWEET_UNRETWEET,
+		],
+	})
 	@IsNumberString(undefined, {
-		groups: [EResourceType.TWEET_LIKE, EResourceType.TWEET_RETWEET, EResourceType.TWEET_UNPOST],
+		groups: [
+			EResourceType.TWEET_LIKE,
+			EResourceType.TWEET_RETWEET,
+			EResourceType.TWEET_UNPOST,
+			EResourceType.TWEET_UNRETWEET,
+		],
 	})
 	public id?: string;
 
