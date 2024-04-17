@@ -86,7 +86,7 @@ export class User {
 
 		// Deserializing valid data
 		for (const item of extract) {
-			if (item.user_results.result.rest_id && item.user_results.result.id) {
+			if (item.user_results?.result?.rest_id && item.user_results?.result?.id) {
 				users.push(new User(item.user_results.result));
 			}
 		}

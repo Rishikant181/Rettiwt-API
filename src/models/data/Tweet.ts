@@ -100,7 +100,7 @@ export class Tweet {
 
 		// Deserializing valid data
 		for (const item of extract) {
-			if (item.tweet_results.result.rest_id) {
+			if (item.tweet_results?.result?.rest_id) {
 				tweets.push(new Tweet(item.tweet_results.result));
 			}
 		}
