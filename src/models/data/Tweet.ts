@@ -57,17 +57,14 @@ export class Tweet {
 	/** The number of retweets of the tweet. */
 	public retweetCount: number;
 
+	/** The tweet which was retweeted in this tweet (if any). */
+	public retweetedTweet?: Tweet;
+
 	/** The details of the user who made the tweet. */
 	public tweetBy: User;
 
 	/** The number of views of a tweet. */
 	public viewCount: number;
-
-	/** The number of bookmarks of a tweet. */
-	public bookmarkCount: number;
-
-	/** The tweet which was retweeted in this tweet (if any). */
-	public retweetedTweet?: Tweet;
 
 	/**
 	 * @param tweet - The raw tweet details.
