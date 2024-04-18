@@ -12,7 +12,7 @@ export class User {
 	public createdAt: string;
 
 	/** The user's description. */
-	public description: string;
+	public description?: string;
 
 	/** The number of followers of the user. */
 	public followersCount: number;
@@ -33,13 +33,13 @@ export class User {
 	public likeCount: number;
 
 	/** The location of user as provided by user. */
-	public location: string;
+	public location?: string;
 
 	/** The rest id of the tweet pinned in the user's profile. */
-	public pinnedTweet: string;
+	public pinnedTweet?: string;
 
 	/** The url of the profile banner image. */
-	public profileBanner: string;
+	public profileBanner?: string;
 
 	/** The url of the profile image. */
 	public profileImage: string;
@@ -58,13 +58,13 @@ export class User {
 		this.userName = user.legacy.screen_name;
 		this.fullName = user.legacy.name;
 		this.createdAt = user.legacy.created_at;
-		this.description = user.legacy.description;
+		this.description = user.legacy.description.length ? user.legacy.description : undefined;
 		this.isVerified = user.is_blue_verified;
 		this.likeCount = user.legacy.favourites_count;
 		this.followersCount = user.legacy.followers_count;
 		this.followingsCount = user.legacy.friends_count;
 		this.statusesCount = user.legacy.statuses_count;
-		this.location = user.legacy.location;
+		this.location = user.legacy.location.length ? user.legacy.location : undefined;
 		this.pinnedTweet = user.legacy.pinned_tweet_ids_str[0];
 		this.profileBanner = user.legacy.profile_banner_url;
 		this.profileImage = user.legacy.profile_image_url_https;

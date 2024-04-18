@@ -13,7 +13,7 @@ export class List {
 	public createdBy: string;
 
 	/** The list description. */
-	public description: string;
+	public description?: string;
 
 	/** The rest id of the list. */
 	public id: string;
@@ -34,7 +34,7 @@ export class List {
 		this.id = list.id_str;
 		this.name = list.name;
 		this.createdAt = new Date(list.created_at).toISOString();
-		this.description = list.description;
+		this.description = list.description.length ? list.description : undefined;
 		this.memberCount = list.member_count;
 		this.subscriberCount = list.subscriber_count;
 		this.createdBy = list.user_results.result.id;
