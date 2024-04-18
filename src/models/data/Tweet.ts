@@ -63,6 +63,12 @@ export class Tweet {
 	/** The number of views of a tweet. */
 	public viewCount: number;
 
+	/** The number of bookmarks of a tweet. */
+	public bookmarkCount: number;
+
+	/** The tweet which was retweeted in this tweet (if any). */
+	public retweetedTweet?: Tweet;
+
 	/**
 	 * @param tweet - The raw tweet details.
 	 */
@@ -82,6 +88,9 @@ export class Tweet {
 		this.likeCount = tweet.legacy.favorite_count;
 		this.viewCount = parseInt(tweet.views.count);
 		this.bookmarkCount = tweet.legacy.bookmark_count;
+		this.retweetedTweet = tweet.legacy.retweeted_status_result?.result?.rest_id
+			? new Tweet(tweet.legacy.retweeted_status_result.result)
+			: undefined;
 	}
 
 	/**
