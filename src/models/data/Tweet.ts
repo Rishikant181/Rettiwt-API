@@ -60,7 +60,7 @@ export class Tweet {
 	/** The number of bookmarks of a tweet. */
 	public bookmarkCount: number;
 
-	/** The which was retweeted in this tweet (if any). */
+	/** The tweet which was retweeted in this tweet (if any). */
 	public retweetedTweet?: Tweet;
 
 	/**
