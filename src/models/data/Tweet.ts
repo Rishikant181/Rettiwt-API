@@ -40,19 +40,19 @@ export class Tweet {
 	public likeCount: number;
 
 	/** The urls of the media contents of the tweet (if any). */
-	public media: TweetMedia[];
+	public media?: TweetMedia[];
 
 	/** The number of quotes of the tweet. */
 	public quoteCount: number;
 
 	/** The rest id of the tweet which is quoted in the tweet. */
-	public quoted: string;
+	public quoted?: string;
 
 	/** The number of replies to the tweet. */
 	public replyCount: number;
 
 	/** The rest id of the tweet to which the tweet is a reply. */
-	public replyTo: string;
+	public replyTo?: string;
 
 	/** The number of retweets of the tweet. */
 	public retweetCount: number;
@@ -83,7 +83,7 @@ export class Tweet {
 		this.replyCount = tweet.legacy.reply_count;
 		this.retweetCount = tweet.legacy.retweet_count;
 		this.likeCount = tweet.legacy.favorite_count;
-		this.viewCount = parseInt(tweet.views.count);
+		this.viewCount = tweet.views.count ? parseInt(tweet.views.count) : 0;
 		this.bookmarkCount = tweet.legacy.bookmark_count;
 		this.retweetedTweet = tweet.legacy.retweeted_status_result?.result?.rest_id
 			? new Tweet(tweet.legacy.retweeted_status_result.result)
