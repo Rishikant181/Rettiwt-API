@@ -248,7 +248,7 @@ export class FetcherService {
 		// Deserializing the extracted raw data and storing it in the list
 		for (const item of extractedData) {
 			// If the item is a valid raw tweet
-			if (item && item.__typename == 'Tweet' && item.rest_id) {
+			if (item && item.__typename == 'Tweet' && item.rest_id && item.legacy) {
 				// Logging
 				this.logger.log(ELogActions.DESERIALIZE, { type: item.__typename, id: item.rest_id });
 
@@ -256,7 +256,7 @@ export class FetcherService {
 				deserializedList.push(new Tweet(item as IRawTweet) as OutType);
 			}
 			// If the item is a valid raw user
-			else if (item && item.__typename == 'User' && item.rest_id && (item as IRawUser).id) {
+			else if (item && item.__typename == 'User' && item.rest_id && (item as IRawUser).id && item.legacy) {
 				// Logging
 				this.logger.log(ELogActions.DESERIALIZE, { type: item.__typename, id: item.rest_id });
 
