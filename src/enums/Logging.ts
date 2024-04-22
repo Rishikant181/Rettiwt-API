@@ -4,7 +4,10 @@
  * @internal
  */
 export enum ELogActions {
-	FETCH = 'FETCH',
-	POST = 'POST',
 	AUTHORIZATION = 'AUTHORIZATION',
+	ERROR = 'ERROR',
+	EXTRACT = 'EXTRACT',
+	GET = 'GET',
+	REQUEST = 'REQUEST',
+	VALIDATION = 'VALIDATION',
 }
