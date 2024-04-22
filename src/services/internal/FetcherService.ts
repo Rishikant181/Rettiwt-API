@@ -26,11 +26,14 @@ import { LogService } from './LogService';
  * @internal
  */
 export class FetcherService {
+	/** The api key to use for authenticating against Twitter API as user. */
+	private readonly apiKey?: string;
+
 	/** The service used to handle HTTP and API errors */
 	private readonly errorHandler: IErrorHandler;
 
-	/** The HTTPS Agent to use for requests to Twitter API. */
-	private readonly httpsAgent: Agent;
+	/** The guest key to use for authenticating against Twitter API as guest. */
+	private readonly guestKey?: string;
 
 	/** Whether the instance is authenticated or not. */
 	private readonly isAuthenticated: boolean;
@@ -38,36 +41,26 @@ export class FetcherService {
 	/** The log service instance to use to logging. */
 	private readonly logger: LogService;
 
+	/** The URL To the proxy server to use for all others. */
+	private readonly proxyUrl?: URL;
+
 	/** The max wait time for a response. */
 	private readonly timeout: number;
 
-	/** The credential to use for authenticating against Twitter API. */
-	private cred?: AuthCredential;
-
-	/** The URL to the proxy server to use for authentication. */
+	/** The URL to the proxy server to use only for authentication. */
 	protected readonly authProxyUrl?: URL;
 
 	/**
 	 * @param config - The config object for configuring the Rettiwt instance.
 	 */
 	public constructor(config?: IRettiwtConfig) {
-		// If API key is supplied
-		if (config?.apiKey) {
-			this.cred = this.getAuthCredential(config.apiKey);
-		}
-		// If guest key is supplied
-		else if (config?.guestKey) {
-			this.cred = this.getGuestCredential(config.guestKey);
-		}
-		// If no key is supplied
-		else {
-			this.cred = undefined;
-		}
+		this.logger = new LogService(config?.logging);
+		this.apiKey = config?.apiKey;
+		this.guestKey = config?.guestKey;
 		this.isAuthenticated = config?.apiKey ? true : false;
 		this.authProxyUrl = config?.authProxyUrl ?? config?.proxyUrl;
-		this.httpsAgent = this.getHttpsAgent(config?.proxyUrl);
+		this.proxyUrl = config?.proxyUrl;
 		this.timeout = config?.timeout ?? 0;
-		this.logger = new LogService(config?.logging);
 		this.errorHandler = config?.errorHandler ?? new ErrorService();
 	}
 
@@ -88,26 +81,28 @@ export class FetcherService {
 	}
 
 	/**
-	 * Returns an AuthCredential generated using the given API key.
+	 * Returns the AuthCredentials based on the type of key present.
 	 *
-	 * @param apiKey - The API key to use for authenticating.
-	 * @returns The generated AuthCredential.
+	 * @returns The generated AuthCredential
 	 */
-	private getAuthCredential(apiKey: string): AuthCredential {
-		// Converting apiKey from base64 to string
-		apiKey = Buffer.from(apiKey, 'base64').toString('ascii');
+	private async getCredential(): Promise<AuthCredential> {
+		if (this.apiKey) {
+			// Logging
+			this.logger.log(ELogActions.GET, { target: 'USER_CREDENTIAL' });
 
-		return new AuthCredential(apiKey.split(';'));
-	}
+			const cookies = Buffer.from(this.apiKey, 'base64').toString('ascii').split(';');
+			return new AuthCredential(cookies);
+		} else if (this.guestKey) {
+			// Logging
+			this.logger.log(ELogActions.GET, { target: 'GUEST_CREDENTIAL' });
 
-	/**
-	 * Returns an AuthCredential generated using the given guest key.
-	 *
-	 * @param guestKey - The guest key to use for authenticating as guest.
-	 * @returns The generated AuthCredential.
-	 */
-	private getGuestCredential(guestKey: string): AuthCredential {
-		return new AuthCredential(undefined, guestKey);
+			return new AuthCredential(undefined, this.guestKey);
+		} else {
+			// Logging
+			this.logger.log(ELogActions.GET, { target: 'NEW_GUEST_CREDENTIAL' });
+
+			return await new Auth({ proxyUrl: this.authProxyUrl }).getGuestCredential();
+		}
 	}
 
 	/**
@@ -118,10 +113,37 @@ export class FetcherService {
 	 */
 	private getHttpsAgent(proxyUrl?: URL): Agent {
 		if (proxyUrl) {
-			return new HttpsProxyAgent(proxyUrl);
-		}
+			// Logging
+			this.logger.log(ELogActions.GET, { target: 'HTTPS_PROXY_AGENT' });
 
-		return new https.Agent();
+			return new HttpsProxyAgent(proxyUrl);
+		} else {
+			// Logging
+			this.logger.log(ELogActions.GET, { target: 'HTTPS_AGENT' });
+
+			return new https.Agent();
+		}
+	}
+
+	/**
+	 * Validates the given args against the given resource.
+	 *
+	 * @param resource - The resource against which validation is to be done.
+	 * @param args - The args to be validated.
+	 * @returns The validated args.
+	 */
+	private validateArgs(resource: EResourceType, args: FetchArgs | PostArgs): FetchArgs | PostArgs | undefined {
+		if (fetchResources.includes(resource)) {
+			// Logging
+			this.logger.log(ELogActions.VALIDATION, { target: 'FETCH_ARGS' });
+
+			return new FetchArgs(resource, args);
+		} else if (postResources.includes(resource)) {
+			// Logging
+			this.logger.log(ELogActions.VALIDATION, { target: 'POST_ARGS' });
+
+			return new PostArgs(resource, args);
+		}
 	}
 
 	/**
@@ -135,6 +157,9 @@ export class FetcherService {
 		response: NonNullable<unknown>,
 		resource: EResourceType,
 	): T | undefined {
+		// Logging
+		this.logger.log(ELogActions.EXTRACT, { resource: resource });
+
 		return extractors[resource](response) as T;
 	}
 
@@ -147,26 +172,28 @@ export class FetcherService {
 	 * @returns The raw data response received.
 	 */
 	public async request<T>(resource: EResourceType, args: FetchArgs | PostArgs): Promise<T> {
+		// Logging
+		this.logger.log(ELogActions.REQUEST, { resource: resource, args: args });
+
 		// Checking authorization for the requested resource
 		this.checkAuthorization(resource);
 
-		// If not authenticated, use guest authentication
-		this.cred = this.cred ?? (await new Auth({ proxyUrl: this.authProxyUrl }).getGuestCredential());
-
 		// Validating args
-		if (fetchResources.includes(resource)) {
-			args = new FetchArgs(resource, args);
-		} else if (postResources.includes(resource)) {
-			args = new PostArgs(resource, args);
-		}
+		args = this.validateArgs(resource, args)!;
+
+		// Getting HTTPS agent
+		const httpsAgent: Agent = this.getHttpsAgent(this.proxyUrl);
+
+		// Getting credentials from key
+		const cred: AuthCredential = await this.getCredential();
 
 		// Getting request configuration
 		const config = requests[resource](args);
 
 		// Setting additional request parameters
-		config.headers = { ...config.headers, ...this.cred.toHeader() };
-		config.httpAgent = this.httpsAgent;
-		config.httpsAgent = this.httpsAgent;
+		config.headers = { ...config.headers, ...cred.toHeader() };
+		config.httpAgent = httpsAgent;
+		config.httpsAgent = httpsAgent;
 		config.timeout = this.timeout;
 
 		// Sending the request
