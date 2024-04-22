@@ -41,14 +41,14 @@ export class FetcherService {
 	/** The log service instance to use to logging. */
 	private readonly logger: LogService;
 
+	/** The URL To the proxy server to use for all others. */
+	private readonly proxyUrl?: URL;
+
 	/** The max wait time for a response. */
 	private readonly timeout: number;
 
 	/** The URL to the proxy server to use only for authentication. */
 	protected readonly authProxyUrl?: URL;
-
-	/** The URL To the proxy server to use for all others. */
-	protected readonly proxyUrl?: URL;
 
 	/**
 	 * @param config - The config object for configuring the Rettiwt instance.
