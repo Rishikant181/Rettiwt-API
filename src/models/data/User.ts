@@ -1,6 +1,8 @@
 import { IUser as IRawUser, IResponse, ITimelineUser, IUser } from 'rettiwt-core';
 
+import { ELogActions } from '../../enums/Logging';
 import { findByFilter } from '../../helper/JsonUtils';
+import { LogService } from '../../services/internal/LogService';
 
 /**
  * The details of a single user.
@@ -87,7 +89,16 @@ export class User {
 		// Deserializing valid data
 		for (const item of extract) {
 			if (item.user_results?.result?.legacy) {
+				// Logging
+				LogService.log(ELogActions.DESERIALIZE, { id: item.user_results.result.rest_id });
+
 				users.push(new User(item.user_results.result));
+			} else {
+				// Logging
+				LogService.log(ELogActions.WARNING, {
+					action: ELogActions.DESERIALIZE,
+					message: `User with id ${item.user_results.result.rest_id} not found, skipping`,
+				});
 			}
 		}
 
@@ -111,7 +122,16 @@ export class User {
 		// Deserializing valid data
 		for (const item of extract) {
 			if (item.legacy) {
+				// Logging
+				LogService.log(ELogActions.DESERIALIZE, { id: item.rest_id });
+
 				users.push(new User(item));
+			} else {
+				// Logging
+				LogService.log(ELogActions.WARNING, {
+					action: ELogActions.DESERIALIZE,
+					message: `User with id ${item.rest_id} not found, skipping`,
+				});
 			}
 		}
 

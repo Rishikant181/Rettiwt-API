@@ -8,7 +8,10 @@ import {
 	ITweet,
 } from 'rettiwt-core';
 
+import { ELogActions } from '../../enums/Logging';
 import { findByFilter } from '../../helper/JsonUtils';
+
+import { LogService } from '../../services/internal/LogService';
 
 import { User } from './User';
 
@@ -107,7 +110,16 @@ export class Tweet {
 		// Deserializing valid data
 		for (const item of extract) {
 			if (item.tweet_results?.result?.legacy) {
+				// Logging
+				LogService.log(ELogActions.DESERIALIZE, { id: item.tweet_results.result.rest_id });
+
 				tweets.push(new Tweet(item.tweet_results.result));
+			} else {
+				// Logging
+				LogService.log(ELogActions.WARNING, {
+					action: ELogActions.DESERIALIZE,
+					message: `Tweet with id ${item.tweet_results.result.rest_id} not found, skipping`,
+				});
 			}
 		}
 
@@ -131,7 +143,16 @@ export class Tweet {
 		// Deserializing valid data
 		for (const item of extract) {
 			if (item.legacy) {
+				// Logging
+				LogService.log(ELogActions.DESERIALIZE, { id: item.rest_id });
+
 				tweets.push(new Tweet(item));
+			} else {
+				// Logging
+				LogService.log(ELogActions.WARNING, {
+					action: ELogActions.DESERIALIZE,
+					message: `Tweet with id ${item.rest_id} not found, skipping`,
+				});
 			}
 		}
 

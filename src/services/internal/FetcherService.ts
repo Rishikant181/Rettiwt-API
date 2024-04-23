@@ -132,12 +132,12 @@ export class FetcherService {
 	private validateArgs(resource: EResourceType, args: FetchArgs | PostArgs): FetchArgs | PostArgs | undefined {
 		if (fetchResources.includes(resource)) {
 			// Logging
-			LogService.log(ELogActions.VALIDATION, { target: 'FETCH_ARGS' });
+			LogService.log(ELogActions.VALIDATE, { target: 'FETCH_ARGS' });
 
 			return new FetchArgs(resource, args);
 		} else if (postResources.includes(resource)) {
 			// Logging
-			LogService.log(ELogActions.VALIDATION, { target: 'POST_ARGS' });
+			LogService.log(ELogActions.VALIDATE, { target: 'POST_ARGS' });
 
 			return new PostArgs(resource, args);
 		}
