@@ -38,9 +38,6 @@ export class FetcherService {
 	/** Whether the instance is authenticated or not. */
 	private readonly isAuthenticated: boolean;
 
-	/** The log service instance to use to logging. */
-	private readonly logger: LogService;
-
 	/** The URL To the proxy server to use for all others. */
 	private readonly proxyUrl?: URL;
 
@@ -54,7 +51,7 @@ export class FetcherService {
 	 * @param config - The config object for configuring the Rettiwt instance.
 	 */
 	public constructor(config?: IRettiwtConfig) {
-		this.logger = new LogService(config?.logging);
+		LogService.enabled = config?.logging ?? false;
 		this.apiKey = config?.apiKey;
 		this.guestKey = config?.guestKey;
 		this.isAuthenticated = config?.apiKey ? true : false;
@@ -72,7 +69,7 @@ export class FetcherService {
 	 */
 	private checkAuthorization(resource: EResourceType): void {
 		// Logging
-		this.logger.log(ELogActions.AUTHORIZATION, { authenticated: this.isAuthenticated });
+		LogService.log(ELogActions.AUTHORIZATION, { authenticated: this.isAuthenticated });
 
 		// Checking authorization status
 		if (!allowGuestAuthentication.includes(resource) && this.isAuthenticated == false) {
@@ -88,18 +85,18 @@ export class FetcherService {
 	private async getCredential(): Promise<AuthCredential> {
 		if (this.apiKey) {
 			// Logging
-			this.logger.log(ELogActions.GET, { target: 'USER_CREDENTIAL' });
+			LogService.log(ELogActions.GET, { target: 'USER_CREDENTIAL' });
 
 			const cookies = Buffer.from(this.apiKey, 'base64').toString('ascii').split(';');
 			return new AuthCredential(cookies);
 		} else if (this.guestKey) {
 			// Logging
-			this.logger.log(ELogActions.GET, { target: 'GUEST_CREDENTIAL' });
+			LogService.log(ELogActions.GET, { target: 'GUEST_CREDENTIAL' });
 
 			return new AuthCredential(undefined, this.guestKey);
 		} else {
 			// Logging
-			this.logger.log(ELogActions.GET, { target: 'NEW_GUEST_CREDENTIAL' });
+			LogService.log(ELogActions.GET, { target: 'NEW_GUEST_CREDENTIAL' });
 
 			return await new Auth({ proxyUrl: this.authProxyUrl }).getGuestCredential();
 		}
@@ -114,12 +111,12 @@ export class FetcherService {
 	private getHttpsAgent(proxyUrl?: URL): Agent {
 		if (proxyUrl) {
 			// Logging
-			this.logger.log(ELogActions.GET, { target: 'HTTPS_PROXY_AGENT' });
+			LogService.log(ELogActions.GET, { target: 'HTTPS_PROXY_AGENT' });
 
 			return new HttpsProxyAgent(proxyUrl);
 		} else {
 			// Logging
-			this.logger.log(ELogActions.GET, { target: 'HTTPS_AGENT' });
+			LogService.log(ELogActions.GET, { target: 'HTTPS_AGENT' });
 
 			return new https.Agent();
 		}
@@ -135,12 +132,12 @@ export class FetcherService {
 	private validateArgs(resource: EResourceType, args: FetchArgs | PostArgs): FetchArgs | PostArgs | undefined {
 		if (fetchResources.includes(resource)) {
 			// Logging
-			this.logger.log(ELogActions.VALIDATION, { target: 'FETCH_ARGS' });
+			LogService.log(ELogActions.VALIDATION, { target: 'FETCH_ARGS' });
 
 			return new FetchArgs(resource, args);
 		} else if (postResources.includes(resource)) {
 			// Logging
-			this.logger.log(ELogActions.VALIDATION, { target: 'POST_ARGS' });
+			LogService.log(ELogActions.VALIDATION, { target: 'POST_ARGS' });
 
 			return new PostArgs(resource, args);
 		}
@@ -158,7 +155,7 @@ export class FetcherService {
 		resource: EResourceType,
 	): T | undefined {
 		// Logging
-		this.logger.log(ELogActions.EXTRACT, { resource: resource });
+		LogService.log(ELogActions.EXTRACT, { resource: resource });
 
 		return extractors[resource](response) as T;
 	}
@@ -173,7 +170,7 @@ export class FetcherService {
 	 */
 	public async request<T>(resource: EResourceType, args: FetchArgs | PostArgs): Promise<T> {
 		// Logging
-		this.logger.log(ELogActions.REQUEST, { resource: resource, args: args });
+		LogService.log(ELogActions.REQUEST, { resource: resource, args: args });
 
 		// Checking authorization for the requested resource
 		this.checkAuthorization(resource);

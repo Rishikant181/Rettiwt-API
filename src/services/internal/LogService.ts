@@ -7,21 +7,14 @@ import { ELogActions } from '../../enums/Logging';
  */
 export class LogService {
 	/** Whether logging is enabled or not. */
-	private readonly enabled: boolean;
-
-	/**
-	 * @param enable - Whether to enable logging or not.
-	 */
-	public constructor(enable?: boolean) {
-		this.enabled = enable ?? false;
-	}
+	public static enabled: boolean = false;
 
 	/**
 	 * Logs the given data.
 	 *
 	 * @param data - The data to be logged.
 	 */
-	public log(action: ELogActions, data: NonNullable<unknown>): void {
+	public static log(action: ELogActions, data: NonNullable<unknown>): void {
 		// Proceed to log only if logging is enabled
 		if (this.enabled) {
 			// Preparing the log message
