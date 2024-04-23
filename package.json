@@ -30,6 +30,7 @@
 	"homepage": "https://rishikant181.github.io/Rettiwt-API/",
 	"dependencies": {
 		"axios": "1.6.3",
+		"chalk": "4.1.2",
 		"class-validator": "0.14.1",
 		"commander": "11.1.0",
 		"https-proxy-agent": "7.0.2",
