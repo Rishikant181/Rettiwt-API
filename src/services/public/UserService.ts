@@ -101,9 +101,11 @@ export class UserService extends FetcherService {
 	 * Get the list followers of a user.
 	 *
 	 * @param id - The id of the target user.
-	 * @param count - The number of followers to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of followers to fetch.
 	 * @returns The list of users following the target user.
+	 *
+	 * @remarks
+	 * The first returned batch has 70 users while successive batches have 50 users each.
 	 *
 	 * @example
 	 * ```
@@ -124,13 +126,12 @@ export class UserService extends FetcherService {
 	 *
 	 * @public
 	 */
-	public async followers(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+	public async followers(id: string, cursor?: string): Promise<CursoredData<User>> {
 		const resource = EResourceType.USER_FOLLOWERS;
 
 		// Fetching raw list of followers
 		const response = await this.request<IUserFollowersResponse>(resource, {
 			id: id,
-			count: count,
 			cursor: cursor,
 		});
 
@@ -147,6 +148,9 @@ export class UserService extends FetcherService {
 	 * @param count - The number of following to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of following to fetch.
 	 * @returns The list of users followed by the target user.
+	 *
+	 * @remarks
+	 * The first returned batch has 70 users while successive batches have 50 users each.
 	 *
 	 * @example
 	 * ```
@@ -167,13 +171,12 @@ export class UserService extends FetcherService {
 	 *
 	 * @public
 	 */
-	public async following(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+	public async following(id: string, cursor?: string): Promise<CursoredData<User>> {
 		const resource = EResourceType.USER_FOLLOWING;
 
 		// Fetching raw list of following
 		const response = await this.request<IUserFollowingResponse>(resource, {
 			id: id,
-			count: count,
 			cursor: cursor,
 		});
 
