@@ -118,7 +118,7 @@ export class Tweet {
 				// Logging
 				LogService.log(ELogActions.WARNING, {
 					action: ELogActions.DESERIALIZE,
-					message: `Tweet with id ${item.tweet_results.result.rest_id} not found, skipping`,
+					message: `Tweet not found, skipping`,
 				});
 			}
 		}
@@ -151,7 +151,7 @@ export class Tweet {
 				// Logging
 				LogService.log(ELogActions.WARNING, {
 					action: ELogActions.DESERIALIZE,
-					message: `Tweet with id ${item.rest_id} not found, skipping`,
+					message: `Tweet not found, skipping`,
 				});
 			}
 		}

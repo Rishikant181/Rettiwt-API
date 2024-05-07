@@ -97,7 +97,7 @@ export class User {
 				// Logging
 				LogService.log(ELogActions.WARNING, {
 					action: ELogActions.DESERIALIZE,
-					message: `User with id ${item.user_results.result.rest_id} not found, skipping`,
+					message: `User not found, skipping`,
 				});
 			}
 		}
@@ -130,7 +130,7 @@ export class User {
 				// Logging
 				LogService.log(ELogActions.WARNING, {
 					action: ELogActions.DESERIALIZE,
-					message: `User with id ${item.rest_id} not found, skipping`,
+					message: `User not found, skipping`,
 				});
 			}
 		}
