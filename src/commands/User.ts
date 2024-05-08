@@ -26,6 +26,19 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// Follow
+	user.command('follow')
+		.description('Follow a user')
+		.argument('<id>', 'The user to follow')
+		.action(async (id: string) => {
+			try {
+				const result = await rettiwt.user.follow(id);
+				output(result);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Followers
 	user.command('followers')
 		.description('Fetch the list of users who follow the given user')

@@ -49,4 +49,5 @@ export const postResources = [
 	EResourceType.TWEET_UNLIKE,
 	EResourceType.TWEET_UNPOST,
 	EResourceType.TWEET_UNRETWEET,
+	EResourceType.USER_FOLLOW,
 ];

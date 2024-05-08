@@ -3,6 +3,12 @@ import { Command, createCommand } from 'commander';
 import { output } from '../helper/CliUtils';
 import { Rettiwt } from '../Rettiwt';
 
+/**
+ * Creates a new 'auht' command which uses the given Rettiwt instance.
+ *
+ * @param rettiwt - The Rettiwt instance to use.
+ * @returns The created 'auth' command.
+ */
 function createAuthCommand(rettiwt: Rettiwt): Command {
 	// Creating the 'auth' command
 	const auth = createCommand('auth').description('Manage authentication');

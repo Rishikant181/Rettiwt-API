@@ -29,7 +29,10 @@ export class PostArgs {
 	 * Required only when posting using the following resources:
 	 * - {@link EResourceType.TWEET_LIKE}
 	 * - {@link EResourceType.TWEET_RETWEET}
+	 * - {@link EResourceType.TWEET_UNLIKE}
 	 * - {@link EResourceType.TWEET_UNPOST}
+	 * - {@link EResourceType.TWEET_UNRETWEET}
+	 * - {@link EResourceType.USER_FOLLOW}
 	 */
 	@IsOptional()
 	@IsNotEmpty({
@@ -39,6 +42,7 @@ export class PostArgs {
 			EResourceType.TWEET_UNLIKE,
 			EResourceType.TWEET_UNPOST,
 			EResourceType.TWEET_UNRETWEET,
+			EResourceType.USER_FOLLOW,
 		],
 	})
 	@IsNumberString(undefined, {
@@ -48,6 +52,7 @@ export class PostArgs {
 			EResourceType.TWEET_UNLIKE,
 			EResourceType.TWEET_UNPOST,
 			EResourceType.TWEET_UNRETWEET,
+			EResourceType.USER_FOLLOW,
 		],
 	})
 	public id?: string;
