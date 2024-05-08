@@ -103,6 +103,8 @@ export class UserService extends FetcherService {
 	 *
 	 * @param id - The id the user to be followed.
 	 * @returns Whether following was successful or not.
+	 *
+	 * @throws Code 108 if given user id is invalid.
 	 */
 	public async follow(id: string): Promise<boolean> {
 		// Following the user
