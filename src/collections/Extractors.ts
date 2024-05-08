@@ -9,6 +9,7 @@ import {
 	ITweetUnpostResponse,
 	ITweetUnretweetResponse,
 	IUserFollowResponse,
+	IUserUnfollowResponse,
 } from 'rettiwt-core';
 
 import { EBaseType } from '../enums/Data';
@@ -57,5 +58,6 @@ export const extractors: {
 	USER_SUBSCRIPTIONS: (response) => new CursoredData<User>(response as IResponse<unknown>, EBaseType.USER),
 	USER_TIMELINE: (response) => new CursoredData<Tweet>(response as IResponse<unknown>, EBaseType.TWEET),
 	USER_TIMELINE_AND_REPLIES: (response) => new CursoredData<Tweet>(response as IResponse<unknown>, EBaseType.TWEET),
+	USER_UNFOLLOW: (response) => ((response as IUserUnfollowResponse)?.id ? true : false),
 	/* eslint-enable @typescript-eslint/naming-convention */
 };

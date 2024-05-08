@@ -9,6 +9,7 @@ import {
 	IUserSubscriptionsResponse,
 	IUserTweetsAndRepliesResponse,
 	IUserTweetsResponse,
+	IUserUnfollowResponse,
 } from 'rettiwt-core';
 
 import { EResourceType } from '../../enums/Resource';
@@ -105,6 +106,24 @@ export class UserService extends FetcherService {
 	 * @returns Whether following was successful or not.
 	 *
 	 * @throws Code 108 if given user id is invalid.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Following the User with id '12345678'
+	 * rettiwt.user.follow('12345678')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 * @public
 	 */
 	public async follow(id: string): Promise<boolean> {
 		// Following the user
@@ -462,6 +481,43 @@ export class UserService extends FetcherService {
 
 		// Deserializing response
 		const data = this.extract<CursoredData<Tweet>>(response, resource)!;
+
+		return data;
+	}
+
+	/**
+	 * Unfollow a user.
+	 *
+	 * @param id - The id the user to be unfollowed.
+	 * @returns Whether unfollowing was successful or not.
+	 *
+	 * @throws Code 34 if given user id is invalid.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Unfollowing the User with id '12345678'
+	 * rettiwt.user.unfollow('12345678')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @public
+	 */
+	public async unfollow(id: string): Promise<boolean> {
+		// Unfollowing the user
+		const response = await this.request<IUserUnfollowResponse>(EResourceType.USER_UNFOLLOW, { id: id });
+
+		// Deserializing the response
+		const data = this.extract<boolean>(response, EResourceType.USER_UNFOLLOW) ?? false;
 
 		return data;
 	}
