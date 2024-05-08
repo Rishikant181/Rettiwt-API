@@ -33,6 +33,7 @@ export class PostArgs {
 	 * - {@link EResourceType.TWEET_UNPOST}
 	 * - {@link EResourceType.TWEET_UNRETWEET}
 	 * - {@link EResourceType.USER_FOLLOW}
+	 * - {@link EResourceType.USER_UNFOLLOW}
 	 */
 	@IsOptional()
 	@IsNotEmpty({
@@ -43,6 +44,7 @@ export class PostArgs {
 			EResourceType.TWEET_UNPOST,
 			EResourceType.TWEET_UNRETWEET,
 			EResourceType.USER_FOLLOW,
+			EResourceType.USER_UNFOLLOW,
 		],
 	})
 	@IsNumberString(undefined, {
@@ -53,6 +55,7 @@ export class PostArgs {
 			EResourceType.TWEET_UNPOST,
 			EResourceType.TWEET_UNRETWEET,
 			EResourceType.USER_FOLLOW,
+			EResourceType.USER_UNFOLLOW,
 		],
 	})
 	public id?: string;

@@ -159,6 +159,19 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// Unfollow
+	user.command('unfollow')
+		.description('Unfollow a user')
+		.argument('<id>', 'The user to unfollow')
+		.action(async (id: string) => {
+			try {
+				const result = await rettiwt.user.unfollow(id);
+				output(result);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	return user;
 }
 
