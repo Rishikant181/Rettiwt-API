@@ -42,7 +42,7 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
-	// Likes
+	// Likers
 	tweet
 		.command('likers')
 		.description('Fetch the list of users who liked the given tweets')

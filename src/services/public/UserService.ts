@@ -2,6 +2,7 @@ import {
 	IUserDetailsResponse,
 	IUserFollowersResponse,
 	IUserFollowingResponse,
+	IUserFollowResponse,
 	IUserHighlightsResponse,
 	IUserLikesResponse,
 	IUserMediaResponse,
@@ -93,6 +94,24 @@ export class UserService extends FetcherService {
 
 		// Deserializing response
 		const data = this.extract<User>(response, resource);
+
+		return data;
+	}
+
+	/**
+	 * Follow a user.
+	 *
+	 * @param id - The id the user to be followed.
+	 * @returns Whether following was successful or not.
+	 *
+	 * @throws Code 108 if given user id is invalid.
+	 */
+	public async follow(id: string): Promise<boolean> {
+		// Following the user
+		const response = await this.request<IUserFollowResponse>(EResourceType.USER_FOLLOW, { id: id });
+
+		// Deserializing the response
+		const data = this.extract<boolean>(response, EResourceType.USER_FOLLOW) ?? false;
 
 		return data;
 	}

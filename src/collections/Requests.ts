@@ -38,6 +38,7 @@ export const requests: { [key in keyof typeof EResourceType]: (args: FetchArgs |
 
 	USER_DETAILS_BY_USERNAME: (args: FetchArgs) => request.user.detailsByUsername(args.id!),
 	USER_DETAILS_BY_ID: (args: FetchArgs) => request.user.detailsById(args.id!),
+	USER_FOLLOW: (args: PostArgs) => request.user.follow(args.id!),
 	USER_FOLLOWING: (args: FetchArgs) => request.user.following(args.id!, args.count, args.cursor),
 	USER_FOLLOWERS: (args: FetchArgs) => request.user.followers(args.id!, args.count, args.cursor),
 	USER_HIGHLIGHTS: (args: FetchArgs) => request.user.highlights(args.id!, args.count, args.cursor),

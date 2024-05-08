@@ -8,6 +8,7 @@ import {
 	ITweetUnlikeResponse,
 	ITweetUnpostResponse,
 	ITweetUnretweetResponse,
+	IUserFollowResponse,
 } from 'rettiwt-core';
 
 import { EBaseType } from '../enums/Data';
@@ -47,6 +48,7 @@ export const extractors: {
 
 	USER_DETAILS_BY_USERNAME: (response) => User.single(response as IResponse<unknown>),
 	USER_DETAILS_BY_ID: (response) => User.single(response as IResponse<unknown>),
+	USER_FOLLOW: (response) => ((response as IUserFollowResponse)?.id ? true : false),
 	USER_FOLLOWING: (response) => new CursoredData<User>(response as IResponse<unknown>, EBaseType.USER),
 	USER_FOLLOWERS: (response) => new CursoredData<User>(response as IResponse<unknown>, EBaseType.USER),
 	USER_HIGHLIGHTS: (response) => new CursoredData<Tweet>(response as IResponse<unknown>, EBaseType.TWEET),
