@@ -22,7 +22,7 @@ import { CursoredData } from '../../models/data/CursoredData';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
 import { IRettiwtConfig } from '../../types/RettiwtConfig';
-import { FetcherService } from '../internal/FetcherService';
+import { FetcherService } from './FetcherService';
 
 /**
  * Handles interacting with resources related to tweets.

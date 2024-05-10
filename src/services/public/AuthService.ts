@@ -1,7 +1,7 @@
 import { Auth } from 'rettiwt-auth';
 
 import { IRettiwtConfig } from '../../types/RettiwtConfig';
-import { FetcherService } from '../internal/FetcherService';
+import { FetcherService } from './FetcherService';
 
 /**
  * The services that handles authentication.

@@ -22,7 +22,7 @@ export * from './models/data/User';
 
 // SERVICES
 export * from './services/internal/ErrorService';
-export * from './services/internal/FetcherService';
+export * from './services/public/FetcherService';
 export * from './services/internal/LogService';
 export * from './services/public/AuthService';
 export * from './services/public/TweetService';

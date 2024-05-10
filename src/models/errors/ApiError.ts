@@ -3,7 +3,7 @@ import { RettiwtError } from './RettiwtError';
 /**
  * Represents an error that is thrown by Twitter API.
  *
- * @internal
+ * @public
  */
 export class ApiError extends RettiwtError {
 	/** The error code thrown by Twitter API. */
