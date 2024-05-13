@@ -19,7 +19,7 @@ import { DataValidationError } from '../errors/DataValidationError';
 /**
  * User set query parameters that are used to specify the data that is to be posted.
  *
- * @internal
+ * @public
  */
 export class PostArgs {
 	/**

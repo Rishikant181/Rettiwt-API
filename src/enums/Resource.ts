@@ -1,7 +1,7 @@
 /**
  * The different types of resources that can be interacted with.
  *
- * @internal
+ * @public
  */
 export enum EResourceType {
 	// LIST
