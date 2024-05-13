@@ -17,6 +17,7 @@ import { CursoredData } from '../../models/data/CursoredData';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
 import { IRettiwtConfig } from '../../types/RettiwtConfig';
+
 import { FetcherService } from './FetcherService';
 
 /**
@@ -38,11 +39,13 @@ export class UserService extends FetcherService {
 	 * Get the details of a user.
 	 *
 	 * @param id - The username/id of the target user.
+	 *
 	 * @returns
 	 * The details of the given user.
 	 * If no user matches the given id, returns `undefined`.
 	 *
-	 * @example Fetching the details of the Twitter user with username 'user1'
+	 * @example
+	 * Fetching the details using username
 	 * ```
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
@@ -59,15 +62,16 @@ export class UserService extends FetcherService {
 	 * });
 	 * ```
 	 *
-	 * @example Fetching the details of the Twitter user with id '12345678'
+	 * @example
+	 * Fetching the details using id
 	 * ```
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Fetching the details of the User with id '12345678'
-	 * rettiwt.user.details('12345678')
+	 * // Fetching the details of the User with id '1234567890'
+	 * rettiwt.user.details('1234567890')
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -75,8 +79,6 @@ export class UserService extends FetcherService {
 	 * 	console.log(err);
 	 * });
 	 * ```
-	 *
-	 * @public
 	 */
 	public async details(id: string): Promise<User | undefined> {
 		let resource: EResourceType;
@@ -103,6 +105,7 @@ export class UserService extends FetcherService {
 	 * Follow a user.
 	 *
 	 * @param id - The id the user to be followed.
+	 *
 	 * @returns Whether following was successful or not.
 	 *
 	 * @throws Code 108 if given user id is invalid.
@@ -114,8 +117,8 @@ export class UserService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Following the User with id '12345678'
-	 * rettiwt.user.follow('12345678')
+	 * // Following the User with id '1234567890'
+	 * rettiwt.user.follow('1234567890')
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -123,7 +126,6 @@ export class UserService extends FetcherService {
 	 * 	console.log(err);
 	 * });
 	 * ```
-	 * @public
 	 */
 	public async follow(id: string): Promise<boolean> {
 		// Following the user
@@ -141,6 +143,7 @@ export class UserService extends FetcherService {
 	 * @param id - The id of the target user.
 	 * @param count - The number of followers to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of followers to fetch.
+	 *
 	 * @returns The list of users following the target user.
 	 *
 	 * @example
@@ -159,8 +162,6 @@ export class UserService extends FetcherService {
 	 * 	console.log(err);
 	 * });
 	 * ```
-	 *
-	 * @public
 	 */
 	public async followers(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		const resource = EResourceType.USER_FOLLOWERS;
@@ -184,6 +185,7 @@ export class UserService extends FetcherService {
 	 * @param id - The id of the target user.
 	 * @param count - The number of following to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of following to fetch.
+	 *
 	 * @returns The list of users followed by the target user.
 	 *
 	 * @example
@@ -202,8 +204,6 @@ export class UserService extends FetcherService {
 	 * 	console.log(err);
 	 * });
 	 * ```
-	 *
-	 * @public
 	 */
 	public async following(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		const resource = EResourceType.USER_FOLLOWING;
@@ -227,6 +227,7 @@ export class UserService extends FetcherService {
 	 * @param id - The id of the target user.
 	 * @param count - The number of followers to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of followers to fetch.
+	 *
 	 * @returns The list of highlighted tweets of the target user.
 	 *
 	 * @example
@@ -245,8 +246,6 @@ export class UserService extends FetcherService {
 	 * 	console.log(err);
 	 * });
 	 * ```
-	 *
-	 * @public
 	 */
 	public async highlights(id: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		const resource = EResourceType.USER_HIGHLIGHTS;
@@ -270,6 +269,7 @@ export class UserService extends FetcherService {
 	 * @param id - The id of the target user.
 	 * @param count - The number of likes to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of likes to fetch.
+	 *
 	 * @returns The list of tweets liked by the target user.
 	 *
 	 * @example
@@ -288,8 +288,6 @@ export class UserService extends FetcherService {
 	 * 	console.log(err);
 	 * });
 	 * ```
-	 *
-	 * @public
 	 */
 	public async likes(id: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		const resource = EResourceType.USER_LIKES;
@@ -313,6 +311,7 @@ export class UserService extends FetcherService {
 	 * @param id - The id of the target user.
 	 * @param count - The number of media to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of media to fetch
+	 *
 	 * @returns The media timeline of the target user.
 	 *
 	 * @example
@@ -331,8 +330,6 @@ export class UserService extends FetcherService {
 	 * 	console.log(err);
 	 * });
 	 * ```
-	 *
-	 * @public
 	 */
 	public async media(id: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		const resource = EResourceType.USER_MEDIA;
@@ -356,6 +353,7 @@ export class UserService extends FetcherService {
 	 * @param id - The id of the target user.
 	 * @param count - The number of replies to fetch, must be \<= 20.
 	 * @param cursor - The cursor to the batch of replies to fetch.
+	 *
 	 * @returns The reply timeline of the target user.
 	 *
 	 * @example
@@ -376,8 +374,6 @@ export class UserService extends FetcherService {
 	 * ```
 	 *
 	 * @remarks If the target user has a pinned tweet, the returned reply timeline has one item extra and this is always the pinned tweet.
-	 *
-	 * @public
 	 */
 	public async replies(id: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		const resource = EResourceType.USER_TIMELINE_AND_REPLIES;
@@ -401,6 +397,7 @@ export class UserService extends FetcherService {
 	 * @param id - The id of the target user.
 	 * @param count - The number of subscriptions to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of subscriptions to fetch.
+	 *
 	 * @returns The list of subscriptions by the target user.
 	 *
 	 * @example
@@ -419,8 +416,6 @@ export class UserService extends FetcherService {
 	 * 	console.log(err);
 	 * });
 	 * ```
-	 *
-	 * @public
 	 */
 	public async subscriptions(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		const resource = EResourceType.USER_SUBSCRIPTIONS;
@@ -444,6 +439,7 @@ export class UserService extends FetcherService {
 	 * @param id - The id of the target user.
 	 * @param count - The number of timeline items to fetch, must be \<= 20.
 	 * @param cursor - The cursor to the batch of timeline items to fetch.
+	 *
 	 * @returns The timeline of the target user.
 	 *
 	 * @example
@@ -466,8 +462,6 @@ export class UserService extends FetcherService {
 	 * @remarks
 	 * - If the target user has a pinned tweet, the returned timeline has one item extra and this is always the pinned tweet.
 	 * - If timeline is fetched without authenticating, then the most popular tweets of the target user are returned instead.
-	 *
-	 * @public
 	 */
 	public async timeline(id: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		const resource = EResourceType.USER_TIMELINE;
@@ -489,6 +483,7 @@ export class UserService extends FetcherService {
 	 * Unfollow a user.
 	 *
 	 * @param id - The id the user to be unfollowed.
+	 *
 	 * @returns Whether unfollowing was successful or not.
 	 *
 	 * @throws Code 34 if given user id is invalid.
@@ -509,8 +504,6 @@ export class UserService extends FetcherService {
 	 * 	console.log(err);
 	 * });
 	 * ```
-	 *
-	 * @public
 	 */
 	public async unfollow(id: string): Promise<boolean> {
 		// Unfollowing the user

@@ -1,6 +1,7 @@
 import { Auth } from 'rettiwt-auth';
 
 import { IRettiwtConfig } from '../../types/RettiwtConfig';
+
 import { FetcherService } from './FetcherService';
 
 /**
@@ -54,10 +55,8 @@ export class AuthService extends FetcherService {
 	 * @param email - The email id associated with the Twitter account.
 	 * @param userName - The username associated with the Twitter account.
 	 * @param password - The password to the Twitter account.
-	 * @returns The `API_KEY` for the Twitter account.
 	 *
-	 * @remarks
-	 * Interchanging `email` and `userName` works too.
+	 * @returns The `API_KEY` for the Twitter account.
 	 *
 	 * @example
 	 * ```
@@ -76,6 +75,9 @@ export class AuthService extends FetcherService {
 	 * 	console.log(err);
 	 * });
 	 * ```
+	 *
+	 * @remarks
+	 * Interchanging `email` and `userName` works too.
 	 */
 	public async login(email: string, userName: string, password: string): Promise<string> {
 		// Logging in and getting the credentials

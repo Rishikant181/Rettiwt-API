@@ -18,7 +18,7 @@ import { EResourceType } from '../../enums/Resource';
 import { DataValidationError } from '../errors/DataValidationError';
 
 /**
- * User set query parameters that are used to specify the data that is to be fetched.
+ * Options specifying the data that is to be fetched.
  *
  * @public
  */

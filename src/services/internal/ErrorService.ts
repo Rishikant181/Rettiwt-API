@@ -23,6 +23,7 @@ export class ErrorService implements IErrorHandler {
 	 * Creates an API error instance based on the provided error code.
 	 *
 	 * @param errorCode - The error code.
+	 *
 	 * @returns An API error instance.
 	 */
 	protected createApiError(errorCode: number): ApiError {
@@ -33,6 +34,7 @@ export class ErrorService implements IErrorHandler {
 	 * Creates an HTTP error instance based on the provided HTTP status.
 	 *
 	 * @param httpStatus - The HTTP status code.
+	 *
 	 * @returns An HTTP error instance.
 	 */
 	protected createHttpError(httpStatus: number): HttpError {
@@ -43,6 +45,7 @@ export class ErrorService implements IErrorHandler {
 	 * Retrieves the API error message based on the provided error code.
 	 *
 	 * @param errorCode - The error code.
+	 *
 	 * @returns The API error message.
 	 */
 	protected getApiErrorMessage(errorCode: number): string {
@@ -57,7 +60,9 @@ export class ErrorService implements IErrorHandler {
 	 * Retrieves the response data from the given error.
 	 *
 	 * @param error - The error object.
+	 *
 	 * @returns The response data.
+	 *
 	 * @throws The original error if it is not an HTTP error with a response.
 	 */
 	protected getAxiosResponse(error: AxiosError): AxiosResponse {
@@ -72,6 +77,7 @@ export class ErrorService implements IErrorHandler {
 	 * Retrieves the API error code from the Axios response data.
 	 *
 	 * @param response - The response object received.
+	 *
 	 * @returns The error code, or undefined if not found.
 	 */
 	protected getErrorCode(response: AxiosResponse): number | undefined {
@@ -84,6 +90,7 @@ export class ErrorService implements IErrorHandler {
 	 * Retrieves the HTTP error message based on the provided HTTP status.
 	 *
 	 * @param httpStatus - The HTTP status code.
+	 *
 	 * @returns The HTTP error message.
 	 */
 	protected getHttpErrorMessage(httpStatus: number): string {
@@ -96,6 +103,7 @@ export class ErrorService implements IErrorHandler {
 	 * Handles API error in a response.
 	 *
 	 * @param response - The response object received.
+	 *
 	 * @throws An error with the corresponding API error message if any API-related error has occurred.
 	 */
 	protected handleApiError(response: AxiosResponse): void {
@@ -112,6 +120,7 @@ export class ErrorService implements IErrorHandler {
 	 * Handles HTTP error in a response.
 	 *
 	 * @param response - The response object received.
+	 *
 	 * @throws An error with the corresponding HTTP status text if any HTTP-related error has occurred.
 	 */
 	protected handleHttpError(response: AxiosResponse): void {
@@ -122,6 +131,7 @@ export class ErrorService implements IErrorHandler {
 	 * Handles exceeded timeout, configured in RettiwtConfig.
 	 *
 	 * @param error - The error object.
+	 *
 	 * @throws An error if the configured request timeout has been exceeded.
 	 */
 	protected handleTimeoutError(error: AxiosError): void {

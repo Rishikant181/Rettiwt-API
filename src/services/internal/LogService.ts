@@ -13,6 +13,7 @@ export class LogService {
 
 	/**
 	 * @param action - The action to be logged.
+	 *
 	 * @returns - The colored text representing the action.
 	 */
 	private static getColoredAction(action: ELogActions): string {
@@ -27,6 +28,7 @@ export class LogService {
 	 * Logs the given data.
 	 *
 	 * @param action - The action to be logged.
+	 *
 	 * @param data - The data to be logged.
 	 */
 	public static log(action: ELogActions, data: NonNullable<unknown>): void {

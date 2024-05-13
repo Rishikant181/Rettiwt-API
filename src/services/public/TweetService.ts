@@ -22,6 +22,7 @@ import { CursoredData } from '../../models/data/CursoredData';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
 import { IRettiwtConfig } from '../../types/RettiwtConfig';
+
 import { FetcherService } from './FetcherService';
 
 /**
@@ -43,6 +44,7 @@ export class TweetService extends FetcherService {
 	 * Get the details of a tweet.
 	 *
 	 * @param id - The id of the target tweet.
+	 *
 	 * @returns
 	 * The details of the tweet with the given id.
 	 * If no tweet matches the given id, returns `undefined`.
@@ -54,8 +56,8 @@ export class TweetService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Fetching the details of the tweet with the id '12345678'
-	 * rettiwt.tweet.details('12345678')
+	 * // Fetching the details of the tweet with the id '1234567890'
+	 * rettiwt.tweet.details('1234567890')
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -63,8 +65,6 @@ export class TweetService extends FetcherService {
 	 * 	console.log(err);
 	 * });
 	 * ```
-	 *
-	 * @public
 	 */
 	public async details(id: string): Promise<Tweet | undefined> {
 		const resource = EResourceType.TWEET_DETAILS;
@@ -82,6 +82,7 @@ export class TweetService extends FetcherService {
 	 * Like a tweet.
 	 *
 	 * @param id - The id of the tweet to be liked.
+	 *
 	 * @returns Whether liking was successful or not.
 	 *
 	 * @example
@@ -91,8 +92,8 @@ export class TweetService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Liking the Tweet with id '12345678'
-	 * rettiwt.tweet.like('12345678')
+	 * // Liking the Tweet with id '1234567890'
+	 * rettiwt.tweet.like('1234567890')
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -100,8 +101,6 @@ export class TweetService extends FetcherService {
 	 * 	console.log(err);
 	 * });
 	 * ```
-	 *
-	 * @public
 	 */
 	public async like(id: string): Promise<boolean> {
 		// Favoriting the tweet
@@ -121,6 +120,7 @@ export class TweetService extends FetcherService {
 	 * @param id - The id of the target tweet.
 	 * @param count - The number of likers to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of likers to fetch.
+	 *
 	 * @returns The list of users who liked the given tweet.
 	 *
 	 * @example
@@ -130,8 +130,8 @@ export class TweetService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Fetching the most recent 100 likers of the Tweet with id '12345678'
-	 * rettiwt.tweet.likers('12345678')
+	 * // Fetching the most recent 100 likers of the Tweet with id '1234567890'
+	 * rettiwt.tweet.likers('1234567890')
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -139,8 +139,6 @@ export class TweetService extends FetcherService {
 	 * 	console.log(err);
 	 * });
 	 * ```
-	 *
-	 * @public
 	 */
 	public async likers(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		const resource = EResourceType.TWEET_LIKERS;
@@ -164,6 +162,7 @@ export class TweetService extends FetcherService {
 	 * @param id - The id of target list.
 	 * @param count - The number of tweets to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of tweets to fetch.
+	 *
 	 * @returns The list tweets in the given list.
 	 *
 	 * @example
@@ -173,8 +172,8 @@ export class TweetService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Fetching the most recent 100 tweets of the Twitter list with id '12345678'
-	 * rettiwt.tweet.list('12345678')
+	 * // Fetching the most recent 100 tweets of the Twitter list with id '1234567890'
+	 * rettiwt.tweet.list('1234567890')
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -208,9 +207,11 @@ export class TweetService extends FetcherService {
 	 * Post a tweet.
 	 *
 	 * @param options - The options describing the tweet to be posted. Check {@link TweetArgs} for available options.
+	 *
 	 * @returns Whether posting was successful or not.
 	 *
-	 * @example Posting a simple text
+	 * @example
+	 * Posting a simple text
 	 * ```
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
@@ -227,7 +228,8 @@ export class TweetService extends FetcherService {
 	 * });
 	 * ```
 	 *
-	 * @example Posting a tweet with an image that has been already uploaded
+	 * @example
+	 * Posting a tweet with an image that has been already uploaded
 	 * ```
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
@@ -244,7 +246,8 @@ export class TweetService extends FetcherService {
 	 * });
 	 * ```
 	 *
-	 * @example Posting a reply to a tweet
+	 * @example
+	 * Posting a reply to a tweet
 	 * ```
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
@@ -261,7 +264,8 @@ export class TweetService extends FetcherService {
 	 * });
 	 * ```
 	 *
-	 * * @example Posting a tweet that quotes another tweet
+	 * * @example
+	 * Posting a tweet that quotes another tweet
 	 * ```
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
@@ -277,8 +281,6 @@ export class TweetService extends FetcherService {
 	 * 	console.log(err);
 	 * });
 	 * ```
-	 *
-	 * @public
 	 */
 	public async post(options: TweetArgs): Promise<string | undefined> {
 		const resource = EResourceType.TWEET_POST;
@@ -296,6 +298,7 @@ export class TweetService extends FetcherService {
 	 * Retweet a tweet.
 	 *
 	 * @param id - The id of the target tweet.
+	 *
 	 * @returns Whether retweeting was successful or not.
 	 *
 	 * @example
@@ -314,8 +317,6 @@ export class TweetService extends FetcherService {
 	 * 	console.log(err);
 	 * });
 	 * ```
-	 *
-	 * @public
 	 */
 	public async retweet(id: string): Promise<boolean> {
 		const resource = EResourceType.TWEET_RETWEET;
@@ -335,6 +336,7 @@ export class TweetService extends FetcherService {
 	 * @param id - The id of the target tweet.
 	 * @param count - The number of retweeters to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of retweeters to fetch.
+	 *
 	 * @returns The list of users who retweeted the given tweet.
 	 *
 	 * @example
@@ -344,8 +346,8 @@ export class TweetService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Fetching the most recent 100 retweeters of the Tweet with id '12345678'
-	 * rettiwt.tweet.retweeters('12345678')
+	 * // Fetching the most recent 100 retweeters of the Tweet with id '1234567890'
+	 * rettiwt.tweet.retweeters('1234567890')
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -353,8 +355,6 @@ export class TweetService extends FetcherService {
 	 * 	console.log(err);
 	 * });
 	 * ```
-	 *
-	 * @public
 	 */
 	public async retweeters(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		const resource = EResourceType.TWEET_RETWEETERS;
@@ -378,6 +378,7 @@ export class TweetService extends FetcherService {
 	 * @param filter - The filter to be used for searching the tweets.
 	 * @param count - The number of tweets to fetch, must be \<= 20.
 	 * @param cursor - The cursor to the batch of tweets to fetch.
+	 *
 	 * @returns The list of tweets that match the given filter.
 	 *
 	 * @example
@@ -398,8 +399,6 @@ export class TweetService extends FetcherService {
 	 * ```
 	 *
 	 * @remarks For details about available filters, refer to {@link TweetFilter}
-	 *
-	 * @public
 	 */
 	public async search(filter: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		const resource = EResourceType.TWEET_SEARCH;
@@ -425,6 +424,7 @@ export class TweetService extends FetcherService {
 	 *
 	 * @param filter - The filter to be used for searching the tweets.
 	 * @param pollingInterval - The interval in milliseconds to poll for new tweets. Default interval is 60000 ms.
+	 *
 	 * @returns An async generator that yields matching tweets as they are found.
 	 *
 	 * @example
@@ -446,8 +446,6 @@ export class TweetService extends FetcherService {
 	 * 	}
 	 * })();
 	 * ```
-	 *
-	 * @public
 	 */
 	public async *stream(filter: TweetFilter, pollingInterval: number = 60000): AsyncGenerator<Tweet> {
 		const startDate = new Date();
@@ -489,6 +487,7 @@ export class TweetService extends FetcherService {
 	 * Unlike a tweet.
 	 *
 	 * @param id - The id of the target tweet.
+	 *
 	 * @returns Whether unliking was successful or not.
 	 *
 	 * @example
@@ -524,6 +523,7 @@ export class TweetService extends FetcherService {
 	 * Unpost a tweet.
 	 *
 	 * @param id - The id of the target tweet.
+	 *
 	 * @returns Whether unposting was successful or not.
 	 *
 	 * @example
@@ -559,6 +559,7 @@ export class TweetService extends FetcherService {
 	 * Unretweet a tweet.
 	 *
 	 * @param id - The id of the target tweet.
+	 *
 	 * @returns Whether unretweeting was successful or not.
 	 *
 	 * @example
@@ -594,6 +595,7 @@ export class TweetService extends FetcherService {
 	 * Upload a media file to Twitter.
 	 *
 	 * @param media - The path or ArrayBuffer to the media file to upload.
+	 *
 	 * @returns The id of the uploaded media.
 	 *
 	 * @example

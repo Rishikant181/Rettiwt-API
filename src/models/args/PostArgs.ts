@@ -17,7 +17,7 @@ import { EResourceType } from '../../enums/Resource';
 import { DataValidationError } from '../errors/DataValidationError';
 
 /**
- * User set query parameters that are used to specify the data that is to be posted.
+ * Options specifying the data that is to be posted.
  *
  * @public
  */
@@ -217,7 +217,7 @@ export class TweetMediaArgs extends NewTweetMedia {
 }
 
 /**
- * Query parameters that are used while uploading a media file.
+ * Options specifying the media file to be uploaded.
  *
  * @internal
  */

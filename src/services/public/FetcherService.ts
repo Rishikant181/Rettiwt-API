@@ -65,6 +65,7 @@ export class FetcherService {
 	 * Checks the authorization status based on the requested resource.
 	 *
 	 * @param resource - The requested resource.
+	 *
 	 * @throws An error if not authorized to access the requested resource.
 	 */
 	private checkAuthorization(resource: EResourceType): void {
@@ -106,6 +107,7 @@ export class FetcherService {
 	 * Gets the https agent based on whether a proxy is used or not.
 	 *
 	 * @param proxyUrl - Optional URL with proxy configuration to use for requests to Twitter API.
+	 *
 	 * @returns The https agent to use.
 	 */
 	private getHttpsAgent(proxyUrl?: URL): Agent {
@@ -127,6 +129,7 @@ export class FetcherService {
 	 *
 	 * @param resource - The resource against which validation is to be done.
 	 * @param args - The args to be validated.
+	 *
 	 * @returns The validated args.
 	 */
 	private validateArgs(resource: EResourceType, args: FetchArgs | PostArgs): FetchArgs | PostArgs | undefined {
@@ -148,6 +151,7 @@ export class FetcherService {
 	 *
 	 * @param data - The raw response data from which extraction is to be done.
 	 * @param resource - The requested resource.
+	 *
 	 * @returns The extracted and deserialized data.
 	 */
 	protected extract<T extends AllReturnTypes>(
@@ -163,10 +167,30 @@ export class FetcherService {
 	/**
 	 * Makes an HTTP request according to the given parameters.
 	 *
-	 * @typeParam T - The type of the returned response data.
 	 * @param resource - The requested resource.
 	 * @param config - The request configuration.
+	 *
+	 * @typeParam T - The type of the returned response data.
+	 *
 	 * @returns The raw data response received.
+	 *
+	 * @example
+	 * Fetching the raw details of a user with username 'user1'
+	 * ```
+	 * import { FetcherService, EResourceType } from 'rettiwt-api';
+	 *
+	 * // Creating a new FetcherService instance using the given 'API_KEY'
+	 * const fetcher = new FetcherService({ apiKey: API_KEY });
+	 *
+	 * // Fetching the details of the User with username 'user1'
+	 * fetcher.request(EResourceType.USER_DETAILS_BY_USERNAME, { id: 'user1' })
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * })
+	 * ```
 	 */
 	public async request<T>(resource: EResourceType, args: FetchArgs | PostArgs): Promise<T> {
 		// Logging
