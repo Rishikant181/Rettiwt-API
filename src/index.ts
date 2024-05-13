@@ -32,3 +32,32 @@ export * from './services/public/UserService';
 // TYPES
 export * from './types/RettiwtConfig';
 export * from './types/ErrorHandler';
+
+// RAW TYPES
+export {
+	IInitializeMediaUploadResponse,
+	IListTweetsResponse,
+	ITweetDetailsResponse,
+	ITweetLikeResponse,
+	ITweetLikersResponse,
+	ITweetPostResponse,
+	ITweetRetweetersResponse,
+	ITweetRetweetResponse,
+	ITweetSearchResponse,
+	ITweetUnlikeResponse,
+	ITweetUnpostResponse,
+	ITweetUnretweetResponse,
+} from 'rettiwt-core';
+export {
+	IUserDetailsResponse,
+	IUserFollowersResponse,
+	IUserFollowingResponse,
+	IUserFollowResponse,
+	IUserHighlightsResponse,
+	IUserLikesResponse,
+	IUserMediaResponse,
+	IUserSubscriptionsResponse,
+	IUserTweetsAndRepliesResponse,
+	IUserTweetsResponse,
+	IUserUnfollowResponse,
+} from 'rettiwt-core';
