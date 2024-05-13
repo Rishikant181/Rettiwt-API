@@ -19,7 +19,7 @@ import { DataValidationError } from '../errors/DataValidationError';
 /**
  * User set query parameters that are used to specify the data that is to be posted.
  *
- * @internal
+ * @public
  */
 export class PostArgs {
 	/**
@@ -117,7 +117,7 @@ export class PostArgs {
 }
 
 /**
- * User set query parameters that are used to specify the tweet that is to be posted.
+ * Options specifying the tweet that is to be posted.
  *
  * @public
  */
@@ -176,9 +176,9 @@ export class TweetArgs extends NewTweet {
 }
 
 /**
- * User set query parameters that are used to specify the media to be posted.
+ * Options specifying the media that is to be posted.
  *
- * @internal
+ * @public
  */
 export class TweetMediaArgs extends NewTweetMedia {
 	/** The id of the media to post. */

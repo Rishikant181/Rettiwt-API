@@ -4,7 +4,7 @@ import { output } from '../helper/CliUtils';
 import { Rettiwt } from '../Rettiwt';
 
 /**
- * Creates a new 'auht' command which uses the given Rettiwt instance.
+ * Creates a new 'auth' command which uses the given Rettiwt instance.
  *
  * @param rettiwt - The Rettiwt instance to use.
  * @returns The created 'auth' command.

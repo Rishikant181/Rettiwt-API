@@ -20,7 +20,7 @@ import { DataValidationError } from '../errors/DataValidationError';
 /**
  * User set query parameters that are used to specify the data that is to be fetched.
  *
- * @internal
+ * @public
  */
 export class FetchArgs {
 	/**
@@ -28,8 +28,12 @@ export class FetchArgs {
 	 *
 	 * @remarks
 	 * - Works only for cursored resources.
-	 * - Must be \<= 20 for {@link EResourceType.USER_TIMELINE}.
+	 * - Must be \<= 20 for:
+	 * 	- {@link EResourceType.USER_TIMELINE}
+	 * 	- {@link EResourceType.USER_TIMELINE}
+	 * 	- {@link EResourceType.USER_TIMELINE_AND_REPLIES}.
 	 * - Must be \<= 100 for all other cursored resources.
+	 * - Due a bug on Twitter's end, count does not work for {@link EResourceType.USER_FOLLOWERS} and {@link EResourceType.USER_FOLLOWING}.
 	 *
 	 * @defaultValue 20
 	 */

@@ -3,7 +3,7 @@ import { RettiwtError } from './RettiwtError';
 /**
  * Represents a timeout error that occues while making a request to Twitter API.
  *
- * @internal
+ * @public
  */
 export class TimeoutError extends RettiwtError {
 	/**

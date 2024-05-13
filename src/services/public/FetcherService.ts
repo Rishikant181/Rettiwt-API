@@ -17,13 +17,13 @@ import { IRettiwtConfig } from '../../types/RettiwtConfig';
 
 import { AllReturnTypes } from '../../types/ReturnTypes';
 
-import { ErrorService } from './ErrorService';
-import { LogService } from './LogService';
+import { ErrorService } from '../internal/ErrorService';
+import { LogService } from '../internal/LogService';
 
 /**
  * The base service that handles all HTTP requests.
  *
- * @internal
+ * @public
  */
 export class FetcherService {
 	/** The api key to use for authenticating against Twitter API as user. */
