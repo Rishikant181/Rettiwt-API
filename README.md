@@ -4,7 +4,7 @@ A CLI tool and an API for fetching data from Twitter for free!
 
 ## Prerequisites
 
--   NodeJS 20.10.0
+-   NodeJS 20
 -   A working Twitter account (optional)
 
 ## Installation
@@ -19,32 +19,44 @@ It is recommended to install the package globally. Use the following steps to in
 
 Rettiwt-API can be used with or without logging in to Twitter. As such, the two authentication strategies are:
 
--   'guest' authentication (without logging in) grants access to the following resources:
+-   'guest' authentication (without logging in) grants access to the following resources/actions:
 
     -   Tweet Details
     -   User Details
-    -   User Timeline (tweets timeline)
-    -   User Replies (replies timeline)
+    -   User Timeline
+    -   User Replies Timeline
 
--   'user' authentication (logging in) grants access to the following resources:
+-   'user' authentication (logging in) grants access to the following resources/actions:
 
     -   Tweet Details
-    -   Tweet Favoriters (likes)
-    -   Tweet Retweeters (retweets)
+    -   Tweet Like
+    -   Tweet Likers
+    -   Tweet List
+    -   Tweet Post
+    -   Tweet Retweet
+    -   Tweet Retweeters
     -   Tweet Search
     -   Tweet Stream
-    -   Tweet List
+    -   Tweet Unlike
+    -   Tweet Unpost
+    -   Tweet Unretweet
+    -   Tweet Media Upload
     -   User Details
+    -   User Follow
     -   User Followers
     -   User Following
+    -   User Highlights
     -   User Likes
-    -   User Timeline (tweets timeline)
-    -   User Replies (replies timeline)
+    -   User Media
+    -   User Replies Timeline
+    -   User Subscriptions
+    -   User Timeline
+    -   User Unfollow
 
 By default, Rettiwt-API uses 'guest' authentication. If however, access to the full set of resources is required, 'user' authentication can be used, which requires the following additional steps post-installtion:
 
 1. Open a terminal.
-2. Generate an API_KEY using the command `rettiwt auth login <email> <username> <password>`
+2. Generate an API_KEY using the command `rettiwt auth login "<email>" "<username>" "<password>"`
 
     Here,
 
@@ -170,11 +182,13 @@ const rettiwt = new Rettiwt({ apiKey: API_KEY });
  * 	- contain the words <word1> and <word2>
  *
  * 'data' is the response object received in the previous example.
+ *
+ * 'count' is a number less or equal to 20 (the quantity of tweets to return)
  */
 rettiwt.tweet.search({
 	fromUsers: ['<username>'],
 	words: ['<word1>', '<word2>']
-}, data.next.value)
+}, count, data.next.value)
 .then(data => {
 	...
 })
@@ -251,6 +265,50 @@ Sometimes, when the library shows unexpected behaviour, for troubleshooting purp
 const rettiwt = new Rettiwt({ apiKey: API_KEY, logging: true });
 ```
 
+## Accessing raw response
+
+Rettiwt-API also provides direct access to the raw response data, bypassing any preprocessing by the library itself. This can be achieved by using the [`FetcherService`](https://rishikant181.github.io/Rettiwt-API/classes/FetcherService.html) class instead of the `Rettiwt` class, as demonstrated by the example below, which fetches the raw details of a user with the username 'user1':
+
+-   ### JavaScript example:
+
+```js
+import { FetcherService, EResourceType } from 'rettiwt-api';
+
+// Creating a new FetcherService instance
+const fetcher = new FetcherService({ apiKey: API_KEY });
+
+// Fetching the details of the given user
+fetcher
+	.request(EResourceType.USER_DETAILS_BY_USERNAME, { id: 'user1' })
+	.then((res) => {
+		console.log(res);
+	})
+	.catch((err) => {
+		console.log(err);
+	});
+```
+
+-   ### TypeScript example:
+
+```ts
+import { FetcherService, EResourceType, IUserDetailsResponse } from 'rettiwt-api';
+
+// Creating a new FetcherService instance
+const fetcher = new FetcherService({ apiKey: API_KEY });
+
+// Fetching the details of the given user
+fetcher
+	.request<IUserDetailsResponse>(EResourceType.USER_DETAILS_BY_USERNAME, { id: 'user1' })
+	.then((res) => {
+		console.log(res);
+	})
+	.catch((err) => {
+		console.log(err);
+	});
+```
+
+As demonstrated by the example, the raw data can be accessed by using the `request` method of the `FetcherService` class, which takes two parameters. The first parameter is the name of the requested resource, while the second is an object specifying the associated arguments required for the given resource. The complete list of resource type can be checked [here](https://rishikant181.github.io/Rettiwt-API/enums/AuthService.html#EResourceType). As for the resource specific argurments, they are the same as that of the methods of `Rettiwt` class' methods for the respective resources, but structured as an object. Notice how the `FetcherService` class takes the same arguments as the `Rettiwt` class, and the arguments have the same effects as they have in case of `Rettiwt` class.
+
 ## Features
 
 So far, the following operations are supported:
@@ -263,23 +321,32 @@ So far, the following operations are supported:
 ### Tweets
 
 -   [Getting the details of a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#details)
--   [Favoriting/liking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#favorite)
--   [Getting the list of users who favorited/liked a given tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#favoriters)
+-   [Liking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#like)
+-   [Getting the list of users who liked a given tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#likers)
 -   [Getting the list of tweets from a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#list)
--   [Retweeting/reposting a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#retweet)
--   [Getting the list of users who retweeted/reposted a given tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#retweeters)
+-   [Posting a new tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#post)
+-   [Retweeting a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#retweet)
+-   [Getting the list of users who retweeted a given tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#retweeters)
 -   [Searching for the list of tweets that match a given filter](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#search)
 -   [Streaming filtered tweets in pseudo-realtime](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#stream)
--   [Posting a new tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#tweet)
+-   [Unliking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unlike)
+-   [Unposting a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unpost)
+-   [Unretweeting a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unretweet)
+-   [Uploading a media file for a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#upload)
 
 ### Users
 
 -   [Getting the details of a user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#details)
+-   [Following a given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#follow)
 -   [Getting the list of users who follow the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#followers)
 -   [Getting the list of users who are followed by the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#following)
--   [Getting the list of tweets favorited/liked by the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#likes)
--   [Getting the tweet timeline of a user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#timeline)
--   [Getting the reply timeline of a user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#replies)
+-   [Getting the list of highlighted tweets of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#highlights)
+-   [Getting the list of tweets liked by the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#likes)
+-   [Getting the media timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#media)
+-   [Getting the replies timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#replies)
+-   [Getting the list of subscriptions of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#subscriptions)
+-   [Getting the tweet timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#timeline)
+-   [Unfollowing a given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#unfollow)
 
 ## CLI Usage
 

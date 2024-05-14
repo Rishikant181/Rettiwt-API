@@ -1,4 +1,3 @@
-// TYPES
 import { IErrorHandler } from './ErrorHandler';
 
 /**

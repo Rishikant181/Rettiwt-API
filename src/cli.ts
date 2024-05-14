@@ -1,13 +1,11 @@
 #! /usr/bin/env node
 
-// PACKAGES
 import { createCommand } from 'commander';
-import { Rettiwt } from './Rettiwt';
 
-// SUB-COMMANDS
+import auth from './commands/Auth';
 import tweet from './commands/Tweet';
 import user from './commands/User';
-import auth from './commands/Auth';
+import { Rettiwt } from './Rettiwt';
 
 // Creating a new commandline program
 const program = createCommand('rettiwt')

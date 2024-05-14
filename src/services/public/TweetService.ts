@@ -1,20 +1,32 @@
-// PACKAGES
-import { EResourceType, MediaArgs, TweetFilter } from 'rettiwt-core';
+import { statSync } from 'fs';
 
-// SERVICES
-import { FetcherService } from '../internal/FetcherService';
+import {
+	IInitializeMediaUploadResponse,
+	IListTweetsResponse,
+	ITweetDetailsResponse,
+	ITweetLikeResponse,
+	ITweetLikersResponse,
+	ITweetPostResponse,
+	ITweetRetweetersResponse,
+	ITweetRetweetResponse,
+	ITweetSearchResponse,
+	ITweetUnlikeResponse,
+	ITweetUnpostResponse,
+	ITweetUnretweetResponse,
+	TweetFilter,
+} from 'rettiwt-core';
 
-// TYPES
-import { IRettiwtConfig } from '../../types/RettiwtConfig';
-
-// MODELS
+import { EResourceType } from '../../enums/Resource';
+import { TweetArgs } from '../../models/args/PostArgs';
+import { CursoredData } from '../../models/data/CursoredData';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
-import { CursoredData } from '../../models/data/CursoredData';
-import { TweetArgs, TweetMediaArgs } from '../../models/args/TweetArgs';
+import { IRettiwtConfig } from '../../types/RettiwtConfig';
+
+import { FetcherService } from './FetcherService';
 
 /**
- * Handles fetching of data related to tweets.
+ * Handles interacting with resources related to tweets.
  *
  * @public
  */
@@ -32,7 +44,10 @@ export class TweetService extends FetcherService {
 	 * Get the details of a tweet.
 	 *
 	 * @param id - The id of the target tweet.
-	 * @returns The details of a single tweet with the given tweet id.
+	 *
+	 * @returns
+	 * The details of the tweet with the given id.
+	 * If no tweet matches the given id, returns `undefined`.
 	 *
 	 * @example
 	 * ```
@@ -41,8 +56,124 @@ export class TweetService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Fetching the details of the tweet with the id '12345678'
-	 * rettiwt.tweet.details('12345678')
+	 * // Fetching the details of the tweet with the id '1234567890'
+	 * rettiwt.tweet.details('1234567890')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async details(id: string): Promise<Tweet | undefined> {
+		const resource = EResourceType.TWEET_DETAILS;
+
+		// Fetching raw tweet details
+		const response = await this.request<ITweetDetailsResponse>(resource, { id: id });
+
+		// Deserializing response
+		const data = this.extract<Tweet>(response, resource);
+
+		return data;
+	}
+
+	/**
+	 * Like a tweet.
+	 *
+	 * @param id - The id of the tweet to be liked.
+	 *
+	 * @returns Whether liking was successful or not.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Liking the Tweet with id '1234567890'
+	 * rettiwt.tweet.like('1234567890')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async like(id: string): Promise<boolean> {
+		// Favoriting the tweet
+		const response = await this.request<ITweetLikeResponse>(EResourceType.TWEET_LIKE, {
+			id: id,
+		});
+
+		// Deserializing response
+		const data = this.extract<boolean>(response, EResourceType.TWEET_LIKE) ?? false;
+
+		return data;
+	}
+
+	/**
+	 * Get the list of users who liked a tweet.
+	 *
+	 * @param id - The id of the target tweet.
+	 * @param count - The number of likers to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of likers to fetch.
+	 *
+	 * @returns The list of users who liked the given tweet.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the most recent 100 likers of the Tweet with id '1234567890'
+	 * rettiwt.tweet.likers('1234567890')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async likers(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+		const resource = EResourceType.TWEET_LIKERS;
+
+		// Fetching raw likers
+		const response = await this.request<ITweetLikersResponse>(resource, {
+			id: id,
+			count: count,
+			cursor: cursor,
+		});
+
+		// Deserializing response
+		const data = this.extract<CursoredData<User>>(response, resource)!;
+
+		return data;
+	}
+
+	/**
+	 * Get the list of tweets from a tweet list.
+	 *
+	 * @param id - The id of target list.
+	 * @param count - The number of tweets to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of tweets to fetch.
+	 *
+	 * @returns The list tweets in the given list.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the most recent 100 tweets of the Twitter list with id '1234567890'
+	 * rettiwt.tweet.list('1234567890')
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -51,21 +182,203 @@ export class TweetService extends FetcherService {
 	 * });
 	 * ```
 	 *
-	 * @public
+	 * @remarks Due a bug in Twitter API, the count is ignored when no cursor is provided and defaults to 100.
 	 */
-	public async details(id: string): Promise<Tweet> {
-		// Fetching the requested data
-		const data = await this.fetch<Tweet>(EResourceType.TWEET_DETAILS, { id: id });
+	public async list(id: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+		const resource = EResourceType.LIST_TWEETS;
 
-		return data.list[0];
+		// Fetching raw list tweets
+		const response = await this.request<IListTweetsResponse>(resource, {
+			id: id,
+			count: count,
+			cursor: cursor,
+		});
+
+		// Deserializing response
+		const data = this.extract<CursoredData<Tweet>>(response, resource)!;
+
+		// Sorting the tweets by date, from recent to oldest
+		data.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
+
+		return data;
 	}
 
 	/**
-	 * Search for tweets using a query.
+	 * Post a tweet.
 	 *
-	 * @param query - The query be used for searching the tweets.
+	 * @param options - The options describing the tweet to be posted. Check {@link TweetArgs} for available options.
+	 *
+	 * @returns Whether posting was successful or not.
+	 *
+	 * @example
+	 * Posting a simple text
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Posting a tweet to twitter
+	 * rettiwt.tweet.post({ text: 'Hello World!' })
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @example
+	 * Posting a tweet with an image that has been already uploaded
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Posting a tweet, containing an image called 'mountains.jpg', to twitter
+	 * rettiwt.tweet.post({ text: 'What a nice view!', media: [{ id: '1234567890' }] })
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @example
+	 * Posting a reply to a tweet
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Posting a simple text reply, to a tweet with id "1234567890"
+	 * rettiwt.tweet.post({ text: 'Hello!', replyTo: "1234567890" })
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * * @example
+	 * Posting a tweet that quotes another tweet
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Posting a simple text tweet, quoting a tweet with id "1234567890"
+	 * rettiwt.tweet.post({ text: 'Hello!', quote: "1234567890" })
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async post(options: TweetArgs): Promise<string | undefined> {
+		const resource = EResourceType.TWEET_POST;
+
+		// Posting the tweet
+		const response = await this.request<ITweetPostResponse>(resource, { tweet: options });
+
+		// Deserializing response
+		const data = this.extract<string>(response, resource);
+
+		return data;
+	}
+
+	/**
+	 * Retweet a tweet.
+	 *
+	 * @param id - The id of the target tweet.
+	 *
+	 * @returns Whether retweeting was successful or not.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Retweeting the Tweet with id '1234567890'
+	 * rettiwt.tweet.retweet('1234567890')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async retweet(id: string): Promise<boolean> {
+		const resource = EResourceType.TWEET_RETWEET;
+
+		// Retweeting the tweet
+		const response = await this.request<ITweetRetweetResponse>(resource, { id: id });
+
+		// Deserializing response
+		const data = this.extract<boolean>(response, resource) ?? false;
+
+		return data;
+	}
+
+	/**
+	 * Get the list of users who retweeted a tweet.
+	 *
+	 * @param id - The id of the target tweet.
+	 * @param count - The number of retweeters to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of retweeters to fetch.
+	 *
+	 * @returns The list of users who retweeted the given tweet.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the most recent 100 retweeters of the Tweet with id '1234567890'
+	 * rettiwt.tweet.retweeters('1234567890')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async retweeters(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+		const resource = EResourceType.TWEET_RETWEETERS;
+
+		// Fetching raw list of retweeters
+		const response = await this.request<ITweetRetweetersResponse>(resource, {
+			id: id,
+			count: count,
+			cursor: cursor,
+		});
+
+		// Deserializing response
+		const data = this.extract<CursoredData<User>>(response, resource)!;
+
+		return data;
+	}
+
+	/**
+	 * Search for tweets using a filter.
+	 *
+	 * @param filter - The filter to be used for searching the tweets.
 	 * @param count - The number of tweets to fetch, must be \<= 20.
 	 * @param cursor - The cursor to the batch of tweets to fetch.
+	 *
 	 * @returns The list of tweets that match the given filter.
 	 *
 	 * @example
@@ -86,16 +399,19 @@ export class TweetService extends FetcherService {
 	 * ```
 	 *
 	 * @remarks For details about available filters, refer to {@link TweetFilter}
-	 *
-	 * @public
 	 */
-	public async search(query: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-		// Fetching the requested data
-		const data = await this.fetch<Tweet>(EResourceType.TWEET_SEARCH, {
-			filter: query,
+	public async search(filter: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+		const resource = EResourceType.TWEET_SEARCH;
+
+		// Fetching raw list of filtered tweets
+		const response = await this.request<ITweetSearchResponse>(resource, {
+			filter: filter,
 			count: count,
 			cursor: cursor,
 		});
+
+		// Deserializing response
+		const data = this.extract<CursoredData<Tweet>>(response, resource)!;
 
 		// Sorting the tweets by date, from recent to oldest
 		data.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
@@ -108,6 +424,7 @@ export class TweetService extends FetcherService {
 	 *
 	 * @param filter - The filter to be used for searching the tweets.
 	 * @param pollingInterval - The interval in milliseconds to poll for new tweets. Default interval is 60000 ms.
+	 *
 	 * @returns An async generator that yields matching tweets as they are found.
 	 *
 	 * @example
@@ -129,8 +446,6 @@ export class TweetService extends FetcherService {
 	 * 	}
 	 * })();
 	 * ```
-	 *
-	 * @public
 	 */
 	public async *stream(filter: TweetFilter, pollingInterval: number = 60000): AsyncGenerator<Tweet> {
 		const startDate = new Date();
@@ -169,53 +484,11 @@ export class TweetService extends FetcherService {
 	}
 
 	/**
-	 * Get the tweets from the tweet list with the given id.
+	 * Unlike a tweet.
 	 *
-	 * @param listId - The id of list from where the tweets are to be fetched.
-	 * @param count - The number of tweets to fetch, must be \<= 100.
-	 * @param cursor - The cursor to the batch of tweets to fetch.
-	 * @returns The list tweets present in the given list.
+	 * @param id - The id of the target tweet.
 	 *
-	 * @example
-	 * ```
-	 * import { Rettiwt } from 'rettiwt-api';
-	 *
-	 * // Creating a new Rettiwt instance using the given 'API_KEY'
-	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
-	 *
-	 * // Fetching the most recent 100 tweets of the Twitter list with id '12345678'
-	 * rettiwt.tweet.list('12345678')
-	 * .then(res => {
-	 * 	console.log(res);
-	 * })
-	 * .catch(err => {
-	 * 	console.log(err);
-	 * });
-	 * ```
-	 *
-	 * @remarks Due a bug in Twitter API, the count is ignored when no cursor is provided and defaults to 100.
-	 */
-	public async list(listId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-		// Fetching the requested data
-		const data = await this.fetch<Tweet>(EResourceType.LIST_TWEETS, {
-			id: listId,
-			count: count,
-			cursor: cursor,
-		});
-
-		// Sorting the tweets by date, from recent to oldest
-		data.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
-
-		return data;
-	}
-
-	/**
-	 * Get the list of users who liked a tweet.
-	 *
-	 * @param tweetId - The rest id of the target tweet.
-	 * @param count - The number of favoriters to fetch, must be \<= 100.
-	 * @param cursor - The cursor to the batch of favoriters to fetch.
-	 * @returns The list of users who liked the given tweet.
+	 * @returns Whether unliking was successful or not.
 	 *
 	 * @example
 	 * ```
@@ -224,8 +497,8 @@ export class TweetService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Fetching the most recent 100 likers of the Tweet with id '12345678'
-	 * rettiwt.tweet.favoriters('12345678')
+	 * // Unliking the Tweet with id '1234567890'
+	 * rettiwt.tweet.unlike('1234567890')
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -233,27 +506,25 @@ export class TweetService extends FetcherService {
 	 * 	console.log(err);
 	 * });
 	 * ```
-	 *
-	 * @public
 	 */
-	public async favoriters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		// Fetching the requested data
-		const data = await this.fetch<User>(EResourceType.TWEET_FAVORITERS, {
-			id: tweetId,
-			count: count,
-			cursor: cursor,
-		});
+	public async unlike(id: string): Promise<boolean> {
+		const resource = EResourceType.TWEET_UNLIKE;
+
+		// Unliking the tweet
+		const response = await this.request<ITweetUnlikeResponse>(resource, { id: id });
+
+		// Deserializing the response
+		const data = this.extract<boolean>(response, resource) ?? false;
 
 		return data;
 	}
 
 	/**
-	 * Get the list of users who retweeted a tweet.
+	 * Unpost a tweet.
 	 *
-	 * @param tweetId - The rest id of the target tweet.
-	 * @param count - The number of retweeters to fetch, must be \<= 100.
-	 * @param cursor - The cursor to the batch of retweeters to fetch.
-	 * @returns The list of users who retweeted the given tweet.
+	 * @param id - The id of the target tweet.
+	 *
+	 * @returns Whether unposting was successful or not.
 	 *
 	 * @example
 	 * ```
@@ -262,8 +533,8 @@ export class TweetService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Fetching the most recent 100 retweeters of the Tweet with id '12345678'
-	 * rettiwt.tweet.retweeters('12345678')
+	 * // Unposting the Tweet with id '1234567890'
+	 * rettiwt.tweet.unpost('1234567890')
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -271,112 +542,25 @@ export class TweetService extends FetcherService {
 	 * 	console.log(err);
 	 * });
 	 * ```
-	 *
-	 * @public
 	 */
-	public async retweeters(tweetId: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		// Fetching the requested data
-		const data = await this.fetch<User>(EResourceType.TWEET_RETWEETERS, {
-			id: tweetId,
-			count: count,
-			cursor: cursor,
-		});
+	public async unpost(id: string): Promise<boolean> {
+		const resource = EResourceType.TWEET_UNPOST;
+
+		// Unposting the tweet
+		const response = await this.request<ITweetUnpostResponse>(resource, { id: id });
+
+		// Deserializing the response
+		const data = this.extract<boolean>(response, resource) ?? false;
 
 		return data;
 	}
 
 	/**
-	 * Post a tweet.
+	 * Unretweet a tweet.
 	 *
-	 * @param text - The text to be posted, length must be \<= 280 characters.
-	 * @param media - The list of media to post in the tweet, max number of media must be \<= 4.
-	 * @param replyTo - The id of the tweet to which the reply is to be made.
-	 * @returns Whether posting was successful or not.
+	 * @param id - The id of the target tweet.
 	 *
-	 * @example Posting a simple text
-	 * ```
-	 * import { Rettiwt } from 'rettiwt-api';
-	 *
-	 * // Creating a new Rettiwt instance using the given 'API_KEY'
-	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
-	 *
-	 * // Posting a tweet to twitter
-	 * rettiwt.tweet.tweet('Hello World!')
-	 * .then(res => {
-	 * 	console.log(res);
-	 * })
-	 * .catch(err => {
-	 * 	console.log(err);
-	 * });
-	 * ```
-	 *
-	 * @example Posting a tweet with an image
-	 * ```
-	 * import { Rettiwt } from 'rettiwt-api';
-	 *
-	 * // Creating a new Rettiwt instance using the given 'API_KEY'
-	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
-	 *
-	 * // Posting a tweet, containing an image called 'mountains.jpg', to twitter
-	 * rettiwt.tweet.tweet('What a nice view!', [{ path: 'mountains.jpg' }])
-	 * .then(res => {
-	 * 	console.log(res);
-	 * })
-	 * .catch(err => {
-	 * 	console.log(err);
-	 * });
-	 * ```
-	 *
-	 * @example Posting a reply to a tweet
-	 * ```
-	 * import { Rettiwt } from 'rettiwt-api';
-	 *
-	 * // Creating a new Rettiwt instance using the given 'API_KEY'
-	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
-	 *
-	 * // Posting a simple text reply, to a tweet with id "1234567890"
-	 * rettiwt.tweet.tweet('Hello!', undefined, "1234567890")
-	 * .then(res => {
-	 * 	console.log(res);
-	 * })
-	 * .catch(err => {
-	 * 	console.log(err);
-	 * });
-	 * ```
-	 *
-	 * @public
-	 */
-	public async tweet(text: string, media?: TweetMediaArgs[], replyTo?: string): Promise<boolean> {
-		// Converting  JSON args to object
-		const tweet: TweetArgs = new TweetArgs({ text: text, media: media });
-
-		/** Stores the list of media that has been uploaded */
-		const uploadedMedia: MediaArgs[] = [];
-
-		// If tweet includes media, upload the media items
-		if (tweet.media) {
-			for (const item of tweet.media) {
-				// Uploading the media item and getting it's allocated id
-				const id: string = await this.upload(item.path);
-
-				// Storing the uploaded media item
-				uploadedMedia.push(new MediaArgs({ id: id, tags: item.tags }));
-			}
-		}
-
-		// Posting the tweet
-		const data = await this.post(EResourceType.CREATE_TWEET, {
-			tweet: { text: text, media: uploadedMedia, replyTo: replyTo },
-		});
-
-		return data;
-	}
-
-	/**
-	 * Favorite the tweet with the given id.
-	 *
-	 * @param tweetId - The id of the tweet to be favorited.
-	 * @returns Whether favoriting was successful or not.
+	 * @returns Whether unretweeting was successful or not.
 	 *
 	 * @example
 	 * ```
@@ -385,8 +569,8 @@ export class TweetService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Liking the Tweet with id '12345678'
-	 * rettiwt.tweet.favorite('12345678')
+	 * // Unretweeting the Tweet with id '1234567890'
+	 * rettiwt.tweet.unretweet('1234567890')
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -394,21 +578,25 @@ export class TweetService extends FetcherService {
 	 * 	console.log(err);
 	 * });
 	 * ```
-	 *
-	 * @public
 	 */
-	public async favorite(tweetId: string): Promise<boolean> {
-		// Favoriting the tweet
-		const data = await this.post(EResourceType.FAVORITE_TWEET, { id: tweetId });
+	public async unretweet(id: string): Promise<boolean> {
+		const resource = EResourceType.TWEET_UNRETWEET;
+
+		// Unretweeting the tweet
+		const response = await this.request<ITweetUnretweetResponse>(resource, { id: id });
+
+		// Deserializing the response
+		const data = this.extract<boolean>(response, resource) ?? false;
 
 		return data;
 	}
 
 	/**
-	 * Retweet the tweet with the given id.
+	 * Upload a media file to Twitter.
 	 *
-	 * @param tweetId - The id of the tweet with the given id.
-	 * @returns Whether retweeting was successful or not.
+	 * @param media - The path or ArrayBuffer to the media file to upload.
+	 *
+	 * @returns The id of the uploaded media.
 	 *
 	 * @example
 	 * ```
@@ -417,8 +605,8 @@ export class TweetService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Retweeting the Tweet with id '12345678'
-	 * rettiwt.tweet.retweet('12345678')
+	 * // Uploading a file called mountains.jpg
+	 * rettiwt.tweet.upload('mountains.jpg')
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -427,12 +615,26 @@ export class TweetService extends FetcherService {
 	 * });
 	 * ```
 	 *
-	 * @public
+	 * @remarks
+	 * - The uploaded media exists for 24 hrs within which it can be included in a tweet to be posted.
+	 * If not posted in a tweet within this period, the uploaded media is removed.
+	 * - Instead of a path to the media, an ArrayBuffer containing the media can also be uploaded.
 	 */
-	public async retweet(tweetId: string): Promise<boolean> {
-		// Retweeting the tweet
-		const data = await this.post(EResourceType.CREATE_RETWEET, { id: tweetId });
+	public async upload(media: string | ArrayBuffer): Promise<string> {
+		// INITIALIZE
+		const size = typeof media == 'string' ? statSync(media).size : media.byteLength;
+		const id: string = (
+			await this.request<IInitializeMediaUploadResponse>(EResourceType.MEDIA_UPLOAD_INITIALIZE, {
+				upload: { size: size },
+			})
+		).media_id_string;
 
-		return data;
+		// APPEND
+		await this.request<unknown>(EResourceType.MEDIA_UPLOAD_APPEND, { upload: { id: id, media: media } });
+
+		// FINALIZE
+		await this.request<unknown>(EResourceType.MEDIA_UPLOAD_FINALIZE, { upload: { id: id } });
+
+		return id;
 	}
 }

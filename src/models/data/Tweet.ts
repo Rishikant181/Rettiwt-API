@@ -1,25 +1,28 @@
-// PACKAGES
 import {
+	EMediaType,
+	IExtendedMedia as IRawExtendedMedia,
 	ITweet as IRawTweet,
 	IEntities as IRawTweetEntities,
-	IExtendedMedia as IRawExtendedMedia,
-	EMediaType,
+	IResponse,
+	ITimelineTweet,
+	ITweet,
 } from 'rettiwt-core';
 
-// MODELS
+import { ELogActions } from '../../enums/Logging';
+import { findByFilter } from '../../helper/JsonUtils';
+
+import { LogService } from '../../services/internal/LogService';
+
 import { User } from './User';
 
 /**
- * The details of a single Tweet.
+ * The details of a single tweet.
  *
  * @public
  */
 export class Tweet {
-	/** The rest id of the tweet. */
-	public id: string;
-
-	/** The details of the user who made the tweet. */
-	public tweetBy: User;
+	/** The number of bookmarks of a tweet. */
+	public bookmarkCount: number;
 
 	/** The date and time of creation of the tweet, in UTC string format. */
 	public createdAt: string;
@@ -27,46 +30,47 @@ export class Tweet {
 	/** Additional tweet entities like urls, mentions, etc. */
 	public entities: TweetEntities;
 
-	/** The urls of the media contents of the tweet (if any). */
-	public media: TweetMedia[];
-
-	/** The rest id of the tweet which is quoted in the tweet. */
-	public quoted: string;
-
 	/** The full text content of the tweet. */
 	public fullText: string;
 
-	/** The rest id of the tweet to which the tweet is a reply. */
-	public replyTo: string;
+	/** The rest id of the tweet. */
+	public id: string;
 
 	/** The language in which the tweet is written. */
 	public lang: string;
 
+	/** The number of likes of the tweet. */
+	public likeCount: number;
+
+	/** The urls of the media contents of the tweet (if any). */
+	public media?: TweetMedia[];
+
 	/** The number of quotes of the tweet. */
 	public quoteCount: number;
+
+	/** The rest id of the tweet which is quoted in the tweet. */
+	public quoted?: string;
 
 	/** The number of replies to the tweet. */
 	public replyCount: number;
 
+	/** The rest id of the tweet to which the tweet is a reply. */
+	public replyTo?: string;
+
 	/** The number of retweets of the tweet. */
 	public retweetCount: number;
-
-	/** The number of likes of the tweet. */
-	public likeCount: number;
-
-	/** The number of views of a tweet. */
-	public viewCount: number;
-
-	/** The number of bookmarks of a tweet. */
-	public bookmarkCount: number;
 
 	/** The tweet which was retweeted in this tweet (if any). */
 	public retweetedTweet?: Tweet;
 
+	/** The details of the user who made the tweet. */
+	public tweetBy: User;
+
+	/** The number of views of a tweet. */
+	public viewCount: number;
+
 	/**
-	 * Initializes a new Tweet from the given raw tweet data.
-	 *
-	 * @param tweet - The raw tweet data.
+	 * @param tweet - The raw tweet details.
 	 */
 	public constructor(tweet: IRawTweet) {
 		this.id = tweet.rest_id;
@@ -82,11 +86,77 @@ export class Tweet {
 		this.replyCount = tweet.legacy.reply_count;
 		this.retweetCount = tweet.legacy.retweet_count;
 		this.likeCount = tweet.legacy.favorite_count;
-		this.viewCount = parseInt(tweet.views.count);
+		this.viewCount = tweet.views.count ? parseInt(tweet.views.count) : 0;
 		this.bookmarkCount = tweet.legacy.bookmark_count;
 		this.retweetedTweet = tweet.legacy.retweeted_status_result?.result?.rest_id
 			? new Tweet(tweet.legacy.retweeted_status_result.result)
 			: undefined;
+	}
+
+	/**
+	 * Extracts and deserializes the list of tweets from the given raw response data.
+	 *
+	 * @param response - The raw response data.
+	 * @returns The deserialized list of tweets.
+	 *
+	 * @internal
+	 */
+	public static list(response: IResponse<unknown>): Tweet[] {
+		const tweets: Tweet[] = [];
+
+		// Extracting the matching data
+		const extract = findByFilter<ITimelineTweet>(response, '__typename', 'TimelineTweet');
+
+		// Deserializing valid data
+		for (const item of extract) {
+			if (item.tweet_results?.result?.legacy) {
+				// Logging
+				LogService.log(ELogActions.DESERIALIZE, { id: item.tweet_results.result.rest_id });
+
+				tweets.push(new Tweet(item.tweet_results.result));
+			} else {
+				// Logging
+				LogService.log(ELogActions.WARNING, {
+					action: ELogActions.DESERIALIZE,
+					message: `Tweet not found, skipping`,
+				});
+			}
+		}
+
+		return tweets;
+	}
+
+	/**
+	 * Extracts and deserializes a single target tweet from the given raw response data.
+	 *
+	 * @param response - The raw response data.
+	 * @returns The target deserialized tweet.
+	 *
+	 * @internal
+	 */
+	public static single(response: IResponse<unknown>): Tweet | undefined {
+		const tweets: Tweet[] = [];
+
+		// Extracting the matching data
+		const extract = findByFilter<ITweet>(response, '__typename', 'Tweet');
+
+		// Deserializing valid data
+		for (const item of extract) {
+			if (item.legacy) {
+				// Logging
+				LogService.log(ELogActions.DESERIALIZE, { id: item.rest_id });
+
+				tweets.push(new Tweet(item));
+			} else {
+				// Logging
+				LogService.log(ELogActions.WARNING, {
+					action: ELogActions.DESERIALIZE,
+					message: `Tweet not found, skipping`,
+				});
+			}
+		}
+
+		return tweets.length ? tweets[0] : undefined;
 	}
 }
 
@@ -99,15 +169,13 @@ export class TweetEntities {
 	/** The list of hashtags mentioned in the tweet. */
 	public hashtags: string[] = [];
 
-	/** The list of urls mentioned in the tweet. */
-	public urls: string[] = [];
-
 	/** The list of IDs of users mentioned in the tweet. */
 	public mentionedUsers: string[] = [];
 
+	/** The list of urls mentioned in the tweet. */
+	public urls: string[] = [];
+
 	/**
-	 * Initializes the TweetEntities from the raw tweet entities.
-	 *
 	 * @param entities - The raw tweet entities.
 	 */
 	public constructor(entities: IRawTweetEntities) {
@@ -135,7 +203,7 @@ export class TweetEntities {
 }
 
 /**
- * A single media content.
+ * The details of a single media content included in a tweet.
  *
  * @public
  */
@@ -147,9 +215,7 @@ export class TweetMedia {
 	public url: string = '';
 
 	/**
-	 * Initializes the TweetMedia from the raw tweet media.
-	 *
-	 * @param media - The raw tweet media.
+	 * @param media - The raw media details.
 	 */
 	public constructor(media: IRawExtendedMedia) {
 		this.type = media.type;

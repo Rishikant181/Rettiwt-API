@@ -1,10 +1,8 @@
-// PACKAGES
 import { Command, createCommand } from 'commander';
-import { Rettiwt } from '../Rettiwt';
 import { TweetFilter } from 'rettiwt-core';
 
-// UTILITY
 import { output } from '../helper/CliUtils';
+import { Rettiwt } from '../Rettiwt';
 
 /**
  * Creates a new 'tweet' command which uses the given Rettiwt instance.
@@ -22,8 +20,113 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		.description('Fetch the details of tweet with the given id')
 		.argument('<id>', 'The id of the tweet whose details are to be fetched')
 		.action(async (id: string) => {
-			const details = await rettiwt.tweet.details(id);
-			output(details);
+			try {
+				const details = await rettiwt.tweet.details(id);
+				output(details);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// Like
+	tweet
+		.command('like')
+		.description('Like a tweet')
+		.argument('<id>', 'The tweet to like')
+		.action(async (id: string) => {
+			try {
+				const result = await rettiwt.tweet.like(id);
+				output(result);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// Likers
+	tweet
+		.command('likers')
+		.description('Fetch the list of users who liked the given tweets')
+		.argument('<id>', 'The id of the tweet')
+		.argument('[count]', 'The number of likers to fetch')
+		.argument('[cursor]', 'The cursor to the batch of likers to fetch')
+		.action(async (id: string, count?: string, cursor?: string) => {
+			try {
+				const tweets = await rettiwt.tweet.likers(id, count ? parseInt(count) : undefined, cursor);
+				output(tweets);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// List
+	tweet
+		.command('list')
+		.description('Fetch the list of tweets in the tweet list with the given id')
+		.argument('<id>', 'The id of the tweet list')
+		.argument('[count]', 'The number of tweets to fetch')
+		.argument('[cursor]', 'The cursor to the batch of tweets to fetch')
+		.action(async (id: string, count?: string, cursor?: string) => {
+			try {
+				const tweets = await rettiwt.tweet.list(id, count ? parseInt(count) : undefined, cursor);
+				output(tweets);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// Post
+	tweet
+		.command('post')
+		.description('Post a tweet (text only)')
+		.argument('<text>', 'The text to post as a tweet')
+		.option('-m, --media [string]', 'Comma-separated list of ids of the media item(s) to be posted')
+		.option('-q, --quote [string]', 'The id of the tweet to quote in the tweet to be posted')
+		.option(
+			'-r, --reply [string]',
+			'The id of the tweet to which the reply is to be made, if the tweet is to be a reply',
+		)
+		.action(async (text: string, options?: { media?: string; quote?: string; reply?: string }) => {
+			try {
+				const result = await rettiwt.tweet.post({
+					text: text,
+					media: options?.media ? options?.media.split(',').map((item) => ({ id: item })) : undefined,
+					quote: options?.quote,
+					replyTo: options?.reply,
+				});
+				output(result);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// Retweet
+	tweet
+		.command('retweet')
+		.description('Retweet a tweet')
+		.argument('<id>', 'The tweet to retweet')
+		.action(async (id: string) => {
+			try {
+				const result = await rettiwt.tweet.retweet(id);
+				output(result);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// Retweeters
+	tweet
+		.command('retweeters')
+		.description('Fetch the list of users who retweeted the given tweets')
+		.argument('<id>', 'The id of the tweet')
+		.argument('[count]', 'The number of retweeters to fetch')
+		.argument('[cursor]', 'The cursor to the batch of retweeters to fetch')
+		.action(async (id: string, count?: string, cursor?: string) => {
+			try {
+				const tweets = await rettiwt.tweet.retweeters(id, count ? parseInt(count) : undefined, cursor);
+				output(tweets);
+			} catch (error) {
+				output(error);
+			}
 		});
 
 	// Search
@@ -60,99 +163,84 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		.option('--stream', 'Stream the filtered tweets in pseudo-realtime')
 		.option('-i, --interval <number>', 'The polling interval (in ms) to use for streaming. Default is 60000')
 		.action(async (count?: string, cursor?: string, options?: TweetSearchOptions) => {
-			// If search results are to be streamed
-			if (options?.stream) {
-				for await (const tweet of rettiwt.tweet.stream(
-					new TweetSearchOptions(options).toTweetFilter(),
-					options?.interval,
-				)) {
-					output(tweet);
+			try {
+				// If search results are to be streamed
+				if (options?.stream) {
+					for await (const tweet of rettiwt.tweet.stream(
+						new TweetSearchOptions(options).toTweetFilter(),
+						options?.interval,
+					)) {
+						output(tweet);
+					}
 				}
+				// If a normal search is to be done
+				else {
+					const tweets = await rettiwt.tweet.search(
+						new TweetSearchOptions(options).toTweetFilter(),
+						count ? parseInt(count) : undefined,
+						cursor,
+					);
+					output(tweets);
+				}
+			} catch (error) {
+				output(error);
 			}
-			// If a normal search is to be done
-			else {
-				const tweets = await rettiwt.tweet.search(
-					new TweetSearchOptions(options).toTweetFilter(),
-					count ? parseInt(count) : undefined,
-					cursor,
-				);
-				output(tweets);
+		});
+
+	// Unlike
+	tweet
+		.command('unlike')
+		.description('Unlike a tweet')
+		.argument('<id>', 'The id of the tweet')
+		.action(async (id: string) => {
+			try {
+				const result = await rettiwt.tweet.unlike(id);
+				output(result);
+			} catch (error) {
+				output(error);
 			}
 		});
 
-	// List
+	// Unpost
 	tweet
-		.command('list')
-		.description('Fetch the list of tweets in the tweet list with the given id')
-		.argument('<id>', 'The id of the tweet list')
-		.argument('[count]', 'The number of tweets to fetch')
-		.argument('[cursor]', 'The cursor to the batch of tweets to fetch')
-		.action(async (id: string, count?: string, cursor?: string) => {
-			const tweets = await rettiwt.tweet.list(id, count ? parseInt(count) : undefined, cursor);
-			output(tweets);
-		});
-
-	// Likes
-	tweet
-		.command('likes')
-		.description('Fetch the list of users who liked the given tweets')
+		.command('unpost')
+		.description('Unpost a tweet')
 		.argument('<id>', 'The id of the tweet')
-		.argument('[count]', 'The number of likers to fetch')
-		.argument('[cursor]', 'The cursor to the batch of likers to fetch')
-		.action(async (id: string, count?: string, cursor?: string) => {
-			const tweets = await rettiwt.tweet.favoriters(id, count ? parseInt(count) : undefined, cursor);
-			output(tweets);
+		.action(async (id: string) => {
+			try {
+				const result = await rettiwt.tweet.unpost(id);
+				output(result);
+			} catch (error) {
+				output(error);
+			}
 		});
 
-	// Retweets
+	// Unretweet
 	tweet
-		.command('retweets')
-		.description('Fetch the list of users who retweeted the given tweets')
+		.command('unretweet')
+		.description('Unretweet a tweet')
 		.argument('<id>', 'The id of the tweet')
-		.argument('[count]', 'The number of retweeters to fetch')
-		.argument('[cursor]', 'The cursor to the batch of retweeters to fetch')
-		.action(async (id: string, count?: string, cursor?: string) => {
-			const tweets = await rettiwt.tweet.retweeters(id, count ? parseInt(count) : undefined, cursor);
-			output(tweets);
-		});
-
-	// Post
-	tweet
-		.command('post')
-		.description('Post a tweet (text only)')
-		.argument('<text>', 'The text to post as a tweet')
-		.option('-m, --media [string]', 'Comma-separated list of path(s) to the media item(s) to be posted')
-		.option(
-			'-r, --reply [string]',
-			'The id of the tweet to which the reply is to be made, if the tweet is to be a reply',
-		)
-		.action(async (text: string, options?: { media?: string; reply?: string }) => {
-			const result = await rettiwt.tweet.tweet(
-				text,
-				options?.media ? options?.media.split(',').map((item) => ({ path: item })) : undefined,
-				options?.reply,
-			);
-			output(result);
-		});
-
-	// Like
-	tweet
-		.command('like')
-		.description('Like a tweet')
-		.argument('<id>', 'The tweet to like')
 		.action(async (id: string) => {
-			const result = await rettiwt.tweet.favorite(id);
-			output(result);
+			try {
+				const result = await rettiwt.tweet.unretweet(id);
+				output(result);
+			} catch (error) {
+				output(error);
+			}
 		});
 
-	// Retweet
+	// Upload
 	tweet
-		.command('retweet')
-		.description('Retweet a tweet')
-		.argument('<id>', 'The tweet to retweet')
-		.action(async (id: string) => {
-			const result = await rettiwt.tweet.retweet(id);
-			output(result);
+		.command('upload')
+		.description('Upload a media file and returns the alloted id (valid for 24 hrs)')
+		.argument('<path>', 'The path to the media to upload')
+		.action(async (path: string) => {
+			try {
+				const id = await rettiwt.tweet.upload(path);
+				output(id);
+			} catch (error) {
+				output(error);
+			}
 		});
 
 	return tweet;
@@ -164,24 +252,24 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
  * @remarks The search options are implementations of the ones offered by {@link TweetFilter}
  */
 class TweetSearchOptions {
-	public from?: string;
-	public to?: string;
-	public words?: string;
-	public phrase?: string;
-	public optionalWords?: string;
-	public excludeWords?: string;
-	public hashtags?: string;
-	public mentions?: string;
-	public minReplies?: number;
-	public minLikes?: number;
-	public minRetweets?: number;
-	public quoted?: string;
+	public end?: string;
 	public excludeLinks?: boolean = false;
 	public excludeReplies?: boolean = false;
-	public start?: string;
-	public end?: string;
-	public stream?: boolean;
+	public excludeWords?: string;
+	public from?: string;
+	public hashtags?: string;
 	public interval?: number;
+	public mentions?: string;
+	public minLikes?: number;
+	public minReplies?: number;
+	public minRetweets?: number;
+	public optionalWords?: string;
+	public phrase?: string;
+	public quoted?: string;
+	public start?: string;
+	public stream?: boolean;
+	public to?: string;
+	public words?: string;
 
 	/**
 	 * Initializes a new object from the given options.

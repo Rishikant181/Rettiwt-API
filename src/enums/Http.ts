@@ -1,7 +1,7 @@
 /**
  * The different types of http status codes
  *
- * @internal
+ * @public
  */
 export enum EHttpStatus {
 	CONTINUE = 100,

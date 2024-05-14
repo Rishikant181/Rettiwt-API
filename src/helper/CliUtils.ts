@@ -3,7 +3,7 @@
  *
  * @param data - The data to be output.
  */
-export function output(data: NonNullable<unknown>): void {
+export function output(data: unknown): void {
 	// If data is string, output as is
 	if (typeof data == 'string') {
 		console.log(data);
