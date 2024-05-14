@@ -182,11 +182,13 @@ const rettiwt = new Rettiwt({ apiKey: API_KEY });
  * 	- contain the words <word1> and <word2>
  *
  * 'data' is the response object received in the previous example.
+ *
+ * 'count' is a number less or equal to 20 (the quantity of tweets to return)
  */
 rettiwt.tweet.search({
 	fromUsers: ['<username>'],
 	words: ['<word1>', '<word2>']
-}, data.next.value)
+}, count, data.next.value)
 .then(data => {
 	...
 })
