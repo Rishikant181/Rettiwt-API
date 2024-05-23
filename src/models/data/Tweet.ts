@@ -130,15 +130,17 @@ export class Tweet {
 	 * Extracts and deserializes a single target tweet from the given raw response data.
 	 *
 	 * @param response - The raw response data.
+	 * @param id - The id of the target tweet.
+	 *
 	 * @returns The target deserialized tweet.
 	 *
 	 * @internal
 	 */
-	public static single(response: IResponse<unknown>): Tweet | undefined {
+	public static single(response: IResponse<unknown>, id: string): Tweet | undefined {
 		const tweets: Tweet[] = [];
 
 		// Extracting the matching data
-		const extract = findByFilter<ITweet>(response, '__typename', 'Tweet');
+		const extract = findByFilter<ITweet>(response, 'rest_id', id);
 
 		// Deserializing valid data
 		for (const item of extract) {
