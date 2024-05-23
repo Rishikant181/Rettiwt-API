@@ -4,7 +4,6 @@ import axios from 'axios';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import { Auth, AuthCredential } from 'rettiwt-auth';
 
-import { extractors } from '../../collections/Extractors';
 import { allowGuestAuthentication, fetchResources, postResources } from '../../collections/Groups';
 import { requests } from '../../collections/Requests';
 import { EApiErrors } from '../../enums/Api';
@@ -14,8 +13,6 @@ import { FetchArgs } from '../../models/args/FetchArgs';
 import { PostArgs } from '../../models/args/PostArgs';
 import { IErrorHandler } from '../../types/ErrorHandler';
 import { IRettiwtConfig } from '../../types/RettiwtConfig';
-
-import { AllReturnTypes } from '../../types/ReturnTypes';
 
 import { ErrorService } from '../internal/ErrorService';
 import { LogService } from '../internal/LogService';
@@ -144,24 +141,6 @@ export class FetcherService {
 
 			return new PostArgs(resource, args);
 		}
-	}
-
-	/**
-	 * Extracts and deserializes the required data based on the requested resource.
-	 *
-	 * @param data - The raw response data from which extraction is to be done.
-	 * @param resource - The requested resource.
-	 *
-	 * @returns The extracted and deserialized data.
-	 */
-	protected extract<T extends AllReturnTypes>(
-		response: NonNullable<unknown>,
-		resource: EResourceType,
-	): T | undefined {
-		// Logging
-		LogService.log(ELogActions.EXTRACT, { resource: resource });
-
-		return extractors[resource](response) as T;
 	}
 
 	/**

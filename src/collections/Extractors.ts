@@ -32,7 +32,7 @@ export const extractors = {
 	MEDIA_UPLOAD_INITIALIZE: (response: IInitializeMediaUploadResponse): string =>
 		response.media_id_string ?? undefined,
 
-	TWEET_DETAILS: (response: IResponse<unknown>, id: string): Tweet | undefined => Tweet.single(response, id),
+	TWEET_DETAILS: (response: IResponse<unknown>): Tweet | undefined => Tweet.single(response),
 	TWEET_LIKE: (response: ITweetLikeResponse): boolean => (response?.data?.favorite_tweet ? true : false),
 	TWEET_LIKERS: (response: IResponse<unknown>): CursoredData<User> =>
 		new CursoredData<User>(response, EBaseType.USER),
