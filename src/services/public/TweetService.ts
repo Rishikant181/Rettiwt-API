@@ -74,7 +74,7 @@ export class TweetService extends FetcherService {
 		const response = await this.request<ITweetDetailsResponse>(resource, { id: id });
 
 		// Deserializing response
-		const data = extractors[resource](response);
+		const data = extractors[resource](response, id);
 
 		return data;
 	}
