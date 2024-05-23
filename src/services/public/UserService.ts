@@ -12,6 +12,7 @@ import {
 	IUserUnfollowResponse,
 } from 'rettiwt-core';
 
+import { extractors } from '../../collections/Extractors';
 import { EResourceType } from '../../enums/Resource';
 import { CursoredData } from '../../models/data/CursoredData';
 import { Tweet } from '../../models/data/Tweet';
@@ -96,7 +97,7 @@ export class UserService extends FetcherService {
 		const response = await this.request<IUserDetailsResponse>(resource, { id: id });
 
 		// Deserializing response
-		const data = this.extract<User>(response, resource);
+		const data = extractors[resource](response);
 
 		return data;
 	}
@@ -128,11 +129,13 @@ export class UserService extends FetcherService {
 	 * ```
 	 */
 	public async follow(id: string): Promise<boolean> {
+		const resource = EResourceType.USER_FOLLOW;
+
 		// Following the user
 		const response = await this.request<IUserFollowResponse>(EResourceType.USER_FOLLOW, { id: id });
 
 		// Deserializing the response
-		const data = this.extract<boolean>(response, EResourceType.USER_FOLLOW) ?? false;
+		const data = extractors[resource](response) ?? false;
 
 		return data;
 	}
@@ -174,7 +177,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = this.extract<CursoredData<User>>(response, resource)!;
+		const data = extractors[resource](response);
 
 		return data;
 	}
@@ -216,7 +219,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = this.extract<CursoredData<User>>(response, resource)!;
+		const data = extractors[resource](response);
 
 		return data;
 	}
@@ -258,7 +261,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = this.extract<CursoredData<Tweet>>(response, resource)!;
+		const data = extractors[resource](response);
 
 		return data;
 	}
@@ -300,7 +303,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = this.extract<CursoredData<Tweet>>(response, resource)!;
+		const data = extractors[resource](response);
 
 		return data;
 	}
@@ -342,7 +345,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = this.extract<CursoredData<Tweet>>(response, resource)!;
+		const data = extractors[resource](response);
 
 		return data;
 	}
@@ -386,7 +389,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = this.extract<CursoredData<Tweet>>(response, resource)!;
+		const data = extractors[resource](response);
 
 		return data;
 	}
@@ -428,7 +431,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = this.extract<CursoredData<User>>(response, resource)!;
+		const data = extractors[resource](response);
 
 		return data;
 	}
@@ -474,7 +477,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = this.extract<CursoredData<Tweet>>(response, resource)!;
+		const data = extractors[resource](response);
 
 		return data;
 	}
@@ -506,11 +509,13 @@ export class UserService extends FetcherService {
 	 * ```
 	 */
 	public async unfollow(id: string): Promise<boolean> {
+		const resource = EResourceType.USER_UNFOLLOW;
+
 		// Unfollowing the user
 		const response = await this.request<IUserUnfollowResponse>(EResourceType.USER_UNFOLLOW, { id: id });
 
 		// Deserializing the response
-		const data = this.extract<boolean>(response, EResourceType.USER_UNFOLLOW) ?? false;
+		const data = extractors[resource](response) ?? false;
 
 		return data;
 	}

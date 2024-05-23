@@ -16,6 +16,7 @@ import {
 	TweetFilter,
 } from 'rettiwt-core';
 
+import { extractors } from '../../collections/Extractors';
 import { EResourceType } from '../../enums/Resource';
 import { TweetArgs } from '../../models/args/PostArgs';
 import { CursoredData } from '../../models/data/CursoredData';
@@ -73,7 +74,7 @@ export class TweetService extends FetcherService {
 		const response = await this.request<ITweetDetailsResponse>(resource, { id: id });
 
 		// Deserializing response
-		const data = this.extract<Tweet>(response, resource);
+		const data = extractors[resource](response);
 
 		return data;
 	}
@@ -103,13 +104,15 @@ export class TweetService extends FetcherService {
 	 * ```
 	 */
 	public async like(id: string): Promise<boolean> {
+		const resource = EResourceType.TWEET_LIKE;
+
 		// Favoriting the tweet
-		const response = await this.request<ITweetLikeResponse>(EResourceType.TWEET_LIKE, {
+		const response = await this.request<ITweetLikeResponse>(resource, {
 			id: id,
 		});
 
 		// Deserializing response
-		const data = this.extract<boolean>(response, EResourceType.TWEET_LIKE) ?? false;
+		const data = extractors[resource](response) ?? false;
 
 		return data;
 	}
@@ -151,7 +154,7 @@ export class TweetService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = this.extract<CursoredData<User>>(response, resource)!;
+		const data = extractors[resource](response);
 
 		return data;
 	}
@@ -195,7 +198,7 @@ export class TweetService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = this.extract<CursoredData<Tweet>>(response, resource)!;
+		const data = extractors[resource](response);
 
 		// Sorting the tweets by date, from recent to oldest
 		data.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
@@ -289,7 +292,7 @@ export class TweetService extends FetcherService {
 		const response = await this.request<ITweetPostResponse>(resource, { tweet: options });
 
 		// Deserializing response
-		const data = this.extract<string>(response, resource);
+		const data = extractors[resource](response);
 
 		return data;
 	}
@@ -325,7 +328,7 @@ export class TweetService extends FetcherService {
 		const response = await this.request<ITweetRetweetResponse>(resource, { id: id });
 
 		// Deserializing response
-		const data = this.extract<boolean>(response, resource) ?? false;
+		const data = extractors[resource](response) ?? false;
 
 		return data;
 	}
@@ -367,7 +370,7 @@ export class TweetService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = this.extract<CursoredData<User>>(response, resource)!;
+		const data = extractors[resource](response);
 
 		return data;
 	}
@@ -411,7 +414,7 @@ export class TweetService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = this.extract<CursoredData<Tweet>>(response, resource)!;
+		const data = extractors[resource](response);
 
 		// Sorting the tweets by date, from recent to oldest
 		data.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
@@ -514,7 +517,7 @@ export class TweetService extends FetcherService {
 		const response = await this.request<ITweetUnlikeResponse>(resource, { id: id });
 
 		// Deserializing the response
-		const data = this.extract<boolean>(response, resource) ?? false;
+		const data = extractors[resource](response) ?? false;
 
 		return data;
 	}
@@ -550,7 +553,7 @@ export class TweetService extends FetcherService {
 		const response = await this.request<ITweetUnpostResponse>(resource, { id: id });
 
 		// Deserializing the response
-		const data = this.extract<boolean>(response, resource) ?? false;
+		const data = extractors[resource](response) ?? false;
 
 		return data;
 	}
@@ -586,7 +589,7 @@ export class TweetService extends FetcherService {
 		const response = await this.request<ITweetUnretweetResponse>(resource, { id: id });
 
 		// Deserializing the response
-		const data = this.extract<boolean>(response, resource) ?? false;
+		const data = extractors[resource](response) ?? false;
 
 		return data;
 	}
