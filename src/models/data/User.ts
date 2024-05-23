@@ -76,6 +76,7 @@ export class User {
 	 * Extracts and deserializes the list of users from the given raw response data.
 	 *
 	 * @param response - The raw response data.
+	 *
 	 * @returns The deserialized list of users.
 	 *
 	 * @internal
@@ -109,6 +110,7 @@ export class User {
 	 * Extracts and deserializes a single target user from the given raw response data.
 	 *
 	 * @param response - The raw response data.
+	 *
 	 * @returns The target deserialized user.
 	 *
 	 * @internal
