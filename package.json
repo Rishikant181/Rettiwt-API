@@ -35,7 +35,7 @@
 		"commander": "11.1.0",
 		"https-proxy-agent": "7.0.2",
 		"rettiwt-auth": "2.1.0",
-		"rettiwt-core": "4.0.0"
+		"rettiwt-core": "4.1.0-alpha.1"
 	},
 	"devDependencies": {
 		"@types/node": "20.4.1",
