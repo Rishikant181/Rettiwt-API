@@ -38,7 +38,7 @@ export class FetchArgs {
 	 *
 	 * @defaultValue 20
 	 */
-	@IsOptional()
+	@IsOptional({ groups: [EResourceType.USER_TIMELINE_RECOMMENDED] })
 	@Max(100, {
 		groups: [
 			EResourceType.LIST_TWEETS,
