@@ -18,6 +18,7 @@ import {
 	IUserHighlightsResponse,
 	IUserLikesResponse,
 	IUserMediaResponse,
+	IUserRecommendedResponse,
 	IUserSubscriptionsResponse,
 	IUserTweetsAndRepliesResponse,
 	IUserTweetsResponse,
@@ -78,6 +79,8 @@ export const extractors = {
 	USER_TIMELINE: (response: IUserTweetsResponse): CursoredData<Tweet> =>
 		new CursoredData<Tweet>(response, EBaseType.TWEET),
 	USER_TIMELINE_AND_REPLIES: (response: IUserTweetsAndRepliesResponse): CursoredData<Tweet> =>
+		new CursoredData<Tweet>(response, EBaseType.TWEET),
+	USER_TIMELINE_RECOMMENDED: (response: IUserRecommendedResponse): CursoredData<Tweet> =>
 		new CursoredData<Tweet>(response, EBaseType.TWEET),
 	USER_UNFOLLOW: (response: IUserUnfollowResponse): boolean => (response?.id ? true : false),
 	/* eslint-enable @typescript-eslint/naming-convention */

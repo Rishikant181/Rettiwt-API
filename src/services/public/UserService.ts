@@ -6,6 +6,7 @@ import {
 	IUserHighlightsResponse,
 	IUserLikesResponse,
 	IUserMediaResponse,
+	IUserRecommendedResponse,
 	IUserSubscriptionsResponse,
 	IUserTweetsAndRepliesResponse,
 	IUserTweetsResponse,
@@ -340,6 +341,21 @@ export class UserService extends FetcherService {
 		// Fetching raw list of media
 		const response = await this.request<IUserMediaResponse>(resource, {
 			id: id,
+			count: count,
+			cursor: cursor,
+		});
+
+		// Deserializing response
+		const data = extractors[resource](response);
+
+		return data;
+	}
+
+	public async recommended(count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+		const resource = EResourceType.USER_TIMELINE_RECOMMENDED;
+
+		// Fetching raw list of tweets
+		const response = await this.request<IUserRecommendedResponse>(resource, {
 			count: count,
 			cursor: cursor,
 		});

@@ -47,6 +47,7 @@ export const requests: { [key in keyof typeof EResourceType]: (args: FetchArgs |
 	USER_SUBSCRIPTIONS: (args: FetchArgs) => request.user.subscriptions(args.id!, args.count, args.cursor),
 	USER_TIMELINE: (args: FetchArgs) => request.user.tweets(args.id!, args.count, args.cursor),
 	USER_TIMELINE_AND_REPLIES: (args: FetchArgs) => request.user.tweetsAndReplies(args.id!, args.count, args.cursor),
+	USER_TIMELINE_RECOMMENDED: (args: FetchArgs) => request.user.recommended(args.count, args.cursor),
 	USER_UNFOLLOW: (args: PostArgs) => request.user.unfollow(args.id!),
 	/* eslint-enable @typescript-eslint/naming-convention */
 };

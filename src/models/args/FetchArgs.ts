@@ -31,7 +31,8 @@ export class FetchArgs {
 	 * - Must be \<= 20 for:
 	 * 	- {@link EResourceType.USER_TIMELINE}
 	 * 	- {@link EResourceType.USER_TIMELINE}
-	 * 	- {@link EResourceType.USER_TIMELINE_AND_REPLIES}.
+	 * 	- {@link EResourceType.USER_TIMELINE_AND_REPLIES}
+	 * 	- {@link EResourceType.USER_TIMELINE_RECOMMENDED}
 	 * - Must be \<= 100 for all other cursored resources.
 	 * - Due a bug on Twitter's end, count does not work for {@link EResourceType.USER_FOLLOWERS} and {@link EResourceType.USER_FOLLOWING}.
 	 *
@@ -52,7 +53,12 @@ export class FetchArgs {
 		],
 	})
 	@Max(20, {
-		groups: [EResourceType.TWEET_SEARCH, EResourceType.USER_TIMELINE, EResourceType.USER_TIMELINE_AND_REPLIES],
+		groups: [
+			EResourceType.TWEET_SEARCH,
+			EResourceType.USER_TIMELINE,
+			EResourceType.USER_TIMELINE_AND_REPLIES,
+			EResourceType.USER_TIMELINE_RECOMMENDED,
+		],
 	})
 	public count?: number;
 
@@ -82,7 +88,7 @@ export class FetchArgs {
 	 * The id of the target resource.
 	 *
 	 * @remarks
-	 * - Required for all resources except {@link EResourceType.TWEET_SEARCH}.
+	 * - Required for all resources except {@link EResourceType.TWEET_SEARCH} and {@link EResourceType.USER_TIMELINE_RECOMMENDED}.
 	 * - For {@link EResourceType.USER_DETAILS_BY_USERNAME}, can be alphanumeric, while for others, is strictly numeric.
 	 */
 	@IsOptional()
