@@ -351,12 +351,37 @@ export class UserService extends FetcherService {
 		return data;
 	}
 
-	public async recommended(count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+	/**
+	 * Get the recommended timeline of the logged in user.
+	 *
+	 * @param cursor - The cursor to the batch of timeline items to fetch.
+	 *
+	 * @returns - The recommended timeline of the logged-in user.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the first 35 recommended timeline items of the logged-in user
+	 * rettiwt.user.recommended()
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @remarks Always returns 35 timeline items, with no way to customize the count.
+	 */
+	public async recommended(cursor?: string): Promise<CursoredData<Tweet>> {
 		const resource = EResourceType.USER_TIMELINE_RECOMMENDED;
 
 		// Fetching raw list of tweets
 		const response = await this.request<IUserRecommendedResponse>(resource, {
-			count: count,
 			cursor: cursor,
 		});
 
