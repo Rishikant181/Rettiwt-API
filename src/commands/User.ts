@@ -114,6 +114,19 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// Recommended
+	user.command('recommended')
+		.description('Fetch your recommended timeline')
+		.argument('[cursor]', 'The cursor to the batch of timeline items to fetch')
+		.action(async (cursor?: string) => {
+			try {
+				const tweets = await rettiwt.user.recommended(cursor);
+				output(tweets);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Replies
 	user.command('replies')
 		.description('Fetch the replies timeline the given user')

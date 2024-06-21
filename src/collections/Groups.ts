@@ -32,6 +32,7 @@ export const fetchResources = [
 	EResourceType.USER_SUBSCRIPTIONS,
 	EResourceType.USER_TIMELINE,
 	EResourceType.USER_TIMELINE_AND_REPLIES,
+	EResourceType.USER_TIMELINE_RECOMMENDED,
 ];
 
 /**

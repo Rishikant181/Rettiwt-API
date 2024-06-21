@@ -31,13 +31,14 @@ export class FetchArgs {
 	 * - Must be \<= 20 for:
 	 * 	- {@link EResourceType.USER_TIMELINE}
 	 * 	- {@link EResourceType.USER_TIMELINE}
-	 * 	- {@link EResourceType.USER_TIMELINE_AND_REPLIES}.
+	 * 	- {@link EResourceType.USER_TIMELINE_AND_REPLIES}
 	 * - Must be \<= 100 for all other cursored resources.
 	 * - Due a bug on Twitter's end, count does not work for {@link EResourceType.USER_FOLLOWERS} and {@link EResourceType.USER_FOLLOWING}.
+	 * - Has not effect for {@link EResourceType.USER_TIMELINE_RECOMMENDED}.
 	 *
 	 * @defaultValue 20
 	 */
-	@IsOptional()
+	@IsOptional({ groups: [EResourceType.USER_TIMELINE_RECOMMENDED] })
 	@Max(100, {
 		groups: [
 			EResourceType.LIST_TWEETS,
@@ -82,7 +83,7 @@ export class FetchArgs {
 	 * The id of the target resource.
 	 *
 	 * @remarks
-	 * - Required for all resources except {@link EResourceType.TWEET_SEARCH}.
+	 * - Required for all resources except {@link EResourceType.TWEET_SEARCH} and {@link EResourceType.USER_TIMELINE_RECOMMENDED}.
 	 * - For {@link EResourceType.USER_DETAILS_BY_USERNAME}, can be alphanumeric, while for others, is strictly numeric.
 	 */
 	@IsOptional()
@@ -205,7 +206,7 @@ export class TweetFilter extends TweetFilterCore {
 	 */
 	@IsOptional()
 	@IsBoolean()
-	public links?: boolean = true;
+	public links?: boolean;
 
 	/** The id of the tweet, before which the tweets are to be searched. */
 	@IsOptional()
@@ -256,7 +257,7 @@ export class TweetFilter extends TweetFilterCore {
 	 */
 	@IsOptional()
 	@IsBoolean()
-	public replies?: boolean = true;
+	public replies?: boolean;
 
 	/** The id of the tweet, after which the tweets are to be searched. */
 	@IsOptional()
