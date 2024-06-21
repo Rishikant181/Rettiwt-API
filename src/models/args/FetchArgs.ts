@@ -205,7 +205,7 @@ export class TweetFilter extends TweetFilterCore {
 	 */
 	@IsOptional()
 	@IsBoolean()
-	public links?: boolean = true;
+	public links?: boolean;
 
 	/** The id of the tweet, before which the tweets are to be searched. */
 	@IsOptional()
@@ -256,7 +256,7 @@ export class TweetFilter extends TweetFilterCore {
 	 */
 	@IsOptional()
 	@IsBoolean()
-	public replies?: boolean = true;
+	public replies?: boolean;
 
 	/** The id of the tweet, after which the tweets are to be searched. */
 	@IsOptional()
