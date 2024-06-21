@@ -38,6 +38,8 @@ export const requests: { [key in keyof typeof EResourceType]: (args: FetchArgs |
 
 	USER_DETAILS_BY_USERNAME: (args: FetchArgs) => request.user.detailsByUsername(args.id!),
 	USER_DETAILS_BY_ID: (args: FetchArgs) => request.user.detailsById(args.id!),
+	USER_FEED_FOLLOWED: (args: FetchArgs) => request.user.followed(args.count, args.cursor),
+	USER_FEED_RECOMMENDED: (args: FetchArgs) => request.user.recommended(args.count, args.cursor),
 	USER_FOLLOW: (args: PostArgs) => request.user.follow(args.id!),
 	USER_FOLLOWING: (args: FetchArgs) => request.user.following(args.id!, args.count, args.cursor),
 	USER_FOLLOWERS: (args: FetchArgs) => request.user.followers(args.id!, args.count, args.cursor),
@@ -47,7 +49,6 @@ export const requests: { [key in keyof typeof EResourceType]: (args: FetchArgs |
 	USER_SUBSCRIPTIONS: (args: FetchArgs) => request.user.subscriptions(args.id!, args.count, args.cursor),
 	USER_TIMELINE: (args: FetchArgs) => request.user.tweets(args.id!, args.count, args.cursor),
 	USER_TIMELINE_AND_REPLIES: (args: FetchArgs) => request.user.tweetsAndReplies(args.id!, args.count, args.cursor),
-	USER_TIMELINE_RECOMMENDED: (args: FetchArgs) => request.user.recommended(args.count, args.cursor),
 	USER_UNFOLLOW: (args: PostArgs) => request.user.unfollow(args.id!),
 	/* eslint-enable @typescript-eslint/naming-convention */
 };
