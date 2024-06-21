@@ -34,11 +34,13 @@ export class FetchArgs {
 	 * 	- {@link EResourceType.USER_TIMELINE_AND_REPLIES}
 	 * - Must be \<= 100 for all other cursored resources.
 	 * - Due a bug on Twitter's end, count does not work for {@link EResourceType.USER_FOLLOWERS} and {@link EResourceType.USER_FOLLOWING}.
-	 * - Has not effect for {@link EResourceType.USER_TIMELINE_RECOMMENDED}.
+	 * - Has not effect for:
+	 * 	- {@link EResourceType.USER_FEED_FOLLOWED}
+	 * 	- {@link EResourceType.USER_FEED_RECOMMENDED}
 	 *
 	 * @defaultValue 20
 	 */
-	@IsOptional({ groups: [EResourceType.USER_TIMELINE_RECOMMENDED] })
+	@IsOptional({ groups: [EResourceType.USER_FEED_FOLLOWED, EResourceType.USER_FEED_RECOMMENDED] })
 	@Max(100, {
 		groups: [
 			EResourceType.LIST_TWEETS,
