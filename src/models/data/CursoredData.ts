@@ -32,7 +32,7 @@ export class CursoredData<T extends Tweet | User> {
 			this.list = User.list(response) as T[];
 		}
 
-		this.next = new Cursor(findByFilter<ICursor>(response, 'cursorType', 'Bottom')[0].value);
+		this.next = new Cursor(findByFilter<ICursor>(response, 'cursorType', 'Bottom')[0]?.value ?? '');
 	}
 }
 
