@@ -1,6 +1,6 @@
 {
 	"name": "rettiwt-api",
-	"version": "3.0.3",
+	"version": "3.1.0",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"description": "An API for fetching data from TwitterAPI, without any rate limits!",
