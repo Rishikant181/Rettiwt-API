@@ -39,6 +39,19 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// Followed
+	user.command('followed')
+		.description('Fetch your followed feed')
+		.argument('[cursor]', 'The cursor to the batch of feed items to fetch')
+		.action(async (cursor?: string) => {
+			try {
+				const tweets = await rettiwt.user.followed(cursor);
+				output(tweets);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Followers
 	user.command('followers')
 		.description('Fetch the list of users who follow the given user')
@@ -109,6 +122,19 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			try {
 				const media = await rettiwt.user.media(id, count ? parseInt(count) : undefined, cursor);
 				output(media);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// Recommended
+	user.command('recommended')
+		.description('Fetch your recommended feed')
+		.argument('[cursor]', 'The cursor to the batch of feed items to fetch')
+		.action(async (cursor?: string) => {
+			try {
+				const tweets = await rettiwt.user.recommended(cursor);
+				output(tweets);
 			} catch (error) {
 				output(error);
 			}

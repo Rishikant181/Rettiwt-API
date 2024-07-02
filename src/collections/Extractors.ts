@@ -12,12 +12,14 @@ import {
 	ITweetUnpostResponse,
 	ITweetUnretweetResponse,
 	IUserDetailsResponse,
+	IUserFollowedResponse,
 	IUserFollowersResponse,
 	IUserFollowingResponse,
 	IUserFollowResponse,
 	IUserHighlightsResponse,
 	IUserLikesResponse,
 	IUserMediaResponse,
+	IUserRecommendedResponse,
 	IUserSubscriptionsResponse,
 	IUserTweetsAndRepliesResponse,
 	IUserTweetsResponse,
@@ -62,6 +64,10 @@ export const extractors = {
 
 	USER_DETAILS_BY_USERNAME: (response: IUserDetailsResponse): User | undefined => User.single(response),
 	USER_DETAILS_BY_ID: (response: IUserDetailsResponse): User | undefined => User.single(response),
+	USER_FEED_FOLLOWED: (response: IUserFollowedResponse): CursoredData<Tweet> =>
+		new CursoredData<Tweet>(response, EBaseType.TWEET),
+	USER_FEED_RECOMMENDED: (response: IUserRecommendedResponse): CursoredData<Tweet> =>
+		new CursoredData<Tweet>(response, EBaseType.TWEET),
 	USER_FOLLOW: (response: IUserFollowResponse): boolean => (response?.id ? true : false),
 	USER_FOLLOWING: (response: IUserFollowingResponse): CursoredData<User> =>
 		new CursoredData<User>(response, EBaseType.USER),

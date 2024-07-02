@@ -25,7 +25,7 @@ export const requests: { [key in keyof typeof EResourceType]: (args: FetchArgs |
 	MEDIA_UPLOAD_FINALIZE: (args: PostArgs) => request.media.finalizeUpload(args.upload!.id!),
 	MEDIA_UPLOAD_INITIALIZE: (args: PostArgs) => request.media.initializeUpload(args.upload!.size!),
 
-	TWEET_DETAILS: (args: FetchArgs) => request.tweet.replies(args.id!),
+	TWEET_DETAILS: (args: FetchArgs) => request.tweet.details(args.id!),
 	TWEET_LIKE: (args: PostArgs) => request.tweet.like(args.id!),
 	TWEET_LIKERS: (args: FetchArgs) => request.tweet.likers(args.id!, args.count, args.cursor),
 	TWEET_POST: (args: PostArgs) => request.tweet.post(args.tweet!),
@@ -38,6 +38,8 @@ export const requests: { [key in keyof typeof EResourceType]: (args: FetchArgs |
 
 	USER_DETAILS_BY_USERNAME: (args: FetchArgs) => request.user.detailsByUsername(args.id!),
 	USER_DETAILS_BY_ID: (args: FetchArgs) => request.user.detailsById(args.id!),
+	USER_FEED_FOLLOWED: (args: FetchArgs) => request.user.followed(args.count, args.cursor),
+	USER_FEED_RECOMMENDED: (args: FetchArgs) => request.user.recommended(args.count, args.cursor),
 	USER_FOLLOW: (args: PostArgs) => request.user.follow(args.id!),
 	USER_FOLLOWING: (args: FetchArgs) => request.user.following(args.id!, args.count, args.cursor),
 	USER_FOLLOWERS: (args: FetchArgs) => request.user.followers(args.id!, args.count, args.cursor),

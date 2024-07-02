@@ -1,11 +1,13 @@
 import {
 	IUserDetailsResponse,
+	IUserFollowedResponse,
 	IUserFollowersResponse,
 	IUserFollowingResponse,
 	IUserFollowResponse,
 	IUserHighlightsResponse,
 	IUserLikesResponse,
 	IUserMediaResponse,
+	IUserRecommendedResponse,
 	IUserSubscriptionsResponse,
 	IUserTweetsAndRepliesResponse,
 	IUserTweetsResponse,
@@ -136,6 +138,46 @@ export class UserService extends FetcherService {
 
 		// Deserializing the response
 		const data = extractors[resource](response) ?? false;
+
+		return data;
+	}
+
+	/**
+	 * Get the followed feed of the logged in user.
+	 *
+	 * @param cursor - The cursor to the batch of feed items to fetch.
+	 *
+	 * @returns - The followed feed of the logged-in user.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the first 35 followed feed items of the logged-in user
+	 * rettiwt.user.followed()
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @remarks Always returns 35 feed items, with no way to customize the count.
+	 */
+	public async followed(cursor?: string): Promise<CursoredData<Tweet>> {
+		const resource = EResourceType.USER_FEED_FOLLOWED;
+
+		// Fetching raw list of tweets
+		const response = await this.request<IUserFollowedResponse>(resource, {
+			cursor: cursor,
+		});
+
+		// Deserializing response
+		const data = extractors[resource](response);
 
 		return data;
 	}
@@ -341,6 +383,46 @@ export class UserService extends FetcherService {
 		const response = await this.request<IUserMediaResponse>(resource, {
 			id: id,
 			count: count,
+			cursor: cursor,
+		});
+
+		// Deserializing response
+		const data = extractors[resource](response);
+
+		return data;
+	}
+
+	/**
+	 * Get the recommended feed of the logged in user.
+	 *
+	 * @param cursor - The cursor to the batch of feed items to fetch.
+	 *
+	 * @returns - The recommended feed of the logged-in user.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the first 35 recommended feed items of the logged-in user
+	 * rettiwt.user.recommended()
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @remarks Always returns 35 feed items, with no way to customize the count.
+	 */
+	public async recommended(cursor?: string): Promise<CursoredData<Tweet>> {
+		const resource = EResourceType.USER_FEED_RECOMMENDED;
+
+		// Fetching raw list of tweets
+		const response = await this.request<IUserRecommendedResponse>(resource, {
 			cursor: cursor,
 		});
 
