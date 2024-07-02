@@ -30,7 +30,6 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
 
     -   Tweet Details
     -   Tweet Like
-    -   Tweet Likers
     -   Tweet List
     -   Tweet Post
     -   Tweet Retweet
@@ -43,11 +42,13 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     -   Tweet Media Upload
     -   User Details
     -   User Follow
+    -   User Followed Feed
     -   User Followers
     -   User Following
     -   User Highlights
     -   User Likes
     -   User Media
+    -   User Recommended Feed
     -   User Replies Timeline
     -   User Subscriptions
     -   User Timeline
@@ -322,7 +323,6 @@ So far, the following operations are supported:
 
 -   [Getting the details of a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#details)
 -   [Liking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#like)
--   [Getting the list of users who liked a given tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#likers)
 -   [Getting the list of tweets from a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#list)
 -   [Posting a new tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#post)
 -   [Retweeting a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#retweet)
@@ -338,11 +338,13 @@ So far, the following operations are supported:
 
 -   [Getting the details of a user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#details)
 -   [Following a given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#follow)
+-   [Getting the followed feed of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#followed)
 -   [Getting the list of users who follow the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#followers)
 -   [Getting the list of users who are followed by the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#following)
 -   [Getting the list of highlighted tweets of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#highlights)
 -   [Getting the list of tweets liked by the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#likes)
 -   [Getting the media timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#media)
+-   [Getting the recommended feed of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#recommended)
 -   [Getting the replies timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#replies)
 -   [Getting the list of subscriptions of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#subscriptions)
 -   [Getting the tweet timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#timeline)
