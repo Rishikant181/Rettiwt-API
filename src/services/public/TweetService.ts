@@ -118,6 +118,10 @@ export class TweetService extends FetcherService {
 	}
 
 	/**
+	 * @deprecated
+	 * The method will be removed in the next release following the removal of the ability to see tweet likers by Twitter.
+	 * Currently, the method does not work.
+	 *
 	 * Get the list of users who liked a tweet.
 	 *
 	 * @param id - The id of the target tweet.
@@ -144,6 +148,12 @@ export class TweetService extends FetcherService {
 	 * ```
 	 */
 	public async likers(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+		// Deprecation warning
+		console.log(`
+			This method has been deprecated following the removal of the ability to see tweet liksers by Twitter.
+			Currently, the method does not work.
+		`);
+
 		const resource = EResourceType.TWEET_LIKERS;
 
 		// Fetching raw likers
