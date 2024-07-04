@@ -1665,10 +1665,10 @@ rettiwt-auth@2.1.0:
     cookiejar "2.1.4"
     https-proxy-agent "7.0.2"
 
-rettiwt-core@4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/rettiwt-core/-/rettiwt-core-4.1.0.tgz#c9d18c8e3276fd3719be0d4536c3af8db5e07378"
-  integrity sha512-d8lL95/y57rJVUS+Mjuwh228LLdL2VPHw3EiXU5zehgD91puKxUb7Rf5kTPWeFZTWwDTjnLefa4hjlrxvhA1qw==
+rettiwt-core@4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/rettiwt-core/-/rettiwt-core-4.1.1.tgz#4422044a5b90f6588545f3d03aabb7dd5712c795"
+  integrity sha512-oPQlEwQRKlMEi6wx3ZjnbIKOFrM9VaYuX7IpsyVVsfRxSBgjqIYhonAYzX9DkpOs6ZTgr9Z9VK0kNuv7hf6AGw==
   dependencies:
     axios "1.6.3"
     form-data "4.0.0"
