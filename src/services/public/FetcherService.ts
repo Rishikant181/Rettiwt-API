@@ -32,9 +32,6 @@ export class FetcherService {
 	/** The guest key to use for authenticating against Twitter API as guest. */
 	private readonly guestKey?: string;
 
-	/** Whether the instance is authenticated or not. */
-	private readonly isAuthenticated: boolean;
-
 	/** The URL To the proxy server to use for all others. */
 	private readonly proxyUrl?: URL;
 
@@ -43,6 +40,9 @@ export class FetcherService {
 
 	/** The URL to the proxy server to use only for authentication. */
 	protected readonly authProxyUrl?: URL;
+
+	/** Whether the instance is authenticated or not. */
+	protected readonly isAuthenticated: boolean;
 
 	/**
 	 * @param config - The config object for configuring the Rettiwt instance.
