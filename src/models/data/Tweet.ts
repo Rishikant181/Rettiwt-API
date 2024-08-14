@@ -49,7 +49,7 @@ export class Tweet {
 	public quoteCount: number;
 
 	/** The tweet which is quoted in the tweet. */
-	public quoted?: Tweet | undefined;
+	public quoted?: Tweet;
 
 	/** The number of replies to the tweet. */
 	public replyCount: number;
