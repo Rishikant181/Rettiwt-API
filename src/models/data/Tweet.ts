@@ -48,8 +48,8 @@ export class Tweet {
 	/** The number of quotes of the tweet. */
 	public quoteCount: number;
 
-	/** The rest id of the tweet which is quoted in the tweet. */
-	public quoted?: string;
+	/** The tweet which is quoted in the tweet. */
+	public quoted?: Tweet | undefined;
 
 	/** The number of replies to the tweet. */
 	public replyCount: number;
@@ -60,7 +60,7 @@ export class Tweet {
 	/** The number of retweets of the tweet. */
 	public retweetCount: number;
 
-	/** The tweet which was retweeted in this tweet (if any). */
+	/** The tweet which is retweeted in this tweet (if any). */
 	public retweetedTweet?: Tweet;
 
 	/** The details of the user who made the tweet. */
@@ -78,7 +78,7 @@ export class Tweet {
 		this.tweetBy = new User(tweet.core.user_results.result);
 		this.entities = new TweetEntities(tweet.legacy.entities);
 		this.media = tweet.legacy.extended_entities?.media?.map((media) => new TweetMedia(media));
-		this.quoted = tweet.legacy.quoted_status_id_str;
+		this.quoted = tweet.quoted_status_result ? new Tweet(tweet.quoted_status_result.result) : undefined;
 		this.fullText = tweet.note_tweet ? tweet.note_tweet.note_tweet_results.result.text : tweet.legacy.full_text;
 		this.replyTo = tweet.legacy.in_reply_to_status_id_str;
 		this.lang = tweet.legacy.lang;
