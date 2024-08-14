@@ -93,6 +93,7 @@ export class FetchArgs {
 		groups: [
 			EResourceType.LIST_TWEETS,
 			EResourceType.TWEET_DETAILS,
+			EResourceType.TWEET_DETAILS_ALT,
 			EResourceType.TWEET_LIKERS,
 			EResourceType.TWEET_RETWEETERS,
 			EResourceType.USER_DETAILS_BY_USERNAME,
@@ -111,6 +112,7 @@ export class FetchArgs {
 		groups: [
 			EResourceType.LIST_TWEETS,
 			EResourceType.TWEET_DETAILS,
+			EResourceType.TWEET_DETAILS_ALT,
 			EResourceType.TWEET_LIKERS,
 			EResourceType.TWEET_RETWEETERS,
 			EResourceType.USER_DETAILS_BY_ID,

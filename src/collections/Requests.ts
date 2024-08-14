@@ -26,6 +26,7 @@ export const requests: { [key in keyof typeof EResourceType]: (args: FetchArgs |
 	MEDIA_UPLOAD_INITIALIZE: (args: PostArgs) => request.media.initializeUpload(args.upload!.size!),
 
 	TWEET_DETAILS: (args: FetchArgs) => request.tweet.details(args.id!),
+	TWEET_DETAILS_ALT: (args: FetchArgs) => request.tweet.replies(args.id!),
 	TWEET_LIKE: (args: PostArgs) => request.tweet.like(args.id!),
 	TWEET_LIKERS: (args: FetchArgs) => request.tweet.likers(args.id!, args.count, args.cursor),
 	TWEET_POST: (args: PostArgs) => request.tweet.post(args.tweet!),

@@ -5,6 +5,7 @@ import {
 	ITweetLikeResponse,
 	ITweetLikersResponse,
 	ITweetPostResponse,
+	ITweetRepliesResponse,
 	ITweetRetweetersResponse,
 	ITweetRetweetResponse,
 	ITweetSearchResponse,
@@ -47,6 +48,7 @@ export const extractors = {
 		response.media_id_string ?? undefined,
 
 	TWEET_DETAILS: (response: ITweetDetailsResponse, id: string): Tweet | undefined => Tweet.single(response, id),
+	TWEET_DETAILS_ALT: (response: ITweetRepliesResponse, id: string): Tweet | undefined => Tweet.single(response, id),
 	TWEET_LIKE: (response: ITweetLikeResponse): boolean => (response?.data?.favorite_tweet ? true : false),
 	TWEET_LIKERS: (response: ITweetLikersResponse): CursoredData<User> =>
 		new CursoredData<User>(response, EBaseType.USER),

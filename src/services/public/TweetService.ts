@@ -7,6 +7,7 @@ import {
 	ITweetLikeResponse,
 	ITweetLikersResponse,
 	ITweetPostResponse,
+	ITweetRepliesResponse,
 	ITweetRetweetersResponse,
 	ITweetRetweetResponse,
 	ITweetSearchResponse,
@@ -68,15 +69,30 @@ export class TweetService extends FetcherService {
 	 * ```
 	 */
 	public async details(id: string): Promise<Tweet | undefined> {
-		const resource = EResourceType.TWEET_DETAILS;
+		let resource: EResourceType;
 
-		// Fetching raw tweet details
-		const response = await this.request<ITweetDetailsResponse>(resource, { id: id });
+		// Determining the resource to use
+		if (this.isAuthenticated) {
+			resource = EResourceType.TWEET_DETAILS_ALT;
 
-		// Deserializing response
-		const data = extractors[resource](response, id);
+			// Fetching raw tweet details
+			const response = await this.request<ITweetRepliesResponse>(resource, { id: id });
 
-		return data;
+			// Deserializing response
+			const data = extractors[resource](response, id);
+
+			return data;
+		} else {
+			resource = EResourceType.TWEET_DETAILS;
+
+			// Fetching raw tweet details
+			const response = await this.request<ITweetDetailsResponse>(resource, { id: id });
+
+			// Deserializing response
+			const data = extractors[resource](response, id);
+
+			return data;
+		}
 	}
 
 	/**
