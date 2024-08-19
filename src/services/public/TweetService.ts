@@ -10,6 +10,7 @@ import {
 	ITweetRepliesResponse,
 	ITweetRetweetersResponse,
 	ITweetRetweetResponse,
+	ITweetScheduleResponse,
 	ITweetSearchResponse,
 	ITweetUnlikeResponse,
 	ITweetUnpostResponse,
@@ -237,7 +238,7 @@ export class TweetService extends FetcherService {
 	 *
 	 * @param options - The options describing the tweet to be posted. Check {@link TweetArgs} for available options.
 	 *
-	 * @returns Whether posting was successful or not.
+	 * @returns The id of the posted tweet.
 	 *
 	 * @example
 	 * Posting a simple text
@@ -394,6 +395,46 @@ export class TweetService extends FetcherService {
 			count: count,
 			cursor: cursor,
 		});
+
+		// Deserializing response
+		const data = extractors[resource](response);
+
+		return data;
+	}
+
+	/**
+	 * Schedule a tweet.
+	 *
+	 * @param options - The options describing the tweet to be posted. Check {@link TweetArgs} for available options.
+	 *
+	 * @returns The id of the schedule.
+	 *
+	 * @example
+	 * Scheduling a simple text
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Scheduling a tweet to posted at 19th of August, 2024, at 11:59:00 AM, in local time
+	 * rettiwt.tweet.schedule({ text: 'Hello World!', scheduleFor: new Date('2024-08-19 23:59:00') })
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @remarks
+	 * Scheduling a tweet is similar to {@link post}ing, except that an extra parameter called `scheduleFor` is used.
+	 */
+	public async schedule(options: TweetArgs): Promise<string | undefined> {
+		const resource = EResourceType.TWEET_SCHEDULE;
+
+		// Scheduling the tweet
+		const response = await this.request<ITweetScheduleResponse>(resource, { tweet: options });
 
 		// Deserializing response
 		const data = extractors[resource](response);
