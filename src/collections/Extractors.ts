@@ -8,6 +8,7 @@ import {
 	ITweetRepliesResponse,
 	ITweetRetweetersResponse,
 	ITweetRetweetResponse,
+	ITweetScheduleResponse,
 	ITweetSearchResponse,
 	ITweetUnlikeResponse,
 	ITweetUnpostResponse,
@@ -57,6 +58,7 @@ export const extractors = {
 	TWEET_RETWEET: (response: ITweetRetweetResponse): boolean => (response?.data?.create_retweet ? true : false),
 	TWEET_RETWEETERS: (response: ITweetRetweetersResponse): CursoredData<User> =>
 		new CursoredData<User>(response, EBaseType.USER),
+	TWEET_SCHEDULE: (response: ITweetScheduleResponse): string => response?.data?.tweet?.rest_id ?? undefined,
 	TWEET_SEARCH: (response: ITweetSearchResponse): CursoredData<Tweet> =>
 		new CursoredData<Tweet>(response, EBaseType.TWEET),
 	TWEET_UNLIKE: (response: ITweetUnlikeResponse): boolean => (response?.data?.unfavorite_tweet ? true : false),

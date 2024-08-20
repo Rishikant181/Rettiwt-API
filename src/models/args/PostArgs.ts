@@ -1,6 +1,7 @@
 import {
 	ArrayMaxSize,
 	IsArray,
+	IsDate,
 	IsNotEmpty,
 	IsNumberString,
 	IsObject,
@@ -8,6 +9,7 @@ import {
 	IsString,
 	Max,
 	MaxLength,
+	MinDate,
 	validateSync,
 } from 'class-validator';
 
@@ -67,8 +69,8 @@ export class PostArgs {
 	 * Required only when posting a tweet using {@link EResourceType.TWEET_POST}
 	 */
 	@IsOptional()
-	@IsNotEmpty({ groups: [EResourceType.TWEET_POST] })
-	@IsObject({ groups: [EResourceType.TWEET_POST] })
+	@IsNotEmpty({ groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
+	@IsObject({ groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
 	public tweet?: TweetArgs;
 
 	/**
@@ -103,7 +105,7 @@ export class PostArgs {
 	 */
 	public constructor(resource: EResourceType, args: PostArgs) {
 		this.id = args.id;
-		this.tweet = args.tweet ? new TweetArgs(args.tweet) : undefined;
+		this.tweet = args.tweet ? new TweetArgs(resource, args.tweet) : undefined;
 		this.upload = args.upload ? new UploadArgs(resource, args.upload) : undefined;
 
 		// Validating this object
@@ -128,21 +130,27 @@ export class TweetArgs extends NewTweet {
 	 * @remarks
 	 * Maximum number of media items that can be posted is 4.
 	 */
-	@IsOptional()
+	@IsOptional({ groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
 	@IsArray()
 	@ArrayMaxSize(4)
 	@IsObject({ each: true })
 	public media?: TweetMediaArgs[];
 
 	/** The id of the tweet to quote. */
-	@IsOptional()
+	@IsOptional({ groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
 	@IsNumberString()
 	public quote?: string;
 
 	/** The id of the tweet to which the given tweet must be a reply. */
-	@IsOptional()
+	@IsOptional({ groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
 	@IsNumberString()
 	public replyTo?: string;
+
+	/** The date/time at which the tweet must be scheduled to be posted. */
+	@IsNotEmpty({ groups: [EResourceType.TWEET_SCHEDULE] })
+	@IsDate()
+	@MinDate(new Date())
+	public scheduleFor?: Date;
 
 	/**
 	 * The text for the tweet to be created.
@@ -150,7 +158,7 @@ export class TweetArgs extends NewTweet {
 	 * @remarks
 	 * Length of the tweet must be \<= 280 characters.
 	 */
-	@IsNotEmpty()
+	@IsNotEmpty({ groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
 	@IsString()
 	@MaxLength(280)
 	public text: string;
@@ -158,15 +166,16 @@ export class TweetArgs extends NewTweet {
 	/**
 	 * @param args - Arguments specifying the tweet to be posted.
 	 */
-	public constructor(args: TweetArgs) {
+	public constructor(resource: EResourceType, args: TweetArgs) {
 		super();
-		this.text = args.text;
-		this.quote = args.quote;
 		this.media = args.media ? args.media.map((item) => new TweetMediaArgs(item)) : undefined;
+		this.quote = args.quote;
 		this.replyTo = args.replyTo;
+		this.scheduleFor = args.scheduleFor;
+		this.text = args.text;
 
 		// Validating this object
-		const validationResult = validateSync(this);
+		const validationResult = validateSync(this, { groups: [resource] });
 
 		// If valiation error occured
 		if (validationResult.length) {
