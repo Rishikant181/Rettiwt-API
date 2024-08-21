@@ -379,4 +379,4 @@ The complete API reference can be found at [this](https://rishikant181.github.io
 
 ## Donation
 
-Support this project by donating at my [PayPal](https://paypal.me/Rishikant181?country.x=IN&locale.x=en_GB).
+Support this project by donating at my [PayPal](https://paypal.me/Rishikant181?country.x=IN&locale.x=en_GB) or by [sponsoring](https://github.com/sponsors/Rishikant181) me.
