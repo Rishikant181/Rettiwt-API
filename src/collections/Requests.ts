@@ -37,6 +37,7 @@ export const requests: { [key in keyof typeof EResourceType]: (args: FetchArgs |
 	TWEET_UNLIKE: (args: PostArgs) => request.tweet.unlike(args.id!),
 	TWEET_UNPOST: (args: PostArgs) => request.tweet.unpost(args.id!),
 	TWEET_UNRETWEET: (args: PostArgs) => request.tweet.unretweet(args.id!),
+	TWEET_UNSCHEDULE: (args: PostArgs) => request.tweet.unschedule(args.id!),
 
 	USER_DETAILS_BY_USERNAME: (args: FetchArgs) => request.user.detailsByUsername(args.id!),
 	USER_DETAILS_BY_ID: (args: FetchArgs) => request.user.detailsById(args.id!),

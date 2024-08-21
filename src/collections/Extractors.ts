@@ -13,6 +13,7 @@ import {
 	ITweetUnlikeResponse,
 	ITweetUnpostResponse,
 	ITweetUnretweetResponse,
+	ITweetUnscheduleResponse,
 	IUserDetailsResponse,
 	IUserFollowedResponse,
 	IUserFollowersResponse,
@@ -65,6 +66,7 @@ export const extractors = {
 	TWEET_UNPOST: (response: ITweetUnpostResponse): boolean => (response?.data?.delete_tweet ? true : false),
 	TWEET_UNRETWEET: (response: ITweetUnretweetResponse): boolean =>
 		response?.data?.unretweet?.source_tweet_results?.result ? true : false,
+	TWEET_UNSCHEDULE: (response: ITweetUnscheduleResponse): boolean => response?.data?.scheduledtweet_delete == 'Done',
 
 	USER_DETAILS_BY_USERNAME: (response: IUserDetailsResponse): User | undefined => User.single(response),
 	USER_DETAILS_BY_ID: (response: IUserDetailsResponse): User | undefined => User.single(response),

@@ -15,6 +15,7 @@ import {
 	ITweetUnlikeResponse,
 	ITweetUnpostResponse,
 	ITweetUnretweetResponse,
+	ITweetUnscheduleResponse,
 	TweetFilter,
 } from 'rettiwt-core';
 
@@ -654,6 +655,42 @@ export class TweetService extends FetcherService {
 
 		// Unretweeting the tweet
 		const response = await this.request<ITweetUnretweetResponse>(resource, { id: id });
+
+		// Deserializing the response
+		const data = extractors[resource](response) ?? false;
+
+		return data;
+	}
+
+	/**
+	 * Unschedule a tweet.
+	 *
+	 * @param id - The id of the scheduled tweet.
+	 *
+	 * @returns Whether unscheduling was successful or not.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Unscheduling the Tweet with id '1234567890'
+	 * rettiwt.tweet.unschedule('1234567890')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async unschedule(id: string): Promise<boolean> {
+		const resource = EResourceType.TWEET_UNSCHEDULE;
+
+		// Unscheduling the tweet
+		const response = await this.request<ITweetUnscheduleResponse>(resource, { id: id });
 
 		// Deserializing the response
 		const data = extractors[resource](response) ?? false;
