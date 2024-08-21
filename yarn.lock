@@ -2743,7 +2743,7 @@ __metadata:
     nodemon: "npm:2.0.20"
     prettier: "npm:3.0.0"
     rettiwt-auth: "npm:2.1.0"
-    rettiwt-core: "npm:4.2.0-alpha.1"
+    rettiwt-core: "npm:4.2.0-alpha.2"
     typedoc: "npm:0.24.8"
     typescript: "npm:5.1.6"
   bin:
@@ -2765,13 +2765,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rettiwt-core@npm:4.2.0-alpha.1":
-  version: 4.2.0-alpha.1
-  resolution: "rettiwt-core@npm:4.2.0-alpha.1"
+"rettiwt-core@npm:4.2.0-alpha.2":
+  version: 4.2.0-alpha.2
+  resolution: "rettiwt-core@npm:4.2.0-alpha.2"
   dependencies:
     axios: "npm:1.6.3"
     form-data: "npm:4.0.0"
-  checksum: 10c0/70dd0c4758d67f9c91da0d2813dbd7c55ae0c58678162053e6f9a642d825463cfd77f4462d57ff1210073c54d4daf2bc8db998c2bbc9c34621ddf41b000d0bf1
+  checksum: 10c0/2b6d58057ec5d6afc74c9e32372fcd6c702d79cad8fe811db548ccffa0ac57c9ff4f4b6f49866a42609849813d3ffc08c20ca6c327d6d54c8634dee3cf871a83
   languageName: node
   linkType: hard
 
