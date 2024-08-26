@@ -16,8 +16,13 @@ jobs:
               with:
                   node-version: '20.x'
 
+            # Enabling CorePack
+            - run: corepack enable
+
             # Installing dependencies
             - run: yarn
+
+            # Generating docs
             - run: npx typedoc src/index.ts
 
             # Packaging the static site as artifact
