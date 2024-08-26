@@ -129,6 +129,33 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// Schedule
+	tweet
+		.command('schedule')
+		.description('Schedule a tweet to be posted at a given date/time')
+		.argument('<text>', 'The text to post as a tweet')
+		.argument('<time>', 'The date/time at which the tweet is to be scheduled (valid date/time string)')
+		.option('-m, --media [string]', 'Comma-separated list of ids of the media item(s) to be posted')
+		.option('-q, --quote [string]', 'The id of the tweet to quote in the tweet to be posted')
+		.option(
+			'-r, --reply [string]',
+			'The id of the tweet to which the reply is to be made, if the tweet is to be a reply',
+		)
+		.action(async (text: string, time: string, options?: { media?: string; quote?: string; reply?: string }) => {
+			try {
+				const result = await rettiwt.tweet.schedule({
+					text: text,
+					media: options?.media ? options?.media.split(',').map((item) => ({ id: item })) : undefined,
+					quote: options?.quote,
+					replyTo: options?.reply,
+					scheduleFor: new Date(time),
+				});
+				output(result);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Search
 	tweet
 		.command('search')
@@ -158,8 +185,8 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		.option('-q, --quoted <string>', 'Matches the tweets that quote the tweet with the given id')
 		.option('--exclude-links', 'Matches tweets that do not contain links')
 		.option('--exclude-replies', 'Matches the tweets that are not replies')
-		.option('-s, --start <string>', 'Matches the tweets made since the given date (valid date string)')
-		.option('-e, --end <string>', 'Matches the tweets made upto the given date (valid date string)')
+		.option('-s, --start <string>', 'Matches the tweets made since the given date (valid date/time string)')
+		.option('-e, --end <string>', 'Matches the tweets made upto the given date (valid date/time string)')
 		.option('--stream', 'Stream the filtered tweets in pseudo-realtime')
 		.option('-i, --interval <number>', 'The polling interval (in ms) to use for streaming. Default is 60000')
 		.action(async (count?: string, cursor?: string, options?: TweetSearchOptions) => {
@@ -223,6 +250,20 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		.action(async (id: string) => {
 			try {
 				const result = await rettiwt.tweet.unretweet(id);
+				output(result);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// Unschedule
+	tweet
+		.command('unschedule')
+		.description('Unschedule a tweet')
+		.argument('<id>', 'The id of the tweet')
+		.action(async (id: string) => {
+			try {
+				const result = await rettiwt.tweet.unschedule(id);
 				output(result);
 			} catch (error) {
 				output(error);
