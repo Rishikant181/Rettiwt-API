@@ -42,22 +42,6 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
-	// Likers
-	tweet
-		.command('likers')
-		.description('Fetch the list of users who liked the given tweets')
-		.argument('<id>', 'The id of the tweet')
-		.argument('[count]', 'The number of likers to fetch')
-		.argument('[cursor]', 'The cursor to the batch of likers to fetch')
-		.action(async (id: string, count?: string, cursor?: string) => {
-			try {
-				const tweets = await rettiwt.tweet.likers(id, count ? parseInt(count) : undefined, cursor);
-				output(tweets);
-			} catch (error) {
-				output(error);
-			}
-		});
-
 	// List
 	tweet
 		.command('list')
