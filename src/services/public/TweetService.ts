@@ -5,7 +5,6 @@ import {
 	IListTweetsResponse,
 	ITweetDetailsResponse,
 	ITweetLikeResponse,
-	ITweetLikersResponse,
 	ITweetPostResponse,
 	ITweetRepliesResponse,
 	ITweetRetweetersResponse,
@@ -131,58 +130,6 @@ export class TweetService extends FetcherService {
 
 		// Deserializing response
 		const data = extractors[resource](response) ?? false;
-
-		return data;
-	}
-
-	/**
-	 * @deprecated
-	 * The method will be removed in the next release following the removal of the ability to see tweet likers by Twitter.
-	 * Currently, the method does not work.
-	 *
-	 * Get the list of users who liked a tweet.
-	 *
-	 * @param id - The id of the target tweet.
-	 * @param count - The number of likers to fetch, must be \<= 100.
-	 * @param cursor - The cursor to the batch of likers to fetch.
-	 *
-	 * @returns The list of users who liked the given tweet.
-	 *
-	 * @example
-	 * ```
-	 * import { Rettiwt } from 'rettiwt-api';
-	 *
-	 * // Creating a new Rettiwt instance using the given 'API_KEY'
-	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
-	 *
-	 * // Fetching the most recent 100 likers of the Tweet with id '1234567890'
-	 * rettiwt.tweet.likers('1234567890')
-	 * .then(res => {
-	 * 	console.log(res);
-	 * })
-	 * .catch(err => {
-	 * 	console.log(err);
-	 * });
-	 * ```
-	 */
-	public async likers(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		// Deprecation warning
-		console.log(`
-			This method has been deprecated following the removal of the ability to see tweet liksers by Twitter.
-			Currently, the method does not work.
-		`);
-
-		const resource = EResourceType.TWEET_LIKERS;
-
-		// Fetching raw likers
-		const response = await this.request<ITweetLikersResponse>(resource, {
-			id: id,
-			count: count,
-			cursor: cursor,
-		});
-
-		// Deserializing response
-		const data = extractors[resource](response);
 
 		return data;
 	}

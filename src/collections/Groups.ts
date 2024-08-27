@@ -20,7 +20,6 @@ export const fetchResources = [
 	EResourceType.LIST_TWEETS,
 	EResourceType.TWEET_DETAILS,
 	EResourceType.TWEET_DETAILS_ALT,
-	EResourceType.TWEET_LIKERS,
 	EResourceType.TWEET_RETWEETERS,
 	EResourceType.TWEET_SEARCH,
 	EResourceType.USER_DETAILS_BY_USERNAME,
