@@ -5,6 +5,7 @@ import {
 	IUserFollowingResponse,
 	IUserFollowResponse,
 	IUserHighlightsResponse,
+	IUserLikesResponse,
 	IUserMediaResponse,
 	IUserRecommendedResponse,
 	IUserSubscriptionsResponse,
@@ -308,9 +309,8 @@ export class UserService extends FetcherService {
 	}
 
 	/**
-	 * Get the list of tweets liked by a user.
+	 * Get the list of tweets liked by the logged in user.
 	 *
-	 * @param id - The id of the target user.
 	 * @param count - The number of likes to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of likes to fetch.
 	 *
@@ -323,8 +323,8 @@ export class UserService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Fetching the most recent 100 liked Tweets of the User with id '1234567890'
-	 * rettiwt.user.likes('1234567890')
+	 * // Fetching the most recent 100 liked Tweets of the logged in User
+	 * rettiwt.user.likes()
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -332,18 +332,13 @@ export class UserService extends FetcherService {
 	 * 	console.log(err);
 	 * });
 	 * ```
-	 *
-	 * @remarks
-	 * This method is temporarily disabled, owing to removal of the ability to get the list of tweet liked by a user by Twitter/X.
-	 * However, it's possible to fetch the liked tweets of the authenticated user, which will be implemented in a future release.
 	 */
-	/*
-	public async likes(id: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+	public async likes(count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		const resource = EResourceType.USER_LIKES;
 
 		// Fetching raw list of likes
 		const response = await this.request<IUserLikesResponse>(resource, {
-			id: id,
+			id: this.userId,
 			count: count,
 			cursor: cursor,
 		});
@@ -353,7 +348,6 @@ export class UserService extends FetcherService {
 
 		return data;
 	}
-	*/
 
 	/**
 	 * Get the media timeline of a user

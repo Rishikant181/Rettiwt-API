@@ -97,22 +97,19 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
-	/*
 	// Likes
 	user.command('likes')
-		.description('Fetch the list of tweets liked by the given user')
-		.argument('<id>', 'The id of the user')
+		.description('Fetch your list of liked tweet')
 		.argument('[count]', 'The number of liked tweets to fetch')
 		.argument('[cursor]', 'The cursor to the batch of liked tweets to fetch')
-		.action(async (id: string, count?: string, cursor?: string) => {
+		.action(async (count?: string, cursor?: string) => {
 			try {
-				const tweets = await rettiwt.user.likes(id, count ? parseInt(count) : undefined, cursor);
+				const tweets = await rettiwt.user.likes(count ? parseInt(count) : undefined, cursor);
 				output(tweets);
 			} catch (error) {
 				output(error);
 			}
 		});
-	*/
 
 	// Media
 	user.command('media')

@@ -52,7 +52,9 @@ export class FetcherService {
 		LogService.enabled = config?.logging ?? false;
 		this.apiKey = config?.apiKey;
 		this.guestKey = config?.guestKey;
-		this.userId = config?.apiKey ? keyToCookie(config.apiKey).match(/(?<=twid="u=)(.*)(?=";)/)![0] : undefined;
+		this.userId = config?.apiKey
+			? keyToCookie(config.apiKey).match(/((?<=twid="u=)(.*)(?="))|((?<=twid=u%3D)(.*)(?=;))/)![0]
+			: undefined;
 		this.authProxyUrl = config?.authProxyUrl ?? config?.proxyUrl;
 		this.proxyUrl = config?.proxyUrl;
 		this.timeout = config?.timeout ?? 0;
