@@ -97,6 +97,7 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	/*
 	// Likes
 	user.command('likes')
 		.description('Fetch the list of tweets liked by the given user')
@@ -111,6 +112,7 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 				output(error);
 			}
 		});
+	*/
 
 	// Media
 	user.command('media')

@@ -5,7 +5,6 @@ import {
 	IUserFollowingResponse,
 	IUserFollowResponse,
 	IUserHighlightsResponse,
-	IUserLikesResponse,
 	IUserMediaResponse,
 	IUserRecommendedResponse,
 	IUserSubscriptionsResponse,
@@ -333,7 +332,12 @@ export class UserService extends FetcherService {
 	 * 	console.log(err);
 	 * });
 	 * ```
+	 *
+	 * @remarks
+	 * This method is temporarily disabled, owing to removal of the ability to get the list of tweet liked by a user by Twitter/X.
+	 * However, it's possible to fetch the liked tweets of the authenticated user, which will be implemented in a future release.
 	 */
+	/*
 	public async likes(id: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		const resource = EResourceType.USER_LIKES;
 
@@ -349,6 +353,7 @@ export class UserService extends FetcherService {
 
 		return data;
 	}
+	*/
 
 	/**
 	 * Get the media timeline of a user
