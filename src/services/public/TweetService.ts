@@ -72,8 +72,8 @@ export class TweetService extends FetcherService {
 	public async details(id: string): Promise<Tweet | undefined> {
 		let resource: EResourceType;
 
-		// Determining the resource to use
-		if (this.isAuthenticated) {
+		// If user is authenticated
+		if (this.userId != undefined) {
 			resource = EResourceType.TWEET_DETAILS_ALT;
 
 			// Fetching raw tweet details
@@ -83,7 +83,9 @@ export class TweetService extends FetcherService {
 			const data = extractors[resource](response, id);
 
 			return data;
-		} else {
+		}
+		// If user is not authenticated
+		else {
 			resource = EResourceType.TWEET_DETAILS;
 
 			// Fetching raw tweet details

@@ -9,6 +9,7 @@ import { requests } from '../../collections/Requests';
 import { EApiErrors } from '../../enums/Api';
 import { ELogActions } from '../../enums/Logging';
 import { EResourceType } from '../../enums/Resource';
+import { keyToCookie } from '../../helper/StringUtils';
 import { FetchArgs } from '../../models/args/FetchArgs';
 import { PostArgs } from '../../models/args/PostArgs';
 import { IErrorHandler } from '../../types/ErrorHandler';
@@ -41,8 +42,8 @@ export class FetcherService {
 	/** The URL to the proxy server to use only for authentication. */
 	protected readonly authProxyUrl?: URL;
 
-	/** Whether the instance is authenticated or not. */
-	protected readonly isAuthenticated: boolean;
+	/** The id of the authenticated user (if any). */
+	protected readonly userId?: string;
 
 	/**
 	 * @param config - The config object for configuring the Rettiwt instance.
@@ -51,7 +52,7 @@ export class FetcherService {
 		LogService.enabled = config?.logging ?? false;
 		this.apiKey = config?.apiKey;
 		this.guestKey = config?.guestKey;
-		this.isAuthenticated = config?.apiKey ? true : false;
+		this.userId = config?.apiKey ? keyToCookie(config.apiKey).match(/(?<=twid="u=)(.*)(?=";)/)![0] : undefined;
 		this.authProxyUrl = config?.authProxyUrl ?? config?.proxyUrl;
 		this.proxyUrl = config?.proxyUrl;
 		this.timeout = config?.timeout ?? 0;
@@ -67,10 +68,10 @@ export class FetcherService {
 	 */
 	private checkAuthorization(resource: EResourceType): void {
 		// Logging
-		LogService.log(ELogActions.AUTHORIZATION, { authenticated: this.isAuthenticated });
+		LogService.log(ELogActions.AUTHORIZATION, { authenticated: this.userId != undefined });
 
 		// Checking authorization status
-		if (!allowGuestAuthentication.includes(resource) && this.isAuthenticated == false) {
+		if (!allowGuestAuthentication.includes(resource) && this.userId == undefined) {
 			throw new Error(EApiErrors.RESOURCE_NOT_ALLOWED);
 		}
 	}
@@ -85,8 +86,7 @@ export class FetcherService {
 			// Logging
 			LogService.log(ELogActions.GET, { target: 'USER_CREDENTIAL' });
 
-			const cookies = Buffer.from(this.apiKey, 'base64').toString('ascii').split(';');
-			return new AuthCredential(cookies);
+			return new AuthCredential(keyToCookie(this.apiKey).split(';'));
 		} else if (this.guestKey) {
 			// Logging
 			LogService.log(ELogActions.GET, { target: 'GUEST_CREDENTIAL' });
