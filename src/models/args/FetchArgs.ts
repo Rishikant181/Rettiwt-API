@@ -2,6 +2,7 @@ import {
 	IsArray,
 	IsBoolean,
 	IsDate,
+	IsEmpty,
 	IsNotEmpty,
 	IsNumber,
 	IsNumberString,
@@ -9,6 +10,7 @@ import {
 	IsOptional,
 	IsString,
 	Max,
+	Min,
 	validateSync,
 } from 'class-validator';
 
@@ -37,10 +39,47 @@ export class FetchArgs {
 	 * - Has not effect for:
 	 * 	- {@link EResourceType.USER_FEED_FOLLOWED}
 	 * 	- {@link EResourceType.USER_FEED_RECOMMENDED}
-	 *
-	 * @defaultValue 20
 	 */
-	@IsOptional({ groups: [EResourceType.USER_FEED_FOLLOWED, EResourceType.USER_FEED_RECOMMENDED] })
+	@IsEmpty({
+		groups: [
+			EResourceType.TWEET_DETAILS,
+			EResourceType.TWEET_DETAILS_ALT,
+			EResourceType.USER_DETAILS_BY_ID,
+			EResourceType.USER_DETAILS_BY_USERNAME,
+			EResourceType.USER_FEED_FOLLOWED,
+			EResourceType.USER_FEED_RECOMMENDED,
+		],
+	})
+	@IsOptional({
+		groups: [
+			EResourceType.LIST_TWEETS,
+			EResourceType.TWEET_RETWEETERS,
+			EResourceType.TWEET_SEARCH,
+			EResourceType.USER_FOLLOWERS,
+			EResourceType.USER_FOLLOWING,
+			EResourceType.USER_HIGHLIGHTS,
+			EResourceType.USER_LIKES,
+			EResourceType.USER_MEDIA,
+			EResourceType.USER_SUBSCRIPTIONS,
+			EResourceType.USER_TIMELINE,
+			EResourceType.USER_TIMELINE_AND_REPLIES,
+		],
+	})
+	@Min(1, {
+		groups: [
+			EResourceType.LIST_TWEETS,
+			EResourceType.TWEET_RETWEETERS,
+			EResourceType.TWEET_SEARCH,
+			EResourceType.USER_FOLLOWERS,
+			EResourceType.USER_FOLLOWING,
+			EResourceType.USER_HIGHLIGHTS,
+			EResourceType.USER_LIKES,
+			EResourceType.USER_MEDIA,
+			EResourceType.USER_SUBSCRIPTIONS,
+			EResourceType.USER_TIMELINE,
+			EResourceType.USER_TIMELINE_AND_REPLIES,
+		],
+	})
 	@Max(100, {
 		groups: [
 			EResourceType.LIST_TWEETS,
@@ -65,8 +104,48 @@ export class FetchArgs {
 	 * - May be used for cursored resources.
 	 * - Has no effect for other resources.
 	 */
-	@IsOptional()
-	@IsString()
+	@IsEmpty({
+		groups: [
+			EResourceType.TWEET_DETAILS,
+			EResourceType.TWEET_DETAILS_ALT,
+			EResourceType.USER_DETAILS_BY_ID,
+			EResourceType.USER_DETAILS_BY_USERNAME,
+		],
+	})
+	@IsOptional({
+		groups: [
+			EResourceType.LIST_TWEETS,
+			EResourceType.TWEET_RETWEETERS,
+			EResourceType.TWEET_SEARCH,
+			EResourceType.USER_FEED_FOLLOWED,
+			EResourceType.USER_FEED_RECOMMENDED,
+			EResourceType.USER_FOLLOWING,
+			EResourceType.USER_FOLLOWERS,
+			EResourceType.USER_HIGHLIGHTS,
+			EResourceType.USER_LIKES,
+			EResourceType.USER_MEDIA,
+			EResourceType.USER_SUBSCRIPTIONS,
+			EResourceType.USER_TIMELINE,
+			EResourceType.USER_TIMELINE_AND_REPLIES,
+		],
+	})
+	@IsString({
+		groups: [
+			EResourceType.LIST_TWEETS,
+			EResourceType.TWEET_RETWEETERS,
+			EResourceType.TWEET_SEARCH,
+			EResourceType.USER_FEED_FOLLOWED,
+			EResourceType.USER_FEED_RECOMMENDED,
+			EResourceType.USER_FOLLOWING,
+			EResourceType.USER_FOLLOWERS,
+			EResourceType.USER_HIGHLIGHTS,
+			EResourceType.USER_LIKES,
+			EResourceType.USER_MEDIA,
+			EResourceType.USER_SUBSCRIPTIONS,
+			EResourceType.USER_TIMELINE,
+			EResourceType.USER_TIMELINE_AND_REPLIES,
+		],
+	})
 	public cursor?: string;
 
 	/**
@@ -75,7 +154,26 @@ export class FetchArgs {
 	 * @remarks
 	 * Required when searching for tweets using {@link EResourceType.TWEET_SEARCH}.
 	 */
-	@IsOptional()
+	@IsEmpty({
+		groups: [
+			EResourceType.LIST_TWEETS,
+			EResourceType.TWEET_DETAILS,
+			EResourceType.TWEET_DETAILS_ALT,
+			EResourceType.TWEET_RETWEETERS,
+			EResourceType.USER_DETAILS_BY_USERNAME,
+			EResourceType.USER_DETAILS_BY_ID,
+			EResourceType.USER_FEED_FOLLOWED,
+			EResourceType.USER_FEED_RECOMMENDED,
+			EResourceType.USER_FOLLOWING,
+			EResourceType.USER_FOLLOWERS,
+			EResourceType.USER_HIGHLIGHTS,
+			EResourceType.USER_LIKES,
+			EResourceType.USER_MEDIA,
+			EResourceType.USER_SUBSCRIPTIONS,
+			EResourceType.USER_TIMELINE,
+			EResourceType.USER_TIMELINE_AND_REPLIES,
+		],
+	})
 	@IsNotEmpty({ groups: [EResourceType.TWEET_SEARCH] })
 	@IsObject({ groups: [EResourceType.TWEET_SEARCH] })
 	public filter?: TweetFilter;
@@ -87,7 +185,9 @@ export class FetchArgs {
 	 * - Required for all resources except {@link EResourceType.TWEET_SEARCH} and {@link EResourceType.USER_TIMELINE_RECOMMENDED}.
 	 * - For {@link EResourceType.USER_DETAILS_BY_USERNAME}, can be alphanumeric, while for others, is strictly numeric.
 	 */
-	@IsOptional()
+	@IsEmpty({
+		groups: [EResourceType.USER_FEED_FOLLOWED, EResourceType.USER_FEED_RECOMMENDED],
+	})
 	@IsNotEmpty({
 		groups: [
 			EResourceType.LIST_TWEETS,
@@ -98,6 +198,24 @@ export class FetchArgs {
 			EResourceType.USER_DETAILS_BY_ID,
 			EResourceType.USER_FOLLOWERS,
 			EResourceType.USER_FOLLOWING,
+			EResourceType.USER_HIGHLIGHTS,
+			EResourceType.USER_LIKES,
+			EResourceType.USER_MEDIA,
+			EResourceType.USER_SUBSCRIPTIONS,
+			EResourceType.USER_TIMELINE,
+			EResourceType.USER_TIMELINE_AND_REPLIES,
+		],
+	})
+	@IsString({
+		groups: [
+			EResourceType.LIST_TWEETS,
+			EResourceType.TWEET_DETAILS,
+			EResourceType.TWEET_DETAILS_ALT,
+			EResourceType.TWEET_RETWEETERS,
+			EResourceType.USER_DETAILS_BY_USERNAME,
+			EResourceType.USER_DETAILS_BY_ID,
+			EResourceType.USER_FOLLOWING,
+			EResourceType.USER_FOLLOWERS,
 			EResourceType.USER_HIGHLIGHTS,
 			EResourceType.USER_LIKES,
 			EResourceType.USER_MEDIA,
@@ -131,7 +249,7 @@ export class FetchArgs {
 	 */
 	public constructor(resource: EResourceType, args: FetchArgs) {
 		this.id = args.id;
-		this.count = args.count ?? 20;
+		this.count = args.count;
 		this.cursor = args.cursor;
 		this.filter = args.filter ? new TweetFilter(args.filter) : undefined;
 
