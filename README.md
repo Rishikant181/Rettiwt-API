@@ -9,11 +9,13 @@ A CLI tool and an API for fetching data from Twitter for free!
 
 ## Installation
 
-It is recommended to install the package globally. Use the following steps to install the package and ensure it's installed correctly:
+It is recommended to install the package globally, if you want to use it from the CLI. Use the following steps to install the package and ensure it's installed correctly:
 
 1. Open a terminal.
 2. Install the package using the command `npm install -g rettiwt-api`.
 3. Check if the package is installed correctly using the command `rettiwt help`.
+
+For using the package in your own project, you can install it as a [dependency](https://rishikant181.github.io/Rettiwt-API/#md:usage-as-a-dependency).
 
 ## Authentication
 
@@ -22,25 +24,26 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
 -   'guest' authentication (without logging in) grants access to the following resources/actions:
 
     -   Tweet Details
-    -   User Details
-    -   User Timeline
+    -   User Details (by username)
     -   User Replies Timeline
+    -   User Timeline
 
 -   'user' authentication (logging in) grants access to the following resources/actions:
 
     -   Tweet Details
     -   Tweet Like
     -   Tweet List
+    -   Tweet Media Upload
     -   Tweet Post
     -   Tweet Retweet
     -   Tweet Retweeters
+    -   Tweet Schedule
     -   Tweet Search
     -   Tweet Stream
     -   Tweet Unlike
     -   Tweet Unpost
     -   Tweet Unretweet
-    -   Tweet Media Upload
-    -   User Details
+    -   User Details (by username or id)
     -   User Follow
     -   User Followed Feed
     -   User Followers
@@ -54,7 +57,36 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     -   User Timeline
     -   User Unfollow
 
-By default, Rettiwt-API uses 'guest' authentication. If however, access to the full set of resources is required, 'user' authentication can be used, which requires the following additional steps post-installtion:
+By default, Rettiwt-API uses 'guest' authentication. If however, access to the full set of resources is required, 'user' authentication can be used. This is done by using the cookies associated with your Twitter/X account, and encoding them into an `API_KEY` for convenience. For getting the said `API_KEY`, there are two approaches:
+
+### 1. Using a browser (recommended):
+
+#### A. For Chrome/Chromium-based browsers:
+
+1. Install the [X Auth Helper extension](https://chromewebstore.google.com/detail/x-auth-helper/igpkhkjmpdecacocghpgkghdcmcmpfhp) from the Chrome Web Store, and allow it to run it in incognito mode.
+2. Switch to incognito mode and login to Twitter/X.
+3. After successful login, while still being on Twitter/X, click on the extension which will open the extension popup.
+4. Click on the `Get Key` button, this will generate the `API_KEY` and will show up in the text-area.
+5. Copy the `API_KEY` by either clicking on the `Copy Key` button or manually from the text-area.
+6. You may close the browser, but don't log out. Remember, since it's incognito mode, you didn't explicity 'log out', so, while the session will be erased from the browser, the `API_KEY` still remains valid.
+7. Save the API_KEY for use.
+
+#### B. For Firefox/Firefox-based browsers:
+
+1. Install the [Rettiwt Auth Helper extension](https://addons.mozilla.org/en-US/firefox/addon/rettiwt-auth-helper) from Firefox Add-Ons, and allow it to run it in in-private mode.
+2. Switch to in-private mode and login to Twitter/X.
+3. After successful login, while still being on Twitter/X, click on the extension which will open the extension popup.
+4. Click on the `Get API Key` button, this will generate the `API_KEY` and will show up in the text-area.
+5. Copy the `API_KEY` by either clicking on the `Copy API Key` button or manually from the text-area.
+6. You may close the browser, but don't log out. Remember, since it's in-private mode, you didn't explicity 'log out', so, while the session will be erased from the browser, the `API_KEY` still remains valid.
+7. Save the API_KEY for use.
+
+#### Notes:
+
+-   `API_KEY` created in this way should last 5 years from the date of login, as long as the credentials to the account aren't changed.
+-   This approach can also be done without going into incognito/in-private mode, in which case you can either login as usual or skip the login step if you're already logged in, and continue from the steps after login. However, this makes the `API_KEY` to last only as long as the Twitter/X account isn't logged out of (you may exit the browser as usual) or 5 years, whichever comes first. That's why it's recommended to use incognito/in-private mode, so that the `API_KEY` isn't accidentially revoked by logging out.
+
+### 2. Using the CLI:
 
 1. Open a terminal.
 2. Generate an API_KEY using the command `rettiwt auth login "<email>" "<username>" "<password>"`
@@ -65,7 +97,11 @@ By default, Rettiwt-API uses 'guest' authentication. If however, access to the f
     - `<username>` is the username associated with the Twitter account.
     - `<password>` is the password to the Twitter account.
 
-3. The string returned after running the command is the API_KEY. Store it in a secure place for later use.
+3. Store the output `API_KEY` in a secure place for later use.
+
+#### Notes:
+
+-   The `API_KEY` created in this way expires after one year from the day it was generated.
 
 ## The API_KEY
 
@@ -74,7 +110,6 @@ The API_KEY generated by logging in is what allows Rettiwt-API to authenticate a
 -   The API_KEY is generated by logging into Twitter using the email, username and password and encoding the returned cookies as a base64 string. This encoded string is the API_KEY.
 -   The API_KEY provides the same level of authorization as any standard Twitter account, nothing more, nothing less.
 -   Since generation of API_KEY is equivalent to logging in to Twitter, repeated generation attempts might trigger Twitter's anti-bot measures, the same way repeated login attempts do.
--   The API_KEY expires after one year from the day it was generated.
 -   Therefore, it is recommended to generate the API_KEY only once, then use it every time it is needed.
 -   Do not generate an API_KEY if it has not expired yet!
 
