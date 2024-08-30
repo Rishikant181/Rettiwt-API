@@ -52,9 +52,7 @@ export class FetcherService {
 		LogService.enabled = config?.logging ?? false;
 		this.apiKey = config?.apiKey;
 		this.guestKey = config?.guestKey;
-		this.userId = config?.apiKey
-			? keyToCookie(config.apiKey).match(/((?<=twid="u=)(.*)(?="))|((?<=twid=u%3D)(.*)(?=;))/)![0]
-			: undefined;
+		this.userId = config?.apiKey ? this.getUserId(config.apiKey) : undefined;
 		this.authProxyUrl = config?.authProxyUrl ?? config?.proxyUrl;
 		this.proxyUrl = config?.proxyUrl;
 		this.timeout = config?.timeout ?? 0;
@@ -120,6 +118,29 @@ export class FetcherService {
 			LogService.log(ELogActions.GET, { target: 'HTTPS_AGENT' });
 
 			return new https.Agent();
+		}
+	}
+
+	/**
+	 * Gets the authenticated user's id from the given API key.
+	 *
+	 * @param apiKey - The API key provided by the user.
+	 * @returns The user id associated with the API key.
+	 */
+	private getUserId(apiKey: string): string {
+		// Getting the cookie string from the API key
+		const cookieString: string = keyToCookie(apiKey);
+
+		// Searching for the user id in the cookie string
+		const searchResults: string[] | null = cookieString.match(/((?<=twid="u=)(.*)(?="))|((?<=twid=u%3D)(.*)(?=;))/);
+
+		// If user id was found
+		if (searchResults) {
+			return searchResults[0];
+		}
+		// If user id was not found
+		else {
+			throw new Error(EApiErrors.BAD_AUTHENTICATION);
 		}
 	}
 

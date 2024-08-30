@@ -178,9 +178,10 @@ export class TweetArgs extends NewTweet {
 	public replyTo?: string;
 
 	/** The date/time at which the tweet must be scheduled to be posted. */
+	@IsEmpty({ groups: [EResourceType.TWEET_POST] })
 	@IsNotEmpty({ groups: [EResourceType.TWEET_SCHEDULE] })
-	@IsDate({ groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
-	@MinDate(() => new Date(), { groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
+	@IsDate({ groups: [EResourceType.TWEET_SCHEDULE] })
+	@MinDate(() => new Date(), { groups: [EResourceType.TWEET_SCHEDULE] })
 	public scheduleFor?: Date;
 
 	/**
