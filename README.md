@@ -69,7 +69,7 @@ By default, Rettiwt-API uses 'guest' authentication. If however, access to the f
 4. Click on the `Get Key` button, this will generate the `API_KEY` and will show up in the text-area.
 5. Copy the `API_KEY` by either clicking on the `Copy Key` button or manually from the text-area.
 6. You may close the browser, but don't log out. Remember, since it's incognito mode, you didn't explicity 'log out', so, while the session will be erased from the browser, the `API_KEY` still remains valid.
-7. Save the API_KEY for use.
+7. Save the `API_KEY` for use.
 
 #### B. For Firefox/Firefox-based browsers:
 
@@ -79,7 +79,7 @@ By default, Rettiwt-API uses 'guest' authentication. If however, access to the f
 4. Click on the `Get API Key` button, this will generate the `API_KEY` and will show up in the text-area.
 5. Copy the `API_KEY` by either clicking on the `Copy API Key` button or manually from the text-area.
 6. You may close the browser, but don't log out. Remember, since it's in-private mode, you didn't explicity 'log out', so, while the session will be erased from the browser, the `API_KEY` still remains valid.
-7. Save the API_KEY for use.
+7. Save the `API_KEY` for use.
 
 #### Notes:
 
