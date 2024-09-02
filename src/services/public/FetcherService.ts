@@ -9,7 +9,6 @@ import { requests } from '../../collections/Requests';
 import { EApiErrors } from '../../enums/Api';
 import { ELogActions } from '../../enums/Logging';
 import { EResourceType } from '../../enums/Resource';
-import { keyToCookie } from '../../helper/StringUtils';
 import { FetchArgs } from '../../models/args/FetchArgs';
 import { PostArgs } from '../../models/args/PostArgs';
 import { IErrorHandler } from '../../types/ErrorHandler';
@@ -17,6 +16,8 @@ import { IRettiwtConfig } from '../../types/RettiwtConfig';
 
 import { ErrorService } from '../internal/ErrorService';
 import { LogService } from '../internal/LogService';
+
+import { AuthService } from './AuthService';
 
 /**
  * The base service that handles all HTTP requests.
@@ -52,7 +53,7 @@ export class FetcherService {
 		LogService.enabled = config?.logging ?? false;
 		this.apiKey = config?.apiKey;
 		this.guestKey = config?.guestKey;
-		this.userId = config?.apiKey ? this.getUserId(config.apiKey) : undefined;
+		this.userId = config?.apiKey ? AuthService.getUserId(config.apiKey) : undefined;
 		this.authProxyUrl = config?.authProxyUrl ?? config?.proxyUrl;
 		this.proxyUrl = config?.proxyUrl;
 		this.timeout = config?.timeout ?? 0;
@@ -86,7 +87,7 @@ export class FetcherService {
 			// Logging
 			LogService.log(ELogActions.GET, { target: 'USER_CREDENTIAL' });
 
-			return new AuthCredential(keyToCookie(this.apiKey).split(';'));
+			return new AuthCredential(AuthService.decodeCookie(this.apiKey).split(';'));
 		} else if (this.guestKey) {
 			// Logging
 			LogService.log(ELogActions.GET, { target: 'GUEST_CREDENTIAL' });
@@ -118,29 +119,6 @@ export class FetcherService {
 			LogService.log(ELogActions.GET, { target: 'HTTPS_AGENT' });
 
 			return new https.Agent();
-		}
-	}
-
-	/**
-	 * Gets the authenticated user's id from the given API key.
-	 *
-	 * @param apiKey - The API key provided by the user.
-	 * @returns The user id associated with the API key.
-	 */
-	private getUserId(apiKey: string): string {
-		// Getting the cookie string from the API key
-		const cookieString: string = keyToCookie(apiKey);
-
-		// Searching for the user id in the cookie string
-		const searchResults: string[] | null = cookieString.match(/((?<=twid="u=)(.*)(?="))|((?<=twid=u%3D)(.*)(?=;))/);
-
-		// If user id was found
-		if (searchResults) {
-			return searchResults[0];
-		}
-		// If user id was not found
-		else {
-			throw new Error(EApiErrors.BAD_AUTHENTICATION);
 		}
 	}
 

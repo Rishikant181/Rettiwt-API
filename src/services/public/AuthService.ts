@@ -1,5 +1,6 @@
 import { Auth } from 'rettiwt-auth';
 
+import { EApiErrors } from '../../enums/Api';
 import { IRettiwtConfig } from '../../types/RettiwtConfig';
 
 import { FetcherService } from './FetcherService';
@@ -17,6 +18,55 @@ export class AuthService extends FetcherService {
 	 */
 	public constructor(config?: IRettiwtConfig) {
 		super(config);
+	}
+
+	/**
+	 * Decodes the encoded cookie string.
+	 *
+	 * @param encodedCookies - The encoded cookie string to decode.
+	 * @returns The decoded cookie string.
+	 */
+	public static decodeCookie(encodedCookies: string): string {
+		// Decoding the encoded cookie string
+		const decodedCookies: string = Buffer.from(encodedCookies, 'base64').toString('ascii');
+
+		return decodedCookies;
+	}
+
+	/**
+	 * Encodes the given cookie string.
+	 *
+	 * @param cookieString - The cookie string to encode.
+	 * @returns The encoded cookie string.
+	 */
+	public static encodeCookie(cookieString: string): string {
+		// Encoding the cookie string to base64
+		const encodedCookies: string = Buffer.from(cookieString).toString('base64');
+
+		return encodedCookies;
+	}
+
+	/**
+	 * Gets the user's id from the given API key.
+	 *
+	 * @param apiKey - The API key.
+	 * @returns The user id associated with the API key.
+	 */
+	public static getUserId(apiKey: string): string {
+		// Getting the cookie string from the API key
+		const cookieString: string = AuthService.decodeCookie(apiKey);
+
+		// Searching for the user id in the cookie string
+		const searchResults: string[] | null = cookieString.match(/((?<=twid="u=)(.*)(?="))|((?<=twid=u%3D)(.*)(?=;))/);
+
+		// If user id was found
+		if (searchResults) {
+			return searchResults[0];
+		}
+		// If user id was not found
+		else {
+			throw new Error(EApiErrors.BAD_AUTHENTICATION);
+		}
 	}
 
 	/**
@@ -91,7 +141,7 @@ export class AuthService extends FetcherService {
 			).toHeader().cookie as string) ?? '';
 
 		// Converting the credentials to base64 string
-		apiKey = Buffer.from(apiKey).toString('base64');
+		apiKey = AuthService.encodeCookie(apiKey);
 
 		return apiKey;
 	}

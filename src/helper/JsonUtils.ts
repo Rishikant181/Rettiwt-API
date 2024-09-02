@@ -52,6 +52,8 @@ export function findByFilter<T>(data: NonNullable<unknown>, key: string, value: 
  * @param data - The data on which search is to be performed.
  * @param value - The value to search.
  * @returns The key with the given value.
+ *
+ * @internal
  */
 export function findKeyByValue(data: NonNullable<unknown>, value: string): string | undefined {
 	// Finding the key-value pairs that have the given value
