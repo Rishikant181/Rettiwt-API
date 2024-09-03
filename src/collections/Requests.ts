@@ -26,15 +26,17 @@ export const requests: { [key in keyof typeof EResourceType]: (args: FetchArgs |
 	MEDIA_UPLOAD_INITIALIZE: (args: PostArgs) => request.media.initializeUpload(args.upload!.size!),
 
 	TWEET_DETAILS: (args: FetchArgs) => request.tweet.details(args.id!),
+	TWEET_DETAILS_ALT: (args: FetchArgs) => request.tweet.replies(args.id!),
 	TWEET_LIKE: (args: PostArgs) => request.tweet.like(args.id!),
-	TWEET_LIKERS: (args: FetchArgs) => request.tweet.likers(args.id!, args.count, args.cursor),
 	TWEET_POST: (args: PostArgs) => request.tweet.post(args.tweet!),
 	TWEET_RETWEET: (args: PostArgs) => request.tweet.retweet(args.id!),
 	TWEET_RETWEETERS: (args: FetchArgs) => request.tweet.retweeters(args.id!, args.count, args.cursor),
+	TWEET_SCHEDULE: (args: PostArgs) => request.tweet.schedule(args.tweet!, args.tweet!.scheduleFor!),
 	TWEET_SEARCH: (args: FetchArgs) => request.tweet.search(args.filter!, args.count, args.cursor),
 	TWEET_UNLIKE: (args: PostArgs) => request.tweet.unlike(args.id!),
 	TWEET_UNPOST: (args: PostArgs) => request.tweet.unpost(args.id!),
 	TWEET_UNRETWEET: (args: PostArgs) => request.tweet.unretweet(args.id!),
+	TWEET_UNSCHEDULE: (args: PostArgs) => request.tweet.unschedule(args.id!),
 
 	USER_DETAILS_BY_USERNAME: (args: FetchArgs) => request.user.detailsByUsername(args.id!),
 	USER_DETAILS_BY_ID: (args: FetchArgs) => request.user.detailsById(args.id!),

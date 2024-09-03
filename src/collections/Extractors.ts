@@ -3,14 +3,16 @@ import {
 	IListTweetsResponse,
 	ITweetDetailsResponse,
 	ITweetLikeResponse,
-	ITweetLikersResponse,
 	ITweetPostResponse,
+	ITweetRepliesResponse,
 	ITweetRetweetersResponse,
 	ITweetRetweetResponse,
+	ITweetScheduleResponse,
 	ITweetSearchResponse,
 	ITweetUnlikeResponse,
 	ITweetUnpostResponse,
 	ITweetUnretweetResponse,
+	ITweetUnscheduleResponse,
 	IUserDetailsResponse,
 	IUserFollowedResponse,
 	IUserFollowersResponse,
@@ -47,20 +49,21 @@ export const extractors = {
 		response.media_id_string ?? undefined,
 
 	TWEET_DETAILS: (response: ITweetDetailsResponse, id: string): Tweet | undefined => Tweet.single(response, id),
+	TWEET_DETAILS_ALT: (response: ITweetRepliesResponse, id: string): Tweet | undefined => Tweet.single(response, id),
 	TWEET_LIKE: (response: ITweetLikeResponse): boolean => (response?.data?.favorite_tweet ? true : false),
-	TWEET_LIKERS: (response: ITweetLikersResponse): CursoredData<User> =>
-		new CursoredData<User>(response, EBaseType.USER),
 	TWEET_POST: (response: ITweetPostResponse): string =>
 		response?.data?.create_tweet?.tweet_results?.result?.rest_id ?? undefined,
 	TWEET_RETWEET: (response: ITweetRetweetResponse): boolean => (response?.data?.create_retweet ? true : false),
 	TWEET_RETWEETERS: (response: ITweetRetweetersResponse): CursoredData<User> =>
 		new CursoredData<User>(response, EBaseType.USER),
+	TWEET_SCHEDULE: (response: ITweetScheduleResponse): string => response?.data?.tweet?.rest_id ?? undefined,
 	TWEET_SEARCH: (response: ITweetSearchResponse): CursoredData<Tweet> =>
 		new CursoredData<Tweet>(response, EBaseType.TWEET),
 	TWEET_UNLIKE: (response: ITweetUnlikeResponse): boolean => (response?.data?.unfavorite_tweet ? true : false),
 	TWEET_UNPOST: (response: ITweetUnpostResponse): boolean => (response?.data?.delete_tweet ? true : false),
 	TWEET_UNRETWEET: (response: ITweetUnretweetResponse): boolean =>
 		response?.data?.unretweet?.source_tweet_results?.result ? true : false,
+	TWEET_UNSCHEDULE: (response: ITweetUnscheduleResponse): boolean => response?.data?.scheduledtweet_delete == 'Done',
 
 	USER_DETAILS_BY_USERNAME: (response: IUserDetailsResponse): User | undefined => User.single(response),
 	USER_DETAILS_BY_ID: (response: IUserDetailsResponse): User | undefined => User.single(response),

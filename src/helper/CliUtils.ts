@@ -2,6 +2,8 @@
  * Outputs the given JSON data.
  *
  * @param data - The data to be output.
+ *
+ * @internal
  */
 export function output(data: unknown): void {
 	// If data is string, output as is

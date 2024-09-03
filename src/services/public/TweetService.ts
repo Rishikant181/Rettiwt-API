@@ -5,14 +5,16 @@ import {
 	IListTweetsResponse,
 	ITweetDetailsResponse,
 	ITweetLikeResponse,
-	ITweetLikersResponse,
 	ITweetPostResponse,
+	ITweetRepliesResponse,
 	ITweetRetweetersResponse,
 	ITweetRetweetResponse,
+	ITweetScheduleResponse,
 	ITweetSearchResponse,
 	ITweetUnlikeResponse,
 	ITweetUnpostResponse,
 	ITweetUnretweetResponse,
+	ITweetUnscheduleResponse,
 	TweetFilter,
 } from 'rettiwt-core';
 
@@ -68,15 +70,32 @@ export class TweetService extends FetcherService {
 	 * ```
 	 */
 	public async details(id: string): Promise<Tweet | undefined> {
-		const resource = EResourceType.TWEET_DETAILS;
+		let resource: EResourceType;
 
-		// Fetching raw tweet details
-		const response = await this.request<ITweetDetailsResponse>(resource, { id: id });
+		// If user is authenticated
+		if (this.userId != undefined) {
+			resource = EResourceType.TWEET_DETAILS_ALT;
 
-		// Deserializing response
-		const data = extractors[resource](response, id);
+			// Fetching raw tweet details
+			const response = await this.request<ITweetRepliesResponse>(resource, { id: id });
 
-		return data;
+			// Deserializing response
+			const data = extractors[resource](response, id);
+
+			return data;
+		}
+		// If user is not authenticated
+		else {
+			resource = EResourceType.TWEET_DETAILS;
+
+			// Fetching raw tweet details
+			const response = await this.request<ITweetDetailsResponse>(resource, { id: id });
+
+			// Deserializing response
+			const data = extractors[resource](response, id);
+
+			return data;
+		}
 	}
 
 	/**
@@ -113,58 +132,6 @@ export class TweetService extends FetcherService {
 
 		// Deserializing response
 		const data = extractors[resource](response) ?? false;
-
-		return data;
-	}
-
-	/**
-	 * @deprecated
-	 * The method will be removed in the next release following the removal of the ability to see tweet likers by Twitter.
-	 * Currently, the method does not work.
-	 *
-	 * Get the list of users who liked a tweet.
-	 *
-	 * @param id - The id of the target tweet.
-	 * @param count - The number of likers to fetch, must be \<= 100.
-	 * @param cursor - The cursor to the batch of likers to fetch.
-	 *
-	 * @returns The list of users who liked the given tweet.
-	 *
-	 * @example
-	 * ```
-	 * import { Rettiwt } from 'rettiwt-api';
-	 *
-	 * // Creating a new Rettiwt instance using the given 'API_KEY'
-	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
-	 *
-	 * // Fetching the most recent 100 likers of the Tweet with id '1234567890'
-	 * rettiwt.tweet.likers('1234567890')
-	 * .then(res => {
-	 * 	console.log(res);
-	 * })
-	 * .catch(err => {
-	 * 	console.log(err);
-	 * });
-	 * ```
-	 */
-	public async likers(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		// Deprecation warning
-		console.log(`
-			This method has been deprecated following the removal of the ability to see tweet liksers by Twitter.
-			Currently, the method does not work.
-		`);
-
-		const resource = EResourceType.TWEET_LIKERS;
-
-		// Fetching raw likers
-		const response = await this.request<ITweetLikersResponse>(resource, {
-			id: id,
-			count: count,
-			cursor: cursor,
-		});
-
-		// Deserializing response
-		const data = extractors[resource](response);
 
 		return data;
 	}
@@ -221,7 +188,7 @@ export class TweetService extends FetcherService {
 	 *
 	 * @param options - The options describing the tweet to be posted. Check {@link TweetArgs} for available options.
 	 *
-	 * @returns Whether posting was successful or not.
+	 * @returns The id of the posted tweet.
 	 *
 	 * @example
 	 * Posting a simple text
@@ -378,6 +345,46 @@ export class TweetService extends FetcherService {
 			count: count,
 			cursor: cursor,
 		});
+
+		// Deserializing response
+		const data = extractors[resource](response);
+
+		return data;
+	}
+
+	/**
+	 * Schedule a tweet.
+	 *
+	 * @param options - The options describing the tweet to be posted. Check {@link TweetArgs} for available options.
+	 *
+	 * @returns The id of the schedule.
+	 *
+	 * @example
+	 * Scheduling a simple text
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Scheduling a tweet to posted at 19th of August, 2024, at 11:59:00 AM, in local time
+	 * rettiwt.tweet.schedule({ text: 'Hello World!', scheduleFor: new Date('2024-08-19 23:59:00') })
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @remarks
+	 * Scheduling a tweet is similar to {@link post}ing, except that an extra parameter called `scheduleFor` is used.
+	 */
+	public async schedule(options: TweetArgs): Promise<string | undefined> {
+		const resource = EResourceType.TWEET_SCHEDULE;
+
+		// Scheduling the tweet
+		const response = await this.request<ITweetScheduleResponse>(resource, { tweet: options });
 
 		// Deserializing response
 		const data = extractors[resource](response);
@@ -597,6 +604,42 @@ export class TweetService extends FetcherService {
 
 		// Unretweeting the tweet
 		const response = await this.request<ITweetUnretweetResponse>(resource, { id: id });
+
+		// Deserializing the response
+		const data = extractors[resource](response) ?? false;
+
+		return data;
+	}
+
+	/**
+	 * Unschedule a tweet.
+	 *
+	 * @param id - The id of the scheduled tweet.
+	 *
+	 * @returns Whether unscheduling was successful or not.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Unscheduling the Tweet with id '1234567890'
+	 * rettiwt.tweet.unschedule('1234567890')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async unschedule(id: string): Promise<boolean> {
+		const resource = EResourceType.TWEET_UNSCHEDULE;
+
+		// Unscheduling the tweet
+		const response = await this.request<ITweetUnscheduleResponse>(resource, { id: id });
 
 		// Deserializing the response
 		const data = extractors[resource](response) ?? false;

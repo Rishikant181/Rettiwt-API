@@ -1,6 +1,8 @@
 import {
 	ArrayMaxSize,
 	IsArray,
+	IsDate,
+	IsEmpty,
 	IsNotEmpty,
 	IsNumberString,
 	IsObject,
@@ -8,6 +10,7 @@ import {
 	IsString,
 	Max,
 	MaxLength,
+	MinDate,
 	validateSync,
 } from 'class-validator';
 
@@ -35,7 +38,15 @@ export class PostArgs {
 	 * - {@link EResourceType.USER_FOLLOW}
 	 * - {@link EResourceType.USER_UNFOLLOW}
 	 */
-	@IsOptional()
+	@IsEmpty({
+		groups: [
+			EResourceType.MEDIA_UPLOAD_APPEND,
+			EResourceType.MEDIA_UPLOAD_FINALIZE,
+			EResourceType.MEDIA_UPLOAD_INITIALIZE,
+			EResourceType.TWEET_POST,
+			EResourceType.TWEET_SCHEDULE,
+		],
+	})
 	@IsNotEmpty({
 		groups: [
 			EResourceType.TWEET_LIKE,
@@ -43,6 +54,7 @@ export class PostArgs {
 			EResourceType.TWEET_UNLIKE,
 			EResourceType.TWEET_UNPOST,
 			EResourceType.TWEET_UNRETWEET,
+			EResourceType.TWEET_UNSCHEDULE,
 			EResourceType.USER_FOLLOW,
 			EResourceType.USER_UNFOLLOW,
 		],
@@ -54,6 +66,7 @@ export class PostArgs {
 			EResourceType.TWEET_UNLIKE,
 			EResourceType.TWEET_UNPOST,
 			EResourceType.TWEET_UNRETWEET,
+			EResourceType.TWEET_UNSCHEDULE,
 			EResourceType.USER_FOLLOW,
 			EResourceType.USER_UNFOLLOW,
 		],
@@ -66,9 +79,23 @@ export class PostArgs {
 	 * @remarks
 	 * Required only when posting a tweet using {@link EResourceType.TWEET_POST}
 	 */
-	@IsOptional()
-	@IsNotEmpty({ groups: [EResourceType.TWEET_POST] })
-	@IsObject({ groups: [EResourceType.TWEET_POST] })
+	@IsEmpty({
+		groups: [
+			EResourceType.MEDIA_UPLOAD_APPEND,
+			EResourceType.MEDIA_UPLOAD_FINALIZE,
+			EResourceType.MEDIA_UPLOAD_INITIALIZE,
+			EResourceType.TWEET_LIKE,
+			EResourceType.TWEET_RETWEET,
+			EResourceType.TWEET_UNLIKE,
+			EResourceType.TWEET_UNPOST,
+			EResourceType.TWEET_UNRETWEET,
+			EResourceType.TWEET_UNSCHEDULE,
+			EResourceType.USER_FOLLOW,
+			EResourceType.USER_UNFOLLOW,
+		],
+	})
+	@IsNotEmpty({ groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
+	@IsObject({ groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
 	public tweet?: TweetArgs;
 
 	/**
@@ -80,7 +107,13 @@ export class PostArgs {
 	 * - {@link EResourceType.MEDIA_UPLOAD_FINALIZE}
 	 * - {@link EResourceType.MEDIA_UPLOAD_INITIALIZE}
 	 */
-	@IsOptional()
+	@IsEmpty({
+		groups: [
+			EResourceType.MEDIA_UPLOAD_APPEND,
+			EResourceType.MEDIA_UPLOAD_FINALIZE,
+			EResourceType.MEDIA_UPLOAD_INITIALIZE,
+		],
+	})
 	@IsNotEmpty({
 		groups: [
 			EResourceType.MEDIA_UPLOAD_INITIALIZE,
@@ -103,7 +136,7 @@ export class PostArgs {
 	 */
 	public constructor(resource: EResourceType, args: PostArgs) {
 		this.id = args.id;
-		this.tweet = args.tweet ? new TweetArgs(args.tweet) : undefined;
+		this.tweet = args.tweet ? new TweetArgs(resource, args.tweet) : undefined;
 		this.upload = args.upload ? new UploadArgs(resource, args.upload) : undefined;
 
 		// Validating this object
@@ -128,21 +161,28 @@ export class TweetArgs extends NewTweet {
 	 * @remarks
 	 * Maximum number of media items that can be posted is 4.
 	 */
-	@IsOptional()
-	@IsArray()
-	@ArrayMaxSize(4)
-	@IsObject({ each: true })
+	@IsOptional({ groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
+	@IsArray({ groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
+	@ArrayMaxSize(4, { groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
+	@IsObject({ each: true, groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
 	public media?: TweetMediaArgs[];
 
 	/** The id of the tweet to quote. */
-	@IsOptional()
-	@IsNumberString()
+	@IsOptional({ groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
+	@IsNumberString(undefined, { groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
 	public quote?: string;
 
 	/** The id of the tweet to which the given tweet must be a reply. */
-	@IsOptional()
-	@IsNumberString()
+	@IsOptional({ groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
+	@IsNumberString(undefined, { groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
 	public replyTo?: string;
+
+	/** The date/time at which the tweet must be scheduled to be posted. */
+	@IsEmpty({ groups: [EResourceType.TWEET_POST] })
+	@IsNotEmpty({ groups: [EResourceType.TWEET_SCHEDULE] })
+	@IsDate({ groups: [EResourceType.TWEET_SCHEDULE] })
+	@MinDate(() => new Date(), { groups: [EResourceType.TWEET_SCHEDULE] })
+	public scheduleFor?: Date;
 
 	/**
 	 * The text for the tweet to be created.
@@ -150,23 +190,24 @@ export class TweetArgs extends NewTweet {
 	 * @remarks
 	 * Length of the tweet must be \<= 280 characters.
 	 */
-	@IsNotEmpty()
-	@IsString()
-	@MaxLength(280)
+	@IsNotEmpty({ groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
+	@IsString({ groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
+	@MaxLength(280, { groups: [EResourceType.TWEET_POST, EResourceType.TWEET_SCHEDULE] })
 	public text: string;
 
 	/**
 	 * @param args - Arguments specifying the tweet to be posted.
 	 */
-	public constructor(args: TweetArgs) {
+	public constructor(resource: EResourceType, args: TweetArgs) {
 		super();
-		this.text = args.text;
-		this.quote = args.quote;
 		this.media = args.media ? args.media.map((item) => new TweetMediaArgs(item)) : undefined;
+		this.quote = args.quote;
 		this.replyTo = args.replyTo;
+		this.scheduleFor = args.scheduleFor;
+		this.text = args.text;
 
 		// Validating this object
-		const validationResult = validateSync(this);
+		const validationResult = validateSync(this, { groups: [resource] });
 
 		// If valiation error occured
 		if (validationResult.length) {
@@ -223,13 +264,13 @@ export class TweetMediaArgs extends NewTweetMedia {
  */
 export class UploadArgs {
 	/** The id allocated to the media file to be uploaded. */
-	@IsOptional()
+	@IsEmpty({ groups: [EResourceType.MEDIA_UPLOAD_INITIALIZE] })
 	@IsNotEmpty({ groups: [EResourceType.MEDIA_UPLOAD_APPEND, EResourceType.MEDIA_UPLOAD_FINALIZE] })
 	@IsNumberString(undefined, { groups: [EResourceType.MEDIA_UPLOAD_APPEND, EResourceType.MEDIA_UPLOAD_FINALIZE] })
 	public id?: string;
 
 	/** The media file to be uploaded. */
-	@IsOptional()
+	@IsEmpty({ groups: [EResourceType.MEDIA_UPLOAD_FINALIZE, EResourceType.MEDIA_UPLOAD_INITIALIZE] })
 	@IsNotEmpty({ groups: [EResourceType.MEDIA_UPLOAD_APPEND] })
 	public media?: string | ArrayBuffer;
 
@@ -238,7 +279,7 @@ export class UploadArgs {
 	 *
 	 * @remarks The size must be \<= 5242880 bytes.
 	 */
-	@IsOptional()
+	@IsEmpty({ groups: [EResourceType.MEDIA_UPLOAD_APPEND, EResourceType.MEDIA_UPLOAD_FINALIZE] })
 	@IsNotEmpty({ groups: [EResourceType.MEDIA_UPLOAD_INITIALIZE] })
 	@Max(5242880, { groups: [EResourceType.MEDIA_UPLOAD_INITIALIZE] })
 	public size?: number;
