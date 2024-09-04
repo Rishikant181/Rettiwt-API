@@ -3,7 +3,6 @@ import {
 	IExtendedMedia as IRawExtendedMedia,
 	ITweet as IRawTweet,
 	IEntities as IRawTweetEntities,
-	IResponse,
 	ITimelineTweet,
 	ITweet,
 } from 'rettiwt-core';
@@ -102,7 +101,7 @@ export class Tweet {
 	 *
 	 * @internal
 	 */
-	public static list(response: IResponse<unknown>): Tweet[] {
+	public static list(response: NonNullable<unknown>): Tweet[] {
 		const tweets: Tweet[] = [];
 
 		// Extracting the matching data
@@ -137,7 +136,7 @@ export class Tweet {
 	 *
 	 * @internal
 	 */
-	public static single(response: IResponse<unknown>, id: string): Tweet | undefined {
+	public static single(response: NonNullable<unknown>, id: string): Tweet | undefined {
 		const tweets: Tweet[] = [];
 
 		// Extracting the matching data

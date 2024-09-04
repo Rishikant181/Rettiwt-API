@@ -7,6 +7,7 @@ import {
 	IUserHighlightsResponse,
 	IUserLikesResponse,
 	IUserMediaResponse,
+	IUserNotifications as IUserNotificationsResponse,
 	IUserRecommendedResponse,
 	IUserSubscriptionsResponse,
 	IUserTweetsAndRepliesResponse,
@@ -17,6 +18,7 @@ import {
 import { extractors } from '../../collections/Extractors';
 import { EResourceType } from '../../enums/Resource';
 import { CursoredData } from '../../models/data/CursoredData';
+import { Notification } from '../../models/data/Notification';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
 import { IRettiwtConfig } from '../../types/RettiwtConfig';
@@ -350,7 +352,7 @@ export class UserService extends FetcherService {
 	}
 
 	/**
-	 * Get the media timeline of a user
+	 * Get the media timeline of a user.
 	 *
 	 * @param id - The id of the target user.
 	 * @param count - The number of media to fetch, must be \<= 100.
@@ -387,6 +389,49 @@ export class UserService extends FetcherService {
 
 		// Deserializing response
 		const data = extractors[resource](response);
+
+		return data;
+	}
+
+	/**
+	 * Get the list of notifications of the logged in user.
+	 *
+	 * @param count - The number of notifications to fetch, must be \<= 40.
+	 * @param cursor - The cursor to the batch of notifications to fetch
+	 *
+	 * @returns The list of notifications of the target user.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the recent 40 Notifications of the logged in user
+	 * rettiwt.user.notifications(40)
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async notifications(count?: number, cursor?: string): Promise<CursoredData<Notification>> {
+		const resource = EResourceType.USER_NOTIFICATIONS;
+
+		// Fetching raw list of notifications
+		const response = await this.request<IUserNotificationsResponse>(resource, {
+			count: count,
+			cursor: cursor,
+		});
+
+		// Deserializing response
+		const data = extractors[resource](response);
+
+		// Sorting the notifications by time, from recent to oldest
+		data.list.sort((a, b) => new Date(b.receivedAt).valueOf() - new Date(a.receivedAt).valueOf());
 
 		return data;
 	}

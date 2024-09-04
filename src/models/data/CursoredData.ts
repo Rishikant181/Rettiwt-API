@@ -1,9 +1,10 @@
-import { ICursor, IResponse } from 'rettiwt-core';
+import { ICursor } from 'rettiwt-core';
 
 import { EBaseType } from '../../enums/Data';
 
 import { findByFilter } from '../../helper/JsonUtils';
 
+import { Notification } from './Notification';
 import { Tweet } from './Tweet';
 import { User } from './User';
 
@@ -14,7 +15,7 @@ import { User } from './User';
  *
  * @public
  */
-export class CursoredData<T extends Tweet | User> {
+export class CursoredData<T extends Notification | Tweet | User> {
 	/** The batch of data of the given type. */
 	public list: T[] = [];
 
@@ -25,11 +26,13 @@ export class CursoredData<T extends Tweet | User> {
 	 * @param response - The raw response.
 	 * @param type - The base type of the data included in the batch.
 	 */
-	public constructor(response: IResponse<unknown>, type: EBaseType) {
+	public constructor(response: NonNullable<unknown>, type: EBaseType) {
 		if (type == EBaseType.TWEET) {
 			this.list = Tweet.list(response) as T[];
-		} else {
+		} else if (type == EBaseType.USER) {
 			this.list = User.list(response) as T[];
+		} else if (type == EBaseType.NOTIFICATION) {
+			this.list = Notification.list(response) as T[];
 		}
 
 		this.next = new Cursor(findByFilter<ICursor>(response, 'cursorType', 'Bottom')[0]?.value ?? '');

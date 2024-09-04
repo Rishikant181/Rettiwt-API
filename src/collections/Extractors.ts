@@ -21,6 +21,7 @@ import {
 	IUserHighlightsResponse,
 	IUserLikesResponse,
 	IUserMediaResponse,
+	IUserNotifications as IUserNotificationsResponse,
 	IUserRecommendedResponse,
 	IUserSubscriptionsResponse,
 	IUserTweetsAndRepliesResponse,
@@ -30,6 +31,7 @@ import {
 
 import { EBaseType } from '../enums/Data';
 import { CursoredData } from '../models/data/CursoredData';
+import { Notification } from '../models/data/Notification';
 import { Tweet } from '../models/data/Tweet';
 import { User } from '../models/data/User';
 
@@ -82,6 +84,8 @@ export const extractors = {
 		new CursoredData<Tweet>(response, EBaseType.TWEET),
 	USER_MEDIA: (response: IUserMediaResponse): CursoredData<Tweet> =>
 		new CursoredData<Tweet>(response, EBaseType.TWEET),
+	USER_NOTIFICATIONS: (response: IUserNotificationsResponse): CursoredData<Notification> =>
+		new CursoredData<Notification>(response, EBaseType.NOTIFICATION),
 	USER_SUBSCRIPTIONS: (response: IUserSubscriptionsResponse): CursoredData<User> =>
 		new CursoredData<User>(response, EBaseType.USER),
 	USER_TIMELINE: (response: IUserTweetsResponse): CursoredData<Tweet> =>
