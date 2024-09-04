@@ -1,6 +1,23 @@
-import { ENotificationType, INotification, IUserNotifications as IUserNotificationsResponse } from 'rettiwt-core';
+import {
+	ENotificationType as ENotificationTypeOriginal,
+	INotification,
+	IUserNotifications as IUserNotificationsResponse,
+} from 'rettiwt-core';
 
 import { findKeyByValue } from '../../helper/JsonUtils';
+
+/**
+ * The different types of notifications.
+ *
+ * @public
+ */
+export enum ENotificationType {
+	RECOMMENDATION = 'RECOMMENDATION',
+	INFORMATION = 'INFORMATION',
+	LIVE = 'LIVE',
+	ALERT = 'ALERT',
+	UNDEFINED = 'UNDEFINED',
+}
 
 /**
  * The details of a single notification.
@@ -30,8 +47,8 @@ export class Notification {
 	 * @param notification - The raw notification details.
 	 */
 	public constructor(notification: INotification) {
-		// Getting the notification type
-		const notificationType: string | undefined = findKeyByValue(ENotificationType, notification.icon.id);
+		// Getting the original notification type
+		const notificationType: string | undefined = findKeyByValue(ENotificationTypeOriginal, notification.icon.id);
 
 		this.from = notification.template?.aggregateUserActionsV1?.fromUsers
 			? notification.template.aggregateUserActionsV1.fromUsers.map((item) => item.user.id)
@@ -44,7 +61,7 @@ export class Notification {
 			: [];
 		this.type = notificationType
 			? ENotificationType[notificationType as keyof typeof ENotificationType]
-			: undefined;
+			: ENotificationType.UNDEFINED;
 	}
 
 	/**
