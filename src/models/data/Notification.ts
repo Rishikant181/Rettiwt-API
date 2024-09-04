@@ -38,7 +38,7 @@ export class Notification {
 			: [];
 		this.id = notification.id;
 		this.message = notification.message.text;
-		this.receivedAt = new Date(notification.timestampMs);
+		this.receivedAt = new Date(Number(notification.timestampMs));
 		this.target = notification.template?.aggregateUserActionsV1?.targetObjects
 			? notification.template.aggregateUserActionsV1.targetObjects.map((item) => item.tweet.id)
 			: [];
