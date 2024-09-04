@@ -60,6 +60,7 @@ export class FetchArgs {
 			EResourceType.USER_HIGHLIGHTS,
 			EResourceType.USER_LIKES,
 			EResourceType.USER_MEDIA,
+			EResourceType.USER_NOTIFICATIONS,
 			EResourceType.USER_SUBSCRIPTIONS,
 			EResourceType.USER_TIMELINE,
 			EResourceType.USER_TIMELINE_AND_REPLIES,
@@ -75,6 +76,7 @@ export class FetchArgs {
 			EResourceType.USER_HIGHLIGHTS,
 			EResourceType.USER_LIKES,
 			EResourceType.USER_MEDIA,
+			EResourceType.USER_NOTIFICATIONS,
 			EResourceType.USER_SUBSCRIPTIONS,
 			EResourceType.USER_TIMELINE,
 			EResourceType.USER_TIMELINE_AND_REPLIES,
@@ -89,6 +91,7 @@ export class FetchArgs {
 			EResourceType.USER_HIGHLIGHTS,
 			EResourceType.USER_LIKES,
 			EResourceType.USER_MEDIA,
+			EResourceType.USER_NOTIFICATIONS,
 			EResourceType.USER_SUBSCRIPTIONS,
 		],
 	})
@@ -124,6 +127,7 @@ export class FetchArgs {
 			EResourceType.USER_HIGHLIGHTS,
 			EResourceType.USER_LIKES,
 			EResourceType.USER_MEDIA,
+			EResourceType.USER_NOTIFICATIONS,
 			EResourceType.USER_SUBSCRIPTIONS,
 			EResourceType.USER_TIMELINE,
 			EResourceType.USER_TIMELINE_AND_REPLIES,
@@ -141,6 +145,7 @@ export class FetchArgs {
 			EResourceType.USER_HIGHLIGHTS,
 			EResourceType.USER_LIKES,
 			EResourceType.USER_MEDIA,
+			EResourceType.USER_NOTIFICATIONS,
 			EResourceType.USER_SUBSCRIPTIONS,
 			EResourceType.USER_TIMELINE,
 			EResourceType.USER_TIMELINE_AND_REPLIES,
@@ -169,6 +174,7 @@ export class FetchArgs {
 			EResourceType.USER_HIGHLIGHTS,
 			EResourceType.USER_LIKES,
 			EResourceType.USER_MEDIA,
+			EResourceType.USER_NOTIFICATIONS,
 			EResourceType.USER_SUBSCRIPTIONS,
 			EResourceType.USER_TIMELINE,
 			EResourceType.USER_TIMELINE_AND_REPLIES,
@@ -186,7 +192,11 @@ export class FetchArgs {
 	 * - For {@link EResourceType.USER_DETAILS_BY_USERNAME}, can be alphanumeric, while for others, is strictly numeric.
 	 */
 	@IsEmpty({
-		groups: [EResourceType.USER_FEED_FOLLOWED, EResourceType.USER_FEED_RECOMMENDED],
+		groups: [
+			EResourceType.USER_FEED_FOLLOWED,
+			EResourceType.USER_FEED_RECOMMENDED,
+			EResourceType.USER_NOTIFICATIONS,
+		],
 	})
 	@IsNotEmpty({
 		groups: [

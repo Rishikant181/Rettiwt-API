@@ -48,6 +48,7 @@ export const requests: { [key in keyof typeof EResourceType]: (args: FetchArgs |
 	USER_HIGHLIGHTS: (args: FetchArgs) => request.user.highlights(args.id!, args.count, args.cursor),
 	USER_LIKES: (args: FetchArgs) => request.user.likes(args.id!, args.count, args.cursor),
 	USER_MEDIA: (args: FetchArgs) => request.user.media(args.id!, args.count, args.cursor),
+	USER_NOTIFICATIONS: (args: FetchArgs) => request.user.notifications(args.count, args.cursor),
 	USER_SUBSCRIPTIONS: (args: FetchArgs) => request.user.subscriptions(args.id!, args.count, args.cursor),
 	USER_TIMELINE: (args: FetchArgs) => request.user.tweets(args.id!, args.count, args.cursor),
 	USER_TIMELINE_AND_REPLIES: (args: FetchArgs) => request.user.tweetsAndReplies(args.id!, args.count, args.cursor),
