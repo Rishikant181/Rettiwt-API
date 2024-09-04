@@ -430,6 +430,9 @@ export class UserService extends FetcherService {
 		// Deserializing response
 		const data = extractors[resource](response);
 
+		// Sorting the notifications by time, from recent to oldest
+		data.list.sort((a, b) => new Date(b.receivedAt).valueOf() - new Date(a.receivedAt).valueOf());
+
 		return data;
 	}
 
