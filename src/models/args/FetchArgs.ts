@@ -91,9 +91,11 @@ export class FetchArgs {
 			EResourceType.USER_HIGHLIGHTS,
 			EResourceType.USER_LIKES,
 			EResourceType.USER_MEDIA,
-			EResourceType.USER_NOTIFICATIONS,
 			EResourceType.USER_SUBSCRIPTIONS,
 		],
+	})
+	@Max(40, {
+		groups: [EResourceType.USER_NOTIFICATIONS],
 	})
 	@Max(20, {
 		groups: [EResourceType.TWEET_SEARCH, EResourceType.USER_TIMELINE, EResourceType.USER_TIMELINE_AND_REPLIES],
