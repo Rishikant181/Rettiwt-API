@@ -52,15 +52,19 @@ export class Notification {
 	 *
 	 * @param response - The raw response data.
 	 *
-	 * @returns
+	 * @returns The deserialized list of notifications.
+	 *
+	 * @internal
 	 */
-	public static list(response: IUserNotificationsResponse): Notification[] {
+	public static list(response: NonNullable<unknown>): Notification[] {
 		const notifications: Notification[] = [];
 
 		// Extracting notifications
-		if (response.globalObjects.notifications) {
+		if ((response as IUserNotificationsResponse).globalObjects.notifications) {
 			// Iterating over the raw list of notifications
-			for (const [, value] of Object.entries(response.globalObjects.notifications)) {
+			for (const [, value] of Object.entries(
+				(response as IUserNotificationsResponse).globalObjects.notifications,
+			)) {
 				notifications.push(new Notification(value as INotification));
 			}
 		}
