@@ -20,7 +20,7 @@ export class CursoredData<T extends Notification | Tweet | User> {
 	public list: T[] = [];
 
 	/** The cursor to the next batch of data. */
-	public next: Cursor;
+	public next: Cursor = new Cursor('');
 
 	/**
 	 * @param response - The raw response.
@@ -29,13 +29,14 @@ export class CursoredData<T extends Notification | Tweet | User> {
 	public constructor(response: NonNullable<unknown>, type: EBaseType) {
 		if (type == EBaseType.TWEET) {
 			this.list = Tweet.list(response) as T[];
+			this.next = new Cursor(findByFilter<ICursor>(response, 'cursorType', 'Bottom')[0]?.value ?? '');
 		} else if (type == EBaseType.USER) {
 			this.list = User.list(response) as T[];
+			this.next = new Cursor(findByFilter<ICursor>(response, 'cursorType', 'Bottom')[0]?.value ?? '');
 		} else if (type == EBaseType.NOTIFICATION) {
 			this.list = Notification.list(response) as T[];
+			this.next = new Cursor(findByFilter<ICursor>(response, 'cursorType', 'Top')[0]?.value ?? '');
 		}
-
-		this.next = new Cursor(findByFilter<ICursor>(response, 'cursorType', 'Bottom')[0]?.value ?? '');
 	}
 }
 

@@ -126,20 +126,6 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
-	// Notifications
-	user.command('notifications')
-		.description('Fetch you list of notifications')
-		.argument('[count]', 'The number of notifications to fetch')
-		.argument('[cursor]', 'The cursor to the batch of notifications to fetch')
-		.action(async (count?: string, cursor?: string) => {
-			try {
-				const notifications = await rettiwt.user.notifications(count ? parseInt(count) : undefined, cursor);
-				output(notifications);
-			} catch (error) {
-				output(error);
-			}
-		});
-
 	// Recommended
 	user.command('recommended')
 		.description('Fetch your recommended feed')
