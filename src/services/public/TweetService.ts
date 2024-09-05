@@ -454,9 +454,10 @@ export class TweetService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Streaming all upcoming tweets from user 'user1'
-	 * (async () => {
+	 * // Creating a function that streams all new tweets from the user 'user1'
+	 * async function streamTweets() {
 	 * 	try {
+	 * 		// Awaiting for the tweets returned by the AsyncGenerator returned by the method
 	 * 		for await (const tweet of rettiwt.tweet.stream({ fromUsers: ['user1'] }, 1000)) {
 	 * 			console.log(tweet.fullText);
 	 * 		}
@@ -464,7 +465,10 @@ export class TweetService extends FetcherService {
 	 * 	catch (err) {
 	 * 		console.log(err);
 	 * 	}
-	 * })();
+	 * }
+	 *
+	 * // Calling the function
+	 * streamTweets();
 	 * ```
 	 */
 	public async *stream(filter: TweetFilter, pollingInterval: number = 60000): AsyncGenerator<Tweet> {
