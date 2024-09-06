@@ -13,6 +13,7 @@ export * from './models/args/PostArgs';
 // DATA MODELS
 export * from './models/data/CursoredData';
 export * from './models/data/List';
+export * from './models/data/Notification';
 export * from './models/data/Tweet';
 export * from './models/data/User';
 
