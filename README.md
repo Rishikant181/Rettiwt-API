@@ -51,6 +51,7 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     -   User Highlights
     -   User Likes
     -   User Media
+    -   User Notification
     -   User Recommended Feed
     -   User Replies Timeline
     -   User Subscriptions
@@ -381,6 +382,7 @@ So far, the following operations are supported:
 -   [Getting the list of highlighted tweets of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#highlights)
 -   [Getting the list of tweets liked by the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#likes)
 -   [Getting the media timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#media)
+-   [Streaming notifications of the logged-in user in pseudo-realtime](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#notifications)
 -   [Getting the recommended feed of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#recommended)
 -   [Getting the replies timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#replies)
 -   [Getting the list of subscriptions of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#subscriptions)

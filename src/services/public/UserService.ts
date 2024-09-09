@@ -7,6 +7,7 @@ import {
 	IUserHighlightsResponse,
 	IUserLikesResponse,
 	IUserMediaResponse,
+	IUserNotifications as IUserNotificationsResponse,
 	IUserRecommendedResponse,
 	IUserSubscriptionsResponse,
 	IUserTweetsAndRepliesResponse,
@@ -17,6 +18,7 @@ import {
 import { extractors } from '../../collections/Extractors';
 import { EResourceType } from '../../enums/Resource';
 import { CursoredData } from '../../models/data/CursoredData';
+import { Notification } from '../../models/data/Notification';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
 import { IRettiwtConfig } from '../../types/RettiwtConfig';
@@ -350,7 +352,7 @@ export class UserService extends FetcherService {
 	}
 
 	/**
-	 * Get the media timeline of a user
+	 * Get the media timeline of a user.
 	 *
 	 * @param id - The id of the target user.
 	 * @param count - The number of media to fetch, must be \<= 100.
@@ -389,6 +391,78 @@ export class UserService extends FetcherService {
 		const data = extractors[resource](response);
 
 		return data;
+	}
+
+	/**
+	 * Stream notifications of the logged in user in pseudo real-time.
+	 *
+	 * @param pollingInterval - The interval in milliseconds to poll for new tweets. Default interval is 60000 ms.
+	 *
+	 * @returns An async generator that yields new notifications as they are received.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Creating a function that streams all new notifications
+	 * async function streamNotifications() {
+	 * 	try {
+	 * 		// Awaiting for the notifications returned by the AsyncGenerator returned by the method
+	 * 		for await (const notification of rettiwt.user.notifications(1000)) {
+	 * 			console.log(notification.message);
+	 * 		}
+	 * 	}
+	 * 	catch (err) {
+	 * 		console.log(err);
+	 * 	}
+	 * }
+	 *
+	 * // Calling the function
+	 * streamNotifications();
+	 * ```
+	 */
+	public async *notifications(pollingInterval: number = 60000): AsyncGenerator<Notification> {
+		const resource = EResourceType.USER_NOTIFICATIONS;
+
+		/** Whether it's the first batch of notifications or not. */
+		let first: boolean = true;
+
+		/** The cursor to the last notification received. */
+		let cursor: string | undefined = undefined;
+
+		while (true) {
+			// Pause execution for the specified polling interval before proceeding to the next iteration
+			await new Promise((resolve) => setTimeout(resolve, pollingInterval));
+
+			// Get the batch of notifications after the given cursor
+			const response = await this.request<IUserNotificationsResponse>(resource, {
+				count: 40,
+				cursor: cursor,
+			});
+
+			// Deserializing response
+			const notifications = extractors[resource](response);
+
+			// Sorting the notifications by time, from oldest to recent
+			notifications.list.sort((a, b) => new Date(a.receivedAt).valueOf() - new Date(b.receivedAt).valueOf());
+
+			// If not first batch, return new notifications
+			if (!first) {
+				// Yield the notifications
+				for (const notification of notifications.list) {
+					yield notification;
+				}
+			}
+			// Else do nothing, do nothing since first batch is notifications that have already been received
+			else {
+				first = false;
+			}
+
+			cursor = notifications.next.value;
+		}
 	}
 
 	/**

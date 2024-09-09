@@ -27,7 +27,7 @@ export function findByFilter<T>(data: NonNullable<unknown>, key: string, value: 
 		res = res.concat(...data.map((item) => findByFilter<T>(item as NonNullable<unknown>, key, value)));
 	}
 	// If the data is an object
-	else if (typeof data == 'object') {
+	else if (data != null && typeof data == 'object') {
 		/**
 		 * If the object includes the key and the value specified by the key matches the filter, add it to the result.
 		 */

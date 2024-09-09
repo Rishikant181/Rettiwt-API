@@ -1,0 +1,29 @@
+name: Publish Alpha
+run-name: Publishing the alpha package to NPM
+
+on:
+    release:
+        types: [prereleased]
+
+jobs:
+    # Packages and publishes the package to NPM
+    publish-npm:
+        runs-on: ubuntu-latest
+        steps:
+            # Setting up Node
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: '20.x'
+                  registry-url: https://registry.npmjs.org/
+
+            # Enabling CorePack
+            - run: corepack enable
+
+            # Installing dependencies
+            - run: yarn
+
+            # Publishing to NPM
+            - run: npm publish --tag alpha
+              env:
+                  NODE_AUTH_TOKEN: ${{secrets.npm_token}}

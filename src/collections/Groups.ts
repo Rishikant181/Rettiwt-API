@@ -31,6 +31,7 @@ export const fetchResources = [
 	EResourceType.USER_HIGHLIGHTS,
 	EResourceType.USER_LIKES,
 	EResourceType.USER_MEDIA,
+	EResourceType.USER_NOTIFICATIONS,
 	EResourceType.USER_SUBSCRIPTIONS,
 	EResourceType.USER_TIMELINE,
 	EResourceType.USER_TIMELINE_AND_REPLIES,

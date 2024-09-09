@@ -1,4 +1,4 @@
-import { IUser as IRawUser, IResponse, ITimelineUser, IUser } from 'rettiwt-core';
+import { IUser as IRawUser, ITimelineUser, IUser } from 'rettiwt-core';
 
 import { ELogActions } from '../../enums/Logging';
 import { findByFilter } from '../../helper/JsonUtils';
@@ -81,7 +81,7 @@ export class User {
 	 *
 	 * @internal
 	 */
-	public static list(response: IResponse<unknown>): User[] {
+	public static list(response: NonNullable<unknown>): User[] {
 		const users: User[] = [];
 
 		// Extracting the matching data
@@ -115,7 +115,7 @@ export class User {
 	 *
 	 * @internal
 	 */
-	public static single(response: IResponse<unknown>): User | undefined {
+	public static single(response: NonNullable<unknown>): User | undefined {
 		const users: User[] = [];
 
 		// Extracting the matching data
