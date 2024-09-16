@@ -109,9 +109,16 @@ export class PostArgs {
 	 */
 	@IsEmpty({
 		groups: [
-			EResourceType.MEDIA_UPLOAD_APPEND,
-			EResourceType.MEDIA_UPLOAD_FINALIZE,
-			EResourceType.MEDIA_UPLOAD_INITIALIZE,
+			EResourceType.TWEET_LIKE,
+			EResourceType.TWEET_POST,
+			EResourceType.TWEET_RETWEET,
+			EResourceType.TWEET_SCHEDULE,
+			EResourceType.TWEET_UNLIKE,
+			EResourceType.TWEET_UNPOST,
+			EResourceType.TWEET_UNRETWEET,
+			EResourceType.TWEET_UNSCHEDULE,
+			EResourceType.USER_FOLLOW,
+			EResourceType.USER_UNFOLLOW,
 		],
 	})
 	@IsNotEmpty({
