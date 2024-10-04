@@ -159,6 +159,7 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 			'Matches the tweets that do not contain any of the give comma-separated list of words',
 		)
 		.option('-h, --hashtags <string>', 'Matches the tweets containing the given comma-separated list of hashtags')
+		.option('--list <string>', 'Matches the tweets from the list with the given id')
 		.option(
 			'-m, --mentions <string>',
 			'Matches the tweets that mention the given comma-separated list of usernames',
@@ -284,6 +285,7 @@ class TweetSearchOptions {
 	public from?: string;
 	public hashtags?: string;
 	public interval?: number;
+	public list?: string;
 	public mentions?: string;
 	public minLikes?: number;
 	public minReplies?: number;
@@ -309,6 +311,7 @@ class TweetSearchOptions {
 		this.optionalWords = options?.optionalWords;
 		this.excludeWords = options?.excludeWords;
 		this.hashtags = options?.hashtags;
+		this.list = options?.list;
 		this.mentions = options?.mentions;
 		this.minReplies = options?.minReplies;
 		this.minLikes = options?.minLikes;
@@ -336,6 +339,7 @@ class TweetSearchOptions {
 			optionalWords: this.optionalWords ? this.optionalWords.split(',') : undefined,
 			excludeWords: this.excludeWords ? this.excludeWords.split(',') : undefined,
 			hashtags: this.hashtags ? this.hashtags.split(',') : undefined,
+			list: this.list,
 			mentions: this.mentions ? this.mentions.split(',') : undefined,
 			minReplies: this.minReplies,
 			minLikes: this.minLikes,
