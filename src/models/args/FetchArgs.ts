@@ -339,6 +339,11 @@ export class TweetFilter extends TweetFilterCore {
 	@IsBoolean()
 	public links?: boolean;
 
+	/** The list from which tweets are to be searched. */
+	@IsOptional()
+	@IsNumberString()
+	public list?: string;
+
 	/** The id of the tweet, before which the tweets are to be searched. */
 	@IsOptional()
 	@IsNumberString()
