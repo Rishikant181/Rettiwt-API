@@ -1,5 +1,5 @@
 import { Command, createCommand } from 'commander';
-import { TweetFilter } from 'rettiwt-core';
+import { ESearchResultType, TweetFilter } from 'rettiwt-core';
 
 import { output } from '../helper/CliUtils';
 import { Rettiwt } from '../Rettiwt';
@@ -172,6 +172,7 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		.option('--exclude-replies', 'Matches the tweets that are not replies')
 		.option('-s, --start <string>', 'Matches the tweets made since the given date (valid date/time string)')
 		.option('-e, --end <string>', 'Matches the tweets made upto the given date (valid date/time string)')
+		.option('--top', 'Matches top tweets instead of latest')
 		.option('--stream', 'Stream the filtered tweets in pseudo-realtime')
 		.option('-i, --interval <number>', 'The polling interval (in ms) to use for streaming. Default is 60000')
 		.action(async (count?: string, cursor?: string, options?: TweetSearchOptions) => {
@@ -191,6 +192,7 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 						new TweetSearchOptions(options).toTweetFilter(),
 						count ? parseInt(count) : undefined,
 						cursor,
+						options?.top ? ESearchResultType.TOP : ESearchResultType.LATEST,
 					);
 					output(tweets);
 				}
@@ -296,6 +298,7 @@ class TweetSearchOptions {
 	public start?: string;
 	public stream?: boolean;
 	public to?: string;
+	public top?: boolean;
 	public words?: string;
 
 	/**
@@ -323,6 +326,7 @@ class TweetSearchOptions {
 		this.end = options?.end;
 		this.stream = options?.stream;
 		this.interval = options?.interval;
+		this.top = options?.top;
 	}
 
 	/**

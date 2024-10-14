@@ -14,7 +14,7 @@ import {
 	validateSync,
 } from 'class-validator';
 
-import { TweetFilter as TweetFilterCore } from 'rettiwt-core';
+import { ESearchResultType, TweetFilter as TweetFilterCore } from 'rettiwt-core';
 
 import { EResourceType } from '../../enums/Resource';
 import { DataValidationError } from '../errors/DataValidationError';
@@ -256,6 +256,40 @@ export class FetchArgs {
 	public id?: string;
 
 	/**
+	 * The type of search results to fetch. Can be one of:
+	 * - {@link EResourceType.LATEST}, for latest search results.
+	 * - {@link EResourceType.TOP}, for top search results.
+	 *
+	 * @defaultValue {@link ESearchResultType.LATEST}.
+	 *
+	 * @remarks
+	 * - Applicable only for {@link EResourceType.TWEET_SEARCH}.
+	 */
+	@IsEmpty({
+		groups: [
+			EResourceType.LIST_TWEETS,
+			EResourceType.TWEET_DETAILS,
+			EResourceType.TWEET_DETAILS_ALT,
+			EResourceType.TWEET_RETWEETERS,
+			EResourceType.USER_DETAILS_BY_USERNAME,
+			EResourceType.USER_DETAILS_BY_ID,
+			EResourceType.USER_FEED_FOLLOWED,
+			EResourceType.USER_FEED_RECOMMENDED,
+			EResourceType.USER_FOLLOWING,
+			EResourceType.USER_FOLLOWERS,
+			EResourceType.USER_HIGHLIGHTS,
+			EResourceType.USER_LIKES,
+			EResourceType.USER_MEDIA,
+			EResourceType.USER_NOTIFICATIONS,
+			EResourceType.USER_SUBSCRIPTIONS,
+			EResourceType.USER_TIMELINE,
+			EResourceType.USER_TIMELINE_AND_REPLIES,
+		],
+	})
+	@IsOptional({ groups: [EResourceType.TWEET_SEARCH] })
+	public results?: ESearchResultType;
+
+	/**
 	 * @param resource - The resource to be fetched.
 	 * @param args - Additional user-defined arguments for fetching the resource.
 	 */
@@ -264,6 +298,7 @@ export class FetchArgs {
 		this.count = args.count;
 		this.cursor = args.cursor;
 		this.filter = args.filter ? new TweetFilter(args.filter) : undefined;
+		this.results = args.results ?? ESearchResultType.LATEST;
 
 		// Validating this object
 		const validationResult = validateSync(this, { groups: [resource] });
