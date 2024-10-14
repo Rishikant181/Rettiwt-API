@@ -1,6 +1,7 @@
 import { statSync } from 'fs';
 
 import {
+	ESearchResultType,
 	IInitializeMediaUploadResponse,
 	IListTweetsResponse,
 	ITweetDetailsResponse,
@@ -398,6 +399,7 @@ export class TweetService extends FetcherService {
 	 * @param filter - The filter to be used for searching the tweets.
 	 * @param count - The number of tweets to fetch, must be \<= 20.
 	 * @param cursor - The cursor to the batch of tweets to fetch.
+	 * @param results - The type of search results to fetch. Default is {@link ESearchResultType.LATEST}.
 	 *
 	 * @returns The list of tweets that match the given filter.
 	 *
@@ -420,7 +422,12 @@ export class TweetService extends FetcherService {
 	 *
 	 * @remarks For details about available filters, refer to {@link TweetFilter}
 	 */
-	public async search(filter: TweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+	public async search(
+		filter: TweetFilter,
+		count?: number,
+		cursor?: string,
+		results?: ESearchResultType,
+	): Promise<CursoredData<Tweet>> {
 		const resource = EResourceType.TWEET_SEARCH;
 
 		// Fetching raw list of filtered tweets
@@ -428,6 +435,7 @@ export class TweetService extends FetcherService {
 			filter: filter,
 			count: count,
 			cursor: cursor,
+			results: results,
 		});
 
 		// Deserializing response
