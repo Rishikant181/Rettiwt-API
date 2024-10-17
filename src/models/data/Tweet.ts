@@ -109,16 +109,10 @@ export class Tweet {
 		}
 		// If normal tweet
 		else if (tweet.quoted_status_result && Object.entries(tweet.quoted_status_result).length) {
-			return new Tweet(tweet);
+			return new Tweet(tweet.quoted_status_result.result as ITweet);
 		}
 		// Else, skip
 		else {
-			// Logging
-			LogService.log(ELogActions.WARNING, {
-				action: ELogActions.DESERIALIZE,
-				message: 'Quoted tweet not found, skipping',
-			});
-
 			return undefined;
 		}
 	}
@@ -137,12 +131,6 @@ export class Tweet {
 		}
 		// Else, skip
 		else {
-			// Logging
-			LogService.log(ELogActions.WARNING, {
-				action: ELogActions.DESERIALIZE,
-				message: 'Retweeted tweet not found, skipping',
-			});
-
 			return undefined;
 		}
 	}
