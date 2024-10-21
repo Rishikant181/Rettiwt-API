@@ -19,6 +19,7 @@ module.exports = {
 	},
 	ignorePatterns: ['.eslintrc.js'],
 	rules: {
+		'@typescript-eslint/ban-ts-comment': 'off',
 		'@typescript-eslint/naming-convention': [
 			'warn',
 			{
@@ -38,6 +39,12 @@ module.exports = {
 			{
 				selector: ['variableLike', 'memberLike'],
 				format: ['camelCase'],
+			},
+			{
+				selector: ['variableLike', 'property'],
+				modifiers: ['private'],
+				format: ['camelCase'],
+				leadingUnderscore: 'require',
 			},
 			{
 				selector: ['variableLike', 'memberLike'],
@@ -77,10 +84,41 @@ module.exports = {
 						'public-readonly-field',
 						'public-field',
 
+
 						// CONSTRUCTORS
 						'private-constructor',
 						'protected-constructor',
 						'public-constructor',
+						
+
+						// GETTERS
+
+						// PRIVATE
+						'private-static-get',
+						'private-get',
+
+						// PROTECTED
+						'protected-static-get',
+						'protected-get',
+
+						// PUBLIC
+						'public-static-get',
+						'public-get',
+
+						// SETTERS
+
+						// PRIVATE
+						'private-static-set',
+						'private-set',
+
+						// PROTECTED
+						'protected-static-set',
+						'protected-set',
+
+						// PUBLIC
+						'public-static-set',
+						'public-set',
+
 
 						// METHODS
 

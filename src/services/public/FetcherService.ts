@@ -26,19 +26,19 @@ import { AuthService } from './AuthService';
  */
 export class FetcherService {
 	/** The api key to use for authenticating against Twitter API as user. */
-	private readonly apiKey?: string;
+	private readonly _apiKey?: string;
 
 	/** The service used to handle HTTP and API errors */
-	private readonly errorHandler: IErrorHandler;
+	private readonly _errorHandler: IErrorHandler;
 
 	/** The guest key to use for authenticating against Twitter API as guest. */
-	private readonly guestKey?: string;
+	private readonly _guestKey?: string;
 
 	/** The URL To the proxy server to use for all others. */
-	private readonly proxyUrl?: URL;
+	private readonly _proxyUrl?: URL;
 
 	/** The max wait time for a response. */
-	private readonly timeout: number;
+	private readonly _timeout: number;
 
 	/** The URL to the proxy server to use only for authentication. */
 	protected readonly authProxyUrl?: URL;
@@ -51,13 +51,13 @@ export class FetcherService {
 	 */
 	public constructor(config?: IRettiwtConfig) {
 		LogService.enabled = config?.logging ?? false;
-		this.apiKey = config?.apiKey;
-		this.guestKey = config?.guestKey;
+		this._apiKey = config?.apiKey;
+		this._guestKey = config?.guestKey;
 		this.userId = config?.apiKey ? AuthService.getUserId(config.apiKey) : undefined;
 		this.authProxyUrl = config?.authProxyUrl ?? config?.proxyUrl;
-		this.proxyUrl = config?.proxyUrl;
-		this.timeout = config?.timeout ?? 0;
-		this.errorHandler = config?.errorHandler ?? new ErrorService();
+		this._proxyUrl = config?.proxyUrl;
+		this._timeout = config?.timeout ?? 0;
+		this._errorHandler = config?.errorHandler ?? new ErrorService();
 	}
 
 	/**
@@ -83,16 +83,16 @@ export class FetcherService {
 	 * @returns The generated AuthCredential
 	 */
 	private async getCredential(): Promise<AuthCredential> {
-		if (this.apiKey) {
+		if (this._apiKey) {
 			// Logging
 			LogService.log(ELogActions.GET, { target: 'USER_CREDENTIAL' });
 
-			return new AuthCredential(AuthService.decodeCookie(this.apiKey).split(';'));
-		} else if (this.guestKey) {
+			return new AuthCredential(AuthService.decodeCookie(this._apiKey).split(';'));
+		} else if (this._guestKey) {
 			// Logging
 			LogService.log(ELogActions.GET, { target: 'GUEST_CREDENTIAL' });
 
-			return new AuthCredential(undefined, this.guestKey);
+			return new AuthCredential(undefined, this._guestKey);
 		} else {
 			// Logging
 			LogService.log(ELogActions.GET, { target: 'NEW_GUEST_CREDENTIAL' });
@@ -183,7 +183,7 @@ export class FetcherService {
 		args = this.validateArgs(resource, args)!;
 
 		// Getting HTTPS agent
-		const httpsAgent: Agent = this.getHttpsAgent(this.proxyUrl);
+		const httpsAgent: Agent = this.getHttpsAgent(this._proxyUrl);
 
 		// Getting credentials from key
 		const cred: AuthCredential = await this.getCredential();
@@ -195,7 +195,7 @@ export class FetcherService {
 		config.headers = { ...config.headers, ...cred.toHeader() };
 		config.httpAgent = httpsAgent;
 		config.httpsAgent = httpsAgent;
-		config.timeout = this.timeout;
+		config.timeout = this._timeout;
 
 		// Sending the request
 		try {
@@ -203,7 +203,7 @@ export class FetcherService {
 			return (await axios<T>(config)).data;
 		} catch (error) {
 			// If error, delegate handling to error handler
-			this.errorHandler.handle(error);
+			this._errorHandler.handle(error);
 			throw error;
 		}
 	}
