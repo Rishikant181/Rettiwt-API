@@ -298,7 +298,7 @@ export class FetchArgs {
 		this.count = args.count;
 		this.cursor = args.cursor;
 		this.filter = args.filter ? new TweetFilter(args.filter) : undefined;
-		this.results = args.results ?? ESearchResultType.LATEST;
+		this.results = args.results;
 
 		// Validating this object
 		const validationResult = validateSync(this, { groups: [resource] });

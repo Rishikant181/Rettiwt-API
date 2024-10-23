@@ -252,8 +252,8 @@ export class TweetEntities {
  * @public
  */
 export class TweetMedia {
-	/** media thumbnail url. */
-	public thumbUrl?: string;
+	/** The thumbnail URL for the video content of the tweet. */
+	public thumbnailUrl?: string;
 
 	/** The type of media. */
 	public type: EMediaType;
@@ -277,10 +277,10 @@ export class TweetMedia {
 		}
 		// If the media is a video
 		else {
+			this.thumbnailUrl = media.media_url_https;
+
 			/** The highest bitrate of all variants. */
 			let highestRate: number = 0;
-
-			this.thumbUrl = media.media_url_https;
 
 			/**
 			 * Selecting the URL of the video variant with the highest bitrate.
