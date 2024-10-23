@@ -155,7 +155,6 @@ export class Tweet {
 			if (item.tweet_results?.result?.legacy) {
 				// Logging
 				LogService.log(ELogActions.DESERIALIZE, { id: item.tweet_results.result.rest_id });
-
 				tweets.push(new Tweet(item.tweet_results.result));
 			} else {
 				// Logging
@@ -253,6 +252,9 @@ export class TweetEntities {
  * @public
  */
 export class TweetMedia {
+	/** media thumbnail url. */
+	public thumbUrl?: string;
+
 	/** The type of media. */
 	public type: EMediaType;
 
@@ -277,6 +279,8 @@ export class TweetMedia {
 		else {
 			/** The highest bitrate of all variants. */
 			let highestRate: number = 0;
+
+			this.thumbUrl = media.media_url_https;
 
 			/**
 			 * Selecting the URL of the video variant with the highest bitrate.
