@@ -9,6 +9,15 @@ interface TransactionIdParams {
 	timeNow?: number;
 }
 
+/**
+ * Generates a transaction ID based on
+ * https://github.com/iSarabjitDhiman/TweeterPy/blob/master/tweeterpy/tid/transaction.py
+ * @param method - HTTP Method
+ * @param path - HTTP Path
+ * @param key - key
+ * @param animationKey - animation key
+ * @param timeNow  - time to use
+ */
 export function generateTransactionId({ method, path, key, animationKey, timeNow }: TransactionIdParams): string {
 	try {
 		const DEFAULT_KEYWORD = "obfiowerehiring";
