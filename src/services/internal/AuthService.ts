@@ -1,9 +1,8 @@
-import { Agent } from 'https';
-
 import axios from 'axios';
 
 import { EApiErrors } from '../../enums/Api';
 import { AuthCredential } from '../../models/auth/AuthCredential';
+import { RettiwtConfig } from '../../models/RettiwtConfig';
 
 /**
  * The services that handles authentication.
@@ -11,14 +10,14 @@ import { AuthCredential } from '../../models/auth/AuthCredential';
  * @public
  */
 export class AuthService {
-	/** The HTTPS Agent to use for requests to Twitter API. */
-	private readonly _httpsAgent: Agent;
+	/** The config object. */
+	private readonly _config: RettiwtConfig;
 
 	/**
-	 * @param httpsAgent - The HTTPS agent to use. If none is provided, default is used.
+	 * @param config - The config for Rettiwt.
 	 */
-	public constructor(httpsAgent?: Agent) {
-		this._httpsAgent = httpsAgent ?? new Agent();
+	public constructor(config: RettiwtConfig) {
+		this._config = config;
 	}
 
 	/**
@@ -107,7 +106,7 @@ export class AuthService {
 				/* eslint-enable @typescript-eslint/naming-convention */
 			}>('https://api.twitter.com/1.1/guest/activate.json', undefined, {
 				headers: cred.toHeader(),
-				httpsAgent: this._httpsAgent,
+				httpsAgent: this._config.httpsAgent,
 			})
 			.then((res) => {
 				cred.guestToken = res.data.guest_token;

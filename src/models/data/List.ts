@@ -7,6 +7,9 @@ import { IList as IRawList } from '../../types/raw/base/List';
  * @public
  */
 export class List implements IList {
+	/** The raw list details. */
+	private readonly _raw: IRawList;
+
 	public createdAt: string;
 	public createdBy: string;
 	public description?: string;
@@ -19,6 +22,7 @@ export class List implements IList {
 	 * @param list - The raw list details.
 	 */
 	public constructor(list: IRawList) {
+		this._raw = { ...list };
 		this.id = list.id_str;
 		this.name = list.name;
 		this.createdAt = new Date(list.created_at).toISOString();
@@ -26,6 +30,11 @@ export class List implements IList {
 		this.memberCount = list.member_count;
 		this.subscriberCount = list.subscriber_count;
 		this.createdBy = list.user_results.result.id;
+	}
+
+	/** Get the raw list details. */
+	public get raw(): IRawList {
+		return { ...this._raw };
 	}
 
 	/**

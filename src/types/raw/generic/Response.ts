@@ -1,5 +1,3 @@
-import { IError } from './Error';
-
 /**
  * The generic raw data received.
  *
@@ -9,5 +7,4 @@ import { IError } from './Error';
  */
 export interface IResponse<DataType> {
 	data: DataType;
-	errors?: IError[];
 }

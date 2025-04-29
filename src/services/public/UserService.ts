@@ -5,8 +5,10 @@ import { Notification } from '../../models/data/Notification';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
 import { RettiwtConfig } from '../../models/RettiwtConfig';
+import { IUserAffiliatesResponse } from '../../types/raw/user/Affiliates';
 import { IUserBookmarksResponse } from '../../types/raw/user/Bookmarks';
 import { IUserDetailsResponse } from '../../types/raw/user/Details';
+import { IUserDetailsBulkResponse } from '../../types/raw/user/DetailsBulk';
 import { IUserFollowResponse } from '../../types/raw/user/Follow';
 import { IUserFollowedResponse } from '../../types/raw/user/Followed';
 import { IUserFollowersResponse } from '../../types/raw/user/Followers';
@@ -36,6 +38,48 @@ export class UserService extends FetcherService {
 	 */
 	public constructor(config: RettiwtConfig) {
 		super(config);
+	}
+
+	/**
+	 * Get the list affiliates of a user.
+	 *
+	 * @param id - The id of the target user.
+	 * @param count - The number of affiliates to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of affiliates to fetch.
+	 *
+	 * @returns The list of users affiliated to the target user.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the first 100 affiliates of the User with id '1234567890'
+	 * rettiwt.user.affiliates('1234567890')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async affiliates(id?: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+		const resource = EResourceType.USER_AFFILIATES;
+
+		// Fetching raw list of affiliates
+		const response = await this.request<IUserAffiliatesResponse>(resource, {
+			id: id,
+			count: count,
+			cursor: cursor,
+		});
+
+		// Deserializing response
+		const data = extractors[resource](response);
+
+		return data;
 	}
 
 	/**
@@ -81,7 +125,7 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the details of a user.
 	 *
-	 * @param id - The username/id(s) of the target user/users.
+	 * @param id - The username/id(s) of the target user/users. If no ID is provided, uses ID of authenticated user.
 	 *
 	 * @returns
 	 * The details of the given user.
@@ -123,7 +167,9 @@ export class UserService extends FetcherService {
 	 * });
 	 * ```
 	 */
-	public async details<T extends string | string[]>(id: T): Promise<T extends string ? User | undefined : User[]> {
+	public async details<T extends string | string[] | undefined>(
+		id: T,
+	): Promise<T extends string | undefined ? User | undefined : User[]> {
 		let resource: EResourceType;
 
 		// If details of multiple users required
@@ -131,31 +177,36 @@ export class UserService extends FetcherService {
 			resource = EResourceType.USER_DETAILS_BY_IDS_BULK;
 
 			// Fetching raw details
-			const response = await this.request<IUserDetailsResponse>(resource, { ids: id });
+			const response = await this.request<IUserDetailsBulkResponse>(resource, { ids: id });
 
 			// Deserializing response
 			const data = extractors[resource](response, id);
 
-			return data as T extends string ? User | undefined : User[];
+			return data as T extends string | undefined ? User | undefined : User[];
 		}
 		// If details of single user required
 		else {
 			// If username is given
-			if (isNaN(Number(id))) {
+			if (id && isNaN(Number(id))) {
 				resource = EResourceType.USER_DETAILS_BY_USERNAME;
 			}
-			// If id is given
+			// If id is given (or not, for self details)
 			else {
 				resource = EResourceType.USER_DETAILS_BY_ID;
 			}
 
+			// If no ID is given, and not authenticated, skip
+			if (!id && !this.config.userId) {
+				return undefined as T extends string | undefined ? User | undefined : User[];
+			}
+
 			// Fetching raw details
-			const response = await this.request<IUserDetailsResponse>(resource, { id: id });
+			const response = await this.request<IUserDetailsResponse>(resource, { id: id ?? this.config.userId });
 
 			// Deserializing response
 			const data = extractors[resource](response);
 
-			return data as T extends string ? User | undefined : User[];
+			return data as T extends string | undefined ? User | undefined : User[];
 		}
 	}
 

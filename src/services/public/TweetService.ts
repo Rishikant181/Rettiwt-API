@@ -11,8 +11,9 @@ import { ITweetFilter } from '../../types/args/FetchArgs';
 import { INewTweet } from '../../types/args/PostArgs';
 import { IListTweetsResponse } from '../../types/raw/list/Tweets';
 import { IMediaInitializeUploadResponse } from '../../types/raw/media/InitalizeUpload';
-import { ITweetDetailsResponse } from '../../types/raw/tweet/Details';
 
+import { ITweetDetailsResponse } from '../../types/raw/tweet/Details';
+import { ITweetDetailsBulkResponse } from '../../types/raw/tweet/DetailsBulk';
 import { ITweetLikeResponse } from '../../types/raw/tweet/Like';
 import { ITweetLikersResponse } from '../../types/raw/tweet/Likers';
 import { ITweetPostResponse } from '../../types/raw/tweet/Post';
@@ -89,7 +90,7 @@ export class TweetService extends FetcherService {
 			resource = EResourceType.TWEET_DETAILS_BULK;
 
 			// Fetching raw tweet details
-			const response = await this.request<ITweetRepliesResponse>(resource, { ids: id });
+			const response = await this.request<ITweetDetailsBulkResponse>(resource, { ids: id });
 
 			// Deserializing response
 			const data = extractors[resource](response, id);

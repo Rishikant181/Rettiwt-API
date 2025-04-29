@@ -1,5 +1,3 @@
-import { Agent } from 'http';
-
 import axios from 'axios';
 import * as htmlParser from 'node-html-parser';
 
@@ -7,6 +5,7 @@ import { ELogActions } from '../../enums/Logging';
 
 import { calculateClientTransactionIdHeader } from '../../helper/TidUtils';
 
+import { RettiwtConfig } from '../../models/RettiwtConfig';
 import { ITidDynamicArgs } from '../../types/auth/TidDynamicArgs';
 import { ITidProvider } from '../../types/auth/TidProvider';
 
@@ -19,16 +18,16 @@ import { LogService } from './LogService';
  */
 export class TidService implements ITidProvider {
 	private readonly _cdnUrl: string;
-	private readonly _httpsAgent: Agent;
+	private readonly _config: RettiwtConfig;
 	private readonly _requestHeaders: NonNullable<unknown>;
 	private _dynamicArgs?: ITidDynamicArgs;
 
 	/**
-	 * @param httpsAgent - The HTTPS agent to use. If none is provided, default is used.
+	 * @param config - The config for Rettiwt.
 	 */
-	public constructor(httpsAgent?: Agent) {
+	public constructor(config: RettiwtConfig) {
 		this._cdnUrl = 'https://abs.twimg.com/responsive-web/client-web';
-		this._httpsAgent = httpsAgent ?? new Agent();
+		this._config = config;
 		this._requestHeaders = {
 			/* eslint-disable @typescript-eslint/naming-convention */
 
@@ -71,8 +70,8 @@ export class TidService implements ITidProvider {
 	private async getHomepageHtml(): Promise<string> {
 		const response = await axios.get<string>('https://x.com', {
 			headers: this._requestHeaders,
-			httpAgent: this._httpsAgent,
-			httpsAgent: this._httpsAgent,
+			httpAgent: this._config.httpsAgent,
+			httpsAgent: this._config.httpsAgent,
 		});
 
 		return response.data;
@@ -88,8 +87,8 @@ export class TidService implements ITidProvider {
 
 		const onDemandFileHash = ondemandFileMatch ? ondemandFileMatch[1] : '';
 		const response = await axios.get<string>(`${this._cdnUrl}/ondemand.s.${onDemandFileHash}a.js`, {
-			httpAgent: this._httpsAgent,
-			httpsAgent: this._httpsAgent,
+			httpAgent: this._config.httpsAgent,
+			httpsAgent: this._config.httpsAgent,
 		});
 		const match = response.data.matchAll(/(\(\w\[(\d{1,2})],\s*16\))+?/gm);
 

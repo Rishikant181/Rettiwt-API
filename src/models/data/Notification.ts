@@ -11,6 +11,9 @@ import { IUserNotificationsResponse } from '../../types/raw/user/Notifications';
  * @public
  */
 export class Notification implements INotification {
+	/** The raw notification details. */
+	private readonly _raw: IRawNotification;
+
 	public from: string[];
 	public id: string;
 	public message: string;
@@ -22,6 +25,8 @@ export class Notification implements INotification {
 	 * @param notification - The raw notification details.
 	 */
 	public constructor(notification: IRawNotification) {
+		this._raw = { ...notification };
+
 		// Getting the original notification type
 		const notificationType: string | undefined = findKeyByValue(ERawNotificationType, notification.icon.id);
 
@@ -37,6 +42,11 @@ export class Notification implements INotification {
 		this.type = notificationType
 			? ENotificationType[notificationType as keyof typeof ENotificationType]
 			: ENotificationType.UNDEFINED;
+	}
+
+	/** Get the raw notification details. */
+	public get raw(): IRawNotification {
+		return { ...this._raw };
 	}
 
 	/**

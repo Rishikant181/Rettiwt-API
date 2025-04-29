@@ -39,6 +39,7 @@ export const requests: { [key in keyof typeof EResourceType]: (args: IFetchArgs 
 	TWEET_UNRETWEET: (args: IPostArgs) => TweetRequests.unretweet(args.id!),
 	TWEET_UNSCHEDULE: (args: IPostArgs) => TweetRequests.unschedule(args.id!),
 
+	USER_AFFILIATES: (args: IFetchArgs) => UserRequests.affiliates(args.id!, args.count, args.cursor),
 	USER_BOOKMARKS: (args: IFetchArgs) => UserRequests.bookmarks(args.count, args.cursor),
 	USER_DETAILS_BY_USERNAME: (args: IFetchArgs) => UserRequests.detailsByUsername(args.id!),
 	USER_DETAILS_BY_ID: (args: IFetchArgs) => UserRequests.detailsById(args.id!),

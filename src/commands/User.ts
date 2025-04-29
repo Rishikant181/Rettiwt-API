@@ -13,6 +13,21 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 	// Creating the 'user' command
 	const user = createCommand('user').description('Access resources releated to users');
 
+	// Affiliates
+	user.command('affiliates')
+		.description('Fetch the list of users who affiliated to the given user')
+		.argument('<id>', 'The id of the user')
+		.argument('[count]', 'The number of affiliates to fetch')
+		.argument('[cursor]', 'The cursor to the batch of affiliates to fetch')
+		.action(async (id: string, count?: string, cursor?: string) => {
+			try {
+				const users = await rettiwt.user.affiliates(id, count ? parseInt(count) : undefined, cursor);
+				output(users);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	user.command('bookmarks')
 		.description('Fetch your list of bookmarks')
 		.argument('[count]', 'The number of bookmarks to fetch')

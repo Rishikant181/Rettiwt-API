@@ -11,6 +11,9 @@ import { ITimelineUser as IRawTimelineUser } from '../../types/raw/composite/Tim
  * @public
  */
 export class User implements IUser {
+	/** The raw user details. */
+	private readonly _raw: IRawUser;
+
 	public createdAt: string;
 	public description?: string;
 	public followersCount: number;
@@ -30,6 +33,7 @@ export class User implements IUser {
 	 * @param user - The raw user details.
 	 */
 	public constructor(user: IRawUser) {
+		this._raw = { ...user };
 		this.id = user.rest_id;
 		this.userName = user.legacy.screen_name;
 		this.fullName = user.legacy.name;
@@ -44,6 +48,11 @@ export class User implements IUser {
 		this.pinnedTweet = user.legacy.pinned_tweet_ids_str[0];
 		this.profileBanner = user.legacy.profile_banner_url;
 		this.profileImage = user.legacy.profile_image_url_https;
+	}
+
+	/** Get the raw user details. */
+	public get raw(): IRawUser {
+		return { ...this._raw };
 	}
 
 	/**
