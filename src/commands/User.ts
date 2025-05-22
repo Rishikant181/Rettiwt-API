@@ -193,21 +193,6 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
-	// Subscriptions
-	user.command('subscriptions')
-		.description('Fetch the list of users who are subscribed by the given user')
-		.argument('<id>', 'The id of the user')
-		.argument('[count]', 'The number of subscriptions to fetch')
-		.argument('[cursor]', 'The cursor to the batch of subscriptions to fetch')
-		.action(async (id: string, count?: string, cursor?: string) => {
-			try {
-				const users = await rettiwt.user.subscriptions(id, count ? parseInt(count) : undefined, cursor);
-				output(users);
-			} catch (error) {
-				output(error);
-			}
-		});
-
 	// Timeline
 	user.command('timeline')
 		.description('Fetch the tweets timeline the given user')

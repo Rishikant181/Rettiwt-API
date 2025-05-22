@@ -50,7 +50,7 @@ export class User implements IUser {
 		this.profileImage = user.legacy.profile_image_url_https;
 	}
 
-	/** Get the raw user details. */
+	/** The raw user details. */
 	public get raw(): IRawUser {
 		return { ...this._raw };
 	}

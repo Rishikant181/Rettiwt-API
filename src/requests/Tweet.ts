@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 
-import { ERawTweetSearchResultType } from '../enums/raw/Tweet';
+import { ERawTweetRepliesSortType, ERawTweetSearchResultType } from '../enums/raw/Tweet';
 import { TweetFilter } from '../models/args/FetchArgs';
 import { NewTweet } from '../models/args/PostArgs';
 import { MediaVariable, ReplyVariable } from '../models/params/Variables';
@@ -266,7 +266,7 @@ export class TweetRequests {
 	 * @param id - The id of the tweet whose replies are to be fetched.
 	 * @param cursor - The cursor to the batch of replies to fetch.
 	 */
-	public static replies(id: string, cursor?: string): AxiosRequestConfig {
+	public static replies(id: string, cursor?: string, sortBy?: ERawTweetRepliesSortType): AxiosRequestConfig {
 		return {
 			method: 'get',
 			url: 'https://x.com/i/api/graphql/_8aYOgEDz35BrBcBal1-_w/TweetDetail',
@@ -276,14 +276,13 @@ export class TweetRequests {
 					focalTweetId: id,
 					cursor: cursor,
 					referrer: 'tweet',
-					controller_data: cursor,
 					with_rux_injections: false,
-					includePromotedContent: false,
+					rankingMode: sortBy ?? ERawTweetRepliesSortType.RELEVACE,
+					includePromotedContent: true,
 					withCommunity: true,
 					withQuickPromoteEligibilityTweetFields: true,
 					withBirdwatchNotes: true,
 					withVoice: true,
-					withV2Timeline: true,
 				}),
 				features: JSON.stringify({
 					rweb_video_screen_enabled: false,

@@ -70,22 +70,6 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
-	// List
-	tweet
-		.command('list')
-		.description('Fetch the list of tweets in the tweet list with the given id')
-		.argument('<id>', 'The id of the tweet list')
-		.argument('[count]', 'The number of tweets to fetch')
-		.argument('[cursor]', 'The cursor to the batch of tweets to fetch')
-		.action(async (id: string, count?: string, cursor?: string) => {
-			try {
-				const tweets = await rettiwt.tweet.list(id, count ? parseInt(count) : undefined, cursor);
-				output(tweets);
-			} catch (error) {
-				output(error);
-			}
-		});
-
 	// Post
 	tweet
 		.command('post')
@@ -196,8 +180,10 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		.option('-l, --min-likes <number>', 'Matches the tweets that have a minimum of given number of likes')
 		.option('-x, --min-retweets <number>', 'Matches the tweets that have a minimum of given number of retweets')
 		.option('-q, --quoted <string>', 'Matches the tweets that quote the tweet with the given id')
-		.option('--exclude-links', 'Matches tweets that do not contain links')
-		.option('--exclude-replies', 'Matches the tweets that are not replies')
+		.option('--only-original', 'Matches tweets are original posts')
+		.option('--only-replies', 'Matches tweets that are replies')
+		.option('--only-text', 'Matches tweets that are only text')
+		.option('--only-links', 'Matches tweets that only contain links like media, quotes, etc')
 		.option('-s, --start <string>', 'Matches the tweets made since the given date (valid date/time string)')
 		.option('-e, --end <string>', 'Matches the tweets made upto the given date (valid date/time string)')
 		.option('--top', 'Matches top tweets instead of latest')
@@ -308,8 +294,6 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
  */
 class TweetSearchOptions {
 	public end?: string;
-	public excludeLinks?: boolean = false;
-	public excludeReplies?: boolean = false;
 	public excludeWords?: string;
 	public from?: string;
 	public hashtags?: string;
@@ -319,6 +303,10 @@ class TweetSearchOptions {
 	public minLikes?: number;
 	public minReplies?: number;
 	public minRetweets?: number;
+	public onlyLinks?: boolean = false;
+	public onlyOriginal?: boolean = false;
+	public onlyReplies?: boolean = false;
+	public onlyText?: boolean = false;
 	public optionalWords?: string;
 	public phrase?: string;
 	public quoted?: string;
@@ -346,9 +334,11 @@ class TweetSearchOptions {
 		this.minReplies = options?.minReplies;
 		this.minLikes = options?.minLikes;
 		this.minRetweets = options?.minRetweets;
+		this.onlyLinks = options?.onlyLinks;
+		this.onlyOriginal = options?.onlyOriginal;
+		this.onlyReplies = options?.onlyReplies;
+		this.onlyText = options?.onlyText;
 		this.quoted = options?.quoted;
-		this.excludeLinks = options?.excludeLinks;
-		this.excludeReplies = options?.excludeReplies;
 		this.start = options?.start;
 		this.end = options?.end;
 		this.stream = options?.stream;
@@ -375,9 +365,11 @@ class TweetSearchOptions {
 			minReplies: this.minReplies,
 			minLikes: this.minLikes,
 			minRetweets: this.minRetweets,
+			onlyLinks: this.onlyLinks,
+			onlyOriginal: this.onlyOriginal,
+			onlyReplies: this.onlyReplies,
+			onlyText: this.onlyText,
 			quoted: this.quoted,
-			links: !this.excludeLinks,
-			replies: !this.excludeReplies,
 			startDate: this.start ? new Date(this.start) : undefined,
 			top: this.top,
 			endDate: this.end ? new Date(this.end) : undefined,

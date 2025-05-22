@@ -2,8 +2,17 @@ import { createHash } from 'node:crypto';
 
 import { ITidParams } from '../types/auth/TidParams';
 
+export function getUnixTime(): number {
+	const [seconds, nanoseconds] = process.hrtime();
+	return Date.now() / 1000 + seconds + nanoseconds / 1e9;
+}
+
+export function getNanosecondPrecisionTime(): number {
+	return Number(((BigInt(Date.now()) * 1000000n + process.hrtime.bigint()) * 1000n) / BigInt(1000000)) / 1000000;
+}
+
 export function calculateClientTransactionIdHeader(args: ITidParams): string {
-	const time = Math.floor(((args.time || Date.now()) - 1682924400 * 1000) / 1000);
+	const time = Math.floor(((args.time || getUnixTime()) * 1000 - 1682924400 * 1000) / 1000);
 	const timeBuffer = new Uint8Array(new Uint32Array([time]).buffer);
 
 	const keyBytes = Array.from(Buffer.from(args.verificationKey, 'base64'));

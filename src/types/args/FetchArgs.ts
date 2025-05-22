@@ -1,3 +1,5 @@
+import { ETweetRepliesSortType } from '../../enums/Tweet';
+
 /**
  * Options specifying the data that is to be fetched.
  *
@@ -55,6 +57,14 @@ export interface IFetchArgs {
 	 * - Required only for {@link EResourceType.TWEET_DETAILS_BULK} and {@link EResourceType.USER_DETAILS_BY_IDS_BULK}.
 	 */
 	ids?: string[];
+
+	/**
+	 * The sorting to use for tweet results.
+	 *
+	 * @remarks
+	 * - Only works for {@link EResourceType.TWEET_REPLIES}.
+	 */
+	sortBy?: ETweetRepliesSortType;
 }
 
 /**
@@ -94,9 +104,6 @@ export interface ITweetFilter {
 	/** The language of the tweets to search. */
 	language?: string;
 
-	/** Whether to fetch tweets that are links or not. */
-	links?: boolean;
-
 	/** The list from which tweets are to be searched. */
 	list?: string;
 
@@ -120,14 +127,27 @@ export interface ITweetFilter {
 	/** The minimum number of retweets to search by. */
 	minRetweets?: number;
 
+	/**
+	 * Whether to search only posts that contain links.
+	 *
+	 * @remarks 'links' includes things like media, quotes, retweets, etc.
+	 */
+	onlyLinks?: boolean;
+
+	/** Whether to search only original posts. */
+	onlyOriginal?: boolean;
+
+	/** Whether to search only replies */
+	onlyReplies?: boolean;
+
+	/** Whether to search posts that only contain text. */
+	onlyText?: boolean;
+
 	/** The optional words to search. */
 	optionalWords?: string[];
 
 	/** The id of the tweet which is quoted in the tweets to search. */
 	quoted?: string;
-
-	/** Whether to fetch tweets that are replies or not. */
-	replies?: boolean;
 
 	/** The id of the tweet, after which the tweets are to be searched. */
 	sinceId?: string;

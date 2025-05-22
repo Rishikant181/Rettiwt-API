@@ -11,7 +11,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             # Setting up Node
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
             - uses: actions/setup-node@v3
               with:
                   node-version: '22.x'
@@ -23,7 +23,7 @@ jobs:
             - run: npx typedoc src/index.ts
 
             # Packaging the static site as artifact
-            - uses: actions/upload-pages-artifact@v2
+            - uses: actions/upload-pages-artifact@v3
               with:
                   path: ./docs
 
@@ -46,4 +46,4 @@ jobs:
         steps:
             # Deploying to gh pages
             - id: deployment
-              uses: actions/deploy-pages@v2
+              uses: actions/deploy-pages@v4

@@ -7,7 +7,7 @@ import { RettiwtConfig } from '../../models/RettiwtConfig';
 /**
  * The services that handles authentication.
  *
- * @public
+ * @internal
  */
 export class AuthService {
 	/** The config object. */

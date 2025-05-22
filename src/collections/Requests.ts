@@ -8,8 +8,10 @@ import { UserRequests } from '../requests/User';
 import { IFetchArgs } from '../types/args/FetchArgs';
 import { IPostArgs } from '../types/args/PostArgs';
 
+import { rawTweetRepliesSortType } from './Tweet';
+
 /**
- * The collection of requests to various resources.
+ * Collection of requests to various resources.
  *
  * @internal
  */
@@ -29,7 +31,8 @@ export const requests: { [key in keyof typeof EResourceType]: (args: IFetchArgs 
 	TWEET_LIKE: (args: IPostArgs) => TweetRequests.like(args.id!),
 	TWEET_LIKERS: (args: IFetchArgs) => TweetRequests.likers(args.id!, args.count, args.cursor),
 	TWEET_POST: (args: IPostArgs) => TweetRequests.post(args.tweet!),
-	TWEET_REPLIES: (args: IFetchArgs) => TweetRequests.replies(args.id!, args.cursor),
+	TWEET_REPLIES: (args: IFetchArgs) =>
+		TweetRequests.replies(args.id!, args.cursor, args.sortBy ? rawTweetRepliesSortType[args.sortBy] : undefined),
 	TWEET_RETWEET: (args: IPostArgs) => TweetRequests.retweet(args.id!),
 	TWEET_RETWEETERS: (args: IFetchArgs) => TweetRequests.retweeters(args.id!, args.count, args.cursor),
 	TWEET_SCHEDULE: (args: IPostArgs) => TweetRequests.schedule(args.tweet!),

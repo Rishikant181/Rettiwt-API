@@ -32,7 +32,7 @@ export class List implements IList {
 		this.createdBy = list.user_results.result.id;
 	}
 
-	/** Get the raw list details. */
+	/** The raw list details. */
 	public get raw(): IRawList {
 		return { ...this._raw };
 	}

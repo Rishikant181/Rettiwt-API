@@ -1,4 +1,4 @@
-import { EResourceType } from '../../enums/Resource';
+import { ETweetRepliesSortType } from '../../enums/Tweet';
 import { IFetchArgs, ITweetFilter } from '../../types/args/FetchArgs';
 
 /**
@@ -12,17 +12,18 @@ export class FetchArgs implements IFetchArgs {
 	public filter?: TweetFilter;
 	public id?: string;
 	public ids?: string[];
+	public sortBy?: ETweetRepliesSortType;
 
 	/**
-	 * @param resource - The resource to be fetched.
 	 * @param args - Additional user-defined arguments for fetching the resource.
 	 */
-	public constructor(resource: EResourceType, args: IFetchArgs) {
+	public constructor(args: IFetchArgs) {
 		this.id = args.id;
 		this.ids = args.ids;
 		this.count = args.count;
 		this.cursor = args.cursor;
 		this.filter = args.filter ? new TweetFilter(args.filter) : undefined;
+		this.sortBy = args.sortBy;
 	}
 }
 
@@ -39,16 +40,18 @@ export class TweetFilter implements ITweetFilter {
 	public includePhrase?: string;
 	public includeWords?: string[];
 	public language?: string;
-	public links?: boolean;
 	public list?: string;
 	public maxId?: string;
 	public mentions?: string[];
 	public minLikes?: number;
 	public minReplies?: number;
 	public minRetweets?: number;
+	public onlyLinks?: boolean;
+	public onlyOriginal?: boolean;
+	public onlyReplies?: boolean;
+	public onlyText?: boolean;
 	public optionalWords?: string[];
 	public quoted?: string;
-	public replies?: boolean;
 	public sinceId?: string;
 	public startDate?: Date;
 	public toUsers?: string[];
@@ -64,9 +67,7 @@ export class TweetFilter implements ITweetFilter {
 		this.hashtags = filter.hashtags;
 		this.includePhrase = filter.includePhrase;
 		this.language = filter.language;
-		this.links = filter.links;
 		this.list = filter.list;
-		this.replies = filter.replies;
 		this.mentions = filter.mentions;
 		this.quoted = filter.quoted;
 		this.sinceId = filter.sinceId;
@@ -74,6 +75,10 @@ export class TweetFilter implements ITweetFilter {
 		this.minLikes = filter.minLikes;
 		this.minReplies = filter.minReplies;
 		this.minRetweets = filter.minRetweets;
+		this.onlyLinks = filter.onlyLinks;
+		this.onlyOriginal = filter.onlyOriginal;
+		this.onlyReplies = filter.onlyReplies;
+		this.onlyText = filter.onlyText;
 		this.optionalWords = filter.optionalWords;
 		this.startDate = filter.startDate;
 		this.toUsers = filter.toUsers;
@@ -138,8 +143,10 @@ export class TweetFilter implements ITweetFilter {
 			]
 				.filter((item) => item !== '()' && item !== '')
 				.join(' ') +
-			(this.links == false ? ' -filter:links' : '') +
-			(this.replies == false ? ' -filter:replies' : '')
+			(this.onlyText === true ? ' -filter:links' : '') +
+			(this.onlyOriginal === true ? ' -filter:replies' : '') +
+			(this.onlyLinks === true ? ' filter:links' : '') +
+			(this.onlyReplies === true ? ' filter:replies' : '')
 		);
 	}
 }

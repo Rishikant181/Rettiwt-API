@@ -1,4 +1,3 @@
-import { EResourceType } from '../../enums/Resource';
 import { INewTweet, INewTweetMedia, IPostArgs, IUploadArgs } from '../../types/args/PostArgs';
 
 /**
@@ -15,10 +14,10 @@ export class PostArgs implements IPostArgs {
 	 * @param resource - The resource to be posted.
 	 * @param args - Additional user-defined arguments for posting the resource.
 	 */
-	public constructor(resource: EResourceType, args: IPostArgs) {
+	public constructor(args: IPostArgs) {
 		this.id = args.id;
 		this.tweet = args.tweet ? new NewTweet(args.tweet) : undefined;
-		this.upload = args.upload ? new UploadArgs(resource, args.upload) : undefined;
+		this.upload = args.upload ? new UploadArgs(args.upload) : undefined;
 	}
 }
 
@@ -78,7 +77,7 @@ export class UploadArgs implements IUploadArgs {
 	 * @param step - The upload step.
 	 * @param args - The upload arguments for uploading the media file.
 	 */
-	public constructor(step: EResourceType, args: IUploadArgs) {
+	public constructor(args: IUploadArgs) {
 		this.size = args.size;
 		this.media = args.media;
 		this.id = args.id;

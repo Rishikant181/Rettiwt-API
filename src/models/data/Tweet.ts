@@ -66,7 +66,7 @@ export class Tweet implements ITweet {
 		this.url = `https://x.com/${this.tweetBy.userName}/status/${this.id}`;
 	}
 
-	/** Get the raw tweet details. */
+	/** The raw tweet details. */
 	public get raw(): IRawTweet {
 		return { ...this._raw };
 	}

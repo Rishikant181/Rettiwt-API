@@ -137,12 +137,12 @@ export class FetcherService {
 			// Logging
 			LogService.log(ELogActions.VALIDATE, { target: 'FETCH_ARGS' });
 
-			return new FetchArgs(resource, args);
+			return new FetchArgs(args);
 		} else if (postResources.includes(resource)) {
 			// Logging
 			LogService.log(ELogActions.VALIDATE, { target: 'POST_ARGS' });
 
-			return new PostArgs(resource, args);
+			return new PostArgs(args);
 		}
 	}
 
@@ -180,8 +180,9 @@ export class FetcherService {
 	 * @returns The raw data response received.
 	 *
 	 * @example
-	 * Fetching the raw details of a user with username 'user1'
-	 * ```
+	 *
+	 * #### Fetching the raw details of a single user, using their username
+	 * ```ts
 	 * import { FetcherService, EResourceType } from 'rettiwt-api';
 	 *
 	 * // Creating a new FetcherService instance using the given 'API_KEY'
@@ -194,7 +195,7 @@ export class FetcherService {
 	 * })
 	 * .catch(err => {
 	 * 	console.log(err);
-	 * })
+	 * });
 	 * ```
 	 */
 	public async request<T = unknown>(resource: EResourceType, args: IFetchArgs | IPostArgs): Promise<T> {

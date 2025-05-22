@@ -15,7 +15,7 @@ import { AuthCookie } from './AuthCookie';
  * - authToken, csrfToken, cookie =\> User authentication.
  * - authToken, guestToken, cookie =\> Guest authentication while logging in.
  *
- * @public
+ * @internal
  */
 export class AuthCredential implements IAuthCredential {
 	public authToken?: string;

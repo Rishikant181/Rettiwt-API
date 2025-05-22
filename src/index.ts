@@ -13,6 +13,7 @@ export * from './enums/Logging';
 export * from './enums/Media';
 export * from './enums/Notification';
 export * from './enums/Resource';
+export * from './enums/Tweet';
 
 // MODELS
 export * from './models/args/FetchArgs';

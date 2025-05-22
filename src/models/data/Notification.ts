@@ -44,7 +44,7 @@ export class Notification implements INotification {
 			: ENotificationType.UNDEFINED;
 	}
 
-	/** Get the raw notification details. */
+	/** The raw notification details. */
 	public get raw(): IRawNotification {
 		return { ...this._raw };
 	}
