@@ -2,6 +2,7 @@ import { RettiwtConfig } from './models/RettiwtConfig';
 import { ListService } from './services/public/ListService';
 import { TweetService } from './services/public/TweetService';
 import { UserService } from './services/public/UserService';
+import { DmService } from './services/public/DmService';
 import { IRettiwtConfig } from './types/RettiwtConfig';
 
 /**
@@ -58,6 +59,9 @@ export class Rettiwt {
 	/** The instance used to fetch data related to users. */
 	public user: UserService;
 
+	/** The instance used to fetch data related to direct messages. */
+	public dm: DmService;
+
 	/**
 	 * Initializes a new Rettiwt instance using the given api key.
 	 *
@@ -68,6 +72,7 @@ export class Rettiwt {
 		this.list = new ListService(this._config);
 		this.tweet = new TweetService(this._config);
 		this.user = new UserService(this._config);
+		this.dm = new DmService(this._config);
 	}
 
 	/** Set the API key for the current instance. */

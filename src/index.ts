@@ -36,6 +36,7 @@ export * from './services/public/FetcherService';
 export * from './services/public/ListService';
 export * from './services/public/TweetService';
 export * from './services/public/UserService';
+export * from './services/public/DmService';
 
 // TYPES
 export * from './types/args/FetchArgs';

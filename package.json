@@ -32,6 +32,7 @@
 		"node": "^22.13.1"
 	},
 	"devDependencies": {
+		"@types/axios": "^0.9.36",
 		"@types/cookiejar": "2.1.5",
 		"@types/node": "22.13.1",
 		"@typescript-eslint/eslint-plugin": "8.24.0",
@@ -45,7 +46,7 @@
 		"typescript": "5.7.3"
 	},
 	"dependencies": {
-		"axios": "1.8.4",
+		"axios": "^1.9.0",
 		"chalk": "5.4.1",
 		"commander": "11.1.0",
 		"cookiejar": "2.1.4",
