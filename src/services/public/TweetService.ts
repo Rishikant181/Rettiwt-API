@@ -177,6 +177,43 @@ export class TweetService extends FetcherService {
 	}
 
 	/**
+	 * Get the raw response data from custom tweet detail endpoint.
+	 *
+	 * @param id - The ID of the target tweet.
+	 *
+	 * @returns The raw response data from the custom endpoint.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the raw response from custom endpoint for tweet '1956690447167815829'
+	 * rettiwt.tweet.tweetDetail('1956690447167815829')
+	 * .then(res => {
+	 * 	console.log(res);	# 'res' is the raw response data
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async tweetDetail(id: string): Promise<ITweetRepliesResponse> {
+		const resource = ResourceType.TWEET_DETAIL;
+
+		// Fetching raw tweet details with entries
+		const response = await this.request<ITweetRepliesResponse>(resource, { id: id });
+
+		// Returning raw response data
+		const data = Extractors[resource](response, id);
+
+		return data;
+	}
+
+	/**
 	 * Like a tweet.
 	 *
 	 * @param id - The ID of the tweet to be liked.
