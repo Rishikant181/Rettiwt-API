@@ -10,6 +10,7 @@ export const AllowGuestAuthenticationGroup = [
 	ResourceType.USER_DETAILS_BY_USERNAME,
 	ResourceType.USER_TIMELINE,
 	ResourceType.TWEET_DETAIL,
+	ResourceType.BULK_TWEET_DETAIL,
 ];
 
 /**
@@ -27,6 +28,7 @@ export const FetchResourcesGroup = [
 	ResourceType.TWEET_DETAILS,
 	ResourceType.TWEET_DETAILS_ALT,
 	ResourceType.TWEET_DETAIL,
+	ResourceType.BULK_TWEET_DETAIL,
 	ResourceType.TWEET_DETAILS_BULK,
 	ResourceType.TWEET_LIKERS,
 	ResourceType.TWEET_REPLIES,

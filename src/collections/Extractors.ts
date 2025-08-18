@@ -84,6 +84,7 @@ export const Extractors = {
 	TWEET_DETAILS: (response: ITweetDetailsResponse, id: string): Tweet | undefined => Tweet.single(response, id),
 	TWEET_DETAILS_ALT: (response: ITweetRepliesResponse, id: string): Tweet | undefined => Tweet.single(response, id),
 	TWEET_DETAIL: (response: ITweetRepliesResponse, id: string): ITweetRepliesResponse => response,
+	BULK_TWEET_DETAIL: (response: ITweetRepliesResponse, ids: string[]): ITweetRepliesResponse => response,
 	TWEET_DETAILS_BULK: (response: ITweetDetailsBulkResponse, ids: string[]): Tweet[] => Tweet.multiple(response, ids),
 	TWEET_LIKE: (response: ITweetLikeResponse): boolean => (response?.data?.favorite_tweet ? true : false),
 	TWEET_LIKERS: (response: ITweetLikersResponse): CursoredData<User> =>
