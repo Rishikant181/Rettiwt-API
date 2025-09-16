@@ -41,8 +41,8 @@ export class User implements IUser {
 		this.fullName = user.legacy.name;
 		this.createdAt = new Date(user.legacy.created_at).toISOString();
 		this.description = user.legacy.description.length ? user.legacy.description : undefined;
-		this.isFollowed = user.legacy.followed_by;
-		this.isFollowing = user.legacy.following;
+		this.isFollowed = user.legacy.following ?? false;
+		this.isFollowing = user.legacy.followed_by ?? false;
 		this.isVerified = user.is_blue_verified;
 		this.likeCount = user.legacy.favourites_count;
 		this.followersCount = user.legacy.followers_count;
@@ -172,6 +172,8 @@ export class User implements IUser {
 			followingsCount: this.followingsCount,
 			fullName: this.fullName,
 			id: this.id,
+			isFollowed: this.isFollowed,
+			isFollowing: this.isFollowing,
 			isVerified: this.isVerified,
 			likeCount: this.likeCount,
 			location: this.location,
