@@ -53,14 +53,14 @@ export class Tweet implements ITweet {
 		this.entities = new TweetEntities(tweet.legacy.entities);
 		this.media = tweet.legacy.extended_entities?.media?.map((media) => new TweetMedia(media));
 		this.quoted = this._getQuotedTweet(tweet);
-		this.fullText = tweet.note_tweet ? tweet.note_tweet.note_tweet_results.result.text : tweet.legacy.full_text;
+		this.fullText =  tweet.note_tweet?.note_tweet_results?.result?.text ? tweet.note_tweet.note_tweet_results.result.text : tweet.legacy.full_text;
 		this.replyTo = tweet.legacy.in_reply_to_status_id_str;
 		this.lang = tweet.legacy.lang;
 		this.quoteCount = tweet.legacy.quote_count;
 		this.replyCount = tweet.legacy.reply_count;
 		this.retweetCount = tweet.legacy.retweet_count;
 		this.likeCount = tweet.legacy.favorite_count;
-		this.viewCount = tweet.views.count ? parseInt(tweet.views.count) : 0;
+		this.viewCount = tweet.views?.count ? parseInt(tweet.views.count) : 0;
 		this.bookmarkCount = tweet.legacy.bookmark_count;
 		this.retweetedTweet = this._getRetweetedTweet(tweet);
 		this.url = `https://x.com/${this.tweetBy.userName}/status/${this.id}`;
