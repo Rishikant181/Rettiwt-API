@@ -14,8 +14,7 @@
 		"format:check": "prettier --check .",
 		"lint": "eslint --max-warnings 0 --fix .",
 		"lint:check": "eslint --max-warnings 0 .",
-		"docs": "typedoc --excludePrivate --excludeProtected --excludeInternal src/index.ts",
-		"debug": "nodemon ./dist/index.js --inspect=0.0.0.0:9229"
+		"docs": "typedoc --excludePrivate --excludeProtected --excludeInternal src/index.ts"
 	},
 	"repository": {
 		"type": "git",
@@ -31,7 +30,7 @@
 	},
 	"homepage": "https://rishikant181.github.io/Rettiwt-API/",
 	"engines": {
-		"node": "^22.13.1"
+		"node": "^22.21.0"
 	},
 	"devDependencies": {
 		"@types/cookiejar": "^2.1.5",
