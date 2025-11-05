@@ -75,6 +75,11 @@ export class Rettiwt {
 		this.user = new UserService(this._config);
 	}
 
+	/** Get the current API key associated with this instance. */
+	public get apiKey(): string | undefined {
+		return this._config.apiKey;
+	}
+
 	/** Set the API key for the current instance. */
 	public set apiKey(apiKey: string | undefined) {
 		this._config.apiKey = apiKey;

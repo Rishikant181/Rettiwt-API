@@ -233,8 +233,8 @@ export class FetcherService {
 			try {
 				// Getting and appending transaction information
 				config.headers = {
-					...config.headers,
 					...(await this._getTransactionHeader(config.method ?? '', config.url ?? '')),
+					...config.headers,
 				};
 
 				// Introducing a delay
