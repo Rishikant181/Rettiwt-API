@@ -25,11 +25,11 @@ export class DirectMessageService extends FetcherService {
 	}
 
 	/**
-	 * Get the full conversation history for a specific conversation.
+	 * Get the full conversation history for a specific conversation, ordered recent to oldest.
 	 * Use this to load complete message history for a conversation identified from the inbox.
 	 *
 	 * @param conversationId - The ID of the conversation (e.g., "394028042-1712730991884689408").
-	 * @param cursor - The cursor for pagination.
+	 * @param cursor - The cursor for pagination. Is equal to the ID of the last message from previous batch.
 	 *
 	 * @returns The conversation with full message history, or undefined if not found.
 	 *
@@ -103,9 +103,9 @@ export class DirectMessageService extends FetcherService {
 	}
 
 	/**
-	 * Get your inbox.
+	 * Get your inbox, ordered recent to oldest.
 	 *
-	 * @param cursor - The cursor to the inbox items to fetch. If not provided, intial inbox with most recent conversations is fetched.
+	 * @param cursor - The cursor to the inbox items to fetch. Is equal to the ID of the last inbox conversation.
 	 *
 	 * @returns The required inbox. Returns initial inbox if no cursor is provided.
 	 *

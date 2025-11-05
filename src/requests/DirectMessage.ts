@@ -5,9 +5,9 @@ import { AxiosRequestConfig } from 'axios';
 /**
  * Common parameter sets for DM requests
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const DM_BASE_PARAMS = {
+const BaseDMParams = {
 	/* eslint-disable @typescript-eslint/naming-convention */
+
 	nsfw_filtering_enabled: false,
 	filter_low_quality: true,
 	include_quality: 'all',
@@ -29,12 +29,13 @@ const DM_BASE_PARAMS = {
 	include_ext_edit_control: true,
 	include_ext_business_affiliations_label: true,
 	ext: 'mediaColor%2CaltText%2CbusinessAffiliationsLabel%2CmediaStats%2ChighlightedLabel%2CparodyCommentaryFanLabel%2CvoiceInfo%2CbirdwatchPivot%2CsuperFollowMetadata%2CunmentionInfo%2CeditControl%2Carticle',
+
 	/* eslint-enable @typescript-eslint/naming-convention */
 };
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const DM_USER_INCLUDE_PARAMS = {
+const DMUserIncludeParams = {
 	/* eslint-disable @typescript-eslint/naming-convention */
+
 	include_profile_interstitial_type: 1,
 	include_blocking: 1,
 	include_blocked_by: 1,
@@ -47,6 +48,7 @@ const DM_USER_INCLUDE_PARAMS = {
 	include_ext_verified_type: 1,
 	include_ext_profile_image_shape: 1,
 	skip_status: 1,
+
 	/* eslint-enable @typescript-eslint/naming-convention */
 };
 
@@ -68,8 +70,8 @@ export class DMRequests {
 			method: 'get',
 			url: `https://x.com/i/api/1.1/dm/conversation/${conversationId}.json`,
 			params: {
-				...DM_BASE_PARAMS,
-				...DM_USER_INCLUDE_PARAMS,
+				...BaseDMParams,
+				...DMUserIncludeParams,
 				/* eslint-disable @typescript-eslint/naming-convention */
 				max_id: maxId,
 				context: context,
@@ -120,8 +122,8 @@ export class DMRequests {
 			method: 'get',
 			url: 'https://x.com/i/api/1.1/dm/inbox_initial_state.json',
 			params: {
-				...DM_BASE_PARAMS,
-				...DM_USER_INCLUDE_PARAMS,
+				...BaseDMParams,
+				...DMUserIncludeParams,
 				/* eslint-disable @typescript-eslint/naming-convention */
 				dm_users: true,
 				include_ext_parody_commentary_fan_label: true,
@@ -140,8 +142,8 @@ export class DMRequests {
 			method: 'get',
 			url: 'https://x.com/i/api/1.1/dm/inbox_timeline/trusted.json',
 			params: {
-				...DM_BASE_PARAMS,
-				...DM_USER_INCLUDE_PARAMS,
+				...BaseDMParams,
+				...DMUserIncludeParams,
 				/* eslint-disable @typescript-eslint/naming-convention */
 				max_id: maxId,
 				dm_users: false,
