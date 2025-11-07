@@ -26,6 +26,8 @@ export interface IUser {
 	highlights_info: IHighlightsInfo;
 	business_account: IBusinessAccountInfo;
 	creator_subscriptions_count: number;
+	privacy?: IPrivacy;
+	relationship_perspectives?: IRelationshipPerspectives;
 }
 
 export interface IAffiliatesHighlightedLabel {
@@ -162,4 +164,13 @@ export interface IHighlightsInfo {
 
 export interface IBusinessAccountInfo {
 	affiliates_count: number;
+}
+
+export interface IPrivacy {
+	protected: boolean;
+}
+
+export interface IRelationshipPerspectives {
+	followed_by: boolean;
+	following: boolean;
 }

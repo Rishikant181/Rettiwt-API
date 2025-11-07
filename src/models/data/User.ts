@@ -30,6 +30,8 @@ export class User implements IUser {
 	public profileImage: string;
 	public statusesCount: number;
 	public userName: string;
+	public isProtected?: boolean;
+	public isFollowedBy?: boolean;
 
 	/**
 	 * @param user - The raw user details.
@@ -52,6 +54,8 @@ export class User implements IUser {
 		this.pinnedTweet = user.legacy.pinned_tweet_ids_str[0];
 		this.profileBanner = user.legacy.profile_banner_url;
 		this.profileImage = user.legacy.profile_image_url_https;
+		this.isProtected = user.privacy?.protected;
+		this.isFollowedBy = user.relationship_perspectives?.followed_by;
 	}
 
 	/** The raw user details. */
@@ -182,6 +186,8 @@ export class User implements IUser {
 			profileImage: this.profileImage,
 			statusesCount: this.statusesCount,
 			userName: this.userName,
+			isProtected: this.isProtected,
+			isFollowedBy: this.isFollowedBy,
 		};
 	}
 }
