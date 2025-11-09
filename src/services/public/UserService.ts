@@ -306,7 +306,7 @@ export class UserService extends FetcherService {
 			// If username is given
 			if (id && isNaN(Number(id))) {
 				resource = ResourceType.USER_DETAILS_BY_USERNAME;
-				if (id?.startsWith("@")) {
+				if (id?.startsWith('@')) {
 					id = id.slice(1);
 				}
 			}
