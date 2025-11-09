@@ -228,8 +228,8 @@ export class UserService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Fetching the details of the User with username 'user1'
-	 * rettiwt.user.details('user1')
+	 * // Fetching the details of the User with username 'user1' or '@user1'
+	 * rettiwt.user.details('user1') // or @user1
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -306,6 +306,9 @@ export class UserService extends FetcherService {
 			// If username is given
 			if (id && isNaN(Number(id))) {
 				resource = ResourceType.USER_DETAILS_BY_USERNAME;
+				if (id?.startsWith('@')) {
+					id = id.slice(1);
+				}
 			}
 			// If id is given (or not, for self details)
 			else {
