@@ -140,3 +140,6 @@ test
 docs
 
 .idea
+
+# Debugging
+src/debug.ts
