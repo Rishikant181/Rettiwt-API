@@ -126,6 +126,8 @@ export class FetcherService {
 		// Fetch X.com homepage
 		const homePageResponse = await axios.get<string>('https://x.com', {
 			headers: this.config.headers,
+			httpAgent: this.config.httpsAgent,
+			httpsAgent: this.config.httpsAgent,
 		});
 
 		// Parse HTML using linkedom
@@ -146,7 +148,10 @@ export class FetcherService {
 
 		if (migrationRedirectionUrl) {
 			// Follow redirection URL
-			const redirectResponse = await axios.get<string>(migrationRedirectionUrl[0]);
+			const redirectResponse = await axios.get<string>(migrationRedirectionUrl[0], {
+				httpAgent: this.config.httpsAgent,
+				httpsAgent: this.config.httpsAgent,
+			});
 
 			dom = new JSDOM(redirectResponse.data);
 			document = dom.window.document;
@@ -186,6 +191,8 @@ export class FetcherService {
 
 					/* eslint-enable @typescript-eslint/naming-convention */
 				},
+				httpAgent: this.config.httpsAgent,
+				httpsAgent: this.config.httpsAgent,
 			});
 
 			dom = new JSDOM(formResponse.data);
