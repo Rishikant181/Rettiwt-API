@@ -1,6 +1,6 @@
 {
 	"name": "rettiwt-api",
-	"version": "6.0.7",
+	"version": "6.0.8",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"description": "An API for fetching data from TwitterAPI, without any rate limits!",
@@ -33,6 +33,7 @@
 	},
 	"devDependencies": {
 		"@types/cookiejar": "^2.1.5",
+		"@types/jsdom": "^27.0.0",
 		"@types/node": "^22.13.1",
 		"@typescript-eslint/eslint-plugin": "^8.24.0",
 		"@typescript-eslint/parser": "^8.24.0",
@@ -50,6 +51,7 @@
 		"commander": "^11.1.0",
 		"cookiejar": "^2.1.4",
 		"https-proxy-agent": "^7.0.6",
+		"jsdom": "^27.2.0",
 		"node-html-parser": "^7.0.1",
 		"x-client-transaction-id-glacier": "^1.0.0"
 	}
