@@ -1,6 +1,7 @@
 import axios, { isAxiosError } from 'axios';
 import { Cookie } from 'cookiejar';
-import { ClientTransaction, handleXMigration } from 'x-client-transaction-id';
+import { JSDOM } from 'jsdom';
+import { ClientTransaction } from 'x-client-transaction-id-glacier';
 
 import { AllowGuestAuthenticationGroup, FetchResourcesGroup, PostResourcesGroup } from '../../collections/Groups';
 import { Requests } from '../../collections/Requests';
@@ -103,7 +104,7 @@ export class FetcherService {
 	 */
 	private async _getTransactionHeader(method: string, url: string): Promise<ITransactionHeader> {
 		// Get the X homepage HTML document (using utility function)
-		const document = await handleXMigration();
+		const document = await this._handleXMigration();
 
 		// Create and initialize ClientTransaction instance
 		const transaction = await ClientTransaction.create(document);
@@ -119,6 +120,87 @@ export class FetcherService {
 			'x-client-transaction-id': tid,
 			/* eslint-enable @typescript-eslint/naming-convention */
 		};
+	}
+
+	private async _handleXMigration(): Promise<Document> {
+		// Fetch X.com homepage
+		const homePageResponse = await axios.get<string>('https://x.com', {
+			headers: this.config.headers,
+			httpAgent: this.config.httpsAgent,
+			httpsAgent: this.config.httpsAgent,
+		});
+
+		// Parse HTML using linkedom
+		let dom = new JSDOM(homePageResponse.data);
+		let document = dom.window.document;
+
+		// Check for migration redirection links
+		const migrationRedirectionRegex = new RegExp(
+			'(http(?:s)?://(?:www\\.)?(twitter|x){1}\\.com(/x)?/migrate([/?])?tok=[a-zA-Z0-9%\\-_]+)+',
+			'i',
+		);
+
+		const metaRefresh = document.querySelector("meta[http-equiv='refresh']");
+		const metaContent = metaRefresh ? metaRefresh.getAttribute('content') || '' : '';
+
+		const migrationRedirectionUrl =
+			migrationRedirectionRegex.exec(metaContent) || migrationRedirectionRegex.exec(homePageResponse.data);
+
+		if (migrationRedirectionUrl) {
+			// Follow redirection URL
+			const redirectResponse = await axios.get<string>(migrationRedirectionUrl[0], {
+				httpAgent: this.config.httpsAgent,
+				httpsAgent: this.config.httpsAgent,
+			});
+
+			dom = new JSDOM(redirectResponse.data);
+			document = dom.window.document;
+		}
+
+		// Handle migration form if present
+		const migrationForm =
+			document.querySelector("form[name='f']") ||
+			document.querySelector("form[action='https://x.com/x/migrate']");
+
+		if (migrationForm) {
+			const url = migrationForm.getAttribute('action') || 'https://x.com/x/migrate';
+			const method = migrationForm.getAttribute('method') || 'POST';
+
+			// Collect form input fields
+			const requestPayload = new FormData();
+
+			const inputFields = migrationForm.querySelectorAll('input');
+			for (const element of Array.from(inputFields)) {
+				const name = element.getAttribute('name');
+				const value = element.getAttribute('value');
+				if (name && value) {
+					requestPayload.append(name, value);
+				}
+			}
+
+			// Submit form using POST request
+			const formResponse = await axios.request<string>({
+				method: method,
+				url: url,
+				data: requestPayload,
+				headers: {
+					/* eslint-disable @typescript-eslint/naming-convention */
+
+					'Content-Type': 'multipart/form-data',
+					...this.config.headers,
+
+					/* eslint-enable @typescript-eslint/naming-convention */
+				},
+				httpAgent: this.config.httpsAgent,
+				httpsAgent: this.config.httpsAgent,
+			});
+
+			dom = new JSDOM(formResponse.data);
+			document = dom.window.document;
+		}
+
+		// Return final DOM document
+		return document;
 	}
 
 	/**
