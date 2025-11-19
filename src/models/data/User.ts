@@ -20,8 +20,8 @@ export class User implements IUser {
 	public followingsCount: number;
 	public fullName: string;
 	public id: string;
-	public isFollowed: boolean;
-	public isFollowing: boolean;
+	public isFollowed?: boolean;
+	public isFollowing?: boolean;
 	public isVerified: boolean;
 	public likeCount: number;
 	public location?: string;
@@ -41,8 +41,8 @@ export class User implements IUser {
 		this.fullName = user.legacy.name;
 		this.createdAt = new Date(user.legacy.created_at).toISOString();
 		this.description = user.legacy.description.length ? user.legacy.description : undefined;
-		this.isFollowed = user.legacy.following ?? false;
-		this.isFollowing = user.legacy.followed_by ?? false;
+		this.isFollowed = user.legacy.following;
+		this.isFollowing = user.legacy.followed_by;
 		this.isVerified = user.is_blue_verified;
 		this.likeCount = user.legacy.favourites_count;
 		this.followersCount = user.legacy.followers_count;
