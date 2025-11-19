@@ -598,7 +598,7 @@ export class UserService extends FetcherService {
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
 	 * // Fetching the first 100 Lists of the logged in User
-	 * rettiwt.user.likes()
+	 * rettiwt.user.lists()
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
