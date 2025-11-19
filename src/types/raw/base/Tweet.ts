@@ -17,7 +17,7 @@ export interface ITweet {
 	edit_control: ITweetEditControl;
 	edit_perspective: ITweetEditPerspective;
 	is_translatable: boolean;
-	views: ITweetViews;
+	views?: ITweetViews;
 	source: string;
 	quoted_status_result: IDataResult<ITweet | ILimitedVisibilityTweet>;
 	note_tweet: ITweetNote;
@@ -78,14 +78,14 @@ export interface ITweetNoteMedia {
 }
 
 export interface ITweetLegacy {
-	bookmark_count: number;
+	bookmark_count?: number;
 	bookmarked: boolean;
 	created_at: string;
 	conversation_id_str: string;
 	display_text_range: number[];
 	entities: IEntities;
 	extended_entities: IExtendedEntities;
-	favorite_count: number;
+	favorite_count?: number;
 	favorited: boolean;
 	full_text: string;
 	in_reply_to_status_id_str: string;
@@ -93,10 +93,10 @@ export interface ITweetLegacy {
 	lang: string;
 	possibly_sensitive: boolean;
 	possibly_sensitive_editable: boolean;
-	quote_count: number;
+	quote_count?: number;
 	quoted_status_id_str: string;
-	reply_count: number;
-	retweet_count: number;
+	reply_count?: number;
+	retweet_count?: number;
 	retweeted: boolean;
 	user_id_str: string;
 	id_str: string;
