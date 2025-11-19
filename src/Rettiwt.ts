@@ -1,4 +1,5 @@
 import { RettiwtConfig } from './models/RettiwtConfig';
+import { DirectMessageService } from './services/public/DirectMessageService';
 import { ListService } from './services/public/ListService';
 import { TweetService } from './services/public/TweetService';
 import { UserService } from './services/public/UserService';
@@ -49,6 +50,9 @@ export class Rettiwt {
 	/** The configuration for Rettiwt. */
 	private _config: RettiwtConfig;
 
+	/** The instance used to fetch data related to direct messages. */
+	public dm: DirectMessageService;
+
 	/** The instance used to fetch data related to lists. */
 	public list: ListService;
 
@@ -65,6 +69,7 @@ export class Rettiwt {
 	 */
 	public constructor(config?: IRettiwtConfig) {
 		this._config = new RettiwtConfig(config);
+		this.dm = new DirectMessageService(this._config);
 		this.list = new ListService(this._config);
 		this.tweet = new TweetService(this._config);
 		this.user = new UserService(this._config);

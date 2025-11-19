@@ -1,0 +1,20 @@
+name: '🚀 Feature request (Rettiwt-API)'
+description: Suggest an idea or enhancement for Rettiwt-API.
+labels: ['triage', 'enhancement', 'feature-request']
+body:
+    - type: markdown
+      attributes:
+          value: |
+              Before requesting a feature, please make sure you have read through our [documentation](https://rishikant181.github.io/Rettiwt-API/) and checked existing [issues](https://github.com/Rishikant181/Rettiwt-API/issues?q=is%3Aissue%20is%3Aopen%20sort%3Aupdated-desc).
+    - type: textarea
+      id: description
+      attributes:
+          label: Description
+          description: A clear and concise description of the feature or enhancement. Include possible use cases, alternatives, and links to any prototype or related module.
+      validations:
+          required: true
+    - type: textarea
+      id: additional
+      attributes:
+          label: Additional context
+          description: If applicable, add any other context, configuration, or screenshots here.

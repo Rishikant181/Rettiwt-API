@@ -262,13 +262,13 @@ export class FetcherService {
 	 *
 	 * #### Fetching the raw details of a single user, using their username
 	 * ```ts
-	 * import { FetcherService, EResourceType } from 'rettiwt-api';
+	 * import { FetcherService, ResourceType } from 'rettiwt-api';
 	 *
 	 * // Creating a new FetcherService instance using the given 'API_KEY'
 	 * const fetcher = new FetcherService({ apiKey: API_KEY });
 	 *
 	 * // Fetching the details of the User with username 'user1'
-	 * fetcher.request(EResourceType.USER_DETAILS_BY_USERNAME, { id: 'user1' })
+	 * fetcher.request(ResourceType.USER_DETAILS_BY_USERNAME, { id: 'user1' })
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })

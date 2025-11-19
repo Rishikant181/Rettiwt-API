@@ -9,6 +9,7 @@ export class PostArgs implements IPostArgs {
 	public id?: string;
 	public tweet?: NewTweet;
 	public upload?: UploadArgs;
+	public userId?: string;
 
 	/**
 	 * @param resource - The resource to be posted.
@@ -18,6 +19,7 @@ export class PostArgs implements IPostArgs {
 		this.id = args.id;
 		this.tweet = args.tweet ? new NewTweet(args.tweet) : undefined;
 		this.upload = args.upload ? new UploadArgs(args.upload) : undefined;
+		this.userId = args.userId;
 	}
 }
 

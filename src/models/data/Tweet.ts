@@ -22,24 +22,24 @@ export class Tweet implements ITweet {
 	/** The raw tweet details. */
 	private readonly _raw: IRawTweet;
 
-	public bookmarkCount: number;
+	public bookmarkCount?: number;
 	public conversationId: string;
 	public createdAt: string;
 	public entities: TweetEntities;
 	public fullText: string;
 	public id: string;
 	public lang: string;
-	public likeCount: number;
+	public likeCount?: number;
 	public media?: TweetMedia[];
-	public quoteCount: number;
+	public quoteCount?: number;
 	public quoted?: Tweet;
-	public replyCount: number;
+	public replyCount?: number;
 	public replyTo?: string;
-	public retweetCount: number;
+	public retweetCount?: number;
 	public retweetedTweet?: Tweet;
 	public tweetBy: User;
 	public url: string;
-	public viewCount: number;
+	public viewCount?: number;
 
 	/**
 	 * @param tweet - The raw tweet details.
@@ -53,14 +53,16 @@ export class Tweet implements ITweet {
 		this.entities = new TweetEntities(tweet.legacy.entities);
 		this.media = tweet.legacy.extended_entities?.media?.map((media) => new TweetMedia(media));
 		this.quoted = this._getQuotedTweet(tweet);
-		this.fullText = tweet.note_tweet ? tweet.note_tweet.note_tweet_results.result.text : tweet.legacy.full_text;
+		this.fullText = tweet.note_tweet?.note_tweet_results?.result?.text
+			? tweet.note_tweet.note_tweet_results.result.text
+			: tweet.legacy.full_text;
 		this.replyTo = tweet.legacy.in_reply_to_status_id_str;
 		this.lang = tweet.legacy.lang;
 		this.quoteCount = tweet.legacy.quote_count;
 		this.replyCount = tweet.legacy.reply_count;
 		this.retweetCount = tweet.legacy.retweet_count;
 		this.likeCount = tweet.legacy.favorite_count;
-		this.viewCount = tweet.views.count ? parseInt(tweet.views.count) : 0;
+		this.viewCount = tweet.views?.count ? parseInt(tweet.views.count) : undefined;
 		this.bookmarkCount = tweet.legacy.bookmark_count;
 		this.retweetedTweet = this._getRetweetedTweet(tweet);
 		this.url = `https://x.com/${this.tweetBy.userName}/status/${this.id}`;

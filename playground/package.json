@@ -1,0 +1,15 @@
+{
+	"name": "rettiwt-playground",
+	"version": "1.0.0",
+	"description": "A playground for testing Rettiwt-API features and functionalities.",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"start": "node index.js",
+		"test": "echo \"No tests specified\" && exit 0"
+	},
+	"dependencies": {
+		"dotenv": "^17.2.0",
+		"rettiwt-api": "workspace"
+	}
+}

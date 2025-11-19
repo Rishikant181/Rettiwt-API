@@ -1,0 +1,33 @@
+name: ci
+
+on:
+    push:
+        branches:
+            - dev
+    pull_request:
+        branches:
+            - dev
+jobs:
+    ci:
+        runs-on: ${{ matrix.os }}
+
+        strategy:
+            matrix:
+                os: [ubuntu-latest]
+                node: [22]
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Install node
+              uses: actions/setup-node@v4
+
+            - name: Install dependencies
+              run: npm install
+
+            - name: Run Format check
+              run: npm run format:check
+
+            - name: Run Lint check
+              run: npm run lint:check

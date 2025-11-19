@@ -1,0 +1,15 @@
+name: '💬 Question (Rettiwt-API)'
+description: Ask a question about Rettiwt-API.
+labels: ['question']
+body:
+    - type: markdown
+      attributes:
+          value: |
+              Before asking a question, please make sure you have read through our [documentation](https://rishikant181.github.io/Rettiwt-API/) and checked existing [issues](https://github.com/Rishikant181/Rettiwt-API/issues?q=is%3Aissue%20is%3Aopen%20sort%3Aupdated-desc).
+    - type: textarea
+      id: description
+      attributes:
+          label: Description
+          description: Please provide a clear and concise question. Include any relevant context, code snippets, or links to documentation.
+      validations:
+          required: true

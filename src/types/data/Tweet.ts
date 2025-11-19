@@ -9,7 +9,7 @@ import { IUser } from './User';
  */
 export interface ITweet {
 	/** The number of bookmarks of a tweet. */
-	bookmarkCount: number;
+	bookmarkCount?: number;
 
 	/** The ID of tweet which started the current conversation. */
 	conversationId: string;
@@ -30,25 +30,25 @@ export interface ITweet {
 	lang: string;
 
 	/** The number of likes of the tweet. */
-	likeCount: number;
+	likeCount?: number;
 
 	/** The urls of the media contents of the tweet (if any). */
 	media?: ITweetMedia[];
 
 	/** The number of quotes of the tweet. */
-	quoteCount: number;
+	quoteCount?: number;
 
 	/** The tweet which is quoted in the tweet. */
 	quoted?: ITweet;
 
 	/** The number of replies to the tweet. */
-	replyCount: number;
+	replyCount?: number;
 
 	/** The rest id of the tweet to which the tweet is a reply. */
 	replyTo?: string;
 
 	/** The number of retweets of the tweet. */
-	retweetCount: number;
+	retweetCount?: number;
 
 	/** The tweet which is retweeted in this tweet (if any). */
 	retweetedTweet?: ITweet;
@@ -60,7 +60,7 @@ export interface ITweet {
 	url: string;
 
 	/** The number of views of a tweet. */
-	viewCount: number;
+	viewCount?: number;
 }
 
 /**

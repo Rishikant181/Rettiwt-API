@@ -8,11 +8,17 @@
 export interface IAnalytics {
 	__typename: string;
 	organic_metrics_time_series: IAnalyticsMetric[];
+	verified_follower_count: string;
+	relationship_counts: IAnalyticsRelationships;
 	id: string;
 }
 
+export interface IAnalyticsRelationships {
+	followers: number;
+}
+
 export interface IAnalyticsMetric {
-	metric_value: IAnalyticsMetricValue[];
+	metric_values: IAnalyticsMetricValue[];
 	timestamp: IAnalyticsTimeStamp;
 }
 

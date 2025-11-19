@@ -1,6 +1,6 @@
 {
 	"name": "rettiwt-api",
-	"version": "6.0.8",
+	"version": "6.1.0",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"description": "An API for fetching data from TwitterAPI, without any rate limits!",
@@ -11,9 +11,10 @@
 		"build": "tsc",
 		"prepare": "tsc",
 		"format": "prettier --write .",
+		"format:check": "prettier --check .",
 		"lint": "eslint --max-warnings 0 --fix .",
-		"docs": "typedoc --excludePrivate --excludeProtected --excludeInternal src/index.ts",
-		"debug": "nodemon ./dist/index.js --inspect=0.0.0.0:9229"
+		"lint:check": "eslint --max-warnings 0 .",
+		"docs": "typedoc --excludePrivate --excludeProtected --excludeInternal src/index.ts"
 	},
 	"repository": {
 		"type": "git",
@@ -29,7 +30,7 @@
 	},
 	"homepage": "https://rishikant181.github.io/Rettiwt-API/",
 	"engines": {
-		"node": "^22.13.1"
+		"node": "^22.21.0"
 	},
 	"devDependencies": {
 		"@types/cookiejar": "^2.1.5",
@@ -53,6 +54,10 @@
 		"https-proxy-agent": "^7.0.6",
 		"jsdom": "^27.2.0",
 		"node-html-parser": "^7.0.1",
-		"x-client-transaction-id-glacier": "^1.0.0"
-	}
+		"x-client-transaction-id": "^0.1.8"
+	},
+	"workspaces": [
+		"playground",
+		"src"
+	]
 }

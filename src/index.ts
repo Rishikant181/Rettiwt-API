@@ -18,7 +18,10 @@ export * from './enums/Tweet';
 // MODELS
 export * from './models/args/FetchArgs';
 export * from './models/args/PostArgs';
+export * from './models/data/Conversation';
 export * from './models/data/CursoredData';
+export * from './models/data/DirectMessage';
+export * from './models/data/Inbox';
 export * from './models/data/List';
 export * from './models/data/Notification';
 export * from './models/data/Tweet';
@@ -26,12 +29,14 @@ export * from './models/data/User';
 export * from './models/errors/TwitterError';
 
 // REQUESTS
+export * from './requests/DirectMessage';
 export * from './requests/List';
 export * from './requests/Media';
 export * from './requests/Tweet';
 export * from './requests/User';
 
 // SERVICES
+export * from './services/public/DirectMessageService';
 export * from './services/public/FetcherService';
 export * from './services/public/ListService';
 export * from './services/public/TweetService';
@@ -40,7 +45,10 @@ export * from './services/public/UserService';
 // TYPES
 export * from './types/args/FetchArgs';
 export * from './types/args/PostArgs';
+export * from './types/data/Conversation';
 export * from './types/data/CursoredData';
+export * from './types/data/DirectMessage';
+export * from './types/data/Inbox';
 export * from './types/data/List';
 export * from './types/data/Notification';
 export * from './types/data/Tweet';
@@ -53,6 +61,7 @@ export { IErrorData as IRawErrorData, IErrorDetails as IRawErrorDetails } from '
 export { ILimitedVisibilityTweet as IRawLimitedVisibilityTweet } from './types/raw/base/LimitedVisibilityTweet';
 export { IList as IRawList } from './types/raw/base/List';
 export { IMedia as IRawMedia } from './types/raw/base/Media';
+export { IMessage as IRawMessage } from './types/raw/base/Message';
 export { INotification as IRawNotification } from './types/raw/base/Notification';
 export { ISpace as IRawSpace } from './types/raw/base/Space';
 export { ITweet as IRawTweet } from './types/raw/base/Tweet';
@@ -61,6 +70,8 @@ export { IDataResult as IRawDataResult } from './types/raw/composite/DataResult'
 export { ITimelineTweet as IRawTimelineTweet } from './types/raw/composite/TimelineTweet';
 export { ITimelineUser as IRawTimelineUser } from './types/raw/composite/TimelineUser';
 export { IResponse as IRawResponse } from './types/raw/generic/Response';
+export { IListMemberAddResponse as IRawListMemberAddResponse } from './types/raw/list/AddMember';
+export { IListMemberRemoveResponse as IRawListMemberRemoveResponse } from './types/raw/list/RemoveMember';
 export { IListDetailsResponse as IRawListDetailsResponse } from './types/raw/list/Details';
 export { IListMembersResponse as IRawListMembersResponse } from './types/raw/list/Members';
 export { IListTweetsResponse as IRawListTweetsResponse } from './types/raw/list/Tweets';
@@ -102,3 +113,7 @@ export { IUserTweetsAndRepliesResponse as IRawUserTweetsAndRepliesResponse } fro
 export { IUserUnfollowResponse as IRawUserUnfollowResponse } from './types/raw/user/Unfollow';
 export * from './types/ErrorHandler';
 export * from './types/RettiwtConfig';
+export { IConversationTimelineResponse as IRawConversationTimelineResponse } from './types/raw/dm/Conversation';
+export { IInboxInitialResponse as IRawInboxInitialResponse } from './types/raw/dm/InboxInitial';
+export { IInboxTimelineResponse as IRawInboxTimelineResponse } from './types/raw/dm/InboxTimeline';
+export { IUserUpdatesResponse as IRawUserUpdatesResponse } from './types/raw/dm/UserUpdates';

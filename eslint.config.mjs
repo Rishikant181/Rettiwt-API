@@ -11,7 +11,7 @@ const compat = new FlatCompat({
 
 export default [
 	{
-		ignores: ['dist/', 'node_modules/', 'docs/'],
+		ignores: ['dist/', 'node_modules/', 'docs/', 'playground/'],
 	},
 	...compat.extends('.eslintrc.js'),
 ];

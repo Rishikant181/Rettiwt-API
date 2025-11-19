@@ -14,7 +14,21 @@ import { ITweetFilter } from '../types/args/FetchArgs';
  */
 function createTweetCommand(rettiwt: Rettiwt): Command {
 	// Creating the 'tweet' command
-	const tweet = createCommand('tweet').description('Access resources releated to tweets');
+	const tweet = createCommand('tweet').description('Access resources related to tweets');
+
+	// Bookmark
+	tweet
+		.command('bookmark')
+		.description('Bookmark a tweet')
+		.argument('<id>', 'The tweet to bookmark')
+		.action(async (id: string) => {
+			try {
+				const result = await rettiwt.tweet.bookmark(id);
+				output(result);
+			} catch (error) {
+				output(error);
+			}
+		});
 
 	// Details
 	tweet
@@ -238,6 +252,20 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 					);
 					output(tweets);
 				}
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// Unbookmark
+	tweet
+		.command('unbookmark')
+		.description('Unbookmark a tweet')
+		.argument('<id>', 'The id of the tweet')
+		.action(async (id: string) => {
+			try {
+				const result = await rettiwt.tweet.unbookmark(id);
+				output(result);
 			} catch (error) {
 				output(error);
 			}

@@ -1,18 +1,27 @@
 import { TweetRepliesSortType } from '../../enums/Tweet';
 import { IFetchArgs, ITweetFilter } from '../../types/args/FetchArgs';
 
+import type { RawAnalyticsGranularity, RawAnalyticsMetric } from '../../enums/raw/Analytics';
 /**
  * Options specifying the data that is to be fetched.
  *
  * @public
  */
 export class FetchArgs implements IFetchArgs {
+	public activeConversationId?: string;
+	public conversationId?: string;
 	public count?: number;
 	public cursor?: string;
 	public filter?: TweetFilter;
+	public fromTime?: Date;
+	public granularity?: RawAnalyticsGranularity;
 	public id?: string;
 	public ids?: string[];
+	public maxId?: string;
+	public metrics?: RawAnalyticsMetric[];
+	public showVerifiedFollowers?: boolean;
 	public sortBy?: TweetRepliesSortType;
+	public toTime?: Date;
 
 	/**
 	 * @param args - Additional user-defined arguments for fetching the resource.
@@ -24,6 +33,14 @@ export class FetchArgs implements IFetchArgs {
 		this.cursor = args.cursor;
 		this.filter = args.filter ? new TweetFilter(args.filter) : undefined;
 		this.sortBy = args.sortBy;
+		this.fromTime = args.fromTime;
+		this.toTime = args.toTime;
+		this.granularity = args.granularity;
+		this.metrics = args.metrics;
+		this.showVerifiedFollowers = args.showVerifiedFollowers;
+		this.activeConversationId = args.activeConversationId;
+		this.conversationId = args.conversationId;
+		this.maxId = args.maxId;
 	}
 }
 

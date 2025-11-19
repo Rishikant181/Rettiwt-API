@@ -1,0 +1,57 @@
+name: '🐛 Bug report'
+description: Report a bug to help us improve Rettiwt-API.
+labels: ['triage', 'bug']
+body:
+    - type: markdown
+      attributes:
+          value: |
+              Before reporting a bug, please make sure you have read through our [documentation](https://rishikant181.github.io/Rettiwt-API/) and checked existing [issues](https://github.com/Rishikant181/Rettiwt-API/issues?q=is%3Aissue%20is%3Aopen%20sort%3Aupdated-desc).
+    - type: textarea
+      id: env
+      attributes:
+          label: Environment
+          description: Please provide your environment details. You can use `node -v` and `npm list rettiwt-api` to fill this section.
+          placeholder: |
+              - Operating System: `Windows/Linux/macOS`
+              - Node Version:     `v22.x.x` (Rettiwt-API requires NodeJS 20+)
+              - Rettiwt-API Version: `x.x.x`
+              - Package Manager:  `npm/yarn/pnpm`
+              - CLI or Dependency: `CLI` or `Dependency`
+      validations:
+          required: true
+    - type: textarea
+      id: reproduction
+      attributes:
+          label: Reproduction
+          description: Please provide a minimal code snippet or CLI command that reproduces the issue. If possible, include the API_KEY usage and any relevant configuration. If the report is vague and has no reproduction, it may be closed automatically.
+          placeholder: |
+              ```ts
+              import { Rettiwt } from 'rettiwt-api';
+              const rettiwt = new Rettiwt({ apiKey: '<API_KEY>' });
+              // ...
+              ```
+              or
+              ```sh
+              rettiwt <command> -k <API_KEY>
+              ```
+      validations:
+          required: true
+    - type: textarea
+      id: description
+      attributes:
+          label: Description
+          description: A clear and concise description of what the bug is. If you intend to submit a PR for this issue, mention it here.
+      validations:
+          required: true
+    - type: textarea
+      id: additional
+      attributes:
+          label: Additional context
+          description: If applicable, add any other context, configuration, or screenshots here.
+    - type: textarea
+      id: logs
+      attributes:
+          label: Logs
+          description: |
+              Please copy-paste any error logs or stack traces here. Avoid screenshots if possible.
+          render: shell-script

@@ -1,11 +1,15 @@
 import { Extractors } from '../../collections/Extractors';
+import { RawAnalyticsGranularity, RawAnalyticsMetric } from '../../enums/raw/Analytics';
 import { ResourceType } from '../../enums/Resource';
+import { Analytics } from '../../models/data/Analytics';
 import { CursoredData } from '../../models/data/CursoredData';
+import { List } from '../../models/data/List';
 import { Notification } from '../../models/data/Notification';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
 import { RettiwtConfig } from '../../models/RettiwtConfig';
 import { IUserAffiliatesResponse } from '../../types/raw/user/Affiliates';
+import { IUserAnalyticsResponse } from '../../types/raw/user/Analytics';
 import { IUserBookmarksResponse } from '../../types/raw/user/Bookmarks';
 import { IUserDetailsResponse } from '../../types/raw/user/Details';
 import { IUserDetailsBulkResponse } from '../../types/raw/user/DetailsBulk';
@@ -15,6 +19,7 @@ import { IUserFollowersResponse } from '../../types/raw/user/Followers';
 import { IUserFollowingResponse } from '../../types/raw/user/Following';
 import { IUserHighlightsResponse } from '../../types/raw/user/Highlights';
 import { IUserLikesResponse } from '../../types/raw/user/Likes';
+import { IUserListsResponse } from '../../types/raw/user/Lists';
 import { IUserMediaResponse } from '../../types/raw/user/Media';
 import { IUserNotificationsResponse } from '../../types/raw/user/Notifications';
 import { IUserRecommendedResponse } from '../../types/raw/user/Recommended';
@@ -78,6 +83,64 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
+		const data = Extractors[resource](response);
+
+		return data;
+	}
+
+	/**
+	 * Get the analytics overview of the logged in user.
+	 *
+	 * @param fromTime - The start time of the analytics period. Defaults to 7 days ago.
+	 * @param toTime - The end time of the analytics period. Defaults to now.
+	 * @param granularity - The granularity of the analytics data. Defaults to daily.
+	 * @param metrics - The metrics to include in the analytics data. Defaults to all available metrics available.
+	 * @param showVerifiedFollowers - Whether to include verified follower count and relationship counts in the response. Defaults to true.
+	 *
+	 * @returns The raw analytics data of the user.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the analytics overview of the logged in user
+	 * rettiwt.user.analytics().then(res => {
+	 *  console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async analytics(
+		fromTime?: Date,
+		toTime?: Date,
+		granularity?: RawAnalyticsGranularity,
+		metrics?: RawAnalyticsMetric[],
+		showVerifiedFollowers?: boolean,
+	): Promise<Analytics> {
+		const resource = ResourceType.USER_ANALYTICS;
+
+		// Define default values if not provided
+		fromTime = fromTime ?? new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+		toTime = toTime ?? new Date();
+		granularity = granularity ?? RawAnalyticsGranularity.DAILY;
+		metrics = metrics ?? Object.values(RawAnalyticsMetric);
+		showVerifiedFollowers = showVerifiedFollowers ?? true;
+
+		// Fetching raw analytics
+		const response = await this.request<IUserAnalyticsResponse>(resource, {
+			fromTime,
+			toTime,
+			granularity,
+			metrics,
+			showVerifiedFollowers,
+		});
+
 		const data = Extractors[resource](response);
 
 		return data;
@@ -165,8 +228,8 @@ export class UserService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Fetching the details of the User with username 'user1'
-	 * rettiwt.user.details('user1')
+	 * // Fetching the details of the User with username 'user1' or '@user1'
+	 * rettiwt.user.details('user1') // or @user1
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -243,6 +306,9 @@ export class UserService extends FetcherService {
 			// If username is given
 			if (id && isNaN(Number(id))) {
 				resource = ResourceType.USER_DETAILS_BY_USERNAME;
+				if (id?.startsWith('@')) {
+					id = id.slice(1);
+				}
 			}
 			// If id is given (or not, for self details)
 			else {
@@ -504,6 +570,48 @@ export class UserService extends FetcherService {
 
 		// Fetching raw list of likes
 		const response = await this.request<IUserLikesResponse>(resource, {
+			id: this.config.userId,
+			count: count,
+			cursor: cursor,
+		});
+
+		// Deserializing response
+		const data = Extractors[resource](response);
+
+		return data;
+	}
+
+	/**
+	 * Get the list of of the the logged in user. Includes both followed and owned.
+	 *
+	 * @param count - The number of lists to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of likes to fetch.
+	 *
+	 * @returns The list of tweets liked by the target user.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the first 100 Lists of the logged in User
+	 * rettiwt.user.lists()
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async lists(count?: number, cursor?: string): Promise<CursoredData<List>> {
+		const resource = ResourceType.USER_LISTS;
+
+		// Fetching raw list of lists
+		const response = await this.request<IUserListsResponse>(resource, {
 			id: this.config.userId,
 			count: count,
 			cursor: cursor,

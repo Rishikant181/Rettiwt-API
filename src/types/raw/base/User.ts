@@ -82,7 +82,8 @@ export interface IAffiliateHighlightedMentionResultLegacy {
 }
 
 export interface IUserLegacy {
-	following: boolean;
+	followed_by?: boolean;
+	following?: boolean;
 	can_dm: boolean;
 	can_media_tag: boolean;
 	created_at: string;

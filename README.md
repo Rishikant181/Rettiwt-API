@@ -4,7 +4,7 @@ A CLI tool and an API for fetching data from Twitter for free!
 
 ## Prerequisites
 
-- NodeJS 20
+- NodeJS 22
 - A working Twitter account (optional)
 
 ## Installation
@@ -29,9 +29,16 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
 
 - 'User' authentication (logging in) grants access to the following resources/actions:
 
+    - Direct Message Inbox
+    - Direct Message Conversations
+    - Direct Message Delete Conversation
+    - List Add Member
+    - List Details
     - List Members
+    - List Remove Member
     - List Tweets
     - Tweet Details - Single and Bulk
+    - Tweet Bookmark
     - Tweet Like
     - Tweet Likers
     - Tweet Media Upload
@@ -42,11 +49,13 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - Tweet Schedule
     - Tweet Search
     - Tweet Stream
+    - Tweet Unbookmark
     - Tweet Unlike
     - Tweet Unpost
     - Tweet Unretweet
     - Tweet Unschedule
     - User Affiliates
+    - User Analytics (Only for Premium accounts)
     - User Bookmarks
     - User Details - Single (by ID and Username) and Bulk (by ID only)
     - User Follow
@@ -55,6 +64,7 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - User Following
     - User Highlights
     - User Likes
+    - User Lists
     - User Media
     - User Notification
     - User Recommended Feed
@@ -124,9 +134,10 @@ A new Rettiwt instance can be initialized using the following code snippets:
 - `const rettiwt = new Rettiwt()` (for 'guest' authentication)
 - `const rettiwt = new Rettiwt({ apiKey: API_KEY })` (for 'user' authentication)
 
-The Rettiwt class has three members:
+The Rettiwt class has four members:
 
-- `list` memeber, for accessing resources related to lists.
+- `dm` member, for accessing resources related to direct messages.
+- `list` member, for accessing resources related to lists.
 - `tweet` member, for accessing resources related to tweets.
 - `user` member, for accessing resources related to users.
 
@@ -399,7 +410,7 @@ rettiwt.user.details('<username>')
 However, if further control over the raw response is required, Rettiwt-API provides the [`FetcherService`](https://rishikant181.github.io/Rettiwt-API/classes/FetcherService.html) class which provides direct access to the raw response, but keep in mind, this delegates the task of parsing and filtering the results to the consumer of the library. The following example demonstrates using the `FetcherService` class:
 
 ```ts
-import { RettiwtConfig, FetcherService, EResourceType, IUserDetailsResponse } from 'rettiwt-api';
+import { RettiwtConfig, FetcherService, ResourceType, IUserDetailsResponse } from 'rettiwt-api';
 
 // Creating the configuration for Rettiwt
 const config = new RettiwtConfig({ apiKey: '<API_KEY>' });
@@ -409,7 +420,7 @@ const fetcher = new FetcherService(config);
 
 // Fetching the details of the given user
 fetcher
-	.request<IUserDetailsResponse>(EResourceType.USER_DETAILS_BY_USERNAME, { id: 'user1' })
+	.request<IUserDetailsResponse>(ResourceType.USER_DETAILS_BY_USERNAME, { id: 'user1' })
 	.then((res) => {
 		console.log(res);
 	})
@@ -418,7 +429,7 @@ fetcher
 	});
 ```
 
-As demonstrated by the example, the raw data can be accessed by using the `request` method of the `FetcherService` class, which takes two parameters. The first parameter is the name of the requested resource, while the second is an object specifying the associated arguments required for the given resource. The complete list of resource type can be checked [here](https://rishikant181.github.io/Rettiwt-API/enums/AuthService.html#EResourceType). As for the resource specific argurments, they are the same as that of the methods of `Rettiwt` class' methods for the respective resources, but structured as an object. Notice how the `FetcherService` class takes the same arguments as the `Rettiwt` class, and the arguments have the same effects as they have in case of `Rettiwt` class.
+As demonstrated by the example, the raw data can be accessed by using the `request` method of the `FetcherService` class, which takes two parameters. The first parameter is the name of the requested resource, while the second is an object specifying the associated arguments required for the given resource. The complete list of resource type can be checked [here](https://rishikant181.github.io/Rettiwt-API/enums/AuthService.html#ResourceType). As for the resource specific argurments, they are the same as that of the methods of `Rettiwt` class' methods for the respective resources, but structured as an object. Notice how the `FetcherService` class takes the same arguments as the `Rettiwt` class, and the arguments have the same effects as they have in case of `Rettiwt` class.
 
 #### Notes:
 
@@ -434,13 +445,23 @@ For handling and processing of data returned by the functions, it's always advis
 
 So far, the following operations are supported:
 
+### Direct Messages
+
+- [Getting the DM inbox](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#inbox)
+- [Getting a specific conversation with full message history](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#conversation)
+- [Deleting a conversation](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#deleteConversation)
+
 ### List
 
+- [Adding a member to a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#addMember)
+- [Getting the details of a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#details)
 - [Getting the members of a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#members)
+- [Removing a member from a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#removeMember)
 - [Getting the list of tweets from a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#tweets)
 
 ### Tweets
 
+- [Bookmarking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#bookmark)
 - [Getting the details of a tweet/multiple tweets](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#details)
 - [Liking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#like)
 - [Getting the list of users who liked your tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#likers)
@@ -451,6 +472,7 @@ So far, the following operations are supported:
 - [Scheduling a new tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#schedule)
 - [Searching for the list of tweets that match a given filter](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#search)
 - [Streaming filtered tweets in pseudo-realtime](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#stream)
+- [Unbookmarking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unbookmark)
 - [Unliking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unlike)
 - [Unposting a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unpost)
 - [Unretweeting a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unretweet)
@@ -460,6 +482,7 @@ So far, the following operations are supported:
 ### Users
 
 - [Getting the list of users affiliated with the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#affiliates)
+- [Getting the analytics of the logged-in user (premium accounts only)](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#analytics)
 - [Getting the list of tweets bookmarked by the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#bookmarks)
 - [Getting the details of a user/multiple users](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#details)
 - [Following a given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#follow)
@@ -468,6 +491,7 @@ So far, the following operations are supported:
 - [Getting the list of users who are followed by the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#following)
 - [Getting the list of highlighted tweets of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#highlights)
 - [Getting the list of tweets liked by the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#likes)
+- [Getting the lists of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#lists)
 - [Getting the media timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#media)
 - [Streaming notifications of the logged-in user in pseudo-realtime](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#notifications)
 - [Getting the recommended feed of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#recommended)

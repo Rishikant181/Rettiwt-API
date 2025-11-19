@@ -17,8 +17,12 @@ export const AllowGuestAuthenticationGroup = [
  * @internal
  */
 export const FetchResourcesGroup = [
+	ResourceType.LIST_DETAILS,
 	ResourceType.LIST_MEMBERS,
 	ResourceType.LIST_TWEETS,
+	ResourceType.DM_CONVERSATION,
+	ResourceType.DM_INBOX_INITIAL_STATE,
+	ResourceType.DM_INBOX_TIMELINE,
 	ResourceType.TWEET_DETAILS,
 	ResourceType.TWEET_DETAILS_ALT,
 	ResourceType.TWEET_DETAILS_BULK,
@@ -27,6 +31,7 @@ export const FetchResourcesGroup = [
 	ResourceType.TWEET_RETWEETERS,
 	ResourceType.TWEET_SEARCH,
 	ResourceType.USER_AFFILIATES,
+	ResourceType.USER_ANALYTICS,
 	ResourceType.USER_BOOKMARKS,
 	ResourceType.USER_DETAILS_BY_USERNAME,
 	ResourceType.USER_DETAILS_BY_ID,
@@ -37,6 +42,7 @@ export const FetchResourcesGroup = [
 	ResourceType.USER_FOLLOWERS,
 	ResourceType.USER_HIGHLIGHTS,
 	ResourceType.USER_LIKES,
+	ResourceType.USER_LISTS,
 	ResourceType.USER_MEDIA,
 	ResourceType.USER_NOTIFICATIONS,
 	ResourceType.USER_SUBSCRIPTIONS,
@@ -50,13 +56,18 @@ export const FetchResourcesGroup = [
  * @internal
  */
 export const PostResourcesGroup = [
+	ResourceType.LIST_MEMBER_ADD,
+	ResourceType.LIST_MEMBER_REMOVE,
 	ResourceType.MEDIA_UPLOAD_APPEND,
 	ResourceType.MEDIA_UPLOAD_FINALIZE,
 	ResourceType.MEDIA_UPLOAD_INITIALIZE,
+	ResourceType.DM_DELETE_CONVERSATION,
+	ResourceType.TWEET_BOOKMARK,
 	ResourceType.TWEET_LIKE,
 	ResourceType.TWEET_POST,
 	ResourceType.TWEET_RETWEET,
 	ResourceType.TWEET_SCHEDULE,
+	ResourceType.TWEET_UNBOOKMARK,
 	ResourceType.TWEET_UNLIKE,
 	ResourceType.TWEET_UNPOST,
 	ResourceType.TWEET_UNRETWEET,

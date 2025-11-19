@@ -7,6 +7,35 @@ import { AxiosRequestConfig } from 'axios';
  */
 export class ListRequests {
 	/**
+	 * @param listId - The ID of the target list.
+	 * @param userId - The ID of the user to be added as a member.
+	 */
+	public static addMember(listId: string, userId: string): AxiosRequestConfig {
+		return {
+			method: 'post',
+			url: 'https://x.com/i/api/graphql/uFQumgzNDR27zs0yK5J3Fw/ListAddMember',
+			data: {
+				/* eslint-disable @typescript-eslint/naming-convention */
+
+				variables: {
+					listId: listId,
+					userId: userId,
+				},
+				features: {
+					payments_enabled: false,
+					profile_label_improvements_pcf_label_in_post_enabled: false,
+					rweb_tipjar_consumption_enabled: false,
+					verified_phone_label_enabled: false,
+					responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
+					responsive_web_graphql_timeline_navigation_enabled: false,
+				},
+
+				/* eslint-enable @typescript-eslint/naming-convention */
+			},
+		};
+	}
+
+	/**
 	 * @param id - The id of the list whose details are to be fetched.
 	 */
 	public static details(id: string): AxiosRequestConfig {
@@ -78,6 +107,35 @@ export class ListRequests {
 					responsive_web_grok_image_annotation_enabled: true,
 					responsive_web_enhance_cards_enabled: false,
 				}),
+				/* eslint-enable @typescript-eslint/naming-convention */
+			},
+		};
+	}
+
+	/**
+	 * @param listId - The ID of the target list.
+	 * @param userId - The ID of the user to remove as a member.
+	 */
+	public static removeMember(listId: string, userId: string): AxiosRequestConfig {
+		return {
+			method: 'post',
+			url: 'https://x.com/i/api/graphql/IzgPnK3wZpNgpcN31ry3Xg/ListRemoveMember',
+			data: {
+				/* eslint-disable @typescript-eslint/naming-convention */
+
+				variables: {
+					listId: listId,
+					userId: userId,
+				},
+				features: {
+					payments_enabled: false,
+					profile_label_improvements_pcf_label_in_post_enabled: false,
+					rweb_tipjar_consumption_enabled: false,
+					verified_phone_label_enabled: false,
+					responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
+					responsive_web_graphql_timeline_navigation_enabled: false,
+				},
+
 				/* eslint-enable @typescript-eslint/naming-convention */
 			},
 		};
