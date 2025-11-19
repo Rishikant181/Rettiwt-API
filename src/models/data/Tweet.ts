@@ -22,24 +22,24 @@ export class Tweet implements ITweet {
 	/** The raw tweet details. */
 	private readonly _raw: IRawTweet;
 
-	public bookmarkCount: number;
+	public bookmarkCount?: number;
 	public conversationId: string;
 	public createdAt: string;
 	public entities: TweetEntities;
 	public fullText: string;
 	public id: string;
 	public lang: string;
-	public likeCount: number;
+	public likeCount?: number;
 	public media?: TweetMedia[];
-	public quoteCount: number;
+	public quoteCount?: number;
 	public quoted?: Tweet;
-	public replyCount: number;
+	public replyCount?: number;
 	public replyTo?: string;
-	public retweetCount: number;
+	public retweetCount?: number;
 	public retweetedTweet?: Tweet;
 	public tweetBy: User;
 	public url: string;
-	public viewCount: number;
+	public viewCount?: number;
 
 	/**
 	 * @param tweet - The raw tweet details.
@@ -62,7 +62,7 @@ export class Tweet implements ITweet {
 		this.replyCount = tweet.legacy.reply_count;
 		this.retweetCount = tweet.legacy.retweet_count;
 		this.likeCount = tweet.legacy.favorite_count;
-		this.viewCount = tweet.views?.count ? parseInt(tweet.views.count) : 0;
+		this.viewCount = tweet.views?.count ? parseInt(tweet.views.count) : undefined;
 		this.bookmarkCount = tweet.legacy.bookmark_count;
 		this.retweetedTweet = this._getRetweetedTweet(tweet);
 		this.url = `https://x.com/${this.tweetBy.userName}/status/${this.id}`;
