@@ -51,4 +51,10 @@ export interface IUser {
 
 	/** The username/screenname of the user. */
 	userName: string;
+
+	/** Whether the account is protected (private). */
+	isProtected?: boolean;
+
+	/** Whether the user is followed by the logged-in user (from their perspective). */
+	isFollowedBy?: boolean;
 }
