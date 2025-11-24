@@ -1,4 +1,4 @@
-import axios, { isAxiosError } from 'axios';
+import axios, { AxiosError, isAxiosError } from 'axios';
 import { Cookie } from 'cookiejar';
 import { JSDOM } from 'jsdom';
 import { ClientTransaction } from 'x-client-transaction-id-glacier';
@@ -11,11 +11,13 @@ import { ResourceType } from '../../enums/Resource';
 import { FetchArgs } from '../../models/args/FetchArgs';
 import { PostArgs } from '../../models/args/PostArgs';
 import { AuthCredential } from '../../models/auth/AuthCredential';
+import { TwitterError } from '../../models/errors/TwitterError';
 import { RettiwtConfig } from '../../models/RettiwtConfig';
 import { IFetchArgs } from '../../types/args/FetchArgs';
 import { IPostArgs } from '../../types/args/PostArgs';
 import { ITransactionHeader } from '../../types/auth/TransactionHeader';
 import { IErrorHandler } from '../../types/ErrorHandler';
+import { IErrorData } from '../../types/raw/base/Error';
 
 import { AuthService } from '../internal/AuthService';
 import { ErrorService } from '../internal/ErrorService';
@@ -322,8 +324,27 @@ export class FetcherService {
 				// Introducing a delay
 				await this._wait();
 
+				// Getting the response body
+				const responseData = (await axios<T>(config)).data;
+
+				// Check for Twitter API errors in response body
+				// Type guard to check if response contains errors
+				const potentialErrorResponse = responseData as unknown as Partial<IErrorData>;
+				if (potentialErrorResponse.errors && Array.isArray(potentialErrorResponse.errors)) {
+					// Throw TwitterError using existing error class
+					const axiosError = {
+						response: {
+							data: { errors: potentialErrorResponse.errors },
+							status: 200,
+						},
+						message: potentialErrorResponse.errors[0]?.message ?? 'Twitter API Error',
+						status: 200,
+					} as AxiosError<IErrorData>;
+					throw new TwitterError(axiosError);
+				}
+
 				// Returning the reponse body
-				return (await axios<T>(config)).data;
+				return responseData;
 			} catch (err) {
 				// If it's an error 404, retry
 				if (isAxiosError(err) && err.status === 404) {
