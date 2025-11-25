@@ -1,3 +1,5 @@
+import { IProfileUpdateOptions } from './ProfileArgs';
+
 /**
  * Options specifying the data that is to be posted.
  *
@@ -57,6 +59,14 @@ export interface IPostArgs {
 	 * Required only when deleting a conversation using {@link ResourceType.DM_DELETE_CONVERSATION}
 	 */
 	conversationId?: string;
+
+	/**
+	 * Profile update options.
+	 *
+	 * @remarks
+	 * Required only when updating user profile using {@link ResourceType.USER_PROFILE_UPDATE}
+	 */
+	profileOptions?: IProfileUpdateOptions;
 }
 
 /**

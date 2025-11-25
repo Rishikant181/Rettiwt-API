@@ -22,7 +22,10 @@ import { IUserLikesResponse } from '../../types/raw/user/Likes';
 import { IUserListsResponse } from '../../types/raw/user/Lists';
 import { IUserMediaResponse } from '../../types/raw/user/Media';
 import { IUserNotificationsResponse } from '../../types/raw/user/Notifications';
+import { IUserProfileUpdateResponse } from '../../types/raw/user/ProfileUpdate';
 import { IUserRecommendedResponse } from '../../types/raw/user/Recommended';
+import { IProfileUpdateOptions } from '../../types/args/ProfileArgs';
+import { ProfileUpdateOptions } from '../../models/args/ProfileArgs';
 import { IUserSubscriptionsResponse } from '../../types/raw/user/Subscriptions';
 import { IUserTweetsResponse } from '../../types/raw/user/Tweets';
 import { IUserTweetsAndRepliesResponse } from '../../types/raw/user/TweetsAndReplies';
@@ -950,6 +953,71 @@ export class UserService extends FetcherService {
 
 		// Unfollowing the user
 		const response = await this.request<IUserUnfollowResponse>(ResourceType.USER_UNFOLLOW, { id: id });
+
+		// Deserializing the response
+		const data = Extractors[resource](response) ?? false;
+
+		return data;
+	}
+
+	/**
+	 * Update the logged in user's profile.
+	 *
+	 * @param options - The profile update options.
+	 *
+	 * @returns Whether the profile update was successful or not.
+	 *
+	 * @example
+	 *
+	 * #### Updating only the display name
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Updating the display name of the logged in user
+	 * rettiwt.user.updateProfile({ name: 'New Display Name' })
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @example
+	 *
+	 * #### Updating multiple profile fields
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Updating multiple profile fields
+	 * rettiwt.user.updateProfile({
+	 * 	name: 'New Display Name',
+	 * 	location: 'Istanbul',
+	 * 	description: 'Hello world!',
+	 * 	url: 'https://example.com'
+	 * })
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async updateProfile(options: IProfileUpdateOptions): Promise<boolean> {
+		const resource = ResourceType.USER_PROFILE_UPDATE;
+
+		// Validating the options
+		const validatedOptions = new ProfileUpdateOptions(options);
+
+		// Updating the profile
+		const response = await this.request<IUserProfileUpdateResponse>(resource, { profileOptions: validatedOptions });
 
 		// Deserializing the response
 		const data = Extractors[resource](response) ?? false;

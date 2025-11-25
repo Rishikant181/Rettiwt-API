@@ -3,6 +3,7 @@ import qs from 'querystring';
 import { AxiosRequestConfig } from 'axios';
 
 import { RawAnalyticsGranularity, RawAnalyticsMetric } from '../enums/raw/Analytics';
+import { IProfileUpdateOptions } from '../types/args/ProfileArgs';
 
 /**
  * Collection of requests related to users.
@@ -960,6 +961,22 @@ export class UserRequests {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				user_id: id,
 				/* eslint-enable @typescript-eslint/naming-convention */
+			}),
+		};
+	}
+
+	/**
+	 * @param options - The profile update options.
+	 */
+	public static updateProfile(options: IProfileUpdateOptions): AxiosRequestConfig {
+		return {
+			method: 'post',
+			url: 'https://x.com/i/api/1.1/account/update_profile.json',
+			data: qs.stringify({
+				...(options.name && { name: options.name }),
+				...(options.url && { url: options.url }),
+				...(options.location && { location: options.location }),
+				...(options.description && { description: options.description }),
 			}),
 		};
 	}

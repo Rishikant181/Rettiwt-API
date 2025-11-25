@@ -18,6 +18,7 @@ export * from './enums/Tweet';
 // MODELS
 export * from './models/args/FetchArgs';
 export * from './models/args/PostArgs';
+export * from './models/args/ProfileArgs';
 export * from './models/data/Conversation';
 export * from './models/data/CursoredData';
 export * from './models/data/DirectMessage';
@@ -45,6 +46,7 @@ export * from './services/public/UserService';
 // TYPES
 export * from './types/args/FetchArgs';
 export * from './types/args/PostArgs';
+export * from './types/args/ProfileArgs';
 export * from './types/data/Conversation';
 export * from './types/data/CursoredData';
 export * from './types/data/DirectMessage';
@@ -111,6 +113,7 @@ export { IUserSubscriptionsResponse as IRawUserSubscriptionsResponse } from './t
 export { IUserTweetsResponse as IRawUserTweetsResponse } from './types/raw/user/Tweets';
 export { IUserTweetsAndRepliesResponse as IRawUserTweetsAndRepliesResponse } from './types/raw/user/TweetsAndReplies';
 export { IUserUnfollowResponse as IRawUserUnfollowResponse } from './types/raw/user/Unfollow';
+export { IUserProfileUpdateResponse as IRawUserProfileUpdateResponse } from './types/raw/user/ProfileUpdate';
 export * from './types/ErrorHandler';
 export * from './types/RettiwtConfig';
 export { IConversationTimelineResponse as IRawConversationTimelineResponse } from './types/raw/dm/Conversation';

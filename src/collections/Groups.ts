@@ -74,4 +74,5 @@ export const PostResourcesGroup = [
 	ResourceType.TWEET_UNSCHEDULE,
 	ResourceType.USER_FOLLOW,
 	ResourceType.USER_UNFOLLOW,
+	ResourceType.USER_PROFILE_UPDATE,
 ];

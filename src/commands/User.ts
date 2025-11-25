@@ -274,6 +274,27 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// Update Profile
+	user.command('update-profile')
+		.description('Update your profile information')
+		.option('-n, --name <string>', 'Display name (max 50 characters)')
+		.option('-u, --url <string>', 'Profile URL')
+		.option('-l, --location <string>', 'Location (max 30 characters)')
+		.option('-b, --bio <string>', 'Bio/description (max 160 characters)')
+		.action(async (options?: UserProfileUpdateOptions) => {
+			try {
+				const result = await rettiwt.user.updateProfile({
+					name: options?.name,
+					url: options?.url,
+					location: options?.location,
+					description: options?.bio,
+				});
+				output(result);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	return user;
 }
 
