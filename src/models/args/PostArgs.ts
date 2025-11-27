@@ -1,12 +1,16 @@
 import { INewTweet, INewTweetMedia, IPostArgs, IUploadArgs } from '../../types/args/PostArgs';
 
+import { ProfileUpdateOptions } from './ProfileArgs';
+
 /**
  * Options specifying the data that is to be posted.
  *
  * @public
  */
 export class PostArgs implements IPostArgs {
+	public conversationId?: string;
 	public id?: string;
+	public profileOptions?: ProfileUpdateOptions;
 	public tweet?: NewTweet;
 	public upload?: UploadArgs;
 	public userId?: string;
@@ -20,6 +24,8 @@ export class PostArgs implements IPostArgs {
 		this.tweet = args.tweet ? new NewTweet(args.tweet) : undefined;
 		this.upload = args.upload ? new UploadArgs(args.upload) : undefined;
 		this.userId = args.userId;
+		this.conversationId = args.conversationId;
+		this.profileOptions = args.profileOptions ? new ProfileUpdateOptions(args.profileOptions) : undefined;
 	}
 }
 
