@@ -1,7 +1,7 @@
 import axios, { isAxiosError } from 'axios';
 import { Cookie } from 'cookiejar';
 import { JSDOM } from 'jsdom';
-import { ClientTransaction } from 'x-client-transaction-id-glacier';
+import { ClientTransaction } from 'x-client-transaction-id';
 
 import { AllowGuestAuthenticationGroup, FetchResourcesGroup, PostResourcesGroup } from '../../collections/Groups';
 import { Requests } from '../../collections/Requests';
