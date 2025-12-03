@@ -10,7 +10,7 @@ import { IUser } from './User';
  *
  * @public
  */
-export interface ItemContent {
+export interface INotification {
 	itemType: string;
 	__typename: string;
 	id: string;
