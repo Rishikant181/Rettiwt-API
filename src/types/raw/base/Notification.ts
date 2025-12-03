@@ -1,67 +1,66 @@
 /* eslint-disable */
 
 import { RawNotificationType } from '../../../enums/raw/Notification';
+import { IDataResult } from '../composite/DataResult';
+import { ITweet } from './Tweet';
+import { IUser } from './User';
 
 /**
  * Represents the raw data of a single Notification.
  *
  * @public
  */
-export interface INotification {
+export interface ItemContent {
+	itemType: string;
+	__typename: string;
 	id: string;
-	timestampMs: string;
-	icon: INotificationIcon;
-	message: INotificationMessage;
-	template: INotificationTemplate;
+	notification_icon: RawNotificationType;
+	rich_message: INotificationRichMessage;
+	notification_url: INotificationUrl;
+	template: INoticiationTemplate;
+	timestamp_ms: string;
 }
 
-export interface INotificationIcon {
-	id: RawNotificationType;
-}
-
-export interface INotificationMessage {
-	text: string;
-	entities: INotificationMessageEntity[];
+export interface INotificationRichMessage {
 	rtl: boolean;
+	text: string;
+	entities: INotificationEntity[];
 }
 
-export interface INotificationMessageEntity {
+export interface INotificationEntity {
 	fromIndex: number;
 	toIndex: number;
-	format: string;
+	ref: INotificationEntityRef;
 }
 
-export interface INotificationTemplate {
-	aggregateUserActionsV1: INotificationUserActions;
+export interface INotificationEntityRef {
+	type: string;
+	user_results: IDataResult<IUser>;
 }
 
-export interface INotificationUserActions {
-	targetObjects: INotificationTargetObject[];
-	fromUsers: INotificationFromUser[];
-	additionalContext: INotificationAdditionalContext;
+export interface INotificationUrl {
+	url: string;
+	urlType: string;
+	urtEndpointOptions?: INotificationUrtEndpointOptions;
+}
+
+export interface INotificationUrtEndpointOptions {
+	cacheId: string;
+	title: string;
+}
+
+export interface INoticiationTemplate {
+	__typename: string;
+	target_objects: INotificationTargetObject[];
+	from_users: INotificationFromUser[];
 }
 
 export interface INotificationTargetObject {
-	tweet: INotificationTweet;
-}
-
-export interface INotificationTweet {
-	id: string;
+	__typename: string;
+	tweet_results: IDataResult<ITweet>;
 }
 
 export interface INotificationFromUser {
-	user: INotificationUser;
-}
-
-export interface INotificationUser {
-	id: string;
-}
-
-export interface INotificationAdditionalContext {
-	contextText: INotificationContextText;
-}
-
-export interface INotificationContextText {
-	text: string;
-	entities: any[];
+	__typename: string;
+	user_results: IDataResult<IUser>;
 }

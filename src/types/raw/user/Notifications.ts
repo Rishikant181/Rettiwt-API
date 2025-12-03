@@ -9,46 +9,46 @@ export interface IUserNotificationsResponse {
 	data: Data;
 }
 
-export interface Data {
+interface Data {
 	viewer_v2: ViewerV2;
 }
 
-export interface ViewerV2 {
+interface ViewerV2 {
 	user_results: UserResults;
 }
 
-export interface UserResults {
+interface UserResults {
 	result: Result;
 }
 
-export interface Result {
+interface Result {
 	__typename: string;
 	rest_id: string;
 	notification_timeline: NotificationTimeline;
 }
 
-export interface NotificationTimeline {
+interface NotificationTimeline {
 	id: string;
 	timeline: Timeline;
 }
 
-export interface Timeline {
+interface Timeline {
 	instructions: Instruction[];
 }
 
-export interface Instruction {
+interface Instruction {
 	type: string;
 	entries?: Entry[];
 	sort_index?: string;
 }
 
-export interface Entry {
+interface Entry {
 	entryId: string;
 	sortIndex: string;
 	content: Content;
 }
 
-export interface Content {
+interface Content {
 	entryType: string;
 	__typename: string;
 	value?: string;
@@ -57,7 +57,7 @@ export interface Content {
 	clientEventInfo?: ClientEventInfo;
 }
 
-export interface ItemContent {
+interface ItemContent {
 	itemType: string;
 	__typename: string;
 	id: string;
@@ -68,28 +68,28 @@ export interface ItemContent {
 	timestamp_ms: string;
 }
 
-export interface RichMessage {
+interface RichMessage {
 	rtl: boolean;
 	text: string;
 	entities: Entity[];
 }
 
-export interface Entity {
+interface Entity {
 	fromIndex: number;
 	toIndex: number;
 	ref: Ref;
 }
 
-export interface Ref {
+interface Ref {
 	type: string;
 	user_results: UserResults2;
 }
 
-export interface UserResults2 {
+interface UserResults2 {
 	result: Result2;
 }
 
-export interface Result2 {
+interface Result2 {
 	__typename: string;
 	id: string;
 	rest_id: string;
@@ -113,23 +113,23 @@ export interface Result2 {
 	verified_phone_status: boolean;
 }
 
-export interface AffiliatesHighlightedLabel {}
+interface AffiliatesHighlightedLabel {}
 
-export interface Avatar {
+interface Avatar {
 	image_url: string;
 }
 
-export interface Core {
+interface Core {
 	created_at: string;
 	name: string;
 	screen_name: string;
 }
 
-export interface DmPermissions {
+interface DmPermissions {
 	can_dm: boolean;
 }
 
-export interface Legacy {
+interface Legacy {
 	default_profile: boolean;
 	default_profile_image: boolean;
 	description: string;
@@ -153,68 +153,68 @@ export interface Legacy {
 	withheld_in_countries: any[];
 }
 
-export interface Entities {
+interface Entities {
 	description: Description;
 }
 
-export interface Description {
+interface Description {
 	urls: any[];
 }
 
-export interface Location {
+interface Location {
 	location: string;
 }
 
-export interface MediaPermissions {
+interface MediaPermissions {
 	can_media_tag: boolean;
 }
 
-export interface ProfileBio {
+interface ProfileBio {
 	description: string;
 }
 
-export interface Privacy {
+interface Privacy {
 	protected: boolean;
 }
 
-export interface RelationshipPerspectives {
+interface RelationshipPerspectives {
 	followed_by: boolean;
 	following: boolean;
 }
 
-export interface TipjarSettings {}
+interface TipjarSettings {}
 
-export interface Verification {
+interface Verification {
 	verified: boolean;
 }
 
-export interface NotificationUrl {
+interface NotificationUrl {
 	url: string;
 	urlType: string;
 	urtEndpointOptions?: UrtEndpointOptions;
 }
 
-export interface UrtEndpointOptions {
+interface UrtEndpointOptions {
 	cacheId: string;
 	title: string;
 }
 
-export interface Template {
+interface Template {
 	__typename: string;
 	target_objects: TargetObject[];
 	from_users: FromUser[];
 }
 
-export interface TargetObject {
+interface TargetObject {
 	__typename: string;
 	tweet_results: TweetResults;
 }
 
-export interface TweetResults {
+interface TweetResults {
 	result: Result3;
 }
 
-export interface Result3 {
+interface Result3 {
 	__typename: string;
 	rest_id: string;
 	core: Core2;
@@ -227,15 +227,15 @@ export interface Result3 {
 	legacy: Legacy3;
 }
 
-export interface Core2 {
+interface Core2 {
 	user_results: UserResults3;
 }
 
-export interface UserResults3 {
+interface UserResults3 {
 	result: Result4;
 }
 
-export interface Result4 {
+interface Result4 {
 	__typename: string;
 	id: string;
 	rest_id: string;
@@ -259,23 +259,23 @@ export interface Result4 {
 	verified_phone_status: boolean;
 }
 
-export interface AffiliatesHighlightedLabel2 {}
+interface AffiliatesHighlightedLabel2 {}
 
-export interface Avatar2 {
+interface Avatar2 {
 	image_url: string;
 }
 
-export interface Core3 {
+interface Core3 {
 	created_at: string;
 	name: string;
 	screen_name: string;
 }
 
-export interface DmPermissions2 {
+interface DmPermissions2 {
 	can_dm: boolean;
 }
 
-export interface Legacy2 {
+interface Legacy2 {
 	default_profile: boolean;
 	default_profile_image: boolean;
 	description: string;
@@ -299,55 +299,55 @@ export interface Legacy2 {
 	withheld_in_countries: any[];
 }
 
-export interface Entities2 {
+interface Entities2 {
 	description: Description2;
 }
 
-export interface Description2 {
+interface Description2 {
 	urls: any[];
 }
 
-export interface Location2 {
+interface Location2 {
 	location: string;
 }
 
-export interface MediaPermissions2 {
+interface MediaPermissions2 {
 	can_media_tag: boolean;
 }
 
-export interface ProfileBio2 {
+interface ProfileBio2 {
 	description: string;
 }
 
-export interface Privacy2 {
+interface Privacy2 {
 	protected: boolean;
 }
 
-export interface RelationshipPerspectives2 {
+interface RelationshipPerspectives2 {
 	following: boolean;
 }
 
-export interface TipjarSettings2 {}
+interface TipjarSettings2 {}
 
-export interface Verification2 {
+interface Verification2 {
 	verified: boolean;
 }
 
-export interface UnmentionData {}
+interface UnmentionData {}
 
-export interface EditControl {
+interface EditControl {
 	edit_tweet_ids: string[];
 	editable_until_msecs: string;
 	is_edit_eligible: boolean;
 	edits_remaining: string;
 }
 
-export interface Views {
+interface Views {
 	count: string;
 	state: string;
 }
 
-export interface Legacy3 {
+interface Legacy3 {
 	bookmark_count: number;
 	bookmarked: boolean;
 	created_at: string;
@@ -367,7 +367,7 @@ export interface Legacy3 {
 	id_str: string;
 }
 
-export interface Entities3 {
+interface Entities3 {
 	hashtags: any[];
 	symbols: any[];
 	timestamps: any[];
@@ -375,16 +375,16 @@ export interface Entities3 {
 	user_mentions: any[];
 }
 
-export interface FromUser {
+interface FromUser {
 	__typename: string;
 	user_results: UserResults4;
 }
 
-export interface UserResults4 {
+interface UserResults4 {
 	result: Result5;
 }
 
-export interface Result5 {
+interface Result5 {
 	__typename: string;
 	id: string;
 	rest_id: string;
@@ -408,23 +408,23 @@ export interface Result5 {
 	verified_phone_status: boolean;
 }
 
-export interface AffiliatesHighlightedLabel3 {}
+interface AffiliatesHighlightedLabel3 {}
 
-export interface Avatar3 {
+interface Avatar3 {
 	image_url: string;
 }
 
-export interface Core4 {
+interface Core4 {
 	created_at: string;
 	name: string;
 	screen_name: string;
 }
 
-export interface DmPermissions3 {
+interface DmPermissions3 {
 	can_dm: boolean;
 }
 
-export interface Legacy4 {
+interface Legacy4 {
 	default_profile: boolean;
 	default_profile_image: boolean;
 	description: string;
@@ -448,52 +448,52 @@ export interface Legacy4 {
 	withheld_in_countries: any[];
 }
 
-export interface Entities4 {
+interface Entities4 {
 	description: Description3;
 }
 
-export interface Description3 {
+interface Description3 {
 	urls: any[];
 }
 
-export interface Location3 {
+interface Location3 {
 	location: string;
 }
 
-export interface MediaPermissions3 {
+interface MediaPermissions3 {
 	can_media_tag: boolean;
 }
 
-export interface ProfileBio3 {
+interface ProfileBio3 {
 	description: string;
 }
 
-export interface Privacy3 {
+interface Privacy3 {
 	protected: boolean;
 }
 
-export interface RelationshipPerspectives3 {
+interface RelationshipPerspectives3 {
 	followed_by: boolean;
 	following: boolean;
 }
 
-export interface TipjarSettings3 {}
+interface TipjarSettings3 {}
 
-export interface Verification3 {
+interface Verification3 {
 	verified: boolean;
 }
 
-export interface ClientEventInfo {
+interface ClientEventInfo {
 	component: string;
 	element: string;
 	details: Details;
 }
 
-export interface Details {
+interface Details {
 	notificationDetails: NotificationDetails;
 }
 
-export interface NotificationDetails {
+interface NotificationDetails {
 	impressionId: string;
 	metadata: string;
 }
