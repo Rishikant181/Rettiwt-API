@@ -1,9 +1,7 @@
 import { NotificationType } from '../../enums/Notification';
-import { RawNotificationType } from '../../enums/raw/Notification';
-import { findKeyByValue } from '../../helper/JsonUtils';
+import { findByFilter } from '../../helper/JsonUtils';
 import { INotification } from '../../types/data/Notification';
 import { INotification as IRawNotification } from '../../types/raw/base/Notification';
-import { IUserNotificationsResponse } from '../../types/raw/user/Notifications';
 
 /**
  * The details of a single notification.
@@ -28,16 +26,16 @@ export class Notification implements INotification {
 		this._raw = { ...notification };
 
 		// Getting the original notification type
-		const notificationType: string | undefined = findKeyByValue(RawNotificationType, notification.icon.id);
+		const notificationType = notification.notification_icon.toString();
 
-		this.from = notification.template?.aggregateUserActionsV1?.fromUsers
-			? notification.template.aggregateUserActionsV1.fromUsers.map((item) => item.user.id)
+		this.from = notification.template.from_users
+			? notification.template.from_users.map((item) => item.user_results.result.rest_id)
 			: [];
 		this.id = notification.id;
-		this.message = notification.message.text;
-		this.receivedAt = new Date(Number(notification.timestampMs)).toISOString();
-		this.target = notification.template?.aggregateUserActionsV1?.targetObjects
-			? notification.template.aggregateUserActionsV1.targetObjects.map((item) => item.tweet.id)
+		this.message = notification.rich_message.text;
+		this.receivedAt = new Date(notification.timestamp_ms).toISOString();
+		this.target = notification.template.target_objects
+			? notification.template.target_objects.map((item) => item.tweet_results.result.rest_id)
 			: [];
 		this.type = notificationType
 			? NotificationType[notificationType as keyof typeof NotificationType]
@@ -59,14 +57,12 @@ export class Notification implements INotification {
 	public static list(response: NonNullable<unknown>): Notification[] {
 		const notifications: Notification[] = [];
 
-		// Extracting notifications
-		if ((response as IUserNotificationsResponse).globalObjects.notifications) {
-			// Iterating over the raw list of notifications
-			for (const [, value] of Object.entries(
-				(response as IUserNotificationsResponse).globalObjects.notifications,
-			)) {
-				notifications.push(new Notification(value as IRawNotification));
-			}
+		// Extracting the matching data
+		const extract = findByFilter<IRawNotification>(response, '__typename', 'TimelineNotification');
+
+		// Deserializing valid data
+		for (const item of extract) {
+			notifications.push(new Notification(item));
 		}
 
 		return notifications;
