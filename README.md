@@ -469,7 +469,7 @@ So far, the following operations are supported:
 - [Posting a new tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#post)
 - [Getting the list of replies to a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#replies)
 - [Retweeting a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#retweet)
-- [Getting the list of users who retweeted a given tweet by the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#retweeters)
+- [Getting the list of users who retweeted/quoted a given tweet (supports quotersOnly and includeQuoters options)](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#retweeters)
 - [Scheduling a new tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#schedule)
 - [Searching for the list of tweets that match a given filter](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#search)
 - [Streaming filtered tweets in pseudo-realtime](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#stream)

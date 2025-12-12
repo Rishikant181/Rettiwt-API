@@ -155,18 +155,34 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 	// Retweeters
 	tweet
 		.command('retweeters')
-		.description('Fetch the list of users who retweeted the given tweets')
+		.description('Fetch the list of users who retweeted and/or quoted the given tweet')
 		.argument('<id>', 'The id of the tweet')
-		.argument('[count]', 'The number of retweeters to fetch')
-		.argument('[cursor]', 'The cursor to the batch of retweeters to fetch')
-		.action(async (id: string, count?: string, cursor?: string) => {
-			try {
-				const users = await rettiwt.tweet.retweeters(id, count ? parseInt(count) : undefined, cursor);
-				output(users);
-			} catch (error) {
-				output(error);
-			}
-		});
+		.argument('[count]', 'The number of users to fetch')
+		.argument('[cursor]', 'The cursor to the batch of users to fetch')
+		.option('--quoters-only', 'Fetch only users who quoted the tweet (instead of retweeters)')
+		.option('--include-quoters', 'Fetch both retweeters and quoters together')
+		.action(
+			async (
+				id: string,
+				count?: string,
+				cursor?: string,
+				options?: { quotersOnly?: boolean; includeQuoters?: boolean },
+			) => {
+				try {
+					const users = await rettiwt.tweet.retweeters(
+						id,
+						count ? parseInt(count) : undefined,
+						cursor,
+						options
+							? { quotersOnly: options.quotersOnly, includeQuoters: options.includeQuoters }
+							: undefined,
+					);
+					output(users);
+				} catch (error) {
+					output(error);
+				}
+			},
+		);
 
 	// Schedule
 	tweet

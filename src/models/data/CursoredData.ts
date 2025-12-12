@@ -47,6 +47,22 @@ export class CursoredData<T extends Notification | Tweet | User | List> implemen
 	}
 
 	/**
+	 * Creates a CursoredData instance from a pre-built list and cursor.
+	 *
+	 * @param list - The list of items.
+	 * @param next - The cursor for the next page.
+	 * @returns A new CursoredData instance.
+	 *
+	 * @internal
+	 */
+	public static fromList<T extends Notification | Tweet | User | List>(list: T[], next?: string): CursoredData<T> {
+		const instance = Object.create(CursoredData.prototype) as CursoredData<T>;
+		instance.list = list;
+		instance.next = next ?? '';
+		return instance;
+	}
+
+	/**
 	 * @returns A serializable JSON representation of `this` object.
 	 */
 	public toJSON(): ICursoredData<T> {

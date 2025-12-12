@@ -8,7 +8,7 @@ import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
 
 import { RettiwtConfig } from '../../models/RettiwtConfig';
-import { ITweetFilter } from '../../types/args/FetchArgs';
+import { IRetweetersOptions, ITweetFilter } from '../../types/args/FetchArgs';
 import { INewTweet } from '../../types/args/PostArgs';
 import { IMediaInitializeUploadResponse } from '../../types/raw/media/InitalizeUpload';
 
@@ -44,6 +44,125 @@ export class TweetService extends FetcherService {
 	 */
 	public constructor(config: RettiwtConfig) {
 		super(config);
+	}
+
+	/**
+	 * Decode a combined cursor into retweeters and quoters cursors.
+	 *
+	 * @param cursor - The combined cursor string.
+	 * @returns Object with separate cursors for retweeters and quoters.
+	 *
+	 * @internal
+	 */
+	private _decodeCombinedCursor(cursor?: string): { retweeters?: string; quoters?: string } {
+		if (!cursor) {
+			return {};
+		}
+
+		// Check if it's a combined cursor
+		if (!cursor.includes('|')) {
+			return { retweeters: cursor };
+		}
+
+		const parts = cursor.split('|');
+		const retweetersPart = parts[0] || '';
+		const quotersPart = parts[1] || '';
+
+		return {
+			retweeters: retweetersPart.startsWith('r:') ? retweetersPart.slice(2) || undefined : undefined,
+			quoters: quotersPart.startsWith('q:') ? quotersPart.slice(2) || undefined : undefined,
+		};
+	}
+
+	/**
+	 * Encode retweeters and quoters cursors into a combined cursor.
+	 *
+	 * @param retweetersCursor - The cursor for retweeters.
+	 * @param quotersCursor - The cursor for quoters.
+	 * @returns The combined cursor string, or undefined if both are empty.
+	 *
+	 * @internal
+	 */
+	private _encodeCombinedCursor(retweetersCursor?: string, quotersCursor?: string): string | undefined {
+		// If both cursors are empty, return undefined
+		if (!retweetersCursor && !quotersCursor) {
+			return undefined;
+		}
+
+		return `r:${retweetersCursor || ''}|q:${quotersCursor || ''}`;
+	}
+
+	/**
+	 * Get the list of users who quoted a tweet using search.
+	 *
+	 * @param id - The ID of the target tweet.
+	 * @param count - The number of quoters to fetch.
+	 * @param cursor - The cursor to the batch of quoters to fetch.
+	 *
+	 * @returns The list of users who quoted the given tweet.
+	 *
+	 * @internal
+	 */
+	private async _getQuoters(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+		// Search for tweets that quote the target tweet
+		const quotingTweets = await this.search({ quoted: id }, count, cursor);
+
+		// Extract unique users from the quoting tweets
+		const usersMap = new Map<string, User>();
+		for (const tweet of quotingTweets.list) {
+			if (tweet.tweetBy && !usersMap.has(tweet.tweetBy.id)) {
+				usersMap.set(tweet.tweetBy.id, tweet.tweetBy);
+			}
+		}
+
+		// Create CursoredData with users
+		const users = Array.from(usersMap.values());
+
+		return CursoredData.fromList<User>(users, quotingTweets.next);
+	}
+
+	/**
+	 * Get both retweeters and quoters of a tweet.
+	 *
+	 * @param id - The ID of the target tweet.
+	 * @param count - The number of users to fetch per source.
+	 * @param cursor - The combined cursor in format `r:RETWEETERS_CURSOR|q:QUOTERS_CURSOR`.
+	 *
+	 * @returns The combined list of users who retweeted or quoted the given tweet.
+	 *
+	 * @internal
+	 */
+	private async _getRetweetersAndQuoters(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+		// Decode combined cursor
+		const decodedCursor = this._decodeCombinedCursor(cursor);
+
+		// Fetch both in parallel
+		const [retweetersResult, quotersResult] = await Promise.all([
+			this.retweeters(id, count, decodedCursor.retweeters),
+			this._getQuoters(id, count, decodedCursor.quoters),
+		]);
+
+		// Merge users and remove duplicates
+		const usersMap = new Map<string, User>();
+
+		for (const user of retweetersResult.list) {
+			if (!usersMap.has(user.id)) {
+				usersMap.set(user.id, user);
+			}
+		}
+
+		for (const user of quotersResult.list) {
+			if (!usersMap.has(user.id)) {
+				usersMap.set(user.id, user);
+			}
+		}
+
+		const uniqueUsers = Array.from(usersMap.values()).slice(0, count);
+
+		// Encode combined cursor for next page
+		const nextCursor = this._encodeCombinedCursor(retweetersResult.next, quotersResult.next);
+
+		return CursoredData.fromList<User>(uniqueUsers, nextCursor);
 	}
 
 	/**
@@ -446,16 +565,18 @@ export class TweetService extends FetcherService {
 	}
 
 	/**
-	 * Get the list of users who retweeted a tweet.
+	 * Get the list of users who retweeted and/or quoted a tweet.
 	 *
 	 * @param id - The ID of the target tweet.
-	 * @param count - The number of retweeters to fetch, must be \<= 100.
-	 * @param cursor - The cursor to the batch of retweeters to fetch.
+	 * @param count - The number of users to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of users to fetch.
+	 * @param options - Options to include quoters or fetch only quoters.
 	 *
-	 * @returns The list of users who retweeted the given tweet.
+	 * @returns The list of users who retweeted/quoted the given tweet.
 	 *
 	 * @example
 	 *
+	 * #### Fetching retweeters (default behavior)
 	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
@@ -471,8 +592,67 @@ export class TweetService extends FetcherService {
 	 * 	console.log(err);
 	 * });
 	 * ```
+	 *
+	 * @example
+	 *
+	 * #### Fetching only quoters
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching users who quoted the Tweet with id '1234567890'
+	 * rettiwt.tweet.retweeters('1234567890', undefined, undefined, { quotersOnly: true })
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @example
+	 *
+	 * #### Fetching both retweeters and quoters
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching both retweeters and quoters of the Tweet with id '1234567890'
+	 * rettiwt.tweet.retweeters('1234567890', undefined, undefined, { includeQuoters: true })
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
 	 */
-	public async retweeters(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+	public async retweeters(
+		id: string,
+		count?: number,
+		cursor?: string,
+		options?: IRetweetersOptions,
+	): Promise<CursoredData<User>> {
+		// Validate options
+		if (options?.quotersOnly && options?.includeQuoters) {
+			throw new Error('Cannot use both quotersOnly and includeQuoters at the same time');
+		}
+
+		// Mode 1: Only quoters
+		if (options?.quotersOnly) {
+			return this._getQuoters(id, count, cursor);
+		}
+
+		// Mode 2: Both retweeters and quoters
+		if (options?.includeQuoters) {
+			return this._getRetweetersAndQuoters(id, count, cursor);
+		}
+
+		// Mode 3: Only retweeters (default)
 		const resource = ResourceType.TWEET_RETWEETERS;
 
 		// Fetching raw list of retweeters
