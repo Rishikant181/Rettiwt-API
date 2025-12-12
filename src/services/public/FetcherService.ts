@@ -354,7 +354,6 @@ export class FetcherService {
 				// Else, delegate error handling
 				else {
 					this._errorHandler.handle(err);
-					throw err;
 				}
 			} finally {
 				// Incrementing the number of retries done
