@@ -231,3 +231,29 @@ export interface ITweetFilter {
 	/** Whether to fetch top tweets or not. */
 	top?: boolean;
 }
+
+/**
+ * Options for fetching retweeters and/or quoters of a tweet.
+ *
+ * @public
+ */
+export interface IRetweetersOptions {
+	/**
+	 * If true, fetches only users who quoted the tweet (instead of retweeters).
+	 *
+	 * @remarks
+	 * - Cannot be used together with `includeQuoters`.
+	 * - When true, uses search endpoint to find quote tweets and extracts users.
+	 */
+	quotersOnly?: boolean;
+
+	/**
+	 * If true, fetches both retweeters and quoters together.
+	 *
+	 * @remarks
+	 * - Cannot be used together with `quotersOnly`.
+	 * - Makes parallel requests to both endpoints and merges results.
+	 * - Cursor format becomes `r:<retweeters_cursor>|q:<quoters_cursor>`.
+	 */
+	includeQuoters?: boolean;
+}
