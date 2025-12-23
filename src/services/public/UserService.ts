@@ -830,8 +830,6 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the list of subscriptions of a user.
 	 *
-	 * @deprecated Currently not working.
-	 *
 	 * @param id - The ID of the target user. If no ID is provided, the logged-in user's ID is used.
 	 * @param count - The number of subscriptions to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of subscriptions to fetch.
