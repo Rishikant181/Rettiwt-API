@@ -2,6 +2,7 @@ import { LogActions } from '../../enums/Logging';
 import { LogService } from '../../services/internal/LogService';
 import { IBookmarkFolder } from '../../types/data/BookmarkFolder';
 import { IBookmarkFolder as IRawBookmarkFolder } from '../../types/raw/base/BookmarkFolder';
+import { IUserBookmarkFoldersResponse } from '../../types/raw/user/BookmarkFolders';
 
 /**
  * The details of a single Bookmark Folder.
@@ -40,7 +41,8 @@ export class BookmarkFolder implements IBookmarkFolder {
 		const folders: BookmarkFolder[] = [];
 
 		// Extract items from the response structure
-		const items = (response as any)?.data?.viewer?.user_results?.result?.bookmark_collections_slice?.items;
+		const items = (response as IUserBookmarkFoldersResponse)?.data?.viewer?.user_results?.result
+			?.bookmark_collections_slice?.items;
 
 		if (!items || !Array.isArray(items)) {
 			return folders;

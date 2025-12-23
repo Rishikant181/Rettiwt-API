@@ -4,6 +4,7 @@ import { findByFilter } from '../../helper/JsonUtils';
 
 import { ICursoredData } from '../../types/data/CursoredData';
 import { ICursor as IRawCursor } from '../../types/raw/base/Cursor';
+import { IUserBookmarkFoldersResponse } from '../../types/raw/user/BookmarkFolders';
 
 import { BookmarkFolder } from './BookmarkFolder';
 import { List } from './List';
@@ -45,7 +46,8 @@ export class CursoredData<T extends Notification | Tweet | User | List | Bookmar
 			this.next = findByFilter<IRawCursor>(response, 'cursorType', 'Bottom')[0]?.value ?? '';
 		} else if (type == BaseType.BOOKMARK_FOLDER) {
 			this.list = BookmarkFolder.list(response) as T[];
-			const sliceInfo = (response as any)?.data?.viewer?.user_results?.result?.bookmark_collections_slice?.slice_info;
+			const sliceInfo = (response as IUserBookmarkFoldersResponse)?.data?.viewer?.user_results?.result
+				?.bookmark_collections_slice?.slice_info;
 			this.next = sliceInfo?.next_cursor ?? '';
 		}
 	}

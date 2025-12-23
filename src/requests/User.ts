@@ -108,19 +108,23 @@ export class UserRequests {
 	}
 
 	/**
-	 * @param count - The number of bookmarks to fetch.
-	 * @param cursor - The cursor to the batch of bookmarks to fetch.
+	 * Fetches tweets from a specific bookmark folder.
+	 *
+	 * @param folderId - The ID of the bookmark folder.
+	 * @param count - The number of tweets to fetch.
+	 * @param cursor - The cursor to the batch of tweets to fetch.
 	 */
-	public static bookmarks(count?: number, cursor?: string): AxiosRequestConfig {
+	public static bookmarkFolderTweets(folderId: string, count?: number, cursor?: string): AxiosRequestConfig {
 		return {
 			method: 'get',
-			url: 'https://x.com/i/api/graphql/E6jlrZG4703s0mcA9DfNKQ/Bookmarks',
+			url: 'https://x.com/i/api/graphql/KJIQpsvxrTfRIlbaRIySHQ/BookmarkFolderTimeline',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				variables: JSON.stringify({
+					bookmark_collection_id: folderId,
 					count: count,
 					cursor: cursor,
-					includePromotedContent: false,
+					includePromotedContent: true,
 				}),
 				features: JSON.stringify({
 					rweb_video_screen_enabled: false,
@@ -222,23 +226,19 @@ export class UserRequests {
 	}
 
 	/**
-	 * Fetches tweets from a specific bookmark folder.
-	 *
-	 * @param folderId - The ID of the bookmark folder.
-	 * @param count - The number of tweets to fetch.
-	 * @param cursor - The cursor to the batch of tweets to fetch.
+	 * @param count - The number of bookmarks to fetch.
+	 * @param cursor - The cursor to the batch of bookmarks to fetch.
 	 */
-	public static bookmarkFolderTweets(folderId: string, count?: number, cursor?: string): AxiosRequestConfig {
+	public static bookmarks(count?: number, cursor?: string): AxiosRequestConfig {
 		return {
 			method: 'get',
-			url: 'https://x.com/i/api/graphql/KJIQpsvxrTfRIlbaRIySHQ/BookmarkFolderTimeline',
+			url: 'https://x.com/i/api/graphql/-LGfdImKeQz0xS_jjUwzlA/Bookmarks',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				variables: JSON.stringify({
-					bookmark_collection_id: folderId,
 					count: count,
 					cursor: cursor,
-					includePromotedContent: true,
+					includePromotedContent: false,
 				}),
 				features: JSON.stringify({
 					rweb_video_screen_enabled: false,

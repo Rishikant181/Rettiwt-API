@@ -13,9 +13,9 @@ import { RettiwtConfig } from '../../models/RettiwtConfig';
 import { IProfileUpdateOptions } from '../../types/args/ProfileArgs';
 import { IUserAffiliatesResponse } from '../../types/raw/user/Affiliates';
 import { IUserAnalyticsResponse } from '../../types/raw/user/Analytics';
-import { IUserBookmarksResponse } from '../../types/raw/user/Bookmarks';
 import { IUserBookmarkFoldersResponse } from '../../types/raw/user/BookmarkFolders';
 import { IUserBookmarkFolderTweetsResponse } from '../../types/raw/user/BookmarkFolderTweets';
+import { IUserBookmarksResponse } from '../../types/raw/user/Bookmarks';
 import { IUserDetailsResponse } from '../../types/raw/user/Details';
 import { IUserDetailsBulkResponse } from '../../types/raw/user/DetailsBulk';
 import { IUserFollowResponse } from '../../types/raw/user/Follow';
@@ -153,12 +153,13 @@ export class UserService extends FetcherService {
 	}
 
 	/**
-	 * Get the list of bookmarks of the logged in user.
+	 * Get the list of tweets in a specific bookmark folder of the logged in user.
 	 *
-	 * @param count - The number of bookmakrs to fetch, must be \<= 100.
-	 * @param cursor - The cursor to the batch of bookmarks to fetch.
+	 * @param folderId - The ID of the bookmark folder.
+	 * @param count - The number of tweets to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of tweets to fetch.
 	 *
-	 * @returns The list of tweets bookmarked by the target user.
+	 * @returns The list of tweets in the bookmark folder.
 	 *
 	 * @example
 	 *
@@ -168,8 +169,8 @@ export class UserService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Fetching the most recent 100 liked Tweets of the logged in User
-	 * rettiwt.user.bookmarks()
+	 * // Fetching the first 100 tweets from bookmark folder with ID '2001752149647049173'
+	 * rettiwt.user.bookmarkFolderTweets('2001752149647049173')
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -178,11 +179,12 @@ export class UserService extends FetcherService {
 	 * });
 	 * ```
 	 */
-	public async bookmarks(count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-		const resource = ResourceType.USER_BOOKMARKS;
+	public async bookmarkFolderTweets(folderId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+		const resource = ResourceType.USER_BOOKMARK_FOLDER_TWEETS;
 
-		// Fetching raw list of likes
-		const response = await this.request<IUserBookmarksResponse>(resource, {
+		// Fetching raw list of tweets from folder
+		const response = await this.request<IUserBookmarkFolderTweetsResponse>(resource, {
+			id: folderId,
 			count: count,
 			cursor: cursor,
 		});
@@ -233,13 +235,12 @@ export class UserService extends FetcherService {
 	}
 
 	/**
-	 * Get the list of tweets in a specific bookmark folder of the logged in user.
+	 * Get the list of bookmarks of the logged in user.
 	 *
-	 * @param folderId - The ID of the bookmark folder.
-	 * @param count - The number of tweets to fetch, must be \<= 100.
-	 * @param cursor - The cursor to the batch of tweets to fetch.
+	 * @param count - The number of bookmakrs to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of bookmarks to fetch.
 	 *
-	 * @returns The list of tweets in the bookmark folder.
+	 * @returns The list of tweets bookmarked by the target user.
 	 *
 	 * @example
 	 *
@@ -249,8 +250,8 @@ export class UserService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Fetching the first 100 tweets from bookmark folder with ID '2001752149647049173'
-	 * rettiwt.user.bookmarkFolderTweets('2001752149647049173')
+	 * // Fetching the most recent 100 liked Tweets of the logged in User
+	 * rettiwt.user.bookmarks()
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -259,12 +260,11 @@ export class UserService extends FetcherService {
 	 * });
 	 * ```
 	 */
-	public async bookmarkFolderTweets(folderId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-		const resource = ResourceType.USER_BOOKMARK_FOLDER_TWEETS;
+	public async bookmarks(count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+		const resource = ResourceType.USER_BOOKMARKS;
 
-		// Fetching raw list of tweets from folder
-		const response = await this.request<IUserBookmarkFolderTweetsResponse>(resource, {
-			id: folderId,
+		// Fetching raw list of likes
+		const response = await this.request<IUserBookmarksResponse>(resource, {
 			count: count,
 			cursor: cursor,
 		});

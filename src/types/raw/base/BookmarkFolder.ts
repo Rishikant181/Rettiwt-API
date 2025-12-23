@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 /**
  * Represents the raw data of a single BookmarkFolder.
  *
