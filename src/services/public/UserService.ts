@@ -3,6 +3,7 @@ import { RawAnalyticsGranularity, RawAnalyticsMetric } from '../../enums/raw/Ana
 import { ResourceType } from '../../enums/Resource';
 import { ProfileUpdateOptions } from '../../models/args/ProfileArgs';
 import { Analytics } from '../../models/data/Analytics';
+import { BookmarkFolder } from '../../models/data/BookmarkFolder';
 import { CursoredData } from '../../models/data/CursoredData';
 import { List } from '../../models/data/List';
 import { Notification } from '../../models/data/Notification';
@@ -13,6 +14,8 @@ import { IProfileUpdateOptions } from '../../types/args/ProfileArgs';
 import { IUserAffiliatesResponse } from '../../types/raw/user/Affiliates';
 import { IUserAnalyticsResponse } from '../../types/raw/user/Analytics';
 import { IUserBookmarksResponse } from '../../types/raw/user/Bookmarks';
+import { IUserBookmarkFoldersResponse } from '../../types/raw/user/BookmarkFolders';
+import { IUserBookmarkFolderTweetsResponse } from '../../types/raw/user/BookmarkFolderTweets';
 import { IUserDetailsResponse } from '../../types/raw/user/Details';
 import { IUserDetailsBulkResponse } from '../../types/raw/user/DetailsBulk';
 import { IUserFollowResponse } from '../../types/raw/user/Follow';
@@ -180,6 +183,88 @@ export class UserService extends FetcherService {
 
 		// Fetching raw list of likes
 		const response = await this.request<IUserBookmarksResponse>(resource, {
+			count: count,
+			cursor: cursor,
+		});
+
+		// Deserializing response
+		const data = Extractors[resource](response);
+
+		return data;
+	}
+
+	/**
+	 * Get the list of bookmark folders of the logged in user.
+	 *
+	 * @param cursor - The cursor to the batch of bookmark folders to fetch.
+	 *
+	 * @returns The list of bookmark folders.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching all bookmark folders of the logged in user
+	 * rettiwt.user.bookmarkFolders()
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async bookmarkFolders(cursor?: string): Promise<CursoredData<BookmarkFolder>> {
+		const resource = ResourceType.USER_BOOKMARK_FOLDERS;
+
+		// Fetching raw list of bookmark folders
+		const response = await this.request<IUserBookmarkFoldersResponse>(resource, {
+			cursor: cursor,
+		});
+
+		// Deserializing response
+		const data = Extractors[resource](response);
+
+		return data;
+	}
+
+	/**
+	 * Get the list of tweets in a specific bookmark folder of the logged in user.
+	 *
+	 * @param folderId - The ID of the bookmark folder.
+	 * @param count - The number of tweets to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of tweets to fetch.
+	 *
+	 * @returns The list of tweets in the bookmark folder.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the first 100 tweets from bookmark folder with ID '2001752149647049173'
+	 * rettiwt.user.bookmarkFolderTweets('2001752149647049173')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async bookmarkFolderTweets(folderId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+		const resource = ResourceType.USER_BOOKMARK_FOLDER_TWEETS;
+
+		// Fetching raw list of tweets from folder
+		const response = await this.request<IUserBookmarkFolderTweetsResponse>(resource, {
+			id: folderId,
 			count: count,
 			cursor: cursor,
 		});

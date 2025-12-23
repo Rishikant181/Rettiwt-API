@@ -1,5 +1,6 @@
 import { BaseType } from '../enums/Data';
 import { Analytics } from '../models/data/Analytics';
+import { BookmarkFolder } from '../models/data/BookmarkFolder';
 import { Conversation } from '../models/data/Conversation';
 import { CursoredData } from '../models/data/CursoredData';
 import { Inbox } from '../models/data/Inbox';
@@ -35,6 +36,8 @@ import { ITweetUnscheduleResponse } from '../types/raw/tweet/Unschedule';
 import { IUserAffiliatesResponse } from '../types/raw/user/Affiliates';
 import { IUserAnalyticsResponse } from '../types/raw/user/Analytics';
 import { IUserBookmarksResponse } from '../types/raw/user/Bookmarks';
+import { IUserBookmarkFoldersResponse } from '../types/raw/user/BookmarkFolders';
+import { IUserBookmarkFolderTweetsResponse } from '../types/raw/user/BookmarkFolderTweets';
 import { IUserDetailsResponse } from '../types/raw/user/Details';
 import { IUserDetailsBulkResponse } from '../types/raw/user/DetailsBulk';
 import { IUserFollowResponse } from '../types/raw/user/Follow';
@@ -110,6 +113,10 @@ export const Extractors = {
 	USER_ANALYTICS: (response: IUserAnalyticsResponse): Analytics =>
 		new Analytics(response.data.viewer_v2.user_results.result),
 	USER_BOOKMARKS: (response: IUserBookmarksResponse): CursoredData<Tweet> =>
+		new CursoredData<Tweet>(response, BaseType.TWEET),
+	USER_BOOKMARK_FOLDERS: (response: IUserBookmarkFoldersResponse): CursoredData<BookmarkFolder> =>
+		new CursoredData<BookmarkFolder>(response, BaseType.BOOKMARK_FOLDER),
+	USER_BOOKMARK_FOLDER_TWEETS: (response: IUserBookmarkFolderTweetsResponse): CursoredData<Tweet> =>
 		new CursoredData<Tweet>(response, BaseType.TWEET),
 	USER_DETAILS_BY_USERNAME: (response: IUserDetailsResponse): User | undefined => User.single(response),
 	USER_DETAILS_BY_ID: (response: IUserDetailsResponse): User | undefined => User.single(response),
