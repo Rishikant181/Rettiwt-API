@@ -12,6 +12,7 @@ export interface IUser {
 	id: string;
 	rest_id: string;
 	core?: IUserCore;
+	avatar?: IUserAvatar;
 	affiliates_highlighted_label: IAffiliatesHighlightedLabel;
 	has_graduated_access: boolean;
 	is_blue_verified: boolean;
@@ -34,6 +35,10 @@ export interface IUserCore {
 	created_at: string;
 	name: string;
 	screen_name: string;
+}
+
+export interface IUserAvatar {
+	image_url: string;
 }
 
 export interface IAffiliatesHighlightedLabel {
@@ -114,7 +119,7 @@ export interface IUserLegacy {
 	pinned_tweet_ids_str: string[];
 	possibly_sensitive: boolean;
 	profile_banner_url: string;
-	profile_image_url_https: string;
+	profile_image_url_https?: string;
 	profile_interstitial_type: string;
 	statuses_count: number;
 	translator_type: string;

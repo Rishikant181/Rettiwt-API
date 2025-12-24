@@ -51,7 +51,7 @@ export class User implements IUser {
 		this.location = user.location?.location ?? user.legacy.location ?? undefined;
 		this.pinnedTweet = user.legacy.pinned_tweet_ids_str[0];
 		this.profileBanner = user.legacy.profile_banner_url;
-		this.profileImage = user.legacy.profile_image_url_https;
+		this.profileImage = user.avatar?.image_url ?? user.legacy.profile_image_url_https ?? '';
 	}
 
 	/** The raw user details. */
