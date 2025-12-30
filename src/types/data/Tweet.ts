@@ -87,7 +87,7 @@ export interface ITweetEntities {
 export interface ITweetMedia {
 	/** The ID of the media. */
 	id: string;
-	
+
 	/** The thumbnail URL for the video content of the tweet. */
 	thumbnailUrl?: string;
 

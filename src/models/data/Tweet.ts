@@ -326,6 +326,9 @@ export class TweetEntities implements ITweetEntities {
  * @public
  */
 export class TweetMedia implements ITweetMedia {
+	/** The ID of the media. */
+	public id: string;
+
 	/** The thumbnail URL for the video content of the tweet. */
 	public thumbnailUrl?: string;
 
@@ -335,14 +338,11 @@ export class TweetMedia implements ITweetMedia {
 	/** The direct URL to the media. */
 	public url = '';
 
-	/** The ID of the media. */
-    public id: string;
-
 	/**
 	 * @param media - The raw media details.
 	 */
 	public constructor(media: IRawExtendedMedia) {
-        this.id = media.id_str;
+		this.id = media.id_str;
 
 		// If the media is a photo
 		if (media.type == RawMediaType.PHOTO) {
@@ -379,7 +379,7 @@ export class TweetMedia implements ITweetMedia {
 	 */
 	public toJSON(): ITweetMedia {
 		return {
-            id: this.id,
+			id: this.id,
 			thumbnailUrl: this.thumbnailUrl,
 			type: this.type,
 			url: this.url,
