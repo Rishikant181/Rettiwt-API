@@ -272,7 +272,7 @@ export class Tweet implements ITweet {
  *
  * @public
  */
-export class TweetEntities {
+export class TweetEntities implements ITweetEntities {
 	/** The list of hashtags mentioned in the tweet. */
 	public hashtags: string[] = [];
 
@@ -325,7 +325,7 @@ export class TweetEntities {
  *
  * @public
  */
-export class TweetMedia {
+export class TweetMedia implements ITweetMedia {
 	/** The thumbnail URL for the video content of the tweet. */
 	public thumbnailUrl?: string;
 
@@ -335,10 +335,15 @@ export class TweetMedia {
 	/** The direct URL to the media. */
 	public url = '';
 
+	/** The ID of the media. */
+    public id: string;
+
 	/**
 	 * @param media - The raw media details.
 	 */
 	public constructor(media: IRawExtendedMedia) {
+        this.id = media.id_str;
+
 		// If the media is a photo
 		if (media.type == RawMediaType.PHOTO) {
 			this.type = MediaType.PHOTO;
@@ -374,6 +379,7 @@ export class TweetMedia {
 	 */
 	public toJSON(): ITweetMedia {
 		return {
+            id: this.id,
 			thumbnailUrl: this.thumbnailUrl,
 			type: this.type,
 			url: this.url,
