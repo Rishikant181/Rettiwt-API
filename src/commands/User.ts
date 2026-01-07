@@ -274,6 +274,27 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// Update Profile
+	user.command('update-profile')
+		.description('Update your profile information')
+		.option('-n, --name <string>', 'Display name (max 50 characters)')
+		.option('-u, --url <string>', 'Profile URL')
+		.option('-l, --location <string>', 'Location (max 30 characters)')
+		.option('-d, --description <string>', 'Description/bio (max 160 characters)')
+		.action(async (options?: UserProfileUpdateOptions) => {
+			try {
+				const result = await rettiwt.user.updateProfile({
+					name: options?.name,
+					url: options?.url,
+					location: options?.location,
+					description: options?.description,
+				});
+				output(result);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	return user;
 }
 
@@ -286,6 +307,16 @@ type UserAnalyticsOptions = {
 	granularity?: string;
 	metrics?: string;
 	verifiedFollowers?: boolean;
+};
+
+/**
+ * The options for updating user profile.
+ */
+type UserProfileUpdateOptions = {
+	name?: string;
+	url?: string;
+	location?: string;
+	description?: string;
 };
 
 export default createUserCommand;

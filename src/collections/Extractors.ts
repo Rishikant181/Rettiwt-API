@@ -46,6 +46,7 @@ import { IUserLikesResponse } from '../types/raw/user/Likes';
 import { IUserListsResponse } from '../types/raw/user/Lists';
 import { IUserMediaResponse } from '../types/raw/user/Media';
 import { IUserNotificationsResponse } from '../types/raw/user/Notifications';
+import { IUserProfileUpdateResponse } from '../types/raw/user/ProfileUpdate';
 import { IUserRecommendedResponse } from '../types/raw/user/Recommended';
 import { IUserSubscriptionsResponse } from '../types/raw/user/Subscriptions';
 import { IUserTweetsResponse } from '../types/raw/user/Tweets';
@@ -139,6 +140,7 @@ export const Extractors = {
 	USER_TIMELINE_AND_REPLIES: (response: IUserTweetsAndRepliesResponse): CursoredData<Tweet> =>
 		new CursoredData<Tweet>(response, BaseType.TWEET),
 	USER_UNFOLLOW: (response: IUserUnfollowResponse): boolean => (response?.id ? true : false),
+	USER_PROFILE_UPDATE: (response: IUserProfileUpdateResponse): boolean => (response?.name ? true : false),
 
 	/* eslint-enable @typescript-eslint/naming-convention */
 };

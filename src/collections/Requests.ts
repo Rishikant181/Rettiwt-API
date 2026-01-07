@@ -80,6 +80,7 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	USER_TIMELINE: (args: IFetchArgs) => UserRequests.tweets(args.id!, args.count, args.cursor),
 	USER_TIMELINE_AND_REPLIES: (args: IFetchArgs) => UserRequests.tweetsAndReplies(args.id!, args.count, args.cursor),
 	USER_UNFOLLOW: (args: IPostArgs) => UserRequests.unfollow(args.id!),
+	USER_PROFILE_UPDATE: (args: IPostArgs) => UserRequests.updateProfile(args.profileOptions!),
 
 	/* eslint-enable @typescript-eslint/naming-convention */
 };
