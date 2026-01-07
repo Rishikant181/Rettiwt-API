@@ -19,7 +19,7 @@ export class UserRequests {
 	public static affiliates(id: string, count?: number, cursor?: string): AxiosRequestConfig {
 		return {
 			method: 'get',
-			url: 'https://x.com/i/api/graphql/OVFfg1hExk_AygiMVSJd-Q/UserBusinessProfileTeamTimeline',
+			url: 'https://x.com/i/api/graphql/KFaAofDlKP7bnzskNWmjwA/UserBusinessProfileTeamTimeline',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				variables: JSON.stringify({
@@ -34,6 +34,7 @@ export class UserRequests {
 				features: JSON.stringify({
 					rweb_video_screen_enabled: false,
 					profile_label_improvements_pcf_label_in_post_enabled: true,
+					responsive_web_profile_redirect_enabled: false,
 					rweb_tipjar_consumption_enabled: true,
 					verified_phone_label_enabled: true,
 					creator_subscriptions_tweet_preview_api_enabled: true,
@@ -44,7 +45,7 @@ export class UserRequests {
 					c9s_tweet_anatomy_moderator_badge_enabled: true,
 					responsive_web_grok_analyze_button_fetch_trends_enabled: false,
 					responsive_web_grok_analyze_post_followups_enabled: true,
-					responsive_web_jetfuel_frame: false,
+					responsive_web_jetfuel_frame: true,
 					responsive_web_grok_share_attachment_enabled: true,
 					articles_preview_enabled: true,
 					responsive_web_edit_tweet_api_enabled: true,
@@ -62,6 +63,8 @@ export class UserRequests {
 					longform_notetweets_rich_text_read_enabled: true,
 					longform_notetweets_inline_media_enabled: true,
 					responsive_web_grok_image_annotation_enabled: true,
+					responsive_web_grok_imagine_annotation_enabled: true,
+					responsive_web_grok_community_note_auto_translation_is_enabled: false,
 					responsive_web_enhance_cards_enabled: false,
 				}),
 				/* eslint-enable @typescript-eslint/naming-convention */
@@ -111,7 +114,7 @@ export class UserRequests {
 	public static bookmarks(count?: number, cursor?: string): AxiosRequestConfig {
 		return {
 			method: 'get',
-			url: 'https://x.com/i/api/graphql/-LGfdImKeQz0xS_jjUwzlA/Bookmarks',
+			url: 'https://x.com/i/api/graphql/E6jlrZG4703s0mcA9DfNKQ/Bookmarks',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				variables: JSON.stringify({
@@ -122,6 +125,7 @@ export class UserRequests {
 				features: JSON.stringify({
 					rweb_video_screen_enabled: false,
 					profile_label_improvements_pcf_label_in_post_enabled: true,
+					responsive_web_profile_redirect_enabled: false,
 					rweb_tipjar_consumption_enabled: true,
 					verified_phone_label_enabled: true,
 					creator_subscriptions_tweet_preview_api_enabled: true,
@@ -132,7 +136,7 @@ export class UserRequests {
 					c9s_tweet_anatomy_moderator_badge_enabled: true,
 					responsive_web_grok_analyze_button_fetch_trends_enabled: false,
 					responsive_web_grok_analyze_post_followups_enabled: true,
-					responsive_web_jetfuel_frame: false,
+					responsive_web_jetfuel_frame: true,
 					responsive_web_grok_share_attachment_enabled: true,
 					articles_preview_enabled: true,
 					responsive_web_edit_tweet_api_enabled: true,
@@ -150,6 +154,8 @@ export class UserRequests {
 					longform_notetweets_rich_text_read_enabled: true,
 					longform_notetweets_inline_media_enabled: true,
 					responsive_web_grok_image_annotation_enabled: true,
+					responsive_web_grok_imagine_annotation_enabled: true,
+					responsive_web_grok_community_note_auto_translation_is_enabled: false,
 					responsive_web_enhance_cards_enabled: false,
 				}),
 				/* eslint-enable @typescript-eslint/naming-convention */
@@ -164,7 +170,7 @@ export class UserRequests {
 	public static bulkDetailsByIds(ids: string[]): AxiosRequestConfig {
 		return {
 			method: 'get',
-			url: 'https://x.com/i/api/graphql/PyRggX3LQweP9nSF6PHliA/UsersByRestIds',
+			url: 'https://x.com/i/api/graphql/xavgLWWbFH8wm_8MQN8plQ/UsersByRestIds',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				variables: JSON.stringify({ userIds: ids }),
@@ -180,6 +186,7 @@ export class UserRequests {
 					responsive_web_graphql_timeline_navigation_enabled: true,
 					profile_label_improvements_pcf_label_in_post_enabled: false,
 					rweb_tipjar_consumption_enabled: false,
+					responsive_web_profile_redirect_enabled: false,
 				}),
 				/* eslint-enable @typescript-eslint/naming-convention */
 			},
@@ -193,7 +200,7 @@ export class UserRequests {
 	public static detailsById(id: string): AxiosRequestConfig {
 		return {
 			method: 'get',
-			url: 'https://x.com/i/api/graphql/WJ7rCtezBVT6nk6VM5R8Bw/UserByRestId',
+			url: 'https://x.com/i/api/graphql/Bbaot8ySMtJD7K2t01gW7A/UserByRestId',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				variables: JSON.stringify({ userId: id, withSafetyModeUserFields: true }),
@@ -208,6 +215,7 @@ export class UserRequests {
 					creator_subscriptions_tweet_preview_api_enabled: true,
 					responsive_web_graphql_skip_user_profile_image_extensions_enabled: true,
 					responsive_web_graphql_timeline_navigation_enabled: true,
+					responsive_web_profile_redirect_enabled: false,
 				}),
 				/* eslint-enable @typescript-eslint/naming-convention */
 			},
@@ -221,13 +229,14 @@ export class UserRequests {
 	public static detailsByUsername(userName: string): AxiosRequestConfig {
 		return {
 			method: 'get',
-			url: 'https://x.com/i/api/graphql/1VOOyvKkiI3FMmkeDNxM9A/UserByScreenName',
+			url: 'https://x.com/i/api/graphql/-oaLodhGbbnzJBACb1kk2Q/UserByScreenName',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
-				variables: JSON.stringify({ screen_name: userName, withSafetyModeUserFields: true }),
+				variables: JSON.stringify({ screen_name: userName, withGrokTranslatedBio: false }),
 				features: JSON.stringify({
 					hidden_profile_subscriptions_enabled: true,
 					profile_label_improvements_pcf_label_in_post_enabled: true,
+					responsive_web_profile_redirect_enabled: false,
 					rweb_tipjar_consumption_enabled: true,
 					verified_phone_label_enabled: true,
 					subscriptions_verification_info_is_identity_verified_enabled: true,
@@ -268,7 +277,7 @@ export class UserRequests {
 	public static followed(count?: number, cursor?: string): AxiosRequestConfig {
 		return {
 			method: 'get',
-			url: 'https://x.com/i/api/graphql/CRprHpVA12yhsub-KRERIg/HomeLatestTimeline',
+			url: 'https://x.com/i/api/graphql/_qO7FJzShSKYWi9gtboE6A/HomeLatestTimeline',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				variables: JSON.stringify({
@@ -281,6 +290,7 @@ export class UserRequests {
 				features: JSON.stringify({
 					rweb_video_screen_enabled: false,
 					profile_label_improvements_pcf_label_in_post_enabled: true,
+					responsive_web_profile_redirect_enabled: false,
 					rweb_tipjar_consumption_enabled: true,
 					verified_phone_label_enabled: true,
 					creator_subscriptions_tweet_preview_api_enabled: true,
@@ -291,7 +301,7 @@ export class UserRequests {
 					c9s_tweet_anatomy_moderator_badge_enabled: true,
 					responsive_web_grok_analyze_button_fetch_trends_enabled: false,
 					responsive_web_grok_analyze_post_followups_enabled: true,
-					responsive_web_jetfuel_frame: false,
+					responsive_web_jetfuel_frame: true,
 					responsive_web_grok_share_attachment_enabled: true,
 					articles_preview_enabled: true,
 					responsive_web_edit_tweet_api_enabled: true,
@@ -309,6 +319,8 @@ export class UserRequests {
 					longform_notetweets_rich_text_read_enabled: true,
 					longform_notetweets_inline_media_enabled: true,
 					responsive_web_grok_image_annotation_enabled: true,
+					responsive_web_grok_imagine_annotation_enabled: true,
+					responsive_web_grok_community_note_auto_translation_is_enabled: false,
 					responsive_web_enhance_cards_enabled: false,
 				}),
 				/* eslint-enable @typescript-eslint/naming-convention */
@@ -325,7 +337,7 @@ export class UserRequests {
 	public static followers(id: string, count?: number, cursor?: string): AxiosRequestConfig {
 		return {
 			method: 'get',
-			url: 'https://x.com/i/api/graphql/Elc_-qTARceHpztqhI9PQA/Followers',
+			url: 'https://x.com/i/api/graphql/kuFUYP9eV1FPoEy4N-pi7w/Followers',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				variables: JSON.stringify({
@@ -333,10 +345,12 @@ export class UserRequests {
 					count: count,
 					cursor: cursor,
 					includePromotedContent: false,
+					withGrokTranslatedBio: false,
 				}),
 				features: JSON.stringify({
 					rweb_video_screen_enabled: false,
 					profile_label_improvements_pcf_label_in_post_enabled: true,
+					responsive_web_profile_redirect_enabled: false,
 					rweb_tipjar_consumption_enabled: true,
 					verified_phone_label_enabled: true,
 					creator_subscriptions_tweet_preview_api_enabled: true,
@@ -347,7 +361,7 @@ export class UserRequests {
 					c9s_tweet_anatomy_moderator_badge_enabled: true,
 					responsive_web_grok_analyze_button_fetch_trends_enabled: false,
 					responsive_web_grok_analyze_post_followups_enabled: true,
-					responsive_web_jetfuel_frame: false,
+					responsive_web_jetfuel_frame: true,
 					responsive_web_grok_share_attachment_enabled: true,
 					articles_preview_enabled: true,
 					responsive_web_edit_tweet_api_enabled: true,
@@ -365,6 +379,8 @@ export class UserRequests {
 					longform_notetweets_rich_text_read_enabled: true,
 					longform_notetweets_inline_media_enabled: true,
 					responsive_web_grok_image_annotation_enabled: true,
+					responsive_web_grok_imagine_annotation_enabled: true,
+					responsive_web_grok_community_note_auto_translation_is_enabled: false,
 					responsive_web_enhance_cards_enabled: false,
 				}),
 				/* eslint-enable @typescript-eslint/naming-convention */
@@ -437,7 +453,7 @@ export class UserRequests {
 	public static highlights(id: string, count?: number, cursor?: string): AxiosRequestConfig {
 		return {
 			method: 'get',
-			url: 'https://x.com/i/api/graphql/cr8FsaThDCa9LKeD9CNZ4w/UserHighlightsTweets',
+			url: 'https://x.com/i/api/graphql/kzKWdUA6Y1LCqlvaVILZwQ/UserHighlightsTweets',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				variables: JSON.stringify({
@@ -450,121 +466,7 @@ export class UserRequests {
 				features: JSON.stringify({
 					rweb_video_screen_enabled: false,
 					profile_label_improvements_pcf_label_in_post_enabled: true,
-					rweb_tipjar_consumption_enabled: true,
-					verified_phone_label_enabled: true,
-					creator_subscriptions_tweet_preview_api_enabled: true,
-					responsive_web_graphql_timeline_navigation_enabled: true,
-					responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
-					premium_content_api_read_enabled: false,
-					communities_web_enable_tweet_community_results_fetch: true,
-					c9s_tweet_anatomy_moderator_badge_enabled: true,
-					responsive_web_grok_analyze_button_fetch_trends_enabled: false,
-					responsive_web_grok_analyze_post_followups_enabled: true,
-					responsive_web_jetfuel_frame: false,
-					responsive_web_grok_share_attachment_enabled: true,
-					articles_preview_enabled: true,
-					responsive_web_edit_tweet_api_enabled: true,
-					graphql_is_translatable_rweb_tweet_is_translatable_enabled: true,
-					view_counts_everywhere_api_enabled: true,
-					longform_notetweets_consumption_enabled: true,
-					responsive_web_twitter_article_tweet_consumption_enabled: true,
-					tweet_awards_web_tipping_enabled: false,
-					responsive_web_grok_show_grok_translated_post: false,
-					responsive_web_grok_analysis_button_from_backend: true,
-					creator_subscriptions_quote_tweet_preview_enabled: false,
-					freedom_of_speech_not_reach_fetch_enabled: true,
-					standardized_nudges_misinfo: true,
-					tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled: true,
-					longform_notetweets_rich_text_read_enabled: true,
-					longform_notetweets_inline_media_enabled: true,
-					responsive_web_grok_image_annotation_enabled: true,
-					responsive_web_enhance_cards_enabled: false,
-				}),
-				fieldToggles: { withArticlePlainText: false },
-				/* eslint-enable @typescript-eslint/naming-convention */
-			},
-			paramsSerializer: { encode: encodeURIComponent },
-		};
-	}
-
-	/**
-	 * @param id - The id of the user whose likes are to be fetched.
-	 * @param count - The number of likes to fetch. Only works as a lower limit when used with a cursor.
-	 * @param cursor - The cursor to the batch of likes to fetch.
-	 */
-	public static likes(id: string, count?: number, cursor?: string): AxiosRequestConfig {
-		return {
-			method: 'get',
-			url: 'https://x.com/i/api/graphql/eQl7iWsCr2fChppuJdAeRw/Likes',
-			params: {
-				/* eslint-disable @typescript-eslint/naming-convention */
-				variables: JSON.stringify({
-					userId: id,
-					count: count,
-					cursor: cursor,
-					includePromotedContent: false,
-					withClientEventToken: false,
-					withBirdwatchNotes: false,
-					withVoice: false,
-					withV2Timeline: false,
-				}),
-				features: JSON.stringify({
-					rweb_video_screen_enabled: false,
-					profile_label_improvements_pcf_label_in_post_enabled: true,
-					rweb_tipjar_consumption_enabled: true,
-					verified_phone_label_enabled: true,
-					creator_subscriptions_tweet_preview_api_enabled: true,
-					responsive_web_graphql_timeline_navigation_enabled: true,
-					responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
-					premium_content_api_read_enabled: false,
-					communities_web_enable_tweet_community_results_fetch: true,
-					c9s_tweet_anatomy_moderator_badge_enabled: true,
-					responsive_web_grok_analyze_button_fetch_trends_enabled: false,
-					responsive_web_grok_analyze_post_followups_enabled: true,
-					responsive_web_jetfuel_frame: false,
-					responsive_web_grok_share_attachment_enabled: true,
-					articles_preview_enabled: true,
-					responsive_web_edit_tweet_api_enabled: true,
-					graphql_is_translatable_rweb_tweet_is_translatable_enabled: true,
-					view_counts_everywhere_api_enabled: true,
-					longform_notetweets_consumption_enabled: true,
-					responsive_web_twitter_article_tweet_consumption_enabled: true,
-					tweet_awards_web_tipping_enabled: false,
-					responsive_web_grok_show_grok_translated_post: false,
-					responsive_web_grok_analysis_button_from_backend: true,
-					creator_subscriptions_quote_tweet_preview_enabled: false,
-					freedom_of_speech_not_reach_fetch_enabled: true,
-					standardized_nudges_misinfo: true,
-					tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled: true,
-					longform_notetweets_rich_text_read_enabled: true,
-					longform_notetweets_inline_media_enabled: true,
-					responsive_web_grok_image_annotation_enabled: true,
-					responsive_web_enhance_cards_enabled: false,
-				}),
-				fieldToggles: { withArticlePlainText: false },
-				/* eslint-enable @typescript-eslint/naming-convention */
-			},
-			paramsSerializer: { encode: encodeURIComponent },
-		};
-	}
-
-	/**
-	 * @param id - The id of the user whose lists are to be fetched.
-	 * @param count - The number of lists to fetch. Only works as a lower limit when used with a cursor.
-	 * @param cursor - The cursor to the batch of lists to fetch.
-	 */
-	public static lists(id: string, count?: number, cursor?: string): AxiosRequestConfig {
-		return {
-			method: 'get',
-			url: 'https://x.com/i/api/graphql/tZg2CHWw-NAL0nKO2Q-P4Q/ListsManagementPageTimeline',
-			params: {
-				/* eslint-disable @typescript-eslint/naming-convention */
-				variables: JSON.stringify({ count: 100, cursor: cursor }),
-				features: JSON.stringify({
-					rweb_video_screen_enabled: false,
-					payments_enabled: false,
-					rweb_xchat_enabled: false,
-					profile_label_improvements_pcf_label_in_post_enabled: true,
+					responsive_web_profile_redirect_enabled: false,
 					rweb_tipjar_consumption_enabled: true,
 					verified_phone_label_enabled: true,
 					creator_subscriptions_tweet_preview_api_enabled: true,
@@ -593,6 +495,126 @@ export class UserRequests {
 					longform_notetweets_rich_text_read_enabled: true,
 					longform_notetweets_inline_media_enabled: true,
 					responsive_web_grok_image_annotation_enabled: true,
+					responsive_web_grok_imagine_annotation_enabled: true,
+					responsive_web_grok_community_note_auto_translation_is_enabled: false,
+					responsive_web_enhance_cards_enabled: false,
+				}),
+				fieldToggles: { withArticlePlainText: false },
+				/* eslint-enable @typescript-eslint/naming-convention */
+			},
+			paramsSerializer: { encode: encodeURIComponent },
+		};
+	}
+
+	/**
+	 * @param id - The id of the user whose likes are to be fetched.
+	 * @param count - The number of likes to fetch. Only works as a lower limit when used with a cursor.
+	 * @param cursor - The cursor to the batch of likes to fetch.
+	 */
+	public static likes(id: string, count?: number, cursor?: string): AxiosRequestConfig {
+		return {
+			method: 'get',
+			url: 'https://x.com/i/api/graphql/JR2gceKucIKcVNB_9JkhsA/Likes',
+			params: {
+				/* eslint-disable @typescript-eslint/naming-convention */
+				variables: JSON.stringify({
+					userId: id,
+					count: count,
+					cursor: cursor,
+					includePromotedContent: false,
+					withClientEventToken: false,
+					withBirdwatchNotes: false,
+					withVoice: false,
+					withV2Timeline: false,
+				}),
+				features: JSON.stringify({
+					rweb_video_screen_enabled: false,
+					profile_label_improvements_pcf_label_in_post_enabled: true,
+					responsive_web_profile_redirect_enabled: false,
+					rweb_tipjar_consumption_enabled: true,
+					verified_phone_label_enabled: true,
+					creator_subscriptions_tweet_preview_api_enabled: true,
+					responsive_web_graphql_timeline_navigation_enabled: true,
+					responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
+					premium_content_api_read_enabled: false,
+					communities_web_enable_tweet_community_results_fetch: true,
+					c9s_tweet_anatomy_moderator_badge_enabled: true,
+					responsive_web_grok_analyze_button_fetch_trends_enabled: false,
+					responsive_web_grok_analyze_post_followups_enabled: true,
+					responsive_web_jetfuel_frame: true,
+					responsive_web_grok_share_attachment_enabled: true,
+					articles_preview_enabled: true,
+					responsive_web_edit_tweet_api_enabled: true,
+					graphql_is_translatable_rweb_tweet_is_translatable_enabled: true,
+					view_counts_everywhere_api_enabled: true,
+					longform_notetweets_consumption_enabled: true,
+					responsive_web_twitter_article_tweet_consumption_enabled: true,
+					tweet_awards_web_tipping_enabled: false,
+					responsive_web_grok_show_grok_translated_post: false,
+					responsive_web_grok_analysis_button_from_backend: true,
+					creator_subscriptions_quote_tweet_preview_enabled: false,
+					freedom_of_speech_not_reach_fetch_enabled: true,
+					standardized_nudges_misinfo: true,
+					tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled: true,
+					longform_notetweets_rich_text_read_enabled: true,
+					longform_notetweets_inline_media_enabled: true,
+					responsive_web_grok_image_annotation_enabled: true,
+					responsive_web_grok_imagine_annotation_enabled: true,
+					responsive_web_grok_community_note_auto_translation_is_enabled: false,
+					responsive_web_enhance_cards_enabled: false,
+				}),
+				fieldToggles: { withArticlePlainText: false },
+				/* eslint-enable @typescript-eslint/naming-convention */
+			},
+			paramsSerializer: { encode: encodeURIComponent },
+		};
+	}
+
+	/**
+	 * @param id - The id of the user whose lists are to be fetched.
+	 * @param count - The number of lists to fetch. Only works as a lower limit when used with a cursor.
+	 * @param cursor - The cursor to the batch of lists to fetch.
+	 */
+	public static lists(id: string, count?: number, cursor?: string): AxiosRequestConfig {
+		return {
+			method: 'get',
+			url: 'https://x.com/i/api/graphql/9mQl9vR31wjodBP9b7_wyQ/ListsManagementPageTimeline',
+			params: {
+				/* eslint-disable @typescript-eslint/naming-convention */
+				variables: JSON.stringify({ count: 100, cursor: cursor }),
+				features: JSON.stringify({
+					rweb_video_screen_enabled: false,
+					profile_label_improvements_pcf_label_in_post_enabled: true,
+					responsive_web_profile_redirect_enabled: false,
+					rweb_tipjar_consumption_enabled: true,
+					verified_phone_label_enabled: true,
+					creator_subscriptions_tweet_preview_api_enabled: true,
+					responsive_web_graphql_timeline_navigation_enabled: true,
+					responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
+					premium_content_api_read_enabled: false,
+					communities_web_enable_tweet_community_results_fetch: true,
+					c9s_tweet_anatomy_moderator_badge_enabled: true,
+					responsive_web_grok_analyze_button_fetch_trends_enabled: false,
+					responsive_web_grok_analyze_post_followups_enabled: true,
+					responsive_web_jetfuel_frame: true,
+					responsive_web_grok_share_attachment_enabled: true,
+					articles_preview_enabled: true,
+					responsive_web_edit_tweet_api_enabled: true,
+					graphql_is_translatable_rweb_tweet_is_translatable_enabled: true,
+					view_counts_everywhere_api_enabled: true,
+					longform_notetweets_consumption_enabled: true,
+					responsive_web_twitter_article_tweet_consumption_enabled: true,
+					tweet_awards_web_tipping_enabled: false,
+					responsive_web_grok_show_grok_translated_post: false,
+					responsive_web_grok_analysis_button_from_backend: true,
+					creator_subscriptions_quote_tweet_preview_enabled: false,
+					freedom_of_speech_not_reach_fetch_enabled: true,
+					standardized_nudges_misinfo: true,
+					tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled: true,
+					longform_notetweets_rich_text_read_enabled: true,
+					longform_notetweets_inline_media_enabled: true,
+					responsive_web_grok_image_annotation_enabled: true,
+					responsive_web_grok_imagine_annotation_enabled: true,
 					responsive_web_grok_community_note_auto_translation_is_enabled: false,
 					responsive_web_enhance_cards_enabled: false,
 				}),
@@ -611,7 +633,7 @@ export class UserRequests {
 	public static media(id: string, count?: number, cursor?: string): AxiosRequestConfig {
 		return {
 			method: 'get',
-			url: 'https://x.com/i/api/graphql/vFPc2LVIu7so2uA_gHQAdg/UserMedia',
+			url: 'https://x.com/i/api/graphql/MMnr49cP_nldzCTfeVDRtA/UserMedia',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				variables: JSON.stringify({
@@ -627,6 +649,7 @@ export class UserRequests {
 				features: JSON.stringify({
 					rweb_video_screen_enabled: false,
 					profile_label_improvements_pcf_label_in_post_enabled: true,
+					responsive_web_profile_redirect_enabled: false,
 					rweb_tipjar_consumption_enabled: true,
 					verified_phone_label_enabled: true,
 					creator_subscriptions_tweet_preview_api_enabled: true,
@@ -637,7 +660,7 @@ export class UserRequests {
 					c9s_tweet_anatomy_moderator_badge_enabled: true,
 					responsive_web_grok_analyze_button_fetch_trends_enabled: false,
 					responsive_web_grok_analyze_post_followups_enabled: true,
-					responsive_web_jetfuel_frame: false,
+					responsive_web_jetfuel_frame: true,
 					responsive_web_grok_share_attachment_enabled: true,
 					articles_preview_enabled: true,
 					responsive_web_edit_tweet_api_enabled: true,
@@ -655,6 +678,8 @@ export class UserRequests {
 					longform_notetweets_rich_text_read_enabled: true,
 					longform_notetweets_inline_media_enabled: true,
 					responsive_web_grok_image_annotation_enabled: true,
+					responsive_web_grok_imagine_annotation_enabled: true,
+					responsive_web_grok_community_note_auto_translation_is_enabled: false,
 					responsive_web_enhance_cards_enabled: false,
 				}),
 				fieldToggles: { withArticlePlainText: false },
@@ -671,7 +696,7 @@ export class UserRequests {
 	public static notifications(count?: number, cursor?: string): AxiosRequestConfig {
 		return {
 			method: 'get',
-			url: 'https://x.com/i/api/graphql/gaBVLalXDBRDJz6maKgdWg/NotificationsTimeline',
+			url: 'https://x.com/i/api/graphql/Ev6UMJRROInk_RMH2oVbBg/NotificationsTimeline',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				variables: JSON.stringify({
@@ -682,6 +707,7 @@ export class UserRequests {
 				features: JSON.stringify({
 					rweb_video_screen_enabled: false,
 					profile_label_improvements_pcf_label_in_post_enabled: true,
+					responsive_web_profile_redirect_enabled: false,
 					rweb_tipjar_consumption_enabled: true,
 					verified_phone_label_enabled: true,
 					creator_subscriptions_tweet_preview_api_enabled: true,
@@ -692,7 +718,7 @@ export class UserRequests {
 					c9s_tweet_anatomy_moderator_badge_enabled: true,
 					responsive_web_grok_analyze_button_fetch_trends_enabled: false,
 					responsive_web_grok_analyze_post_followups_enabled: true,
-					responsive_web_jetfuel_frame: false,
+					responsive_web_jetfuel_frame: true,
 					responsive_web_grok_share_attachment_enabled: true,
 					articles_preview_enabled: true,
 					responsive_web_edit_tweet_api_enabled: true,
@@ -710,6 +736,8 @@ export class UserRequests {
 					longform_notetweets_rich_text_read_enabled: true,
 					longform_notetweets_inline_media_enabled: true,
 					responsive_web_grok_image_annotation_enabled: true,
+					responsive_web_grok_imagine_annotation_enabled: true,
+					responsive_web_grok_community_note_auto_translation_is_enabled: false,
 					responsive_web_enhance_cards_enabled: false,
 				}),
 				/* eslint-enable @typescript-eslint/naming-convention */
@@ -724,7 +752,7 @@ export class UserRequests {
 	public static recommended(count?: number, cursor?: string): AxiosRequestConfig {
 		return {
 			method: 'get',
-			url: 'https://x.com/i/api/graphql/Q_P3YVnmHunGFkZ8ISM-7w/HomeTimeline',
+			url: 'https://x.com/i/api/graphql/V7xdnRnvW6a8vIsMr9xK7A/HomeTimeline',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				variables: JSON.stringify({
@@ -738,6 +766,7 @@ export class UserRequests {
 				features: JSON.stringify({
 					rweb_video_screen_enabled: false,
 					profile_label_improvements_pcf_label_in_post_enabled: true,
+					responsive_web_profile_redirect_enabled: false,
 					rweb_tipjar_consumption_enabled: true,
 					verified_phone_label_enabled: true,
 					creator_subscriptions_tweet_preview_api_enabled: true,
@@ -748,7 +777,7 @@ export class UserRequests {
 					c9s_tweet_anatomy_moderator_badge_enabled: true,
 					responsive_web_grok_analyze_button_fetch_trends_enabled: false,
 					responsive_web_grok_analyze_post_followups_enabled: true,
-					responsive_web_jetfuel_frame: false,
+					responsive_web_jetfuel_frame: true,
 					responsive_web_grok_share_attachment_enabled: true,
 					articles_preview_enabled: true,
 					responsive_web_edit_tweet_api_enabled: true,
@@ -766,6 +795,8 @@ export class UserRequests {
 					longform_notetweets_rich_text_read_enabled: true,
 					longform_notetweets_inline_media_enabled: true,
 					responsive_web_grok_image_annotation_enabled: true,
+					responsive_web_grok_imagine_annotation_enabled: true,
+					responsive_web_grok_community_note_auto_translation_is_enabled: false,
 					responsive_web_enhance_cards_enabled: false,
 				}),
 				/* eslint-enable @typescript-eslint/naming-convention */
@@ -793,7 +824,7 @@ export class UserRequests {
 	public static subscriptions(id: string, count?: number, cursor?: string): AxiosRequestConfig {
 		return {
 			method: 'get',
-			url: 'https://x.com/i/api/graphql/UWlxAhUnBNK0BYmeqNPqAw/UserCreatorSubscriptions',
+			url: 'https://x.com/i/api/graphql/fl06vhYypYRcRxgLKO011Q/UserCreatorSubscriptions',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				variables: JSON.stringify({
@@ -801,58 +832,11 @@ export class UserRequests {
 					count: count,
 					cursor: cursor,
 					includePromotedContent: false,
-				}),
-				features: JSON.stringify({
-					responsive_web_graphql_exclude_directive_enabled: true,
-					verified_phone_label_enabled: true,
-					creator_subscriptions_tweet_preview_api_enabled: true,
-					responsive_web_graphql_timeline_navigation_enabled: true,
-					responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
-					c9s_tweet_anatomy_moderator_badge_enabled: true,
-					tweetypie_unmention_optimization_enabled: true,
-					responsive_web_edit_tweet_api_enabled: true,
-					graphql_is_translatable_rweb_tweet_is_translatable_enabled: true,
-					view_counts_everywhere_api_enabled: true,
-					longform_notetweets_consumption_enabled: true,
-					responsive_web_twitter_article_tweet_consumption_enabled: true,
-					tweet_awards_web_tipping_enabled: false,
-					freedom_of_speech_not_reach_fetch_enabled: true,
-					standardized_nudges_misinfo: true,
-					tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled: true,
-					rweb_video_timestamps_enabled: true,
-					longform_notetweets_rich_text_read_enabled: true,
-					longform_notetweets_inline_media_enabled: true,
-					responsive_web_enhance_cards_enabled: false,
-				}),
-				/* eslint-enable @typescript-eslint/naming-convention */
-			},
-			paramsSerializer: { encode: encodeURIComponent },
-		};
-	}
-
-	/**
-	 * @param id - The id of the user whose timeline tweets are to be fetched.
-	 * @param count - The number of timeline tweets to fetch. Only works as a lower limit when used with a cursor.
-	 * @param cursor - The cursor to the batch of timeline tweets to fetch.
-	 */
-	public static tweets(id: string, count?: number, cursor?: string): AxiosRequestConfig {
-		return {
-			method: 'get',
-			url: 'https://x.com/i/api/graphql/HeWHY26ItCfUmm1e6ITjeA/UserTweets',
-			params: {
-				/* eslint-disable @typescript-eslint/naming-convention */
-				variables: JSON.stringify({
-					userId: id,
-					count: count,
-					cursor: cursor,
-					includePromotedContent: false,
-					withQuickPromoteEligibilityTweetFields: false,
-					withVoice: false,
-					withV2Timeline: false,
 				}),
 				features: JSON.stringify({
 					rweb_video_screen_enabled: false,
 					profile_label_improvements_pcf_label_in_post_enabled: true,
+					responsive_web_profile_redirect_enabled: false,
 					rweb_tipjar_consumption_enabled: true,
 					verified_phone_label_enabled: true,
 					creator_subscriptions_tweet_preview_api_enabled: true,
@@ -863,7 +847,7 @@ export class UserRequests {
 					c9s_tweet_anatomy_moderator_badge_enabled: true,
 					responsive_web_grok_analyze_button_fetch_trends_enabled: false,
 					responsive_web_grok_analyze_post_followups_enabled: true,
-					responsive_web_jetfuel_frame: false,
+					responsive_web_jetfuel_frame: true,
 					responsive_web_grok_share_attachment_enabled: true,
 					articles_preview_enabled: true,
 					responsive_web_edit_tweet_api_enabled: true,
@@ -881,6 +865,70 @@ export class UserRequests {
 					longform_notetweets_rich_text_read_enabled: true,
 					longform_notetweets_inline_media_enabled: true,
 					responsive_web_grok_image_annotation_enabled: true,
+					responsive_web_grok_imagine_annotation_enabled: true,
+					responsive_web_grok_community_note_auto_translation_is_enabled: false,
+					responsive_web_enhance_cards_enabled: false,
+				}),
+				/* eslint-enable @typescript-eslint/naming-convention */
+			},
+			paramsSerializer: { encode: encodeURIComponent },
+		};
+	}
+
+	/**
+	 * @param id - The id of the user whose timeline tweets are to be fetched.
+	 * @param count - The number of timeline tweets to fetch. Only works as a lower limit when used with a cursor.
+	 * @param cursor - The cursor to the batch of timeline tweets to fetch.
+	 */
+	public static tweets(id: string, count?: number, cursor?: string): AxiosRequestConfig {
+		return {
+			method: 'get',
+			url: 'https://x.com/i/api/graphql/-V26I6Pb5xDZ3C7BWwCQ_Q/UserTweets',
+			params: {
+				/* eslint-disable @typescript-eslint/naming-convention */
+				variables: JSON.stringify({
+					userId: id,
+					count: count,
+					cursor: cursor,
+					includePromotedContent: false,
+					withQuickPromoteEligibilityTweetFields: false,
+					withVoice: false,
+					withV2Timeline: false,
+				}),
+				features: JSON.stringify({
+					rweb_video_screen_enabled: false,
+					profile_label_improvements_pcf_label_in_post_enabled: true,
+					responsive_web_profile_redirect_enabled: false,
+					rweb_tipjar_consumption_enabled: true,
+					verified_phone_label_enabled: true,
+					creator_subscriptions_tweet_preview_api_enabled: true,
+					responsive_web_graphql_timeline_navigation_enabled: true,
+					responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
+					premium_content_api_read_enabled: false,
+					communities_web_enable_tweet_community_results_fetch: true,
+					c9s_tweet_anatomy_moderator_badge_enabled: true,
+					responsive_web_grok_analyze_button_fetch_trends_enabled: false,
+					responsive_web_grok_analyze_post_followups_enabled: true,
+					responsive_web_jetfuel_frame: true,
+					responsive_web_grok_share_attachment_enabled: true,
+					articles_preview_enabled: true,
+					responsive_web_edit_tweet_api_enabled: true,
+					graphql_is_translatable_rweb_tweet_is_translatable_enabled: true,
+					view_counts_everywhere_api_enabled: true,
+					longform_notetweets_consumption_enabled: true,
+					responsive_web_twitter_article_tweet_consumption_enabled: true,
+					tweet_awards_web_tipping_enabled: false,
+					responsive_web_grok_show_grok_translated_post: false,
+					responsive_web_grok_analysis_button_from_backend: true,
+					creator_subscriptions_quote_tweet_preview_enabled: false,
+					freedom_of_speech_not_reach_fetch_enabled: true,
+					standardized_nudges_misinfo: true,
+					tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled: true,
+					longform_notetweets_rich_text_read_enabled: true,
+					longform_notetweets_inline_media_enabled: true,
+					responsive_web_grok_image_annotation_enabled: true,
+					responsive_web_grok_imagine_annotation_enabled: true,
+					responsive_web_grok_community_note_auto_translation_is_enabled: false,
 					responsive_web_enhance_cards_enabled: false,
 				}),
 				fieldToggles: { withArticlePlainText: false },
@@ -898,7 +946,7 @@ export class UserRequests {
 	public static tweetsAndReplies(id: string, count?: number, cursor?: string): AxiosRequestConfig {
 		return {
 			method: 'get',
-			url: 'https://x.com/i/api/graphql/OAx9yEcW3JA9bPo63pcYlA/UserTweetsAndReplies',
+			url: 'https://x.com/i/api/graphql/61HQnvcGP870hiE-hCbG4A/UserTweetsAndReplies',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				variables: JSON.stringify({
@@ -913,6 +961,7 @@ export class UserRequests {
 				features: JSON.stringify({
 					rweb_video_screen_enabled: false,
 					profile_label_improvements_pcf_label_in_post_enabled: true,
+					responsive_web_profile_redirect_enabled: false,
 					rweb_tipjar_consumption_enabled: true,
 					verified_phone_label_enabled: true,
 					creator_subscriptions_tweet_preview_api_enabled: true,
@@ -923,7 +972,7 @@ export class UserRequests {
 					c9s_tweet_anatomy_moderator_badge_enabled: true,
 					responsive_web_grok_analyze_button_fetch_trends_enabled: false,
 					responsive_web_grok_analyze_post_followups_enabled: true,
-					responsive_web_jetfuel_frame: false,
+					responsive_web_jetfuel_frame: true,
 					responsive_web_grok_share_attachment_enabled: true,
 					articles_preview_enabled: true,
 					responsive_web_edit_tweet_api_enabled: true,
@@ -941,6 +990,8 @@ export class UserRequests {
 					longform_notetweets_rich_text_read_enabled: true,
 					longform_notetweets_inline_media_enabled: true,
 					responsive_web_grok_image_annotation_enabled: true,
+					responsive_web_grok_imagine_annotation_enabled: true,
+					responsive_web_grok_community_note_auto_translation_is_enabled: false,
 					responsive_web_enhance_cards_enabled: false,
 				}),
 				fieldToggles: { withArticlePlainText: false },

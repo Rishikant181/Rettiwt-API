@@ -330,7 +330,12 @@ export class FetcherService {
 				// Check for Twitter API errors in response body
 				// Type guard to check if response contains errors
 				const potentialErrorResponse = responseData as unknown as Partial<IErrorData>;
-				if (potentialErrorResponse.errors && Array.isArray(potentialErrorResponse.errors)) {
+				if (
+					potentialErrorResponse.errors &&
+					Array.isArray(potentialErrorResponse.errors) &&
+					(potentialErrorResponse.data === undefined ||
+						JSON.stringify(potentialErrorResponse.data) === JSON.stringify({}))
+				) {
 					// Throw TwitterError using existing error class
 					const axiosError = {
 						response: {
