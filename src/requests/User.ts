@@ -155,7 +155,6 @@ export class UserRequests {
 					freedom_of_speech_not_reach_fetch_enabled: true,
 					responsive_web_grok_imagine_annotation_enabled: false,
 					responsive_web_grok_community_note_auto_translation_is_enabled: false,
-					responsive_web_profile_redirect_enabled: false,
 					standardized_nudges_misinfo: true,
 					tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled: true,
 					longform_notetweets_rich_text_read_enabled: true,
@@ -274,8 +273,6 @@ export class UserRequests {
 					longform_notetweets_rich_text_read_enabled: true,
 					longform_notetweets_inline_media_enabled: true,
 					responsive_web_grok_image_annotation_enabled: true,
-					responsive_web_grok_imagine_annotation_enabled: true,
-					responsive_web_grok_community_note_auto_translation_is_enabled: false,
 					responsive_web_enhance_cards_enabled: false,
 				}),
 				/* eslint-enable @typescript-eslint/naming-convention */
