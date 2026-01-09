@@ -57,6 +57,8 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - User Affiliates
     - User Analytics (Only for Premium accounts)
     - User Bookmarks
+    - User Bookmark Folders
+    - User Bookmark Folder Tweets
     - User Details - Single (by ID and Username) and Bulk (by ID only)
     - User Follow
     - User Followed Feed
@@ -485,6 +487,8 @@ So far, the following operations are supported:
 - [Getting the list of users affiliated with the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#affiliates)
 - [Getting the analytics of the logged-in user (premium accounts only)](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#analytics)
 - [Getting the list of tweets bookmarked by the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#bookmarks)
+- [Getting the list of bookmark folders of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#bookmarkFolders)
+- [Getting the list of tweets in a specific bookmark folder](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#bookmarkFolderTweets)
 - [Getting the details of a user/multiple users](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#details)
 - [Following a given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#follow)
 - [Getting the followed feed of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#followed)
