@@ -1,7 +1,7 @@
 import { Rettiwt } from 'rettiwt-api';
 import 'dotenv/config';
 
-const rettiwt = new Rettiwt({ apiKey: process.env.ACCESS_TOKEN });
+const rettiwt = new Rettiwt({ apiKey: process.env.API_KEY });
 
 async function userDetails() {
 	try {
