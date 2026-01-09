@@ -10,6 +10,6 @@
 	},
 	"dependencies": {
 		"dotenv": "^17.2.0",
-		"rettiwt-api": "workspace"
+		"rettiwt-api": "file:../"
 	}
 }

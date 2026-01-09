@@ -55,9 +55,5 @@
 		"jsdom": "^27.2.0",
 		"node-html-parser": "^7.0.1",
 		"x-client-transaction-id": "^0.1.9"
-	},
-	"workspaces": [
-		"playground",
-		"src"
-	]
+	}
 }
