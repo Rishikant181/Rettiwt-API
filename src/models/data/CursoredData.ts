@@ -4,9 +4,10 @@ import { findByFilter } from '../../helper/JsonUtils';
 
 import { ICursoredData } from '../../types/data/CursoredData';
 import { ICursor as IRawCursor } from '../../types/raw/base/Cursor';
+import { IUserBookmarkFoldersResponse } from '../../types/raw/user/BookmarkFolders';
 
+import { BookmarkFolder } from './BookmarkFolder';
 import { List } from './List';
-
 import { Notification } from './Notification';
 import { Tweet } from './Tweet';
 import { User } from './User';
@@ -18,7 +19,7 @@ import { User } from './User';
  *
  * @public
  */
-export class CursoredData<T extends Notification | Tweet | User | List> implements ICursoredData<T> {
+export class CursoredData<T extends Notification | Tweet | User | List | BookmarkFolder> implements ICursoredData<T> {
 	public list: T[];
 	public next: string;
 
@@ -43,6 +44,11 @@ export class CursoredData<T extends Notification | Tweet | User | List> implemen
 		} else if (type == BaseType.NOTIFICATION) {
 			this.list = Notification.list(response) as T[];
 			this.next = findByFilter<IRawCursor>(response, 'cursorType', 'Bottom')[0]?.value ?? '';
+		} else if (type == BaseType.BOOKMARK_FOLDER) {
+			this.list = BookmarkFolder.list(response) as T[];
+			const sliceInfo = (response as IUserBookmarkFoldersResponse)?.data?.viewer?.user_results?.result
+				?.bookmark_collections_slice?.slice_info;
+			this.next = sliceInfo?.next_cursor ?? '';
 		}
 	}
 

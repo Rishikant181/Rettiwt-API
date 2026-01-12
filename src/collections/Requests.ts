@@ -63,6 +63,9 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 			args.showVerifiedFollowers!,
 		),
 	USER_BOOKMARKS: (args: IFetchArgs) => UserRequests.bookmarks(args.count, args.cursor),
+	USER_BOOKMARK_FOLDERS: (args: IFetchArgs) => UserRequests.bookmarkFolders(args.cursor),
+	USER_BOOKMARK_FOLDER_TWEETS: (args: IFetchArgs) =>
+		UserRequests.bookmarkFolderTweets(args.id!, args.count, args.cursor),
 	USER_DETAILS_BY_USERNAME: (args: IFetchArgs) => UserRequests.detailsByUsername(args.id!),
 	USER_DETAILS_BY_ID: (args: IFetchArgs) => UserRequests.detailsById(args.id!),
 	USER_DETAILS_BY_IDS_BULK: (args: IFetchArgs) => UserRequests.bulkDetailsByIds(args.ids!),
