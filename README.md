@@ -294,6 +294,34 @@ Where,
 - `<username>` is the username associated with the Twitter account.
 - `<password>` is the password to the Twitter account.
 
+## Using a custom error handler
+
+Out of the box, `Rettiwt`'s error handling is bare-minimum, only able to parse basic error messages. For advanced scenarios, where full error response might be required, in order to diagnose error reason, it's recommended to use a custom error handler, by implementing the `IErrorHandler` interface, as follows:
+
+```ts
+import { Rettiwt, IErrorHandler } from 'rettiwt-api';
+
+// Implementing an error handler
+class CustomErrorHandler implements IErrorHandler {
+	/**
+	 * This is where you handle the error yourself.
+	 */
+	public handler(error: unknown): void {
+		// The 'error' variable has the full, raw error response returned from Twitter.
+		/**
+		 * You custom error handling logic goes here
+		 */
+
+		console.log(`Raw Twitter Error: ${JSON.stringify(error)}`);
+	}
+}
+
+// Now we'll use the implemented error handler while initializing Rettiwt
+const rettiwt = new Rettiwt({ apiKey: '<API_KEY>', errorHandler: CustomErrorHandler });
+```
+
+You can then use the created `rettiwt` instance and your custom error handler will handler all the error responses, bypassing `Rettiwt`'s error handling logic.
+
 ## Using a proxy
 
 For masking of IP address using a proxy server, use the following code snippet for instantiation of Rettiwt:
