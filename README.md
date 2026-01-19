@@ -71,6 +71,7 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - User Notification
     - User Recommended Feed
     - User Replies Timeline
+    - User Search
     - User Subscriptions
     - User Timeline
     - User Unfollow
@@ -529,6 +530,7 @@ So far, the following operations are supported:
 - [Streaming notifications of the logged-in user in pseudo-realtime](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#notifications)
 - [Getting the recommended feed of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#recommended)
 - [Getting the replies timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#replies)
+- [Searching for a username](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#search)
 - [Getting the tweet timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#timeline)
 - [Unfollowing a given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#unfollow)
 - [Updating the profile of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#updateProfile)

@@ -113,6 +113,7 @@ export { IUserLikesResponse as IRawUserLikesResponse } from './types/raw/user/Li
 export { IUserMediaResponse as IRawUserMediaResponse } from './types/raw/user/Media';
 export { IUserNotificationsResponse as IRawUserNotificationsResponse } from './types/raw/user/Notifications';
 export { IUserRecommendedResponse as IRawUserRecommendedResponse } from './types/raw/user/Recommended';
+export { IUserSearchResponse as IRawUserSearchResponse } from './types/raw/user/Search';
 export { IUserScheduledResponse as IRawUserScheduledResponse } from './types/raw/user/Scheduled';
 export { IUserSubscriptionsResponse as IRawUserSubscriptionsResponse } from './types/raw/user/Subscriptions';
 export { IUserTweetsResponse as IRawUserTweetsResponse } from './types/raw/user/Tweets';
