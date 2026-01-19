@@ -47,6 +47,7 @@ export const FetchResourcesGroup = [
 	ResourceType.USER_LISTS,
 	ResourceType.USER_MEDIA,
 	ResourceType.USER_NOTIFICATIONS,
+	ResourceType.USER_SEARCH,
 	ResourceType.USER_SUBSCRIPTIONS,
 	ResourceType.USER_TIMELINE,
 	ResourceType.USER_TIMELINE_AND_REPLIES,
