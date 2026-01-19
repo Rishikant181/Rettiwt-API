@@ -276,6 +276,21 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// Replies
+	user.command('search')
+		.description('Search for a username')
+		.argument('<username>', 'The username to search for')
+		.argument('[count]', 'The number of results to fetch')
+		.argument('[cursor]', 'The cursor to the batch of results to fetch')
+		.action(async (userName: string, count?: string, cursor?: string) => {
+			try {
+				const replies = await rettiwt.user.search(userName, count ? parseInt(count) : undefined, cursor);
+				output(replies);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Timeline
 	user.command('timeline')
 		.description('Fetch the tweets timeline the given user')

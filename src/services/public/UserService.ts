@@ -29,6 +29,7 @@ import { IUserMediaResponse } from '../../types/raw/user/Media';
 import { IUserNotificationsResponse } from '../../types/raw/user/Notifications';
 import { IUserProfileUpdateResponse } from '../../types/raw/user/ProfileUpdate';
 import { IUserRecommendedResponse } from '../../types/raw/user/Recommended';
+import { IUserSearchResponse } from '../../types/raw/user/Search';
 import { IUserSubscriptionsResponse } from '../../types/raw/user/Subscriptions';
 import { IUserTweetsResponse } from '../../types/raw/user/Tweets';
 import { IUserTweetsAndRepliesResponse } from '../../types/raw/user/TweetsAndReplies';
@@ -905,6 +906,49 @@ export class UserService extends FetcherService {
 		// Fetching raw list of replies
 		const response = await this.request<IUserTweetsAndRepliesResponse>(resource, {
 			id: id ?? this.config.userId,
+			count: count,
+			cursor: cursor,
+		});
+
+		// Deserializing response
+		const data = Extractors[resource](response);
+
+		return data;
+	}
+
+	/**
+	 * Search for a username.
+	 *
+	 * @param userName - The username to search for.
+	 * @param count - The number of results to fetch, must be \<= 20.
+	 * @param cursor - The cursor to the batch of results to fetch.
+	 *
+	 * @returns The list of users that match the given username.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the top 5 matching users for the username 'user1'
+	 * rettiwt.user.search('user1')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async search(userName: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+		const resource = ResourceType.USER_SEARCH;
+
+		// Fetching raw list of filtered tweets
+		const response = await this.request<IUserSearchResponse>(resource, {
+			id: userName,
 			count: count,
 			cursor: cursor,
 		});
