@@ -1,6 +1,7 @@
 import { RettiwtConfig } from './models/RettiwtConfig';
 import { DirectMessageService } from './services/public/DirectMessageService';
 import { ListService } from './services/public/ListService';
+import { SpaceService } from './services/public/SpaceService';
 import { TweetService } from './services/public/TweetService';
 import { UserService } from './services/public/UserService';
 import { IRettiwtConfig } from './types/RettiwtConfig';
@@ -59,6 +60,9 @@ export class Rettiwt {
 	/** The instance used to fetch data related to tweets. */
 	public tweet: TweetService;
 
+	/** The instance used to fetch data related to spaces. */
+	public space: SpaceService;
+
 	/** The instance used to fetch data related to users. */
 	public user: UserService;
 
@@ -71,6 +75,7 @@ export class Rettiwt {
 		this._config = new RettiwtConfig(config);
 		this.dm = new DirectMessageService(this._config);
 		this.list = new ListService(this._config);
+		this.space = new SpaceService(this._config);
 		this.tweet = new TweetService(this._config);
 		this.user = new UserService(this._config);
 	}

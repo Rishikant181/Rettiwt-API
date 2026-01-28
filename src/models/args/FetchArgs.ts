@@ -17,6 +17,9 @@ export class FetchArgs implements IFetchArgs {
 	public granularity?: RawAnalyticsGranularity;
 	public id?: string;
 	public ids?: string[];
+	public withReplays?: boolean;
+	public withListeners?: boolean;
+	public isMetatagsQuery?: boolean;
 	public maxId?: string;
 	public metrics?: RawAnalyticsMetric[];
 	public showVerifiedFollowers?: boolean;
@@ -29,6 +32,9 @@ export class FetchArgs implements IFetchArgs {
 	public constructor(args: IFetchArgs) {
 		this.id = args.id;
 		this.ids = args.ids;
+		this.withReplays = args.withReplays;
+		this.withListeners = args.withListeners;
+		this.isMetatagsQuery = args.isMetatagsQuery;
 		this.count = args.count;
 		this.cursor = args.cursor;
 		this.filter = args.filter ? new TweetFilter(args.filter) : undefined;

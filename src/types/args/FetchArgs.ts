@@ -84,6 +84,30 @@ export interface IFetchArgs {
 	ids?: string[];
 
 	/**
+	 * Whether to include replay information when fetching space details.
+	 *
+	 * @remarks
+	 * - Only works for {@link ResourceType.SPACE_DETAILS}.
+	 */
+	withReplays?: boolean;
+
+	/**
+	 * Whether to include listeners information when fetching space details.
+	 *
+	 * @remarks
+	 * - Only works for {@link ResourceType.SPACE_DETAILS}.
+	 */
+	withListeners?: boolean;
+
+	/**
+	 * Whether to request metatags for space details.
+	 *
+	 * @remarks
+	 * - Only works for {@link ResourceType.SPACE_DETAILS}.
+	 */
+	isMetatagsQuery?: boolean;
+
+	/**
 	 * The sorting to use for tweet results.
 	 *
 	 * @remarks
@@ -130,6 +154,22 @@ export interface IFetchArgs {
 	 * - Only works for {@link EResourceType.USER_ANALYTICS}.
 	 */
 	showVerifiedFollowers?: boolean;
+}
+
+/**
+ * Options specifying the data that is to be fetched for space details.
+ *
+ * @public
+ */
+export interface ISpaceDetailsOptions {
+	/** Whether to include replay information. */
+	withReplays?: boolean;
+
+	/** Whether to include listeners information. */
+	withListeners?: boolean;
+
+	/** Whether the request is a metatags query. */
+	isMetatagsQuery?: boolean;
 }
 
 /**

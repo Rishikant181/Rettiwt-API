@@ -4,6 +4,7 @@ import { ResourceType } from '../enums/Resource';
 import { DMRequests } from '../requests/DirectMessage';
 import { ListRequests } from '../requests/List';
 import { MediaRequests } from '../requests/Media';
+import { SpaceRequests } from '../requests/Space';
 import { TweetRequests } from '../requests/Tweet';
 import { UserRequests } from '../requests/User';
 import { IFetchArgs } from '../types/args/FetchArgs';
@@ -33,6 +34,9 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	DM_INBOX_INITIAL_STATE: () => DMRequests.inboxInitial(),
 	DM_INBOX_TIMELINE: (args: IFetchArgs) => DMRequests.inboxTimeline(args.maxId),
 	DM_DELETE_CONVERSATION: (args: IPostArgs) => DMRequests.deleteConversation(args.conversationId!),
+
+	SPACE_DETAILS: (args: IFetchArgs) =>
+		SpaceRequests.details(args.id!, args.withReplays, args.withListeners, args.isMetatagsQuery),
 
 	TWEET_BOOKMARK: (args: IPostArgs) => TweetRequests.bookmark(args.id!),
 	TWEET_DETAILS: (args: IFetchArgs) => TweetRequests.details(args.id!),
