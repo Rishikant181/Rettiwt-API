@@ -80,6 +80,36 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	user.command('bookmark-folders')
+		.description('Fetch your list of bookmark folders')
+		.argument('[cursor]', 'The cursor to the batch of bookmark folders to fetch')
+		.action(async (cursor?: string) => {
+			try {
+				const folders = await rettiwt.user.bookmarkFolders(cursor);
+				output(folders);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	user.command('bookmark-folder-tweets')
+		.description('Fetch tweets from a specific bookmark folder')
+		.argument('<folderId>', 'The ID of the bookmark folder')
+		.argument('[count]', 'The number of tweets to fetch')
+		.argument('[cursor]', 'The cursor to the batch of tweets to fetch')
+		.action(async (folderId: string, count?: string, cursor?: string) => {
+			try {
+				const tweets = await rettiwt.user.bookmarkFolderTweets(
+					folderId,
+					count ? parseInt(count) : undefined,
+					cursor,
+				);
+				output(tweets);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Details
 	user.command('details')
 		.description('Fetch the details of the user with the given id/username')
@@ -240,6 +270,21 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 		.action(async (id: string, count?: string, cursor?: string) => {
 			try {
 				const replies = await rettiwt.user.replies(id, count ? parseInt(count) : undefined, cursor);
+				output(replies);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// Replies
+	user.command('search')
+		.description('Search for a username')
+		.argument('<username>', 'The username to search for')
+		.argument('[count]', 'The number of results to fetch')
+		.argument('[cursor]', 'The cursor to the batch of results to fetch')
+		.action(async (userName: string, count?: string, cursor?: string) => {
+			try {
+				const replies = await rettiwt.user.search(userName, count ? parseInt(count) : undefined, cursor);
 				output(replies);
 			} catch (error) {
 				output(error);

@@ -3,6 +3,7 @@ import { RawAnalyticsGranularity, RawAnalyticsMetric } from '../../enums/raw/Ana
 import { ResourceType } from '../../enums/Resource';
 import { ProfileUpdateOptions } from '../../models/args/ProfileArgs';
 import { Analytics } from '../../models/data/Analytics';
+import { BookmarkFolder } from '../../models/data/BookmarkFolder';
 import { CursoredData } from '../../models/data/CursoredData';
 import { List } from '../../models/data/List';
 import { Notification } from '../../models/data/Notification';
@@ -12,6 +13,8 @@ import { RettiwtConfig } from '../../models/RettiwtConfig';
 import { IProfileUpdateOptions } from '../../types/args/ProfileArgs';
 import { IUserAffiliatesResponse } from '../../types/raw/user/Affiliates';
 import { IUserAnalyticsResponse } from '../../types/raw/user/Analytics';
+import { IUserBookmarkFoldersResponse } from '../../types/raw/user/BookmarkFolders';
+import { IUserBookmarkFolderTweetsResponse } from '../../types/raw/user/BookmarkFolderTweets';
 import { IUserBookmarksResponse } from '../../types/raw/user/Bookmarks';
 import { IUserDetailsResponse } from '../../types/raw/user/Details';
 import { IUserDetailsBulkResponse } from '../../types/raw/user/DetailsBulk';
@@ -26,6 +29,7 @@ import { IUserMediaResponse } from '../../types/raw/user/Media';
 import { IUserNotificationsResponse } from '../../types/raw/user/Notifications';
 import { IUserProfileUpdateResponse } from '../../types/raw/user/ProfileUpdate';
 import { IUserRecommendedResponse } from '../../types/raw/user/Recommended';
+import { IUserSearchResponse } from '../../types/raw/user/Search';
 import { IUserSubscriptionsResponse } from '../../types/raw/user/Subscriptions';
 import { IUserTweetsResponse } from '../../types/raw/user/Tweets';
 import { IUserTweetsAndRepliesResponse } from '../../types/raw/user/TweetsAndReplies';
@@ -144,6 +148,88 @@ export class UserService extends FetcherService {
 			showVerifiedFollowers,
 		});
 
+		const data = Extractors[resource](response);
+
+		return data;
+	}
+
+	/**
+	 * Get the list of tweets in a specific bookmark folder of the logged in user.
+	 *
+	 * @param folderId - The ID of the bookmark folder.
+	 * @param count - The number of tweets to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of tweets to fetch.
+	 *
+	 * @returns The list of tweets in the bookmark folder.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the first 100 tweets from bookmark folder with ID '2001752149647049173'
+	 * rettiwt.user.bookmarkFolderTweets('2001752149647049173')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async bookmarkFolderTweets(folderId: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+		const resource = ResourceType.USER_BOOKMARK_FOLDER_TWEETS;
+
+		// Fetching raw list of tweets from folder
+		const response = await this.request<IUserBookmarkFolderTweetsResponse>(resource, {
+			id: folderId,
+			count: count,
+			cursor: cursor,
+		});
+
+		// Deserializing response
+		const data = Extractors[resource](response);
+
+		return data;
+	}
+
+	/**
+	 * Get the list of bookmark folders of the logged in user.
+	 *
+	 * @param cursor - The cursor to the batch of bookmark folders to fetch.
+	 *
+	 * @returns The list of bookmark folders.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching all bookmark folders of the logged in user
+	 * rettiwt.user.bookmarkFolders()
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async bookmarkFolders(cursor?: string): Promise<CursoredData<BookmarkFolder>> {
+		const resource = ResourceType.USER_BOOKMARK_FOLDERS;
+
+		// Fetching raw list of bookmark folders
+		const response = await this.request<IUserBookmarkFoldersResponse>(resource, {
+			cursor: cursor,
+		});
+
+		// Deserializing response
 		const data = Extractors[resource](response);
 
 		return data;
@@ -831,9 +917,50 @@ export class UserService extends FetcherService {
 	}
 
 	/**
-	 * Get the list of subscriptions of a user.
+	 * Search for a username.
 	 *
-	 * @deprecated Currently not working.
+	 * @param userName - The username to search for.
+	 * @param count - The number of results to fetch, must be \<= 20.
+	 * @param cursor - The cursor to the batch of results to fetch.
+	 *
+	 * @returns The list of users that match the given username.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the top 5 matching users for the username 'user1'
+	 * rettiwt.user.search('user1')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async search(userName: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+		const resource = ResourceType.USER_SEARCH;
+
+		// Fetching raw list of filtered tweets
+		const response = await this.request<IUserSearchResponse>(resource, {
+			id: userName,
+			count: count,
+			cursor: cursor,
+		});
+
+		// Deserializing response
+		const data = Extractors[resource](response);
+
+		return data;
+	}
+
+	/**
+	 * Get the list of subscriptions of a user.
 	 *
 	 * @param id - The ID of the target user. If no ID is provided, the logged-in user's ID is used.
 	 * @param count - The number of subscriptions to fetch, must be \<= 100.

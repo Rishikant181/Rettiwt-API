@@ -57,6 +57,8 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - User Affiliates
     - User Analytics (Only for Premium accounts)
     - User Bookmarks
+    - User Bookmark Folders
+    - User Bookmark Folder Tweets
     - User Details - Single (by ID and Username) and Bulk (by ID only)
     - User Follow
     - User Followed Feed
@@ -69,6 +71,7 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - User Notification
     - User Recommended Feed
     - User Replies Timeline
+    - User Search
     - User Subscriptions
     - User Timeline
     - User Unfollow
@@ -292,6 +295,34 @@ Where,
 - `<username>` is the username associated with the Twitter account.
 - `<password>` is the password to the Twitter account.
 
+## Using a custom error handler
+
+Out of the box, `Rettiwt`'s error handling is bare-minimum, only able to parse basic error messages. For advanced scenarios, where full error response might be required, in order to diagnose error reason, it's recommended to use a custom error handler, by implementing the `IErrorHandler` interface, as follows:
+
+```ts
+import { Rettiwt, IErrorHandler } from 'rettiwt-api';
+
+// Implementing an error handler
+class CustomErrorHandler implements IErrorHandler {
+	/**
+	 * This is where you handle the error yourself.
+	 */
+	public handler(error: unknown): void {
+		// The 'error' variable has the full, raw error response returned from Twitter.
+		/**
+		 * You custom error handling logic goes here
+		 */
+
+		console.log(`Raw Twitter Error: ${JSON.stringify(error)}`);
+	}
+}
+
+// Now we'll use the implemented error handler while initializing Rettiwt
+const rettiwt = new Rettiwt({ apiKey: '<API_KEY>', errorHandler: CustomErrorHandler });
+```
+
+You can then use the created `rettiwt` instance and your custom error handler will handler all the error responses, bypassing `Rettiwt`'s error handling logic.
+
 ## Using a proxy
 
 For masking of IP address using a proxy server, use the following code snippet for instantiation of Rettiwt:
@@ -485,6 +516,8 @@ So far, the following operations are supported:
 - [Getting the list of users affiliated with the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#affiliates)
 - [Getting the analytics of the logged-in user (premium accounts only)](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#analytics)
 - [Getting the list of tweets bookmarked by the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#bookmarks)
+- [Getting the list of bookmark folders of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#bookmarkFolders)
+- [Getting the list of tweets in a specific bookmark folder](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#bookmarkFolderTweets)
 - [Getting the details of a user/multiple users](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#details)
 - [Following a given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#follow)
 - [Getting the followed feed of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#followed)
@@ -497,6 +530,7 @@ So far, the following operations are supported:
 - [Streaming notifications of the logged-in user in pseudo-realtime](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#notifications)
 - [Getting the recommended feed of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#recommended)
 - [Getting the replies timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#replies)
+- [Searching for a username](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#search)
 - [Getting the tweet timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#timeline)
 - [Unfollowing a given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#unfollow)
 - [Updating the profile of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#updateProfile)
