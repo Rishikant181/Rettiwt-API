@@ -1,5 +1,6 @@
 import { BaseType } from '../enums/Data';
 import { Analytics } from '../models/data/Analytics';
+import { BookmarkFolder } from '../models/data/BookmarkFolder';
 import { Conversation } from '../models/data/Conversation';
 import { CursoredData } from '../models/data/CursoredData';
 import { Inbox } from '../models/data/Inbox';
@@ -36,6 +37,8 @@ import { ITweetUnretweetResponse } from '../types/raw/tweet/Unretweet';
 import { ITweetUnscheduleResponse } from '../types/raw/tweet/Unschedule';
 import { IUserAffiliatesResponse } from '../types/raw/user/Affiliates';
 import { IUserAnalyticsResponse } from '../types/raw/user/Analytics';
+import { IUserBookmarkFoldersResponse } from '../types/raw/user/BookmarkFolders';
+import { IUserBookmarkFolderTweetsResponse } from '../types/raw/user/BookmarkFolderTweets';
 import { IUserBookmarksResponse } from '../types/raw/user/Bookmarks';
 import { IUserDetailsResponse } from '../types/raw/user/Details';
 import { IUserDetailsBulkResponse } from '../types/raw/user/DetailsBulk';
@@ -50,6 +53,7 @@ import { IUserMediaResponse } from '../types/raw/user/Media';
 import { IUserNotificationsResponse } from '../types/raw/user/Notifications';
 import { IUserProfileUpdateResponse } from '../types/raw/user/ProfileUpdate';
 import { IUserRecommendedResponse } from '../types/raw/user/Recommended';
+import { IUserSearchResponse } from '../types/raw/user/Search';
 import { IUserSubscriptionsResponse } from '../types/raw/user/Subscriptions';
 import { IUserTweetsResponse } from '../types/raw/user/Tweets';
 import { IUserTweetsAndRepliesResponse } from '../types/raw/user/TweetsAndReplies';
@@ -115,6 +119,10 @@ export const Extractors = {
 		new Analytics(response.data.viewer_v2.user_results.result),
 	USER_BOOKMARKS: (response: IUserBookmarksResponse): CursoredData<Tweet> =>
 		new CursoredData<Tweet>(response, BaseType.TWEET),
+	USER_BOOKMARK_FOLDERS: (response: IUserBookmarkFoldersResponse): CursoredData<BookmarkFolder> =>
+		new CursoredData<BookmarkFolder>(response, BaseType.BOOKMARK_FOLDER),
+	USER_BOOKMARK_FOLDER_TWEETS: (response: IUserBookmarkFolderTweetsResponse): CursoredData<Tweet> =>
+		new CursoredData<Tweet>(response, BaseType.TWEET),
 	USER_DETAILS_BY_USERNAME: (response: IUserDetailsResponse): User | undefined => User.single(response),
 	USER_DETAILS_BY_ID: (response: IUserDetailsResponse): User | undefined => User.single(response),
 	USER_DETAILS_BY_IDS_BULK: (response: IUserDetailsBulkResponse, ids: string[]): User[] =>
@@ -137,6 +145,7 @@ export const Extractors = {
 		new CursoredData<Tweet>(response, BaseType.TWEET),
 	USER_NOTIFICATIONS: (response: IUserNotificationsResponse): CursoredData<Notification> =>
 		new CursoredData<Notification>(response, BaseType.NOTIFICATION),
+	USER_SEARCH: (response: IUserSearchResponse): CursoredData<User> => new CursoredData<User>(response, BaseType.USER),
 	USER_SUBSCRIPTIONS: (response: IUserSubscriptionsResponse): CursoredData<User> =>
 		new CursoredData<User>(response, BaseType.USER),
 	USER_TIMELINE: (response: IUserTweetsResponse): CursoredData<Tweet> =>

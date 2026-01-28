@@ -34,7 +34,7 @@ export class TweetRequests {
 	public static bulkDetails(ids: string[]): AxiosRequestConfig {
 		return {
 			method: 'get',
-			url: 'https://x.com/i/api/graphql/kPnxYjNX2HCKu8aY96er5w/TweetResultsByRestIds',
+			url: 'https://x.com/i/api/graphql/-R17e8UqwApFGdMxa3jASA/TweetResultsByRestIds',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				variables: JSON.stringify({
@@ -83,6 +83,9 @@ export class TweetRequests {
 					responsive_web_grok_analyze_button_fetch_trends_enabled: false,
 					articles_preview_enabled: false,
 					responsive_web_grok_share_attachment_enabled: false,
+					responsive_web_grok_imagine_annotation_enabled: false,
+					responsive_web_grok_community_note_auto_translation_is_enabled: false,
+					responsive_web_profile_redirect_enabled: false,
 				}),
 				/* eslint-enable @typescript-eslint/naming-convention */
 			},
@@ -96,7 +99,7 @@ export class TweetRequests {
 	public static details(id: string): AxiosRequestConfig {
 		return {
 			method: 'get',
-			url: 'https://x.com/i/api/graphql/zAz9764BcLZOJ0JU2wrd1A/TweetResultByRestId',
+			url: 'https://x.com/i/api/graphql/aFvUsJm2c-oDkJV75blV6g/TweetResultByRestId',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				variables: JSON.stringify({
@@ -173,18 +176,20 @@ export class TweetRequests {
 	public static likers(id: string, count?: number, cursor?: string): AxiosRequestConfig {
 		return {
 			method: 'get',
-			url: 'https://x.com/i/api/graphql/4AzoFlLkEcs2bx5pO1mvsQ/Favoriters',
+			url: 'https://x.com/i/api/graphql/b3OrdeHDQfb9zRMC0fV3bw/Favoriters',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				variables: JSON.stringify({
 					tweetId: id,
 					count: count,
 					cursor: cursor,
+					enableRanking: false,
 					includePromotedContent: false,
 				}),
 				features: JSON.stringify({
 					rweb_video_screen_enabled: false,
 					profile_label_improvements_pcf_label_in_post_enabled: true,
+					responsive_web_profile_redirect_enabled: false,
 					rweb_tipjar_consumption_enabled: true,
 					verified_phone_label_enabled: true,
 					creator_subscriptions_tweet_preview_api_enabled: true,
@@ -195,7 +200,7 @@ export class TweetRequests {
 					c9s_tweet_anatomy_moderator_badge_enabled: true,
 					responsive_web_grok_analyze_button_fetch_trends_enabled: false,
 					responsive_web_grok_analyze_post_followups_enabled: true,
-					responsive_web_jetfuel_frame: false,
+					responsive_web_jetfuel_frame: true,
 					responsive_web_grok_share_attachment_enabled: true,
 					articles_preview_enabled: true,
 					responsive_web_edit_tweet_api_enabled: true,
@@ -213,6 +218,8 @@ export class TweetRequests {
 					longform_notetweets_rich_text_read_enabled: true,
 					longform_notetweets_inline_media_enabled: true,
 					responsive_web_grok_image_annotation_enabled: true,
+					responsive_web_grok_imagine_annotation_enabled: true,
+					responsive_web_grok_community_note_auto_translation_is_enabled: false,
 					responsive_web_enhance_cards_enabled: false,
 				}),
 				/* eslint-enable @typescript-eslint/naming-convention */
@@ -230,7 +237,7 @@ export class TweetRequests {
 
 		return {
 			method: 'post',
-			url: 'https://x.com/i/api/graphql/IID9x6WsdMnTlXnzXGq8ng/CreateTweet',
+			url: 'https://x.com/i/api/graphql/Uf3io9zVp1DsYxrmL5FJ7g/CreateTweet',
 			data: {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				variables: {
@@ -271,6 +278,9 @@ export class TweetRequests {
 					responsive_web_grok_image_annotation_enabled: true,
 					responsive_web_graphql_timeline_navigation_enabled: true,
 					responsive_web_enhance_cards_enabled: false,
+					responsive_web_grok_imagine_annotation_enabled: false,
+					responsive_web_profile_redirect_enabled: false,
+					responsive_web_grok_community_note_auto_translation_is_enabled: false,
 				},
 				/* eslint-enable @typescript-eslint/naming-convention */
 			},
@@ -284,7 +294,7 @@ export class TweetRequests {
 	public static replies(id: string, cursor?: string, sortBy?: RawTweetRepliesSortType): AxiosRequestConfig {
 		return {
 			method: 'get',
-			url: 'https://x.com/i/api/graphql/_8aYOgEDz35BrBcBal1-_w/TweetDetail',
+			url: 'https://x.com/i/api/graphql/97JF30KziU00483E_8elBA/TweetDetail',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				variables: JSON.stringify({
@@ -302,6 +312,7 @@ export class TweetRequests {
 				features: JSON.stringify({
 					rweb_video_screen_enabled: false,
 					profile_label_improvements_pcf_label_in_post_enabled: true,
+					responsive_web_profile_redirect_enabled: false,
 					rweb_tipjar_consumption_enabled: true,
 					verified_phone_label_enabled: true,
 					creator_subscriptions_tweet_preview_api_enabled: true,
@@ -312,7 +323,7 @@ export class TweetRequests {
 					c9s_tweet_anatomy_moderator_badge_enabled: true,
 					responsive_web_grok_analyze_button_fetch_trends_enabled: false,
 					responsive_web_grok_analyze_post_followups_enabled: true,
-					responsive_web_jetfuel_frame: false,
+					responsive_web_jetfuel_frame: true,
 					responsive_web_grok_share_attachment_enabled: true,
 					articles_preview_enabled: true,
 					responsive_web_edit_tweet_api_enabled: true,
@@ -330,6 +341,8 @@ export class TweetRequests {
 					longform_notetweets_rich_text_read_enabled: true,
 					longform_notetweets_inline_media_enabled: true,
 					responsive_web_grok_image_annotation_enabled: true,
+					responsive_web_grok_imagine_annotation_enabled: true,
+					responsive_web_grok_community_note_auto_translation_is_enabled: false,
 					responsive_web_enhance_cards_enabled: false,
 				}),
 				fieldToggles: JSON.stringify({
@@ -350,7 +363,7 @@ export class TweetRequests {
 	public static retweet(id: string): AxiosRequestConfig {
 		return {
 			method: 'post',
-			url: 'https://x.com/i/api/graphql/ojPdsZsimiJrUGLR1sjUtA/CreateRetweet',
+			url: 'https://x.com/i/api/graphql/LFho5rIi4xcKO90p9jwG7A/CreateRetweet',
 			data: {
 				variables: {
 					/* eslint-disable @typescript-eslint/naming-convention */
@@ -370,7 +383,7 @@ export class TweetRequests {
 	public static retweeters(id: string, count?: number, cursor?: string): AxiosRequestConfig {
 		return {
 			method: 'get',
-			url: 'https://x.com/i/api/graphql/i-CI8t2pJD15euZJErEDrg/Retweeters',
+			url: 'https://x.com/i/api/graphql/wfglZEC0MRgBdxMa_1a5YQ/Retweeters',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				variables: JSON.stringify({
@@ -382,6 +395,7 @@ export class TweetRequests {
 				features: JSON.stringify({
 					rweb_video_screen_enabled: false,
 					profile_label_improvements_pcf_label_in_post_enabled: true,
+					responsive_web_profile_redirect_enabled: false,
 					rweb_tipjar_consumption_enabled: true,
 					verified_phone_label_enabled: true,
 					creator_subscriptions_tweet_preview_api_enabled: true,
@@ -392,7 +406,7 @@ export class TweetRequests {
 					c9s_tweet_anatomy_moderator_badge_enabled: true,
 					responsive_web_grok_analyze_button_fetch_trends_enabled: false,
 					responsive_web_grok_analyze_post_followups_enabled: true,
-					responsive_web_jetfuel_frame: false,
+					responsive_web_jetfuel_frame: true,
 					responsive_web_grok_share_attachment_enabled: true,
 					articles_preview_enabled: true,
 					responsive_web_edit_tweet_api_enabled: true,
@@ -410,6 +424,8 @@ export class TweetRequests {
 					longform_notetweets_rich_text_read_enabled: true,
 					longform_notetweets_inline_media_enabled: true,
 					responsive_web_grok_image_annotation_enabled: true,
+					responsive_web_grok_imagine_annotation_enabled: true,
+					responsive_web_grok_community_note_auto_translation_is_enabled: false,
 					responsive_web_enhance_cards_enabled: false,
 				}),
 				/* eslint-enable @typescript-eslint/naming-convention */
@@ -458,7 +474,7 @@ export class TweetRequests {
 
 		return {
 			method: 'get',
-			url: 'https://x.com/i/api/graphql/nK1dw4oV3k4w5TdtcAdSww/SearchTimeline',
+			url: 'https://x.com/i/api/graphql/M1jEez78PEfVfbQLvlWMvQ/SearchTimeline',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				variables: JSON.stringify({
@@ -467,48 +483,43 @@ export class TweetRequests {
 					cursor: cursor,
 					querySource: 'typed_query',
 					product: parsedFilter.top ? RawTweetSearchResultType.TOP : RawTweetSearchResultType.LATEST,
-					withAuxiliaryUserLabels: false,
-					withArticleRichContentState: false,
-					withArticlePlainText: false,
-					withGrokAnalyze: false,
-					withDisallowedReplyControls: false,
+					withGrokTranslatedBio: false,
 				}),
 				features: JSON.stringify({
-					rweb_lists_timeline_redesign_enabled: true,
-					responsive_web_graphql_exclude_directive_enabled: true,
+					rweb_video_screen_enabled: false,
+					profile_label_improvements_pcf_label_in_post_enabled: true,
+					responsive_web_profile_redirect_enabled: false,
+					rweb_tipjar_consumption_enabled: true,
 					verified_phone_label_enabled: true,
 					creator_subscriptions_tweet_preview_api_enabled: true,
 					responsive_web_graphql_timeline_navigation_enabled: true,
 					responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
-					tweetypie_unmention_optimization_enabled: true,
+					premium_content_api_read_enabled: false,
+					communities_web_enable_tweet_community_results_fetch: true,
+					c9s_tweet_anatomy_moderator_badge_enabled: true,
+					responsive_web_grok_analyze_button_fetch_trends_enabled: false,
+					responsive_web_grok_analyze_post_followups_enabled: true,
+					responsive_web_jetfuel_frame: true,
+					responsive_web_grok_share_attachment_enabled: true,
+					articles_preview_enabled: true,
 					responsive_web_edit_tweet_api_enabled: true,
 					graphql_is_translatable_rweb_tweet_is_translatable_enabled: true,
 					view_counts_everywhere_api_enabled: true,
 					longform_notetweets_consumption_enabled: true,
-					responsive_web_twitter_article_tweet_consumption_enabled: false,
+					responsive_web_twitter_article_tweet_consumption_enabled: true,
 					tweet_awards_web_tipping_enabled: false,
+					responsive_web_grok_show_grok_translated_post: false,
+					responsive_web_grok_analysis_button_from_backend: true,
+					creator_subscriptions_quote_tweet_preview_enabled: false,
 					freedom_of_speech_not_reach_fetch_enabled: true,
 					standardized_nudges_misinfo: true,
 					tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled: true,
 					longform_notetweets_rich_text_read_enabled: true,
 					longform_notetweets_inline_media_enabled: true,
-					responsive_web_media_download_video_enabled: false,
+					responsive_web_grok_image_annotation_enabled: true,
+					responsive_web_grok_imagine_annotation_enabled: true,
+					responsive_web_grok_community_note_auto_translation_is_enabled: false,
 					responsive_web_enhance_cards_enabled: false,
-					c9s_tweet_anatomy_moderator_badge_enabled: false,
-					responsive_web_grok_show_grok_translated_post: false,
-					premium_content_api_read_enabled: false,
-					rweb_video_screen_enabled: false,
-					responsive_web_grok_analyze_post_followups_enabled: false,
-					creator_subscriptions_quote_tweet_preview_enabled: false,
-					communities_web_enable_tweet_community_results_fetch: false,
-					rweb_tipjar_consumption_enabled: false,
-					responsive_web_grok_analyze_button_fetch_trends_enabled: false,
-					profile_label_improvements_pcf_label_in_post_enabled: false,
-					responsive_web_grok_image_annotation_enabled: false,
-					responsive_web_jetfuel_frame: false,
-					articles_preview_enabled: false,
-					responsive_web_grok_share_attachment_enabled: false,
-					responsive_web_grok_analysis_button_from_backend: false,
 				}),
 				/* eslint-enable @typescript-eslint/naming-convention */
 			},

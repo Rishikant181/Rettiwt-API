@@ -11,11 +11,14 @@ export interface IUser {
 	__typename: string;
 	id: string;
 	rest_id: string;
+	core?: IUserCore;
+	avatar?: IUserAvatar;
 	affiliates_highlighted_label: IAffiliatesHighlightedLabel;
 	has_graduated_access: boolean;
 	is_blue_verified: boolean;
 	profile_image_shape: string;
 	legacy: IUserLegacy;
+	location?: IUserLocation;
 	super_follow_eligible: boolean;
 	smart_blocked_by: boolean;
 	smart_blocking: boolean;
@@ -26,6 +29,16 @@ export interface IUser {
 	highlights_info: IHighlightsInfo;
 	business_account: IBusinessAccountInfo;
 	creator_subscriptions_count: number;
+}
+
+export interface IUserCore {
+	created_at: string;
+	name: string;
+	screen_name: string;
+}
+
+export interface IUserAvatar {
+	image_url: string;
 }
 
 export interface IAffiliatesHighlightedLabel {
@@ -82,11 +95,14 @@ export interface IAffiliateHighlightedMentionResultLegacy {
 }
 
 export interface IUserLegacy {
+	created_at?: string;
+	name?: string;
+	screen_name?: string;
+	location?: string;
 	followed_by?: boolean;
 	following?: boolean;
 	can_dm: boolean;
 	can_media_tag: boolean;
-	created_at: string;
 	default_profile: boolean;
 	default_profile_image: boolean;
 	description: string;
@@ -98,16 +114,13 @@ export interface IUserLegacy {
 	has_custom_timelines: boolean;
 	is_translator: boolean;
 	listed_count: number;
-	location: string;
 	media_count: number;
-	name: string;
 	normal_followers_count: number;
 	pinned_tweet_ids_str: string[];
 	possibly_sensitive: boolean;
 	profile_banner_url: string;
-	profile_image_url_https: string;
+	profile_image_url_https?: string;
 	profile_interstitial_type: string;
-	screen_name: string;
 	statuses_count: number;
 	translator_type: string;
 	verified: boolean;
@@ -126,6 +139,10 @@ export interface IProfileDescription {
 
 export interface IProfileUrl {
 	urls: IUrl[];
+}
+
+export interface IUserLocation {
+	location: string;
 }
 
 export interface ILegacyExtendedProfile {}

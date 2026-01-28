@@ -23,7 +23,7 @@ This playground is intended for developers to test and experiment with features 
 2. **Environment Variables**
    Create a `.env` file in the `playground` directory with your API credentials:
     ```env
-    ACCESS_TOKEN=your_access_token_here
+    API_KEY=your_api_key_here
     ```
 
 ### Usage

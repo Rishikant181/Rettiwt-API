@@ -9,4 +9,5 @@ export enum BaseType {
 	TWEET = 'TWEET',
 	USER = 'USER',
 	LIST = 'LIST',
+	BOOKMARK_FOLDER = 'BOOKMARK_FOLDER',
 }
