@@ -46,10 +46,7 @@ export class SpaceService extends FetcherService {
 	 * });
 	 * ```
 	 */
-	public async details(
-		id: string,
-		options?: ISpaceDetailsOptions,
-	): Promise<Space | undefined> {
+	public async details(id: string, options?: ISpaceDetailsOptions): Promise<Space | undefined> {
 		const resource = ResourceType.SPACE_DETAILS;
 
 		// Fetching raw space details

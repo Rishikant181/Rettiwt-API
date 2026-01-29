@@ -120,4 +120,3 @@ export interface ISpaceParticipant {
 	/** Whether the user is muted by guests. */
 	isMutedByGuest?: boolean;
 }
-

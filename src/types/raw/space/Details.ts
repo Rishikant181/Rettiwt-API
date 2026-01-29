@@ -8,4 +8,3 @@ import { ISpace } from '../base/Space';
  * @public
  */
 export interface ISpaceDetailsResponse extends ISpace {}
-
