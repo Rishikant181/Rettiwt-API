@@ -4,6 +4,7 @@ import { createCommand } from 'commander';
 
 import dm from './commands/DirectMessage';
 import list from './commands/List';
+import space from './commands/Space';
 import tweet from './commands/Tweet';
 import user from './commands/User';
 import { Rettiwt } from './Rettiwt';
@@ -41,6 +42,7 @@ const RettiwtInstance = new Rettiwt({
 // Adding sub-commands
 Program.addCommand(dm(RettiwtInstance));
 Program.addCommand(list(RettiwtInstance));
+Program.addCommand(space(RettiwtInstance));
 Program.addCommand(tweet(RettiwtInstance));
 Program.addCommand(user(RettiwtInstance));
 

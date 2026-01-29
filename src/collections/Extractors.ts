@@ -6,6 +6,7 @@ import { CursoredData } from '../models/data/CursoredData';
 import { Inbox } from '../models/data/Inbox';
 import { List } from '../models/data/List';
 import { Notification } from '../models/data/Notification';
+import { Space } from '../models/data/Space';
 import { Tweet } from '../models/data/Tweet';
 import { User } from '../models/data/User';
 import { IConversationTimelineResponse } from '../types/raw/dm/Conversation';
@@ -17,6 +18,7 @@ import { IListMembersResponse } from '../types/raw/list/Members';
 import { IListMemberRemoveResponse } from '../types/raw/list/RemoveMember';
 import { IListTweetsResponse } from '../types/raw/list/Tweets';
 import { IMediaInitializeUploadResponse } from '../types/raw/media/InitalizeUpload';
+import { IAudioSpaceByIdResponse } from '../types/raw/space/AudioSpaceById';
 import { ITweetBookmarkResponse } from '../types/raw/tweet/Bookmark';
 import { ITweetDetailsResponse } from '../types/raw/tweet/Details';
 import { ITweetDetailsBulkResponse } from '../types/raw/tweet/DetailsBulk';
@@ -84,6 +86,8 @@ export const Extractors = {
 		Conversation.fromConversationTimeline(response),
 	DM_INBOX_INITIAL_STATE: (response: IInboxInitialResponse): Inbox => new Inbox(response),
 	DM_INBOX_TIMELINE: (response: IInboxTimelineResponse): Inbox => new Inbox(response),
+
+	SPACE_DETAILS: (response: IAudioSpaceByIdResponse): Space | undefined => Space.single(response),
 
 	TWEET_BOOKMARK: (response: ITweetBookmarkResponse): boolean => response?.data?.tweet_bookmark_put === 'Done',
 	TWEET_DETAILS: (response: ITweetDetailsResponse, id: string): Tweet | undefined => Tweet.single(response, id),

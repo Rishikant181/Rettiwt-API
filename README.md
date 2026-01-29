@@ -24,6 +24,7 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
 - 'Guest' authentication (without logging in) grants access to the following resources/actions:
 
     - Tweet Details
+    - Space Details
     - User Details (by username)
     - User Timeline
 
@@ -138,10 +139,11 @@ A new Rettiwt instance can be initialized using the following code snippets:
 - `const rettiwt = new Rettiwt()` (for 'guest' authentication)
 - `const rettiwt = new Rettiwt({ apiKey: API_KEY })` (for 'user' authentication)
 
-The Rettiwt class has four members:
+The Rettiwt class has five members:
 
 - `dm` member, for accessing resources related to direct messages.
 - `list` member, for accessing resources related to lists.
+- `space` member, for accessing resources related to spaces.
 - `tweet` member, for accessing resources related to tweets.
 - `user` member, for accessing resources related to users.
 
