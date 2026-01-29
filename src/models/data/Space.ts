@@ -17,29 +17,29 @@ export class Space implements ISpace {
 	/** The raw space details. */
 	private readonly _raw: IAudioSpace;
 
-	public id: string;
-	public state?: string;
-	public title?: string;
-	public mediaKey?: string;
-	public createdAt?: string;
-	public scheduledStart?: string;
-	public startedAt?: string;
-	public endedAt?: string;
-	public updatedAt?: string;
-	public creatorId?: string;
 	public conversationControls?: number;
+	public createdAt?: string;
+	public creatorId?: string;
 	public disallowJoin?: boolean;
+	public endedAt?: string;
+	public id: string;
 	public isEmployeeOnly?: boolean;
 	public isLocked?: boolean;
 	public isMuted?: boolean;
 	public isSpaceAvailableForClipping?: boolean;
 	public isSpaceAvailableForReplay?: boolean;
+	public isSubscribed?: boolean;
+	public mediaKey?: string;
 	public noIncognito?: boolean;
+	public participantCount?: number;
+	public participants?: ISpaceParticipants;
+	public scheduledStart?: string;
+	public startedAt?: string;
+	public state?: string;
+	public title?: string;
 	public totalLiveListeners?: number;
 	public totalReplayWatched?: number;
-	public participantCount?: number;
-	public isSubscribed?: boolean;
-	public participants?: ISpaceParticipants;
+	public updatedAt?: string;
 
 	/**
 	 * @param space - The raw space details.
@@ -77,6 +77,68 @@ export class Space implements ISpace {
 	/** The raw space details. */
 	public get raw(): IAudioSpace {
 		return { ...this._raw };
+	}
+
+	/**
+	 * Maps a raw participant to a deserialized participant.
+	 *
+	 * @param participant - The raw participant data.
+	 */
+	private static _mapParticipant(participant: IAudioSpaceParticipant): ISpaceParticipant {
+		const userId = participant.user_results?.rest_id ?? participant.user_results?.result?.rest_id;
+
+		return {
+			id: userId,
+			screenName: participant.twitter_screen_name,
+			displayName: participant.display_name,
+			avatarUrl: participant.avatar_url,
+			isVerified: participant.is_verified,
+			isMutedByAdmin: participant.is_muted_by_admin,
+			isMutedByGuest: participant.is_muted_by_guest,
+		};
+	}
+
+	/**
+	 * Maps raw participants to deserialized participants.
+	 *
+	 * @param participants - The raw participants data.
+	 */
+	private static _mapParticipants(participants?: IAudioSpaceParticipants): ISpaceParticipants | undefined {
+		if (!participants) {
+			return undefined;
+		}
+
+		return {
+			total: participants.total,
+			admins: (participants.admins ?? []).map((participant) => Space._mapParticipant(participant)),
+			speakers: (participants.speakers ?? []).map((participant) => Space._mapParticipant(participant)),
+			listeners: (participants.listeners ?? []).map((participant) => Space._mapParticipant(participant)),
+		};
+	}
+
+	/**
+	 * Convert timestamp to ISO string.
+	 *
+	 * @param value - The timestamp value.
+	 */
+	private static _timestampToIso(value?: number | string): string | undefined {
+		if (value == undefined) {
+			return undefined;
+		}
+
+		const numeric = typeof value === 'string' ? Number(value) : value;
+
+		if (!Number.isNaN(numeric)) {
+			return new Date(numeric).toISOString();
+		}
+
+		const parsed = new Date(value);
+
+		if (!Number.isNaN(parsed.getTime())) {
+			return parsed.toISOString();
+		}
+
+		return undefined;
 	}
 
 	/**
@@ -134,68 +196,6 @@ export class Space implements ISpace {
 			participantCount: this.participantCount,
 			isSubscribed: this.isSubscribed,
 			participants: this.participants,
-		};
-	}
-
-	/**
-	 * Convert timestamp to ISO string.
-	 *
-	 * @param value - The timestamp value.
-	 */
-	private static _timestampToIso(value?: number | string): string | undefined {
-		if (value == undefined) {
-			return undefined;
-		}
-
-		const numeric = typeof value === 'string' ? Number(value) : value;
-
-		if (!Number.isNaN(numeric)) {
-			return new Date(numeric).toISOString();
-		}
-
-		const parsed = new Date(value);
-
-		if (!Number.isNaN(parsed.getTime())) {
-			return parsed.toISOString();
-		}
-
-		return undefined;
-	}
-
-	/**
-	 * Maps raw participants to deserialized participants.
-	 *
-	 * @param participants - The raw participants data.
-	 */
-	private static _mapParticipants(participants?: IAudioSpaceParticipants): ISpaceParticipants | undefined {
-		if (!participants) {
-			return undefined;
-		}
-
-		return {
-			total: participants.total,
-			admins: (participants.admins ?? []).map(Space._mapParticipant),
-			speakers: (participants.speakers ?? []).map(Space._mapParticipant),
-			listeners: (participants.listeners ?? []).map(Space._mapParticipant),
-		};
-	}
-
-	/**
-	 * Maps a raw participant to a deserialized participant.
-	 *
-	 * @param participant - The raw participant data.
-	 */
-	private static _mapParticipant(participant: IAudioSpaceParticipant): ISpaceParticipant {
-		const userId = participant.user_results?.rest_id ?? participant.user_results?.result?.rest_id;
-
-		return {
-			id: userId,
-			screenName: participant.twitter_screen_name,
-			displayName: participant.display_name,
-			avatarUrl: participant.avatar_url,
-			isVerified: participant.is_verified,
-			isMutedByAdmin: participant.is_muted_by_admin,
-			isMutedByGuest: participant.is_muted_by_guest,
 		};
 	}
 }

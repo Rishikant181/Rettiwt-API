@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { ISpace } from '../base/Space';
+import { IRawSpace } from '../base/Space';
 
 /**
  * The raw data received when fetching the details of a given Space.
@@ -15,7 +15,7 @@ export interface IAudioSpaceByIdResponse {
 }
 
 export interface IAudioSpace {
-	metadata?: ISpace;
+	metadata?: IRawSpace;
 	participants?: IAudioSpaceParticipants;
 	sharings?: IAudioSpaceSharings;
 	is_subscribed?: boolean;

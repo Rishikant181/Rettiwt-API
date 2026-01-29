@@ -72,7 +72,7 @@ export { IList as IRawList } from './types/raw/base/List';
 export { IMedia as IRawMedia } from './types/raw/base/Media';
 export { IMessage as IRawMessage } from './types/raw/base/Message';
 export { INotification as IRawNotification } from './types/raw/base/Notification';
-export { ISpace as IRawSpace } from './types/raw/base/Space';
+export { IRawSpace } from './types/raw/base/Space';
 export { ITweet as IRawTweet } from './types/raw/base/Tweet';
 export { IUser as IRawUser } from './types/raw/base/User';
 export { IDataResult as IRawDataResult } from './types/raw/composite/DataResult';

@@ -57,11 +57,11 @@ export class Rettiwt {
 	/** The instance used to fetch data related to lists. */
 	public list: ListService;
 
-	/** The instance used to fetch data related to tweets. */
-	public tweet: TweetService;
-
 	/** The instance used to fetch data related to spaces. */
 	public space: SpaceService;
+
+	/** The instance used to fetch data related to tweets. */
+	public tweet: TweetService;
 
 	/** The instance used to fetch data related to users. */
 	public user: UserService;

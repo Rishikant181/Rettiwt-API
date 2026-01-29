@@ -9,7 +9,7 @@ import { ITweet } from './Tweet';
  *
  * @public
  */
-export interface ISpace {
+export interface IRawSpace {
 	rest_id: string;
 	state?: string;
 	title?: string;
@@ -44,11 +44,11 @@ export interface ISpace {
 	host_ids?: string[];
 	speaker_ids?: string[];
 	invited_user_ids?: string[];
-	topics?: ISpaceTopic[];
+	topics?: IRawSpaceTopic[];
 	tweet_results?: IDataResult<ITweet>;
 }
 
-export interface ISpaceTopic {
+export interface IRawSpaceTopic {
 	id: string;
 	name: string;
 	description?: string;

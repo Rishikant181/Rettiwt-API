@@ -17,14 +17,14 @@ export class FetchArgs implements IFetchArgs {
 	public granularity?: RawAnalyticsGranularity;
 	public id?: string;
 	public ids?: string[];
-	public withReplays?: boolean;
-	public withListeners?: boolean;
 	public isMetatagsQuery?: boolean;
 	public maxId?: string;
 	public metrics?: RawAnalyticsMetric[];
 	public showVerifiedFollowers?: boolean;
 	public sortBy?: TweetRepliesSortType;
 	public toTime?: Date;
+	public withListeners?: boolean;
+	public withReplays?: boolean;
 
 	/**
 	 * @param args - Additional user-defined arguments for fetching the resource.
@@ -32,8 +32,6 @@ export class FetchArgs implements IFetchArgs {
 	public constructor(args: IFetchArgs) {
 		this.id = args.id;
 		this.ids = args.ids;
-		this.withReplays = args.withReplays;
-		this.withListeners = args.withListeners;
 		this.isMetatagsQuery = args.isMetatagsQuery;
 		this.count = args.count;
 		this.cursor = args.cursor;
@@ -47,6 +45,8 @@ export class FetchArgs implements IFetchArgs {
 		this.activeConversationId = args.activeConversationId;
 		this.conversationId = args.conversationId;
 		this.maxId = args.maxId;
+		this.withListeners = args.withListeners;
+		this.withReplays = args.withReplays;
 	}
 }
 
