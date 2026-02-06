@@ -110,6 +110,19 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// About
+	user.command('about')
+		.description('Fetch the about profile of the user with the given username')
+		.argument('<username>', 'The username of the user')
+		.action(async (username: string) => {
+			try {
+				const about = await rettiwt.user.about(username);
+				output(about);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Details
 	user.command('details')
 		.description('Fetch the details of the user with the given id/username')

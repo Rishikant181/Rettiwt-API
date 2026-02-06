@@ -29,6 +29,7 @@ export * from './models/data/Notification';
 export * from './models/data/Space';
 export * from './models/data/Tweet';
 export * from './models/data/User';
+export * from './models/data/UserAbout';
 export * from './models/errors/TwitterError';
 
 // REQUESTS
@@ -61,6 +62,7 @@ export * from './types/data/Notification';
 export * from './types/data/Space';
 export * from './types/data/Tweet';
 export * from './types/data/User';
+export * from './types/data/UserAbout';
 export * from './types/errors/TwitterError';
 export * from './types/params/Variables';
 export { IAnalytics as IRawAnalytics } from './types/raw/base/Analytic';
@@ -102,6 +104,7 @@ export { ITweetUnlikeResponse as IRawTweetUnlikeResponse } from './types/raw/twe
 export { ITweetUnpostResponse as IRawTweetUnpostResponse } from './types/raw/tweet/Unpost';
 export { ITweetUnretweetResponse as IRawTweetUnretweetResponse } from './types/raw/tweet/Unretweet';
 export { ITweetUnscheduleResponse as ITRawTweetUnscheduleResponse } from './types/raw/tweet/Unschedule';
+export { IUserAboutResponse as IRawUserAboutResponse } from './types/raw/user/About';
 export { IUserAffiliatesResponse as IRawUserAffiliatesResponse } from './types/raw/user/Affiliates';
 export { IUserAnalyticsResponse as IRawUserAnalyticsResponse } from './types/raw/user/Analytics';
 export { IUserBookmarkFoldersResponse as IRawUserBookmarkFoldersResponse } from './types/raw/user/BookmarkFolders';
