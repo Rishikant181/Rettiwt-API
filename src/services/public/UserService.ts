@@ -9,8 +9,10 @@ import { List } from '../../models/data/List';
 import { Notification } from '../../models/data/Notification';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
+import { UserAbout } from '../../models/data/UserAbout';
 import { RettiwtConfig } from '../../models/RettiwtConfig';
 import { IProfileUpdateOptions } from '../../types/args/ProfileArgs';
+import { IUserAboutResponse } from '../../types/raw/user/About';
 import { IUserAffiliatesResponse } from '../../types/raw/user/Affiliates';
 import { IUserAnalyticsResponse } from '../../types/raw/user/Analytics';
 import { IUserBookmarkFoldersResponse } from '../../types/raw/user/BookmarkFolders';
@@ -50,6 +52,47 @@ export class UserService extends FetcherService {
 	 */
 	public constructor(config: RettiwtConfig) {
 		super(config);
+	}
+
+	/**
+	 * Get the about profile of a user.
+	 *
+	 * @param userName - The username/screenname of the target user.
+	 *
+	 * @returns The about profile of the user.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the about profile of the User with username 'user1' or '@user1'
+	 * rettiwt.user.about('user1') // or @user1
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async about(userName: string): Promise<UserAbout | undefined> {
+		const resource = ResourceType.USER_ABOUT_BY_USERNAME;
+
+		if (userName.startsWith('@')) {
+			userName = userName.slice(1);
+		}
+
+		// Fetching raw about profile
+		const response = await this.request<IUserAboutResponse>(resource, { id: userName });
+
+		// Deserializing response
+		const data = Extractors[resource](response);
+
+		return data;
 	}
 
 	/**

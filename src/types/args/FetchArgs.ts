@@ -71,7 +71,7 @@ export interface IFetchArgs {
 	 *
 	 * @remarks
 	 * - Required for all resources except {@link ResourceType.TWEET_SEARCH} and {@link ResourceType.USER_TIMELINE_RECOMMENDED}.
-	 * - For {@link ResourceType.USER_DETAILS_BY_USERNAME} and {@link ResourceType.USER_SEARCH}, can be alphanumeric, while for others, is strictly numeric.
+	 * - For {@link ResourceType.USER_DETAILS_BY_USERNAME}, {@link ResourceType.USER_ABOUT_BY_USERNAME}, and {@link ResourceType.USER_SEARCH}, can be alphanumeric, while for others, is strictly numeric.
 	 */
 	id?: string;
 

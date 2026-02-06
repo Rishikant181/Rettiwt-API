@@ -12,6 +12,20 @@ import { IProfileUpdateOptions } from '../types/args/ProfileArgs';
  */
 export class UserRequests {
 	/**
+	 * @param userName - The username of the user whose about profile is to be fetched.
+	 */
+	public static aboutByUsername(userName: string): AxiosRequestConfig {
+		return {
+			method: 'get',
+			url: 'https://x.com/i/api/graphql/zs_jFPFT78rBpXv9Z3U2YQ/AboutAccountQuery',
+			params: {
+				variables: JSON.stringify({ screenName: userName }),
+			},
+			paramsSerializer: { encode: encodeURIComponent },
+		};
+	}
+
+	/**
 	 * @param id - The id of the user whose affiliates are to be fetched.
 	 * @param count - The number of affiliates to fetch. Only works as a lower limit when used with a cursor.
 	 * @param cursor - The cursor to the batch of affiliates to fetch.

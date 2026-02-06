@@ -9,6 +9,7 @@ import { Notification } from '../models/data/Notification';
 import { Space } from '../models/data/Space';
 import { Tweet } from '../models/data/Tweet';
 import { User } from '../models/data/User';
+import { UserAbout } from '../models/data/UserAbout';
 import { IConversationTimelineResponse } from '../types/raw/dm/Conversation';
 import { IInboxInitialResponse } from '../types/raw/dm/InboxInitial';
 import { IInboxTimelineResponse } from '../types/raw/dm/InboxTimeline';
@@ -35,6 +36,7 @@ import { ITweetUnlikeResponse } from '../types/raw/tweet/Unlike';
 import { ITweetUnpostResponse } from '../types/raw/tweet/Unpost';
 import { ITweetUnretweetResponse } from '../types/raw/tweet/Unretweet';
 import { ITweetUnscheduleResponse } from '../types/raw/tweet/Unschedule';
+import { IUserAboutResponse } from '../types/raw/user/About';
 import { IUserAffiliatesResponse } from '../types/raw/user/Affiliates';
 import { IUserAnalyticsResponse } from '../types/raw/user/Analytics';
 import { IUserBookmarkFoldersResponse } from '../types/raw/user/BookmarkFolders';
@@ -123,6 +125,7 @@ export const Extractors = {
 		new CursoredData<BookmarkFolder>(response, BaseType.BOOKMARK_FOLDER),
 	USER_BOOKMARK_FOLDER_TWEETS: (response: IUserBookmarkFolderTweetsResponse): CursoredData<Tweet> =>
 		new CursoredData<Tweet>(response, BaseType.TWEET),
+	USER_ABOUT_BY_USERNAME: (response: IUserAboutResponse): UserAbout | undefined => UserAbout.single(response),
 	USER_DETAILS_BY_USERNAME: (response: IUserDetailsResponse): User | undefined => User.single(response),
 	USER_DETAILS_BY_ID: (response: IUserDetailsResponse): User | undefined => User.single(response),
 	USER_DETAILS_BY_IDS_BULK: (response: IUserDetailsBulkResponse, ids: string[]): User[] =>

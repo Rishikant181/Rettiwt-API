@@ -37,6 +37,7 @@ export const FetchResourcesGroup = [
 	ResourceType.USER_BOOKMARKS,
 	ResourceType.USER_BOOKMARK_FOLDERS,
 	ResourceType.USER_BOOKMARK_FOLDER_TWEETS,
+	ResourceType.USER_ABOUT_BY_USERNAME,
 	ResourceType.USER_DETAILS_BY_USERNAME,
 	ResourceType.USER_DETAILS_BY_ID,
 	ResourceType.USER_DETAILS_BY_IDS_BULK,
