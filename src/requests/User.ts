@@ -19,9 +19,7 @@ export class UserRequests {
 			method: 'get',
 			url: 'https://x.com/i/api/graphql/zs_jFPFT78rBpXv9Z3U2YQ/AboutAccountQuery',
 			params: {
-				 
 				variables: JSON.stringify({ screenName: userName }),
-				 
 			},
 			paramsSerializer: { encode: encodeURIComponent },
 		};
