@@ -309,13 +309,14 @@ import { Rettiwt } from 'rettiwt-api';
 const rettiwt = new Rettiwt({ apiKey: API_KEY });
 
 // Automatically appends `filter:spaces` if omitted
-rettiwt.space.search('from:tbvxyz lang:zxx', 20)
-.then(spaces => {
-	console.log(spaces); // Space[]
-})
-.catch(error => {
-	console.log(error);
-});
+rettiwt.space
+	.search('from:tbvxyz lang:zxx', 20)
+	.then((spaces) => {
+		console.log(spaces); // Space[]
+	})
+	.catch((error) => {
+		console.log(error);
+	});
 ```
 
 ## Using a custom error handler
