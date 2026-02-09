@@ -78,6 +78,7 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - User Timeline
     - User Unfollow
     - User Profile Update
+    - Space Search
 
 By default, Rettiwt-API uses 'guest' authentication. If however, access to the full set of resources is required, 'user' authentication can be used. This is done by using the cookies associated with your Twitter/X account, and encoding them into an `API_KEY` for convenience. The said `API_KEY` can be obtained by using a browser extension, as follows:
 
@@ -298,6 +299,25 @@ Where,
 - `<username>` is the username associated with the Twitter account.
 - `<password>` is the password to the Twitter account.
 
+### 5. Searching spaces
+
+`space.search(...)` returns an array of `Space` objects (`Space[]`).
+
+```ts
+import { Rettiwt } from 'rettiwt-api';
+
+const rettiwt = new Rettiwt({ apiKey: API_KEY });
+
+// Automatically appends `filter:spaces` if omitted
+rettiwt.space.search('from:tbvxyz lang:zxx', 20)
+.then(spaces => {
+	console.log(spaces); // Space[]
+})
+.catch(error => {
+	console.log(error);
+});
+```
+
 ## Using a custom error handler
 
 Out of the box, `Rettiwt`'s error handling is bare-minimum, only able to parse basic error messages. For advanced scenarios, where full error response might be required, in order to diagnose error reason, it's recommended to use a custom error handler, by implementing the `IErrorHandler` interface, as follows:
@@ -494,6 +514,11 @@ So far, the following operations are supported:
 - [Removing a member from a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#removeMember)
 - [Getting the list of tweets from a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#tweets)
 
+### Spaces
+
+- [Getting the details of a given space](https://rishikant181.github.io/Rettiwt-API/classes/SpaceService.html#details)
+- [Searching for spaces (returns `Space[]`)](https://rishikant181.github.io/Rettiwt-API/classes/SpaceService.html#search)
+
 ### Tweets
 
 - [Bookmarking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#bookmark)
@@ -556,6 +581,12 @@ Help for the CLI can be obtained from the CLI itself:
 
 - For help regarding the available commands, use the command `rettiwt help`
 - For help regarding a specific command, use the command `rettiwt help <command_name>`
+
+Examples:
+
+- `rettiwt space details <space_id>`
+- `rettiwt space search "<query>" [count] [cursor]`
+- `rettiwt space search "<query>" [count] [cursor] --latest`
 
 ## API Reference
 

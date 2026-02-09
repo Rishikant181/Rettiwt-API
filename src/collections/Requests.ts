@@ -37,6 +37,7 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 
 	SPACE_DETAILS: (args: IFetchArgs) =>
 		SpaceRequests.details(args.id!, args.withReplays, args.withListeners, args.isMetatagsQuery),
+	SPACE_SEARCH: (args: IFetchArgs) => SpaceRequests.search(args.query!, args.count, args.cursor, args.top),
 
 	TWEET_BOOKMARK: (args: IPostArgs) => TweetRequests.bookmark(args.id!),
 	TWEET_DETAILS: (args: IFetchArgs) => TweetRequests.details(args.id!),

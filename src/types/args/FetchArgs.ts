@@ -8,6 +8,22 @@ import { TweetRepliesSortType } from '../../enums/Tweet';
  */
 export interface IFetchArgs {
 	/**
+	 * The raw query string.
+	 *
+	 * @remarks
+	 * - Only works for {@link ResourceType.SPACE_SEARCH}.
+	 */
+	query?: string;
+
+	/**
+	 * Whether to fetch top results.
+	 *
+	 * @remarks
+	 * - Only works for {@link ResourceType.SPACE_SEARCH}.
+	 */
+	top?: boolean;
+
+	/**
 	 * The id of the active conversation.
 	 *
 	 * @remarks

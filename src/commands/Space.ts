@@ -9,6 +9,10 @@ interface ISpaceDetailsOptions {
 	metatags?: boolean;
 }
 
+interface ISpaceSearchOptions {
+	latest?: boolean;
+}
+
 /**
  * Creates a new 'space' command which uses the given Rettiwt instance.
  *
@@ -35,6 +39,28 @@ function createSpaceCommand(rettiwt: Rettiwt): Command {
 					isMetatagsQuery: options?.metatags,
 				});
 				output(details);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// Search
+	space
+		.command('search')
+		.description('Search for spaces')
+		.argument('<query>', 'The search query')
+		.argument('[count]', 'The number of results to fetch')
+		.argument('[cursor]', 'The cursor to the batch of results to fetch')
+		.option('--latest', 'Fetch latest results instead of top results')
+		.action(async (query: string, count?: string, cursor?: string, options?: ISpaceSearchOptions) => {
+			try {
+				const results = await rettiwt.space.search(
+					query,
+					count ? parseInt(count) : undefined,
+					cursor,
+					!options?.latest,
+				);
+				output(results);
 			} catch (error) {
 				output(error);
 			}

@@ -20,6 +20,7 @@ import { IListMemberRemoveResponse } from '../types/raw/list/RemoveMember';
 import { IListTweetsResponse } from '../types/raw/list/Tweets';
 import { IMediaInitializeUploadResponse } from '../types/raw/media/InitalizeUpload';
 import { IAudioSpaceByIdResponse } from '../types/raw/space/AudioSpaceById';
+import { ISpaceSearchResponse } from '../types/raw/space/Search';
 import { ITweetBookmarkResponse } from '../types/raw/tweet/Bookmark';
 import { ITweetDetailsResponse } from '../types/raw/tweet/Details';
 import { ITweetDetailsBulkResponse } from '../types/raw/tweet/DetailsBulk';
@@ -90,6 +91,8 @@ export const Extractors = {
 	DM_INBOX_TIMELINE: (response: IInboxTimelineResponse): Inbox => new Inbox(response),
 
 	SPACE_DETAILS: (response: IAudioSpaceByIdResponse): Space | undefined => Space.single(response),
+	SPACE_SEARCH: (response: ISpaceSearchResponse): CursoredData<Tweet> =>
+		new CursoredData<Tweet>(response, BaseType.TWEET),
 
 	TWEET_BOOKMARK: (response: ITweetBookmarkResponse): boolean => response?.data?.tweet_bookmark_put === 'Done',
 	TWEET_DETAILS: (response: ITweetDetailsResponse, id: string): Tweet | undefined => Tweet.single(response, id),

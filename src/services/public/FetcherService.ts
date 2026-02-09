@@ -254,7 +254,7 @@ export class FetcherService {
 	 * Makes an HTTP request according to the given parameters.
 	 *
 	 * @param resource - The requested resource.
-	 * @param config - The request configuration.
+	 * @param args - The arguments required for the requested resource.
 	 *
 	 * @typeParam T - The type of the returned response data.
 	 *

@@ -25,6 +25,7 @@ export const FetchResourcesGroup = [
 	ResourceType.DM_INBOX_INITIAL_STATE,
 	ResourceType.DM_INBOX_TIMELINE,
 	ResourceType.SPACE_DETAILS,
+	ResourceType.SPACE_SEARCH,
 	ResourceType.TWEET_DETAILS,
 	ResourceType.TWEET_DETAILS_ALT,
 	ResourceType.TWEET_DETAILS_BULK,

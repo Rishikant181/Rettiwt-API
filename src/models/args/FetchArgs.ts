@@ -20,9 +20,11 @@ export class FetchArgs implements IFetchArgs {
 	public isMetatagsQuery?: boolean;
 	public maxId?: string;
 	public metrics?: RawAnalyticsMetric[];
+	public query?: string;
 	public showVerifiedFollowers?: boolean;
 	public sortBy?: TweetRepliesSortType;
 	public toTime?: Date;
+	public top?: boolean;
 	public withListeners?: boolean;
 	public withReplays?: boolean;
 
@@ -30,6 +32,8 @@ export class FetchArgs implements IFetchArgs {
 	 * @param args - Additional user-defined arguments for fetching the resource.
 	 */
 	public constructor(args: IFetchArgs) {
+		this.query = args.query;
+		this.top = args.top;
 		this.id = args.id;
 		this.ids = args.ids;
 		this.isMetatagsQuery = args.isMetatagsQuery;

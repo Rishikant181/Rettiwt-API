@@ -90,6 +90,7 @@ export { IMediaFinalizeUploadResponse as IRawMediaFinalizeUploadResponse } from 
 export { IMediaInitializeUploadResponse as IRawMediaInitializeUploadResponse } from './types/raw/media/InitalizeUpload';
 export { IMediaLiveVideoStreamResponse as IRawMediaLiveVideoStreamResponse } from './types/raw/media/LiveVideoStream';
 export { IAudioSpaceByIdResponse as IRawSpaceDetailsResponse } from './types/raw/space/AudioSpaceById';
+export { ISpaceSearchResponse as IRawSpaceSearchResponse } from './types/raw/space/Search';
 export { ITweetDetailsResponse as IRawTweetDetailsResponse } from './types/raw/tweet/Details';
 export { ITweetDetailsBulkResponse as IRawTweetDetailsBulkResponse } from './types/raw/tweet/DetailsBulk';
 export { ITweetLikeResponse as IRawTweetLikeResponse } from './types/raw/tweet/Like';
