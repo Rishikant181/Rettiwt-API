@@ -1,4 +1,4 @@
-import axios, { AxiosError, isAxiosError } from 'axios';
+import axios, { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 import { Cookie } from 'cookiejar';
 import { JSDOM } from 'jsdom';
 import { ClientTransaction } from 'x-client-transaction-id';
@@ -254,11 +254,11 @@ export class FetcherService {
 	 * Makes an HTTP request according to the given parameters.
 	 *
 	 * @param resource - The requested resource.
-	 * @param config - The request configuration.
+	 * @param args - The args to be used for the request.
 	 *
 	 * @typeParam T - The type of the returned response data.
 	 *
-	 * @returns The raw data response received.
+	 * @returns The raw HTTP response received.
 	 *
 	 * @example
 	 *
@@ -279,7 +279,10 @@ export class FetcherService {
 	 * });
 	 * ```
 	 */
-	public async request<T = unknown>(resource: ResourceType, args: IFetchArgs | IPostArgs): Promise<T> {
+	protected async requestWithResponse<T = unknown>(
+		resource: ResourceType,
+		args: IFetchArgs | IPostArgs,
+	): Promise<AxiosResponse<T>> {
 		/** The current retry number. */
 		let retry = 0;
 
@@ -325,7 +328,8 @@ export class FetcherService {
 				await this._wait();
 
 				// Getting the response body
-				const responseData = (await axios<T>(config)).data;
+				const response = await axios<T>(config);
+				const responseData = response.data;
 
 				// Check for Twitter API errors in response body
 				// Type guard to check if response contains errors
@@ -348,8 +352,8 @@ export class FetcherService {
 					throw new TwitterError(axiosError);
 				}
 
-				// Returning the reponse body
-				return responseData;
+				// Returning the response
+				return response;
 			} catch (err) {
 				// If it's an error 404, retry
 				if (isAxiosError(err) && err.status === 404) {
@@ -368,5 +372,21 @@ export class FetcherService {
 
 		/** If request not successful even after retries, throw the error */
 		throw error;
+	}
+
+	/**
+	 * Makes an HTTP request according to the given parameters.
+	 *
+	 * @param resource - The requested resource.
+	 * @param args - The args to be used for the request.
+	 *
+	 * @typeParam T - The type of the returned response data.
+	 *
+	 * @returns The raw data response received.
+	 */
+	public async request<T = unknown>(resource: ResourceType, args: IFetchArgs | IPostArgs): Promise<T> {
+		const response = await this.requestWithResponse<T>(resource, args);
+
+		return response.data;
 	}
 }
