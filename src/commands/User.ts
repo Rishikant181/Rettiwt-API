@@ -1,3 +1,5 @@
+import { readFileSync } from 'fs';
+
 import { Command, createCommand } from 'commander';
 
 import { RawAnalyticsGranularity, RawAnalyticsMetric } from '../enums/raw/Analytics';
@@ -353,7 +355,55 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// Update Profile Banner
+	user.command('update-profile-banner')
+		.description('Update your profile banner from an image file path')
+		.argument('<path>', 'The path to the banner image file')
+		.action(async (path: string) => {
+			try {
+				const result = await rettiwt.user.updateProfileBanner(fileToBase64(path));
+				output(result);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// Update Profile Image
+	user.command('update-profile-image')
+		.description('Update your profile image from an image file path')
+		.argument('<path>', 'The path to the profile image file')
+		.action(async (path: string) => {
+			try {
+				const result = await rettiwt.user.updateProfileImage(fileToBase64(path));
+				output(result);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	return user;
+}
+
+/**
+ * Reads a file and returns its base64 representation.
+ *
+ * @param path - The path to the file.
+ * @returns The base64 representation of the file contents.
+ */
+function fileToBase64(path: string): string {
+	if (path.trim().length === 0) {
+		throw new Error('File path cannot be empty');
+	}
+
+	try {
+		return readFileSync(path).toString('base64');
+	} catch (error) {
+		if (error instanceof Error) {
+			throw new Error(`Could not read file at '${path}': ${error.message}`);
+		}
+
+		throw new Error(`Could not read file at '${path}'`);
+	}
 }
 
 /**

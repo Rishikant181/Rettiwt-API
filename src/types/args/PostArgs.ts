@@ -67,6 +67,22 @@ export interface IPostArgs {
 	 * Required only when updating user profile using {@link ResourceType.USER_PROFILE_UPDATE}
 	 */
 	profileOptions?: IProfileUpdateOptions;
+
+	/**
+	 * Base64-encoded profile image data.
+	 *
+	 * @remarks
+	 * Required only when updating profile image using {@link ResourceType.USER_PROFILE_IMAGE_UPDATE}.
+	 */
+	profileImage?: string;
+
+	/**
+	 * Base64-encoded profile banner data.
+	 *
+	 * @remarks
+	 * Required only when updating profile banner using {@link ResourceType.USER_PROFILE_BANNER_UPDATE}.
+	 */
+	profileBanner?: string;
 }
 
 /**

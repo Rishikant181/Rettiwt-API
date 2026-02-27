@@ -81,4 +81,6 @@ export const PostResourcesGroup = [
 	ResourceType.USER_FOLLOW,
 	ResourceType.USER_UNFOLLOW,
 	ResourceType.USER_PROFILE_UPDATE,
+	ResourceType.USER_PROFILE_IMAGE_UPDATE,
+	ResourceType.USER_PROFILE_BANNER_UPDATE,
 ];

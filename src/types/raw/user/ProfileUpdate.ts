@@ -39,6 +39,7 @@ export interface IUserProfileUpdateResponse {
 	profile_image_url: string;
 	profile_image_url_https: string;
 	profile_banner_url: string;
+	profile_banner_url_https?: string;
 	profile_link_color: string;
 	profile_sidebar_border_color: string;
 	profile_sidebar_fill_color: string;

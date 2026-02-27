@@ -1223,4 +1223,30 @@ export class UserRequests {
 			}),
 		};
 	}
+
+	/**
+	 * Returns the request to update the user's profile banner.
+	 *
+	 * @param bannerBase64 - The base64-encoded banner image data.
+	 */
+	public static updateProfileBanner(bannerBase64: string): AxiosRequestConfig {
+		return {
+			method: 'post',
+			url: 'https://x.com/i/api/1.1/account/update_profile_banner.json',
+			data: qs.stringify({ banner: bannerBase64 }),
+		};
+	}
+
+	/**
+	 * Returns the request to update the user's profile image.
+	 *
+	 * @param imageBase64 - The base64-encoded image data.
+	 */
+	public static updateProfileImage(imageBase64: string): AxiosRequestConfig {
+		return {
+			method: 'post',
+			url: 'https://x.com/i/api/1.1/account/update_profile_image.json',
+			data: qs.stringify({ image: imageBase64 }),
+		};
+	}
 }

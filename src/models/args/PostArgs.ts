@@ -10,6 +10,8 @@ import { ProfileUpdateOptions } from './ProfileArgs';
 export class PostArgs implements IPostArgs {
 	public conversationId?: string;
 	public id?: string;
+	public profileBanner?: string;
+	public profileImage?: string;
 	public profileOptions?: ProfileUpdateOptions;
 	public tweet?: NewTweet;
 	public upload?: UploadArgs;
@@ -26,6 +28,24 @@ export class PostArgs implements IPostArgs {
 		this.userId = args.userId;
 		this.conversationId = args.conversationId;
 		this.profileOptions = args.profileOptions ? new ProfileUpdateOptions(args.profileOptions) : undefined;
+		this.profileImage = PostArgs._validateNonEmptyString(args.profileImage, 'Profile image');
+		this.profileBanner = PostArgs._validateNonEmptyString(args.profileBanner, 'Profile banner');
+	}
+
+	private static _validateNonEmptyString(value: unknown, fieldName: string): string | undefined {
+		if (value === undefined) {
+			return undefined;
+		}
+
+		if (typeof value !== 'string') {
+			throw new Error(`${fieldName} must be a string`);
+		}
+
+		if (value.trim().length === 0) {
+			throw new Error(`${fieldName} cannot be empty`);
+		}
+
+		return value;
 	}
 }
 

@@ -54,6 +54,42 @@ export class UserService extends FetcherService {
 		super(config);
 	}
 
+	private _base64ByteSize(base64Data: string): number {
+		const paddingMatch = base64Data.match(/=+$/);
+		const paddingLength = paddingMatch ? paddingMatch[0].length : 0;
+
+		return (base64Data.length * 3) / 4 - paddingLength;
+	}
+
+	private _normalizeBase64(payload: string): string {
+		const trimmedPayload = payload.trim();
+		const lowerCasePayload = trimmedPayload.toLowerCase();
+		const base64Marker = ';base64,';
+
+		if (lowerCasePayload.startsWith('data:')) {
+			const markerIndex = lowerCasePayload.indexOf(base64Marker);
+			if (markerIndex !== -1) {
+				return trimmedPayload.slice(markerIndex + base64Marker.length).trim();
+			}
+		}
+
+		return trimmedPayload;
+	}
+
+	private _validateBase64Payload(payload: string, fieldName: string): string {
+		const normalizedPayload = this._normalizeBase64(payload).replace(/\s+/g, '');
+
+		if (normalizedPayload.length === 0) {
+			throw new Error(`${fieldName} cannot be empty`);
+		}
+
+		if (!/^[A-Za-z0-9+/]*={0,2}$/.test(normalizedPayload)) {
+			throw new Error(`${fieldName} must be valid base64`);
+		}
+
+		return normalizedPayload;
+	}
+
 	/**
 	 * Get the about profile of a user.
 	 *
@@ -1190,6 +1226,58 @@ export class UserService extends FetcherService {
 		const response = await this.request<IUserProfileUpdateResponse>(resource, { profileOptions: validatedOptions });
 
 		// Deserializing the response
+		const data = Extractors[resource](response) ?? false;
+
+		return data;
+	}
+
+	/**
+	 * Updates the profile banner of the authenticated user.
+	 *
+	 * @param bannerBase64 - The base64-encoded banner image data.
+	 * @returns Whether the profile banner was updated successfully.
+	 */
+	public async updateProfileBanner(bannerBase64: string): Promise<boolean> {
+		const resource = ResourceType.USER_PROFILE_BANNER_UPDATE;
+
+		const validatedBanner = this._validateBase64Payload(bannerBase64, 'Profile banner');
+
+		// Banner size validation (max 5 MB)
+		const bannerSizeBytes = this._base64ByteSize(validatedBanner);
+		if (bannerSizeBytes > 5 * 1024 * 1024) {
+			throw new Error('Profile banner cannot exceed 5 MB');
+		}
+
+		const response = await this.request<IUserProfileUpdateResponse>(resource, {
+			profileBanner: validatedBanner,
+		});
+
+		const data = Extractors[resource](response) ?? false;
+
+		return data;
+	}
+
+	/**
+	 * Updates the profile image of the authenticated user.
+	 *
+	 * @param imageBase64 - The base64-encoded image data.
+	 * @returns Whether the profile image was updated successfully.
+	 */
+	public async updateProfileImage(imageBase64: string): Promise<boolean> {
+		const resource = ResourceType.USER_PROFILE_IMAGE_UPDATE;
+
+		const validatedImage = this._validateBase64Payload(imageBase64, 'Profile image');
+
+		// Image size validation (max 2 MB)
+		const imageSizeBytes = this._base64ByteSize(validatedImage);
+		if (imageSizeBytes > 2 * 1024 * 1024) {
+			throw new Error('Profile image cannot exceed 2 MB');
+		}
+
+		const response = await this.request<IUserProfileUpdateResponse>(resource, {
+			profileImage: validatedImage,
+		});
+
 		const data = Extractors[resource](response) ?? false;
 
 		return data;

@@ -157,6 +157,10 @@ export const Extractors = {
 		new CursoredData<Tweet>(response, BaseType.TWEET),
 	USER_UNFOLLOW: (response: IUserUnfollowResponse): boolean => (response?.id ? true : false),
 	USER_PROFILE_UPDATE: (response: IUserProfileUpdateResponse): boolean => (response?.name ? true : false),
+	USER_PROFILE_IMAGE_UPDATE: (response: IUserProfileUpdateResponse): boolean =>
+		response?.profile_image_url || response?.profile_image_url_https ? true : false,
+	USER_PROFILE_BANNER_UPDATE: (response: IUserProfileUpdateResponse): boolean =>
+		!response || response?.profile_banner_url || response?.profile_banner_url_https ? true : false,
 
 	/* eslint-enable @typescript-eslint/naming-convention */
 };
