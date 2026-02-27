@@ -20,8 +20,19 @@ export interface IPostArgs {
 	 * - {@link ResourceType.TWEET_UNRETWEET}
 	 * - {@link ResourceType.USER_FOLLOW}
 	 * - {@link ResourceType.USER_UNFOLLOW}
+	 *
+	 * For {@link ResourceType.USER_USERNAME_CHANGE}, use {@link IPostArgs.username}.
+	 * `id` is still accepted for backward compatibility.
 	 */
 	id?: string;
+
+	/**
+	 * The new username to set.
+	 *
+	 * @remarks
+	 * Required only when changing username using {@link ResourceType.USER_USERNAME_CHANGE}.
+	 */
+	username?: string;
 
 	/**
 	 * The tweet that is to be posted.

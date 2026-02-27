@@ -326,6 +326,23 @@ export class UserRequests {
 	}
 
 	/**
+	 * Returns the request to change the user's username (screen_name).
+	 *
+	 * @param newUsername - The new username to set.
+	 */
+	public static changeUsername(newUsername: string): AxiosRequestConfig {
+		return {
+			method: 'post',
+			url: 'https://x.com/i/api/1.1/account/settings.json',
+			data: qs.stringify({
+				/* eslint-disable @typescript-eslint/naming-convention */
+				screen_name: newUsername,
+				/* eslint-enable @typescript-eslint/naming-convention */
+			}),
+		};
+	}
+
+	/**
 	 * @param id - The id of the user whose details are to be fetched.
 	 */
 	public static detailsById(id: string): AxiosRequestConfig {

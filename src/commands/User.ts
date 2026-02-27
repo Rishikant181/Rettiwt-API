@@ -355,6 +355,19 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// Change Username
+	user.command('change-username')
+		.description('Change your username')
+		.argument('<username>', 'The new username (with or without @)')
+		.action(async (username: string) => {
+			try {
+				const result = await rettiwt.user.changeUsername(username);
+				output(result);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Update Profile Banner
 	user.command('update-profile-banner')
 		.description('Update your profile banner from an image file path')

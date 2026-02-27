@@ -16,6 +16,7 @@ export class PostArgs implements IPostArgs {
 	public tweet?: NewTweet;
 	public upload?: UploadArgs;
 	public userId?: string;
+	public username?: string;
 
 	/**
 	 * @param resource - The resource to be posted.
@@ -26,6 +27,7 @@ export class PostArgs implements IPostArgs {
 		this.tweet = args.tweet ? new NewTweet(args.tweet) : undefined;
 		this.upload = args.upload ? new UploadArgs(args.upload) : undefined;
 		this.userId = args.userId;
+		this.username = PostArgs._validateNonEmptyString(args.username, 'Username');
 		this.conversationId = args.conversationId;
 		this.profileOptions = args.profileOptions ? new ProfileUpdateOptions(args.profileOptions) : undefined;
 		this.profileImage = PostArgs._validateNonEmptyString(args.profileImage, 'Profile image');

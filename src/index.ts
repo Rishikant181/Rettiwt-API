@@ -128,6 +128,7 @@ export { IUserTweetsResponse as IRawUserTweetsResponse } from './types/raw/user/
 export { IUserTweetsAndRepliesResponse as IRawUserTweetsAndRepliesResponse } from './types/raw/user/TweetsAndReplies';
 export { IUserUnfollowResponse as IRawUserUnfollowResponse } from './types/raw/user/Unfollow';
 export { IUserProfileUpdateResponse as IRawUserProfileUpdateResponse } from './types/raw/user/ProfileUpdate';
+export { IUserSettingsResponse as IRawUserSettingsResponse } from './types/raw/user/Settings';
 export * from './types/ErrorHandler';
 export * from './types/RettiwtConfig';
 export { IConversationTimelineResponse as IRawConversationTimelineResponse } from './types/raw/dm/Conversation';

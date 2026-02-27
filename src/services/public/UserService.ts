@@ -31,6 +31,7 @@ import { IUserMediaResponse } from '../../types/raw/user/Media';
 import { IUserNotificationsResponse } from '../../types/raw/user/Notifications';
 import { IUserProfileUpdateResponse } from '../../types/raw/user/ProfileUpdate';
 import { IUserRecommendedResponse } from '../../types/raw/user/Recommended';
+import { IUserSettingsResponse } from '../../types/raw/user/Settings';
 import { IUserSearchResponse } from '../../types/raw/user/Search';
 import { IUserSubscriptionsResponse } from '../../types/raw/user/Subscriptions';
 import { IUserTweetsResponse } from '../../types/raw/user/Tweets';
@@ -230,6 +231,38 @@ export class UserService extends FetcherService {
 		const data = Extractors[resource](response);
 
 		return data;
+	}
+
+	/**
+	 * Changes the username (screen_name) of the authenticated user.
+	 *
+	 * @param newUsername - The new username (with or without @).
+	 * @returns Whether the username was changed successfully.
+	 */
+	public async changeUsername(newUsername: string): Promise<boolean> {
+		const resource = ResourceType.USER_USERNAME_CHANGE;
+
+		// Strip @ prefix if present
+		const username = newUsername.startsWith('@') ? newUsername.slice(1) : newUsername;
+
+		// Username validation
+		if (username.length < 4) {
+			throw new Error('Username must be at least 4 characters long');
+		}
+		if (username.length > 15) {
+			throw new Error('Username cannot exceed 15 characters');
+		}
+		if (!/^[A-Za-z0-9_]+$/.test(username)) {
+			throw new Error('Username can only contain letters, numbers, and underscores');
+		}
+
+		const response = await this.request<IUserSettingsResponse>(resource, {
+			username,
+		});
+
+		const updatedUsername = Extractors[resource](response);
+
+		return updatedUsername?.toLowerCase() === username.toLowerCase();
 	}
 
 	/**
