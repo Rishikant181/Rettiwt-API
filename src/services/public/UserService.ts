@@ -1,7 +1,12 @@
+import axios from 'axios';
+
+import { Cookie } from 'cookiejar';
+
 import { Extractors } from '../../collections/Extractors';
 import { RawAnalyticsGranularity, RawAnalyticsMetric } from '../../enums/raw/Analytics';
 import { ResourceType } from '../../enums/Resource';
 import { ProfileUpdateOptions } from '../../models/args/ProfileArgs';
+import { AuthCredential } from '../../models/auth/AuthCredential';
 import { Analytics } from '../../models/data/Analytics';
 import { BookmarkFolder } from '../../models/data/BookmarkFolder';
 import { CursoredData } from '../../models/data/CursoredData';
@@ -18,6 +23,7 @@ import { IUserAnalyticsResponse } from '../../types/raw/user/Analytics';
 import { IUserBookmarkFoldersResponse } from '../../types/raw/user/BookmarkFolders';
 import { IUserBookmarkFolderTweetsResponse } from '../../types/raw/user/BookmarkFolderTweets';
 import { IUserBookmarksResponse } from '../../types/raw/user/Bookmarks';
+import { IUserChangePasswordResponse } from '../../types/raw/user/ChangePassword';
 import { IUserDetailsResponse } from '../../types/raw/user/Details';
 import { IUserDetailsBulkResponse } from '../../types/raw/user/DetailsBulk';
 import { IUserFollowResponse } from '../../types/raw/user/Follow';
@@ -31,12 +37,14 @@ import { IUserMediaResponse } from '../../types/raw/user/Media';
 import { IUserNotificationsResponse } from '../../types/raw/user/Notifications';
 import { IUserProfileUpdateResponse } from '../../types/raw/user/ProfileUpdate';
 import { IUserRecommendedResponse } from '../../types/raw/user/Recommended';
-import { IUserSettingsResponse } from '../../types/raw/user/Settings';
 import { IUserSearchResponse } from '../../types/raw/user/Search';
+import { IUserSettingsResponse } from '../../types/raw/user/Settings';
 import { IUserSubscriptionsResponse } from '../../types/raw/user/Subscriptions';
 import { IUserTweetsResponse } from '../../types/raw/user/Tweets';
 import { IUserTweetsAndRepliesResponse } from '../../types/raw/user/TweetsAndReplies';
 import { IUserUnfollowResponse } from '../../types/raw/user/Unfollow';
+
+import { AuthService } from '../internal/AuthService';
 
 import { FetcherService } from './FetcherService';
 
@@ -75,6 +83,113 @@ export class UserService extends FetcherService {
 		}
 
 		return trimmedPayload;
+	}
+
+	private _refreshApiKeyFromResponseCookies(setCookieHeader: string | string[] | undefined): void {
+		if (!this.config.apiKey || !setCookieHeader) {
+			return;
+		}
+
+		const requiredCookieNames = new Set(['auth_token', 'ct0', 'kdt', 'twid']);
+		const currentCookieString = AuthService.decodeCookie(this.config.apiKey);
+		const cookiePairs = this._splitSetCookieHeader(setCookieHeader);
+		const cookiesMap = new Map<string, string>();
+
+		for (const cookieEntry of currentCookieString.split(';')) {
+			const trimmedEntry = cookieEntry.trim();
+			const separatorIndex = trimmedEntry.indexOf('=');
+
+			if (!trimmedEntry || separatorIndex < 1) {
+				continue;
+			}
+
+			const key = trimmedEntry.slice(0, separatorIndex).trim();
+			const value = trimmedEntry.slice(separatorIndex + 1).trim();
+			if (!key || !value || !requiredCookieNames.has(key)) {
+				continue;
+			}
+
+			cookiesMap.set(key, value);
+		}
+
+		let hasUpdate = false;
+		for (const cookiePair of cookiePairs) {
+			const cookieValuePair = cookiePair.split(';', 1)[0]?.trim();
+			const separatorIndex = cookieValuePair?.indexOf('=') ?? -1;
+
+			if (!cookieValuePair || separatorIndex < 1) {
+				continue;
+			}
+
+			const key = cookieValuePair.slice(0, separatorIndex).trim();
+			const value = cookieValuePair.slice(separatorIndex + 1).trim();
+			if (!key || !value || !requiredCookieNames.has(key)) {
+				continue;
+			}
+
+			cookiesMap.set(key, value);
+			hasUpdate = true;
+		}
+
+		if (!hasUpdate || !cookiesMap.has('twid')) {
+			return;
+		}
+
+		let mergedCookieString = '';
+		for (const [key, value] of cookiesMap.entries()) {
+			mergedCookieString += `${key}=${value};`;
+		}
+
+		if (!mergedCookieString) {
+			return;
+		}
+
+		try {
+			this.config.apiKey = AuthService.encodeCookie(mergedCookieString);
+		} catch {
+			// Ignore cookie rotation errors and leave existing apiKey unchanged.
+		}
+	}
+
+	/**
+	 * Fetches a fresh ct0 (CSRF token) from Twitter by making a lightweight
+	 * authenticated request, then rotates the apiKey with the updated cookie.
+	 */
+	private async _refreshCsrfToken(): Promise<void> {
+		if (!this.config.apiKey) {
+			return;
+		}
+
+		try {
+			const cred = new AuthCredential(
+				AuthService.decodeCookie(this.config.apiKey)
+					.split(';')
+					.map((item) => new Cookie(item)),
+			);
+
+			const refreshResponse = await axios.get('https://x.com/i/api/1.1/account/verify_credentials.json', {
+				headers: {
+					...cred.toHeader(),
+					authorization:
+						'Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA',
+				},
+				httpAgent: this.config.httpsAgent,
+				httpsAgent: this.config.httpsAgent,
+				validateStatus: () => true,
+			});
+
+			this._refreshApiKeyFromResponseCookies(refreshResponse.headers['set-cookie']);
+		} catch {
+			// Best-effort: if ct0 refresh fails, leave apiKey as-is
+		}
+	}
+
+	private _splitSetCookieHeader(setCookieHeader: string | string[]): string[] {
+		if (Array.isArray(setCookieHeader)) {
+			return setCookieHeader;
+		}
+
+		return setCookieHeader.split(/,(?=\s*[^;,]+=)/g);
 	}
 
 	private _validateBase64Payload(payload: string, fieldName: string): string {
@@ -234,38 +349,6 @@ export class UserService extends FetcherService {
 	}
 
 	/**
-	 * Changes the username (screen_name) of the authenticated user.
-	 *
-	 * @param newUsername - The new username (with or without @).
-	 * @returns Whether the username was changed successfully.
-	 */
-	public async changeUsername(newUsername: string): Promise<boolean> {
-		const resource = ResourceType.USER_USERNAME_CHANGE;
-
-		// Strip @ prefix if present
-		const username = newUsername.startsWith('@') ? newUsername.slice(1) : newUsername;
-
-		// Username validation
-		if (username.length < 4) {
-			throw new Error('Username must be at least 4 characters long');
-		}
-		if (username.length > 15) {
-			throw new Error('Username cannot exceed 15 characters');
-		}
-		if (!/^[A-Za-z0-9_]+$/.test(username)) {
-			throw new Error('Username can only contain letters, numbers, and underscores');
-		}
-
-		const response = await this.request<IUserSettingsResponse>(resource, {
-			username,
-		});
-
-		const updatedUsername = Extractors[resource](response);
-
-		return updatedUsername?.toLowerCase() === username.toLowerCase();
-	}
-
-	/**
 	 * Get the list of tweets in a specific bookmark folder of the logged in user.
 	 *
 	 * @param folderId - The ID of the bookmark folder.
@@ -386,6 +469,67 @@ export class UserService extends FetcherService {
 		const data = Extractors[resource](response);
 
 		return data;
+	}
+
+	/**
+	 * Changes the password of the authenticated user.
+	 *
+	 * @param currentPassword - The current account password.
+	 * @param newPassword - The new password to set.
+	 * @returns Whether the password was changed successfully.
+	 *
+	 * @remarks
+	 * After a successful password change, this method attempts to rotate the current
+	 * `apiKey` using cookies returned by Twitter. If rotation is not possible, you
+	 * must re-authenticate and obtain a new `apiKey` to continue making authenticated
+	 * requests.
+	 */
+	public async changePassword(currentPassword: string, newPassword: string): Promise<boolean> {
+		const resource = ResourceType.USER_PASSWORD_CHANGE;
+
+		const response = await this.requestWithResponse<IUserChangePasswordResponse>(resource, {
+			changePassword: { currentPassword, newPassword },
+		});
+
+		const data = Extractors[resource](response.data) ?? false;
+		if (data) {
+			this._refreshApiKeyFromResponseCookies(response.headers['set-cookie']);
+			await this._refreshCsrfToken();
+		}
+
+		return data;
+	}
+
+	/**
+	 * Changes the username (screen_name) of the authenticated user.
+	 *
+	 * @param newUsername - The new username (with or without `@`).
+	 * @returns Whether the username was changed successfully.
+	 */
+	public async changeUsername(newUsername: string): Promise<boolean> {
+		const resource = ResourceType.USER_USERNAME_CHANGE;
+
+		// Strip @ prefix if present
+		const username = newUsername.startsWith('@') ? newUsername.slice(1) : newUsername;
+
+		// Username validation
+		if (username.length < 4) {
+			throw new Error('Username must be at least 4 characters long');
+		}
+		if (username.length > 15) {
+			throw new Error('Username cannot exceed 15 characters');
+		}
+		if (!/^[A-Za-z0-9_]+$/.test(username)) {
+			throw new Error('Username can only contain letters, numbers, and underscores');
+		}
+
+		const response = await this.request<IUserSettingsResponse>(resource, {
+			username,
+		});
+
+		const updatedUsername = Extractors[resource](response);
+
+		return updatedUsername?.toLowerCase() === username.toLowerCase();
 	}
 
 	/**

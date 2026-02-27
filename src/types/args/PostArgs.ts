@@ -94,6 +94,14 @@ export interface IPostArgs {
 	 * Required only when updating profile banner using {@link ResourceType.USER_PROFILE_BANNER_UPDATE}.
 	 */
 	profileBanner?: string;
+
+	/**
+	 * Password change arguments.
+	 *
+	 * @remarks
+	 * Required only when changing password using {@link ResourceType.USER_PASSWORD_CHANGE}.
+	 */
+	changePassword?: IChangePasswordArgs;
 }
 
 /**
@@ -166,4 +174,17 @@ export interface IUploadArgs {
 	 * @remarks The size must be \<= 5242880 bytes.
 	 */
 	size?: number;
+}
+
+/**
+ * Arguments for changing the account password.
+ *
+ * @public
+ */
+export interface IChangePasswordArgs {
+	/** The current account password. */
+	currentPassword: string;
+
+	/** The new password to set. */
+	newPassword: string;
 }

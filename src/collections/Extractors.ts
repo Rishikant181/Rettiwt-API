@@ -42,6 +42,7 @@ import { IUserAnalyticsResponse } from '../types/raw/user/Analytics';
 import { IUserBookmarkFoldersResponse } from '../types/raw/user/BookmarkFolders';
 import { IUserBookmarkFolderTweetsResponse } from '../types/raw/user/BookmarkFolderTweets';
 import { IUserBookmarksResponse } from '../types/raw/user/Bookmarks';
+import { IUserChangePasswordResponse } from '../types/raw/user/ChangePassword';
 import { IUserDetailsResponse } from '../types/raw/user/Details';
 import { IUserDetailsBulkResponse } from '../types/raw/user/DetailsBulk';
 import { IUserFollowResponse } from '../types/raw/user/Follow';
@@ -163,6 +164,7 @@ export const Extractors = {
 	USER_PROFILE_BANNER_UPDATE: (response: IUserProfileUpdateResponse): boolean =>
 		!response || response?.profile_banner_url || response?.profile_banner_url_https ? true : false,
 	USER_USERNAME_CHANGE: (response: IUserSettingsResponse): string | undefined => response?.screen_name ?? undefined,
+	USER_PASSWORD_CHANGE: (response: IUserChangePasswordResponse): boolean => response?.status === 'ok',
 
 	/* eslint-enable @typescript-eslint/naming-convention */
 };

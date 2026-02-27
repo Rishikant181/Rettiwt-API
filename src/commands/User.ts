@@ -1,4 +1,6 @@
 import { readFileSync } from 'fs';
+import { createInterface } from 'readline/promises';
+import { Writable } from 'stream';
 
 import { Command, createCommand } from 'commander';
 
@@ -355,6 +357,38 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// Change Password
+	user.command('change-password')
+		.description('Change your account password')
+		.option('--show-new-key', 'Include rotated apiKey in the output')
+		.action(async (options?: UserPasswordChangeOptions) => {
+			try {
+				const initialApiKey = rettiwt.apiKey;
+				const currentPassword = await promptHidden('Current password: ');
+				const newPassword = await promptHidden('New password: ');
+				const confirmPassword = await promptHidden('Confirm new password: ');
+
+				if (newPassword !== confirmPassword) {
+					throw new Error('New password confirmation does not match');
+				}
+				if (newPassword === currentPassword) {
+					throw new Error('New password must be different from current password');
+				}
+
+				const result = await rettiwt.user.changePassword(currentPassword, newPassword);
+				const apiKeyUpdated = initialApiKey !== rettiwt.apiKey;
+				const response = {
+					success: result,
+					apiKeyUpdated: result ? apiKeyUpdated : false,
+					...(options?.showNewKey ? { apiKey: rettiwt.apiKey } : {}),
+				};
+
+				output(response);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Change Username
 	user.command('change-username')
 		.description('Change your username')
@@ -420,6 +454,48 @@ function fileToBase64(path: string): string {
 }
 
 /**
+ * Prompts user for hidden input without echoing typed characters.
+ *
+ * @param query - The prompt text.
+ * @returns The provided value.
+ */
+async function promptHidden(query: string): Promise<string> {
+	if (!process.stdin.isTTY || !process.stdout.isTTY) {
+		throw new Error('Password prompt requires an interactive terminal');
+	}
+
+	let queryShown = false;
+
+	const mutedOutput = new Writable({
+		write(chunk: Buffer | string, encoding: BufferEncoding, callback: (error?: Error | null) => void): void {
+			const text = chunk.toString();
+
+			if (!queryShown) {
+				process.stdout.write(text);
+				queryShown = text.includes(query);
+			}
+
+			callback();
+		},
+	});
+
+	const input = createInterface({
+		input: process.stdin,
+		output: mutedOutput,
+		terminal: true,
+	});
+
+	try {
+		const value = await input.question(query);
+		process.stdout.write('\n');
+
+		return value;
+	} finally {
+		input.close();
+	}
+}
+
+/**
  * The options for fetching user analytics.
  */
 type UserAnalyticsOptions = {
@@ -438,6 +514,13 @@ type UserProfileUpdateOptions = {
 	url?: string;
 	location?: string;
 	description?: string;
+};
+
+/**
+ * The options for changing account password.
+ */
+type UserPasswordChangeOptions = {
+	showNewKey?: boolean;
 };
 
 export default createUserCommand;

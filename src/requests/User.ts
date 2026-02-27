@@ -326,6 +326,26 @@ export class UserRequests {
 	}
 
 	/**
+	 * Returns the request to change the user's password.
+	 *
+	 * @param currentPassword - The current password.
+	 * @param newPassword - The new password.
+	 */
+	public static changePassword(currentPassword: string, newPassword: string): AxiosRequestConfig {
+		return {
+			method: 'post',
+			url: 'https://x.com/i/api/i/account/change_password.json',
+			data: qs.stringify({
+				/* eslint-disable @typescript-eslint/naming-convention */
+				current_password: currentPassword,
+				password: newPassword,
+				password_confirmation: newPassword,
+				/* eslint-enable @typescript-eslint/naming-convention */
+			}),
+		};
+	}
+
+	/**
 	 * Returns the request to change the user's username (screen_name).
 	 *
 	 * @param newUsername - The new username to set.
