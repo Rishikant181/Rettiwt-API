@@ -78,6 +78,10 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - User Timeline
     - User Unfollow
     - User Profile Update
+    - User Profile Image Update
+    - User Profile Banner Update
+    - User Username Change
+    - User Password Change
 
 By default, Rettiwt-API uses 'guest' authentication. If however, access to the full set of resources is required, 'user' authentication can be used. This is done by using the cookies associated with your Twitter/X account, and encoding them into an `API_KEY` for convenience. The said `API_KEY` can be obtained by using a browser extension, as follows:
 
@@ -538,6 +542,10 @@ So far, the following operations are supported:
 - [Getting the tweet timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#timeline)
 - [Unfollowing a given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#unfollow)
 - [Updating the profile of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#updateProfile)
+- [Updating the profile image of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#updateProfileImage)
+- [Updating the profile banner of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#updateProfileBanner)
+- [Changing the username of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#changeUsername)
+- [Changing the password of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#changePassword)
 
 ## CLI Usage
 
@@ -556,6 +564,26 @@ Help for the CLI can be obtained from the CLI itself:
 
 - For help regarding the available commands, use the command `rettiwt help`
 - For help regarding a specific command, use the command `rettiwt help <command_name>`
+
+### Common user account commands
+
+```bash
+# Update profile fields
+rettiwt user update-profile --name "Jane Doe" --location "Berlin"
+
+# Update profile image and banner from file paths
+rettiwt user update-profile-image ./profile.jpg
+rettiwt user update-profile-banner ./banner.jpg
+
+# Change username
+rettiwt user change-username new_username
+
+# Change password (interactive prompt)
+rettiwt user change-password
+```
+
+Use `rettiwt user change-password --show-new-key` to print the rotated `API_KEY` after a successful password update.
+If you store your `API_KEY` outside the current process, update that stored value after changing the password.
 
 ## API Reference
 
