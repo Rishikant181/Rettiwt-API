@@ -90,6 +90,11 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	USER_TIMELINE_AND_REPLIES: (args: IFetchArgs) => UserRequests.tweetsAndReplies(args.id!, args.count, args.cursor),
 	USER_UNFOLLOW: (args: IPostArgs) => UserRequests.unfollow(args.id!),
 	USER_PROFILE_UPDATE: (args: IPostArgs) => UserRequests.updateProfile(args.profileOptions!),
+	USER_PROFILE_IMAGE_UPDATE: (args: IPostArgs) => UserRequests.updateProfileImage(args.profileImage!),
+	USER_PROFILE_BANNER_UPDATE: (args: IPostArgs) => UserRequests.updateProfileBanner(args.profileBanner!),
+	USER_USERNAME_CHANGE: (args: IPostArgs) => UserRequests.changeUsername(args.username!),
+	USER_PASSWORD_CHANGE: (args: IPostArgs) =>
+		UserRequests.changePassword(args.changePassword!.currentPassword, args.changePassword!.newPassword),
 
 	/* eslint-enable @typescript-eslint/naming-convention */
 };

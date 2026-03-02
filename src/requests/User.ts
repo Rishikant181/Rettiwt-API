@@ -326,6 +326,43 @@ export class UserRequests {
 	}
 
 	/**
+	 * Returns the request to change the user's password.
+	 *
+	 * @param currentPassword - The current password.
+	 * @param newPassword - The new password.
+	 */
+	public static changePassword(currentPassword: string, newPassword: string): AxiosRequestConfig {
+		return {
+			method: 'post',
+			url: 'https://x.com/i/api/i/account/change_password.json',
+			data: qs.stringify({
+				/* eslint-disable @typescript-eslint/naming-convention */
+				current_password: currentPassword,
+				password: newPassword,
+				password_confirmation: newPassword,
+				/* eslint-enable @typescript-eslint/naming-convention */
+			}),
+		};
+	}
+
+	/**
+	 * Returns the request to change the user's username (screen_name).
+	 *
+	 * @param newUsername - The new username to set.
+	 */
+	public static changeUsername(newUsername: string): AxiosRequestConfig {
+		return {
+			method: 'post',
+			url: 'https://x.com/i/api/1.1/account/settings.json',
+			data: qs.stringify({
+				/* eslint-disable @typescript-eslint/naming-convention */
+				screen_name: newUsername,
+				/* eslint-enable @typescript-eslint/naming-convention */
+			}),
+		};
+	}
+
+	/**
 	 * @param id - The id of the user whose details are to be fetched.
 	 */
 	public static detailsById(id: string): AxiosRequestConfig {
@@ -1221,6 +1258,32 @@ export class UserRequests {
 				...(options.location && { location: options.location }),
 				...(options.description && { description: options.description }),
 			}),
+		};
+	}
+
+	/**
+	 * Returns the request to update the user's profile banner.
+	 *
+	 * @param bannerBase64 - The base64-encoded banner image data.
+	 */
+	public static updateProfileBanner(bannerBase64: string): AxiosRequestConfig {
+		return {
+			method: 'post',
+			url: 'https://x.com/i/api/1.1/account/update_profile_banner.json',
+			data: qs.stringify({ banner: bannerBase64 }),
+		};
+	}
+
+	/**
+	 * Returns the request to update the user's profile image.
+	 *
+	 * @param imageBase64 - The base64-encoded image data.
+	 */
+	public static updateProfileImage(imageBase64: string): AxiosRequestConfig {
+		return {
+			method: 'post',
+			url: 'https://x.com/i/api/1.1/account/update_profile_image.json',
+			data: qs.stringify({ image: imageBase64 }),
 		};
 	}
 }

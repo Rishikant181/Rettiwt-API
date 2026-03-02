@@ -1,4 +1,4 @@
-import { INewTweet, INewTweetMedia, IPostArgs, IUploadArgs } from '../../types/args/PostArgs';
+import { IChangePasswordArgs, INewTweet, INewTweetMedia, IPostArgs, IUploadArgs } from '../../types/args/PostArgs';
 
 import { ProfileUpdateOptions } from './ProfileArgs';
 
@@ -8,12 +8,16 @@ import { ProfileUpdateOptions } from './ProfileArgs';
  * @public
  */
 export class PostArgs implements IPostArgs {
+	public changePassword?: ChangePasswordArgs;
 	public conversationId?: string;
 	public id?: string;
+	public profileBanner?: string;
+	public profileImage?: string;
 	public profileOptions?: ProfileUpdateOptions;
 	public tweet?: NewTweet;
 	public upload?: UploadArgs;
 	public userId?: string;
+	public username?: string;
 
 	/**
 	 * @param resource - The resource to be posted.
@@ -24,8 +28,28 @@ export class PostArgs implements IPostArgs {
 		this.tweet = args.tweet ? new NewTweet(args.tweet) : undefined;
 		this.upload = args.upload ? new UploadArgs(args.upload) : undefined;
 		this.userId = args.userId;
+		this.username = PostArgs._validateNonEmptyString(args.username, 'Username');
 		this.conversationId = args.conversationId;
 		this.profileOptions = args.profileOptions ? new ProfileUpdateOptions(args.profileOptions) : undefined;
+		this.profileImage = PostArgs._validateNonEmptyString(args.profileImage, 'Profile image');
+		this.profileBanner = PostArgs._validateNonEmptyString(args.profileBanner, 'Profile banner');
+		this.changePassword = args.changePassword ? new ChangePasswordArgs(args.changePassword) : undefined;
+	}
+
+	private static _validateNonEmptyString(value: unknown, fieldName: string): string | undefined {
+		if (value === undefined) {
+			return undefined;
+		}
+
+		if (typeof value !== 'string') {
+			throw new Error(`${fieldName} must be a string`);
+		}
+
+		if (value.trim().length === 0) {
+			throw new Error(`${fieldName} cannot be empty`);
+		}
+
+		return value;
 	}
 }
 
@@ -89,5 +113,29 @@ export class UploadArgs implements IUploadArgs {
 		this.size = args.size;
 		this.media = args.media;
 		this.id = args.id;
+	}
+}
+
+/**
+ * Validated password change arguments.
+ *
+ * @public
+ */
+export class ChangePasswordArgs implements IChangePasswordArgs {
+	public currentPassword: string;
+	public newPassword: string;
+
+	public constructor(args: IChangePasswordArgs) {
+		if (!args.currentPassword || args.currentPassword.trim().length === 0) {
+			throw new Error('Current password cannot be empty');
+		}
+		if (!args.newPassword || args.newPassword.trim().length === 0) {
+			throw new Error('New password cannot be empty');
+		}
+		if (args.newPassword.length < 8) {
+			throw new Error('New password must be at least 8 characters long');
+		}
+		this.currentPassword = args.currentPassword;
+		this.newPassword = args.newPassword;
 	}
 }
