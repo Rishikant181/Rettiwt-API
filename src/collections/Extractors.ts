@@ -25,7 +25,7 @@ import { ITweetDetailsResponse } from '../types/raw/tweet/Details';
 import { ITweetDetailsBulkResponse } from '../types/raw/tweet/DetailsBulk';
 import { ITweetLikeResponse } from '../types/raw/tweet/Like';
 import { ITweetLikersResponse } from '../types/raw/tweet/Likers';
-import { ITweetPostResponse } from '../types/raw/tweet/Post';
+import { ITweetPostNoteResponse, ITweetPostResponse } from '../types/raw/tweet/Post';
 import { ITweetRepliesResponse } from '../types/raw/tweet/Replies';
 import { ITweetRetweetResponse } from '../types/raw/tweet/Retweet';
 import { ITweetRetweetersResponse } from '../types/raw/tweet/Retweeters';
@@ -100,8 +100,12 @@ export const Extractors = {
 	TWEET_LIKE: (response: ITweetLikeResponse): boolean => (response?.data?.favorite_tweet ? true : false),
 	TWEET_LIKERS: (response: ITweetLikersResponse): CursoredData<User> =>
 		new CursoredData<User>(response, BaseType.USER),
-	TWEET_POST: (response: ITweetPostResponse): string =>
-		response?.data?.create_tweet?.tweet_results?.result?.rest_id ?? undefined,
+	TWEET_POST: (response: ITweetPostResponse): string | undefined =>
+		response?.data?.create_tweet?.tweet_results?.result?.rest_id ??
+		response?.data?.create_note_tweet?.tweet_results?.result?.rest_id ??
+		undefined,
+	TWEET_POST_NOTE: (response: ITweetPostNoteResponse): string | undefined =>
+		response?.data?.notetweet_create?.tweet_results?.result?.rest_id ?? undefined,
 	TWEET_REPLIES: (response: ITweetDetailsResponse): CursoredData<Tweet> =>
 		new CursoredData<Tweet>(response, BaseType.TWEET),
 	TWEET_RETWEET: (response: ITweetRetweetResponse): boolean => (response?.data?.create_retweet ? true : false),

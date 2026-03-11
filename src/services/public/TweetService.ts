@@ -17,7 +17,7 @@ import { ITweetDetailsResponse } from '../../types/raw/tweet/Details';
 import { ITweetDetailsBulkResponse } from '../../types/raw/tweet/DetailsBulk';
 import { ITweetLikeResponse } from '../../types/raw/tweet/Like';
 import { ITweetLikersResponse } from '../../types/raw/tweet/Likers';
-import { ITweetPostResponse } from '../../types/raw/tweet/Post';
+import { ITweetPostNoteResponse, ITweetPostResponse } from '../../types/raw/tweet/Post';
 import { ITweetRepliesResponse } from '../../types/raw/tweet/Replies';
 import { ITweetRetweetResponse } from '../../types/raw/tweet/Retweet';
 import { ITweetRetweetersResponse } from '../../types/raw/tweet/Retweeters';
@@ -342,15 +342,18 @@ export class TweetService extends FetcherService {
 	 * ```
 	 */
 	public async post(options: INewTweet): Promise<string | undefined> {
-		const resource = ResourceType.TWEET_POST;
+		// Use CreateNoteTweet endpoint for long-form tweets (X Premium, >280 chars)
+		if ((options.text?.length ?? 0) > 280) {
+			const response = await this.request<ITweetPostNoteResponse>(ResourceType.TWEET_POST_NOTE, {
+				tweet: options,
+			});
 
-		// Posting the tweet
-		const response = await this.request<ITweetPostResponse>(resource, { tweet: options });
+			return Extractors[ResourceType.TWEET_POST_NOTE](response);
+		}
 
-		// Deserializing response
-		const data = Extractors[resource](response);
+		const response = await this.request<ITweetPostResponse>(ResourceType.TWEET_POST, { tweet: options });
 
-		return data;
+		return Extractors[ResourceType.TWEET_POST](response);
 	}
 
 	/**
