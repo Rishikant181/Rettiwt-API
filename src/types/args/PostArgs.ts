@@ -133,7 +133,8 @@ export interface INewTweet {
 	 * The text for the tweet to be created.
 	 *
 	 * @remarks
-	 * Length of the tweet must be \<= 280 characters.
+	 * Length of the tweet must be \<= 280 characters for non-premium accounts.
+	 * X Premium (Blue) accounts can post longer tweets (up to 25,000 characters).
 	 */
 	text?: string;
 }

@@ -45,6 +45,7 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	TWEET_LIKE: (args: IPostArgs) => TweetRequests.like(args.id!),
 	TWEET_LIKERS: (args: IFetchArgs) => TweetRequests.likers(args.id!, args.count, args.cursor),
 	TWEET_POST: (args: IPostArgs) => TweetRequests.post(args.tweet!),
+	TWEET_POST_NOTE: (args: IPostArgs) => TweetRequests.postNote(args.tweet!),
 	TWEET_REPLIES: (args: IFetchArgs) =>
 		TweetRequests.replies(args.id!, args.cursor, args.sortBy ? TweetRepliesSortTypeMap[args.sortBy] : undefined),
 	TWEET_RETWEET: (args: IPostArgs) => TweetRequests.retweet(args.id!),
