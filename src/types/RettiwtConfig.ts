@@ -16,6 +16,16 @@ export interface IRettiwtConfig {
 	 */
 	proxyUrl?: URL;
 
+	/**
+	 * Whether to use axios built-in proxy support.
+	 *
+	 * @remarks
+	 * - If user explicitly sets this, the user's value is used.
+	 * - If {@link proxyUrl} is set, this defaults to `false`.
+	 * - Otherwise, defaults to `true`.
+	 */
+	proxy?: boolean;
+
 	/** The max wait time (in milli-seconds) for a response; if not set, Twitter server timeout is used. */
 	timeout?: number;
 

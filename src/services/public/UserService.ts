@@ -175,6 +175,7 @@ export class UserService extends FetcherService {
 				},
 				httpAgent: this.config.httpsAgent,
 				httpsAgent: this.config.httpsAgent,
+				proxy: this.config.proxy,
 				validateStatus: () => true,
 			});
 

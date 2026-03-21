@@ -35,6 +35,7 @@ export class RettiwtConfig implements IRettiwtConfig {
 	private _apiKey?: string;
 	private _headers: { [key: string]: string };
 	private _httpsAgent: Agent;
+	private _proxy: boolean | null = null;
 	private _userId: string | undefined;
 
 	// Parameters that can be set once, upon initialization
@@ -50,6 +51,10 @@ export class RettiwtConfig implements IRettiwtConfig {
 	public constructor(config?: IRettiwtConfig) {
 		this._apiKey = config?.apiKey;
 		this._httpsAgent = config?.proxyUrl ? new HttpsProxyAgent(config?.proxyUrl) : new Agent();
+		// Proxy logic: user explicit value > httpsAgent set > default true
+		if (config?.proxy !== undefined) {
+			this._proxy = config.proxy;
+		}
 		this._userId = config?.apiKey ? AuthService.getUserId(config?.apiKey) : undefined;
 		this.delay = config?.delay ?? 0;
 		this.maxRetries = config?.maxRetries ?? 0;
@@ -76,6 +81,20 @@ export class RettiwtConfig implements IRettiwtConfig {
 		return this._httpsAgent;
 	}
 
+	/** Whether to use axios built-in proxy. */
+	public get proxy(): false | undefined {
+		// User explicitly set proxy
+		if (this._proxy !== null) {
+			return this._proxy ? undefined : false;
+		}
+		// httpsAgent set via proxyUrl → proxy should be false
+		if (this._httpsAgent instanceof HttpsProxyAgent) {
+			return false;
+		}
+		// Default: let axios use its default (env proxy)
+		return undefined;
+	}
+
 	/** The ID of the user associated with the API key, if any. */
 	public get userId(): string | undefined {
 		return this._userId;
@@ -95,6 +114,10 @@ export class RettiwtConfig implements IRettiwtConfig {
 
 	public set proxyUrl(proxyUrl: URL | undefined) {
 		this._httpsAgent = proxyUrl ? new HttpsProxyAgent(proxyUrl) : new Agent();
+	}
+
+	public set proxy(proxy: boolean | undefined) {
+		this._proxy = proxy ?? null;
 	}
 }
 
