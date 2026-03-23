@@ -259,25 +259,6 @@ export class FetcherService {
 	 * @typeParam T - The type of the returned response data.
 	 *
 	 * @returns The raw HTTP response received.
-	 *
-	 * @example
-	 *
-	 * #### Fetching the raw details of a single user, using their username
-	 * ```ts
-	 * import { FetcherService, ResourceType } from 'rettiwt-api';
-	 *
-	 * // Creating a new FetcherService instance using the given 'API_KEY'
-	 * const fetcher = new FetcherService({ apiKey: API_KEY });
-	 *
-	 * // Fetching the details of the User with username 'user1'
-	 * fetcher.request(ResourceType.USER_DETAILS_BY_USERNAME, { id: 'user1' })
-	 * .then(res => {
-	 * 	console.log(res);
-	 * })
-	 * .catch(err => {
-	 * 	console.log(err);
-	 * });
-	 * ```
 	 */
 	protected async requestWithResponse<T = unknown>(
 		resource: ResourceType,
@@ -382,7 +363,26 @@ export class FetcherService {
 	 *
 	 * @typeParam T - The type of the returned response data.
 	 *
-	 * @returns The raw data response received.
+	 * @returns The parsed HTTP response data.
+	 *
+	 * @example
+	 *
+	 * #### Fetching the raw details of a single user, using their username
+	 * ```ts
+	 * import { FetcherService, ResourceType } from 'rettiwt-api';
+	 *
+	 * // Creating a new FetcherService instance using the given 'API_KEY'
+	 * const fetcher = new FetcherService({ apiKey: API_KEY });
+	 *
+	 * // Fetching the details of the User with username 'user1'
+	 * fetcher.request(ResourceType.USER_DETAILS_BY_USERNAME, { id: 'user1' })
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
 	 */
 	public async request<T = unknown>(resource: ResourceType, args: IFetchArgs | IPostArgs): Promise<T> {
 		const response = await this.requestWithResponse<T>(resource, args);
