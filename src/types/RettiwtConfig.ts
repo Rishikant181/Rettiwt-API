@@ -1,3 +1,5 @@
+import { AxiosProxyConfig } from 'axios';
+
 import { IErrorHandler } from './ErrorHandler';
 
 /**
@@ -24,7 +26,7 @@ export interface IRettiwtConfig {
 	 * - If {@link proxyUrl} is set, this defaults to `false`.
 	 * - Otherwise, defaults to `true`.
 	 */
-	proxy?: boolean;
+	proxy?: AxiosProxyConfig | false;
 
 	/** The max wait time (in milli-seconds) for a response; if not set, Twitter server timeout is used. */
 	timeout?: number;

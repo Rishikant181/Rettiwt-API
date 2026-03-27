@@ -1,5 +1,6 @@
 import { Agent } from 'https';
 
+import { AxiosProxyConfig } from 'axios';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 
 import { AuthService } from '../services/internal/AuthService';
@@ -35,7 +36,7 @@ export class RettiwtConfig implements IRettiwtConfig {
 	private _apiKey?: string;
 	private _headers: { [key: string]: string };
 	private _httpsAgent: Agent;
-	private _proxy: boolean | null = null;
+	private _proxy: AxiosProxyConfig | false | undefined;
 	private _userId: string | undefined;
 
 	// Parameters that can be set once, upon initialization
@@ -52,9 +53,7 @@ export class RettiwtConfig implements IRettiwtConfig {
 		this._apiKey = config?.apiKey;
 		this._httpsAgent = config?.proxyUrl ? new HttpsProxyAgent(config?.proxyUrl) : new Agent();
 		// Proxy logic: user explicit value > httpsAgent set > default true
-		if (config?.proxy !== undefined) {
-			this._proxy = config.proxy;
-		}
+		this._proxy = config?.proxy;
 		this._userId = config?.apiKey ? AuthService.getUserId(config?.apiKey) : undefined;
 		this.delay = config?.delay ?? 0;
 		this.maxRetries = config?.maxRetries ?? 0;
@@ -82,10 +81,10 @@ export class RettiwtConfig implements IRettiwtConfig {
 	}
 
 	/** Whether to use axios built-in proxy. */
-	public get proxy(): false | undefined {
+	public get proxy(): AxiosProxyConfig | false | undefined {
 		// User explicitly set proxy
-		if (this._proxy !== null) {
-			return this._proxy ? undefined : false;
+		if (this._proxy) {
+			return this._proxy;
 		}
 		// httpsAgent set via proxyUrl → proxy should be false
 		if (this._httpsAgent instanceof HttpsProxyAgent) {
@@ -112,12 +111,12 @@ export class RettiwtConfig implements IRettiwtConfig {
 		};
 	}
 
-	public set proxyUrl(proxyUrl: URL | undefined) {
-		this._httpsAgent = proxyUrl ? new HttpsProxyAgent(proxyUrl) : new Agent();
+	public set proxy(proxy: AxiosProxyConfig | false | undefined) {
+		this._proxy = proxy ?? undefined;
 	}
 
-	public set proxy(proxy: boolean | undefined) {
-		this._proxy = proxy ?? null;
+	public set proxyUrl(proxyUrl: URL | undefined) {
+		this._httpsAgent = proxyUrl ? new HttpsProxyAgent(proxyUrl) : new Agent();
 	}
 }
 
