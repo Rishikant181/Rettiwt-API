@@ -326,8 +326,6 @@ export class UserRequests {
 	}
 
 	/**
-	 * Returns the request to change the user's password.
-	 *
 	 * @param currentPassword - The current password.
 	 * @param newPassword - The new password.
 	 */
@@ -346,8 +344,6 @@ export class UserRequests {
 	}
 
 	/**
-	 * Returns the request to change the user's username (screen_name).
-	 *
 	 * @param newUsername - The new username to set.
 	 */
 	public static changeUsername(newUsername: string): AxiosRequestConfig {
@@ -1262,8 +1258,6 @@ export class UserRequests {
 	}
 
 	/**
-	 * Returns the request to update the user's profile banner.
-	 *
 	 * @param bannerBase64 - The base64-encoded banner image data.
 	 */
 	public static updateProfileBanner(bannerBase64: string): AxiosRequestConfig {
@@ -1275,8 +1269,6 @@ export class UserRequests {
 	}
 
 	/**
-	 * Returns the request to update the user's profile image.
-	 *
 	 * @param imageBase64 - The base64-encoded image data.
 	 */
 	public static updateProfileImage(imageBase64: string): AxiosRequestConfig {

@@ -36,6 +36,14 @@ export class PostArgs implements IPostArgs {
 		this.changePassword = args.changePassword ? new ChangePasswordArgs(args.changePassword) : undefined;
 	}
 
+	/**
+	 * Validates if a data value is a valid string.
+	 *
+	 * @param value - The data to validate.
+	 * @param fieldName - The field name whose value is to be validated.
+	 *
+	 * @returns The validated, parsed string. If data was `undefined`, returns `undefined`.
+	 */
 	private static _validateNonEmptyString(value: unknown, fieldName: string): string | undefined {
 		if (value === undefined) {
 			return undefined;
@@ -117,7 +125,7 @@ export class UploadArgs implements IUploadArgs {
 }
 
 /**
- * Validated password change arguments.
+ * The args for changing authenticated user's password.
  *
  * @public
  */
@@ -135,6 +143,7 @@ export class ChangePasswordArgs implements IChangePasswordArgs {
 		if (args.newPassword.length < 8) {
 			throw new Error('New password must be at least 8 characters long');
 		}
+
 		this.currentPassword = args.currentPassword;
 		this.newPassword = args.newPassword;
 	}
