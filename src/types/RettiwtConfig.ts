@@ -19,14 +19,27 @@ export interface IRettiwtConfig {
 	proxyUrl?: URL;
 
 	/**
-	 * Whether to use axios built-in proxy support.
+	 * Axios built-in proxy configuration.
 	 *
 	 * @remarks
-	 * - If user explicitly sets this, the user's value is used.
-	 * - If {@link proxyUrl} is set, this defaults to `false`.
-	 * - Otherwise, defaults to `true`.
+	 * Controls proxy behavior with the following priority:
+	 * 1. User explicitly set value → use user's proxy config
+	 * 2. {@link proxyUrl} is set → defaults to `false` (uses httpsAgent instead)
+	 * 3. Neither set → defaults to `undefined` (allows axios to use environment variables)
+	 *
+	 * @example
+	 * ```
+	 * // Use custom proxy config
+	 * { proxy: { host: '127.0.0.1', port: 8080 } }
+	 *
+	 * // Explicitly disable proxy
+	 * { proxy: false }
+	 *
+	 * // Use environment variables
+	 * { proxy: undefined }
+	 * ```
 	 */
-	proxy?: AxiosProxyConfig | false;
+	proxy?: AxiosProxyConfig | false | undefined;
 
 	/** The max wait time (in milli-seconds) for a response; if not set, Twitter server timeout is used. */
 	timeout?: number;

@@ -82,7 +82,11 @@ export class RettiwtConfig implements IRettiwtConfig {
 		return this._httpsAgent;
 	}
 
-	/** Whether to use axios built-in proxy. */
+	/**
+	 * Axios built-in proxy configuration.
+	 *
+	 * Priority: user explicit value > httpsAgent set > default environment variables
+	 */
 	public get proxy(): AxiosProxyConfig | false | undefined {
 		// User explicitly set proxy , maybe undefined
 		if (this._proxy !== null) {
