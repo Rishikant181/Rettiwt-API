@@ -200,6 +200,7 @@ export class AuthService {
 				},
 				httpAgent: config.httpsAgent,
 				httpsAgent: config.httpsAgent,
+				proxy: config.proxy,
 				validateStatus: () => true,
 			});
 
