@@ -200,7 +200,7 @@ export class AuthService {
 				},
 				httpAgent: config.httpsAgent,
 				httpsAgent: config.httpsAgent,
-				proxy: config.proxy,
+				proxy: config.axiosProxyConfig,
 				validateStatus: () => true,
 			});
 
@@ -253,7 +253,7 @@ export class AuthService {
 			}>('https://api.twitter.com/1.1/guest/activate.json', undefined, {
 				headers: cred.toHeader(),
 				httpsAgent: this._config.httpsAgent,
-				proxy: this._config.proxy,
+				proxy: this._config.axiosProxyConfig,
 			})
 			.then((res) => {
 				cred.guestToken = res.data.guest_token;

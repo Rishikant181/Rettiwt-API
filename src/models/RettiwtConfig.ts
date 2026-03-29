@@ -36,7 +36,7 @@ export class RettiwtConfig implements IRettiwtConfig {
 	private _apiKey?: string;
 	private _headers: { [key: string]: string };
 	private _httpsAgent: Agent;
-	private _proxy: AxiosProxyConfig | false | undefined | null = null;
+	private _proxy?: AxiosProxyConfig | string | null;
 	private _userId: string | undefined;
 
 	// Parameters that can be set once, upon initialization
@@ -51,11 +51,8 @@ export class RettiwtConfig implements IRettiwtConfig {
 	 */
 	public constructor(config?: IRettiwtConfig) {
 		this._apiKey = config?.apiKey;
-		this._httpsAgent = config?.proxyUrl ? new HttpsProxyAgent(config?.proxyUrl) : new Agent();
-		// Proxy logic: user explicit value > httpsAgent set > default true
-		if (config && 'proxy' in config) {
-			this._proxy = config.proxy;
-		}
+		this._httpsAgent = typeof config?.proxy === 'string' ? new HttpsProxyAgent(config.proxy) : new Agent();
+		this._proxy = config?.proxy;
 		this._userId = config?.apiKey ? AuthService.getUserId(config?.apiKey) : undefined;
 		this.delay = config?.delay ?? 0;
 		this.maxRetries = config?.maxRetries ?? 0;
@@ -73,6 +70,27 @@ export class RettiwtConfig implements IRettiwtConfig {
 		return this._apiKey;
 	}
 
+	/**
+	 * The Axios proxy configuration to use.
+	 *
+	 * @remarks
+	 * <br>
+	 * - If `proxy` is set, Axios' built-in env-variable-based proxy is disabled.
+	 */
+	public get axiosProxyConfig(): AxiosProxyConfig | false | undefined {
+		// If user explicitly set to null or a proxy URL, disable Axios' built-in proxy
+		if (this._proxy === null || typeof this._proxy === 'string') {
+			return false;
+		}
+		// If user has set an AxiosProxyConfig, use that
+		if (this._proxy !== undefined) {
+			return this._proxy;
+		}
+
+		// Default: Let axios use it's built-in env-variable-based proxy.
+		return undefined;
+	}
+
 	public get headers(): { [key: string]: string } {
 		return this._headers;
 	}
@@ -80,20 +98,6 @@ export class RettiwtConfig implements IRettiwtConfig {
 	/** The HTTPS agent instance to use. */
 	public get httpsAgent(): Agent {
 		return this._httpsAgent;
-	}
-
-	/** Axios proxy config. Priority: User explicit → HttpsAgent → Env variables */
-	public get proxy(): AxiosProxyConfig | false | undefined {
-		// User explicitly set proxy , maybe undefined
-		if (this._proxy !== null) {
-			return this._proxy;
-		}
-		// httpsAgent set via proxyUrl → proxy should be false
-		if (this._httpsAgent instanceof HttpsProxyAgent) {
-			return false;
-		}
-		// Default: let axios use its default (env proxy)
-		return undefined;
 	}
 
 	/** The ID of the user associated with the API key, if any. */
@@ -113,12 +117,11 @@ export class RettiwtConfig implements IRettiwtConfig {
 		};
 	}
 
-	public set proxy(proxy: AxiosProxyConfig | false | undefined) {
-		this._proxy = proxy ?? undefined;
-	}
+	public set proxy(proxy: AxiosProxyConfig | string | null | undefined) {
+		// Update HTTPs agent
+		this._httpsAgent = typeof proxy === 'string' ? new HttpsProxyAgent(proxy) : new Agent();
 
-	public set proxyUrl(proxyUrl: URL | undefined) {
-		this._httpsAgent = proxyUrl ? new HttpsProxyAgent(proxyUrl) : new Agent();
+		this._proxy = proxy;
 	}
 }
 

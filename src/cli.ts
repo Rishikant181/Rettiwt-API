@@ -33,7 +33,7 @@ Program.parse();
 const RettiwtInstance = new Rettiwt({
 	apiKey: process.env.API_KEY ?? (Program.opts().key as string),
 	logging: Program.opts().log ? true : false,
-	proxyUrl: Program.opts().proxy as URL,
+	proxy: Program.opts().proxy as string,
 	timeout: Program.opts().timeout ? Number(Program.opts().timeout) : undefined,
 	maxRetries: Program.opts().retries as number,
 	delay: Program.opts().delay as number,
