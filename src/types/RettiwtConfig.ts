@@ -12,34 +12,34 @@ export interface IRettiwtConfig {
 	apiKey?: string;
 
 	/**
-	 * Optional URL to proxy server to use for requests to Twitter API.
-	 *
-	 * @remarks When deploying to cloud platforms, if setting {@link IRettiwtConfig.authProxyUrl} does not resolve Error 429, then this might be required.
-	 */
-	proxyUrl?: URL;
-
-	/**
-	 * Axios built-in proxy configuration.
+	 * The proxy to use.
 	 *
 	 * @remarks
-	 * Controls proxy behavior with the following priority:
-	 * 1. User explicitly set value → use user's proxy config
-	 * 2. {@link proxyUrl} is set → defaults to `false` (uses httpsAgent instead)
-	 * 3. Neither set → defaults to `undefined` (allows axios to use environment variables)
+	 * <br>
+	 * - If set to anything besides `undefined`, disables Axios' built-in environment variable-set proxy.
 	 *
 	 * @example
 	 * ```
-	 * // Use custom proxy config
-	 * { proxy: { host: '127.0.0.1', port: 8080 } }
+	 * // Use custom proxy config via config object
+	 * {
+	 *   proxy: {
+	 *     host: '127.0.0.1',
+	 *     port: 8080
+	 *   }
+	 * }
 	 *
-	 * // Explicitly disable proxy
-	 * { proxy: false }
+	 * // Use custom proxy config via URL
+	 * {
+	 *   proxy: 'https://127.0.0.1:8080'
+	 * }
 	 *
-	 * // Use environment variables
-	 * { proxy: undefined }
+	 * // Use Axios environment variable for proxy
+	 * {
+	 *   proxy: undefined
+	 * }
 	 * ```
 	 */
-	proxy?: AxiosProxyConfig | false | undefined;
+	proxy?: AxiosProxyConfig | string | null;
 
 	/** The max wait time (in milli-seconds) for a response; if not set, Twitter server timeout is used. */
 	timeout?: number;

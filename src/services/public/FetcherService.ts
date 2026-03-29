@@ -130,7 +130,7 @@ export class FetcherService {
 			headers: this.config.headers,
 			httpAgent: this.config.httpsAgent,
 			httpsAgent: this.config.httpsAgent,
-			proxy: this.config.proxy,
+			proxy: this.config.axiosProxyConfig,
 		});
 
 		// Parse HTML using linkedom
@@ -154,7 +154,7 @@ export class FetcherService {
 			const redirectResponse = await axios.get<string>(migrationRedirectionUrl[0], {
 				httpAgent: this.config.httpsAgent,
 				httpsAgent: this.config.httpsAgent,
-				proxy: this.config.proxy,
+				proxy: this.config.axiosProxyConfig,
 			});
 
 			dom = new JSDOM(redirectResponse.data);
@@ -197,7 +197,7 @@ export class FetcherService {
 				},
 				httpAgent: this.config.httpsAgent,
 				httpsAgent: this.config.httpsAgent,
-				proxy: this.config.proxy,
+				proxy: this.config.axiosProxyConfig,
 			});
 
 			dom = new JSDOM(formResponse.data);
@@ -296,7 +296,7 @@ export class FetcherService {
 		};
 		config.httpAgent = this.config.httpsAgent;
 		config.httpsAgent = this.config.httpsAgent;
-		config.proxy = this.config.proxy;
+		config.proxy = this.config.axiosProxyConfig;
 		config.timeout = this._timeout;
 
 		// Using retries for error 404

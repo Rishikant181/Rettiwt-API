@@ -1,3 +1,5 @@
+import { AxiosProxyConfig } from 'axios';
+
 import { RettiwtConfig } from './models/RettiwtConfig';
 import { DirectMessageService } from './services/public/DirectMessageService';
 import { ListService } from './services/public/ListService';
@@ -95,8 +97,8 @@ export class Rettiwt {
 		this._config.headers = headers;
 	}
 
-	/** Set the proxy URL for the current instance. */
-	public set proxyUrl(proxyUrl: URL) {
-		this._config.proxyUrl = proxyUrl;
+	/** Set the proxy for the current instance. */
+	public set proxy(proxy: AxiosProxyConfig | string | undefined | null) {
+		this._config.proxy = proxy;
 	}
 }
