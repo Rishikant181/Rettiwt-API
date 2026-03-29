@@ -1,3 +1,5 @@
+import { AxiosProxyConfig } from 'axios';
+
 import { IErrorHandler } from './ErrorHandler';
 
 /**
@@ -15,6 +17,29 @@ export interface IRettiwtConfig {
 	 * @remarks When deploying to cloud platforms, if setting {@link IRettiwtConfig.authProxyUrl} does not resolve Error 429, then this might be required.
 	 */
 	proxyUrl?: URL;
+
+	/**
+	 * Axios built-in proxy configuration.
+	 *
+	 * @remarks
+	 * Controls proxy behavior with the following priority:
+	 * 1. User explicitly set value → use user's proxy config
+	 * 2. {@link proxyUrl} is set → defaults to `false` (uses httpsAgent instead)
+	 * 3. Neither set → defaults to `undefined` (allows axios to use environment variables)
+	 *
+	 * @example
+	 * ```
+	 * // Use custom proxy config
+	 * { proxy: { host: '127.0.0.1', port: 8080 } }
+	 *
+	 * // Explicitly disable proxy
+	 * { proxy: false }
+	 *
+	 * // Use environment variables
+	 * { proxy: undefined }
+	 * ```
+	 */
+	proxy?: AxiosProxyConfig | false | undefined;
 
 	/** The max wait time (in milli-seconds) for a response; if not set, Twitter server timeout is used. */
 	timeout?: number;

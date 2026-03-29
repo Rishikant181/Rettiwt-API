@@ -1,5 +1,6 @@
 import { Agent } from 'https';
 
+import { AxiosProxyConfig } from 'axios';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 
 import { AuthService } from '../services/internal/AuthService';
@@ -35,6 +36,7 @@ export class RettiwtConfig implements IRettiwtConfig {
 	private _apiKey?: string;
 	private _headers: { [key: string]: string };
 	private _httpsAgent: Agent;
+	private _proxy: AxiosProxyConfig | false | undefined | null = null;
 	private _userId: string | undefined;
 
 	// Parameters that can be set once, upon initialization
@@ -50,6 +52,10 @@ export class RettiwtConfig implements IRettiwtConfig {
 	public constructor(config?: IRettiwtConfig) {
 		this._apiKey = config?.apiKey;
 		this._httpsAgent = config?.proxyUrl ? new HttpsProxyAgent(config?.proxyUrl) : new Agent();
+		// Proxy logic: user explicit value > httpsAgent set > default true
+		if (config && 'proxy' in config) {
+			this._proxy = config.proxy;
+		}
 		this._userId = config?.apiKey ? AuthService.getUserId(config?.apiKey) : undefined;
 		this.delay = config?.delay ?? 0;
 		this.maxRetries = config?.maxRetries ?? 0;
@@ -76,6 +82,20 @@ export class RettiwtConfig implements IRettiwtConfig {
 		return this._httpsAgent;
 	}
 
+	/** Axios proxy config. Priority: User explicit → HttpsAgent → Env variables */
+	public get proxy(): AxiosProxyConfig | false | undefined {
+		// User explicitly set proxy , maybe undefined
+		if (this._proxy !== null) {
+			return this._proxy;
+		}
+		// httpsAgent set via proxyUrl → proxy should be false
+		if (this._httpsAgent instanceof HttpsProxyAgent) {
+			return false;
+		}
+		// Default: let axios use its default (env proxy)
+		return undefined;
+	}
+
 	/** The ID of the user associated with the API key, if any. */
 	public get userId(): string | undefined {
 		return this._userId;
@@ -91,6 +111,10 @@ export class RettiwtConfig implements IRettiwtConfig {
 			...DefaultHeaders,
 			...headers,
 		};
+	}
+
+	public set proxy(proxy: AxiosProxyConfig | false | undefined) {
+		this._proxy = proxy ?? undefined;
 	}
 
 	public set proxyUrl(proxyUrl: URL | undefined) {
