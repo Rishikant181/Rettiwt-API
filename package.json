@@ -51,6 +51,7 @@
 		"chalk": "^5.4.1",
 		"commander": "^11.1.0",
 		"cookiejar": "^2.1.4",
+		"http-proxy-agent": "^7.0.2",
 		"https-proxy-agent": "^7.0.6",
 		"jsdom": "^27.2.0",
 		"node-html-parser": "^7.0.1",
