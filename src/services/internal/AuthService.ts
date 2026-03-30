@@ -198,7 +198,7 @@ export class AuthService {
 					authorization:
 						'Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA',
 				},
-				httpAgent: config.httpAgent,
+				httpAgent: config.httpsAgent,
 				httpsAgent: config.httpsAgent,
 				proxy: config.axiosProxyConfig,
 				validateStatus: () => true,
@@ -252,7 +252,6 @@ export class AuthService {
 				/* eslint-enable @typescript-eslint/naming-convention */
 			}>('https://api.twitter.com/1.1/guest/activate.json', undefined, {
 				headers: cred.toHeader(),
-				httpAgent: this._config.httpAgent,
 				httpsAgent: this._config.httpsAgent,
 				proxy: this._config.axiosProxyConfig,
 			})
