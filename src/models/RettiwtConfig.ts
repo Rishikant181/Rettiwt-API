@@ -1,8 +1,6 @@
-import { Agent as HttpAgent } from 'http';
-import { Agent as HttpsAgent } from 'https';
+import { Agent } from 'https';
 
 import { AxiosProxyConfig } from 'axios';
-import { HttpProxyAgent } from 'http-proxy-agent';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 
 import { AuthService } from '../services/internal/AuthService';
@@ -37,8 +35,7 @@ export class RettiwtConfig implements IRettiwtConfig {
 	// Parameters for internal use
 	private _apiKey?: string;
 	private _headers: { [key: string]: string };
-	private _httpAgent: HttpAgent;
-	private _httpsAgent: HttpsAgent;
+	private _httpsAgent: Agent;
 	private _proxy?: AxiosProxyConfig | string | null;
 	private _userId: string | undefined;
 
@@ -54,14 +51,7 @@ export class RettiwtConfig implements IRettiwtConfig {
 	 */
 	public constructor(config?: IRettiwtConfig) {
 		this._apiKey = config?.apiKey;
-		this._httpAgent =
-			typeof config?.proxy === 'string' && config.proxy.startsWith('http://')
-				? new HttpProxyAgent(config.proxy)
-				: new HttpAgent();
-		this._httpsAgent =
-			typeof config?.proxy === 'string' && config.proxy.startsWith('https://')
-				? new HttpsProxyAgent(config.proxy)
-				: new HttpsAgent();
+		this._httpsAgent = typeof config?.proxy === 'string' ? new HttpsProxyAgent(config.proxy) : new Agent();
 		this._proxy = config?.proxy;
 		this._userId = config?.apiKey ? AuthService.getUserId(config?.apiKey) : undefined;
 		this.delay = config?.delay ?? 0;
@@ -105,13 +95,8 @@ export class RettiwtConfig implements IRettiwtConfig {
 		return this._headers;
 	}
 
-	/** The HTTP agent instance to use. */
-	public get httpAgent(): HttpAgent {
-		return this._httpAgent;
-	}
-
 	/** The HTTPS agent instance to use. */
-	public get httpsAgent(): HttpsAgent {
+	public get httpsAgent(): Agent {
 		return this._httpsAgent;
 	}
 
@@ -133,11 +118,8 @@ export class RettiwtConfig implements IRettiwtConfig {
 	}
 
 	public set proxy(proxy: AxiosProxyConfig | string | null | undefined) {
-		// Update HTTP(s) agent(s)
-		this._httpAgent =
-			typeof proxy === 'string' && proxy.startsWith('http://') ? new HttpProxyAgent(proxy) : new HttpAgent();
-		this._httpsAgent =
-			typeof proxy === 'string' && proxy.startsWith('https://') ? new HttpsProxyAgent(proxy) : new HttpsAgent();
+		// Update HTTPs agent
+		this._httpsAgent = typeof proxy === 'string' ? new HttpsProxyAgent(proxy) : new Agent();
 
 		this._proxy = proxy;
 	}
