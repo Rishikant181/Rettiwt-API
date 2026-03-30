@@ -4,6 +4,7 @@ import { Agent as HttpsAgent } from 'https';
 import { AxiosProxyConfig } from 'axios';
 import { HttpProxyAgent } from 'http-proxy-agent';
 import { HttpsProxyAgent } from 'https-proxy-agent';
+import { SocksProxyAgent } from 'socks-proxy-agent';
 
 import { AuthService } from '../services/internal/AuthService';
 import { IErrorHandler } from '../types/ErrorHandler';
@@ -68,13 +69,9 @@ export class RettiwtConfig implements IRettiwtConfig {
 		};
 
 		// Initializing the HTTP(S) agent(s)
-		if (typeof config?.proxy === 'string') {
-			this._httpAgent = new HttpProxyAgent(config.proxy);
-			this._httpsAgent = new HttpsProxyAgent(config.proxy);
-		} else {
-			this._httpAgent = new HttpAgent();
-			this._httpsAgent = new HttpsAgent();
-		}
+		const agents = this._getRequestAgents(config?.proxy);
+		this._httpAgent = agents.httpAgent;
+		this._httpsAgent = agents.httpsAgent;
 	}
 
 	public get apiKey(): string | undefined {
@@ -134,16 +131,43 @@ export class RettiwtConfig implements IRettiwtConfig {
 	}
 
 	public set proxy(proxy: AxiosProxyConfig | string | null | undefined) {
-		// Update HTTPs agent
-		if (typeof proxy === 'string') {
-			this._httpAgent = new HttpProxyAgent(proxy);
-			this._httpsAgent = new HttpsProxyAgent(proxy);
-		} else {
-			this._httpAgent = new HttpAgent();
-			this._httpsAgent = new HttpsAgent();
-		}
+		// Update HTTP(s) agents
+		const agents = this._getRequestAgents(proxy);
+		this._httpAgent = agents.httpAgent;
+		this._httpsAgent = agents.httpsAgent;
 
 		this._proxy = proxy;
+	}
+
+	/**
+	 * Returns the appropriate HTTP(s) agents based on the type of proxy config.
+	 *
+	 * @param proxy - The proxy configuration.
+	 *
+	 * @returns The HTTP(s) agents.
+	 */
+	private _getRequestAgents(proxy?: AxiosProxyConfig | string | null): {
+		httpAgent: HttpAgent;
+		httpsAgent: HttpsAgent;
+	} {
+		let httpAgent: HttpAgent | undefined;
+		let httpsAgent: HttpsAgent | undefined;
+
+		if (typeof proxy === 'string' && (proxy.startsWith('http://') || proxy.startsWith('https://'))) {
+			httpAgent = new HttpProxyAgent(proxy);
+			httpsAgent = new HttpsProxyAgent(proxy);
+		} else if (typeof proxy === 'string' && proxy.startsWith('socks')) {
+			httpAgent = new SocksProxyAgent(proxy);
+			httpsAgent = new SocksProxyAgent(proxy);
+		} else {
+			httpAgent = new HttpAgent();
+			httpsAgent = new HttpsAgent();
+		}
+
+		return {
+			httpAgent: httpAgent,
+			httpsAgent: httpsAgent,
+		};
 	}
 }
 
