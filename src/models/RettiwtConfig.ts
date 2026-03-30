@@ -1,6 +1,8 @@
-import { Agent } from 'https';
+import { Agent as HttpAgent } from 'http';
+import { Agent as HttpsAgent } from 'https';
 
 import { AxiosProxyConfig } from 'axios';
+import { HttpProxyAgent } from 'http-proxy-agent';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 
 import { AuthService } from '../services/internal/AuthService';
@@ -35,7 +37,8 @@ export class RettiwtConfig implements IRettiwtConfig {
 	// Parameters for internal use
 	private _apiKey?: string;
 	private _headers: { [key: string]: string };
-	private _httpsAgent: Agent;
+	private _httpAgent: HttpAgent;
+	private _httpsAgent: HttpsAgent;
 	private _proxy?: AxiosProxyConfig | string | null;
 	private _userId: string | undefined;
 
@@ -51,7 +54,6 @@ export class RettiwtConfig implements IRettiwtConfig {
 	 */
 	public constructor(config?: IRettiwtConfig) {
 		this._apiKey = config?.apiKey;
-		this._httpsAgent = typeof config?.proxy === 'string' ? new HttpsProxyAgent(config.proxy) : new Agent();
 		this._proxy = config?.proxy;
 		this._userId = config?.apiKey ? AuthService.getUserId(config?.apiKey) : undefined;
 		this.delay = config?.delay ?? 0;
@@ -64,6 +66,15 @@ export class RettiwtConfig implements IRettiwtConfig {
 			...DefaultHeaders,
 			...config?.headers,
 		};
+
+		// Initializing the HTTP(S) agent(s)
+		if (typeof config?.proxy === 'string') {
+			this._httpAgent = new HttpProxyAgent(config.proxy);
+			this._httpsAgent = new HttpsProxyAgent(config.proxy);
+		} else {
+			this._httpAgent = new HttpAgent();
+			this._httpsAgent = new HttpsAgent();
+		}
 	}
 
 	public get apiKey(): string | undefined {
@@ -95,8 +106,13 @@ export class RettiwtConfig implements IRettiwtConfig {
 		return this._headers;
 	}
 
+	/** The HTTP agent instance to use. */
+	public get httpAgent(): HttpAgent {
+		return this._httpAgent;
+	}
+
 	/** The HTTPS agent instance to use. */
-	public get httpsAgent(): Agent {
+	public get httpsAgent(): HttpsAgent {
 		return this._httpsAgent;
 	}
 
@@ -119,7 +135,13 @@ export class RettiwtConfig implements IRettiwtConfig {
 
 	public set proxy(proxy: AxiosProxyConfig | string | null | undefined) {
 		// Update HTTPs agent
-		this._httpsAgent = typeof proxy === 'string' ? new HttpsProxyAgent(proxy) : new Agent();
+		if (typeof proxy === 'string') {
+			this._httpAgent = new HttpProxyAgent(proxy);
+			this._httpsAgent = new HttpsProxyAgent(proxy);
+		} else {
+			this._httpAgent = new HttpAgent();
+			this._httpsAgent = new HttpsAgent();
+		}
 
 		this._proxy = proxy;
 	}

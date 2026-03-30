@@ -128,7 +128,7 @@ export class FetcherService {
 		// Fetch X.com homepage
 		const homePageResponse = await axios.get<string>('https://x.com', {
 			headers: this.config.headers,
-			httpAgent: this.config.httpsAgent,
+			httpAgent: this.config.httpAgent,
 			httpsAgent: this.config.httpsAgent,
 			proxy: this.config.axiosProxyConfig,
 		});
@@ -152,7 +152,7 @@ export class FetcherService {
 		if (migrationRedirectionUrl) {
 			// Follow redirection URL
 			const redirectResponse = await axios.get<string>(migrationRedirectionUrl[0], {
-				httpAgent: this.config.httpsAgent,
+				httpAgent: this.config.httpAgent,
 				httpsAgent: this.config.httpsAgent,
 				proxy: this.config.axiosProxyConfig,
 			});
@@ -195,7 +195,7 @@ export class FetcherService {
 
 					/* eslint-enable @typescript-eslint/naming-convention */
 				},
-				httpAgent: this.config.httpsAgent,
+				httpAgent: this.config.httpAgent,
 				httpsAgent: this.config.httpsAgent,
 				proxy: this.config.axiosProxyConfig,
 			});
@@ -294,7 +294,7 @@ export class FetcherService {
 			...cred.toHeader(),
 			...this.config.headers,
 		};
-		config.httpAgent = this.config.httpsAgent;
+		config.httpAgent = this.config.httpAgent;
 		config.httpsAgent = this.config.httpsAgent;
 		config.proxy = this.config.axiosProxyConfig;
 		config.timeout = this._timeout;
