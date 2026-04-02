@@ -3,7 +3,7 @@ import { ResourceType } from '../../enums/Resource';
 import { Conversation } from '../../models/data/Conversation';
 import { Inbox } from '../../models/data/Inbox';
 import { RettiwtConfig } from '../../models/RettiwtConfig';
-import { IConversationTimelineResponse } from '../../types/raw/dm/Conversation';
+import { IConversationPageResponse } from '../../types/raw/dm/ConversationPage';
 import { IInboxInitialResponse } from '../../types/raw/dm/InboxInitial';
 import { IInboxTimelineResponse } from '../../types/raw/dm/InboxTimeline';
 
@@ -28,8 +28,8 @@ export class DirectMessageService extends FetcherService {
 	 * Get the full conversation history for a specific conversation, ordered recent to oldest.
 	 * Use this to load complete message history for a conversation identified from the inbox.
 	 *
-	 * @param conversationId - The ID of the conversation (e.g., "394028042-1712730991884689408").
-	 * @param cursor - The cursor for pagination. Is equal to the ID of the last message from previous batch.
+	 * @param conversationId - The ID of the conversation (e.g., "394028042:1645287614").
+	 * @param cursor - The cursor for pagination. Is equal to the ID of the oldest event from the previous batch.
 	 *
 	 * @returns The conversation with full message history, or undefined if not found.
 	 *
@@ -42,7 +42,7 @@ export class DirectMessageService extends FetcherService {
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
 	 * // Fetching a specific conversation
-	 * rettiwt.dm.conversation('394028042-1712730991884689408')
+	 * rettiwt.dm.conversation('394028042:1645287614')
 	 * .then(conversation => {
 	 * 	if (conversation) {
 	 * 		console.log(`Conversation with ${conversation.participants.length} participants`);
@@ -57,14 +57,14 @@ export class DirectMessageService extends FetcherService {
 	public async conversation(conversationId: string, cursor?: string): Promise<Conversation | undefined> {
 		const resource = ResourceType.DM_CONVERSATION;
 
-		// Fetching raw conversation timeline
-		const response = await this.request<IConversationTimelineResponse>(resource, {
+		// Fetching raw conversation page
+		const response = await this.request<IConversationPageResponse>(resource, {
 			conversationId,
 			maxId: cursor,
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response, conversationId);
 
 		return data;
 	}

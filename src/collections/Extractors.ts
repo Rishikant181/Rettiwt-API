@@ -10,7 +10,7 @@ import { Space } from '../models/data/Space';
 import { Tweet } from '../models/data/Tweet';
 import { User } from '../models/data/User';
 import { UserAbout } from '../models/data/UserAbout';
-import { IConversationTimelineResponse } from '../types/raw/dm/Conversation';
+import { IConversationPageResponse } from '../types/raw/dm/ConversationPage';
 import { IInboxInitialResponse } from '../types/raw/dm/InboxInitial';
 import { IInboxTimelineResponse } from '../types/raw/dm/InboxTimeline';
 import { IListMemberAddResponse } from '../types/raw/list/AddMember';
@@ -86,8 +86,8 @@ export const Extractors = {
 	MEDIA_UPLOAD_INITIALIZE: (response: IMediaInitializeUploadResponse): string =>
 		response.media_id_string ?? undefined,
 
-	DM_CONVERSATION: (response: IConversationTimelineResponse): Conversation | undefined =>
-		Conversation.fromConversationTimeline(response),
+	DM_CONVERSATION: (response: IConversationPageResponse, conversationId?: string): Conversation | undefined =>
+		Conversation.fromConversationPage(response, conversationId),
 	DM_INBOX_INITIAL_STATE: (response: IInboxInitialResponse): Inbox => new Inbox(response),
 	DM_INBOX_TIMELINE: (response: IInboxTimelineResponse): Inbox => new Inbox(response),
 

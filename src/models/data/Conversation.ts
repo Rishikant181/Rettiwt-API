@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/member-ordering */
+
 import { IConversation } from '../../types/data/Conversation';
 import { IConversationTimelineResponse } from '../../types/raw/dm/Conversation';
+import { IConversationPageResponse } from '../../types/raw/dm/ConversationPage';
 import {
 	IInboxInitialResponse,
 	Conversation as RawConversation,
@@ -13,16 +16,37 @@ import { DirectMessage } from './DirectMessage';
  * Type guard to check if the response is an IConversationTimelineResponse
  */
 function isConversationTimelineResponse(
-	response: IConversationTimelineResponse | IInboxInitialResponse | IInboxTimelineResponse,
+	response:
+		| IConversationTimelineResponse
+		| IConversationPageResponse
+		| IInboxInitialResponse
+		| IInboxTimelineResponse,
 ): response is IConversationTimelineResponse {
 	return 'conversation_timeline' in response;
+}
+
+/**
+ * Type guard to check if the response is an IConversationPageResponse
+ */
+function isConversationPageResponse(
+	response:
+		| IConversationTimelineResponse
+		| IConversationPageResponse
+		| IInboxInitialResponse
+		| IInboxTimelineResponse,
+): response is IConversationPageResponse {
+	return 'data' in response && 'get_conversation_page' in (response.data ?? {});
 }
 
 /**
  * Type guard to check if the response is an IInboxInitialResponse
  */
 function isInboxInitialResponse(
-	response: IConversationTimelineResponse | IInboxInitialResponse | IInboxTimelineResponse,
+	response:
+		| IConversationTimelineResponse
+		| IConversationPageResponse
+		| IInboxInitialResponse
+		| IInboxTimelineResponse,
 ): response is IInboxInitialResponse {
 	return 'inbox_initial_state' in response;
 }
@@ -31,7 +55,11 @@ function isInboxInitialResponse(
  * Type guard to check if the response is an IInboxTimelineResponse
  */
 function isInboxTimelineResponse(
-	response: IConversationTimelineResponse | IInboxInitialResponse | IInboxTimelineResponse,
+	response:
+		| IConversationTimelineResponse
+		| IConversationPageResponse
+		| IInboxInitialResponse
+		| IInboxTimelineResponse,
 ): response is IInboxTimelineResponse {
 	return 'inbox_timeline' in response;
 }
@@ -196,6 +224,57 @@ export class Conversation implements IConversation {
 	}
 
 	/**
+	 * Extracts a single conversation from encoded conversation page response.
+	 *
+	 * @param response - The raw response data.
+	 * @param conversationId - The requested conversation ID.
+	 *
+	 * @returns The deserialized conversation with full message history.
+	 */
+	public static fromConversationPage(
+		response: IConversationPageResponse,
+		conversationId?: string,
+	): Conversation | undefined {
+		const messages = DirectMessage.sortByTime(DirectMessage.listFromResponse(response), false);
+		const resolvedConversationId = conversationId ?? messages[0]?.conversationId ?? '';
+
+		if (!resolvedConversationId) {
+			return undefined;
+		}
+
+		const participantsFromId = resolvedConversationId.split(':').filter(Boolean);
+		const participantIds = new Set<string>(participantsFromId);
+		for (const message of messages) {
+			if (message.senderId) {
+				participantIds.add(message.senderId);
+			}
+			if (message.recipientId) {
+				participantIds.add(message.recipientId);
+			}
+		}
+
+		const latestMessage = messages[0];
+		const syntheticConversation: Partial<RawConversation> =
+			/* eslint-disable @typescript-eslint/naming-convention */
+			{
+				conversation_id: resolvedConversationId,
+				max_entry_id: latestMessage?.id ?? '',
+				min_entry_id: messages[messages.length - 1]?.id ?? '',
+				muted: false,
+				notifications_disabled: false,
+				participants: [...participantIds].map((userId) => ({ user_id: userId })),
+				sort_event_id: latestMessage?.id ?? '',
+				sort_timestamp: latestMessage ? String(Date.parse(latestMessage.createdAt)) : '',
+				status: response.data?.get_conversation_page?.has_more ? 'HAS_MORE' : 'AT_END',
+				trusted: true,
+				type: participantIds.size > 2 ? 'GROUP_DM' : 'ONE_TO_ONE',
+			};
+		/* eslint-enable @typescript-eslint/naming-convention */
+
+		return new Conversation(syntheticConversation, messages);
+	}
+
+	/**
 	 * Extracts conversations from inbox initial state response.
 	 *
 	 * @param response - The raw response data.
@@ -285,10 +364,17 @@ export class Conversation implements IConversation {
 	 * Generic method to extract conversations from any supported response type
 	 */
 	public static listFromResponse(
-		response: IConversationTimelineResponse | IInboxInitialResponse | IInboxTimelineResponse,
+		response:
+			| IConversationTimelineResponse
+			| IConversationPageResponse
+			| IInboxInitialResponse
+			| IInboxTimelineResponse,
 	): Conversation[] {
 		if (isConversationTimelineResponse(response)) {
 			const conversation = Conversation.fromConversationTimeline(response);
+			return conversation ? [conversation] : [];
+		} else if (isConversationPageResponse(response)) {
+			const conversation = Conversation.fromConversationPage(response);
 			return conversation ? [conversation] : [];
 		} else if (isInboxInitialResponse(response)) {
 			return Conversation.listFromInboxInitial(response);

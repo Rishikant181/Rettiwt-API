@@ -1,6 +1,10 @@
+/* eslint-disable @typescript-eslint/member-ordering */
+
+import { DMEventDecoder } from '../../helper/DMEventDecoder';
 import { IDirectMessage } from '../../types/data/DirectMessage';
 import { IMessage as IRawMessage } from '../../types/raw/base/Message';
 import { IConversationTimelineResponse } from '../../types/raw/dm/Conversation';
+import { IConversationPageResponse } from '../../types/raw/dm/ConversationPage';
 import { IInboxInitialResponse } from '../../types/raw/dm/InboxInitial';
 import { IInboxTimelineResponse } from '../../types/raw/dm/InboxTimeline';
 
@@ -8,7 +12,11 @@ import { IInboxTimelineResponse } from '../../types/raw/dm/InboxTimeline';
  * Type guard to check if the response is an IInboxInitialResponse
  */
 function isInboxInitialResponse(
-	response: IInboxInitialResponse | IConversationTimelineResponse | IInboxTimelineResponse,
+	response:
+		| IInboxInitialResponse
+		| IConversationTimelineResponse
+		| IInboxTimelineResponse
+		| IConversationPageResponse,
 ): response is IInboxInitialResponse {
 	return 'inbox_initial_state' in response;
 }
@@ -17,7 +25,11 @@ function isInboxInitialResponse(
  * Type guard to check if the response is an IConversationTimelineResponse
  */
 function isConversationTimelineResponse(
-	response: IInboxInitialResponse | IConversationTimelineResponse | IInboxTimelineResponse,
+	response:
+		| IInboxInitialResponse
+		| IConversationTimelineResponse
+		| IInboxTimelineResponse
+		| IConversationPageResponse,
 ): response is IConversationTimelineResponse {
 	return 'conversation_timeline' in response;
 }
@@ -26,9 +38,26 @@ function isConversationTimelineResponse(
  * Type guard to check if the response is an IInboxTimelineResponse
  */
 function isInboxTimelineResponse(
-	response: IInboxInitialResponse | IConversationTimelineResponse | IInboxTimelineResponse,
+	response:
+		| IInboxInitialResponse
+		| IConversationTimelineResponse
+		| IInboxTimelineResponse
+		| IConversationPageResponse,
 ): response is IInboxTimelineResponse {
 	return 'inbox_timeline' in response;
+}
+
+/**
+ * Type guard to check if the response is an IConversationPageResponse
+ */
+function isConversationPageResponse(
+	response:
+		| IInboxInitialResponse
+		| IConversationTimelineResponse
+		| IInboxTimelineResponse
+		| IConversationPageResponse,
+): response is IConversationPageResponse {
+	return 'data' in response && 'get_conversation_page' in (response.data ?? {});
 }
 
 /**
@@ -38,7 +67,7 @@ function isInboxTimelineResponse(
  */
 export class DirectMessage implements IDirectMessage {
 	/** The raw message details. */
-	private readonly _raw: IRawMessage;
+	private readonly _raw: IRawMessage | Record<string, unknown>;
 
 	public conversationId: string;
 	public createdAt: string;
@@ -54,7 +83,7 @@ export class DirectMessage implements IDirectMessage {
 	 * @param message - The raw message details from the API response.
 	 */
 	public constructor(message: unknown) {
-		this._raw = message as IRawMessage;
+		this._raw = message as IRawMessage | Record<string, unknown>;
 
 		const parsedData = this._parseMessageData(message);
 
@@ -70,7 +99,7 @@ export class DirectMessage implements IDirectMessage {
 	}
 
 	/** The raw message details. */
-	public get raw(): IRawMessage {
+	public get raw(): IRawMessage | Record<string, unknown> {
 		return this._raw;
 	}
 
@@ -123,11 +152,43 @@ export class DirectMessage implements IDirectMessage {
 	}
 
 	/**
+	 * Extract messages from encoded conversation page response
+	 */
+	private static _extractFromConversationPage(response: IConversationPageResponse): DirectMessage[] {
+		const encodedEvents = response.data?.get_conversation_page?.encoded_message_events ?? [];
+
+		return DMEventDecoder.decodeMessages(encodedEvents).map(
+			(decodedMessage) =>
+				new DirectMessage(
+					/* eslint-disable @typescript-eslint/naming-convention */
+					{
+						conversation_id: decodedMessage.conversationId,
+						id: decodedMessage.id,
+						media_urls: decodedMessage.mediaUrls,
+						recipient_id: decodedMessage.recipientId,
+						sender_id: decodedMessage.senderId,
+						text: decodedMessage.text,
+						time: decodedMessage.createdAtMs,
+					},
+					/* eslint-enable @typescript-eslint/naming-convention */
+				),
+		);
+	}
+
+	/**
 	 * Extract media URLs from message attachment data with proper type safety.
 	 */
 	private _extractMediaUrls(message: unknown): string[] | undefined {
 		const urls: string[] = [];
 		const msg = message as Record<string, unknown>;
+
+		if (Array.isArray(msg.media_urls)) {
+			const mediaUrls = msg.media_urls.filter((url): url is string => typeof url === 'string' && url.length > 0);
+			if (mediaUrls.length > 0) {
+				return [...new Set(mediaUrls)];
+			}
+		}
+
 		const messageData = msg.message_data as Record<string, unknown> | undefined;
 
 		// Check for card attachments with images
@@ -253,7 +314,11 @@ export class DirectMessage implements IDirectMessage {
 	 * @returns The deserialized list of direct messages.
 	 */
 	public static list(
-		response: IInboxInitialResponse | IConversationTimelineResponse | IInboxTimelineResponse,
+		response:
+			| IInboxInitialResponse
+			| IConversationTimelineResponse
+			| IInboxTimelineResponse
+			| IConversationPageResponse,
 	): DirectMessage[] {
 		const messages: DirectMessage[] = [];
 
@@ -263,6 +328,8 @@ export class DirectMessage implements IDirectMessage {
 			return DirectMessage._extractFromConversationTimeline(response);
 		} else if (isInboxTimelineResponse(response)) {
 			return DirectMessage._extractFromInboxTimeline(response);
+		} else if (isConversationPageResponse(response)) {
+			return DirectMessage._extractFromConversationPage(response);
 		}
 
 		return messages;
@@ -272,7 +339,11 @@ export class DirectMessage implements IDirectMessage {
 	 * Generic method to extract messages from any supported response type
 	 */
 	public static listFromResponse(
-		response: IInboxInitialResponse | IConversationTimelineResponse | IInboxTimelineResponse,
+		response:
+			| IInboxInitialResponse
+			| IConversationTimelineResponse
+			| IInboxTimelineResponse
+			| IConversationPageResponse,
 	): DirectMessage[] {
 		return DirectMessage.list(response);
 	}

@@ -16,8 +16,8 @@ function createDirectMessageCommand(rettiwt: Rettiwt): Command {
 	// Conversation
 	dm.command('conversation')
 		.description('Get the full conversation history for a specific conversation')
-		.argument('<conversation-id>', 'The ID of the conversation (e.g., "394028042-1712730991884689408")')
-		.argument('[cursor]', 'The cursor for pagination (maxId from previous response)')
+		.argument('<conversation-id>', 'The ID of the conversation (e.g., "394028042:1645287614")')
+		.argument('[cursor]', 'The cursor for pagination (oldest event id from previous response)')
 		.action(async (conversationId: string, cursor?: string) => {
 			try {
 				const conversation = await rettiwt.dm.conversation(conversationId, cursor);
