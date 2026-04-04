@@ -59,7 +59,7 @@ export class ListService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -100,7 +100,7 @@ export class ListService extends FetcherService {
 		const response = await this.request<IListDetailsResponse>(resource, { id: id });
 
 		// Deserializing response
-		const data = Extractors[resource](response, id);
+		const data = Extractors[resource](response.data, id);
 
 		return data;
 	}
@@ -145,7 +145,7 @@ export class ListService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -186,7 +186,7 @@ export class ListService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -231,7 +231,7 @@ export class ListService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		// Sorting the tweets by date, from recent to oldest
 		data.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());

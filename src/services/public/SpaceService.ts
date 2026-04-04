@@ -58,7 +58,7 @@ export class SpaceService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
