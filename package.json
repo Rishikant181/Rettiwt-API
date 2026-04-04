@@ -40,7 +40,7 @@
 		"@typescript-eslint/parser": "^8.24.0",
 		"eslint": "^9.20.1",
 		"eslint-plugin-import": "^2.31.0",
-		"eslint-plugin-tsdoc": "^0.4.0",
+		"eslint-plugin-tsdoc": "^0.5.2",
 		"nodemon": "^3.1.9",
 		"prettier": "^3.5.1",
 		"typedoc": "^0.27.7",
@@ -53,7 +53,7 @@
 		"cookiejar": "^2.1.4",
 		"http-proxy-agent": "^7.0.2",
 		"https-proxy-agent": "^7.0.6",
-		"jsdom": "^27.2.0",
+		"linkedom": "^0.18.12",
 		"node-html-parser": "^7.0.1",
 		"socks-proxy-agent": "^8.0.5",
 		"x-client-transaction-id": "^0.2.0"

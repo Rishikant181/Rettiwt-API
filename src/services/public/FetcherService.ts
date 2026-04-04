@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 import { Cookie } from 'cookiejar';
-import { JSDOM } from 'jsdom';
+import { parseHTML } from 'linkedom';
 import { ClientTransaction } from 'x-client-transaction-id';
 
 import { AllowGuestAuthenticationGroup, FetchResourcesGroup, PostResourcesGroup } from '../../collections/Groups';
@@ -134,8 +134,7 @@ export class FetcherService {
 		});
 
 		// Parse HTML using linkedom
-		let dom = new JSDOM(homePageResponse.data);
-		let document = dom.window.document;
+		let document = parseHTML(homePageResponse.data).document;
 
 		// Check for migration redirection links
 		const migrationRedirectionRegex = new RegExp(
@@ -157,8 +156,7 @@ export class FetcherService {
 				proxy: this.config.axiosProxyConfig,
 			});
 
-			dom = new JSDOM(redirectResponse.data);
-			document = dom.window.document;
+			document = parseHTML(redirectResponse.data).document;
 		}
 
 		// Handle migration form if present
@@ -200,8 +198,7 @@ export class FetcherService {
 				proxy: this.config.axiosProxyConfig,
 			});
 
-			dom = new JSDOM(formResponse.data);
-			document = dom.window.document;
+			document = parseHTML(formResponse.data).document;
 		}
 
 		// Return final DOM document
