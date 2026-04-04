@@ -258,12 +258,28 @@ export class FetcherService {
 	 *
 	 * @typeParam T - The type of the returned response data.
 	 *
-	 * @returns The raw HTTP response received.
+	 * @returns The raw Axios response.
+	 *
+	 * @example
+	 *
+	 * #### Fetching the raw details of a single user, using their username
+	 * ```ts
+	 * import { FetcherService, ResourceType } from 'rettiwt-api';
+	 *
+	 * // Creating a new FetcherService instance using the given 'API_KEY'
+	 * const fetcher = new FetcherService({ apiKey: API_KEY });
+	 *
+	 * // Fetching the details of the User with username 'user1'
+	 * fetcher.request(ResourceType.USER_DETAILS_BY_USERNAME, { id: 'user1' })
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
 	 */
-	protected async requestWithResponse<T = unknown>(
-		resource: ResourceType,
-		args: IFetchArgs | IPostArgs,
-	): Promise<AxiosResponse<T>> {
+	public async request<T = unknown>(resource: ResourceType, args: IFetchArgs | IPostArgs): Promise<AxiosResponse<T>> {
 		/** The current retry number. */
 		let retry = 0;
 
@@ -354,40 +370,5 @@ export class FetcherService {
 
 		/** If request not successful even after retries, throw the error */
 		throw error;
-	}
-
-	/**
-	 * Makes an HTTP request according to the given parameters.
-	 *
-	 * @param resource - The requested resource.
-	 * @param args - The args to be used for the request.
-	 *
-	 * @typeParam T - The type of the returned response data.
-	 *
-	 * @returns The parsed HTTP response data.
-	 *
-	 * @example
-	 *
-	 * #### Fetching the raw details of a single user, using their username
-	 * ```ts
-	 * import { FetcherService, ResourceType } from 'rettiwt-api';
-	 *
-	 * // Creating a new FetcherService instance using the given 'API_KEY'
-	 * const fetcher = new FetcherService({ apiKey: API_KEY });
-	 *
-	 * // Fetching the details of the User with username 'user1'
-	 * fetcher.request(ResourceType.USER_DETAILS_BY_USERNAME, { id: 'user1' })
-	 * .then(res => {
-	 * 	console.log(res);
-	 * })
-	 * .catch(err => {
-	 * 	console.log(err);
-	 * });
-	 * ```
-	 */
-	public async request<T = unknown>(resource: ResourceType, args: IFetchArgs | IPostArgs): Promise<T> {
-		const response = await this.requestWithResponse<T>(resource, args);
-
-		return response.data;
 	}
 }

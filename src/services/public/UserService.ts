@@ -144,7 +144,7 @@ export class UserService extends FetcherService {
 		const response = await this.request<IUserAboutResponse>(resource, { id: userName });
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -187,7 +187,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -245,7 +245,7 @@ export class UserService extends FetcherService {
 			showVerifiedFollowers,
 		});
 
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -288,7 +288,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -327,7 +327,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -368,7 +368,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -390,7 +390,7 @@ export class UserService extends FetcherService {
 		const resource = ResourceType.USER_PASSWORD_CHANGE;
 
 		// Changing the password
-		const response = await this.requestWithResponse<IUserChangePasswordResponse>(resource, {
+		const response = await this.request<IUserChangePasswordResponse>(resource, {
 			changePassword: { currentPassword, newPassword },
 		});
 
@@ -443,7 +443,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Getting the updated username
-		const updatedUsername = Extractors[resource](response);
+		const updatedUsername = Extractors[resource](response.data);
 
 		return updatedUsername?.toLowerCase() === username.toLowerCase();
 	}
@@ -558,7 +558,7 @@ export class UserService extends FetcherService {
 			const response = await this.request<IUserDetailsBulkResponse>(resource, { ids: id });
 
 			// Deserializing response
-			const data = Extractors[resource](response, id);
+			const data = Extractors[resource](response.data, id);
 
 			return data;
 		}
@@ -585,7 +585,7 @@ export class UserService extends FetcherService {
 			const response = await this.request<IUserDetailsResponse>(resource, { id: id ?? this.config.userId });
 
 			// Deserializing response
-			const data = Extractors[resource](response);
+			const data = Extractors[resource](response.data);
 
 			return data;
 		}
@@ -625,7 +625,7 @@ export class UserService extends FetcherService {
 		const response = await this.request<IUserFollowResponse>(ResourceType.USER_FOLLOW, { id: id });
 
 		// Deserializing the response
-		const data = Extractors[resource](response) ?? false;
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}
@@ -666,7 +666,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -709,7 +709,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -752,7 +752,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -795,7 +795,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -837,7 +837,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -879,7 +879,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -922,7 +922,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -979,7 +979,7 @@ export class UserService extends FetcherService {
 			});
 
 			// Deserializing response
-			const notifications = Extractors[resource](response);
+			const notifications = Extractors[resource](response.data);
 
 			// Sorting the notifications by time, from oldest to recent
 			notifications.list.sort((a, b) => new Date(a.receivedAt).valueOf() - new Date(b.receivedAt).valueOf());
@@ -1036,7 +1036,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -1083,7 +1083,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -1126,7 +1126,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -1169,7 +1169,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -1217,7 +1217,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -1254,7 +1254,7 @@ export class UserService extends FetcherService {
 		const response = await this.request<IUserUnfollowResponse>(ResourceType.USER_UNFOLLOW, { id: id });
 
 		// Deserializing the response
-		const data = Extractors[resource](response) ?? false;
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}
@@ -1319,7 +1319,7 @@ export class UserService extends FetcherService {
 		const response = await this.request<IUserProfileUpdateResponse>(resource, { profileOptions: validatedOptions });
 
 		// Deserializing the response
-		const data = Extractors[resource](response) ?? false;
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}
@@ -1345,7 +1345,7 @@ export class UserService extends FetcherService {
 			profileBanner: validatedBanner,
 		});
 
-		const data = Extractors[resource](response) ?? false;
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}
@@ -1371,7 +1371,7 @@ export class UserService extends FetcherService {
 			profileImage: validatedImage,
 		});
 
-		const data = Extractors[resource](response) ?? false;
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}

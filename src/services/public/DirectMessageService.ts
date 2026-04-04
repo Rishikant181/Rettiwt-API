@@ -64,7 +64,7 @@ export class DirectMessageService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -139,7 +139,7 @@ export class DirectMessageService extends FetcherService {
 			});
 
 			// Deserializing response
-			const data = Extractors[resource](response);
+			const data = Extractors[resource](response.data);
 
 			return data;
 		}
@@ -151,7 +151,7 @@ export class DirectMessageService extends FetcherService {
 			const response = await this.request<IInboxInitialResponse>(resource, {});
 
 			// Deserializing response
-			const data = Extractors[resource](response);
+			const data = Extractors[resource](response.data);
 
 			return data;
 		}
