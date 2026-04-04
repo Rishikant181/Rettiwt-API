@@ -52,7 +52,7 @@
 		"commander": "^11.1.0",
 		"cookiejar": "^2.1.4",
 		"https-proxy-agent": "^7.0.6",
-		"jsdom": "^27.2.0",
+		"linkedom": "^0.18.12",
 		"node-html-parser": "^7.0.1",
 		"x-client-transaction-id": "^0.2.0"
 	}
