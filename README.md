@@ -302,6 +302,56 @@ Where,
 - `<username>` is the username associated with the Twitter account.
 - `<password>` is the password to the Twitter account.
 
+## Using a response middleware
+
+`Rettiwt` allows configuring a response middleware, which provides access to the raw `AxiosResponse` object, as received from Twitter. The middleware is non-blocking in nature, and serves purely as an accessorial method.
+
+This is especially helpful getting access to response headers like rate limit information.
+
+The following example demonstrates using a custom response handler for getting rate limit information:
+
+```ts
+// Creating a new Rettiwt instance using guest auth
+const rettiwt = new Rettiwt({
+	responseMiddleware: (res): void => {
+		console.log(`Rate limit: ${res.headers['x-rate-limit-limit']}`);
+		console.log(`Rate limit remaining: ${res.headers['x-rate-limit-remaining']}`);
+		console.log(`Rate limit reset timestamp (seconds): ${res.headers['x-rate-limit-reset']}`);
+		console.log('\n');
+	},
+});
+
+// Getting the details of user by username
+rettiwt.user
+	.details('negmatico')
+	.then((res) => {
+		console.log(res.toJSON());
+
+		// Results in similar data being logged to console, as follows:
+
+		// Rate limit: 50
+		// Rate limit reamining: 49
+		// Rate limit reset timestamp (seconds): 1775416043
+		//
+		// {
+		//     "createdAt": "2021-07-24T14:25:32.000Z",
+		//     "description": "Coder, Gamer and Tech Enthusiast",
+		//     "followersCount": 3,
+		//     "followingsCount": 44,
+		//     "fullName": "Rishikant Sahu",
+		//     "id": "1418940387037782018",
+		//     "isVerified": false,
+		//     "likeCount": 762,
+		//     "profileImage": "https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png",
+		//     "statusesCount": 5,
+		//     "userName": "negmatico"
+		// }
+	})
+	.catch((err) => {
+		console.log(err);
+	});
+```
+
 ## Using a custom error handler
 
 Out of the box, `Rettiwt`'s error handling is bare-minimum, only able to parse basic error messages. For advanced scenarios, where full error response might be required, in order to diagnose error reason, it's recommended to use a custom error handler, by implementing the `IErrorHandler` interface, as follows:

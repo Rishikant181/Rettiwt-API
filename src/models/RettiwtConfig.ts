@@ -1,7 +1,7 @@
 import { Agent as HttpAgent } from 'http';
 import { Agent as HttpsAgent } from 'https';
 
-import { AxiosProxyConfig } from 'axios';
+import { AxiosProxyConfig, AxiosResponse } from 'axios';
 import { HttpProxyAgent } from 'http-proxy-agent';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import { SocksProxyAgent } from 'socks-proxy-agent';
@@ -48,6 +48,7 @@ export class RettiwtConfig implements IRettiwtConfig {
 	public readonly errorHandler?: IErrorHandler;
 	public readonly logging?: boolean;
 	public readonly maxRetries: number;
+	public readonly responseMiddleware?: (response: AxiosResponse) => void | Promise<void>;
 	public readonly timeout?: number;
 
 	/**
@@ -60,6 +61,7 @@ export class RettiwtConfig implements IRettiwtConfig {
 		this.delay = config?.delay ?? 0;
 		this.maxRetries = config?.maxRetries ?? 0;
 		this.errorHandler = config?.errorHandler;
+		this.responseMiddleware = config?.responseMiddleware;
 		this.logging = config?.logging;
 		this.timeout = config?.timeout;
 		this.apiKey = config?.apiKey;

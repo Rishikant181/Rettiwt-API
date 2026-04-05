@@ -350,6 +350,11 @@ export class FetcherService {
 					throw new TwitterError(axiosError);
 				}
 
+				// Calling the request middleware, if configured
+				if (this.config.responseMiddleware !== undefined) {
+					await this.config.responseMiddleware(response);
+				}
+
 				// Returning the response
 				return response;
 			} catch (err) {
