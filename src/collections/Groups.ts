@@ -6,6 +6,10 @@ import { ResourceType } from '../enums/Resource';
  * @internal
  */
 export const AllowGuestAuthenticationGroup = [
+	ResourceType.COMMUNITY_DETAILS,
+	ResourceType.COMMUNITY_MEMBERS,
+	ResourceType.COMMUNITY_MODERATORS,
+	ResourceType.COMMUNITY_TWEETS,
 	ResourceType.TWEET_DETAILS,
 	ResourceType.USER_DETAILS_BY_USERNAME,
 	ResourceType.USER_TIMELINE,
@@ -18,6 +22,10 @@ export const AllowGuestAuthenticationGroup = [
  * @internal
  */
 export const FetchResourcesGroup = [
+	ResourceType.COMMUNITY_DETAILS,
+	ResourceType.COMMUNITY_MEMBERS,
+	ResourceType.COMMUNITY_MODERATORS,
+	ResourceType.COMMUNITY_TWEETS,
 	ResourceType.LIST_DETAILS,
 	ResourceType.LIST_MEMBERS,
 	ResourceType.LIST_TWEETS,
@@ -62,6 +70,8 @@ export const FetchResourcesGroup = [
  * @internal
  */
 export const PostResourcesGroup = [
+	ResourceType.COMMUNITY_JOIN,
+	ResourceType.COMMUNITY_LEAVE,
 	ResourceType.LIST_MEMBER_ADD,
 	ResourceType.LIST_MEMBER_REMOVE,
 	ResourceType.MEDIA_UPLOAD_APPEND,

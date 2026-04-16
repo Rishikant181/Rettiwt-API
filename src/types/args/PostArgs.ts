@@ -11,6 +11,8 @@ export interface IPostArgs {
 	 *
 	 * @remarks
 	 * Required only when posting using the following resources:
+	 * - {@link ResourceType.COMMUNITY_JOIN}
+	 * - {@link ResourceType.COMMUNITY_LEAVE}
 	 * - {@link ResourceType.TWEET_BOOKMARK}
 	 * - {@link ResourceType.TWEET_LIKE}
 	 * - {@link ResourceType.TWEET_RETWEET}
