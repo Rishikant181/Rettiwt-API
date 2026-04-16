@@ -93,7 +93,10 @@ export { IDataResult as IRawDataResult } from './types/raw/composite/DataResult'
 export { ITimelineTweet as IRawTimelineTweet } from './types/raw/composite/TimelineTweet';
 export { ITimelineUser as IRawTimelineUser } from './types/raw/composite/TimelineUser';
 export { IResponse as IRawResponse } from './types/raw/generic/Response';
-export { ICommunityDetailsResponse as IRawCommunityDetailsResponse, IRawCommunity } from './types/raw/community/Details';
+export {
+	ICommunityDetailsResponse as IRawCommunityDetailsResponse,
+	IRawCommunity,
+} from './types/raw/community/Details';
 export { ICommunityJoinResponse as IRawCommunityJoinResponse } from './types/raw/community/Join';
 export { ICommunityLeaveResponse as IRawCommunityLeaveResponse } from './types/raw/community/Leave';
 export {

@@ -1,11 +1,6 @@
 import { LogActions } from '../../enums/Logging';
 import { LogService } from '../../services/internal/LogService';
-import {
-	ICommunity,
-	ICommunityBanner,
-	ICommunityMemberPreview,
-	ICommunityRule,
-} from '../../types/data/Community';
+import { ICommunity, ICommunityBanner, ICommunityMemberPreview, ICommunityRule } from '../../types/data/Community';
 import {
 	ICommunityBannerMedia,
 	ICommunityDetailsResponse,
@@ -53,7 +48,8 @@ export class Community implements ICommunity {
 		this.creatorId = community.creator_results?.result?.rest_id;
 		this.creatorScreenName = community.creator_results?.result?.core?.screen_name;
 		this.isCreatorVerified =
-			community.creator_results?.result?.verification?.verified ?? community.creator_results?.result?.is_blue_verified;
+			community.creator_results?.result?.verification?.verified ??
+			community.creator_results?.result?.is_blue_verified;
 		this.isMember = community.is_member;
 		this.isNsfw = community.is_nsfw;
 		this.joinPolicy = community.join_policy;

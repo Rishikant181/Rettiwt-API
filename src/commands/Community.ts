@@ -102,7 +102,12 @@ function createCommunityCommand(rettiwt: Rettiwt): Command {
 					sortType = CommunityTweetsSortType.TOP;
 				}
 
-				const tweets = await rettiwt.community.tweets(id, count ? parseInt(count) : undefined, cursor, sortType);
+				const tweets = await rettiwt.community.tweets(
+					id,
+					count ? parseInt(count) : undefined,
+					cursor,
+					sortType,
+				);
 				output(tweets);
 			} catch (error) {
 				output(error);
