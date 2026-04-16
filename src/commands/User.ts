@@ -1,3 +1,7 @@
+import { readFileSync } from 'fs';
+import { createInterface } from 'readline/promises';
+import { Writable } from 'stream';
+
 import { Command, createCommand } from 'commander';
 
 import { RawAnalyticsGranularity, RawAnalyticsMetric } from '../enums/raw/Analytics';
@@ -105,6 +109,19 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 					cursor,
 				);
 				output(tweets);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// About
+	user.command('about')
+		.description('Fetch the about profile of the user with the given username')
+		.argument('<username>', 'The username of the user')
+		.action(async (username: string) => {
+			try {
+				const about = await rettiwt.user.about(username);
+				output(about);
 			} catch (error) {
 				output(error);
 			}
@@ -276,6 +293,21 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// Replies
+	user.command('search')
+		.description('Search for a username')
+		.argument('<username>', 'The username to search for')
+		.argument('[count]', 'The number of results to fetch')
+		.argument('[cursor]', 'The cursor to the batch of results to fetch')
+		.action(async (userName: string, count?: string, cursor?: string) => {
+			try {
+				const replies = await rettiwt.user.search(userName, count ? parseInt(count) : undefined, cursor);
+				output(replies);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Timeline
 	user.command('timeline')
 		.description('Fetch the tweets timeline the given user')
@@ -325,7 +357,142 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// Change Password
+	user.command('change-password')
+		.description('Change your account password')
+		.option('--show-new-key', 'Include rotated apiKey in the output')
+		.action(async (options?: UserPasswordChangeOptions) => {
+			try {
+				const initialApiKey = rettiwt.apiKey;
+				const currentPassword = await promptHidden('Current password: ');
+				const newPassword = await promptHidden('New password: ');
+				const confirmPassword = await promptHidden('Confirm new password: ');
+
+				if (newPassword !== confirmPassword) {
+					throw new Error('New password confirmation does not match');
+				}
+				if (newPassword === currentPassword) {
+					throw new Error('New password must be different from current password');
+				}
+
+				const result = await rettiwt.user.changePassword(currentPassword, newPassword);
+				const apiKeyUpdated = initialApiKey !== rettiwt.apiKey;
+				const response = {
+					success: result,
+					apiKeyUpdated: result ? apiKeyUpdated : false,
+					...(options?.showNewKey ? { apiKey: rettiwt.apiKey } : {}),
+				};
+
+				output(response);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// Change Username
+	user.command('change-username')
+		.description('Change your username')
+		.argument('<username>', 'The new username (with or without @)')
+		.action(async (username: string) => {
+			try {
+				const result = await rettiwt.user.changeUsername(username);
+				output(result);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// Update Profile Banner
+	user.command('update-profile-banner')
+		.description('Update your profile banner from an image file path')
+		.argument('<path>', 'The path to the banner image file')
+		.action(async (path: string) => {
+			try {
+				const result = await rettiwt.user.updateProfileBanner(fileToBase64(path));
+				output(result);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// Update Profile Image
+	user.command('update-profile-image')
+		.description('Update your profile image from an image file path')
+		.argument('<path>', 'The path to the profile image file')
+		.action(async (path: string) => {
+			try {
+				const result = await rettiwt.user.updateProfileImage(fileToBase64(path));
+				output(result);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	return user;
+}
+
+/**
+ * Reads a file and returns its base64 representation.
+ *
+ * @param path - The path to the file.
+ * @returns The base64 representation of the file contents.
+ */
+function fileToBase64(path: string): string {
+	if (path.trim().length === 0) {
+		throw new Error('File path cannot be empty');
+	}
+
+	try {
+		return readFileSync(path).toString('base64');
+	} catch (error) {
+		if (error instanceof Error) {
+			throw new Error(`Could not read file at '${path}': ${error.message}`);
+		}
+
+		throw new Error(`Could not read file at '${path}'`);
+	}
+}
+
+/**
+ * Prompts user for hidden input without echoing typed characters.
+ *
+ * @param query - The prompt text.
+ * @returns The provided value.
+ */
+async function promptHidden(query: string): Promise<string> {
+	if (!process.stdin.isTTY || !process.stdout.isTTY) {
+		throw new Error('Password prompt requires an interactive terminal');
+	}
+
+	let queryShown = false;
+
+	const mutedOutput = new Writable({
+		write(chunk: Buffer | string, encoding: BufferEncoding, callback: (error?: Error | null) => void): void {
+			const text = chunk.toString();
+
+			if (!queryShown) {
+				process.stdout.write(text);
+				queryShown = text.includes(query);
+			}
+
+			callback();
+		},
+	});
+
+	const input = createInterface({
+		input: process.stdin,
+		output: mutedOutput,
+		terminal: true,
+	});
+
+	try {
+		const value = await input.question(query);
+		process.stdout.write('\n');
+
+		return value;
+	} finally {
+		input.close();
+	}
 }
 
 /**
@@ -347,6 +514,13 @@ type UserProfileUpdateOptions = {
 	url?: string;
 	location?: string;
 	description?: string;
+};
+
+/**
+ * The options for changing account password.
+ */
+type UserPasswordChangeOptions = {
+	showNewKey?: boolean;
 };
 
 export default createUserCommand;

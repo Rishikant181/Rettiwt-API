@@ -1,6 +1,9 @@
+import { AxiosProxyConfig } from 'axios';
+
 import { RettiwtConfig } from './models/RettiwtConfig';
 import { DirectMessageService } from './services/public/DirectMessageService';
 import { ListService } from './services/public/ListService';
+import { SpaceService } from './services/public/SpaceService';
 import { TweetService } from './services/public/TweetService';
 import { UserService } from './services/public/UserService';
 import { IRettiwtConfig } from './types/RettiwtConfig';
@@ -56,6 +59,9 @@ export class Rettiwt {
 	/** The instance used to fetch data related to lists. */
 	public list: ListService;
 
+	/** The instance used to fetch data related to spaces. */
+	public space: SpaceService;
+
 	/** The instance used to fetch data related to tweets. */
 	public tweet: TweetService;
 
@@ -71,6 +77,7 @@ export class Rettiwt {
 		this._config = new RettiwtConfig(config);
 		this.dm = new DirectMessageService(this._config);
 		this.list = new ListService(this._config);
+		this.space = new SpaceService(this._config);
 		this.tweet = new TweetService(this._config);
 		this.user = new UserService(this._config);
 	}
@@ -90,8 +97,8 @@ export class Rettiwt {
 		this._config.headers = headers;
 	}
 
-	/** Set the proxy URL for the current instance. */
-	public set proxyUrl(proxyUrl: URL) {
-		this._config.proxyUrl = proxyUrl;
+	/** Set the proxy for the current instance. */
+	public set proxy(proxy: AxiosProxyConfig | string | undefined | null) {
+		this._config.proxy = proxy;
 	}
 }

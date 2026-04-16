@@ -6,8 +6,10 @@ import { CursoredData } from '../models/data/CursoredData';
 import { Inbox } from '../models/data/Inbox';
 import { List } from '../models/data/List';
 import { Notification } from '../models/data/Notification';
+import { Space } from '../models/data/Space';
 import { Tweet } from '../models/data/Tweet';
 import { User } from '../models/data/User';
+import { UserAbout } from '../models/data/UserAbout';
 import { IConversationTimelineResponse } from '../types/raw/dm/Conversation';
 import { IInboxInitialResponse } from '../types/raw/dm/InboxInitial';
 import { IInboxTimelineResponse } from '../types/raw/dm/InboxTimeline';
@@ -17,12 +19,13 @@ import { IListMembersResponse } from '../types/raw/list/Members';
 import { IListMemberRemoveResponse } from '../types/raw/list/RemoveMember';
 import { IListTweetsResponse } from '../types/raw/list/Tweets';
 import { IMediaInitializeUploadResponse } from '../types/raw/media/InitalizeUpload';
+import { IAudioSpaceByIdResponse } from '../types/raw/space/AudioSpaceById';
 import { ITweetBookmarkResponse } from '../types/raw/tweet/Bookmark';
 import { ITweetDetailsResponse } from '../types/raw/tweet/Details';
 import { ITweetDetailsBulkResponse } from '../types/raw/tweet/DetailsBulk';
 import { ITweetLikeResponse } from '../types/raw/tweet/Like';
 import { ITweetLikersResponse } from '../types/raw/tweet/Likers';
-import { ITweetPostResponse } from '../types/raw/tweet/Post';
+import { ITweetPostNoteResponse, ITweetPostResponse } from '../types/raw/tweet/Post';
 import { ITweetRepliesResponse } from '../types/raw/tweet/Replies';
 import { ITweetRetweetResponse } from '../types/raw/tweet/Retweet';
 import { ITweetRetweetersResponse } from '../types/raw/tweet/Retweeters';
@@ -33,11 +36,13 @@ import { ITweetUnlikeResponse } from '../types/raw/tweet/Unlike';
 import { ITweetUnpostResponse } from '../types/raw/tweet/Unpost';
 import { ITweetUnretweetResponse } from '../types/raw/tweet/Unretweet';
 import { ITweetUnscheduleResponse } from '../types/raw/tweet/Unschedule';
+import { IUserAboutResponse } from '../types/raw/user/About';
 import { IUserAffiliatesResponse } from '../types/raw/user/Affiliates';
 import { IUserAnalyticsResponse } from '../types/raw/user/Analytics';
 import { IUserBookmarkFoldersResponse } from '../types/raw/user/BookmarkFolders';
 import { IUserBookmarkFolderTweetsResponse } from '../types/raw/user/BookmarkFolderTweets';
 import { IUserBookmarksResponse } from '../types/raw/user/Bookmarks';
+import { IUserChangePasswordResponse } from '../types/raw/user/ChangePassword';
 import { IUserDetailsResponse } from '../types/raw/user/Details';
 import { IUserDetailsBulkResponse } from '../types/raw/user/DetailsBulk';
 import { IUserFollowResponse } from '../types/raw/user/Follow';
@@ -51,6 +56,8 @@ import { IUserMediaResponse } from '../types/raw/user/Media';
 import { IUserNotificationsResponse } from '../types/raw/user/Notifications';
 import { IUserProfileUpdateResponse } from '../types/raw/user/ProfileUpdate';
 import { IUserRecommendedResponse } from '../types/raw/user/Recommended';
+import { IUserSearchResponse } from '../types/raw/user/Search';
+import { IUserSettingsResponse } from '../types/raw/user/Settings';
 import { IUserSubscriptionsResponse } from '../types/raw/user/Subscriptions';
 import { IUserTweetsResponse } from '../types/raw/user/Tweets';
 import { IUserTweetsAndRepliesResponse } from '../types/raw/user/TweetsAndReplies';
@@ -84,6 +91,8 @@ export const Extractors = {
 	DM_INBOX_INITIAL_STATE: (response: IInboxInitialResponse): Inbox => new Inbox(response),
 	DM_INBOX_TIMELINE: (response: IInboxTimelineResponse): Inbox => new Inbox(response),
 
+	SPACE_DETAILS: (response: IAudioSpaceByIdResponse): Space | undefined => Space.single(response),
+
 	TWEET_BOOKMARK: (response: ITweetBookmarkResponse): boolean => response?.data?.tweet_bookmark_put === 'Done',
 	TWEET_DETAILS: (response: ITweetDetailsResponse, id: string): Tweet | undefined => Tweet.single(response, id),
 	TWEET_DETAILS_ALT: (response: ITweetRepliesResponse, id: string): Tweet | undefined => Tweet.single(response, id),
@@ -91,8 +100,12 @@ export const Extractors = {
 	TWEET_LIKE: (response: ITweetLikeResponse): boolean => (response?.data?.favorite_tweet ? true : false),
 	TWEET_LIKERS: (response: ITweetLikersResponse): CursoredData<User> =>
 		new CursoredData<User>(response, BaseType.USER),
-	TWEET_POST: (response: ITweetPostResponse): string =>
-		response?.data?.create_tweet?.tweet_results?.result?.rest_id ?? undefined,
+	TWEET_POST: (response: ITweetPostResponse): string | undefined =>
+		response?.data?.create_tweet?.tweet_results?.result?.rest_id ??
+		response?.data?.create_note_tweet?.tweet_results?.result?.rest_id ??
+		undefined,
+	TWEET_POST_NOTE: (response: ITweetPostNoteResponse): string | undefined =>
+		response?.data?.notetweet_create?.tweet_results?.result?.rest_id ?? undefined,
 	TWEET_REPLIES: (response: ITweetDetailsResponse): CursoredData<Tweet> =>
 		new CursoredData<Tweet>(response, BaseType.TWEET),
 	TWEET_RETWEET: (response: ITweetRetweetResponse): boolean => (response?.data?.create_retweet ? true : false),
@@ -118,6 +131,7 @@ export const Extractors = {
 		new CursoredData<BookmarkFolder>(response, BaseType.BOOKMARK_FOLDER),
 	USER_BOOKMARK_FOLDER_TWEETS: (response: IUserBookmarkFolderTweetsResponse): CursoredData<Tweet> =>
 		new CursoredData<Tweet>(response, BaseType.TWEET),
+	USER_ABOUT_BY_USERNAME: (response: IUserAboutResponse): UserAbout | undefined => UserAbout.single(response),
 	USER_DETAILS_BY_USERNAME: (response: IUserDetailsResponse): User | undefined => User.single(response),
 	USER_DETAILS_BY_ID: (response: IUserDetailsResponse): User | undefined => User.single(response),
 	USER_DETAILS_BY_IDS_BULK: (response: IUserDetailsBulkResponse, ids: string[]): User[] =>
@@ -140,6 +154,7 @@ export const Extractors = {
 		new CursoredData<Tweet>(response, BaseType.TWEET),
 	USER_NOTIFICATIONS: (response: IUserNotificationsResponse): CursoredData<Notification> =>
 		new CursoredData<Notification>(response, BaseType.NOTIFICATION),
+	USER_SEARCH: (response: IUserSearchResponse): CursoredData<User> => new CursoredData<User>(response, BaseType.USER),
 	USER_SUBSCRIPTIONS: (response: IUserSubscriptionsResponse): CursoredData<User> =>
 		new CursoredData<User>(response, BaseType.USER),
 	USER_TIMELINE: (response: IUserTweetsResponse): CursoredData<Tweet> =>
@@ -148,6 +163,12 @@ export const Extractors = {
 		new CursoredData<Tweet>(response, BaseType.TWEET),
 	USER_UNFOLLOW: (response: IUserUnfollowResponse): boolean => (response?.id ? true : false),
 	USER_PROFILE_UPDATE: (response: IUserProfileUpdateResponse): boolean => (response?.name ? true : false),
+	USER_PROFILE_IMAGE_UPDATE: (response: IUserProfileUpdateResponse): boolean =>
+		response?.profile_image_url || response?.profile_image_url_https ? true : false,
+	USER_PROFILE_BANNER_UPDATE: (response: IUserProfileUpdateResponse): boolean =>
+		!response || response?.profile_banner_url || response?.profile_banner_url_https ? true : false,
+	USER_USERNAME_CHANGE: (response: IUserSettingsResponse): string | undefined => response?.screen_name ?? undefined,
+	USER_PASSWORD_CHANGE: (response: IUserChangePasswordResponse): boolean => response?.status === 'ok',
 
 	/* eslint-enable @typescript-eslint/naming-convention */
 };

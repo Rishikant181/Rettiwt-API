@@ -20,8 +20,19 @@ export interface IPostArgs {
 	 * - {@link ResourceType.TWEET_UNRETWEET}
 	 * - {@link ResourceType.USER_FOLLOW}
 	 * - {@link ResourceType.USER_UNFOLLOW}
+	 *
+	 * For {@link ResourceType.USER_USERNAME_CHANGE}, use {@link IPostArgs.username}.
+	 * `id` is still accepted for backward compatibility.
 	 */
 	id?: string;
+
+	/**
+	 * The new username to set.
+	 *
+	 * @remarks
+	 * Required only when changing username using {@link ResourceType.USER_USERNAME_CHANGE}.
+	 */
+	username?: string;
 
 	/**
 	 * The tweet that is to be posted.
@@ -67,6 +78,30 @@ export interface IPostArgs {
 	 * Required only when updating user profile using {@link ResourceType.USER_PROFILE_UPDATE}
 	 */
 	profileOptions?: IProfileUpdateOptions;
+
+	/**
+	 * Base64-encoded profile image data.
+	 *
+	 * @remarks
+	 * Required only when updating profile image using {@link ResourceType.USER_PROFILE_IMAGE_UPDATE}.
+	 */
+	profileImage?: string;
+
+	/**
+	 * Base64-encoded profile banner data.
+	 *
+	 * @remarks
+	 * Required only when updating profile banner using {@link ResourceType.USER_PROFILE_BANNER_UPDATE}.
+	 */
+	profileBanner?: string;
+
+	/**
+	 * Password change arguments.
+	 *
+	 * @remarks
+	 * Required only when changing password using {@link ResourceType.USER_PASSWORD_CHANGE}.
+	 */
+	changePassword?: IChangePasswordArgs;
 }
 
 /**
@@ -98,7 +133,8 @@ export interface INewTweet {
 	 * The text for the tweet to be created.
 	 *
 	 * @remarks
-	 * Length of the tweet must be \<= 280 characters.
+	 * Length of the tweet must be \<= 280 characters for non-premium accounts.
+	 * X Premium (Blue) accounts can post longer tweets (up to 25,000 characters).
 	 */
 	text?: string;
 }
@@ -139,4 +175,17 @@ export interface IUploadArgs {
 	 * @remarks The size must be \<= 5242880 bytes.
 	 */
 	size?: number;
+}
+
+/**
+ * Arguments for changing the account password.
+ *
+ * @public
+ */
+export interface IChangePasswordArgs {
+	/** The current account password. */
+	currentPassword: string;
+
+	/** The new password to set. */
+	newPassword: string;
 }

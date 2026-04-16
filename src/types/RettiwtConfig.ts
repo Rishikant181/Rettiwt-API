@@ -1,3 +1,5 @@
+import { AxiosProxyConfig, AxiosResponse } from 'axios';
+
 import { IErrorHandler } from './ErrorHandler';
 
 /**
@@ -10,17 +12,47 @@ export interface IRettiwtConfig {
 	apiKey?: string;
 
 	/**
-	 * Optional URL to proxy server to use for requests to Twitter API.
+	 * The proxy to use.
 	 *
-	 * @remarks When deploying to cloud platforms, if setting {@link IRettiwtConfig.authProxyUrl} does not resolve Error 429, then this might be required.
+	 * @remarks
+	 * <br>
+	 * - If set to anything besides `undefined`, disables Axios' built-in environment variable-set proxy.
+	 *
+	 * @example
+	 * ```
+	 * // Use custom proxy config via config object
+	 * {
+	 *   proxy: {
+	 *     host: '127.0.0.1',
+	 *     port: 8080
+	 *   }
+	 * }
+	 *
+	 * // Use custom proxy config via URL
+	 * {
+	 *   proxy: 'https://127.0.0.1:8080'
+	 * }
+	 *
+	 * // Use Axios environment variable for proxy
+	 * {
+	 *   proxy: undefined
+	 * }
+	 * ```
 	 */
-	proxyUrl?: URL;
+	proxy?: AxiosProxyConfig | string | null;
 
 	/** The max wait time (in milli-seconds) for a response; if not set, Twitter server timeout is used. */
 	timeout?: number;
 
 	/** Whether to write logs to console or not. */
 	logging?: boolean;
+
+	/**
+	 * Optional response middleware to be executed on obtaining a successful response.
+	 *
+	 * @param response -  The raw `AxiosReponse` object.
+	 */
+	responseMiddleware?: (response: AxiosResponse) => void | Promise<void>;
 
 	/** Optional custom error handler to define error conditions and process API/HTTP errors in responses. */
 	errorHandler?: IErrorHandler;

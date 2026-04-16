@@ -9,13 +9,16 @@ import { List } from '../../models/data/List';
 import { Notification } from '../../models/data/Notification';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
+import { UserAbout } from '../../models/data/UserAbout';
 import { RettiwtConfig } from '../../models/RettiwtConfig';
 import { IProfileUpdateOptions } from '../../types/args/ProfileArgs';
+import { IUserAboutResponse } from '../../types/raw/user/About';
 import { IUserAffiliatesResponse } from '../../types/raw/user/Affiliates';
 import { IUserAnalyticsResponse } from '../../types/raw/user/Analytics';
 import { IUserBookmarkFoldersResponse } from '../../types/raw/user/BookmarkFolders';
 import { IUserBookmarkFolderTweetsResponse } from '../../types/raw/user/BookmarkFolderTweets';
 import { IUserBookmarksResponse } from '../../types/raw/user/Bookmarks';
+import { IUserChangePasswordResponse } from '../../types/raw/user/ChangePassword';
 import { IUserDetailsResponse } from '../../types/raw/user/Details';
 import { IUserDetailsBulkResponse } from '../../types/raw/user/DetailsBulk';
 import { IUserFollowResponse } from '../../types/raw/user/Follow';
@@ -29,10 +32,14 @@ import { IUserMediaResponse } from '../../types/raw/user/Media';
 import { IUserNotificationsResponse } from '../../types/raw/user/Notifications';
 import { IUserProfileUpdateResponse } from '../../types/raw/user/ProfileUpdate';
 import { IUserRecommendedResponse } from '../../types/raw/user/Recommended';
+import { IUserSearchResponse } from '../../types/raw/user/Search';
+import { IUserSettingsResponse } from '../../types/raw/user/Settings';
 import { IUserSubscriptionsResponse } from '../../types/raw/user/Subscriptions';
 import { IUserTweetsResponse } from '../../types/raw/user/Tweets';
 import { IUserTweetsAndRepliesResponse } from '../../types/raw/user/TweetsAndReplies';
 import { IUserUnfollowResponse } from '../../types/raw/user/Unfollow';
+
+import { AuthService } from '../internal/AuthService';
 
 import { FetcherService } from './FetcherService';
 
@@ -49,6 +56,97 @@ export class UserService extends FetcherService {
 	 */
 	public constructor(config: RettiwtConfig) {
 		super(config);
+	}
+
+	/**
+	 * Gets the size in bytes of a base64 string.
+	 *
+	 * @param base64Data - The base64 data show size is required.
+	 *
+	 * @returns The size in bytes of the data.
+	 */
+	private _base64ByteSize(base64Data: string): number {
+		const paddingMatch = base64Data.match(/=+$/);
+		const paddingLength = paddingMatch ? paddingMatch[0].length : 0;
+
+		return (base64Data.length * 3) / 4 - paddingLength;
+	}
+
+	/**
+	 * Normalizes base64 data into just the raw base64 string.
+	 *
+	 * @param payload - The data to normalize.
+	 *
+	 * @returns The raw base64 part of the data.
+	 */
+	private _normalizeBase64(payload: string): string {
+		const trimmedPayload = payload.trim();
+		const lowerCasePayload = trimmedPayload.toLowerCase();
+		const base64Marker = ';base64,';
+
+		if (lowerCasePayload.startsWith('data:')) {
+			const markerIndex = lowerCasePayload.indexOf(base64Marker);
+			if (markerIndex !== -1) {
+				return trimmedPayload.slice(markerIndex + base64Marker.length).trim();
+			}
+		}
+
+		return trimmedPayload;
+	}
+
+	private _validateBase64Payload(payload: string, fieldName: string): string {
+		const normalizedPayload = this._normalizeBase64(payload).replace(/\s+/g, '');
+
+		if (normalizedPayload.length === 0) {
+			throw new Error(`${fieldName} cannot be empty`);
+		}
+
+		if (!/^[A-Za-z0-9+/]*={0,2}$/.test(normalizedPayload)) {
+			throw new Error(`${fieldName} must be valid base64`);
+		}
+
+		return normalizedPayload;
+	}
+
+	/**
+	 * Get the about profile of a user.
+	 *
+	 * @param userName - The username/screenname of the target user.
+	 *
+	 * @returns The about profile of the user.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the about profile of the User with username 'user1' or '@user1'
+	 * rettiwt.user.about('user1') // or @user1
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async about(userName: string): Promise<UserAbout | undefined> {
+		const resource = ResourceType.USER_ABOUT_BY_USERNAME;
+
+		if (userName.startsWith('@')) {
+			userName = userName.slice(1);
+		}
+
+		// Fetching raw about profile
+		const response = await this.request<IUserAboutResponse>(resource, { id: userName });
+
+		// Deserializing response
+		const data = Extractors[resource](response.data);
+
+		return data;
 	}
 
 	/**
@@ -89,7 +187,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -147,7 +245,7 @@ export class UserService extends FetcherService {
 			showVerifiedFollowers,
 		});
 
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -190,7 +288,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -229,7 +327,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -270,9 +368,84 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
+	}
+
+	/**
+	 * Changes the password of the authenticated user.
+	 *
+	 * @param currentPassword - The current account password.
+	 * @param newPassword - The new password to set.
+	 * @returns Whether the password was changed successfully.
+	 *
+	 * @remarks
+	 * After a successful password change, this method attempts to rotate the current
+	 * `apiKey` using cookies returned by Twitter. If rotation is not possible, you
+	 * must re-authenticate and obtain a new `apiKey` to continue making authenticated
+	 * requests.
+	 */
+	public async changePassword(currentPassword: string, newPassword: string): Promise<boolean> {
+		const resource = ResourceType.USER_PASSWORD_CHANGE;
+
+		// Changing the password
+		const response = await this.request<IUserChangePasswordResponse>(resource, {
+			changePassword: { currentPassword, newPassword },
+		});
+
+		// Getting if password change was successful or not
+		const data = Extractors[resource](response.data) ?? false;
+
+		// If password change was successful
+		if (data === true) {
+			// Getting the new API key
+			const newApiKey = AuthService.getApiKeyFromReponse(response);
+
+			// If new API key is generated, update current API key
+			if (newApiKey !== undefined) {
+				this.config.apiKey = newApiKey;
+			}
+
+			// Getting the new CSRF token and updating current API key
+			await AuthService.refreshCsrfToken(this.config);
+		}
+
+		return data;
+	}
+
+	/**
+	 * Changes the username (screen_name) of the authenticated user.
+	 *
+	 * @param newUsername - The new username (with or without `@`).
+	 * @returns Whether the username was changed successfully.
+	 */
+	public async changeUsername(newUsername: string): Promise<boolean> {
+		const resource = ResourceType.USER_USERNAME_CHANGE;
+
+		// Strip @ prefix if present
+		const username = newUsername.startsWith('@') ? newUsername.slice(1) : newUsername;
+
+		// Username validation
+		if (username.length < 4) {
+			throw new Error('Username must be at least 4 characters long');
+		}
+		if (username.length > 15) {
+			throw new Error('Username cannot exceed 15 characters');
+		}
+		if (!/^[A-Za-z0-9_]+$/.test(username)) {
+			throw new Error('Username can only contain letters, numbers, and underscores');
+		}
+
+		// Changing the username
+		const response = await this.request<IUserSettingsResponse>(resource, {
+			username,
+		});
+
+		// Getting the updated username
+		const updatedUsername = Extractors[resource](response.data);
+
+		return updatedUsername?.toLowerCase() === username.toLowerCase();
 	}
 
 	/**
@@ -385,7 +558,7 @@ export class UserService extends FetcherService {
 			const response = await this.request<IUserDetailsBulkResponse>(resource, { ids: id });
 
 			// Deserializing response
-			const data = Extractors[resource](response, id);
+			const data = Extractors[resource](response.data, id);
 
 			return data;
 		}
@@ -412,7 +585,7 @@ export class UserService extends FetcherService {
 			const response = await this.request<IUserDetailsResponse>(resource, { id: id ?? this.config.userId });
 
 			// Deserializing response
-			const data = Extractors[resource](response);
+			const data = Extractors[resource](response.data);
 
 			return data;
 		}
@@ -452,7 +625,7 @@ export class UserService extends FetcherService {
 		const response = await this.request<IUserFollowResponse>(ResourceType.USER_FOLLOW, { id: id });
 
 		// Deserializing the response
-		const data = Extractors[resource](response) ?? false;
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}
@@ -493,7 +666,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -536,7 +709,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -579,7 +752,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -622,7 +795,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -664,7 +837,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -706,7 +879,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -749,7 +922,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -806,7 +979,7 @@ export class UserService extends FetcherService {
 			});
 
 			// Deserializing response
-			const notifications = Extractors[resource](response);
+			const notifications = Extractors[resource](response.data);
 
 			// Sorting the notifications by time, from oldest to recent
 			notifications.list.sort((a, b) => new Date(a.receivedAt).valueOf() - new Date(b.receivedAt).valueOf());
@@ -863,7 +1036,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -910,7 +1083,50 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
+
+		return data;
+	}
+
+	/**
+	 * Search for a username.
+	 *
+	 * @param userName - The username to search for.
+	 * @param count - The number of results to fetch, must be \<= 20.
+	 * @param cursor - The cursor to the batch of results to fetch.
+	 *
+	 * @returns The list of users that match the given username.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the top 5 matching users for the username 'user1'
+	 * rettiwt.user.search('user1')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async search(userName: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+		const resource = ResourceType.USER_SEARCH;
+
+		// Fetching raw list of filtered tweets
+		const response = await this.request<IUserSearchResponse>(resource, {
+			id: userName,
+			count: count,
+			cursor: cursor,
+		});
+
+		// Deserializing response
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -953,7 +1169,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -1001,7 +1217,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -1038,7 +1254,7 @@ export class UserService extends FetcherService {
 		const response = await this.request<IUserUnfollowResponse>(ResourceType.USER_UNFOLLOW, { id: id });
 
 		// Deserializing the response
-		const data = Extractors[resource](response) ?? false;
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}
@@ -1103,7 +1319,59 @@ export class UserService extends FetcherService {
 		const response = await this.request<IUserProfileUpdateResponse>(resource, { profileOptions: validatedOptions });
 
 		// Deserializing the response
-		const data = Extractors[resource](response) ?? false;
+		const data = Extractors[resource](response.data) ?? false;
+
+		return data;
+	}
+
+	/**
+	 * Updates the profile banner of the authenticated user.
+	 *
+	 * @param bannerBase64 - The base64-encoded banner image data.
+	 * @returns Whether the profile banner was updated successfully.
+	 */
+	public async updateProfileBanner(bannerBase64: string): Promise<boolean> {
+		const resource = ResourceType.USER_PROFILE_BANNER_UPDATE;
+
+		const validatedBanner = this._validateBase64Payload(bannerBase64, 'Profile banner');
+
+		// Banner size validation (max 5 MB)
+		const bannerSizeBytes = this._base64ByteSize(validatedBanner);
+		if (bannerSizeBytes > 5 * 1024 * 1024) {
+			throw new Error('Profile banner cannot exceed 5 MB');
+		}
+
+		const response = await this.request<IUserProfileUpdateResponse>(resource, {
+			profileBanner: validatedBanner,
+		});
+
+		const data = Extractors[resource](response.data) ?? false;
+
+		return data;
+	}
+
+	/**
+	 * Updates the profile image of the authenticated user.
+	 *
+	 * @param imageBase64 - The base64-encoded image data.
+	 * @returns Whether the profile image was updated successfully.
+	 */
+	public async updateProfileImage(imageBase64: string): Promise<boolean> {
+		const resource = ResourceType.USER_PROFILE_IMAGE_UPDATE;
+
+		const validatedImage = this._validateBase64Payload(imageBase64, 'Profile image');
+
+		// Image size validation (max 2 MB)
+		const imageSizeBytes = this._base64ByteSize(validatedImage);
+		if (imageSizeBytes > 2 * 1024 * 1024) {
+			throw new Error('Profile image cannot exceed 2 MB');
+		}
+
+		const response = await this.request<IUserProfileUpdateResponse>(resource, {
+			profileImage: validatedImage,
+		});
+
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}

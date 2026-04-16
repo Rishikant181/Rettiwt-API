@@ -17,7 +17,7 @@ import { ITweetDetailsResponse } from '../../types/raw/tweet/Details';
 import { ITweetDetailsBulkResponse } from '../../types/raw/tweet/DetailsBulk';
 import { ITweetLikeResponse } from '../../types/raw/tweet/Like';
 import { ITweetLikersResponse } from '../../types/raw/tweet/Likers';
-import { ITweetPostResponse } from '../../types/raw/tweet/Post';
+import { ITweetPostNoteResponse, ITweetPostResponse } from '../../types/raw/tweet/Post';
 import { ITweetRepliesResponse } from '../../types/raw/tweet/Replies';
 import { ITweetRetweetResponse } from '../../types/raw/tweet/Retweet';
 import { ITweetRetweetersResponse } from '../../types/raw/tweet/Retweeters';
@@ -80,7 +80,7 @@ export class TweetService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response) ?? false;
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}
@@ -146,7 +146,7 @@ export class TweetService extends FetcherService {
 			const response = await this.request<ITweetRepliesResponse>(resource, { id: id });
 
 			// Deserializing response
-			const data = Extractors[resource](response, id);
+			const data = Extractors[resource](response.data, id);
 
 			return data as T extends string ? Tweet | undefined : Tweet[];
 		}
@@ -158,7 +158,7 @@ export class TweetService extends FetcherService {
 			const response = await this.request<ITweetDetailsBulkResponse>(resource, { ids: id });
 
 			// Deserializing response
-			const data = Extractors[resource](response, id);
+			const data = Extractors[resource](response.data, id);
 
 			return data as T extends string ? Tweet | undefined : Tweet[];
 		}
@@ -170,7 +170,7 @@ export class TweetService extends FetcherService {
 			const response = await this.request<ITweetDetailsResponse>(resource, { id: String(id) });
 
 			// Deserializing response
-			const data = Extractors[resource](response, String(id));
+			const data = Extractors[resource](response.data, String(id));
 
 			return data as T extends string ? Tweet | undefined : Tweet[];
 		}
@@ -210,7 +210,7 @@ export class TweetService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response) ?? false;
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}
@@ -253,7 +253,7 @@ export class TweetService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -342,15 +342,18 @@ export class TweetService extends FetcherService {
 	 * ```
 	 */
 	public async post(options: INewTweet): Promise<string | undefined> {
-		const resource = ResourceType.TWEET_POST;
+		// Use CreateNoteTweet endpoint for long-form tweets (X Premium, >280 chars)
+		if ((options.text?.length ?? 0) > 280) {
+			const response = await this.request<ITweetPostNoteResponse>(ResourceType.TWEET_POST_NOTE, {
+				tweet: options,
+			});
 
-		// Posting the tweet
-		const response = await this.request<ITweetPostResponse>(resource, { tweet: options });
+			return Extractors[ResourceType.TWEET_POST_NOTE](response.data);
+		}
 
-		// Deserializing response
-		const data = Extractors[resource](response);
+		const response = await this.request<ITweetPostResponse>(ResourceType.TWEET_POST, { tweet: options });
 
-		return data;
+		return Extractors[ResourceType.TWEET_POST](response.data);
 	}
 
 	/**
@@ -403,7 +406,7 @@ export class TweetService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -440,7 +443,7 @@ export class TweetService extends FetcherService {
 		const response = await this.request<ITweetRetweetResponse>(resource, { id: id });
 
 		// Deserializing response
-		const data = Extractors[resource](response) ?? false;
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}
@@ -483,7 +486,7 @@ export class TweetService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -525,7 +528,7 @@ export class TweetService extends FetcherService {
 		const response = await this.request<ITweetScheduleResponse>(resource, { tweet: options });
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -573,7 +576,7 @@ export class TweetService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		// Sorting the tweets by date, from recent to oldest
 		data.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
@@ -682,7 +685,7 @@ export class TweetService extends FetcherService {
 		const response = await this.request<ITweetUnbookmarkResponse>(resource, { id: id });
 
 		// Deserializing the response
-		const data = Extractors[resource](response) ?? false;
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}
@@ -719,7 +722,7 @@ export class TweetService extends FetcherService {
 		const response = await this.request<ITweetUnlikeResponse>(resource, { id: id });
 
 		// Deserializing the response
-		const data = Extractors[resource](response) ?? false;
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}
@@ -756,7 +759,7 @@ export class TweetService extends FetcherService {
 		const response = await this.request<ITweetUnpostResponse>(resource, { id: id });
 
 		// Deserializing the response
-		const data = Extractors[resource](response) ?? false;
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}
@@ -793,7 +796,7 @@ export class TweetService extends FetcherService {
 		const response = await this.request<ITweetUnretweetResponse>(resource, { id: id });
 
 		// Deserializing the response
-		const data = Extractors[resource](response) ?? false;
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}
@@ -830,7 +833,7 @@ export class TweetService extends FetcherService {
 		const response = await this.request<ITweetUnscheduleResponse>(resource, { id: id });
 
 		// Deserializing the response
-		const data = Extractors[resource](response) ?? false;
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}
@@ -873,7 +876,7 @@ export class TweetService extends FetcherService {
 			await this.request<IMediaInitializeUploadResponse>(ResourceType.MEDIA_UPLOAD_INITIALIZE, {
 				upload: { size: size },
 			})
-		).media_id_string;
+		).data.media_id_string;
 
 		// APPEND
 		await this.request<unknown>(ResourceType.MEDIA_UPLOAD_APPEND, { upload: { id: id, media: media } });

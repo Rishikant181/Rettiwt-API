@@ -4,6 +4,7 @@ import { ResourceType } from '../enums/Resource';
 import { DMRequests } from '../requests/DirectMessage';
 import { ListRequests } from '../requests/List';
 import { MediaRequests } from '../requests/Media';
+import { SpaceRequests } from '../requests/Space';
 import { TweetRequests } from '../requests/Tweet';
 import { UserRequests } from '../requests/User';
 import { IFetchArgs } from '../types/args/FetchArgs';
@@ -34,6 +35,9 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	DM_INBOX_TIMELINE: (args: IFetchArgs) => DMRequests.inboxTimeline(args.maxId),
 	DM_DELETE_CONVERSATION: (args: IPostArgs) => DMRequests.deleteConversation(args.conversationId!),
 
+	SPACE_DETAILS: (args: IFetchArgs) =>
+		SpaceRequests.details(args.id!, args.withReplays, args.withListeners, args.isMetatagsQuery),
+
 	TWEET_BOOKMARK: (args: IPostArgs) => TweetRequests.bookmark(args.id!),
 	TWEET_DETAILS: (args: IFetchArgs) => TweetRequests.details(args.id!),
 	TWEET_DETAILS_ALT: (args: IFetchArgs) => TweetRequests.replies(args.id!),
@@ -41,6 +45,7 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	TWEET_LIKE: (args: IPostArgs) => TweetRequests.like(args.id!),
 	TWEET_LIKERS: (args: IFetchArgs) => TweetRequests.likers(args.id!, args.count, args.cursor),
 	TWEET_POST: (args: IPostArgs) => TweetRequests.post(args.tweet!),
+	TWEET_POST_NOTE: (args: IPostArgs) => TweetRequests.postNote(args.tweet!),
 	TWEET_REPLIES: (args: IFetchArgs) =>
 		TweetRequests.replies(args.id!, args.cursor, args.sortBy ? TweetRepliesSortTypeMap[args.sortBy] : undefined),
 	TWEET_RETWEET: (args: IPostArgs) => TweetRequests.retweet(args.id!),
@@ -66,6 +71,7 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	USER_BOOKMARK_FOLDERS: (args: IFetchArgs) => UserRequests.bookmarkFolders(args.cursor),
 	USER_BOOKMARK_FOLDER_TWEETS: (args: IFetchArgs) =>
 		UserRequests.bookmarkFolderTweets(args.id!, args.count, args.cursor),
+	USER_ABOUT_BY_USERNAME: (args: IFetchArgs) => UserRequests.aboutByUsername(args.id!),
 	USER_DETAILS_BY_USERNAME: (args: IFetchArgs) => UserRequests.detailsByUsername(args.id!),
 	USER_DETAILS_BY_ID: (args: IFetchArgs) => UserRequests.detailsById(args.id!),
 	USER_DETAILS_BY_IDS_BULK: (args: IFetchArgs) => UserRequests.bulkDetailsByIds(args.ids!),
@@ -79,11 +85,17 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	USER_LISTS: (args: IFetchArgs) => UserRequests.lists(args.id!, args.count, args.cursor),
 	USER_MEDIA: (args: IFetchArgs) => UserRequests.media(args.id!, args.count, args.cursor),
 	USER_NOTIFICATIONS: (args: IFetchArgs) => UserRequests.notifications(args.count, args.cursor),
+	USER_SEARCH: (args: IFetchArgs) => UserRequests.search(args.id!, args.count, args.cursor),
 	USER_SUBSCRIPTIONS: (args: IFetchArgs) => UserRequests.subscriptions(args.id!, args.count, args.cursor),
 	USER_TIMELINE: (args: IFetchArgs) => UserRequests.tweets(args.id!, args.count, args.cursor),
 	USER_TIMELINE_AND_REPLIES: (args: IFetchArgs) => UserRequests.tweetsAndReplies(args.id!, args.count, args.cursor),
 	USER_UNFOLLOW: (args: IPostArgs) => UserRequests.unfollow(args.id!),
 	USER_PROFILE_UPDATE: (args: IPostArgs) => UserRequests.updateProfile(args.profileOptions!),
+	USER_PROFILE_IMAGE_UPDATE: (args: IPostArgs) => UserRequests.updateProfileImage(args.profileImage!),
+	USER_PROFILE_BANNER_UPDATE: (args: IPostArgs) => UserRequests.updateProfileBanner(args.profileBanner!),
+	USER_USERNAME_CHANGE: (args: IPostArgs) => UserRequests.changeUsername(args.username!),
+	USER_PASSWORD_CHANGE: (args: IPostArgs) =>
+		UserRequests.changePassword(args.changePassword!.currentPassword, args.changePassword!.newPassword),
 
 	/* eslint-enable @typescript-eslint/naming-convention */
 };

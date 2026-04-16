@@ -4,6 +4,7 @@ import { createCommand } from 'commander';
 
 import dm from './commands/DirectMessage';
 import list from './commands/List';
+import space from './commands/Space';
 import tweet from './commands/Tweet';
 import user from './commands/User';
 import { Rettiwt } from './Rettiwt';
@@ -32,7 +33,7 @@ Program.parse();
 const RettiwtInstance = new Rettiwt({
 	apiKey: process.env.API_KEY ?? (Program.opts().key as string),
 	logging: Program.opts().log ? true : false,
-	proxyUrl: Program.opts().proxy as URL,
+	proxy: Program.opts().proxy as string,
 	timeout: Program.opts().timeout ? Number(Program.opts().timeout) : undefined,
 	maxRetries: Program.opts().retries as number,
 	delay: Program.opts().delay as number,
@@ -41,6 +42,7 @@ const RettiwtInstance = new Rettiwt({
 // Adding sub-commands
 Program.addCommand(dm(RettiwtInstance));
 Program.addCommand(list(RettiwtInstance));
+Program.addCommand(space(RettiwtInstance));
 Program.addCommand(tweet(RettiwtInstance));
 Program.addCommand(user(RettiwtInstance));
 

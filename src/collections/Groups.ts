@@ -9,6 +9,7 @@ export const AllowGuestAuthenticationGroup = [
 	ResourceType.TWEET_DETAILS,
 	ResourceType.USER_DETAILS_BY_USERNAME,
 	ResourceType.USER_TIMELINE,
+	ResourceType.SPACE_DETAILS,
 ];
 
 /**
@@ -23,6 +24,7 @@ export const FetchResourcesGroup = [
 	ResourceType.DM_CONVERSATION,
 	ResourceType.DM_INBOX_INITIAL_STATE,
 	ResourceType.DM_INBOX_TIMELINE,
+	ResourceType.SPACE_DETAILS,
 	ResourceType.TWEET_DETAILS,
 	ResourceType.TWEET_DETAILS_ALT,
 	ResourceType.TWEET_DETAILS_BULK,
@@ -35,6 +37,7 @@ export const FetchResourcesGroup = [
 	ResourceType.USER_BOOKMARKS,
 	ResourceType.USER_BOOKMARK_FOLDERS,
 	ResourceType.USER_BOOKMARK_FOLDER_TWEETS,
+	ResourceType.USER_ABOUT_BY_USERNAME,
 	ResourceType.USER_DETAILS_BY_USERNAME,
 	ResourceType.USER_DETAILS_BY_ID,
 	ResourceType.USER_DETAILS_BY_IDS_BULK,
@@ -47,6 +50,7 @@ export const FetchResourcesGroup = [
 	ResourceType.USER_LISTS,
 	ResourceType.USER_MEDIA,
 	ResourceType.USER_NOTIFICATIONS,
+	ResourceType.USER_SEARCH,
 	ResourceType.USER_SUBSCRIPTIONS,
 	ResourceType.USER_TIMELINE,
 	ResourceType.USER_TIMELINE_AND_REPLIES,
@@ -67,6 +71,7 @@ export const PostResourcesGroup = [
 	ResourceType.TWEET_BOOKMARK,
 	ResourceType.TWEET_LIKE,
 	ResourceType.TWEET_POST,
+	ResourceType.TWEET_POST_NOTE,
 	ResourceType.TWEET_RETWEET,
 	ResourceType.TWEET_SCHEDULE,
 	ResourceType.TWEET_UNBOOKMARK,
@@ -77,4 +82,8 @@ export const PostResourcesGroup = [
 	ResourceType.USER_FOLLOW,
 	ResourceType.USER_UNFOLLOW,
 	ResourceType.USER_PROFILE_UPDATE,
+	ResourceType.USER_PROFILE_IMAGE_UPDATE,
+	ResourceType.USER_PROFILE_BANNER_UPDATE,
+	ResourceType.USER_USERNAME_CHANGE,
+	ResourceType.USER_PASSWORD_CHANGE,
 ];

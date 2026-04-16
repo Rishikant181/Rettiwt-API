@@ -26,14 +26,17 @@ export * from './models/data/DirectMessage';
 export * from './models/data/Inbox';
 export * from './models/data/List';
 export * from './models/data/Notification';
+export * from './models/data/Space';
 export * from './models/data/Tweet';
 export * from './models/data/User';
+export * from './models/data/UserAbout';
 export * from './models/errors/TwitterError';
 
 // REQUESTS
 export * from './requests/DirectMessage';
 export * from './requests/List';
 export * from './requests/Media';
+export * from './requests/Space';
 export * from './requests/Tweet';
 export * from './requests/User';
 
@@ -41,6 +44,7 @@ export * from './requests/User';
 export * from './services/public/DirectMessageService';
 export * from './services/public/FetcherService';
 export * from './services/public/ListService';
+export * from './services/public/SpaceService';
 export * from './services/public/TweetService';
 export * from './services/public/UserService';
 
@@ -55,8 +59,10 @@ export * from './types/data/DirectMessage';
 export * from './types/data/Inbox';
 export * from './types/data/List';
 export * from './types/data/Notification';
+export * from './types/data/Space';
 export * from './types/data/Tweet';
 export * from './types/data/User';
+export * from './types/data/UserAbout';
 export * from './types/errors/TwitterError';
 export * from './types/params/Variables';
 export { IAnalytics as IRawAnalytics } from './types/raw/base/Analytic';
@@ -68,7 +74,7 @@ export { IList as IRawList } from './types/raw/base/List';
 export { IMedia as IRawMedia } from './types/raw/base/Media';
 export { IMessage as IRawMessage } from './types/raw/base/Message';
 export { INotification as IRawNotification } from './types/raw/base/Notification';
-export { ISpace as IRawSpace } from './types/raw/base/Space';
+export { IRawSpace } from './types/raw/base/Space';
 export { ITweet as IRawTweet } from './types/raw/base/Tweet';
 export { IUser as IRawUser } from './types/raw/base/User';
 export { IDataResult as IRawDataResult } from './types/raw/composite/DataResult';
@@ -83,6 +89,7 @@ export { IListTweetsResponse as IRawListTweetsResponse } from './types/raw/list/
 export { IMediaFinalizeUploadResponse as IRawMediaFinalizeUploadResponse } from './types/raw/media/FinalizeUpload';
 export { IMediaInitializeUploadResponse as IRawMediaInitializeUploadResponse } from './types/raw/media/InitalizeUpload';
 export { IMediaLiveVideoStreamResponse as IRawMediaLiveVideoStreamResponse } from './types/raw/media/LiveVideoStream';
+export { IAudioSpaceByIdResponse as IRawSpaceDetailsResponse } from './types/raw/space/AudioSpaceById';
 export { ITweetDetailsResponse as IRawTweetDetailsResponse } from './types/raw/tweet/Details';
 export { ITweetDetailsBulkResponse as IRawTweetDetailsBulkResponse } from './types/raw/tweet/DetailsBulk';
 export { ITweetLikeResponse as IRawTweetLikeResponse } from './types/raw/tweet/Like';
@@ -97,6 +104,7 @@ export { ITweetUnlikeResponse as IRawTweetUnlikeResponse } from './types/raw/twe
 export { ITweetUnpostResponse as IRawTweetUnpostResponse } from './types/raw/tweet/Unpost';
 export { ITweetUnretweetResponse as IRawTweetUnretweetResponse } from './types/raw/tweet/Unretweet';
 export { ITweetUnscheduleResponse as ITRawTweetUnscheduleResponse } from './types/raw/tweet/Unschedule';
+export { IUserAboutResponse as IRawUserAboutResponse } from './types/raw/user/About';
 export { IUserAffiliatesResponse as IRawUserAffiliatesResponse } from './types/raw/user/Affiliates';
 export { IUserAnalyticsResponse as IRawUserAnalyticsResponse } from './types/raw/user/Analytics';
 export { IUserBookmarkFoldersResponse as IRawUserBookmarkFoldersResponse } from './types/raw/user/BookmarkFolders';
@@ -113,12 +121,15 @@ export { IUserLikesResponse as IRawUserLikesResponse } from './types/raw/user/Li
 export { IUserMediaResponse as IRawUserMediaResponse } from './types/raw/user/Media';
 export { IUserNotificationsResponse as IRawUserNotificationsResponse } from './types/raw/user/Notifications';
 export { IUserRecommendedResponse as IRawUserRecommendedResponse } from './types/raw/user/Recommended';
+export { IUserSearchResponse as IRawUserSearchResponse } from './types/raw/user/Search';
 export { IUserScheduledResponse as IRawUserScheduledResponse } from './types/raw/user/Scheduled';
 export { IUserSubscriptionsResponse as IRawUserSubscriptionsResponse } from './types/raw/user/Subscriptions';
 export { IUserTweetsResponse as IRawUserTweetsResponse } from './types/raw/user/Tweets';
 export { IUserTweetsAndRepliesResponse as IRawUserTweetsAndRepliesResponse } from './types/raw/user/TweetsAndReplies';
 export { IUserUnfollowResponse as IRawUserUnfollowResponse } from './types/raw/user/Unfollow';
 export { IUserProfileUpdateResponse as IRawUserProfileUpdateResponse } from './types/raw/user/ProfileUpdate';
+export { IUserSettingsResponse as IRawUserSettingsResponse } from './types/raw/user/Settings';
+export { IUserChangePasswordResponse as IRawUserChangePasswordResponse } from './types/raw/user/ChangePassword';
 export * from './types/ErrorHandler';
 export * from './types/RettiwtConfig';
 export { IConversationTimelineResponse as IRawConversationTimelineResponse } from './types/raw/dm/Conversation';

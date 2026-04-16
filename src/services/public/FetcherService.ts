@@ -1,4 +1,4 @@
-import axios, { AxiosError, isAxiosError } from 'axios';
+import axios, { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 import { Cookie } from 'cookiejar';
 import { parseHTML } from 'linkedom';
 import { ClientTransaction } from 'x-client-transaction-id';
@@ -128,8 +128,9 @@ export class FetcherService {
 		// Fetch X.com homepage
 		const homePageResponse = await axios.get<string>('https://x.com', {
 			headers: this.config.headers,
-			httpAgent: this.config.httpsAgent,
+			httpAgent: this.config.httpAgent,
 			httpsAgent: this.config.httpsAgent,
+			proxy: this.config.axiosProxyConfig,
 		});
 
 		// Parse HTML using linkedom
@@ -150,8 +151,9 @@ export class FetcherService {
 		if (migrationRedirectionUrl) {
 			// Follow redirection URL
 			const redirectResponse = await axios.get<string>(migrationRedirectionUrl[0], {
-				httpAgent: this.config.httpsAgent,
+				httpAgent: this.config.httpAgent,
 				httpsAgent: this.config.httpsAgent,
+				proxy: this.config.axiosProxyConfig,
 			});
 
 			document = parseHTML(redirectResponse.data).document;
@@ -191,8 +193,9 @@ export class FetcherService {
 
 					/* eslint-enable @typescript-eslint/naming-convention */
 				},
-				httpAgent: this.config.httpsAgent,
+				httpAgent: this.config.httpAgent,
 				httpsAgent: this.config.httpsAgent,
+				proxy: this.config.axiosProxyConfig,
 			});
 
 			document = parseHTML(formResponse.data).document;
@@ -251,11 +254,11 @@ export class FetcherService {
 	 * Makes an HTTP request according to the given parameters.
 	 *
 	 * @param resource - The requested resource.
-	 * @param config - The request configuration.
+	 * @param args - The args to be used for the request.
 	 *
 	 * @typeParam T - The type of the returned response data.
 	 *
-	 * @returns The raw data response received.
+	 * @returns The raw Axios response.
 	 *
 	 * @example
 	 *
@@ -276,7 +279,7 @@ export class FetcherService {
 	 * });
 	 * ```
 	 */
-	public async request<T = unknown>(resource: ResourceType, args: IFetchArgs | IPostArgs): Promise<T> {
+	public async request<T = unknown>(resource: ResourceType, args: IFetchArgs | IPostArgs): Promise<AxiosResponse<T>> {
 		/** The current retry number. */
 		let retry = 0;
 
@@ -304,8 +307,9 @@ export class FetcherService {
 			...cred.toHeader(),
 			...this.config.headers,
 		};
-		config.httpAgent = this.config.httpsAgent;
+		config.httpAgent = this.config.httpAgent;
 		config.httpsAgent = this.config.httpsAgent;
+		config.proxy = this.config.axiosProxyConfig;
 		config.timeout = this._timeout;
 
 		// Using retries for error 404
@@ -322,7 +326,8 @@ export class FetcherService {
 				await this._wait();
 
 				// Getting the response body
-				const responseData = (await axios<T>(config)).data;
+				const response = await axios<T>(config);
+				const responseData = response.data;
 
 				// Check for Twitter API errors in response body
 				// Type guard to check if response contains errors
@@ -345,8 +350,13 @@ export class FetcherService {
 					throw new TwitterError(axiosError);
 				}
 
-				// Returning the reponse body
-				return responseData;
+				// Calling the request middleware, if configured
+				if (this.config.responseMiddleware !== undefined) {
+					await this.config.responseMiddleware(response);
+				}
+
+				// Returning the response
+				return response;
 			} catch (err) {
 				// If it's an error 404, retry
 				if (isAxiosError(err) && err.status === 404) {

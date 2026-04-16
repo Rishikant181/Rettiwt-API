@@ -71,7 +71,7 @@ export interface IFetchArgs {
 	 *
 	 * @remarks
 	 * - Required for all resources except {@link ResourceType.TWEET_SEARCH} and {@link ResourceType.USER_TIMELINE_RECOMMENDED}.
-	 * - For {@link ResourceType.USER_DETAILS_BY_USERNAME}, can be alphanumeric, while for others, is strictly numeric.
+	 * - For {@link ResourceType.USER_DETAILS_BY_USERNAME}, {@link ResourceType.USER_ABOUT_BY_USERNAME}, and {@link ResourceType.USER_SEARCH}, can be alphanumeric, while for others, is strictly numeric.
 	 */
 	id?: string;
 
@@ -82,6 +82,30 @@ export interface IFetchArgs {
 	 * - Required only for {@link ResourceType.TWEET_DETAILS_BULK} and {@link ResourceType.USER_DETAILS_BY_IDS_BULK}.
 	 */
 	ids?: string[];
+
+	/**
+	 * Whether to include replay information when fetching space details.
+	 *
+	 * @remarks
+	 * - Only works for {@link ResourceType.SPACE_DETAILS}.
+	 */
+	withReplays?: boolean;
+
+	/**
+	 * Whether to include listeners information when fetching space details.
+	 *
+	 * @remarks
+	 * - Only works for {@link ResourceType.SPACE_DETAILS}.
+	 */
+	withListeners?: boolean;
+
+	/**
+	 * Whether to request metatags for space details.
+	 *
+	 * @remarks
+	 * - Only works for {@link ResourceType.SPACE_DETAILS}.
+	 */
+	isMetatagsQuery?: boolean;
 
 	/**
 	 * The sorting to use for tweet results.
@@ -130,6 +154,22 @@ export interface IFetchArgs {
 	 * - Only works for {@link EResourceType.USER_ANALYTICS}.
 	 */
 	showVerifiedFollowers?: boolean;
+}
+
+/**
+ * Options specifying the data that is to be fetched for space details.
+ *
+ * @public
+ */
+export interface ISpaceDetailsOptions {
+	/** Whether to include replay information. */
+	withReplays?: boolean;
+
+	/** Whether to include listeners information. */
+	withListeners?: boolean;
+
+	/** Whether the request is a metatags query. */
+	isMetatagsQuery?: boolean;
 }
 
 /**
