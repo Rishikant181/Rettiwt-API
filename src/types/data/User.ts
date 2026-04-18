@@ -37,8 +37,8 @@ export interface IUser {
 	/** The location of user as provided by user. */
 	location?: string;
 
-	/** The rest id of the tweet pinned in the user's profile. */
-	pinnedTweet?: string;
+	/** The rest IDs of the tweets pinned in the user's profile. */
+	pinnedTweets: string[];
 
 	/** The url of the profile banner image. */
 	profileBanner?: string;
