@@ -25,7 +25,7 @@ export class User implements IUser {
 	public isVerified: boolean;
 	public likeCount: number;
 	public location?: string;
-	public pinnedTweet?: string;
+	public pinnedTweets: string[];
 	public profileBanner?: string;
 	public profileImage: string;
 	public statusesCount: number;
@@ -49,7 +49,7 @@ export class User implements IUser {
 		this.followingsCount = user.legacy.friends_count;
 		this.statusesCount = user.legacy.statuses_count;
 		this.location = user.location?.location ?? user.legacy.location ?? undefined;
-		this.pinnedTweet = user.legacy.pinned_tweet_ids_str[0];
+		this.pinnedTweets = user.legacy.pinned_tweet_ids_str ?? [];
 		this.profileBanner = user.legacy.profile_banner_url;
 		this.profileImage = user.avatar?.image_url ?? user.legacy.profile_image_url_https ?? '';
 	}
@@ -177,7 +177,7 @@ export class User implements IUser {
 			isVerified: this.isVerified,
 			likeCount: this.likeCount,
 			location: this.location,
-			pinnedTweet: this.pinnedTweet,
+			pinnedTweets: this.pinnedTweets,
 			profileBanner: this.profileBanner,
 			profileImage: this.profileImage,
 			statusesCount: this.statusesCount,

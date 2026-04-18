@@ -116,7 +116,7 @@ export interface IUserLegacy {
 	listed_count: number;
 	media_count: number;
 	normal_followers_count: number;
-	pinned_tweet_ids_str: string[];
+	pinned_tweet_ids_str?: string[];
 	possibly_sensitive: boolean;
 	profile_banner_url: string;
 	profile_image_url_https?: string;
