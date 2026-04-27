@@ -1,4 +1,4 @@
-import { AxiosProxyConfig } from 'axios';
+import { AxiosProxyConfig, AxiosResponse } from 'axios';
 
 import { IErrorHandler } from './ErrorHandler';
 
@@ -46,6 +46,13 @@ export interface IRettiwtConfig {
 
 	/** Whether to write logs to console or not. */
 	logging?: boolean;
+
+	/**
+	 * Optional response middleware to be executed on obtaining a successful response.
+	 *
+	 * @param response -  The raw `AxiosReponse` object.
+	 */
+	responseMiddleware?: (response: AxiosResponse) => void | Promise<void>;
 
 	/** Optional custom error handler to define error conditions and process API/HTTP errors in responses. */
 	errorHandler?: IErrorHandler;

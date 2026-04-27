@@ -38,6 +38,7 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - List Members
     - List Remove Member
     - List Tweets
+    - Space Details
     - Tweet Details - Single and Bulk
     - Tweet Bookmark
     - Tweet Like
@@ -159,11 +160,10 @@ For details regarding usage of these members for accessing the Twitter API, refe
 When initializing a new Rettiwt instance, it can be configures using various parameters, namely:
 
 - `apiKey` (string) - The API key to use for `user` authentication.
-- `proxyUrl` (URL) - The URL to the proxy server to use.
+- `proxy` (string | AxiosProxyConfig) - The proxy server to use.
 - `timeout` (number) - The timeout to use for HTTP requests used by Rettiwt.
 - `logging` (boolean) - Whether to enable logging or not.
 - `errorHandler` (interface) - The custom error handler to use.
-- `tidProvider` (interface) - The custom TID provider to use for generating transaction token.
 - `headers` (object) - Custom HTTP headers to append to the default headers.
 - `delay` (number/function) - The delay to use between concurrent requests, can either be a number in milliseconds, or a function that returns the number. Default is 0 (no delay).
 - `maxRetries` (number) - The maximum number of retries to use in case when a random error 404 is encountered. Default is 0 (no retries).
@@ -172,7 +172,7 @@ Of these parameters, the following are hot-swappable, using their respective set
 
 - `apiKey`
 - `headers`
-- `proxyUrl`
+- `proxy`
 
 The following example demonstrates changing the API key on the fly:
 
@@ -275,32 +275,55 @@ rettiwt.tweet.search({
 });
 ```
 
-### 4. Getting an API_KEY during runtime, using 'user' authentication (Borked)
+## Using a response middleware
 
-Sometimes, you might want to generate an API_KEY on the fly, in situations such as implementing Twitter login in your application. The following example demonstrates how to generate an API_KEY during runtime:
+`Rettiwt` allows configuring a response middleware, which provides access to the raw `AxiosResponse` object, as received from Twitter. The middleware is non-blocking in nature, and serves purely as an accessorial method.
+
+This is especially helpful getting access to response headers like rate limit information.
+
+The following example demonstrates using a custom response handler for getting rate limit information:
 
 ```ts
-import { Rettiwt } from 'rettiwt-api';
-
-// Creating a new Rettiwt instance
-const rettiwt = new Rettiwt();
-
-// Logging in an getting the API_KEY
-rettiwt.auth.login('<email>', '<username>', '<password>')
-.then(apiKey => {
-    // Use the API_KEY
-	...
-})
-.catch(err => {
-	console.log(err);
+// Creating a new Rettiwt instance using guest auth
+const rettiwt = new Rettiwt({
+	responseMiddleware: (res): void => {
+		console.log(`Rate limit: ${res.headers['x-rate-limit-limit']}`);
+		console.log(`Rate limit remaining: ${res.headers['x-rate-limit-remaining']}`);
+		console.log(`Rate limit reset timestamp (seconds): ${res.headers['x-rate-limit-reset']}`);
+		console.log('\n');
+	},
 });
+
+// Getting the details of user by username
+rettiwt.user
+	.details('negmatico')
+	.then((res) => {
+		console.log(res.toJSON());
+
+		// Results in similar data being logged to console, as follows:
+
+		// Rate limit: 50
+		// Rate limit reamining: 49
+		// Rate limit reset timestamp (seconds): 1775416043
+		//
+		// {
+		//     "createdAt": "2021-07-24T14:25:32.000Z",
+		//     "description": "Coder, Gamer and Tech Enthusiast",
+		//     "followersCount": 3,
+		//     "followingsCount": 44,
+		//     "fullName": "Rishikant Sahu",
+		//     "id": "1418940387037782018",
+		//     "isVerified": false,
+		//     "likeCount": 762,
+		//     "profileImage": "https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png",
+		//     "statusesCount": 5,
+		//     "userName": "negmatico"
+		// }
+	})
+	.catch((err) => {
+		console.log(err);
+	});
 ```
-
-Where,
-
-- `<email>` is the email associated with the Twitter account to be logged into.
-- `<username>` is the username associated with the Twitter account.
-- `<password>` is the password to the Twitter account.
 
 ## Using a custom error handler
 
@@ -332,14 +355,25 @@ You can then use the created `rettiwt` instance and your custom error handler wi
 
 ## Using a proxy
 
-For masking of IP address using a proxy server, use the following code snippet for instantiation of Rettiwt:
+For masking of IP address using a proxy server (HTTP/HTTPS/SOCKS), use the following code snippet for instantiation of Rettiwt:
 
-```ts
-/**
- * PROXY_URL is the URL or configuration for the proxy server you want to use.`
- */
-const rettiwt = new Rettiwt({ apiKey: API_KEY, proxyUrl: PROXY_URL });
-```
+- Using an HTTP/HTTPS proxy:
+
+    ```ts
+    /**
+     * <PROXY_URL_STRING_OR_CONFIG> is the URL string or `AxiosProxyConfiguration` for the HTTP/HTTPS proxy server you want to use.`
+     */
+    const rettiwt = new Rettiwt({ apiKey: API_KEY, proxy: '<PROXY_URL_STRING_OR_CONFIG>' });
+    ```
+
+- Using an SOCKS proxy:
+
+    ```ts
+    /**
+     * <PROXY_URL> is the URL string to the SOCKS proxy server you want to use.`
+     */
+    const rettiwt = new Rettiwt({ apiKey: API_KEY, proxy: '<PROXY_URL>' });
+    ```
 
 This creates a Rettiwt instance which uses the given proxy server for making requests to Twitter.
 
@@ -498,6 +532,10 @@ So far, the following operations are supported:
 - [Removing a member from a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#removeMember)
 - [Getting the list of tweets from a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#tweets)
 
+### Space
+
+- [Getting the details of a space](https://rishikant181.github.io/Rettiwt-API/classes/SpaceService.html#details)
+
 ### Tweets
 
 - [Bookmarking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#bookmark)
@@ -564,26 +602,6 @@ Help for the CLI can be obtained from the CLI itself:
 
 - For help regarding the available commands, use the command `rettiwt help`
 - For help regarding a specific command, use the command `rettiwt help <command_name>`
-
-### Common user account commands
-
-```bash
-# Update profile fields
-rettiwt user update-profile --name "Jane Doe" --location "Berlin"
-
-# Update profile image and banner from file paths
-rettiwt user update-profile-image ./profile.jpg
-rettiwt user update-profile-banner ./banner.jpg
-
-# Change username
-rettiwt user change-username new_username
-
-# Change password (interactive prompt)
-rettiwt user change-password
-```
-
-Use `rettiwt user change-password --show-new-key` to print the rotated `API_KEY` after a successful password update.
-If you store your `API_KEY` outside the current process, update that stored value after changing the password.
 
 ## API Reference
 
