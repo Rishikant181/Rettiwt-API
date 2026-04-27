@@ -326,7 +326,9 @@ export class DMEventDecoder {
 		}
 
 		const eventFields = DMEventDecoder._getFieldChildren(payloadFields, PayloadField.event);
-		const messageFields = eventFields ? DMEventDecoder._getFieldChildren(eventFields, EventField.message) : undefined;
+		const messageFields = eventFields
+			? DMEventDecoder._getFieldChildren(eventFields, EventField.message)
+			: undefined;
 		if (!messageFields) {
 			// Field 2 in the inner payload is currently used for reactions.
 			return undefined;
