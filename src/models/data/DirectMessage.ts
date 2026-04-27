@@ -73,6 +73,7 @@ export class DirectMessage implements IDirectMessage {
 	public createdAt: string;
 	public editCount?: number;
 	public id: string;
+	public isEncrypted?: boolean;
 	public mediaUrls?: string[];
 	public read?: boolean;
 	public recipientId?: string;
@@ -92,6 +93,7 @@ export class DirectMessage implements IDirectMessage {
 		this.senderId = parsedData.senderId;
 		this.recipientId = parsedData.recipientId;
 		this.text = parsedData.text;
+		this.isEncrypted = parsedData.isEncrypted;
 		this.createdAt = parsedData.createdAt;
 		this.editCount = parsedData.editCount ?? 0;
 		this.mediaUrls = this._extractMediaUrls(message);
@@ -164,6 +166,7 @@ export class DirectMessage implements IDirectMessage {
 					{
 						conversation_id: decodedMessage.conversationId,
 						id: decodedMessage.id,
+						is_encrypted: decodedMessage.isEncrypted,
 						media_urls: decodedMessage.mediaUrls,
 						recipient_id: decodedMessage.recipientId,
 						sender_id: decodedMessage.senderId,
@@ -264,6 +267,7 @@ export class DirectMessage implements IDirectMessage {
 		const senderId = this._extractStringValue(messageData?.sender_id, msg.sender_id) ?? '';
 		const recipientId = this._extractStringValue(messageData?.recipient_id, msg.recipient_id);
 		const text = this._extractStringValue(messageData?.text, msg.text) ?? '';
+		const isEncrypted = messageData?.is_encrypted === true || msg.is_encrypted === true;
 		const createdAt = this._parseTimestamp(this._extractStringValue(messageData?.time, msg.time) ?? '');
 		const editCount = this._extractNumberValue(messageData?.edit_count);
 
@@ -274,6 +278,7 @@ export class DirectMessage implements IDirectMessage {
 			recipientId,
 			createdAt,
 			text,
+			isEncrypted,
 			editCount,
 		};
 	}
@@ -389,6 +394,7 @@ export class DirectMessage implements IDirectMessage {
 			createdAt: this.createdAt,
 			editCount: this.editCount,
 			id: this.id,
+			isEncrypted: this.isEncrypted,
 			mediaUrls: this.mediaUrls,
 			read: this.read,
 			recipientId: this.recipientId,

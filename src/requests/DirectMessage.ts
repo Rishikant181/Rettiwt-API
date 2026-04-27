@@ -63,6 +63,8 @@ const DMConversationPageQuerySettings = {
 	/* eslint-enable @typescript-eslint/naming-convention */
 };
 
+const InitialDMConversationSequenceId = '9223372036854775807';
+
 /**
  * Collection of requests related to direct messages.
  *
@@ -79,15 +81,12 @@ export class DMRequests {
 			/* eslint-disable @typescript-eslint/naming-convention */
 
 			conversation_id: conversationId,
-			min_conversation_key_version: '9223372036854775807',
+			min_conversation_key_version: InitialDMConversationSequenceId,
+			min_local_sequence_id: maxId || InitialDMConversationSequenceId,
 			query_settings: DMConversationPageQuerySettings,
 
 			/* eslint-enable @typescript-eslint/naming-convention */
 		};
-
-		if (maxId) {
-			variables.min_local_sequence_id = maxId;
-		}
 
 		return {
 			method: 'get',

@@ -64,7 +64,7 @@ export class DirectMessageService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response.data);
+		const data = Extractors[resource](response.data, conversationId);
 
 		return data;
 	}
