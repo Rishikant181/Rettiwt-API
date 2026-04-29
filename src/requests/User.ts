@@ -969,6 +969,22 @@ export class UserRequests {
 		};
 	}
 
+	/**
+	 * @param id - The id of the user to remove from the authenticated user's followers.
+	 */
+	public static removeFollower(id: string): AxiosRequestConfig {
+		return {
+			method: 'post',
+			url: 'https://x.com/i/api/graphql/QpNfg0kpPRfjROQ_9eOLXA/RemoveFollower',
+			data: {
+				/* eslint-disable @typescript-eslint/naming-convention */
+				variables: { target_user_id: id },
+				queryId: 'QpNfg0kpPRfjROQ_9eOLXA',
+				/* eslint-enable @typescript-eslint/naming-convention */
+			},
+		};
+	}
+
 	public static scheduled(): AxiosRequestConfig {
 		return {
 			method: 'get',
