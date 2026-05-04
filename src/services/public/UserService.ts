@@ -32,6 +32,7 @@ import { IUserMediaResponse } from '../../types/raw/user/Media';
 import { IUserNotificationsResponse } from '../../types/raw/user/Notifications';
 import { IUserProfileUpdateResponse } from '../../types/raw/user/ProfileUpdate';
 import { IUserRecommendedResponse } from '../../types/raw/user/Recommended';
+import { IUserRemoveFollowerResponse } from '../../types/raw/user/RemoveFollower';
 import { IUserSearchResponse } from '../../types/raw/user/Search';
 import { IUserSettingsResponse } from '../../types/raw/user/Settings';
 import { IUserSubscriptionsResponse } from '../../types/raw/user/Subscriptions';
@@ -1037,6 +1038,45 @@ export class UserService extends FetcherService {
 
 		// Deserializing response
 		const data = Extractors[resource](response.data);
+
+		return data;
+	}
+
+	/**
+	 * Remove a user from the authenticated user's followers (force-unfollow).
+	 *
+	 * @param id - The ID of the user to remove as a follower.
+	 *
+	 * @returns Whether the user was removed successfully.
+	 *
+	 * @throws Code 108 if given user id is invalid.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Removing the User with id '1234567890' from the authenticated user's followers
+	 * rettiwt.user.removeFollower('1234567890')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async removeFollower(id: string): Promise<boolean> {
+		const resource = ResourceType.USER_REMOVE_FOLLOWER;
+
+		// Removing the follower
+		const response = await this.request<IUserRemoveFollowerResponse>(resource, { id: id });
+
+		// Deserializing the response
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}

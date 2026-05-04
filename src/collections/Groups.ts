@@ -80,6 +80,7 @@ export const PostResourcesGroup = [
 	ResourceType.TWEET_UNRETWEET,
 	ResourceType.TWEET_UNSCHEDULE,
 	ResourceType.USER_FOLLOW,
+	ResourceType.USER_REMOVE_FOLLOWER,
 	ResourceType.USER_UNFOLLOW,
 	ResourceType.USER_PROFILE_UPDATE,
 	ResourceType.USER_PROFILE_IMAGE_UPDATE,
