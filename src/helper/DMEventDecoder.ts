@@ -369,7 +369,11 @@ export class DMEventDecoder {
 		if (conversationKey) {
 			const decryptedPayload = XChatCrypto.decryptPayload(payloadBytes, conversationKey);
 			if (decryptedPayload) {
-				const decodedDecryptedPayload = DMEventDecoder._parseMessagePayload(decryptedPayload, outerMessage, true);
+				const decodedDecryptedPayload = DMEventDecoder._parseMessagePayload(
+					decryptedPayload,
+					outerMessage,
+					true,
+				);
 				if (decodedDecryptedPayload) {
 					return decodedDecryptedPayload;
 				}
