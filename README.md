@@ -579,6 +579,7 @@ So far, the following operations are supported:
 - [Searching for a username](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#search)
 - [Getting the tweet timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#timeline)
 - [Unfollowing a given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#unfollow)
+- [Removing a follower from the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#removeFollower)
 - [Updating the profile of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#updateProfile)
 - [Updating the profile image of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#updateProfileImage)
 - [Updating the profile banner of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#updateProfileBanner)
