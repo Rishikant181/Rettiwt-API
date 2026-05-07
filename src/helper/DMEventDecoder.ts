@@ -1,3 +1,7 @@
+import { XChatConversationKey } from '../types/args/DirectMessageArgs';
+
+import { XChatCrypto } from './XChatCrypto';
+
 interface ITlvField {
 	id: number;
 	kind: 'bytes' | 'bool' | 'u32' | 'u64' | 'object' | 'list';
@@ -14,6 +18,10 @@ export interface IDecodedConversationMessage {
 	recipientId?: string;
 	senderId: string;
 	text: string;
+}
+
+export interface IDecodedConversationMessageOptions {
+	conversationKeys?: Record<string, XChatConversationKey>;
 }
 
 const DefaultMediaHosts = /^(https?:\/\/(?:video|pbs)\.twimg\.com\/)/i;
@@ -266,6 +274,36 @@ export class DMEventDecoder {
 		}
 	}
 
+	private static _parseMessagePayload(
+		payloadBytes: Buffer,
+		outerMessage: Omit<IDecodedConversationMessage, 'isEncrypted' | 'mediaUrls' | 'text'>,
+		isEncrypted = false,
+	): IDecodedConversationMessage | undefined {
+		const payloadFields = DMEventDecoder._safeParseRoot(payloadBytes);
+		if (!payloadFields) {
+			return undefined;
+		}
+
+		const eventFields = DMEventDecoder._getFieldChildren(payloadFields, PayloadField.event);
+		const messageFields = eventFields
+			? DMEventDecoder._getFieldChildren(eventFields, EventField.message)
+			: undefined;
+		if (!messageFields) {
+			// Field 2 in the inner payload is currently used for reactions.
+			return undefined;
+		}
+
+		const text = DMEventDecoder._getFieldString(messageFields, MessageField.text) ?? '';
+		const mediaUrls = DMEventDecoder._collectMediaUrls(messageFields);
+
+		return {
+			...outerMessage,
+			isEncrypted,
+			mediaUrls: mediaUrls.length > 0 ? mediaUrls : undefined,
+			text,
+		};
+	}
+
 	private static _parseRoot(buffer: Buffer): ITlvField[] {
 		return DMEventDecoder._parseContainer(buffer, 0, buffer.length)[0];
 	}
@@ -293,7 +331,10 @@ export class DMEventDecoder {
 	/**
 	 * Decode a single encoded message event.
 	 */
-	public static decodeMessage(encodedEvent: string): IDecodedConversationMessage | undefined {
+	public static decodeMessage(
+		encodedEvent: string,
+		options?: IDecodedConversationMessageOptions,
+	): IDecodedConversationMessage | undefined {
 		const eventBuffer = Buffer.from(encodedEvent, 'base64');
 		const outerFields = DMEventDecoder._safeParseRoot(eventBuffer);
 		if (!outerFields) {
@@ -311,42 +352,34 @@ export class DMEventDecoder {
 		const conversationId = DMEventDecoder._getFieldString(outerFields, OuterEventField.conversationId) ?? '';
 		const createdAtMs = DMEventDecoder._getFieldString(outerFields, OuterEventField.createdAtMs) ?? '';
 		const recipientId = DMEventDecoder._inferRecipientId(conversationId, senderId);
-		const payloadFields = DMEventDecoder._safeParseRoot(payloadBytes);
-		if (!payloadFields) {
-			return {
-				id: messageId,
-				conversationId,
-				createdAt: DMEventDecoder._toIsoDate(createdAtMs),
-				createdAtMs,
-				isEncrypted: true,
-				recipientId,
-				senderId,
-				text: '',
-			};
-		}
-
-		const eventFields = DMEventDecoder._getFieldChildren(payloadFields, PayloadField.event);
-		const messageFields = eventFields
-			? DMEventDecoder._getFieldChildren(eventFields, EventField.message)
-			: undefined;
-		if (!messageFields) {
-			// Field 2 in the inner payload is currently used for reactions.
-			return undefined;
-		}
-
-		const text = DMEventDecoder._getFieldString(messageFields, MessageField.text) ?? '';
-		const mediaUrls = DMEventDecoder._collectMediaUrls(messageFields);
-
-		return {
+		const outerMessage = {
 			id: messageId,
 			conversationId,
 			createdAt: DMEventDecoder._toIsoDate(createdAtMs),
 			createdAtMs,
-			isEncrypted: false,
-			mediaUrls: mediaUrls.length > 0 ? mediaUrls : undefined,
 			recipientId,
 			senderId,
-			text,
+		};
+		const decodedPayload = DMEventDecoder._parseMessagePayload(payloadBytes, outerMessage);
+		if (decodedPayload) {
+			return decodedPayload;
+		}
+
+		const conversationKey = options?.conversationKeys?.[conversationId];
+		if (conversationKey) {
+			const decryptedPayload = XChatCrypto.decryptPayload(payloadBytes, conversationKey);
+			if (decryptedPayload) {
+				const decodedDecryptedPayload = DMEventDecoder._parseMessagePayload(decryptedPayload, outerMessage, true);
+				if (decodedDecryptedPayload) {
+					return decodedDecryptedPayload;
+				}
+			}
+		}
+
+		return {
+			...outerMessage,
+			isEncrypted: true,
+			text: '',
 		};
 	}
 
@@ -354,9 +387,12 @@ export class DMEventDecoder {
 	 * Decode a list of message events and discard non-message events such as
 	 * reactions that do not map to the current DirectMessage model.
 	 */
-	public static decodeMessages(encodedEvents: string[]): IDecodedConversationMessage[] {
+	public static decodeMessages(
+		encodedEvents: string[],
+		options?: IDecodedConversationMessageOptions,
+	): IDecodedConversationMessage[] {
 		return encodedEvents
-			.map((encodedEvent) => DMEventDecoder.decodeMessage(encodedEvent))
+			.map((encodedEvent) => DMEventDecoder.decodeMessage(encodedEvent, options))
 			.filter((message): message is IDecodedConversationMessage => message !== undefined);
 	}
 }

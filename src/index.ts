@@ -50,6 +50,7 @@ export * from './services/public/UserService';
 
 // TYPES
 export * from './types/args/FetchArgs';
+export * from './types/args/DirectMessageArgs';
 export * from './types/args/PostArgs';
 export * from './types/args/ProfileArgs';
 export * from './types/data/BookmarkFolder';

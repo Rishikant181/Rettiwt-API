@@ -3,6 +3,7 @@ import { ResourceType } from '../../enums/Resource';
 import { Conversation } from '../../models/data/Conversation';
 import { Inbox } from '../../models/data/Inbox';
 import { RettiwtConfig } from '../../models/RettiwtConfig';
+import { IDMConversationOptions } from '../../types/args/DirectMessageArgs';
 import { IConversationPageResponse } from '../../types/raw/dm/ConversationPage';
 import { IInboxInitialResponse } from '../../types/raw/dm/InboxInitial';
 import { IInboxTimelineResponse } from '../../types/raw/dm/InboxTimeline';
@@ -54,8 +55,27 @@ export class DirectMessageService extends FetcherService {
 	 * });
 	 * ```
 	 */
-	public async conversation(conversationId: string, cursor?: string): Promise<Conversation | undefined> {
+	public async conversation(
+		conversationId: string,
+		cursorOrOptions?: string | IDMConversationOptions,
+		options?: IDMConversationOptions,
+	): Promise<Conversation | undefined> {
 		const resource = ResourceType.DM_CONVERSATION;
+		const cursor = typeof cursorOrOptions === 'string' ? cursorOrOptions : undefined;
+		const conversationOptions = typeof cursorOrOptions === 'object' ? cursorOrOptions : options;
+		const conversationKeys = {
+			...this.config.xChatConversationKeys,
+			...conversationOptions?.xChatConversationKeys,
+		};
+		const conversationKeyProvider =
+			conversationOptions?.xChatConversationKeyProvider ?? this.config.xChatConversationKeyProvider;
+		const providedConversationKey = await conversationKeyProvider?.(conversationId);
+
+		if (conversationOptions?.xChatConversationKey) {
+			conversationKeys[conversationId] = conversationOptions.xChatConversationKey;
+		} else if (providedConversationKey) {
+			conversationKeys[conversationId] = providedConversationKey;
+		}
 
 		// Fetching raw conversation page
 		const response = await this.request<IConversationPageResponse>(resource, {
@@ -64,7 +84,9 @@ export class DirectMessageService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response.data, conversationId);
+		const data = Conversation.fromConversationPage(response.data, conversationId, {
+			conversationKeys: Object.keys(conversationKeys).length > 0 ? conversationKeys : undefined,
+		});
 
 		return data;
 	}

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/member-ordering */
 
+import { IDecodedConversationMessageOptions } from '../../helper/DMEventDecoder';
 import { IConversation } from '../../types/data/Conversation';
 import { IConversationTimelineResponse } from '../../types/raw/dm/Conversation';
 import { IConversationPageResponse } from '../../types/raw/dm/ConversationPage';
@@ -234,8 +235,9 @@ export class Conversation implements IConversation {
 	public static fromConversationPage(
 		response: IConversationPageResponse,
 		conversationId?: string,
+		options?: IDecodedConversationMessageOptions,
 	): Conversation | undefined {
-		const messages = DirectMessage.sortByTime(DirectMessage.listFromResponse(response), false);
+		const messages = DirectMessage.sortByTime(DirectMessage.listFromResponse(response, options), false);
 		const resolvedConversationId = conversationId ?? messages[0]?.conversationId ?? '';
 
 		if (!resolvedConversationId) {

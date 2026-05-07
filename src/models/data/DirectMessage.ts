@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/member-ordering */
 
-import { DMEventDecoder } from '../../helper/DMEventDecoder';
+import { DMEventDecoder, IDecodedConversationMessageOptions } from '../../helper/DMEventDecoder';
 import { IDirectMessage } from '../../types/data/DirectMessage';
 import { IMessage as IRawMessage } from '../../types/raw/base/Message';
 import { IConversationTimelineResponse } from '../../types/raw/dm/Conversation';
@@ -156,10 +156,13 @@ export class DirectMessage implements IDirectMessage {
 	/**
 	 * Extract messages from encoded conversation page response
 	 */
-	private static _extractFromConversationPage(response: IConversationPageResponse): DirectMessage[] {
+	private static _extractFromConversationPage(
+		response: IConversationPageResponse,
+		options?: IDecodedConversationMessageOptions,
+	): DirectMessage[] {
 		const encodedEvents = response.data?.get_conversation_page?.encoded_message_events ?? [];
 
-		return DMEventDecoder.decodeMessages(encodedEvents).map(
+		return DMEventDecoder.decodeMessages(encodedEvents, options).map(
 			(decodedMessage) =>
 				new DirectMessage(
 					/* eslint-disable @typescript-eslint/naming-convention */
@@ -324,6 +327,7 @@ export class DirectMessage implements IDirectMessage {
 			| IConversationTimelineResponse
 			| IInboxTimelineResponse
 			| IConversationPageResponse,
+		options?: IDecodedConversationMessageOptions,
 	): DirectMessage[] {
 		const messages: DirectMessage[] = [];
 
@@ -334,7 +338,7 @@ export class DirectMessage implements IDirectMessage {
 		} else if (isInboxTimelineResponse(response)) {
 			return DirectMessage._extractFromInboxTimeline(response);
 		} else if (isConversationPageResponse(response)) {
-			return DirectMessage._extractFromConversationPage(response);
+			return DirectMessage._extractFromConversationPage(response, options);
 		}
 
 		return messages;
@@ -349,8 +353,9 @@ export class DirectMessage implements IDirectMessage {
 			| IConversationTimelineResponse
 			| IInboxTimelineResponse
 			| IConversationPageResponse,
+		options?: IDecodedConversationMessageOptions,
 	): DirectMessage[] {
-		return DirectMessage.list(response);
+		return DirectMessage.list(response, options);
 	}
 
 	/**
