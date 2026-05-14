@@ -278,6 +278,19 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// Remove Follower
+	user.command('remove-follower')
+		.description("Remove a user from the authenticated user's followers")
+		.argument('<id>', 'The user to remove as a follower')
+		.action(async (id: string) => {
+			try {
+				const result = await rettiwt.user.removeFollower(id);
+				output(result);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Replies
 	user.command('replies')
 		.description('Fetch the replies timeline the given user')

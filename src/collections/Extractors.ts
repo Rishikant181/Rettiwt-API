@@ -65,6 +65,7 @@ import { IUserMediaResponse } from '../types/raw/user/Media';
 import { IUserNotificationsResponse } from '../types/raw/user/Notifications';
 import { IUserProfileUpdateResponse } from '../types/raw/user/ProfileUpdate';
 import { IUserRecommendedResponse } from '../types/raw/user/Recommended';
+import { IUserRemoveFollowerResponse } from '../types/raw/user/RemoveFollower';
 import { IUserSearchResponse } from '../types/raw/user/Search';
 import { IUserSettingsResponse } from '../types/raw/user/Settings';
 import { IUserSubscriptionsResponse } from '../types/raw/user/Subscriptions';
@@ -173,6 +174,8 @@ export const Extractors = {
 		new CursoredData<Tweet>(response, BaseType.TWEET),
 	USER_NOTIFICATIONS: (response: IUserNotificationsResponse): CursoredData<Notification> =>
 		new CursoredData<Notification>(response, BaseType.NOTIFICATION),
+	USER_REMOVE_FOLLOWER: (response: IUserRemoveFollowerResponse): boolean =>
+		response?.data?.remove_follower?.unfollow_success_reason ? true : false,
 	USER_SEARCH: (response: IUserSearchResponse): CursoredData<User> => new CursoredData<User>(response, BaseType.USER),
 	USER_SUBSCRIPTIONS: (response: IUserSubscriptionsResponse): CursoredData<User> =>
 		new CursoredData<User>(response, BaseType.USER),
