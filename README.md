@@ -40,6 +40,7 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - List Tweets
     - Space Details
     - Tweet Details - Single and Bulk
+    - Tweet History
     - Tweet Bookmark
     - Tweet Like
     - Tweet Likers
@@ -268,6 +269,24 @@ rettiwt.tweet.search({
 	includeWords: ['<word1>', '<word2>']
 }, count, data.next.value)
 .then(data => {
+	...
+})
+.catch(err => {
+	...
+});
+```
+
+### 4. Getting the edit history of a tweet
+
+```ts
+import { Rettiwt } from 'rettiwt-api';
+
+// Creating a new Rettiwt instance using the API_KEY
+const rettiwt = new Rettiwt({ apiKey: API_KEY });
+
+// Fetching the edit history of the tweet whose ID is <tweet_id>
+rettiwt.tweet.history('<tweet_id>')
+.then(tweets => {
 	...
 })
 .catch(err => {
@@ -540,6 +559,7 @@ So far, the following operations are supported:
 
 - [Bookmarking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#bookmark)
 - [Getting the details of a tweet/multiple tweets](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#details)
+- [Getting the edit history of a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#history)
 - [Liking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#like)
 - [Getting the list of users who liked your tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#likers)
 - [Posting a new tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#post)
@@ -602,6 +622,7 @@ Help for the CLI can be obtained from the CLI itself:
 
 - For help regarding the available commands, use the command `rettiwt help`
 - For help regarding a specific command, use the command `rettiwt help <command_name>`
+- For fetching the edit history of a tweet, use the command `rettiwt tweet history <tweet_id>`
 
 ## API Reference
 
