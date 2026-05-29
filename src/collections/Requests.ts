@@ -1,6 +1,7 @@
 import { AxiosRequestConfig } from 'axios';
 
 import { ResourceType } from '../enums/Resource';
+import { ArticleRequests } from '../requests/Article';
 import { DMRequests } from '../requests/DirectMessage';
 import { ListRequests } from '../requests/List';
 import { MediaRequests } from '../requests/Media';
@@ -19,6 +20,8 @@ import { TweetRepliesSortTypeMap } from './Tweet';
  */
 export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs | IPostArgs) => AxiosRequestConfig } = {
 	/* eslint-disable @typescript-eslint/naming-convention */
+
+	ARTICLE_ENTITIES: (args: IFetchArgs) => ArticleRequests.entities(args.id!, args.lifecycle, args.count, args.cursor),
 
 	LIST_DETAILS: (args: IFetchArgs) => ListRequests.details(args.id!),
 	LIST_MEMBERS: (args: IFetchArgs) => ListRequests.members(args.id!, args.count, args.cursor),

@@ -1,3 +1,4 @@
+import { ArticleLifecycle } from '../../enums/Article';
 import { TweetRepliesSortType } from '../../enums/Tweet';
 import { IFetchArgs, ITweetFilter } from '../../types/args/FetchArgs';
 
@@ -18,6 +19,7 @@ export class FetchArgs implements IFetchArgs {
 	public id?: string;
 	public ids?: string[];
 	public isMetatagsQuery?: boolean;
+	public lifecycle?: ArticleLifecycle;
 	public maxId?: string;
 	public metrics?: RawAnalyticsMetric[];
 	public showVerifiedFollowers?: boolean;
@@ -33,6 +35,7 @@ export class FetchArgs implements IFetchArgs {
 		this.id = args.id;
 		this.ids = args.ids;
 		this.isMetatagsQuery = args.isMetatagsQuery;
+		this.lifecycle = args.lifecycle;
 		this.count = args.count;
 		this.cursor = args.cursor;
 		this.filter = args.filter ? new TweetFilter(args.filter) : undefined;

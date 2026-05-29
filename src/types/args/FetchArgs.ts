@@ -1,3 +1,4 @@
+import { ArticleLifecycle } from '../../enums/Article';
 import { RawAnalyticsGranularity, RawAnalyticsMetric } from '../../enums/raw/Analytics';
 import { TweetRepliesSortType } from '../../enums/Tweet';
 
@@ -82,6 +83,14 @@ export interface IFetchArgs {
 	 * - Required only for {@link ResourceType.TWEET_DETAILS_BULK} and {@link ResourceType.USER_DETAILS_BY_IDS_BULK}.
 	 */
 	ids?: string[];
+
+	/**
+	 * The lifecycle of the Articles to fetch.
+	 *
+	 * @remarks
+	 * - Only works for {@link ResourceType.ARTICLE_ENTITIES}.
+	 */
+	lifecycle?: ArticleLifecycle;
 
 	/**
 	 * Whether to include replay information when fetching space details.

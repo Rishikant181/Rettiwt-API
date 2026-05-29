@@ -4,6 +4,9 @@
  * @public
  */
 export enum ResourceType {
+	// ARTICLE
+	ARTICLE_ENTITIES = 'ARTICLE_ENTITIES',
+
 	// LIST
 	LIST_DETAILS = 'LIST_DETAILS',
 	LIST_MEMBER_ADD = 'LIST_MEMBER_ADD',
