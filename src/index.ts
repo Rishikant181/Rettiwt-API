@@ -72,6 +72,7 @@ export * from './types/errors/TwitterError';
 export * from './types/params/Variables';
 export { IArticle as IRawArticle } from './types/raw/base/Article';
 export { IArticleDeleteResponse as IRawArticleDeleteResponse } from './types/raw/article/Delete';
+export { IArticleDraftCreateResponse as IRawArticleDraftCreateResponse } from './types/raw/article/DraftCreate';
 export { IArticleEntitiesResponse as IRawArticleEntitiesResponse } from './types/raw/article/Entities';
 export { IAnalytics as IRawAnalytics } from './types/raw/base/Analytic';
 export { IBookmarkFolder as IRawBookmarkFolder } from './types/raw/base/BookmarkFolder';

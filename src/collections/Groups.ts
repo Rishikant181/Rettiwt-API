@@ -65,6 +65,7 @@ export const FetchResourcesGroup = [
  */
 export const PostResourcesGroup = [
 	ResourceType.ARTICLE_DELETE,
+	ResourceType.ARTICLE_DRAFT_CREATE,
 	ResourceType.LIST_MEMBER_ADD,
 	ResourceType.LIST_MEMBER_REMOVE,
 	ResourceType.MEDIA_UPLOAD_APPEND,

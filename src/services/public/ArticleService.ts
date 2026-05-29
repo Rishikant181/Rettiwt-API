@@ -4,7 +4,9 @@ import { ResourceType } from '../../enums/Resource';
 import { Article } from '../../models/data/Article';
 import { CursoredData } from '../../models/data/CursoredData';
 import { RettiwtConfig } from '../../models/RettiwtConfig';
+import { IArticleDraft } from '../../types/args/PostArgs';
 import { IArticleDeleteResponse } from '../../types/raw/article/Delete';
+import { IArticleDraftCreateResponse } from '../../types/raw/article/DraftCreate';
 import { IArticleEntitiesResponse } from '../../types/raw/article/Entities';
 
 import { FetcherService } from './FetcherService';
@@ -22,6 +24,45 @@ export class ArticleService extends FetcherService {
 	 */
 	public constructor(config: RettiwtConfig) {
 		super(config);
+	}
+
+	/**
+	 * Create an Article draft.
+	 *
+	 * @param options - The Article draft options.
+	 *
+	 * @returns The created Article draft.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Creating an empty Article draft
+	 * rettiwt.article.createDraft()
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async createDraft(options?: IArticleDraft): Promise<Article | undefined> {
+		const resource = ResourceType.ARTICLE_DRAFT_CREATE;
+
+		// Creating the Article draft
+		const response = await this.request<IArticleDraftCreateResponse>(resource, {
+			articleDraft: options,
+		});
+
+		// Deserializing response
+		const data = Extractors[resource](response.data);
+
+		return data;
 	}
 
 	/**

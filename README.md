@@ -30,6 +30,10 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
 
 - 'User' authentication (logging in) grants access to the following resources/actions:
 
+    - Article Delete
+    - Article Draft Create
+    - Article Drafts
+    - Article List
     - Direct Message Inbox
     - Direct Message Conversations
     - Direct Message Delete Conversation
@@ -146,8 +150,9 @@ A new Rettiwt instance can be initialized using the following code snippets:
 - `const rettiwt = new Rettiwt()` (for 'guest' authentication)
 - `const rettiwt = new Rettiwt({ apiKey: API_KEY })` (for 'user' authentication)
 
-The Rettiwt class has five members:
+The Rettiwt class has six members:
 
+- `article` member, for accessing resources related to Articles.
 - `dm` member, for accessing resources related to direct messages.
 - `list` member, for accessing resources related to lists.
 - `space` member, for accessing resources related to spaces.
@@ -287,6 +292,24 @@ const rettiwt = new Rettiwt({ apiKey: API_KEY });
 // Fetching the edit history of the tweet whose ID is <tweet_id>
 rettiwt.tweet.history('<tweet_id>')
 .then(tweets => {
+	...
+})
+.catch(err => {
+	...
+});
+```
+
+### 5. Creating an Article draft
+
+```ts
+import { Rettiwt } from 'rettiwt-api';
+
+// Creating a new Rettiwt instance using the API_KEY
+const rettiwt = new Rettiwt({ apiKey: API_KEY });
+
+// Creating an empty Article draft
+rettiwt.article.createDraft()
+.then(article => {
 	...
 })
 .catch(err => {
@@ -536,6 +559,13 @@ For handling and processing of data returned by the functions, it's always advis
 ## Features
 
 So far, the following operations are supported:
+
+### Articles
+
+- [Creating an Article draft](https://rishikant181.github.io/Rettiwt-API/classes/ArticleService.html#createDraft)
+- [Deleting an Article](https://rishikant181.github.io/Rettiwt-API/classes/ArticleService.html#delete)
+- [Getting the draft Articles of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/ArticleService.html#drafts)
+- [Getting the list of Articles by lifecycle state](https://rishikant181.github.io/Rettiwt-API/classes/ArticleService.html#list)
 
 ### Direct Messages
 
