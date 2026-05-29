@@ -92,6 +92,7 @@ export { IMediaLiveVideoStreamResponse as IRawMediaLiveVideoStreamResponse } fro
 export { IAudioSpaceByIdResponse as IRawSpaceDetailsResponse } from './types/raw/space/AudioSpaceById';
 export { ITweetDetailsResponse as IRawTweetDetailsResponse } from './types/raw/tweet/Details';
 export { ITweetDetailsBulkResponse as IRawTweetDetailsBulkResponse } from './types/raw/tweet/DetailsBulk';
+export { ITweetHistoryResponse as IRawTweetHistoryResponse } from './types/raw/tweet/History';
 export { ITweetLikeResponse as IRawTweetLikeResponse } from './types/raw/tweet/Like';
 export { ITweetLikersResponse as IRawTweetLikersResponse } from './types/raw/tweet/Likers';
 export { ITweetPostResponse as IRawTweetPostResponse } from './types/raw/tweet/Post';

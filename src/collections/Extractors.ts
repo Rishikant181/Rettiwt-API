@@ -23,6 +23,7 @@ import { IAudioSpaceByIdResponse } from '../types/raw/space/AudioSpaceById';
 import { ITweetBookmarkResponse } from '../types/raw/tweet/Bookmark';
 import { ITweetDetailsResponse } from '../types/raw/tweet/Details';
 import { ITweetDetailsBulkResponse } from '../types/raw/tweet/DetailsBulk';
+import { ITweetHistoryResponse } from '../types/raw/tweet/History';
 import { ITweetLikeResponse } from '../types/raw/tweet/Like';
 import { ITweetLikersResponse } from '../types/raw/tweet/Likers';
 import { ITweetPostNoteResponse, ITweetPostResponse } from '../types/raw/tweet/Post';
@@ -98,6 +99,7 @@ export const Extractors = {
 	TWEET_DETAILS: (response: ITweetDetailsResponse, id: string): Tweet | undefined => Tweet.single(response, id),
 	TWEET_DETAILS_ALT: (response: ITweetRepliesResponse, id: string): Tweet | undefined => Tweet.single(response, id),
 	TWEET_DETAILS_BULK: (response: ITweetDetailsBulkResponse, ids: string[]): Tweet[] => Tweet.multiple(response, ids),
+	TWEET_HISTORY: (response: ITweetHistoryResponse): Tweet[] => Tweet.timeline(response),
 	TWEET_LIKE: (response: ITweetLikeResponse): boolean => (response?.data?.favorite_tweet ? true : false),
 	TWEET_LIKERS: (response: ITweetLikersResponse): CursoredData<User> =>
 		new CursoredData<User>(response, BaseType.USER),

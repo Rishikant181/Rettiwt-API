@@ -42,6 +42,7 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	TWEET_DETAILS: (args: IFetchArgs) => TweetRequests.details(args.id!),
 	TWEET_DETAILS_ALT: (args: IFetchArgs) => TweetRequests.replies(args.id!),
 	TWEET_DETAILS_BULK: (args: IFetchArgs) => TweetRequests.bulkDetails(args.ids!),
+	TWEET_HISTORY: (args: IFetchArgs) => TweetRequests.history(args.id!),
 	TWEET_LIKE: (args: IPostArgs) => TweetRequests.like(args.id!),
 	TWEET_LIKERS: (args: IFetchArgs) => TweetRequests.likers(args.id!, args.count, args.cursor),
 	TWEET_POST: (args: IPostArgs) => TweetRequests.post(args.tweet!),

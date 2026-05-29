@@ -28,6 +28,7 @@ export const FetchResourcesGroup = [
 	ResourceType.TWEET_DETAILS,
 	ResourceType.TWEET_DETAILS_ALT,
 	ResourceType.TWEET_DETAILS_BULK,
+	ResourceType.TWEET_HISTORY,
 	ResourceType.TWEET_LIKERS,
 	ResourceType.TWEET_REPLIES,
 	ResourceType.TWEET_RETWEETERS,
