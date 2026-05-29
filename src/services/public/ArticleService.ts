@@ -8,6 +8,7 @@ import { IArticleDraft } from '../../types/args/PostArgs';
 import { IArticleDeleteResponse } from '../../types/raw/article/Delete';
 import { IArticleDraftCreateResponse } from '../../types/raw/article/DraftCreate';
 import { IArticleEntitiesResponse } from '../../types/raw/article/Entities';
+import { IArticleUpdateTitleResponse } from '../../types/raw/article/UpdateTitle';
 
 import { FetcherService } from './FetcherService';
 
@@ -177,6 +178,47 @@ export class ArticleService extends FetcherService {
 			lifecycle: lifecycle,
 			count: count,
 			cursor: cursor,
+		});
+
+		// Deserializing response
+		const data = Extractors[resource](response.data);
+
+		return data;
+	}
+
+	/**
+	 * Update an Article title.
+	 *
+	 * @param id - The ID of the Article to update.
+	 * @param title - The new title to set.
+	 *
+	 * @returns The updated Article.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Updating an Article title
+	 * rettiwt.article.updateTitle('2060444932632977410', 'New title')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async updateTitle(id: string, title: string): Promise<Article | undefined> {
+		const resource = ResourceType.ARTICLE_TITLE_UPDATE;
+
+		// Updating the Article title
+		const response = await this.request<IArticleUpdateTitleResponse>(resource, {
+			id: id,
+			title: title,
 		});
 
 		// Deserializing response

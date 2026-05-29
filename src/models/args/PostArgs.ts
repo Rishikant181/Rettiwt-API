@@ -23,6 +23,7 @@ export class PostArgs implements IPostArgs {
 	public profileBanner?: string;
 	public profileImage?: string;
 	public profileOptions?: ProfileUpdateOptions;
+	public title?: string;
 	public tweet?: NewTweet;
 	public upload?: UploadArgs;
 	public userId?: string;
@@ -43,6 +44,7 @@ export class PostArgs implements IPostArgs {
 		this.profileOptions = args.profileOptions ? new ProfileUpdateOptions(args.profileOptions) : undefined;
 		this.profileImage = PostArgs._validateNonEmptyString(args.profileImage, 'Profile image');
 		this.profileBanner = PostArgs._validateNonEmptyString(args.profileBanner, 'Profile banner');
+		this.title = args.title;
 		this.changePassword = args.changePassword ? new ChangePasswordArgs(args.changePassword) : undefined;
 	}
 

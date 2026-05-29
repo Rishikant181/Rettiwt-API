@@ -31,6 +31,7 @@ export interface IPostArgs {
 	 * - {@link ResourceType.USER_FOLLOW}
 	 * - {@link ResourceType.USER_UNFOLLOW}
 	 * - {@link ResourceType.ARTICLE_DELETE}
+	 * - {@link ResourceType.ARTICLE_TITLE_UPDATE}
 	 *
 	 * For {@link ResourceType.USER_USERNAME_CHANGE}, use {@link IPostArgs.username}.
 	 * `id` is still accepted for backward compatibility.
@@ -52,6 +53,14 @@ export interface IPostArgs {
 	 * Required only when posting a tweet using {@link ResourceType.TWEET_POST}
 	 */
 	tweet?: INewTweet;
+
+	/**
+	 * The Article title to set.
+	 *
+	 * @remarks
+	 * Required only when updating an Article title using {@link ResourceType.ARTICLE_TITLE_UPDATE}.
+	 */
+	title?: string;
 
 	/**
 	 * The media file to be uploaded.

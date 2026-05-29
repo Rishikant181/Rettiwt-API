@@ -24,6 +24,7 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	ARTICLE_DELETE: (args: IPostArgs) => ArticleRequests.delete(args.id!),
 	ARTICLE_DRAFT_CREATE: (args: IPostArgs) => ArticleRequests.createDraft(args.articleDraft),
 	ARTICLE_ENTITIES: (args: IFetchArgs) => ArticleRequests.entities(args.id!, args.lifecycle, args.count, args.cursor),
+	ARTICLE_TITLE_UPDATE: (args: IPostArgs) => ArticleRequests.updateTitle(args.id!, args.title ?? ''),
 
 	LIST_DETAILS: (args: IFetchArgs) => ListRequests.details(args.id!),
 	LIST_MEMBERS: (args: IFetchArgs) => ListRequests.members(args.id!, args.count, args.cursor),

@@ -91,4 +91,32 @@ export class ArticleRequests {
 			paramsSerializer: { encode: encodeURIComponent },
 		};
 	}
+
+	/**
+	 * @param id - The id of the Article whose title is to be updated.
+	 * @param title - The new title to set.
+	 */
+	public static updateTitle(id: string, title: string): AxiosRequestConfig {
+		return {
+			method: 'post',
+			url: 'https://x.com/i/api/graphql/x75E2ABzm8_mGTg1bz8hcA/ArticleEntityUpdateTitle',
+			data: {
+				/* eslint-disable @typescript-eslint/naming-convention */
+				variables: {
+					articleEntityId: id,
+					title: title,
+				},
+				features: {
+					profile_label_improvements_pcf_label_in_post_enabled: true,
+					responsive_web_profile_redirect_enabled: false,
+					rweb_tipjar_consumption_enabled: false,
+					verified_phone_label_enabled: false,
+					responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
+					responsive_web_graphql_timeline_navigation_enabled: true,
+				},
+				queryId: 'x75E2ABzm8_mGTg1bz8hcA',
+				/* eslint-enable @typescript-eslint/naming-convention */
+			},
+		};
+	}
 }

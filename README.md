@@ -34,6 +34,7 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - Article Draft Create
     - Article Drafts
     - Article List
+    - Article Title Update
     - Direct Message Inbox
     - Direct Message Conversations
     - Direct Message Delete Conversation
@@ -566,6 +567,7 @@ So far, the following operations are supported:
 - [Deleting an Article](https://rishikant181.github.io/Rettiwt-API/classes/ArticleService.html#delete)
 - [Getting the draft Articles of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/ArticleService.html#drafts)
 - [Getting the list of Articles by lifecycle state](https://rishikant181.github.io/Rettiwt-API/classes/ArticleService.html#list)
+- [Updating an Article title](https://rishikant181.github.io/Rettiwt-API/classes/ArticleService.html#updateTitle)
 
 ### Direct Messages
 
