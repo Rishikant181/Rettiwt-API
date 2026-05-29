@@ -2,6 +2,7 @@ import { ArticleLifecycle } from '../../enums/Article';
 import { LogActions } from '../../enums/Logging';
 import { LogService } from '../../services/internal/LogService';
 import { IArticle, IArticleContentState } from '../../types/data/Article';
+import { IArticleDraftCreateResponse } from '../../types/raw/article/DraftCreate';
 import { IArticleEntitiesResponse } from '../../types/raw/article/Entities';
 import { IArticle as IRawArticle } from '../../types/raw/base/Article';
 
@@ -70,6 +71,32 @@ export class Article implements IArticle {
 		}
 
 		return new Date(milliseconds).toISOString();
+	}
+
+	/**
+	 * Extracts and deserializes the created Article draft from the given raw response data.
+	 *
+	 * @param response - The raw response data.
+	 *
+	 * @returns The created Article draft.
+	 */
+	public static fromDraftCreate(response: IArticleDraftCreateResponse): Article | undefined {
+		const article = response.data?.articleentity_create_draft?.article_entity_results?.result;
+
+		if (article?.rest_id) {
+			// Logging
+			LogService.log(LogActions.DESERIALIZE, { id: article.rest_id });
+
+			return new Article(article);
+		}
+
+		// Logging
+		LogService.log(LogActions.WARNING, {
+			action: LogActions.DESERIALIZE,
+			message: `Article not found, skipping`,
+		});
+
+		return undefined;
 	}
 
 	/**

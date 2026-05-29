@@ -23,6 +23,7 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	/* eslint-disable @typescript-eslint/naming-convention */
 
 	ARTICLE_DELETE: (args: IPostArgs) => ArticleRequests.delete(args.id!),
+	ARTICLE_DRAFT_CREATE: (args: IPostArgs) => ArticleRequests.createDraft(args.articleDraft),
 	ARTICLE_ENTITIES: (args: IFetchArgs) => ArticleRequests.entities(args.id!, args.lifecycle, args.count, args.cursor),
 
 	JOB_DETAILS: (args: IFetchArgs) => JobRequests.details(args.id!),

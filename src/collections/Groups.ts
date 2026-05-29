@@ -70,6 +70,7 @@ export const FetchResourcesGroup = [
  */
 export const PostResourcesGroup = [
 	ResourceType.ARTICLE_DELETE,
+	ResourceType.ARTICLE_DRAFT_CREATE,
 	ResourceType.LIST_CREATE,
 	ResourceType.LIST_DELETE,
 	ResourceType.LIST_MEMBER_ADD,

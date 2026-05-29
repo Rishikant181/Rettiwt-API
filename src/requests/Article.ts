@@ -1,6 +1,7 @@
 import { AxiosRequestConfig } from 'axios';
 
 import { ArticleLifecycle } from '../enums/Article';
+import { IArticleDraft } from '../types/args/PostArgs';
 
 /**
  * Collection of requests related to Articles.
@@ -8,6 +9,36 @@ import { ArticleLifecycle } from '../enums/Article';
  * @public
  */
 export class ArticleRequests {
+	/**
+	 * @param articleDraft - The Article draft to create.
+	 */
+	public static createDraft(articleDraft?: IArticleDraft): AxiosRequestConfig {
+		return {
+			method: 'post',
+			url: 'https://x.com/i/api/graphql/g1l5N8BxGewYuCy5USe_bQ/ArticleEntityDraftCreate',
+			data: {
+				/* eslint-disable @typescript-eslint/naming-convention */
+				variables: {
+					content_state: {
+						blocks: articleDraft?.contentState?.blocks ?? [],
+						entity_map: articleDraft?.contentState?.entityMap ?? [],
+					},
+					title: articleDraft?.title ?? '',
+				},
+				features: {
+					profile_label_improvements_pcf_label_in_post_enabled: true,
+					responsive_web_profile_redirect_enabled: false,
+					rweb_tipjar_consumption_enabled: false,
+					verified_phone_label_enabled: false,
+					responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
+					responsive_web_graphql_timeline_navigation_enabled: true,
+				},
+				queryId: 'g1l5N8BxGewYuCy5USe_bQ',
+				/* eslint-enable @typescript-eslint/naming-convention */
+			},
+		};
+	}
+
 	/**
 	 * @param id - The id of the Article to delete.
 	 */
