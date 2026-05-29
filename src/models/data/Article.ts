@@ -4,6 +4,7 @@ import { LogService } from '../../services/internal/LogService';
 import { IArticle, IArticleContentState } from '../../types/data/Article';
 import { IArticleDraftCreateResponse } from '../../types/raw/article/DraftCreate';
 import { IArticleEntitiesResponse } from '../../types/raw/article/Entities';
+import { IArticleUpdateTitleResponse } from '../../types/raw/article/UpdateTitle';
 import { IArticle as IRawArticle } from '../../types/raw/base/Article';
 
 import { User } from './User';
@@ -83,6 +84,17 @@ export class Article implements IArticle {
 	public static fromDraftCreate(response: IArticleDraftCreateResponse): Article | undefined {
 		const article = response.data?.articleentity_create_draft?.article_entity_results?.result;
 
+		return Article.fromRawArticle(article);
+	}
+
+	/**
+	 * Extracts and deserializes a single raw Article.
+	 *
+	 * @param article - The raw Article data.
+	 *
+	 * @returns The deserialized Article.
+	 */
+	public static fromRawArticle(article?: IRawArticle): Article | undefined {
 		if (article?.rest_id) {
 			// Logging
 			LogService.log(LogActions.DESERIALIZE, { id: article.rest_id });
@@ -97,6 +109,19 @@ export class Article implements IArticle {
 		});
 
 		return undefined;
+	}
+
+	/**
+	 * Extracts and deserializes the updated Article from the given raw response data.
+	 *
+	 * @param response - The raw response data.
+	 *
+	 * @returns The updated Article.
+	 */
+	public static fromTitleUpdate(response: IArticleUpdateTitleResponse): Article | undefined {
+		const article = response.data?.articleentity_update_title;
+
+		return Article.fromRawArticle(article);
 	}
 
 	/**

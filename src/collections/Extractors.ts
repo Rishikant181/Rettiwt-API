@@ -16,6 +16,7 @@ import { UserAbout } from '../models/data/UserAbout';
 import { IArticleDeleteResponse } from '../types/raw/article/Delete';
 import { IArticleDraftCreateResponse } from '../types/raw/article/DraftCreate';
 import { IArticleEntitiesResponse } from '../types/raw/article/Entities';
+import { IArticleUpdateTitleResponse } from '../types/raw/article/UpdateTitle';
 import { IConversationPageResponse } from '../types/raw/dm/ConversationPage';
 import { IInboxInitialResponse } from '../types/raw/dm/InboxInitial';
 import { IInboxTimelineResponse } from '../types/raw/dm/InboxTimeline';
@@ -93,6 +94,8 @@ export const Extractors = {
 		Article.fromDraftCreate(response),
 	ARTICLE_ENTITIES: (response: IArticleEntitiesResponse): CursoredData<Article> =>
 		new CursoredData<Article>(response, BaseType.ARTICLE),
+	ARTICLE_TITLE_UPDATE: (response: IArticleUpdateTitleResponse): Article | undefined =>
+		Article.fromTitleUpdate(response),
 
 	JOB_DETAILS: (response: IJobScreenQueryResponse, id: string): Job | undefined => Job.single(response, id),
 	JOB_LOCATIONS: (response: ILocationSelectorQueryResponse): JobLocation[] => JobLocation.list(response),
