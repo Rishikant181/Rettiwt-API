@@ -11,6 +11,7 @@ import { Space } from '../models/data/Space';
 import { Tweet } from '../models/data/Tweet';
 import { User } from '../models/data/User';
 import { UserAbout } from '../models/data/UserAbout';
+import { IArticleDeleteResponse } from '../types/raw/article/Delete';
 import { IArticleEntitiesResponse } from '../types/raw/article/Entities';
 import { IConversationTimelineResponse } from '../types/raw/dm/Conversation';
 import { IInboxInitialResponse } from '../types/raw/dm/InboxInitial';
@@ -75,6 +76,7 @@ import { IUserUnfollowResponse } from '../types/raw/user/Unfollow';
 export const Extractors = {
 	/* eslint-disable @typescript-eslint/naming-convention */
 
+	ARTICLE_DELETE: (response: IArticleDeleteResponse): boolean => response?.data?.articleentity_delete === 'Done',
 	ARTICLE_ENTITIES: (response: IArticleEntitiesResponse): CursoredData<Article> =>
 		new CursoredData<Article>(response, BaseType.ARTICLE),
 

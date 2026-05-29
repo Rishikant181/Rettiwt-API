@@ -9,6 +9,22 @@ import { ArticleLifecycle } from '../enums/Article';
  */
 export class ArticleRequests {
 	/**
+	 * @param id - The id of the Article to delete.
+	 */
+	public static delete(id: string): AxiosRequestConfig {
+		return {
+			method: 'post',
+			url: 'https://x.com/i/api/graphql/e4lWqB6m2TA8Fn_j9L9xEA/ArticleEntityDelete',
+			data: {
+				variables: {
+					articleEntityId: id,
+				},
+				queryId: 'e4lWqB6m2TA8Fn_j9L9xEA',
+			},
+		};
+	}
+
+	/**
 	 * @param userId - The id of the user whose Articles are to be fetched.
 	 * @param lifecycle - The lifecycle state of the Articles to fetch.
 	 * @param count - The number of Articles to fetch.

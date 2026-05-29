@@ -5,6 +5,7 @@
  */
 export enum ResourceType {
 	// ARTICLE
+	ARTICLE_DELETE = 'ARTICLE_DELETE',
 	ARTICLE_ENTITIES = 'ARTICLE_ENTITIES',
 
 	// LIST

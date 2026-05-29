@@ -20,6 +20,7 @@ export interface IPostArgs {
 	 * - {@link ResourceType.TWEET_UNRETWEET}
 	 * - {@link ResourceType.USER_FOLLOW}
 	 * - {@link ResourceType.USER_UNFOLLOW}
+	 * - {@link ResourceType.ARTICLE_DELETE}
 	 *
 	 * For {@link ResourceType.USER_USERNAME_CHANGE}, use {@link IPostArgs.username}.
 	 * `id` is still accepted for backward compatibility.

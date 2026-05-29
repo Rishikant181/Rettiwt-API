@@ -4,6 +4,7 @@ import { ResourceType } from '../../enums/Resource';
 import { Article } from '../../models/data/Article';
 import { CursoredData } from '../../models/data/CursoredData';
 import { RettiwtConfig } from '../../models/RettiwtConfig';
+import { IArticleDeleteResponse } from '../../types/raw/article/Delete';
 import { IArticleEntitiesResponse } from '../../types/raw/article/Entities';
 
 import { FetcherService } from './FetcherService';
@@ -21,6 +22,45 @@ export class ArticleService extends FetcherService {
 	 */
 	public constructor(config: RettiwtConfig) {
 		super(config);
+	}
+
+	/**
+	 * Delete an Article.
+	 *
+	 * @param id - The ID of the Article to delete.
+	 *
+	 * @returns Whether the Article was deleted.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Deleting an Article
+	 * rettiwt.article.delete('2060430005013008384')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async delete(id: string): Promise<boolean> {
+		const resource = ResourceType.ARTICLE_DELETE;
+
+		// Deleting the Article
+		const response = await this.request<IArticleDeleteResponse>(resource, {
+			id: id,
+		});
+
+		// Deserializing response
+		const data = Extractors[resource](response.data);
+
+		return data;
 	}
 
 	/**
