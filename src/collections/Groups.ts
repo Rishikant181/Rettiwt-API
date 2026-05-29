@@ -69,6 +69,7 @@ export const FetchResourcesGroup = [
  * @internal
  */
 export const PostResourcesGroup = [
+	ResourceType.ARTICLE_DELETE,
 	ResourceType.LIST_CREATE,
 	ResourceType.LIST_DELETE,
 	ResourceType.LIST_MEMBER_ADD,
