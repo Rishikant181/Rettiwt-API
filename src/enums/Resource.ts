@@ -4,6 +4,9 @@
  * @public
  */
 export enum ResourceType {
+	// ARTICLE
+	ARTICLE_ENTITIES = 'ARTICLE_ENTITIES',
+
 	// JOB
 	JOB_DETAILS = 'JOB_DETAILS',
 	JOB_LOCATIONS = 'JOB_LOCATIONS',

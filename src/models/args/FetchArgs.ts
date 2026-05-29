@@ -1,3 +1,4 @@
+import { ArticleLifecycle } from '../../enums/Article';
 import { JobEmploymentType, JobLocationType, JobSeniorityLevel } from '../../enums/Job';
 import { TweetRepliesSortType } from '../../enums/Tweet';
 import { IFetchArgs, IJobSearchFilter, ITweetFilter } from '../../types/args/FetchArgs';
@@ -22,6 +23,7 @@ export class FetchArgs implements IFetchArgs {
 	public includeJuiceboxTokens?: boolean;
 	public isMetatagsQuery?: boolean;
 	public jobFilter?: JobSearchFilter;
+	public lifecycle?: ArticleLifecycle;
 	public maxId?: string;
 	public metrics?: RawAnalyticsMetric[];
 	public showVerifiedFollowers?: boolean;
@@ -39,6 +41,7 @@ export class FetchArgs implements IFetchArgs {
 		this.includeJuiceboxTokens = args.includeJuiceboxTokens;
 		this.isMetatagsQuery = args.isMetatagsQuery;
 		this.jobFilter = args.jobFilter ? new JobSearchFilter(args.jobFilter) : undefined;
+		this.lifecycle = args.lifecycle;
 		this.count = args.count;
 		this.creatorOnly = args.creatorOnly;
 		this.cursor = args.cursor;

@@ -2,6 +2,7 @@
 export * from './Rettiwt';
 
 // ENUMS
+export * from './enums/Article';
 export * from './enums/raw/Analytics';
 export * from './enums/raw/Media';
 export * from './enums/raw/Notification';
@@ -20,6 +21,7 @@ export * from './enums/Tweet';
 export * from './models/args/FetchArgs';
 export * from './models/args/PostArgs';
 export * from './models/args/ProfileArgs';
+export * from './models/data/Article';
 export * from './models/data/BookmarkFolder';
 export * from './models/data/Conversation';
 export * from './models/data/CursoredData';
@@ -37,6 +39,7 @@ export * from './models/errors/TwitterError';
 export * from './models/XChatSession';
 
 // REQUESTS
+export * from './requests/Article';
 export * from './requests/DirectMessage';
 export * from './requests/Job';
 export * from './requests/List';
@@ -46,6 +49,7 @@ export * from './requests/Tweet';
 export * from './requests/User';
 
 // SERVICES
+export * from './services/public/ArticleService';
 export * from './services/public/DirectMessageService';
 export * from './services/public/FetcherService';
 export * from './services/public/JobService';
@@ -58,6 +62,7 @@ export * from './services/public/UserService';
 export * from './types/args/FetchArgs';
 export * from './types/args/PostArgs';
 export * from './types/args/ProfileArgs';
+export * from './types/data/Article';
 export * from './types/data/BookmarkFolder';
 export * from './types/data/Conversation';
 export * from './types/data/CursoredData';
@@ -73,6 +78,8 @@ export * from './types/data/User';
 export * from './types/data/UserAbout';
 export * from './types/errors/TwitterError';
 export * from './types/params/Variables';
+export { IArticle as IRawArticle } from './types/raw/base/Article';
+export { IArticleEntitiesResponse as IRawArticleEntitiesResponse } from './types/raw/article/Entities';
 export { IAnalytics as IRawAnalytics } from './types/raw/base/Analytic';
 export { IBookmarkFolder as IRawBookmarkFolder } from './types/raw/base/BookmarkFolder';
 export { ICursor as IRawCursor } from './types/raw/base/Cursor';

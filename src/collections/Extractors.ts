@@ -1,5 +1,6 @@
 import { BaseType } from '../enums/Data';
 import { Analytics } from '../models/data/Analytics';
+import { Article } from '../models/data/Article';
 import { BookmarkFolder } from '../models/data/BookmarkFolder';
 import { Conversation } from '../models/data/Conversation';
 import { CursoredData } from '../models/data/CursoredData';
@@ -13,6 +14,7 @@ import { Tweet } from '../models/data/Tweet';
 import { User } from '../models/data/User';
 import { UserAbout } from '../models/data/UserAbout';
 import { IConversationPageResponse } from '../types/raw/dm/ConversationPage';
+import { IArticleEntitiesResponse } from '../types/raw/article/Entities';
 import { IInboxInitialResponse } from '../types/raw/dm/InboxInitial';
 import { IInboxTimelineResponse } from '../types/raw/dm/InboxTimeline';
 import { IJobScreenQueryResponse } from '../types/raw/job/JobScreenQuery';
@@ -83,6 +85,9 @@ import { IUserUnfollowResponse } from '../types/raw/user/Unfollow';
  */
 export const Extractors = {
 	/* eslint-disable @typescript-eslint/naming-convention */
+
+	ARTICLE_ENTITIES: (response: IArticleEntitiesResponse): CursoredData<Article> =>
+		new CursoredData<Article>(response, BaseType.ARTICLE),
 
 	JOB_DETAILS: (response: IJobScreenQueryResponse, id: string): Job | undefined => Job.single(response, id),
 	JOB_LOCATIONS: (response: ILocationSelectorQueryResponse): JobLocation[] => JobLocation.list(response),

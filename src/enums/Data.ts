@@ -4,6 +4,7 @@
  * @internal
  */
 export enum BaseType {
+	ARTICLE = 'ARTICLE',
 	BOOKMARK_FOLDER = 'BOOKMARK_FOLDER',
 	DIRECT_MESSAGE = 'DIRECT_MESSAGE',
 	JOB = 'JOB',
