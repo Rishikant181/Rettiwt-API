@@ -90,19 +90,7 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - User Username Change
     - User Password Change
 
-By default, Rettiwt-API uses 'guest' authentication. If however, access to the full set of resources is required, 'user' authentication can be used. This is done by using the cookies associated with your Twitter/X account, and encoding them into an `API_KEY` for convenience. The said `API_KEY` can be obtained by using a browser extension, as follows:
-
-### A. For Chrome/Chromium-based browsers:
-
-1. Install the [X Auth Helper extension](https://chromewebstore.google.com/detail/x-auth-helper/igpkhkjmpdecacocghpgkghdcmcmpfhp) from the Chrome Web Store, and allow it to run it in incognito mode.
-2. Switch to incognito mode and login to Twitter/X.
-3. After successful login, while still being on Twitter/X, click on the extension which will open the extension popup.
-4. Click on the `Get Key` button, this will generate the `API_KEY` and will show up in the text-area.
-5. Copy the `API_KEY` by either clicking on the `Copy Key` button or manually from the text-area.
-6. You may close the browser, but don't log out. Remember, since it's incognito mode, you didn't explicity 'log out', so, while the session will be erased from the browser, the `API_KEY` still remains valid.
-7. Save the `API_KEY` for use.
-
-### B. For Firefox/Firefox-based browsers:
+By default, Rettiwt-API uses 'guest' authentication. If however, access to the full set of resources is required, 'user' authentication can be used. This is done by using the cookies associated with your Twitter/X account, and encoding them into an `API_KEY` for convenience. The said `API_KEY` can be obtained by using a **Firefox** extension, as follows:
 
 1. Install the [Rettiwt Auth Helper extension](https://addons.mozilla.org/en-US/firefox/addon/rettiwt-auth-helper) from Firefox Add-Ons, and allow it to run it in in-private mode.
 2. Switch to in-private mode and login to Twitter/X.
@@ -115,7 +103,7 @@ By default, Rettiwt-API uses 'guest' authentication. If however, access to the f
 #### Notes:
 
 - `API_KEY` created in this way should last 5 years from the date of login, as long as the credentials to the account aren't changed.
-- This approach can also be done without going into incognito/in-private mode, in which case you can either login as usual or skip the login step if you're already logged in, and continue from the steps after login. However, this makes the `API_KEY` to last only as long as the Twitter/X account isn't logged out of (you may exit the browser as usual) or 5 years, whichever comes first. That's why it's recommended to use incognito/in-private mode, so that the `API_KEY` isn't accidentially revoked by logging out.
+- This approach can also be done without going into n-private mode, in which case you can either login as usual or skip the login step if you're already logged in, and continue from the steps after login. However, this makes the `API_KEY` to last only as long as the Twitter/X account isn't logged out of (you may exit the browser as usual) or 5 years, whichever comes first. That's why it's recommended to use incognito/in-private mode, so that the `API_KEY` isn't accidentially revoked by logging out.
 
 ## The API_KEY
 
