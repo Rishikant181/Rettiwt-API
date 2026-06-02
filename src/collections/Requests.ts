@@ -1,6 +1,7 @@
 import { AxiosRequestConfig } from 'axios';
 
 import { ResourceType } from '../enums/Resource';
+import { CommunityRequests } from '../requests/Community';
 import { DMRequests } from '../requests/DirectMessage';
 import { ListRequests } from '../requests/List';
 import { MediaRequests } from '../requests/Media';
@@ -19,6 +20,14 @@ import { TweetRepliesSortTypeMap } from './Tweet';
  */
 export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs | IPostArgs) => AxiosRequestConfig } = {
 	/* eslint-disable @typescript-eslint/naming-convention */
+
+	COMMUNITY_DETAILS: (args: IFetchArgs) => CommunityRequests.details(args.id!),
+	COMMUNITY_JOIN: (args: IPostArgs) => CommunityRequests.join(args.id!),
+	COMMUNITY_LEAVE: (args: IPostArgs) => CommunityRequests.leave(args.id!),
+	COMMUNITY_MEMBERS: (args: IFetchArgs) => CommunityRequests.members(args.id!, args.cursor),
+	COMMUNITY_MODERATORS: (args: IFetchArgs) => CommunityRequests.moderators(args.id!, args.count, args.cursor),
+	COMMUNITY_TWEETS: (args: IFetchArgs) =>
+		CommunityRequests.tweets(args.id!, args.count, args.cursor, args.communitySortBy),
 
 	LIST_DETAILS: (args: IFetchArgs) => ListRequests.details(args.id!),
 	LIST_MEMBERS: (args: IFetchArgs) => ListRequests.members(args.id!, args.count, args.cursor),

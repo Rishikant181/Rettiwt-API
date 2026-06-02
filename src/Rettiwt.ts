@@ -1,6 +1,7 @@
 import { AxiosProxyConfig } from 'axios';
 
 import { RettiwtConfig } from './models/RettiwtConfig';
+import { CommunityService } from './services/public/CommunityService';
 import { DirectMessageService } from './services/public/DirectMessageService';
 import { ListService } from './services/public/ListService';
 import { SpaceService } from './services/public/SpaceService';
@@ -53,6 +54,9 @@ export class Rettiwt {
 	/** The configuration for Rettiwt. */
 	private _config: RettiwtConfig;
 
+	/** The instance used to fetch data related to communities. */
+	public community: CommunityService;
+
 	/** The instance used to fetch data related to direct messages. */
 	public dm: DirectMessageService;
 
@@ -76,6 +80,7 @@ export class Rettiwt {
 	public constructor(config?: IRettiwtConfig) {
 		this._config = new RettiwtConfig(config);
 		this.dm = new DirectMessageService(this._config);
+		this.community = new CommunityService(this._config);
 		this.list = new ListService(this._config);
 		this.space = new SpaceService(this._config);
 		this.tweet = new TweetService(this._config);

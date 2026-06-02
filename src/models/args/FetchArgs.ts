@@ -1,4 +1,4 @@
-import { TweetRepliesSortType } from '../../enums/Tweet';
+import { CommunityTweetsSortType, TweetRepliesSortType } from '../../enums/Tweet';
 import { IFetchArgs, ITweetFilter } from '../../types/args/FetchArgs';
 
 import type { RawAnalyticsGranularity, RawAnalyticsMetric } from '../../enums/raw/Analytics';
@@ -9,6 +9,7 @@ import type { RawAnalyticsGranularity, RawAnalyticsMetric } from '../../enums/ra
  */
 export class FetchArgs implements IFetchArgs {
 	public activeConversationId?: string;
+	public communitySortBy?: CommunityTweetsSortType;
 	public conversationId?: string;
 	public count?: number;
 	public cursor?: string;
@@ -33,6 +34,7 @@ export class FetchArgs implements IFetchArgs {
 		this.id = args.id;
 		this.ids = args.ids;
 		this.isMetatagsQuery = args.isMetatagsQuery;
+		this.communitySortBy = args.communitySortBy;
 		this.count = args.count;
 		this.cursor = args.cursor;
 		this.filter = args.filter ? new TweetFilter(args.filter) : undefined;

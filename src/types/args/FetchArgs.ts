@@ -1,5 +1,5 @@
 import { RawAnalyticsGranularity, RawAnalyticsMetric } from '../../enums/raw/Analytics';
-import { TweetRepliesSortType } from '../../enums/Tweet';
+import { CommunityTweetsSortType, TweetRepliesSortType } from '../../enums/Tweet';
 
 /**
  * Options specifying the data that is to be fetched.
@@ -114,6 +114,14 @@ export interface IFetchArgs {
 	 * - Only works for {@link ResourceType.TWEET_REPLIES}.
 	 */
 	sortBy?: TweetRepliesSortType;
+
+	/**
+	 * The sorting to use for community tweet results.
+	 *
+	 * @remarks
+	 * - Only works for {@link ResourceType.COMMUNITY_TWEETS}.
+	 */
+	communitySortBy?: CommunityTweetsSortType;
 
 	/**
 	 * The date to start fetching data from.

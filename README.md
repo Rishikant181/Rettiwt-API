@@ -23,6 +23,10 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
 
 - 'Guest' authentication (without logging in) grants access to the following resources/actions:
 
+    - Community Details
+    - Community Members
+    - Community Moderators
+    - Community Tweets
     - Tweet Details
     - Space Details
     - User Details (by username)
@@ -30,6 +34,12 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
 
 - 'User' authentication (logging in) grants access to the following resources/actions:
 
+    - Community Details
+    - Community Join
+    - Community Leave
+    - Community Members
+    - Community Moderators
+    - Community Tweets
     - Direct Message Inbox
     - Direct Message Conversations
     - Direct Message Delete Conversation
@@ -134,8 +144,9 @@ A new Rettiwt instance can be initialized using the following code snippets:
 - `const rettiwt = new Rettiwt()` (for 'guest' authentication)
 - `const rettiwt = new Rettiwt({ apiKey: API_KEY })` (for 'user' authentication)
 
-The Rettiwt class has five members:
+The Rettiwt class has six members:
 
+- `community` member, for accessing resources related to communities.
 - `dm` member, for accessing resources related to direct messages.
 - `list` member, for accessing resources related to lists.
 - `space` member, for accessing resources related to spaces.
@@ -233,7 +244,44 @@ rettiwt.tweet.search({
 
 For more information regarding the different available filter options, please refer to [TweetFilter](https://rishikant181.github.io/Rettiwt-API/classes/TweetFilter.html).
 
-### 3. Getting the next batch of data using a cursor
+### 3. Getting the details of a community
+
+```ts
+import { Rettiwt } from 'rettiwt-api';
+
+const rettiwt = new Rettiwt({ apiKey: API_KEY });
+
+rettiwt.community.details('1498502284082565120')
+.then(community => {
+	...
+})
+.catch(error => {
+	...
+});
+```
+
+### 4. Getting tweets from a community timeline
+
+```ts
+import { CommunityTweetsSortType, Rettiwt } from 'rettiwt-api';
+
+const rettiwt = new Rettiwt({ apiKey: API_KEY });
+
+rettiwt.community.tweets(
+	'1498502284082565120',
+	40,
+	'DAAJAAA',
+	CommunityTweetsSortType.TOP
+)
+.then(data => {
+	...
+})
+.catch(error => {
+	...
+});
+```
+
+### 5. Getting the next batch of data using a cursor
 
 The previous example fetches the the list of tweets matching the given filter. Since no count is specified, in this case, a default of 20 such Tweets are fetched initially. The following example demonstrates how to use the [cursor string](https://rishikant181.github.io/Rettiwt-API/classes/Cursor.html#value) obtained from the [response](https://rishikant181.github.io/Rettiwt-API/classes/CursoredData.html) object's [next](https://rishikant181.github.io/Rettiwt-API/classes/CursoredData.html#next) field, from the previous example, to fetch the next batch of tweets:
 
@@ -524,6 +572,15 @@ For handling and processing of data returned by the functions, it's always advis
 ## Features
 
 So far, the following operations are supported:
+
+### Communities
+
+- [Getting the details of a community](https://rishikant181.github.io/Rettiwt-API/classes/CommunityService.html#details)
+- [Joining a community](https://rishikant181.github.io/Rettiwt-API/classes/CommunityService.html#join)
+- [Leaving a community](https://rishikant181.github.io/Rettiwt-API/classes/CommunityService.html#leave)
+- [Getting the members of a community](https://rishikant181.github.io/Rettiwt-API/classes/CommunityService.html#members)
+- [Getting the moderators of a community](https://rishikant181.github.io/Rettiwt-API/classes/CommunityService.html#moderators)
+- [Getting the tweets from a community timeline](https://rishikant181.github.io/Rettiwt-API/classes/CommunityService.html#tweets)
 
 ### Direct Messages
 

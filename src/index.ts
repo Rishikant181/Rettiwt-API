@@ -20,6 +20,11 @@ export * from './models/args/FetchArgs';
 export * from './models/args/PostArgs';
 export * from './models/args/ProfileArgs';
 export * from './models/data/BookmarkFolder';
+export * from './models/data/Community';
+export * from './models/data/CommunityJoin';
+export * from './models/data/CommunityLeave';
+export * from './models/data/CommunityMember';
+export * from './models/data/CommunityMembersSlice';
 export * from './models/data/Conversation';
 export * from './models/data/CursoredData';
 export * from './models/data/DirectMessage';
@@ -34,6 +39,7 @@ export * from './models/errors/TwitterError';
 
 // REQUESTS
 export * from './requests/DirectMessage';
+export * from './requests/Community';
 export * from './requests/List';
 export * from './requests/Media';
 export * from './requests/Space';
@@ -42,6 +48,7 @@ export * from './requests/User';
 
 // SERVICES
 export * from './services/public/DirectMessageService';
+export * from './services/public/CommunityService';
 export * from './services/public/FetcherService';
 export * from './services/public/ListService';
 export * from './services/public/SpaceService';
@@ -53,6 +60,11 @@ export * from './types/args/FetchArgs';
 export * from './types/args/PostArgs';
 export * from './types/args/ProfileArgs';
 export * from './types/data/BookmarkFolder';
+export * from './types/data/Community';
+export * from './types/data/CommunityJoin';
+export * from './types/data/CommunityLeave';
+export * from './types/data/CommunityMember';
+export * from './types/data/CommunityMembersSlice';
 export * from './types/data/Conversation';
 export * from './types/data/CursoredData';
 export * from './types/data/DirectMessage';
@@ -81,6 +93,17 @@ export { IDataResult as IRawDataResult } from './types/raw/composite/DataResult'
 export { ITimelineTweet as IRawTimelineTweet } from './types/raw/composite/TimelineTweet';
 export { ITimelineUser as IRawTimelineUser } from './types/raw/composite/TimelineUser';
 export { IResponse as IRawResponse } from './types/raw/generic/Response';
+export {
+	ICommunityDetailsResponse as IRawCommunityDetailsResponse,
+	IRawCommunity,
+} from './types/raw/community/Details';
+export { ICommunityJoinResponse as IRawCommunityJoinResponse } from './types/raw/community/Join';
+export { ICommunityLeaveResponse as IRawCommunityLeaveResponse } from './types/raw/community/Leave';
+export {
+	ICommunityMembersSliceResponse as IRawCommunityMembersSliceResponse,
+	ICommunityModeratorsSliceResponse as IRawCommunityModeratorsSliceResponse,
+} from './types/raw/community/Slices';
+export { ICommunityTweetsResponse as IRawCommunityTweetsResponse } from './types/raw/community/Tweets';
 export { IListMemberAddResponse as IRawListMemberAddResponse } from './types/raw/list/AddMember';
 export { IListMemberRemoveResponse as IRawListMemberRemoveResponse } from './types/raw/list/RemoveMember';
 export { IListDetailsResponse as IRawListDetailsResponse } from './types/raw/list/Details';

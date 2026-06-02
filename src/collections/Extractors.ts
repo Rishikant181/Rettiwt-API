@@ -1,6 +1,10 @@
 import { BaseType } from '../enums/Data';
 import { Analytics } from '../models/data/Analytics';
 import { BookmarkFolder } from '../models/data/BookmarkFolder';
+import { Community } from '../models/data/Community';
+import { CommunityJoin } from '../models/data/CommunityJoin';
+import { CommunityLeave } from '../models/data/CommunityLeave';
+import { CommunityMembersSlice } from '../models/data/CommunityMembersSlice';
 import { Conversation } from '../models/data/Conversation';
 import { CursoredData } from '../models/data/CursoredData';
 import { Inbox } from '../models/data/Inbox';
@@ -10,6 +14,11 @@ import { Space } from '../models/data/Space';
 import { Tweet } from '../models/data/Tweet';
 import { User } from '../models/data/User';
 import { UserAbout } from '../models/data/UserAbout';
+import { ICommunityDetailsResponse } from '../types/raw/community/Details';
+import { ICommunityJoinResponse } from '../types/raw/community/Join';
+import { ICommunityLeaveResponse } from '../types/raw/community/Leave';
+import { ICommunityMembersSliceResponse, ICommunityModeratorsSliceResponse } from '../types/raw/community/Slices';
+import { ICommunityTweetsResponse } from '../types/raw/community/Tweets';
 import { IConversationTimelineResponse } from '../types/raw/dm/Conversation';
 import { IInboxInitialResponse } from '../types/raw/dm/InboxInitial';
 import { IInboxTimelineResponse } from '../types/raw/dm/InboxTimeline';
@@ -72,6 +81,16 @@ import { IUserUnfollowResponse } from '../types/raw/user/Unfollow';
  */
 export const Extractors = {
 	/* eslint-disable @typescript-eslint/naming-convention */
+
+	COMMUNITY_DETAILS: (response: ICommunityDetailsResponse): Community | undefined => Community.single(response),
+	COMMUNITY_JOIN: (response: ICommunityJoinResponse): CommunityJoin | undefined => CommunityJoin.single(response),
+	COMMUNITY_LEAVE: (response: ICommunityLeaveResponse): CommunityLeave | undefined => CommunityLeave.single(response),
+	COMMUNITY_MEMBERS: (response: ICommunityMembersSliceResponse): CommunityMembersSlice | undefined =>
+		CommunityMembersSlice.members(response),
+	COMMUNITY_MODERATORS: (response: ICommunityModeratorsSliceResponse): CommunityMembersSlice | undefined =>
+		CommunityMembersSlice.moderators(response),
+	COMMUNITY_TWEETS: (response: ICommunityTweetsResponse): CursoredData<Tweet> =>
+		new CursoredData<Tweet>(response, BaseType.TWEET),
 
 	LIST_DETAILS: (response: IListDetailsResponse, id: string): List | undefined => List.single(response, id),
 	LIST_MEMBERS: (response: IListMembersResponse): CursoredData<User> =>
