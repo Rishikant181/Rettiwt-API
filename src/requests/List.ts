@@ -36,6 +36,39 @@ export class ListRequests {
 	}
 
 	/**
+	 * @param name - The name of the list to create.
+	 * @param isPrivate - Whether the list is private.
+	 * @param description - The description of the list.
+	 */
+	public static create(name: string, isPrivate?: boolean, description?: string): AxiosRequestConfig {
+		return {
+			method: 'post',
+			headers: { referer: 'https://x.com/i/lists/create' },
+			url: 'https://x.com/i/api/graphql/4lSOF4GqldI-NbiFET4ofQ/CreateList',
+			data: {
+				/* eslint-disable @typescript-eslint/naming-convention */
+
+				variables: {
+					isPrivate: isPrivate ?? false,
+					name: name,
+					description: description ?? '',
+				},
+				features: {
+					profile_label_improvements_pcf_label_in_post_enabled: true,
+					responsive_web_profile_redirect_enabled: false,
+					rweb_tipjar_consumption_enabled: false,
+					verified_phone_label_enabled: false,
+					responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
+					responsive_web_graphql_timeline_navigation_enabled: true,
+				},
+				queryId: '4lSOF4GqldI-NbiFET4ofQ',
+
+				/* eslint-enable @typescript-eslint/naming-convention */
+			},
+		};
+	}
+
+	/**
 	 * @param id - The id of the list whose details are to be fetched.
 	 */
 	public static details(id: string): AxiosRequestConfig {

@@ -1,4 +1,4 @@
-import { IChangePasswordArgs, INewTweet, INewTweetMedia, IPostArgs, IUploadArgs } from '../../types/args/PostArgs';
+import { IChangePasswordArgs, INewList, INewTweet, INewTweetMedia, IPostArgs, IUploadArgs } from '../../types/args/PostArgs';
 
 import { ProfileUpdateOptions } from './ProfileArgs';
 
@@ -11,6 +11,7 @@ export class PostArgs implements IPostArgs {
 	public changePassword?: ChangePasswordArgs;
 	public conversationId?: string;
 	public id?: string;
+	public list?: NewList;
 	public profileBanner?: string;
 	public profileImage?: string;
 	public profileOptions?: ProfileUpdateOptions;
@@ -25,6 +26,7 @@ export class PostArgs implements IPostArgs {
 	 */
 	public constructor(args: IPostArgs) {
 		this.id = args.id;
+		this.list = args.list ? new NewList(args.list) : undefined;
 		this.tweet = args.tweet ? new NewTweet(args.tweet) : undefined;
 		this.upload = args.upload ? new UploadArgs(args.upload) : undefined;
 		this.userId = args.userId;
@@ -58,6 +60,33 @@ export class PostArgs implements IPostArgs {
 		}
 
 		return value;
+	}
+}
+
+/**
+ * Configuration for the new list to be created.
+ *
+ * @public
+ */
+export class NewList implements INewList {
+	public description?: string;
+	public isPrivate: boolean;
+	public name: string;
+
+	/**
+	 * @param newList - The args specifying the new list to be created.
+	 */
+	public constructor(newList: INewList) {
+		if (typeof newList.name !== 'string') {
+			throw new Error('List name must be a string');
+		}
+		if (newList.name.trim().length === 0) {
+			throw new Error('List name cannot be empty');
+		}
+
+		this.name = newList.name;
+		this.description = newList.description;
+		this.isPrivate = newList.isPrivate ?? false;
 	}
 }
 

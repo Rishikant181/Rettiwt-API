@@ -6,6 +6,7 @@ import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
 import { RettiwtConfig } from '../../models/RettiwtConfig';
 import { IListMemberAddResponse } from '../../types/raw/list/AddMember';
+import { IListCreateResponse } from '../../types/raw/list/Create';
 import { IListDetailsResponse } from '../../types/raw/list/Details';
 import { IListMembersResponse } from '../../types/raw/list/Members';
 import { IListMemberRemoveResponse } from '../../types/raw/list/RemoveMember';
@@ -56,6 +57,51 @@ export class ListService extends FetcherService {
 		const response = await this.request<IListMemberAddResponse>(resource, {
 			id: listId,
 			userId: userId,
+		});
+
+		// Deserializing response
+		const data = Extractors[resource](response.data);
+
+		return data;
+	}
+
+	/**
+	 * Create a list.
+	 *
+	 * @param name - The name of the list to create.
+	 * @param isPrivate - Whether the list is private.
+	 * @param description - The description of the list.
+	 *
+	 * @returns The ID of the created list. If creation was unsuccessful, return `undefined`.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Creating a public list
+	 * rettiwt.list.create('My list', false, 'List description')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async create(name: string, isPrivate?: boolean, description?: string): Promise<string | undefined> {
+		const resource: ResourceType = ResourceType.LIST_CREATE;
+
+		// Creating the list
+		const response = await this.request<IListCreateResponse>(resource, {
+			list: {
+				description: description,
+				isPrivate: isPrivate,
+				name: name,
+			},
 		});
 
 		// Deserializing response

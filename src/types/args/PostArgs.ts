@@ -27,6 +27,14 @@ export interface IPostArgs {
 	id?: string;
 
 	/**
+	 * The list that is to be created.
+	 *
+	 * @remarks
+	 * Required only when creating a list using {@link ResourceType.LIST_CREATE}.
+	 */
+	list?: INewList;
+
+	/**
 	 * The new username to set.
 	 *
 	 * @remarks
@@ -102,6 +110,22 @@ export interface IPostArgs {
 	 * Required only when changing password using {@link ResourceType.USER_PASSWORD_CHANGE}.
 	 */
 	changePassword?: IChangePasswordArgs;
+}
+
+/**
+ * Configuration for the new list to be created.
+ *
+ * @public
+ */
+export interface INewList {
+	/** The list description. */
+	description?: string;
+
+	/** Whether the list is private. */
+	isPrivate?: boolean;
+
+	/** The list name. */
+	name: string;
 }
 
 /**

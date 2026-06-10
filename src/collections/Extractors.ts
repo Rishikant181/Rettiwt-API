@@ -14,6 +14,7 @@ import { IConversationTimelineResponse } from '../types/raw/dm/Conversation';
 import { IInboxInitialResponse } from '../types/raw/dm/InboxInitial';
 import { IInboxTimelineResponse } from '../types/raw/dm/InboxTimeline';
 import { IListMemberAddResponse } from '../types/raw/list/AddMember';
+import { IListCreateResponse } from '../types/raw/list/Create';
 import { IListDetailsResponse } from '../types/raw/list/Details';
 import { IListMembersResponse } from '../types/raw/list/Members';
 import { IListMemberRemoveResponse } from '../types/raw/list/RemoveMember';
@@ -73,6 +74,14 @@ import { IUserUnfollowResponse } from '../types/raw/user/Unfollow';
 export const Extractors = {
 	/* eslint-disable @typescript-eslint/naming-convention */
 
+	LIST_CREATE: (response: IListCreateResponse): string | undefined =>
+		response?.data?.list?.id_str ??
+		response?.data?.list?.id ??
+		response?.data?.create_list?.list?.id_str ??
+		response?.data?.create_list?.list?.id ??
+		response?.data?.list_create?.list?.id_str ??
+		response?.data?.list_create?.list?.id ??
+		undefined,
 	LIST_DETAILS: (response: IListDetailsResponse, id: string): List | undefined => List.single(response, id),
 	LIST_MEMBERS: (response: IListMembersResponse): CursoredData<User> =>
 		new CursoredData<User>(response, BaseType.USER),
