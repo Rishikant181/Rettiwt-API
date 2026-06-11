@@ -12,6 +12,5 @@ export interface IListCreateResponse {
 }
 
 interface IListCreateList {
-	id?: string;
 	id_str?: string;
 }

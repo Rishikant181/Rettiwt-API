@@ -74,8 +74,7 @@ import { IUserUnfollowResponse } from '../types/raw/user/Unfollow';
 export const Extractors = {
 	/* eslint-disable @typescript-eslint/naming-convention */
 
-	LIST_CREATE: (response: IListCreateResponse): string | undefined =>
-		response.data?.list?.id_str ?? response.data?.list?.id ?? undefined,
+	LIST_CREATE: (response: IListCreateResponse): string | undefined => response.data?.list?.id_str ?? undefined,
 	LIST_DETAILS: (response: IListDetailsResponse, id: string): List | undefined => List.single(response, id),
 	LIST_MEMBERS: (response: IListMembersResponse): CursoredData<User> =>
 		new CursoredData<User>(response, BaseType.USER),

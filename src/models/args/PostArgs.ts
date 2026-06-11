@@ -77,13 +77,6 @@ export class NewList implements INewList {
 	 * @param newList - The args specifying the new list to be created.
 	 */
 	public constructor(newList: INewList) {
-		if (typeof newList.name !== 'string') {
-			throw new Error('List name must be a string');
-		}
-		if (newList.name.trim().length === 0) {
-			throw new Error('List name cannot be empty');
-		}
-
 		this.name = newList.name;
 		this.description = newList.description;
 		this.isPrivate = newList.isPrivate ?? false;
