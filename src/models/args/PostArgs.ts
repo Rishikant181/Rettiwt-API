@@ -71,7 +71,7 @@ export class PostArgs implements IPostArgs {
 }
 
 /**
- * Configuration for the new list to be created.
+ * Configuration for the list to be created or updated.
  *
  * @public
  */
@@ -81,7 +81,7 @@ export class NewList implements INewList {
 	public name: string;
 
 	/**
-	 * @param newList - The args specifying the new list to be created.
+	 * @param newList - The args specifying the list to be created or updated.
 	 */
 	public constructor(newList: INewList) {
 		this.name = newList.name;

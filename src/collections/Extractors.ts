@@ -15,10 +15,14 @@ import { IInboxInitialResponse } from '../types/raw/dm/InboxInitial';
 import { IInboxTimelineResponse } from '../types/raw/dm/InboxTimeline';
 import { IListMemberAddResponse } from '../types/raw/list/AddMember';
 import { IListCreateResponse } from '../types/raw/list/Create';
+import { IListDeleteResponse } from '../types/raw/list/Delete';
 import { IListDetailsResponse } from '../types/raw/list/Details';
 import { IListMembersResponse } from '../types/raw/list/Members';
+import { IListMuteResponse } from '../types/raw/list/Mute';
 import { IListMemberRemoveResponse } from '../types/raw/list/RemoveMember';
 import { IListTweetsResponse } from '../types/raw/list/Tweets';
+import { IListUnmuteResponse } from '../types/raw/list/Unmute';
+import { IListUpdateResponse } from '../types/raw/list/Update';
 import { IMediaInitializeUploadResponse } from '../types/raw/media/InitalizeUpload';
 import { IAudioSpaceByIdResponse } from '../types/raw/space/AudioSpaceById';
 import { ITweetBookmarkResponse } from '../types/raw/tweet/Bookmark';
@@ -75,6 +79,7 @@ export const Extractors = {
 	/* eslint-disable @typescript-eslint/naming-convention */
 
 	LIST_CREATE: (response: IListCreateResponse): string | undefined => response.data?.list?.id_str ?? undefined,
+	LIST_DELETE: (response: IListDeleteResponse): boolean => response.data?.list_delete === 'Done',
 	LIST_DETAILS: (response: IListDetailsResponse, id: string): List | undefined => List.single(response, id),
 	LIST_MEMBERS: (response: IListMembersResponse): CursoredData<User> =>
 		new CursoredData<User>(response, BaseType.USER),
@@ -82,8 +87,12 @@ export const Extractors = {
 		response.data?.list?.member_count ?? undefined,
 	LIST_MEMBER_REMOVE: (response: IListMemberRemoveResponse): number | undefined =>
 		response.data?.list?.member_count ?? undefined,
+	LIST_MUTE: (response: IListMuteResponse): boolean => response.data?.list === 'Done',
 	LIST_TWEETS: (response: IListTweetsResponse): CursoredData<Tweet> =>
 		new CursoredData<Tweet>(response, BaseType.TWEET),
+	LIST_UNMUTE: (response: IListUnmuteResponse): boolean => response.data?.list === 'Done',
+	LIST_UPDATE: (response: IListUpdateResponse): List | undefined =>
+		response.data?.list ? new List(response.data.list) : undefined,
 
 	MEDIA_UPLOAD_APPEND: (): void => undefined,
 	MEDIA_UPLOAD_FINALIZE: (): void => undefined,

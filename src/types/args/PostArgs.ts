@@ -18,6 +18,10 @@ export interface IPostArgs {
 	 * - {@link ResourceType.TWEET_UNLIKE}
 	 * - {@link ResourceType.TWEET_UNPOST}
 	 * - {@link ResourceType.TWEET_UNRETWEET}
+	 * - {@link ResourceType.LIST_DELETE}
+	 * - {@link ResourceType.LIST_MUTE}
+	 * - {@link ResourceType.LIST_UNMUTE}
+	 * - {@link ResourceType.LIST_UPDATE}
 	 * - {@link ResourceType.USER_FOLLOW}
 	 * - {@link ResourceType.USER_UNFOLLOW}
 	 *
@@ -27,10 +31,12 @@ export interface IPostArgs {
 	id?: string;
 
 	/**
-	 * The list that is to be created.
+	 * The list that is to be created or updated.
 	 *
 	 * @remarks
-	 * Required only when creating a list using {@link ResourceType.LIST_CREATE}.
+	 * Required only when creating or updating a list using the following resources:
+	 * - {@link ResourceType.LIST_CREATE}
+	 * - {@link ResourceType.LIST_UPDATE}
 	 */
 	list?: INewList;
 
@@ -113,7 +119,7 @@ export interface IPostArgs {
 }
 
 /**
- * Configuration for the new list to be created.
+ * Configuration for the list to be created or updated.
  *
  * @public
  */

@@ -28,6 +28,61 @@ function createListCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// Update
+	list.command('update')
+		.description('Update a list')
+		.argument('<id>', 'The ID of the tweet list')
+		.argument('<name>', 'The updated name of the tweet list')
+		.option('-d, --description [string]', 'The updated description of the tweet list')
+		.option('--private', 'Update to a private list')
+		.action(async (id: string, name: string, options?: { description?: string; private?: boolean }) => {
+			try {
+				const details = await rettiwt.list.update(id, name, options?.description, options?.private);
+				output(details);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// Delete
+	list.command('delete')
+		.description('Delete a list')
+		.argument('<id>', 'The ID of the tweet list')
+		.action(async (id: string) => {
+			try {
+				const deleted = await rettiwt.list.delete(id);
+				output(deleted);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// Mute
+	list.command('mute')
+		.description('Mute a list')
+		.argument('<id>', 'The ID of the tweet list')
+		.action(async (id: string) => {
+			try {
+				const muted = await rettiwt.list.mute(id);
+				output(muted);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// Unmute
+	list.command('unmute')
+		.description('Unmute a list')
+		.argument('<id>', 'The ID of the tweet list')
+		.action(async (id: string) => {
+			try {
+				const unmuted = await rettiwt.list.unmute(id);
+				output(unmuted);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Add member
 	list.command('add-member')
 		.description('Add a new member to a list')
