@@ -428,7 +428,12 @@ export class ListService extends FetcherService {
 	 * });
 	 * ```
 	 */
-	public async update(id: string, name: string, description?: string, isPrivate?: boolean): Promise<List | undefined> {
+	public async update(
+		id: string,
+		name: string,
+		description?: string,
+		isPrivate?: boolean,
+	): Promise<List | undefined> {
 		const resource: ResourceType = ResourceType.LIST_UPDATE;
 
 		// Updating the list
