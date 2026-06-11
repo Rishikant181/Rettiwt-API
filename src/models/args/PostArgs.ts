@@ -1,4 +1,11 @@
-import { IChangePasswordArgs, INewList, INewTweet, INewTweetMedia, IPostArgs, IUploadArgs } from '../../types/args/PostArgs';
+import {
+	IChangePasswordArgs,
+	INewList,
+	INewTweet,
+	INewTweetMedia,
+	IPostArgs,
+	IUploadArgs,
+} from '../../types/args/PostArgs';
 
 import { ProfileUpdateOptions } from './ProfileArgs';
 
