@@ -8,12 +8,6 @@
 export interface IListCreateResponse {
 	data?: {
 		list?: IListCreateList;
-		create_list?: {
-			list?: IListCreateList;
-		};
-		list_create?: {
-			list?: IListCreateList;
-		};
 	};
 }
 
