@@ -85,7 +85,18 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - User Username Change
     - User Password Change
 
-By default, Rettiwt-API uses 'guest' authentication. If however, access to the full set of resources is required, 'user' authentication can be used. This is done by using the cookies associated with your Twitter/X account, and encoding them into an `API_KEY` for convenience. The said `API_KEY` can be obtained by using a **Firefox** extension, as follows:
+By default, Rettiwt-API uses 'guest' authentication. If however, access to the full set of resources is required, 'user' authentication can be used. This is done by using the cookies associated with your Twitter/X account, and encoding them into an `API_KEY` for convenience. The said `API_KEY` can be obtained by using a **Firefox** extension or manually from your browser (Chrome/Chromium-Based/Firefox/Firefox-Based), as follows:
+
+### Manual Method
+
+1. Open your browser (Chrome/Chromium-Based/Firefox/Firefox-Based) and go to Twitter/X.
+2. Open your browser developer tools by pressing `F12` on your keyboard.
+3. Navigate to Applications -> Cookies (for Chrome/Chromium-Based) or Storage -> Cookies (for Firefox/Firefox-Based).
+4. Copy the values of the 3 fields: `auth_token`, `ct0`, `twid`. These server as your authentication credentials.
+5. Go to `Console` of your browser developer tools, and execute the command: `btoa("auth_token=<auth_token_value>;ct0=<ct0_value>;twid=<twid_value>;")`. Substitute the values of the tokens with the values you copied.
+6. The output string is your API_KEY.
+
+### Firefox Extension Method
 
 1. Install the [Rettiwt Auth Helper extension](https://addons.mozilla.org/en-US/firefox/addon/rettiwt-auth-helper) from Firefox Add-Ons, and allow it to run it in in-private mode.
 2. Switch to in-private mode and login to Twitter/X.
@@ -98,7 +109,7 @@ By default, Rettiwt-API uses 'guest' authentication. If however, access to the f
 #### Notes:
 
 - `API_KEY` created in this way should last 5 years from the date of login, as long as the credentials to the account aren't changed.
-- This approach can also be done without going into n-private mode, in which case you can either login as usual or skip the login step if you're already logged in, and continue from the steps after login. However, this makes the `API_KEY` to last only as long as the Twitter/X account isn't logged out of (you may exit the browser as usual) or 5 years, whichever comes first. That's why it's recommended to use incognito/in-private mode, so that the `API_KEY` isn't accidentially revoked by logging out.
+- This approach can also be done without going into incognito/in-private mode, in which case you can either login as usual or skip the login step if you're already logged in, and continue from the steps after login. However, this makes the `API_KEY` to last only as long as the Twitter/X account isn't logged out of (you may exit the browser as usual) or 5 years, whichever comes first. That's why it's recommended to use incognito/in-private mode, so that the `API_KEY` isn't accidentially revoked by logging out.
 
 ## The API_KEY
 
