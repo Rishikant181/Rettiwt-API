@@ -13,6 +13,21 @@ function createListCommand(rettiwt: Rettiwt): Command {
 	// Creating the 'list' command
 	const list = createCommand('list').description('Access resources related to lists');
 
+	// Create
+	list.command('create')
+		.description('Create a new list')
+		.argument('<name>', 'The name of the tweet list')
+		.option('-d, --description [string]', 'The description of the tweet list')
+		.option('--private', 'Create a private list')
+		.action(async (name: string, options?: { description?: string; private?: boolean }) => {
+			try {
+				const id = await rettiwt.list.create(name, options?.private, options?.description);
+				output(id);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Add member
 	list.command('add-member')
 		.description('Add a new member to a list')
