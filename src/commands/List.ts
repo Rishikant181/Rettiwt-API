@@ -21,7 +21,7 @@ function createListCommand(rettiwt: Rettiwt): Command {
 		.option('--private', 'Create a private list')
 		.action(async (name: string, options?: { description?: string; private?: boolean }) => {
 			try {
-				const id = await rettiwt.list.create(name, options?.private, options?.description);
+				const id = await rettiwt.list.create(name, options?.description, options?.private);
 				output(id);
 			} catch (error) {
 				output(error);

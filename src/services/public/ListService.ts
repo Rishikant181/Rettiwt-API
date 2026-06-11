@@ -69,8 +69,8 @@ export class ListService extends FetcherService {
 	 * Create a list.
 	 *
 	 * @param name - The name of the list to create.
-	 * @param isPrivate - Whether the list is private.
 	 * @param description - The description of the list.
+	 * @param isPrivate - Whether the list is private.
 	 *
 	 * @returns The ID of the created list. If creation was unsuccessful, return `undefined`.
 	 *
@@ -83,7 +83,7 @@ export class ListService extends FetcherService {
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
 	 * // Creating a public list
-	 * rettiwt.list.create('My list', false, 'List description')
+	 * rettiwt.list.create('My list', 'List description', false)
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -92,15 +92,15 @@ export class ListService extends FetcherService {
 	 * });
 	 * ```
 	 */
-	public async create(name: string, isPrivate?: boolean, description?: string): Promise<string | undefined> {
+	public async create(name: string, description?: string, isPrivate?: boolean): Promise<string | undefined> {
 		const resource: ResourceType = ResourceType.LIST_CREATE;
 
 		// Creating the list
 		const response = await this.request<IListCreateResponse>(resource, {
 			list: {
+				name: name,
 				description: description,
 				isPrivate: isPrivate,
-				name: name,
 			},
 		});
 

@@ -37,10 +37,10 @@ export class ListRequests {
 
 	/**
 	 * @param name - The name of the list to create.
-	 * @param isPrivate - Whether the list is private.
 	 * @param description - The description of the list.
+	 * @param isPrivate - Whether the list is private.
 	 */
-	public static create(name: string, isPrivate?: boolean, description?: string): AxiosRequestConfig {
+	public static create(name: string, description?: string, isPrivate?: boolean): AxiosRequestConfig {
 		return {
 			method: 'post',
 			headers: { referer: 'https://x.com/i/lists/create' },

@@ -21,7 +21,7 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	/* eslint-disable @typescript-eslint/naming-convention */
 
 	LIST_CREATE: (args: IPostArgs) =>
-		ListRequests.create(args.list!.name, args.list!.isPrivate, args.list!.description),
+		ListRequests.create(args.list!.name, args.list!.description, args.list!.isPrivate),
 	LIST_DETAILS: (args: IFetchArgs) => ListRequests.details(args.id!),
 	LIST_MEMBERS: (args: IFetchArgs) => ListRequests.members(args.id!, args.count, args.cursor),
 	LIST_MEMBER_ADD: (args: IPostArgs) => ListRequests.addMember(args.id!, args.userId!),

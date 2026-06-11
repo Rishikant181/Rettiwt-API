@@ -118,14 +118,14 @@ export interface IPostArgs {
  * @public
  */
 export interface INewList {
+	/** The list name. */
+	name: string;
+
 	/** The list description. */
 	description?: string;
 
 	/** Whether the list is private. */
 	isPrivate?: boolean;
-
-	/** The list name. */
-	name: string;
 }
 
 /**
