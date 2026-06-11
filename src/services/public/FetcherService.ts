@@ -358,8 +358,12 @@ export class FetcherService {
 				// Returning the response
 				return response;
 			} catch (err) {
+				if (err instanceof TwitterError) {
+					throw err;
+				}
+
 				// If it's an error 404, retry
-				if (isAxiosError(err) && err.status === 404) {
+				if (isAxiosError(err) && (err.status === 404 || err.response?.status === 404)) {
 					error = err;
 					continue;
 				}

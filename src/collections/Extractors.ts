@@ -1,5 +1,6 @@
 import { BaseType } from '../enums/Data';
 import { Analytics } from '../models/data/Analytics';
+import { Article } from '../models/data/Article';
 import { BookmarkFolder } from '../models/data/BookmarkFolder';
 import { Conversation } from '../models/data/Conversation';
 import { CursoredData } from '../models/data/CursoredData';
@@ -10,6 +11,10 @@ import { Space } from '../models/data/Space';
 import { Tweet } from '../models/data/Tweet';
 import { User } from '../models/data/User';
 import { UserAbout } from '../models/data/UserAbout';
+import { IArticleDeleteResponse } from '../types/raw/article/Delete';
+import { IArticleDraftCreateResponse } from '../types/raw/article/DraftCreate';
+import { IArticleEntitiesResponse } from '../types/raw/article/Entities';
+import { IArticleUpdateTitleResponse } from '../types/raw/article/UpdateTitle';
 import { IConversationTimelineResponse } from '../types/raw/dm/Conversation';
 import { IInboxInitialResponse } from '../types/raw/dm/InboxInitial';
 import { IInboxTimelineResponse } from '../types/raw/dm/InboxTimeline';
@@ -72,6 +77,14 @@ import { IUserUnfollowResponse } from '../types/raw/user/Unfollow';
  */
 export const Extractors = {
 	/* eslint-disable @typescript-eslint/naming-convention */
+
+	ARTICLE_DELETE: (response: IArticleDeleteResponse): boolean => response?.data?.articleentity_delete === 'Done',
+	ARTICLE_DRAFT_CREATE: (response: IArticleDraftCreateResponse): Article | undefined =>
+		Article.fromDraftCreate(response),
+	ARTICLE_ENTITIES: (response: IArticleEntitiesResponse): CursoredData<Article> =>
+		new CursoredData<Article>(response, BaseType.ARTICLE),
+	ARTICLE_TITLE_UPDATE: (response: IArticleUpdateTitleResponse): Article | undefined =>
+		Article.fromTitleUpdate(response),
 
 	LIST_DETAILS: (response: IListDetailsResponse, id: string): List | undefined => List.single(response, id),
 	LIST_MEMBERS: (response: IListMembersResponse): CursoredData<User> =>

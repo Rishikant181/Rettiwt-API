@@ -1,3 +1,5 @@
+import { IArticleContentState } from '../data/Article';
+
 import { IProfileUpdateOptions } from './ProfileArgs';
 
 /**
@@ -6,6 +8,14 @@ import { IProfileUpdateOptions } from './ProfileArgs';
  * @public
  */
 export interface IPostArgs {
+	/**
+	 * The Article draft that is to be created.
+	 *
+	 * @remarks
+	 * Required only when creating an Article draft using {@link ResourceType.ARTICLE_DRAFT_CREATE}.
+	 */
+	articleDraft?: IArticleDraft;
+
 	/**
 	 * The id of the target resource.
 	 *
@@ -20,6 +30,8 @@ export interface IPostArgs {
 	 * - {@link ResourceType.TWEET_UNRETWEET}
 	 * - {@link ResourceType.USER_FOLLOW}
 	 * - {@link ResourceType.USER_UNFOLLOW}
+	 * - {@link ResourceType.ARTICLE_DELETE}
+	 * - {@link ResourceType.ARTICLE_TITLE_UPDATE}
 	 *
 	 * For {@link ResourceType.USER_USERNAME_CHANGE}, use {@link IPostArgs.username}.
 	 * `id` is still accepted for backward compatibility.
@@ -41,6 +53,14 @@ export interface IPostArgs {
 	 * Required only when posting a tweet using {@link ResourceType.TWEET_POST}
 	 */
 	tweet?: INewTweet;
+
+	/**
+	 * The Article title to set.
+	 *
+	 * @remarks
+	 * Required only when updating an Article title using {@link ResourceType.ARTICLE_TITLE_UPDATE}.
+	 */
+	title?: string;
 
 	/**
 	 * The media file to be uploaded.
@@ -102,6 +122,19 @@ export interface IPostArgs {
 	 * Required only when changing password using {@link ResourceType.USER_PASSWORD_CHANGE}.
 	 */
 	changePassword?: IChangePasswordArgs;
+}
+
+/**
+ * Configuration for the Article draft to be created.
+ *
+ * @public
+ */
+export interface IArticleDraft {
+	/** The Draft.js-like content state of the Article draft. */
+	contentState?: IArticleContentState;
+
+	/** The title of the Article draft. */
+	title?: string;
 }
 
 /**

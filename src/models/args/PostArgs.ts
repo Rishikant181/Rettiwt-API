@@ -1,4 +1,12 @@
-import { IChangePasswordArgs, INewTweet, INewTweetMedia, IPostArgs, IUploadArgs } from '../../types/args/PostArgs';
+import {
+	IArticleDraft,
+	IChangePasswordArgs,
+	INewTweet,
+	INewTweetMedia,
+	IPostArgs,
+	IUploadArgs,
+} from '../../types/args/PostArgs';
+import { IArticleContentState } from '../../types/data/Article';
 
 import { ProfileUpdateOptions } from './ProfileArgs';
 
@@ -8,12 +16,14 @@ import { ProfileUpdateOptions } from './ProfileArgs';
  * @public
  */
 export class PostArgs implements IPostArgs {
+	public articleDraft?: ArticleDraft;
 	public changePassword?: ChangePasswordArgs;
 	public conversationId?: string;
 	public id?: string;
 	public profileBanner?: string;
 	public profileImage?: string;
 	public profileOptions?: ProfileUpdateOptions;
+	public title?: string;
 	public tweet?: NewTweet;
 	public upload?: UploadArgs;
 	public userId?: string;
@@ -24,6 +34,7 @@ export class PostArgs implements IPostArgs {
 	 * @param args - Additional user-defined arguments for posting the resource.
 	 */
 	public constructor(args: IPostArgs) {
+		this.articleDraft = args.articleDraft ? new ArticleDraft(args.articleDraft) : undefined;
 		this.id = args.id;
 		this.tweet = args.tweet ? new NewTweet(args.tweet) : undefined;
 		this.upload = args.upload ? new UploadArgs(args.upload) : undefined;
@@ -33,6 +44,7 @@ export class PostArgs implements IPostArgs {
 		this.profileOptions = args.profileOptions ? new ProfileUpdateOptions(args.profileOptions) : undefined;
 		this.profileImage = PostArgs._validateNonEmptyString(args.profileImage, 'Profile image');
 		this.profileBanner = PostArgs._validateNonEmptyString(args.profileBanner, 'Profile banner');
+		this.title = args.title;
 		this.changePassword = args.changePassword ? new ChangePasswordArgs(args.changePassword) : undefined;
 	}
 
@@ -58,6 +70,24 @@ export class PostArgs implements IPostArgs {
 		}
 
 		return value;
+	}
+}
+
+/**
+ * Configuration for the Article draft to be created.
+ *
+ * @public
+ */
+export class ArticleDraft implements IArticleDraft {
+	public contentState: IArticleContentState;
+	public title: string;
+
+	/**
+	 * @param articleDraft - The args specifying the Article draft to be created.
+	 */
+	public constructor(articleDraft: IArticleDraft) {
+		this.contentState = articleDraft.contentState ?? { blocks: [], entityMap: [] };
+		this.title = articleDraft.title ?? '';
 	}
 }
 

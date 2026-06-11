@@ -18,6 +18,7 @@ export const AllowGuestAuthenticationGroup = [
  * @internal
  */
 export const FetchResourcesGroup = [
+	ResourceType.ARTICLE_ENTITIES,
 	ResourceType.LIST_DETAILS,
 	ResourceType.LIST_MEMBERS,
 	ResourceType.LIST_TWEETS,
@@ -63,6 +64,9 @@ export const FetchResourcesGroup = [
  * @internal
  */
 export const PostResourcesGroup = [
+	ResourceType.ARTICLE_DELETE,
+	ResourceType.ARTICLE_DRAFT_CREATE,
+	ResourceType.ARTICLE_TITLE_UPDATE,
 	ResourceType.LIST_MEMBER_ADD,
 	ResourceType.LIST_MEMBER_REMOVE,
 	ResourceType.MEDIA_UPLOAD_APPEND,
