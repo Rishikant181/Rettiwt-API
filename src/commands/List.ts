@@ -2,6 +2,20 @@ import { Command, createCommand } from 'commander';
 
 import { output } from '../helper/CliUtils';
 import { Rettiwt } from '../Rettiwt';
+import { IListUpdates } from '../types/args/PostArgs';
+
+type ListCreateOptions = {
+	description?: boolean | string;
+	private?: boolean;
+};
+
+type ListUpdateOptions = ListCreateOptions & {
+	public?: boolean;
+};
+
+function getDescription(description?: boolean | string): string | undefined {
+	return typeof description === 'string' ? description : undefined;
+}
 
 /**
  * Creates a new 'list' command which uses the given Rettiwt instance.
@@ -19,9 +33,13 @@ function createListCommand(rettiwt: Rettiwt): Command {
 		.argument('<name>', 'The name of the tweet list')
 		.option('-d, --description [string]', 'The description of the tweet list')
 		.option('--private', 'Create a private list')
-		.action(async (name: string, options?: { description?: string; private?: boolean }) => {
+		.action(async (name: string, options?: ListCreateOptions) => {
 			try {
-				const id = await rettiwt.list.create(name, options?.description, options?.private);
+				const id = await rettiwt.list.create({
+					name: name,
+					description: getDescription(options?.description),
+					isPrivate: options?.private,
+				});
 				output(id);
 			} catch (error) {
 				output(error);
@@ -32,12 +50,24 @@ function createListCommand(rettiwt: Rettiwt): Command {
 	list.command('update')
 		.description('Update a list')
 		.argument('<id>', 'The ID of the tweet list')
-		.argument('<name>', 'The updated name of the tweet list')
+		.argument('[name]', 'The updated name of the tweet list')
 		.option('-d, --description [string]', 'The updated description of the tweet list')
 		.option('--private', 'Update to a private list')
-		.action(async (id: string, name: string, options?: { description?: string; private?: boolean }) => {
+		.option('--public', 'Update to a public list')
+		.action(async (id: string, name?: string, options?: ListUpdateOptions) => {
 			try {
-				const details = await rettiwt.list.update(id, name, options?.description, options?.private);
+				if (options?.private && options?.public) {
+					throw new Error('List cannot be both private and public');
+				}
+
+				const updates: IListUpdates = {
+					...(name !== undefined ? { name: name } : {}),
+					...(typeof options?.description === 'string' ? { description: options.description } : {}),
+					...(options?.private ? { isPrivate: true } : {}),
+					...(options?.public ? { isPrivate: false } : {}),
+				};
+
+				const details = await rettiwt.list.update(id, updates);
 				output(details);
 			} catch (error) {
 				output(error);

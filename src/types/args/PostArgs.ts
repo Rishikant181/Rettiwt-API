@@ -31,14 +31,21 @@ export interface IPostArgs {
 	id?: string;
 
 	/**
-	 * The list that is to be created or updated.
+	 * The list that is to be created.
 	 *
 	 * @remarks
-	 * Required only when creating or updating a list using the following resources:
+	 * Required only when creating a list using the following resources:
 	 * - {@link ResourceType.LIST_CREATE}
-	 * - {@link ResourceType.LIST_UPDATE}
 	 */
 	list?: INewList;
+
+	/**
+	 * The updates to apply to an existing list.
+	 *
+	 * @remarks
+	 * Required only when updating a list using {@link ResourceType.LIST_UPDATE}.
+	 */
+	listUpdates?: IListUpdates;
 
 	/**
 	 * The new username to set.
@@ -119,7 +126,7 @@ export interface IPostArgs {
 }
 
 /**
- * Configuration for the list to be created or updated.
+ * Configuration for the list to be created.
  *
  * @public
  */
@@ -128,6 +135,27 @@ export interface INewList {
 	name: string;
 
 	/** The list description. */
+	description?: string;
+
+	/** Whether the list is private. */
+	isPrivate?: boolean;
+}
+
+/**
+ * Configuration for the updates to apply to an existing list.
+ *
+ * @public
+ */
+export interface IListUpdates {
+	/** The updated list name. */
+	name?: string;
+
+	/**
+	 * The updated list description.
+	 *
+	 * @remarks
+	 * Use an empty string to clear the existing description.
+	 */
 	description?: string;
 
 	/** Whether the list is private. */

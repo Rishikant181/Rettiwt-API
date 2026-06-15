@@ -1,5 +1,7 @@
 import { AxiosRequestConfig } from 'axios';
 
+import { IListUpdates, INewList } from '../types/args/PostArgs';
+
 /**
  * Collection of requests related to lists.
  *
@@ -36,11 +38,9 @@ export class ListRequests {
 	}
 
 	/**
-	 * @param name - The name of the list to create.
-	 * @param description - The description of the list.
-	 * @param isPrivate - Whether the list is private.
+	 * @param list - The details of the list to create.
 	 */
-	public static create(name: string, description?: string, isPrivate?: boolean): AxiosRequestConfig {
+	public static create(list: INewList): AxiosRequestConfig {
 		return {
 			method: 'post',
 			headers: { referer: 'https://x.com/i/lists/create' },
@@ -49,9 +49,9 @@ export class ListRequests {
 				/* eslint-disable @typescript-eslint/naming-convention */
 
 				variables: {
-					isPrivate: isPrivate ?? false,
-					name: name,
-					description: description ?? '',
+					isPrivate: list.isPrivate ?? false,
+					name: list.name,
+					...(list.description !== undefined ? { description: list.description } : {}),
 				},
 				features: {
 					profile_label_improvements_pcf_label_in_post_enabled: true,
@@ -289,11 +289,9 @@ export class ListRequests {
 
 	/**
 	 * @param id - The ID of the list to update.
-	 * @param name - The updated name of the list.
-	 * @param description - The updated description of the list.
-	 * @param isPrivate - Whether the list is private.
+	 * @param updates - The updates to apply.
 	 */
-	public static update(id: string, name: string, description?: string, isPrivate?: boolean): AxiosRequestConfig {
+	public static update(id: string, updates: IListUpdates): AxiosRequestConfig {
 		return {
 			method: 'post',
 			headers: { referer: `https://x.com/i/lists/${id}/info` },
@@ -303,9 +301,9 @@ export class ListRequests {
 
 				variables: {
 					listId: id,
-					isPrivate: isPrivate ?? false,
-					description: description ?? '',
-					name: name,
+					...(updates.isPrivate !== undefined ? { isPrivate: updates.isPrivate } : {}),
+					...(updates.description !== undefined ? { description: updates.description } : {}),
+					...(updates.name !== undefined ? { name: updates.name } : {}),
 				},
 				features: {
 					profile_label_improvements_pcf_label_in_post_enabled: true,

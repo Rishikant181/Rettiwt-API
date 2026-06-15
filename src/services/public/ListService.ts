@@ -5,6 +5,7 @@ import { List } from '../../models/data/List';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
 import { RettiwtConfig } from '../../models/RettiwtConfig';
+import { IListUpdates, INewList } from '../../types/args/PostArgs';
 import { IListMemberAddResponse } from '../../types/raw/list/AddMember';
 import { IListCreateResponse } from '../../types/raw/list/Create';
 import { IListDeleteResponse } from '../../types/raw/list/Delete';
@@ -72,9 +73,7 @@ export class ListService extends FetcherService {
 	/**
 	 * Create a list.
 	 *
-	 * @param name - The name of the list to create.
-	 * @param description - The description of the list.
-	 * @param isPrivate - Whether the list is private.
+	 * @param list - The details of the list to create.
 	 *
 	 * @returns The ID of the created list. If creation was unsuccessful, return `undefined`.
 	 *
@@ -87,7 +86,7 @@ export class ListService extends FetcherService {
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
 	 * // Creating a public list
-	 * rettiwt.list.create('My list', 'List description', false)
+	 * rettiwt.list.create({ name: 'My list', description: 'List description', isPrivate: false })
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -96,16 +95,12 @@ export class ListService extends FetcherService {
 	 * });
 	 * ```
 	 */
-	public async create(name: string, description?: string, isPrivate?: boolean): Promise<string | undefined> {
+	public async create(list: INewList): Promise<string | undefined> {
 		const resource: ResourceType = ResourceType.LIST_CREATE;
 
 		// Creating the list
 		const response = await this.request<IListCreateResponse>(resource, {
-			list: {
-				name: name,
-				description: description,
-				isPrivate: isPrivate,
-			},
+			list: list,
 		});
 
 		// Deserializing response
@@ -404,11 +399,13 @@ export class ListService extends FetcherService {
 	 * Update a list.
 	 *
 	 * @param id - The ID of the list to update.
-	 * @param name - The updated name of the list.
-	 * @param description - The updated description of the list.
-	 * @param isPrivate - Whether the list is private.
+	 * @param updates - The updates to apply to the list.
 	 *
 	 * @returns The updated list. If update was unsuccessful, return `undefined`.
+	 *
+	 * @remarks
+	 * Fields omitted from `updates` are left unchanged. Use an empty string for
+	 * `description` to clear the existing description.
 	 *
 	 * @example
 	 *
@@ -419,7 +416,7 @@ export class ListService extends FetcherService {
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
 	 * // Updating the list with ID '1234567890'
-	 * rettiwt.list.update('1234567890', 'My list', 'List description', false)
+	 * rettiwt.list.update('1234567890', { name: 'My list', description: 'List description', isPrivate: false })
 	 * .then(res => {
 	 * 	console.log(res);
 	 * })
@@ -428,22 +425,13 @@ export class ListService extends FetcherService {
 	 * });
 	 * ```
 	 */
-	public async update(
-		id: string,
-		name: string,
-		description?: string,
-		isPrivate?: boolean,
-	): Promise<List | undefined> {
+	public async update(id: string, updates: IListUpdates): Promise<List | undefined> {
 		const resource: ResourceType = ResourceType.LIST_UPDATE;
 
 		// Updating the list
 		const response = await this.request<IListUpdateResponse>(resource, {
 			id: id,
-			list: {
-				name: name,
-				description: description,
-				isPrivate: isPrivate,
-			},
+			listUpdates: updates,
 		});
 
 		// Deserializing response
