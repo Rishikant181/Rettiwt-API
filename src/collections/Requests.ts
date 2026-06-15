@@ -20,11 +20,16 @@ import { TweetRepliesSortTypeMap } from './Tweet';
 export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs | IPostArgs) => AxiosRequestConfig } = {
 	/* eslint-disable @typescript-eslint/naming-convention */
 
+	LIST_CREATE: (args: IPostArgs) => ListRequests.create(args.list!),
+	LIST_DELETE: (args: IPostArgs) => ListRequests.delete(args.id!),
 	LIST_DETAILS: (args: IFetchArgs) => ListRequests.details(args.id!),
 	LIST_MEMBERS: (args: IFetchArgs) => ListRequests.members(args.id!, args.count, args.cursor),
 	LIST_MEMBER_ADD: (args: IPostArgs) => ListRequests.addMember(args.id!, args.userId!),
 	LIST_MEMBER_REMOVE: (args: IPostArgs) => ListRequests.removeMember(args.id!, args.userId!),
+	LIST_MUTE: (args: IPostArgs) => ListRequests.mute(args.id!),
 	LIST_TWEETS: (args: IFetchArgs) => ListRequests.tweets(args.id!, args.count, args.cursor),
+	LIST_UNMUTE: (args: IPostArgs) => ListRequests.unmute(args.id!),
+	LIST_UPDATE: (args: IPostArgs) => ListRequests.update(args.id!, args.listUpdates!),
 
 	MEDIA_UPLOAD_APPEND: (args: IPostArgs) => MediaRequests.appendUpload(args.upload!.id!, args.upload!.media!),
 	MEDIA_UPLOAD_FINALIZE: (args: IPostArgs) => MediaRequests.finalizeUpload(args.upload!.id!),

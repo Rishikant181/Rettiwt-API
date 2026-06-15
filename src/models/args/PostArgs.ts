@@ -1,4 +1,12 @@
-import { IChangePasswordArgs, INewTweet, INewTweetMedia, IPostArgs, IUploadArgs } from '../../types/args/PostArgs';
+import {
+	IChangePasswordArgs,
+	IListUpdates,
+	INewList,
+	INewTweet,
+	INewTweetMedia,
+	IPostArgs,
+	IUploadArgs,
+} from '../../types/args/PostArgs';
 
 import { ProfileUpdateOptions } from './ProfileArgs';
 
@@ -11,6 +19,8 @@ export class PostArgs implements IPostArgs {
 	public changePassword?: ChangePasswordArgs;
 	public conversationId?: string;
 	public id?: string;
+	public list?: NewList;
+	public listUpdates?: ListUpdates;
 	public profileBanner?: string;
 	public profileImage?: string;
 	public profileOptions?: ProfileUpdateOptions;
@@ -25,6 +35,7 @@ export class PostArgs implements IPostArgs {
 	 */
 	public constructor(args: IPostArgs) {
 		this.id = args.id;
+		this.list = args.list ? new NewList(args.list) : undefined;
 		this.tweet = args.tweet ? new NewTweet(args.tweet) : undefined;
 		this.upload = args.upload ? new UploadArgs(args.upload) : undefined;
 		this.userId = args.userId;
@@ -34,6 +45,7 @@ export class PostArgs implements IPostArgs {
 		this.profileImage = PostArgs._validateNonEmptyString(args.profileImage, 'Profile image');
 		this.profileBanner = PostArgs._validateNonEmptyString(args.profileBanner, 'Profile banner');
 		this.changePassword = args.changePassword ? new ChangePasswordArgs(args.changePassword) : undefined;
+		this.listUpdates = args.listUpdates ? new ListUpdates(args.listUpdates) : undefined;
 	}
 
 	/**
@@ -58,6 +70,46 @@ export class PostArgs implements IPostArgs {
 		}
 
 		return value;
+	}
+}
+
+/**
+ * Configuration for the list to be created.
+ *
+ * @public
+ */
+export class NewList implements INewList {
+	public description?: string;
+	public isPrivate: boolean;
+	public name: string;
+
+	/**
+	 * @param newList - The args specifying the list to be created.
+	 */
+	public constructor(newList: INewList) {
+		this.name = newList.name;
+		this.description = newList.description;
+		this.isPrivate = newList.isPrivate ?? false;
+	}
+}
+
+/**
+ * Configuration for the updates to apply to an existing list.
+ *
+ * @public
+ */
+export class ListUpdates implements IListUpdates {
+	public description?: string;
+	public isPrivate?: boolean;
+	public name?: string;
+
+	/**
+	 * @param updates - The updates to apply to the target list.
+	 */
+	public constructor(updates: IListUpdates) {
+		this.name = updates.name;
+		this.description = updates.description;
+		this.isPrivate = updates.isPrivate;
 	}
 }
 

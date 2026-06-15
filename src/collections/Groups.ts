@@ -63,8 +63,13 @@ export const FetchResourcesGroup = [
  * @internal
  */
 export const PostResourcesGroup = [
+	ResourceType.LIST_CREATE,
+	ResourceType.LIST_DELETE,
 	ResourceType.LIST_MEMBER_ADD,
 	ResourceType.LIST_MEMBER_REMOVE,
+	ResourceType.LIST_MUTE,
+	ResourceType.LIST_UNMUTE,
+	ResourceType.LIST_UPDATE,
 	ResourceType.MEDIA_UPLOAD_APPEND,
 	ResourceType.MEDIA_UPLOAD_FINALIZE,
 	ResourceType.MEDIA_UPLOAD_INITIALIZE,
