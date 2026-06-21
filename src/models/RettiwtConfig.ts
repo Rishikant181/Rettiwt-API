@@ -50,6 +50,8 @@ export class RettiwtConfig implements IRettiwtConfig {
 	public readonly maxRetries: number;
 	public readonly responseMiddleware?: (response: AxiosResponse) => void | Promise<void>;
 	public readonly timeout?: number;
+	public readonly xChatConversationKeyProvider?: IRettiwtConfig['xChatConversationKeyProvider'];
+	public readonly xChatConversationKeys?: IRettiwtConfig['xChatConversationKeys'];
 
 	/**
 	 * @param config - The config for Rettiwt of type {@link IRettiwtConfig}.
@@ -64,6 +66,8 @@ export class RettiwtConfig implements IRettiwtConfig {
 		this.responseMiddleware = config?.responseMiddleware;
 		this.logging = config?.logging;
 		this.timeout = config?.timeout;
+		this.xChatConversationKeyProvider = config?.xChatConversationKeyProvider;
+		this.xChatConversationKeys = config?.xChatConversationKeys;
 		this.apiKey = config?.apiKey;
 		this._headers = {
 			...DefaultHeaders,

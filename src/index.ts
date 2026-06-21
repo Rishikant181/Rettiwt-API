@@ -50,6 +50,7 @@ export * from './services/public/UserService';
 
 // TYPES
 export * from './types/args/FetchArgs';
+export * from './types/args/DirectMessageArgs';
 export * from './types/args/PostArgs';
 export * from './types/args/ProfileArgs';
 export * from './types/data/BookmarkFolder';
@@ -139,6 +140,7 @@ export { IUserChangePasswordResponse as IRawUserChangePasswordResponse } from '.
 export * from './types/ErrorHandler';
 export * from './types/RettiwtConfig';
 export { IConversationTimelineResponse as IRawConversationTimelineResponse } from './types/raw/dm/Conversation';
+export { IConversationPageResponse as IRawConversationPageResponse } from './types/raw/dm/ConversationPage';
 export { IInboxInitialResponse as IRawInboxInitialResponse } from './types/raw/dm/InboxInitial';
 export { IInboxTimelineResponse as IRawInboxTimelineResponse } from './types/raw/dm/InboxTimeline';
 export { IUserUpdatesResponse as IRawUserUpdatesResponse } from './types/raw/dm/UserUpdates';

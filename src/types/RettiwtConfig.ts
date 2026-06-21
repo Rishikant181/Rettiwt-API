@@ -1,5 +1,7 @@
 import { AxiosProxyConfig, AxiosResponse } from 'axios';
 
+import { XChatConversationKey, XChatConversationKeyProvider } from './args/DirectMessageArgs';
+
 import { IErrorHandler } from './ErrorHandler';
 
 /**
@@ -56,6 +58,17 @@ export interface IRettiwtConfig {
 
 	/** Optional custom error handler to define error conditions and process API/HTTP errors in responses. */
 	errorHandler?: IErrorHandler;
+
+	/**
+	 * Optional XChat conversation keys, indexed by conversation ID, used to decrypt
+	 * encrypted DM payloads returned by the XChat conversation endpoint.
+	 */
+	xChatConversationKeys?: Record<string, XChatConversationKey>;
+
+	/**
+	 * Optional provider used to resolve a local XChat conversation key on demand.
+	 */
+	xChatConversationKeyProvider?: XChatConversationKeyProvider;
 
 	/**
 	 * Optional custom HTTP headers to add to all requests to Twitter API.

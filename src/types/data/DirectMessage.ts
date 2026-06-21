@@ -19,6 +19,9 @@ export interface IDirectMessage {
 	/** The text content of the message. */
 	text: string;
 
+	/** Whether the message payload is end-to-end encrypted and not decrypted locally. */
+	isEncrypted?: boolean;
+
 	/** The timestamp when the message was sent (ISO 8601 format). */
 	createdAt: string;
 
