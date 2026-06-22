@@ -36,8 +36,11 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - List Add Member
     - List Details
     - List Members
+    - List Mute
     - List Remove Member
     - List Tweets
+    - List Unmute
+    - List Update
     - Space Details
     - Tweet Details - Single and Bulk
     - Tweet History
@@ -74,6 +77,7 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - User Media
     - User Notification
     - User Recommended Feed
+    - User Remove Follower
     - User Replies Timeline
     - User Search
     - User Subscriptions
@@ -547,8 +551,11 @@ So far, the following operations are supported:
 - [Adding a member to a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#addMember)
 - [Getting the details of a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#details)
 - [Getting the members of a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#members)
+- [Muting a list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#mute)
 - [Removing a member from a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#removeMember)
 - [Getting the list of tweets from a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#tweets)
+- [Unmuting a list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#unmute)
+- [Updating a list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#update)
 
 ### Space
 
@@ -585,6 +592,7 @@ So far, the following operations are supported:
 - [Getting the list of tweets in a specific bookmark folder](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#bookmarkFolderTweets)
 - [Getting the details of a user/multiple users](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#details)
 - [Following a given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#follow)
+- [Removing a follower](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#removeFollower)
 - [Getting the followed feed of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#followed)
 - [Getting the list of users who follow the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#followers)
 - [Getting the list of users who are followed by the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#following)
