@@ -28,6 +28,7 @@ export const FetchResourcesGroup = [
 	ResourceType.TWEET_DETAILS,
 	ResourceType.TWEET_DETAILS_ALT,
 	ResourceType.TWEET_DETAILS_BULK,
+	ResourceType.TWEET_HISTORY,
 	ResourceType.TWEET_LIKERS,
 	ResourceType.TWEET_REPLIES,
 	ResourceType.TWEET_RETWEETERS,
@@ -62,8 +63,13 @@ export const FetchResourcesGroup = [
  * @internal
  */
 export const PostResourcesGroup = [
+	ResourceType.LIST_CREATE,
+	ResourceType.LIST_DELETE,
 	ResourceType.LIST_MEMBER_ADD,
 	ResourceType.LIST_MEMBER_REMOVE,
+	ResourceType.LIST_MUTE,
+	ResourceType.LIST_UNMUTE,
+	ResourceType.LIST_UPDATE,
 	ResourceType.MEDIA_UPLOAD_APPEND,
 	ResourceType.MEDIA_UPLOAD_FINALIZE,
 	ResourceType.MEDIA_UPLOAD_INITIALIZE,
@@ -80,6 +86,7 @@ export const PostResourcesGroup = [
 	ResourceType.TWEET_UNRETWEET,
 	ResourceType.TWEET_UNSCHEDULE,
 	ResourceType.USER_FOLLOW,
+	ResourceType.USER_REMOVE_FOLLOWER,
 	ResourceType.USER_UNFOLLOW,
 	ResourceType.USER_PROFILE_UPDATE,
 	ResourceType.USER_PROFILE_IMAGE_UPDATE,

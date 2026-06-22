@@ -15,6 +15,7 @@ import { IMediaInitializeUploadResponse } from '../../types/raw/media/InitalizeU
 import { ITweetBookmarkResponse } from '../../types/raw/tweet/Bookmark';
 import { ITweetDetailsResponse } from '../../types/raw/tweet/Details';
 import { ITweetDetailsBulkResponse } from '../../types/raw/tweet/DetailsBulk';
+import { ITweetHistoryResponse } from '../../types/raw/tweet/History';
 import { ITweetLikeResponse } from '../../types/raw/tweet/Like';
 import { ITweetLikersResponse } from '../../types/raw/tweet/Likers';
 import { ITweetPostNoteResponse, ITweetPostResponse } from '../../types/raw/tweet/Post';
@@ -174,6 +175,43 @@ export class TweetService extends FetcherService {
 
 			return data as T extends string ? Tweet | undefined : Tweet[];
 		}
+	}
+
+	/**
+	 * Get the edit history of a tweet.
+	 *
+	 * @param id - The ID of the target tweet.
+	 *
+	 * @returns The list of tweet versions, ordered by the returned timeline.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the edit history of the tweet with id '1234567890'
+	 * rettiwt.tweet.history('1234567890')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async history(id: string): Promise<Tweet[]> {
+		const resource = ResourceType.TWEET_HISTORY;
+
+		// Fetching raw tweet history
+		const response = await this.request<ITweetHistoryResponse>(resource, { id: id });
+
+		// Deserializing response
+		const data = Extractors[resource](response.data);
+
+		return data;
 	}
 
 	/**

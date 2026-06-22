@@ -5,11 +5,17 @@ import { List } from '../../models/data/List';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
 import { RettiwtConfig } from '../../models/RettiwtConfig';
+import { IListUpdates, INewList } from '../../types/args/PostArgs';
 import { IListMemberAddResponse } from '../../types/raw/list/AddMember';
+import { IListCreateResponse } from '../../types/raw/list/Create';
+import { IListDeleteResponse } from '../../types/raw/list/Delete';
 import { IListDetailsResponse } from '../../types/raw/list/Details';
 import { IListMembersResponse } from '../../types/raw/list/Members';
+import { IListMuteResponse } from '../../types/raw/list/Mute';
 import { IListMemberRemoveResponse } from '../../types/raw/list/RemoveMember';
 import { IListTweetsResponse } from '../../types/raw/list/Tweets';
+import { IListUnmuteResponse } from '../../types/raw/list/Unmute';
+import { IListUpdateResponse } from '../../types/raw/list/Update';
 
 import { FetcherService } from './FetcherService';
 
@@ -57,6 +63,82 @@ export class ListService extends FetcherService {
 			id: listId,
 			userId: userId,
 		});
+
+		// Deserializing response
+		const data = Extractors[resource](response.data);
+
+		return data;
+	}
+
+	/**
+	 * Create a list.
+	 *
+	 * @param list - The details of the list to create.
+	 *
+	 * @returns The ID of the created list. If creation was unsuccessful, return `undefined`.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Creating a public list
+	 * rettiwt.list.create({ name: 'My list', description: 'List description', isPrivate: false })
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async create(list: INewList): Promise<string | undefined> {
+		const resource: ResourceType = ResourceType.LIST_CREATE;
+
+		// Creating the list
+		const response = await this.request<IListCreateResponse>(resource, {
+			list: list,
+		});
+
+		// Deserializing response
+		const data = Extractors[resource](response.data);
+
+		return data;
+	}
+
+	/**
+	 * Delete a list.
+	 *
+	 * @param id - The ID of the list to delete.
+	 *
+	 * @returns Whether deletion was successful.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Deleting the list with ID '1234567890'
+	 * rettiwt.list.delete('1234567890')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async delete(id: string): Promise<boolean> {
+		const resource: ResourceType = ResourceType.LIST_DELETE;
+
+		// Deleting the list
+		const response = await this.request<IListDeleteResponse>(resource, { id: id });
 
 		// Deserializing response
 		const data = Extractors[resource](response.data);
@@ -151,6 +233,43 @@ export class ListService extends FetcherService {
 	}
 
 	/**
+	 * Mute a list.
+	 *
+	 * @param id - The ID of the list to mute.
+	 *
+	 * @returns Whether muting was successful.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Muting the list with ID '1234567890'
+	 * rettiwt.list.mute('1234567890')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async mute(id: string): Promise<boolean> {
+		const resource: ResourceType = ResourceType.LIST_MUTE;
+
+		// Muting the list
+		const response = await this.request<IListMuteResponse>(resource, { id: id });
+
+		// Deserializing response
+		const data = Extractors[resource](response.data);
+
+		return data;
+	}
+
+	/**
 	 * Remove a member from a list.
 	 *
 	 * @param listId - The ID of the target list.
@@ -235,6 +354,88 @@ export class ListService extends FetcherService {
 
 		// Sorting the tweets by date, from recent to oldest
 		data.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
+
+		return data;
+	}
+
+	/**
+	 * Unmute a list.
+	 *
+	 * @param id - The ID of the list to unmute.
+	 *
+	 * @returns Whether unmuting was successful.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Unmuting the list with ID '1234567890'
+	 * rettiwt.list.unmute('1234567890')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async unmute(id: string): Promise<boolean> {
+		const resource: ResourceType = ResourceType.LIST_UNMUTE;
+
+		// Unmuting the list
+		const response = await this.request<IListUnmuteResponse>(resource, { id: id });
+
+		// Deserializing response
+		const data = Extractors[resource](response.data);
+
+		return data;
+	}
+
+	/**
+	 * Update a list.
+	 *
+	 * @param id - The ID of the list to update.
+	 * @param updates - The updates to apply to the list.
+	 *
+	 * @returns The updated list. If update was unsuccessful, return `undefined`.
+	 *
+	 * @remarks
+	 * Fields omitted from `updates` are left unchanged. Use an empty string for
+	 * `description` to clear the existing description.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Updating the list with ID '1234567890'
+	 * rettiwt.list.update('1234567890', { name: 'My list', description: 'List description', isPrivate: false })
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async update(id: string, updates: IListUpdates): Promise<List | undefined> {
+		const resource: ResourceType = ResourceType.LIST_UPDATE;
+
+		// Updating the list
+		const response = await this.request<IListUpdateResponse>(resource, {
+			id: id,
+			listUpdates: updates,
+		});
+
+		// Deserializing response
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
