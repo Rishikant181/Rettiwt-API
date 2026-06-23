@@ -1,3 +1,4 @@
+import { JobEmploymentType, JobLocationType, JobSeniorityLevel } from '../../enums/Job';
 import { RawAnalyticsGranularity, RawAnalyticsMetric } from '../../enums/raw/Analytics';
 import { TweetRepliesSortType } from '../../enums/Tweet';
 
@@ -65,6 +66,14 @@ export interface IFetchArgs {
 	 * Required when searching for tweets using {@link ResourceType.TWEET_SEARCH}.
 	 */
 	filter?: ITweetFilter;
+
+	/**
+	 * The filter for searching X Jobs.
+	 *
+	 * @remarks
+	 * Required when searching for X Jobs using {@link ResourceType.JOB_SEARCH}.
+	 */
+	jobFilter?: IJobSearchFilter;
 
 	/**
 	 * The id of the target resource.
@@ -270,4 +279,35 @@ export interface ITweetFilter {
 
 	/** Whether to fetch top tweets or not. */
 	top?: boolean;
+}
+
+/**
+ * The filter to be used for searching X Jobs.
+ *
+ * @public
+ */
+export interface IJobSearchFilter {
+	/** The company whose jobs are to be searched. */
+	companyName?: string;
+
+	/** The employment types to search. */
+	employmentTypes?: JobEmploymentType[];
+
+	/** The industry to search. */
+	industry?: string;
+
+	/** The keyword to search. */
+	keyword?: string;
+
+	/** The location to search. */
+	location?: string;
+
+	/** The location id to search. */
+	locationId?: string;
+
+	/** The location types to search. */
+	locationTypes?: JobLocationType[];
+
+	/** The seniority levels to search. */
+	seniorityLevels?: JobSeniorityLevel[];
 }
