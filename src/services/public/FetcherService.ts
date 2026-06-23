@@ -125,9 +125,19 @@ export class FetcherService {
 	}
 
 	private async _handleXMigration(): Promise<Document> {
+		/** The headers required for getting X migration. */
+		const migrationHeaders = {
+			...this.config.headers,
+		};
+
+		// If API key is provided, append decoded cookies
+		if (this.config.apiKey) {
+			migrationHeaders['cookie'] = AuthService.decodeCookie(this.config.apiKey);
+		}
+
 		// Fetch X.com homepage
 		const homePageResponse = await axios.get<string>('https://x.com', {
-			headers: this.config.headers,
+			headers: migrationHeaders,
 			httpAgent: this.config.httpAgent,
 			httpsAgent: this.config.httpsAgent,
 			proxy: this.config.axiosProxyConfig,
