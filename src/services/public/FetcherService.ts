@@ -126,7 +126,7 @@ export class FetcherService {
 
 	private async _handleXMigration(): Promise<Document> {
 		// Fetch X.com homepage
-		const homePageResponse = await axios.get<string>('https://x.com', {
+		const homePageResponse = await axios.get<string>('https://x.com/home', {
 			headers: this.config.headers,
 			httpAgent: this.config.httpAgent,
 			httpsAgent: this.config.httpsAgent,
