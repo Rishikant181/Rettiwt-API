@@ -59,6 +59,14 @@ export interface IFetchArgs {
 	cursor?: string;
 
 	/**
+	 * Whether to fetch creator-only suggested users.
+	 *
+	 * @remarks
+	 * - Only works for {@link ResourceType.USER_SUGGESTIONS}.
+	 */
+	creatorOnly?: boolean;
+
+	/**
 	 * The filter for searching tweets.
 	 *
 	 * @remarks

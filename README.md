@@ -80,6 +80,7 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - User Remove Follower
     - User Replies Timeline
     - User Search
+    - User Suggestions
     - User Subscriptions
     - User Timeline
     - User Unfollow
@@ -604,6 +605,7 @@ So far, the following operations are supported:
 - [Getting the recommended feed of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#recommended)
 - [Getting the replies timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#replies)
 - [Searching for a username](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#search)
+- [Getting suggested users from the Connect tab](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#suggestions)
 - [Getting the tweet timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#timeline)
 - [Unfollowing a given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#unfollow)
 - [Updating the profile of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#updateProfile)
@@ -630,6 +632,7 @@ Help for the CLI can be obtained from the CLI itself:
 - For help regarding the available commands, use the command `rettiwt help`
 - For help regarding a specific command, use the command `rettiwt help <command_name>`
 - For fetching the edit history of a tweet, use the command `rettiwt tweet history <tweet_id>`
+- For fetching suggested users from the Connect tab, use the command `rettiwt user suggestions [count]`
 
 ## API Reference
 

@@ -93,6 +93,7 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	USER_NOTIFICATIONS: (args: IFetchArgs) => UserRequests.notifications(args.count, args.cursor),
 	USER_REMOVE_FOLLOWER: (args: IPostArgs) => UserRequests.removeFollower(args.id!),
 	USER_SEARCH: (args: IFetchArgs) => UserRequests.search(args.id!, args.count, args.cursor),
+	USER_SUGGESTIONS: (args: IFetchArgs) => UserRequests.suggestions(args.count, args.creatorOnly),
 	USER_SUBSCRIPTIONS: (args: IFetchArgs) => UserRequests.subscriptions(args.id!, args.count, args.cursor),
 	USER_TIMELINE: (args: IFetchArgs) => UserRequests.tweets(args.id!, args.count, args.cursor),
 	USER_TIMELINE_AND_REPLIES: (args: IFetchArgs) => UserRequests.tweetsAndReplies(args.id!, args.count, args.cursor),
