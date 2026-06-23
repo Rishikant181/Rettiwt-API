@@ -46,6 +46,7 @@ export interface IFetchArgs {
 	 * - Has not effect for:
 	 * 	- {@link ResourceType.USER_FEED_FOLLOWED}
 	 * 	- {@link ResourceType.USER_FEED_RECOMMENDED}
+	 * 	- {@link ResourceType.USER_SUGGESTIONS}
 	 */
 	count?: number;
 

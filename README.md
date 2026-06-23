@@ -632,7 +632,7 @@ Help for the CLI can be obtained from the CLI itself:
 - For help regarding the available commands, use the command `rettiwt help`
 - For help regarding a specific command, use the command `rettiwt help <command_name>`
 - For fetching the edit history of a tweet, use the command `rettiwt tweet history <tweet_id>`
-- For fetching suggested users from the Connect tab, use the command `rettiwt user suggestions [count]`
+- For fetching suggested users from the Connect tab, use the command `rettiwt user suggestions`
 
 ## API Reference
 

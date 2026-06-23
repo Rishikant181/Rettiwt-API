@@ -281,11 +281,10 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 	// Suggestions
 	user.command('suggestions')
 		.description('Fetch suggested users from the Connect tab')
-		.argument('[count]', 'The number of suggested users to fetch')
 		.option('--creator-only', 'Fetch creator-only suggested users')
-		.action(async (count?: string, options?: UserSuggestionsOptions) => {
+		.action(async (options?: UserSuggestionsOptions) => {
 			try {
-				const users = await rettiwt.user.suggestions(count ? parseInt(count) : undefined, options?.creatorOnly);
+				const users = await rettiwt.user.suggestions(options?.creatorOnly);
 				output(users);
 			} catch (error) {
 				output(error);

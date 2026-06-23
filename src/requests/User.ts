@@ -1128,17 +1128,16 @@ export class UserRequests {
 	}
 
 	/**
-	 * @param count - The number of suggested users to fetch.
 	 * @param creatorOnly - Whether to fetch creator-only suggested users.
 	 */
-	public static suggestions(count?: number, creatorOnly?: boolean): AxiosRequestConfig {
+	public static suggestions(creatorOnly?: boolean): AxiosRequestConfig {
 		return {
 			method: 'get',
 			url: 'https://x.com/i/api/graphql/um4EWJszOgVpZIUG8o-ZQA/ConnectTabTimeline',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				variables: JSON.stringify({
-					count: count ?? 20,
+					count: 20,
 					context: JSON.stringify(creatorOnly ? { isCreatorOnlyConnectTab: true } : {}),
 				}),
 				features: JSON.stringify({

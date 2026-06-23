@@ -1218,17 +1218,15 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the list of suggested users from the Connect tab.
 	 *
-	 * @param count - The number of suggested users to fetch. Defaults to 20.
 	 * @param creatorOnly - Whether to fetch creator-only suggestions.
 	 *
 	 * @returns The list of suggested users.
 	 */
-	public async suggestions(count?: number, creatorOnly?: boolean): Promise<CursoredData<User>> {
+	public async suggestions(creatorOnly?: boolean): Promise<CursoredData<User>> {
 		const resource = ResourceType.USER_SUGGESTIONS;
 
 		// Fetching raw list of suggested users
 		const response = await this.request<IUserSuggestionsResponse>(resource, {
-			count: count,
 			creatorOnly: creatorOnly,
 		});
 
