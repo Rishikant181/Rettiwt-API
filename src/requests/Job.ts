@@ -28,12 +28,32 @@ export class JobRequests {
 	}
 
 	/**
+	 * @param query - The query to use for searching location suggestions.
+	 */
+	public static locations(query: string): AxiosRequestConfig {
+		return {
+			method: 'get',
+			url: 'https://x.com/i/api/graphql/hbib0bN-dlHHvUhiy3YVyg/LocationSelectorQuery',
+			params: {
+				variables: JSON.stringify({
+					query: query,
+				}),
+			},
+			paramsSerializer: { encode: encodeURIComponent },
+		};
+	}
+
+	/**
 	 * @param filter - The filter to use for searching jobs.
 	 * @param count - The number of jobs to fetch.
 	 * @param cursor - The cursor to the batch of jobs to fetch.
 	 */
 	public static search(filter: IJobSearchFilter, count?: number, cursor?: string): AxiosRequestConfig {
 		const parsedFilter = new JobSearchFilter(filter);
+		const locationIds =
+			parsedFilter.locationIds?.length || parsedFilter.locationId
+				? [...(parsedFilter.locationIds ?? []), ...(parsedFilter.locationId ? [parsedFilter.locationId] : [])]
+				: null;
 
 		return {
 			method: 'get',
@@ -45,7 +65,7 @@ export class JobRequests {
 					cursor: cursor ?? null,
 					searchParams: {
 						keyword: parsedFilter.keyword ?? null,
-						job_location_id: parsedFilter.locationId ?? null,
+						job_location_id: locationIds,
 						job_location: parsedFilter.location ?? null,
 						job_location_type: parsedFilter.locationTypes ?? [],
 						seniority_level: parsedFilter.seniorityLevels ?? [],

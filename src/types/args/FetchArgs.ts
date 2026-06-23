@@ -305,6 +305,9 @@ export interface IJobSearchFilter {
 	/** The location id to search. */
 	locationId?: string;
 
+	/** The location ids to search. */
+	locationIds?: string[];
+
 	/** The location types to search. */
 	locationTypes?: JobLocationType[];
 

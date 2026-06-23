@@ -16,7 +16,7 @@ function createJobCommand(rettiwt: Rettiwt): Command {
 	// Creating the 'job' command
 	const job = createCommand('job').description('Access resources related to X Jobs');
 
-	// Search
+	// Details
 	job.command('details')
 		.description('Fetch the details of an X Job')
 		.argument('<id>', 'The id of the job')
@@ -24,6 +24,19 @@ function createJobCommand(rettiwt: Rettiwt): Command {
 			try {
 				const details = await rettiwt.job.details(id);
 				output(details);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// Locations
+	job.command('locations')
+		.description('Fetch the list of suggested X Job locations')
+		.argument('<query>', 'The location query to search for')
+		.action(async (query: string) => {
+			try {
+				const locations = await rettiwt.job.locations(query);
+				output(locations);
 			} catch (error) {
 				output(error);
 			}
@@ -42,7 +55,7 @@ function createJobCommand(rettiwt: Rettiwt): Command {
 		)
 		.option('-i, --industry <string>', 'Matches jobs from the given industry')
 		.option('-l, --location <string>', 'Matches jobs from the given location')
-		.option('--location-id <string>', 'Matches jobs from the given location id')
+		.option('--location-id <string>', 'Matches jobs from the given comma-separated location ids')
 		.option(
 			'--location-type <string>',
 			`Matches jobs with the given comma-separated location types: ${Object.values(JobLocationType).join(', ')}`,
@@ -111,7 +124,7 @@ class JobSearchOptions {
 			industry: this.industry,
 			keyword: this.keyword,
 			location: this.location,
-			locationId: this.locationId,
+			locationIds: splitCommaSeparated<string>(this.locationId),
 			locationTypes: splitCommaSeparated<JobLocationType>(this.locationType),
 			seniorityLevels: splitCommaSeparated<JobSeniorityLevel>(this.seniority),
 		});

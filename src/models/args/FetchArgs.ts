@@ -65,6 +65,7 @@ export class JobSearchFilter implements IJobSearchFilter {
 	public keyword?: string;
 	public location?: string;
 	public locationId?: string;
+	public locationIds?: string[];
 	public locationTypes?: JobLocationType[];
 	public seniorityLevels?: JobSeniorityLevel[];
 
@@ -78,6 +79,7 @@ export class JobSearchFilter implements IJobSearchFilter {
 		this.keyword = filter.keyword;
 		this.location = filter.location;
 		this.locationId = filter.locationId;
+		this.locationIds = filter.locationIds;
 		this.locationTypes = filter.locationTypes;
 		this.seniorityLevels = filter.seniorityLevels;
 	}

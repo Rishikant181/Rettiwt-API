@@ -2,10 +2,12 @@ import { Extractors } from '../../collections/Extractors';
 import { ResourceType } from '../../enums/Resource';
 import { CursoredData } from '../../models/data/CursoredData';
 import { Job } from '../../models/data/Job';
+import { JobLocation } from '../../models/data/JobLocation';
 import { RettiwtConfig } from '../../models/RettiwtConfig';
 import { IJobSearchFilter } from '../../types/args/FetchArgs';
 import { IJobScreenQueryResponse } from '../../types/raw/job/JobScreenQuery';
 import { IJobSearchQueryScreenJobsQueryResponse } from '../../types/raw/job/JobSearchQueryScreenJobsQuery';
+import { ILocationSelectorQueryResponse } from '../../types/raw/job/LocationSelectorQuery';
 
 import { FetcherService } from './FetcherService';
 
@@ -39,6 +41,24 @@ export class JobService extends FetcherService {
 
 		// Deserializing response
 		const data = Extractors[resource](response.data, id);
+
+		return data;
+	}
+
+	/**
+	 * Get the list of suggested X Job locations.
+	 *
+	 * @param query - The query to use for searching location suggestions.
+	 * @returns The list of suggested locations.
+	 */
+	public async locations(query: string): Promise<JobLocation[]> {
+		const resource = ResourceType.JOB_LOCATIONS;
+
+		// Fetching raw location suggestions
+		const response = await this.request<ILocationSelectorQueryResponse>(resource, { id: query });
+
+		// Deserializing response
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}

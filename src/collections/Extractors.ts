@@ -5,6 +5,7 @@ import { Conversation } from '../models/data/Conversation';
 import { CursoredData } from '../models/data/CursoredData';
 import { Inbox } from '../models/data/Inbox';
 import { Job } from '../models/data/Job';
+import { JobLocation } from '../models/data/JobLocation';
 import { List } from '../models/data/List';
 import { Notification } from '../models/data/Notification';
 import { Space } from '../models/data/Space';
@@ -16,6 +17,7 @@ import { IInboxInitialResponse } from '../types/raw/dm/InboxInitial';
 import { IInboxTimelineResponse } from '../types/raw/dm/InboxTimeline';
 import { IJobScreenQueryResponse } from '../types/raw/job/JobScreenQuery';
 import { IJobSearchQueryScreenJobsQueryResponse } from '../types/raw/job/JobSearchQueryScreenJobsQuery';
+import { ILocationSelectorQueryResponse } from '../types/raw/job/LocationSelectorQuery';
 import { IListMemberAddResponse } from '../types/raw/list/AddMember';
 import { IListCreateResponse } from '../types/raw/list/Create';
 import { IListDeleteResponse } from '../types/raw/list/Delete';
@@ -82,6 +84,7 @@ export const Extractors = {
 	/* eslint-disable @typescript-eslint/naming-convention */
 
 	JOB_DETAILS: (response: IJobScreenQueryResponse, id: string): Job | undefined => Job.single(response, id),
+	JOB_LOCATIONS: (response: ILocationSelectorQueryResponse): JobLocation[] => JobLocation.list(response),
 	JOB_SEARCH: (response: IJobSearchQueryScreenJobsQueryResponse): CursoredData<Job> =>
 		new CursoredData<Job>(response, BaseType.JOB),
 
