@@ -71,6 +71,7 @@ import { IUserRemoveFollowerResponse } from '../types/raw/user/RemoveFollower';
 import { IUserSearchResponse } from '../types/raw/user/Search';
 import { IUserSettingsResponse } from '../types/raw/user/Settings';
 import { IUserSubscriptionsResponse } from '../types/raw/user/Subscriptions';
+import { IUserSuggestionsResponse } from '../types/raw/user/Suggestions';
 import { IUserTweetsResponse } from '../types/raw/user/Tweets';
 import { IUserTweetsAndRepliesResponse } from '../types/raw/user/TweetsAndReplies';
 import { IUserUnfollowResponse } from '../types/raw/user/Unfollow';
@@ -181,6 +182,8 @@ export const Extractors = {
 	USER_REMOVE_FOLLOWER: (response: IUserRemoveFollowerResponse): boolean =>
 		response?.data?.remove_follower?.unfollow_success_reason ? true : false,
 	USER_SEARCH: (response: IUserSearchResponse): CursoredData<User> => new CursoredData<User>(response, BaseType.USER),
+	USER_SUGGESTIONS: (response: IUserSuggestionsResponse): CursoredData<User> =>
+		new CursoredData<User>(response, BaseType.USER),
 	USER_SUBSCRIPTIONS: (response: IUserSubscriptionsResponse): CursoredData<User> =>
 		new CursoredData<User>(response, BaseType.USER),
 	USER_TIMELINE: (response: IUserTweetsResponse): CursoredData<Tweet> =>

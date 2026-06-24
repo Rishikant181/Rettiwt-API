@@ -141,6 +141,7 @@ export { IUserNotificationsResponse as IRawUserNotificationsResponse } from './t
 export { IUserRecommendedResponse as IRawUserRecommendedResponse } from './types/raw/user/Recommended';
 export { IUserSearchResponse as IRawUserSearchResponse } from './types/raw/user/Search';
 export { IUserScheduledResponse as IRawUserScheduledResponse } from './types/raw/user/Scheduled';
+export { IUserSuggestionsResponse as IRawUserSuggestionsResponse } from './types/raw/user/Suggestions';
 export { IUserSubscriptionsResponse as IRawUserSubscriptionsResponse } from './types/raw/user/Subscriptions';
 export { IUserTweetsResponse as IRawUserTweetsResponse } from './types/raw/user/Tweets';
 export { IUserTweetsAndRepliesResponse as IRawUserTweetsAndRepliesResponse } from './types/raw/user/TweetsAndReplies';

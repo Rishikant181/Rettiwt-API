@@ -47,6 +47,7 @@ export interface IFetchArgs {
 	 * - Has not effect for:
 	 * 	- {@link ResourceType.USER_FEED_FOLLOWED}
 	 * 	- {@link ResourceType.USER_FEED_RECOMMENDED}
+	 * 	- {@link ResourceType.USER_SUGGESTIONS}
 	 */
 	count?: number;
 
@@ -58,6 +59,14 @@ export interface IFetchArgs {
 	 * - Has no effect for other resources.
 	 */
 	cursor?: string;
+
+	/**
+	 * Whether to fetch creator-only suggested users.
+	 *
+	 * @remarks
+	 * - Only works for {@link ResourceType.USER_SUGGESTIONS}.
+	 */
+	creatorOnly?: boolean;
 
 	/**
 	 * The filter for searching tweets.

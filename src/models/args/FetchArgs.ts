@@ -12,6 +12,7 @@ export class FetchArgs implements IFetchArgs {
 	public activeConversationId?: string;
 	public conversationId?: string;
 	public count?: number;
+	public creatorOnly?: boolean;
 	public cursor?: string;
 	public filter?: TweetFilter;
 	public fromTime?: Date;
@@ -37,6 +38,7 @@ export class FetchArgs implements IFetchArgs {
 		this.isMetatagsQuery = args.isMetatagsQuery;
 		this.jobFilter = args.jobFilter ? new JobSearchFilter(args.jobFilter) : undefined;
 		this.count = args.count;
+		this.creatorOnly = args.creatorOnly;
 		this.cursor = args.cursor;
 		this.filter = args.filter ? new TweetFilter(args.filter) : undefined;
 		this.sortBy = args.sortBy;
