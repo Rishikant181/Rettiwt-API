@@ -281,7 +281,7 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 	// Suggestions
 	user.command('suggestions')
 		.description('Fetch suggested users from the Connect tab')
-		.option('--creator-only', 'Fetch creator-only suggested users')
+		.option('-c, --creator-only', 'Fetch creator-only suggested users')
 		.action(async (options?: UserSuggestionsOptions) => {
 			try {
 				const users = await rettiwt.user.suggestions(options?.creatorOnly);
