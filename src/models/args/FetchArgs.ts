@@ -1,5 +1,6 @@
+import { JobEmploymentType, JobLocationType, JobSeniorityLevel } from '../../enums/Job';
 import { TweetRepliesSortType } from '../../enums/Tweet';
-import { IFetchArgs, ITweetFilter } from '../../types/args/FetchArgs';
+import { IFetchArgs, IJobSearchFilter, ITweetFilter } from '../../types/args/FetchArgs';
 
 import type { RawAnalyticsGranularity, RawAnalyticsMetric } from '../../enums/raw/Analytics';
 /**
@@ -18,6 +19,7 @@ export class FetchArgs implements IFetchArgs {
 	public id?: string;
 	public ids?: string[];
 	public isMetatagsQuery?: boolean;
+	public jobFilter?: JobSearchFilter;
 	public maxId?: string;
 	public metrics?: RawAnalyticsMetric[];
 	public showVerifiedFollowers?: boolean;
@@ -33,6 +35,7 @@ export class FetchArgs implements IFetchArgs {
 		this.id = args.id;
 		this.ids = args.ids;
 		this.isMetatagsQuery = args.isMetatagsQuery;
+		this.jobFilter = args.jobFilter ? new JobSearchFilter(args.jobFilter) : undefined;
 		this.count = args.count;
 		this.cursor = args.cursor;
 		this.filter = args.filter ? new TweetFilter(args.filter) : undefined;
@@ -47,6 +50,38 @@ export class FetchArgs implements IFetchArgs {
 		this.maxId = args.maxId;
 		this.withListeners = args.withListeners;
 		this.withReplays = args.withReplays;
+	}
+}
+
+/**
+ * The filter to be used for searching X Jobs.
+ *
+ * @public
+ */
+export class JobSearchFilter implements IJobSearchFilter {
+	public companyName?: string;
+	public employmentTypes?: JobEmploymentType[];
+	public industry?: string;
+	public keyword?: string;
+	public location?: string;
+	public locationId?: string;
+	public locationIds?: string[];
+	public locationTypes?: JobLocationType[];
+	public seniorityLevels?: JobSeniorityLevel[];
+
+	/**
+	 * @param filter - The filter configuration.
+	 */
+	public constructor(filter: IJobSearchFilter) {
+		this.companyName = filter.companyName;
+		this.employmentTypes = filter.employmentTypes;
+		this.industry = filter.industry;
+		this.keyword = filter.keyword;
+		this.location = filter.location;
+		this.locationId = filter.locationId;
+		this.locationIds = filter.locationIds;
+		this.locationTypes = filter.locationTypes;
+		this.seniorityLevels = filter.seniorityLevels;
 	}
 }
 

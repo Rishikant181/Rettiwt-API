@@ -18,6 +18,9 @@ export const AllowGuestAuthenticationGroup = [
  * @internal
  */
 export const FetchResourcesGroup = [
+	ResourceType.JOB_DETAILS,
+	ResourceType.JOB_LOCATIONS,
+	ResourceType.JOB_SEARCH,
 	ResourceType.LIST_DETAILS,
 	ResourceType.LIST_MEMBERS,
 	ResourceType.LIST_TWEETS,

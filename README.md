@@ -33,6 +33,9 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - Direct Message Inbox
     - Direct Message Conversations
     - Direct Message Delete Conversation
+    - Job Details
+    - Job Locations
+    - Job Search
     - List Add Member
     - List Details
     - List Members
@@ -279,7 +282,49 @@ rettiwt.tweet.search({
 });
 ```
 
-### 4. Getting the edit history of a tweet
+### 4. Searching X Jobs
+
+```ts
+import { Rettiwt } from 'rettiwt-api';
+
+// Creating a new Rettiwt instance using the API_KEY
+const rettiwt = new Rettiwt({ apiKey: API_KEY });
+
+// Fetching the first 25 jobs matching Discord
+rettiwt.job.search('Discord', 25)
+.then(data => {
+	...
+})
+.catch(err => {
+	...
+});
+```
+
+The details of a specific job can be fetched using its job ID:
+
+```ts
+rettiwt.job.details('<job_id>')
+.then(data => {
+	...
+})
+.catch(err => {
+	...
+});
+```
+
+Suggested locations for the jobs location selector can be fetched as follows:
+
+```ts
+rettiwt.job.locations('Grenoble')
+.then(data => {
+	...
+})
+.catch(err => {
+	...
+});
+```
+
+### 5. Getting the edit history of a tweet
 
 ```ts
 import { Rettiwt } from 'rettiwt-api';
@@ -546,6 +591,12 @@ So far, the following operations are supported:
 - [Getting a specific conversation with full message history](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#conversation)
 - [Deleting a conversation](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#deleteConversation)
 
+### Jobs
+
+- [Getting the details of an X Job](https://rishikant181.github.io/Rettiwt-API/classes/JobService.html#details)
+- [Getting suggested X Job locations](https://rishikant181.github.io/Rettiwt-API/classes/JobService.html#locations)
+- [Searching for X Jobs](https://rishikant181.github.io/Rettiwt-API/classes/JobService.html#search)
+
 ### List
 
 - [Adding a member to a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#addMember)
@@ -629,6 +680,9 @@ Help for the CLI can be obtained from the CLI itself:
 
 - For help regarding the available commands, use the command `rettiwt help`
 - For help regarding a specific command, use the command `rettiwt help <command_name>`
+- For fetching the details of an X Job, use the command `rettiwt job details <job_id>`
+- For fetching suggested X Job locations, use the command `rettiwt job locations <query>`
+- For searching X Jobs, use the command `rettiwt job search <keyword>`
 - For fetching the edit history of a tweet, use the command `rettiwt tweet history <tweet_id>`
 
 ## API Reference

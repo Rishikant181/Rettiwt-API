@@ -2,6 +2,7 @@ import { AxiosRequestConfig } from 'axios';
 
 import { ResourceType } from '../enums/Resource';
 import { DMRequests } from '../requests/DirectMessage';
+import { JobRequests } from '../requests/Job';
 import { ListRequests } from '../requests/List';
 import { MediaRequests } from '../requests/Media';
 import { SpaceRequests } from '../requests/Space';
@@ -19,6 +20,10 @@ import { TweetRepliesSortTypeMap } from './Tweet';
  */
 export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs | IPostArgs) => AxiosRequestConfig } = {
 	/* eslint-disable @typescript-eslint/naming-convention */
+
+	JOB_DETAILS: (args: IFetchArgs) => JobRequests.details(args.id!),
+	JOB_LOCATIONS: (args: IFetchArgs) => JobRequests.locations(args.id!),
+	JOB_SEARCH: (args: IFetchArgs) => JobRequests.search(args.jobFilter!, args.count, args.cursor),
 
 	LIST_CREATE: (args: IPostArgs) => ListRequests.create(args.list!),
 	LIST_DELETE: (args: IPostArgs) => ListRequests.delete(args.id!),

@@ -2,6 +2,7 @@ import { AxiosProxyConfig } from 'axios';
 
 import { RettiwtConfig } from './models/RettiwtConfig';
 import { DirectMessageService } from './services/public/DirectMessageService';
+import { JobService } from './services/public/JobService';
 import { ListService } from './services/public/ListService';
 import { SpaceService } from './services/public/SpaceService';
 import { TweetService } from './services/public/TweetService';
@@ -56,6 +57,9 @@ export class Rettiwt {
 	/** The instance used to fetch data related to direct messages. */
 	public dm: DirectMessageService;
 
+	/** The instance used to fetch data related to X Jobs. */
+	public job: JobService;
+
 	/** The instance used to fetch data related to lists. */
 	public list: ListService;
 
@@ -76,6 +80,7 @@ export class Rettiwt {
 	public constructor(config?: IRettiwtConfig) {
 		this._config = new RettiwtConfig(config);
 		this.dm = new DirectMessageService(this._config);
+		this.job = new JobService(this._config);
 		this.list = new ListService(this._config);
 		this.space = new SpaceService(this._config);
 		this.tweet = new TweetService(this._config);

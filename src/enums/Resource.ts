@@ -4,6 +4,11 @@
  * @public
  */
 export enum ResourceType {
+	// JOB
+	JOB_DETAILS = 'JOB_DETAILS',
+	JOB_LOCATIONS = 'JOB_LOCATIONS',
+	JOB_SEARCH = 'JOB_SEARCH',
+
 	// LIST
 	LIST_CREATE = 'LIST_CREATE',
 	LIST_DELETE = 'LIST_DELETE',
