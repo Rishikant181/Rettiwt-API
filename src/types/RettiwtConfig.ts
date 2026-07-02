@@ -77,4 +77,17 @@ export interface IRettiwtConfig {
 	 * @remarks Recommended to use a value of 5 combined with a `delay` of 1000 to prevent error 404.
 	 */
 	maxRetries?: number;
+
+	/**
+	 * A custom `fetch` implementation to use for making HTTP requests.
+	 *
+	 * @remarks
+	 * <br>
+	 * - When specified, the underlying HTTP client switches to a fetch-based transport.
+	 * - Allows injecting a fetch-compatible client (e.g. a browser-impersonation client)
+	 *   to control TLS/HTTP fingerprints or run in environments without Node.js HTTP agents.
+	 *
+	 * @see {@link https://axios.rest/pages/advanced/fetch-adapter}
+	 */
+	fetch?: typeof fetch;
 }
