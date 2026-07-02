@@ -45,7 +45,6 @@ export class RettiwtConfig implements IRettiwtConfig {
 	private _userId: string | undefined;
 
 	// Parameters that can be set once, upon initialization
-	public readonly adapter?: NonNullable<AxiosRequestConfig['adapter']>;
 	public readonly delay?: number | (() => number | Promise<number>);
 	public readonly errorHandler?: IErrorHandler;
 	public readonly fetch?: typeof fetch;
@@ -61,9 +60,8 @@ export class RettiwtConfig implements IRettiwtConfig {
 		this._apiKey = config?.apiKey;
 		this._proxy = config?.proxy;
 		this._userId = config?.apiKey ? AuthService.getUserId(config?.apiKey) : undefined;
-		this.adapter = config?.adapter ?? (config?.fetch !== undefined ? 'fetch' : undefined);
-		this.fetch = config?.fetch;
 		this.delay = config?.delay ?? 0;
+		this.fetch = config?.fetch;
 		this.maxRetries = config?.maxRetries ?? 0;
 		this.errorHandler = config?.errorHandler;
 		this.responseMiddleware = config?.responseMiddleware;
@@ -165,7 +163,7 @@ export class RettiwtConfig implements IRettiwtConfig {
 	}
 
 	/**
-	 * Creates the shared Axios instance with the current configuration.
+	 * Creates the shared HTTP client instance with the current configuration.
 	 *
 	 * @returns The configured Axios instance.
 	 */
@@ -176,11 +174,8 @@ export class RettiwtConfig implements IRettiwtConfig {
 			proxy: this.axiosProxyConfig,
 		};
 
-		if (this.adapter !== undefined) {
-			config.adapter = this.adapter;
-		}
-
 		if (this.fetch !== undefined) {
+			config.adapter = 'fetch';
 			config.env = { fetch: this.fetch };
 		}
 

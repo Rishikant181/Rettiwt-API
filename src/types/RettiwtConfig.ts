@@ -1,4 +1,4 @@
-import { AxiosProxyConfig, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { AxiosProxyConfig, AxiosResponse } from 'axios';
 
 import { IErrorHandler } from './ErrorHandler';
 
@@ -79,23 +79,13 @@ export interface IRettiwtConfig {
 	maxRetries?: number;
 
 	/**
-	 * The Axios adapter to use for making HTTP requests.
+	 * A custom `fetch` implementation to use for making HTTP requests.
 	 *
 	 * @remarks
 	 * <br>
-	 * - If not specified, Axios' default adapter is used.
-	 * - If `fetch` is specified without an `adapter`, the adapter is automatically set to `'fetch'`.
-	 *
-	 * @see {@link https://axios.rest/pages/advanced/fetch-adapter}
-	 */
-	adapter?: NonNullable<AxiosRequestConfig['adapter']>;
-
-	/**
-	 * A custom `fetch` implementation to use with the Axios fetch adapter.
-	 *
-	 * @remarks
-	 * <br>
-	 * - Has no effect unless the `adapter` is set to (or auto-resolves to) `'fetch'`.
+	 * - When specified, the underlying HTTP client switches to a fetch-based transport.
+	 * - Allows injecting a fetch-compatible client (e.g. a browser-impersonation client)
+	 *   to control TLS/HTTP fingerprints or run in environments without Node.js HTTP agents.
 	 *
 	 * @see {@link https://axios.rest/pages/advanced/fetch-adapter}
 	 */
