@@ -1,4 +1,4 @@
-import { AxiosProxyConfig, AxiosResponse } from 'axios';
+import { AxiosProxyConfig, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 import { IErrorHandler } from './ErrorHandler';
 
@@ -77,4 +77,27 @@ export interface IRettiwtConfig {
 	 * @remarks Recommended to use a value of 5 combined with a `delay` of 1000 to prevent error 404.
 	 */
 	maxRetries?: number;
+
+	/**
+	 * The Axios adapter to use for making HTTP requests.
+	 *
+	 * @remarks
+	 * <br>
+	 * - If not specified, Axios' default adapter is used.
+	 * - If `fetch` is specified without an `adapter`, the adapter is automatically set to `'fetch'`.
+	 *
+	 * @see {@link https://axios.rest/pages/advanced/fetch-adapter}
+	 */
+	adapter?: NonNullable<AxiosRequestConfig['adapter']>;
+
+	/**
+	 * A custom `fetch` implementation to use with the Axios fetch adapter.
+	 *
+	 * @remarks
+	 * <br>
+	 * - Has no effect unless the `adapter` is set to (or auto-resolves to) `'fetch'`.
+	 *
+	 * @see {@link https://axios.rest/pages/advanced/fetch-adapter}
+	 */
+	fetch?: typeof fetch;
 }

@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse, isAxiosError } from 'axios';
+import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 import { Cookie } from 'cookiejar';
 import { parseHTML } from 'linkedom';
 import { ClientTransaction } from 'x-client-transaction-id';
@@ -38,9 +38,6 @@ export class FetcherService {
 	/** The service used to handle HTTP and API errors */
 	private readonly _errorHandler: IErrorHandler;
 
-	/** The max wait time for a response. */
-	private readonly _timeout: number;
-
 	/** The config object. */
 	protected readonly config: RettiwtConfig;
 
@@ -52,7 +49,6 @@ export class FetcherService {
 		this.config = config;
 		this._delay = config.delay;
 		this._errorHandler = config.errorHandler ?? new ErrorService();
-		this._timeout = config.timeout ?? 0;
 		this._auth = new AuthService(config);
 	}
 
@@ -126,11 +122,8 @@ export class FetcherService {
 
 	private async _handleXMigration(): Promise<Document> {
 		// Fetch X.com homepage
-		const homePageResponse = await axios.get<string>('https://x.com/home', {
+		const homePageResponse = await this.config.instance.get<string>('https://x.com/home', {
 			headers: this.config.headers,
-			httpAgent: this.config.httpAgent,
-			httpsAgent: this.config.httpsAgent,
-			proxy: this.config.axiosProxyConfig,
 		});
 
 		// Parse HTML using linkedom
@@ -150,11 +143,7 @@ export class FetcherService {
 
 		if (migrationRedirectionUrl) {
 			// Follow redirection URL
-			const redirectResponse = await axios.get<string>(migrationRedirectionUrl[0], {
-				httpAgent: this.config.httpAgent,
-				httpsAgent: this.config.httpsAgent,
-				proxy: this.config.axiosProxyConfig,
-			});
+			const redirectResponse = await this.config.instance.get<string>(migrationRedirectionUrl[0]);
 
 			document = parseHTML(redirectResponse.data).document;
 		}
@@ -181,7 +170,7 @@ export class FetcherService {
 			}
 
 			// Submit form using POST request
-			const formResponse = await axios.request<string>({
+			const formResponse = await this.config.instance.request<string>({
 				method: method,
 				url: url,
 				data: requestPayload,
@@ -193,9 +182,6 @@ export class FetcherService {
 
 					/* eslint-enable @typescript-eslint/naming-convention */
 				},
-				httpAgent: this.config.httpAgent,
-				httpsAgent: this.config.httpsAgent,
-				proxy: this.config.axiosProxyConfig,
 			});
 
 			document = parseHTML(formResponse.data).document;
@@ -307,10 +293,6 @@ export class FetcherService {
 			...cred.toHeader(),
 			...this.config.headers,
 		};
-		config.httpAgent = this.config.httpAgent;
-		config.httpsAgent = this.config.httpsAgent;
-		config.proxy = this.config.axiosProxyConfig;
-		config.timeout = this._timeout;
 
 		// Using retries for error 404
 		do {
@@ -326,7 +308,7 @@ export class FetcherService {
 				await this._wait();
 
 				// Getting the response body
-				const response = await axios<T>(config);
+				const response = await this.config.instance<T>(config);
 				const responseData = response.data;
 
 				// Check for Twitter API errors in response body
