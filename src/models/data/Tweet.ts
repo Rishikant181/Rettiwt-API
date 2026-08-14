@@ -11,6 +11,7 @@ import { IExtendedMedia as IRawExtendedMedia } from '../../types/raw/base/Media'
 import { ITweet as IRawTweet, IEntities as IRawTweetEntities } from '../../types/raw/base/Tweet';
 import { ITimelineTweet } from '../../types/raw/composite/TimelineTweet';
 
+import { Article } from './Article';
 import { User } from './User';
 
 /**
@@ -22,6 +23,7 @@ export class Tweet implements ITweet {
 	/** The raw tweet details. */
 	private readonly _raw: IRawTweet;
 
+	public article?: Article;
 	public bookmarkCount?: number;
 	public conversationId: string;
 	public createdAt: string;
@@ -46,6 +48,7 @@ export class Tweet implements ITweet {
 	 */
 	public constructor(tweet: IRawTweet) {
 		this._raw = { ...tweet };
+		this.article = Article.fromTweet(tweet);
 		this.id = tweet.rest_id;
 		this.conversationId = tweet.legacy.conversation_id_str;
 		this.createdAt = new Date(tweet.legacy.created_at).toISOString();
@@ -245,6 +248,7 @@ export class Tweet implements ITweet {
 	 */
 	public toJSON(): ITweet {
 		return {
+			article: this.article?.toJSON(),
 			bookmarkCount: this.bookmarkCount,
 			conversationId: this.conversationId,
 			createdAt: this.createdAt,

@@ -3,6 +3,7 @@ import { RawAnalyticsGranularity, RawAnalyticsMetric } from '../../enums/raw/Ana
 import { ResourceType } from '../../enums/Resource';
 import { ProfileUpdateOptions } from '../../models/args/ProfileArgs';
 import { Analytics } from '../../models/data/Analytics';
+import { Article } from '../../models/data/Article';
 import { BookmarkFolder } from '../../models/data/BookmarkFolder';
 import { CursoredData } from '../../models/data/CursoredData';
 import { List } from '../../models/data/List';
@@ -15,6 +16,7 @@ import { IProfileUpdateOptions } from '../../types/args/ProfileArgs';
 import { IUserAboutResponse } from '../../types/raw/user/About';
 import { IUserAffiliatesResponse } from '../../types/raw/user/Affiliates';
 import { IUserAnalyticsResponse } from '../../types/raw/user/Analytics';
+import { IUserArticlesResponse } from '../../types/raw/user/Articles';
 import { IUserBookmarkFoldersResponse } from '../../types/raw/user/BookmarkFolders';
 import { IUserBookmarkFolderTweetsResponse } from '../../types/raw/user/BookmarkFolderTweets';
 import { IUserBookmarksResponse } from '../../types/raw/user/Bookmarks';
@@ -250,6 +252,36 @@ export class UserService extends FetcherService {
 		const data = Extractors[resource](response.data);
 
 		return data;
+	}
+
+	/**
+	 * Get the articles published by a user.
+	 *
+	 * @param id - The ID of the target user. If no ID is provided, the logged-in user's ID is used.
+	 * @param count - The number of articles to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of articles to fetch.
+	 *
+	 * @returns The articles published by the target user and the cursor for the next batch.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 * const articles = await rettiwt.user.articles('1466675689554202624', 20);
+	 * console.log(articles.list, articles.next);
+	 * ```
+	 */
+	public async articles(id?: string, count?: number, cursor?: string): Promise<CursoredData<Article>> {
+		const resource = ResourceType.USER_ARTICLES;
+		const response = await this.request<IUserArticlesResponse>(resource, {
+			id: id ?? this.config.userId,
+			count: count,
+			cursor: cursor,
+		});
+
+		return Extractors[resource](response.data);
 	}
 
 	/**

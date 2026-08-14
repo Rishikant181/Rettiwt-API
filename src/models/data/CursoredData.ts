@@ -7,6 +7,7 @@ import { ICursor as IRawCursor } from '../../types/raw/base/Cursor';
 import { IJobSearchQueryScreenJobsQueryResponse } from '../../types/raw/job/JobSearchQueryScreenJobsQuery';
 import { IUserBookmarkFoldersResponse } from '../../types/raw/user/BookmarkFolders';
 
+import { Article } from './Article';
 import { BookmarkFolder } from './BookmarkFolder';
 import { Job } from './Job';
 import { List } from './List';
@@ -21,7 +22,7 @@ import { User } from './User';
  *
  * @public
  */
-export class CursoredData<T extends Notification | Tweet | User | List | BookmarkFolder | Job>
+export class CursoredData<T extends Article | Notification | Tweet | User | List | BookmarkFolder | Job>
 	implements ICursoredData<T>
 {
 	public list: T[];
@@ -36,7 +37,12 @@ export class CursoredData<T extends Notification | Tweet | User | List | Bookmar
 		this.list = [];
 		this.next = '';
 
-		if (type == BaseType.TWEET) {
+		if (type == BaseType.ARTICLE) {
+			this.list = Tweet.timeline(response)
+				.map((tweet) => tweet.article)
+				.filter((article): article is Article => article !== undefined) as T[];
+			this.next = findByFilter<IRawCursor>(response, 'cursorType', 'Bottom')[0]?.value ?? '';
+		} else if (type == BaseType.TWEET) {
 			this.list = Tweet.timeline(response) as T[];
 			this.next = findByFilter<IRawCursor>(response, 'cursorType', 'Bottom')[0]?.value ?? '';
 		} else if (type == BaseType.USER) {

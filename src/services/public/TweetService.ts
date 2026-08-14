@@ -3,6 +3,7 @@ import { statSync } from 'fs';
 import { Extractors } from '../../collections/Extractors';
 import { ResourceType } from '../../enums/Resource';
 import { TweetRepliesSortType } from '../../enums/Tweet';
+import { Article } from '../../models/data/Article';
 import { CursoredData } from '../../models/data/CursoredData';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
@@ -45,6 +46,30 @@ export class TweetService extends FetcherService {
 	 */
 	public constructor(config: RettiwtConfig) {
 		super(config);
+	}
+
+	/**
+	 * Get the complete X Article attached to a tweet.
+	 *
+	 * @param id - The ID of the tweet containing the article.
+	 *
+	 * @returns The article, or `undefined` when the tweet does not contain one.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 * const article = await rettiwt.tweet.article('2083935229757337948');
+	 * console.log(article?.title, article?.text);
+	 * ```
+	 */
+	public async article(id: string): Promise<Article | undefined> {
+		const resource = ResourceType.TWEET_ARTICLE;
+		const response = await this.request<ITweetRepliesResponse>(resource, { id: id });
+
+		return Extractors[resource](response.data, id);
 	}
 
 	/**

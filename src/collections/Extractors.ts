@@ -1,5 +1,6 @@
 import { BaseType } from '../enums/Data';
 import { Analytics } from '../models/data/Analytics';
+import { Article } from '../models/data/Article';
 import { BookmarkFolder } from '../models/data/BookmarkFolder';
 import { Conversation } from '../models/data/Conversation';
 import { CursoredData } from '../models/data/CursoredData';
@@ -50,6 +51,7 @@ import { ITweetUnscheduleResponse } from '../types/raw/tweet/Unschedule';
 import { IUserAboutResponse } from '../types/raw/user/About';
 import { IUserAffiliatesResponse } from '../types/raw/user/Affiliates';
 import { IUserAnalyticsResponse } from '../types/raw/user/Analytics';
+import { IUserArticlesResponse } from '../types/raw/user/Articles';
 import { IUserBookmarkFoldersResponse } from '../types/raw/user/BookmarkFolders';
 import { IUserBookmarkFolderTweetsResponse } from '../types/raw/user/BookmarkFolderTweets';
 import { IUserBookmarksResponse } from '../types/raw/user/Bookmarks';
@@ -118,6 +120,8 @@ export const Extractors = {
 	SPACE_DETAILS: (response: IAudioSpaceByIdResponse): Space | undefined => Space.single(response),
 
 	TWEET_BOOKMARK: (response: ITweetBookmarkResponse): boolean => response?.data?.tweet_bookmark_put === 'Done',
+	TWEET_ARTICLE: (response: ITweetRepliesResponse, id: string): Article | undefined =>
+		Tweet.single(response, id)?.article,
 	TWEET_DETAILS: (response: ITweetDetailsResponse, id: string): Tweet | undefined => Tweet.single(response, id),
 	TWEET_DETAILS_ALT: (response: ITweetRepliesResponse, id: string): Tweet | undefined => Tweet.single(response, id),
 	TWEET_DETAILS_BULK: (response: ITweetDetailsBulkResponse, ids: string[]): Tweet[] => Tweet.multiple(response, ids),
@@ -148,6 +152,8 @@ export const Extractors = {
 
 	USER_AFFILIATES: (response: IUserAffiliatesResponse): CursoredData<User> =>
 		new CursoredData<User>(response, BaseType.USER),
+	USER_ARTICLES: (response: IUserArticlesResponse): CursoredData<Article> =>
+		new CursoredData<Article>(response, BaseType.ARTICLE),
 	USER_ANALYTICS: (response: IUserAnalyticsResponse): Analytics =>
 		new Analytics(response.data.viewer_v2.user_results.result),
 	USER_BOOKMARKS: (response: IUserBookmarksResponse): CursoredData<Tweet> =>

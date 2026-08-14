@@ -17,6 +17,7 @@ export * from './enums/Resource';
 export * from './enums/Tweet';
 
 // MODELS
+export * from './models/data/Article';
 export * from './models/args/FetchArgs';
 export * from './models/args/PostArgs';
 export * from './models/args/ProfileArgs';
@@ -54,6 +55,7 @@ export * from './services/public/TweetService';
 export * from './services/public/UserService';
 
 // TYPES
+export * from './types/data/Article';
 export * from './types/args/FetchArgs';
 export * from './types/args/PostArgs';
 export * from './types/args/ProfileArgs';
@@ -84,6 +86,13 @@ export { IMedia as IRawMedia } from './types/raw/base/Media';
 export { IMessage as IRawMessage } from './types/raw/base/Message';
 export { INotification as IRawNotification } from './types/raw/base/Notification';
 export { IRawSpace } from './types/raw/base/Space';
+export {
+	IArticle as IRawArticle,
+	IArticleContentState as IRawArticleContentState,
+	IArticleLifecycleState as IRawArticleLifecycleState,
+	IArticleMedia as IRawArticleMedia,
+	IArticleMetadata as IRawArticleMetadata,
+} from './types/raw/base/Article';
 export { ITweet as IRawTweet } from './types/raw/base/Tweet';
 export { IUser as IRawUser } from './types/raw/base/User';
 export { IDataResult as IRawDataResult } from './types/raw/composite/DataResult';
@@ -123,6 +132,7 @@ export { ITweetUnpostResponse as IRawTweetUnpostResponse } from './types/raw/twe
 export { ITweetUnretweetResponse as IRawTweetUnretweetResponse } from './types/raw/tweet/Unretweet';
 export { ITweetUnscheduleResponse as ITRawTweetUnscheduleResponse } from './types/raw/tweet/Unschedule';
 export { IUserAboutResponse as IRawUserAboutResponse } from './types/raw/user/About';
+export { IUserArticlesResponse as IRawUserArticlesResponse } from './types/raw/user/Articles';
 export { IUserAffiliatesResponse as IRawUserAffiliatesResponse } from './types/raw/user/Affiliates';
 export { IUserAnalyticsResponse as IRawUserAnalyticsResponse } from './types/raw/user/Analytics';
 export { IUserBookmarkFoldersResponse as IRawUserBookmarkFoldersResponse } from './types/raw/user/BookmarkFolders';
