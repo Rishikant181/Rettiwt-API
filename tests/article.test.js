@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
 
-const { Article, BaseType, CursoredData, ResourceType, Tweet, UserRequests } = require('../dist');
+const { PublishedArticle, PublishedArticlePage, ResourceType, Tweet, UserRequests } = require('../dist');
 const { FetchResourcesGroup } = require('../dist/collections/Groups');
 
 function rawTweet() {
@@ -80,8 +80,8 @@ function rawTweet() {
 	};
 }
 
-test('Article deserializes rich content and media from a tweet', () => {
-	const article = new Article(rawTweet());
+test('PublishedArticle deserializes rich content and media from a tweet', () => {
+	const article = new PublishedArticle(rawTweet());
 
 	assert.equal(article.id, '2083915397791891456');
 	assert.equal(article.tweetId, '2083935229757337948');
@@ -99,7 +99,7 @@ test('Tweet exposes its attached article', () => {
 	assert.equal(tweet.toJSON().article.id, '2083915397791891456');
 });
 
-test('CursoredData extracts an article timeline and bottom cursor', () => {
+test('PublishedArticlePage extracts an article timeline and bottom cursor', () => {
 	const response = {
 		data: {
 			entries: [
@@ -108,7 +108,7 @@ test('CursoredData extracts an article timeline and bottom cursor', () => {
 			],
 		},
 	};
-	const page = new CursoredData(response, BaseType.ARTICLE);
+	const page = new PublishedArticlePage(response);
 
 	assert.equal(page.list.length, 1);
 	assert.equal(page.list[0].title, 'An article title');

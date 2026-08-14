@@ -3,8 +3,8 @@ import { statSync } from 'fs';
 import { Extractors } from '../../collections/Extractors';
 import { ResourceType } from '../../enums/Resource';
 import { TweetRepliesSortType } from '../../enums/Tweet';
-import { Article } from '../../models/data/Article';
 import { CursoredData } from '../../models/data/CursoredData';
+import { PublishedArticle } from '../../models/data/PublishedArticle';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
 
@@ -65,11 +65,11 @@ export class TweetService extends FetcherService {
 	 * console.log(article?.title, article?.text);
 	 * ```
 	 */
-	public async article(id: string): Promise<Article | undefined> {
+	public async article(id: string): Promise<PublishedArticle | undefined> {
 		const resource = ResourceType.TWEET_ARTICLE;
 		const response = await this.request<ITweetRepliesResponse>(resource, { id: id });
 
-		return Extractors[resource](response.data, id);
+		return Tweet.single(response.data, id)?.article;
 	}
 
 	/**

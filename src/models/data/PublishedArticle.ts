@@ -1,5 +1,8 @@
-import { IArticle, IArticleMedia } from '../../types/data/Article';
-import { IArticle as IRawArticle, IArticleMedia as IRawArticleMedia } from '../../types/raw/base/Article';
+import { IPublishedArticle, IPublishedArticleMedia } from '../../types/data/PublishedArticle';
+import {
+	IPublishedArticle as IRawPublishedArticle,
+	IPublishedArticleMedia as IRawPublishedArticleMedia,
+} from '../../types/raw/base/PublishedArticle';
 import { ITweet as IRawTweet } from '../../types/raw/base/Tweet';
 
 import { User } from './User';
@@ -9,16 +12,16 @@ import { User } from './User';
  *
  * @public
  */
-export class Article implements IArticle {
+export class PublishedArticle implements IPublishedArticle {
 	/** The raw article details. */
-	private readonly _raw: IRawArticle;
+	private readonly _raw: IRawPublishedArticle;
 
 	public author: User;
 	public blocks: Record<string, unknown>[];
-	public coverMedia?: ArticleMedia;
+	public coverMedia?: PublishedArticleMedia;
 	public entityMap: Record<string, unknown>;
 	public id: string;
-	public media: ArticleMedia[];
+	public media: PublishedArticleMedia[];
 	public modifiedAt?: string;
 	public previewText?: string;
 	public publishedAt?: string;
@@ -48,18 +51,18 @@ export class Article implements IArticle {
 			.filter(Boolean)
 			.join('\n\n');
 		this.author = new User(tweet.core.user_results.result);
-		this.publishedAt = Article._toIsoDate(article.metadata?.first_published_at_secs);
-		this.modifiedAt = Article._toIsoDate(article.lifecycle_state?.modified_at_secs);
-		this.coverMedia = article.cover_media ? new ArticleMedia(article.cover_media) : undefined;
+		this.publishedAt = PublishedArticle._toIsoDate(article.metadata?.first_published_at_secs);
+		this.modifiedAt = PublishedArticle._toIsoDate(article.lifecycle_state?.modified_at_secs);
+		this.coverMedia = article.cover_media ? new PublishedArticleMedia(article.cover_media) : undefined;
 		const media = Array.isArray(article.media_entities)
 			? article.media_entities
 			: Object.values(article.media_entities ?? {});
-		this.media = media.map((item) => new ArticleMedia(item));
+		this.media = media.map((item) => new PublishedArticleMedia(item));
 		this.url = `https://x.com/${this.author.userName}/status/${this.tweetId}`;
 	}
 
 	/** The raw article details. */
-	public get raw(): IRawArticle {
+	public get raw(): IRawPublishedArticle {
 		return { ...this._raw };
 	}
 
@@ -74,14 +77,14 @@ export class Article implements IArticle {
 	 *
 	 * @param tweet - The raw tweet that may contain an article.
 	 */
-	public static fromTweet(tweet: IRawTweet): Article | undefined {
-		return tweet.article?.article_results?.result ? new Article(tweet) : undefined;
+	public static fromTweet(tweet: IRawTweet): PublishedArticle | undefined {
+		return tweet.article?.article_results?.result ? new PublishedArticle(tweet) : undefined;
 	}
 
 	/**
 	 * @returns A serializable JSON representation of this article.
 	 */
-	public toJSON(): IArticle {
+	public toJSON(): IPublishedArticle {
 		return {
 			author: this.author.toJSON(),
 			blocks: this.blocks,
@@ -105,7 +108,7 @@ export class Article implements IArticle {
  *
  * @public
  */
-export class ArticleMedia implements IArticleMedia {
+export class PublishedArticleMedia implements IPublishedArticleMedia {
 	public height?: number;
 	public id?: string;
 	public mediaId?: string;
@@ -114,7 +117,7 @@ export class ArticleMedia implements IArticleMedia {
 	public url: string;
 	public width?: number;
 
-	public constructor(media: IRawArticleMedia) {
+	public constructor(media: IRawPublishedArticleMedia) {
 		this.id = media.rest_id ?? media.id_str ?? media.id;
 		this.mediaId = media.media_id;
 		this.mediaKey = media.media_key;
@@ -124,7 +127,7 @@ export class ArticleMedia implements IArticleMedia {
 		this.height = media.media_info?.original_img_height ?? media.original_info?.height;
 	}
 
-	public toJSON(): IArticleMedia {
+	public toJSON(): IPublishedArticleMedia {
 		return {
 			height: this.height,
 			id: this.id,

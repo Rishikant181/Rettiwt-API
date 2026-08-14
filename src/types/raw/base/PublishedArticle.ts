@@ -5,32 +5,32 @@
  *
  * @public
  */
-export interface IArticle {
+export interface IPublishedArticle {
 	rest_id: string;
 	title: string;
 	preview_text?: string;
-	cover_media?: IArticleMedia;
-	media_entities?: IArticleMedia[] | Record<string, IArticleMedia>;
-	content_state?: IArticleContentState;
-	metadata?: IArticleMetadata;
-	lifecycle_state?: IArticleLifecycleState;
+	cover_media?: IPublishedArticleMedia;
+	media_entities?: IPublishedArticleMedia[] | Record<string, IPublishedArticleMedia>;
+	content_state?: IPublishedArticleContentState;
+	metadata?: IPublishedArticleMetadata;
+	lifecycle_state?: IPublishedArticleLifecycleState;
 }
 
-export interface IArticleContentState {
+export interface IPublishedArticleContentState {
 	blocks?: Record<string, unknown>[];
 	entityMap?: Record<string, unknown>;
 	entity_map?: Record<string, unknown>;
 }
 
-export interface IArticleMetadata {
+export interface IPublishedArticleMetadata {
 	first_published_at_secs?: string | number;
 }
 
-export interface IArticleLifecycleState {
+export interface IPublishedArticleLifecycleState {
 	modified_at_secs?: string | number;
 }
 
-export interface IArticleMedia {
+export interface IPublishedArticleMedia {
 	rest_id?: string;
 	id_str?: string;
 	id?: string;

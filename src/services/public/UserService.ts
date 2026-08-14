@@ -3,11 +3,11 @@ import { RawAnalyticsGranularity, RawAnalyticsMetric } from '../../enums/raw/Ana
 import { ResourceType } from '../../enums/Resource';
 import { ProfileUpdateOptions } from '../../models/args/ProfileArgs';
 import { Analytics } from '../../models/data/Analytics';
-import { Article } from '../../models/data/Article';
 import { BookmarkFolder } from '../../models/data/BookmarkFolder';
 import { CursoredData } from '../../models/data/CursoredData';
 import { List } from '../../models/data/List';
 import { Notification } from '../../models/data/Notification';
+import { PublishedArticlePage } from '../../models/data/PublishedArticlePage';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
 import { UserAbout } from '../../models/data/UserAbout';
@@ -273,7 +273,7 @@ export class UserService extends FetcherService {
 	 * console.log(articles.list, articles.next);
 	 * ```
 	 */
-	public async articles(id?: string, count?: number, cursor?: string): Promise<CursoredData<Article>> {
+	public async articles(id?: string, count?: number, cursor?: string): Promise<PublishedArticlePage> {
 		const resource = ResourceType.USER_ARTICLES;
 		const response = await this.request<IUserArticlesResponse>(resource, {
 			id: id ?? this.config.userId,
@@ -281,7 +281,7 @@ export class UserService extends FetcherService {
 			cursor: cursor,
 		});
 
-		return Extractors[resource](response.data);
+		return new PublishedArticlePage(response.data);
 	}
 
 	/**

@@ -17,7 +17,6 @@ export * from './enums/Resource';
 export * from './enums/Tweet';
 
 // MODELS
-export * from './models/data/Article';
 export * from './models/args/FetchArgs';
 export * from './models/args/PostArgs';
 export * from './models/args/ProfileArgs';
@@ -30,6 +29,8 @@ export * from './models/data/Job';
 export * from './models/data/JobLocation';
 export * from './models/data/List';
 export * from './models/data/Notification';
+export * from './models/data/PublishedArticle';
+export * from './models/data/PublishedArticlePage';
 export * from './models/data/Space';
 export * from './models/data/Tweet';
 export * from './models/data/User';
@@ -55,7 +56,6 @@ export * from './services/public/TweetService';
 export * from './services/public/UserService';
 
 // TYPES
-export * from './types/data/Article';
 export * from './types/args/FetchArgs';
 export * from './types/args/PostArgs';
 export * from './types/args/ProfileArgs';
@@ -68,6 +68,8 @@ export * from './types/data/Job';
 export * from './types/data/JobLocation';
 export * from './types/data/List';
 export * from './types/data/Notification';
+export * from './types/data/PublishedArticle';
+export * from './types/data/PublishedArticlePage';
 export * from './types/data/Space';
 export * from './types/data/Tweet';
 export * from './types/data/User';
@@ -87,12 +89,12 @@ export { IMessage as IRawMessage } from './types/raw/base/Message';
 export { INotification as IRawNotification } from './types/raw/base/Notification';
 export { IRawSpace } from './types/raw/base/Space';
 export {
-	IArticle as IRawArticle,
-	IArticleContentState as IRawArticleContentState,
-	IArticleLifecycleState as IRawArticleLifecycleState,
-	IArticleMedia as IRawArticleMedia,
-	IArticleMetadata as IRawArticleMetadata,
-} from './types/raw/base/Article';
+	IPublishedArticle as IRawPublishedArticle,
+	IPublishedArticleContentState as IRawPublishedArticleContentState,
+	IPublishedArticleLifecycleState as IRawPublishedArticleLifecycleState,
+	IPublishedArticleMedia as IRawPublishedArticleMedia,
+	IPublishedArticleMetadata as IRawPublishedArticleMetadata,
+} from './types/raw/base/PublishedArticle';
 export { ITweet as IRawTweet } from './types/raw/base/Tweet';
 export { IUser as IRawUser } from './types/raw/base/User';
 export { IDataResult as IRawDataResult } from './types/raw/composite/DataResult';

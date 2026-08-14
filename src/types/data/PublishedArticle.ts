@@ -5,7 +5,7 @@ import { IUser } from './User';
  *
  * @public
  */
-export interface IArticle {
+export interface IPublishedArticle {
 	/** The article ID. */
 	id: string;
 
@@ -37,10 +37,10 @@ export interface IArticle {
 	modifiedAt?: string;
 
 	/** The article cover media. */
-	coverMedia?: IArticleMedia;
+	coverMedia?: IPublishedArticleMedia;
 
 	/** Media referenced by the article body. */
-	media: IArticleMedia[];
+	media: IPublishedArticleMedia[];
 
 	/** The canonical tweet URL that opens the article. */
 	url: string;
@@ -51,7 +51,7 @@ export interface IArticle {
  *
  * @public
  */
-export interface IArticleMedia {
+export interface IPublishedArticleMedia {
 	id?: string;
 	mediaId?: string;
 	mediaKey?: string;
