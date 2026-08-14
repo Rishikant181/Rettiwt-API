@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
 
-const { PublishedArticle, PublishedArticlePage, ResourceType, Tweet, UserRequests } = require('../dist');
+const { Article, PublishedArticlePage, ResourceType, Tweet, TweetArticle, UserRequests } = require('../dist');
 const { FetchResourcesGroup } = require('../dist/collections/Groups');
 
 function rawTweet() {
@@ -80,9 +80,10 @@ function rawTweet() {
 	};
 }
 
-test('PublishedArticle deserializes rich content and media from a tweet', () => {
-	const article = new PublishedArticle(rawTweet());
+test('TweetArticle extends the shared Article model with tweet context', () => {
+	const article = new TweetArticle(rawTweet());
 
+	assert.equal(article instanceof Article, true);
 	assert.equal(article.id, '2083915397791891456');
 	assert.equal(article.tweetId, '2083935229757337948');
 	assert.equal(article.text, 'First paragraph\n\nSecond paragraph');
@@ -99,7 +100,7 @@ test('Tweet exposes its attached article', () => {
 	assert.equal(tweet.toJSON().article.id, '2083915397791891456');
 });
 
-test('PublishedArticlePage extracts an article timeline and bottom cursor', () => {
+test('PublishedArticlePage extracts shared Article instances and a bottom cursor', () => {
 	const response = {
 		data: {
 			entries: [
@@ -111,6 +112,7 @@ test('PublishedArticlePage extracts an article timeline and bottom cursor', () =
 	const page = new PublishedArticlePage(response);
 
 	assert.equal(page.list.length, 1);
+	assert.equal(page.list[0] instanceof Article, true);
 	assert.equal(page.list[0].title, 'An article title');
 	assert.equal(page.next, 'next-page');
 });

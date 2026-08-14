@@ -1,4 +1,4 @@
-import { IPublishedArticle } from './PublishedArticle';
+import { ITweetArticle } from './TweetArticle';
 
 /**
  * A cursor-based page of published X Articles.
@@ -11,7 +11,7 @@ import { IPublishedArticle } from './PublishedArticle';
  */
 export interface IPublishedArticlePage {
 	/** The published articles in this page. */
-	list: IPublishedArticle[];
+	list: ITweetArticle[];
 
 	/** The cursor to the next page, or an empty string when no page follows. */
 	next: string;

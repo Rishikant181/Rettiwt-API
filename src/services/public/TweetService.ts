@@ -4,8 +4,8 @@ import { Extractors } from '../../collections/Extractors';
 import { ResourceType } from '../../enums/Resource';
 import { TweetRepliesSortType } from '../../enums/Tweet';
 import { CursoredData } from '../../models/data/CursoredData';
-import { PublishedArticle } from '../../models/data/PublishedArticle';
 import { Tweet } from '../../models/data/Tweet';
+import { TweetArticle } from '../../models/data/TweetArticle';
 import { User } from '../../models/data/User';
 
 import { RettiwtConfig } from '../../models/RettiwtConfig';
@@ -65,7 +65,7 @@ export class TweetService extends FetcherService {
 	 * console.log(article?.title, article?.text);
 	 * ```
 	 */
-	public async article(id: string): Promise<PublishedArticle | undefined> {
+	public async article(id: string): Promise<TweetArticle | undefined> {
 		const resource = ResourceType.TWEET_ARTICLE;
 		const response = await this.request<ITweetRepliesResponse>(resource, { id: id });
 

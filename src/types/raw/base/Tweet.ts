@@ -4,7 +4,7 @@ import { IDataResult } from '../composite/DataResult';
 import { IUser } from './User';
 import { IMedia, IExtendedMedia } from './Media';
 import { ILimitedVisibilityTweet } from './LimitedVisibilityTweet';
-import { IPublishedArticle } from './PublishedArticle';
+import { ITweetArticle } from './TweetArticle';
 
 /**
  * Represents the raw data of a single Tweet.
@@ -25,7 +25,7 @@ export interface ITweet {
 	legacy: ITweetLegacy;
 	quick_promote_eligibility: ITweetQuickPromoteEligibilityInfo;
 	article?: {
-		article_results: IDataResult<IPublishedArticle>;
+		article_results: IDataResult<ITweetArticle>;
 	};
 }
 

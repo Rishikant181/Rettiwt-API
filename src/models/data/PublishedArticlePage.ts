@@ -2,8 +2,8 @@ import { findByFilter } from '../../helper/JsonUtils';
 import { IPublishedArticlePage } from '../../types/data/PublishedArticlePage';
 import { ICursor as IRawCursor } from '../../types/raw/base/Cursor';
 
-import { PublishedArticle } from './PublishedArticle';
 import { Tweet } from './Tweet';
+import { TweetArticle } from './TweetArticle';
 
 /**
  * A cursor-based page of published X Articles extracted from a user timeline.
@@ -11,7 +11,7 @@ import { Tweet } from './Tweet';
  * @public
  */
 export class PublishedArticlePage implements IPublishedArticlePage {
-	public list: PublishedArticle[];
+	public list: TweetArticle[];
 	public next: string;
 
 	/**
@@ -20,7 +20,7 @@ export class PublishedArticlePage implements IPublishedArticlePage {
 	public constructor(response: NonNullable<unknown>) {
 		this.list = Tweet.timeline(response)
 			.map((tweet) => tweet.article)
-			.filter((article): article is PublishedArticle => article !== undefined);
+			.filter((article): article is TweetArticle => article !== undefined);
 		this.next = findByFilter<IRawCursor>(response, 'cursorType', 'Bottom')[0]?.value ?? '';
 	}
 
