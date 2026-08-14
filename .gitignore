@@ -143,3 +143,6 @@ docs
 
 # Debugging
 src/debug.ts
+
+# Local live API test containing a dedicated credential
+/index.js

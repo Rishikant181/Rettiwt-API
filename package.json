@@ -15,6 +15,7 @@
 		"lint": "eslint --max-warnings 0 --fix .",
 		"lint:check": "eslint --max-warnings 0 .",
 		"test": "npm run build && node --test tests/*.test.js",
+		"test:live:article": "npm run build && node --use-env-proxy --test tests/live/article.live.test.js",
 		"docs": "typedoc --excludePrivate --excludeProtected --excludeInternal src/index.ts"
 	},
 	"repository": {
