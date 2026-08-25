@@ -4,7 +4,7 @@ A CLI tool and an API for fetching data from Twitter for free!
 
 ## Prerequisites
 
-- NodeJS 22
+- NodeJS 22 or 24
 - A working Twitter account (optional)
 
 ## Installation

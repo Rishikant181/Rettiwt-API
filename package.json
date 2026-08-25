@@ -30,7 +30,7 @@
 	},
 	"homepage": "https://rishikant181.github.io/Rettiwt-API/",
 	"engines": {
-		"node": "^22.21.0"
+		"node": "^22.21.0 || ^24.0.0"
 	},
 	"devDependencies": {
 		"@types/cookiejar": "^2.1.5",
