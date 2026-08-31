@@ -5,6 +5,7 @@ import { ResourceType } from '../../enums/Resource';
 import { TweetRepliesSortType } from '../../enums/Tweet';
 import { CursoredData } from '../../models/data/CursoredData';
 import { Tweet } from '../../models/data/Tweet';
+import { TweetArticle } from '../../models/data/TweetArticle';
 import { User } from '../../models/data/User';
 
 import { RettiwtConfig } from '../../models/RettiwtConfig';
@@ -45,6 +46,30 @@ export class TweetService extends FetcherService {
 	 */
 	public constructor(config: RettiwtConfig) {
 		super(config);
+	}
+
+	/**
+	 * Get the complete X Article attached to a tweet.
+	 *
+	 * @param id - The ID of the tweet containing the article.
+	 *
+	 * @returns The article, or `undefined` when the tweet does not contain one.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 * const article = await rettiwt.tweet.article('2083935229757337948');
+	 * console.log(article?.title, article?.text);
+	 * ```
+	 */
+	public async article(id: string): Promise<TweetArticle | undefined> {
+		const resource = ResourceType.TWEET_ARTICLE;
+		const response = await this.request<ITweetRepliesResponse>(resource, { id: id });
+
+		return Tweet.single(response.data, id)?.article;
 	}
 
 	/**

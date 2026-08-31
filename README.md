@@ -46,6 +46,7 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - List Update
     - Space Details
     - Tweet Details - Single and Bulk
+    - Tweet Article Details
     - Tweet History
     - Tweet Bookmark
     - Tweet Like
@@ -64,6 +65,7 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - Tweet Unretweet
     - Tweet Unschedule
     - User Affiliates
+    - User Articles
     - User Analytics (Only for Premium accounts)
     - User About Profile (by username)
     - User Bookmarks
@@ -615,6 +617,7 @@ So far, the following operations are supported:
 
 ### Tweets
 
+- [Getting the complete X Article attached to a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#article)
 - [Bookmarking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#bookmark)
 - [Getting the details of a tweet/multiple tweets](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#details)
 - [Getting the edit history of a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#history)
@@ -637,6 +640,7 @@ So far, the following operations are supported:
 ### Users
 
 - [Getting the list of users affiliated with the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#affiliates)
+- [Getting the articles published by a user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#articles)
 - [Getting the analytics of the logged-in user (premium accounts only)](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#analytics)
 - [Getting the about profile of a user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#about)
 - [Getting the list of tweets bookmarked by the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#bookmarks)

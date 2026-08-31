@@ -49,6 +49,7 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 		SpaceRequests.details(args.id!, args.withReplays, args.withListeners, args.isMetatagsQuery),
 
 	TWEET_BOOKMARK: (args: IPostArgs) => TweetRequests.bookmark(args.id!),
+	TWEET_ARTICLE: (args: IFetchArgs) => TweetRequests.replies(args.id!),
 	TWEET_DETAILS: (args: IFetchArgs) => TweetRequests.details(args.id!),
 	TWEET_DETAILS_ALT: (args: IFetchArgs) => TweetRequests.replies(args.id!),
 	TWEET_DETAILS_BULK: (args: IFetchArgs) => TweetRequests.bulkDetails(args.ids!),
@@ -70,6 +71,7 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	TWEET_UNSCHEDULE: (args: IPostArgs) => TweetRequests.unschedule(args.id!),
 
 	USER_AFFILIATES: (args: IFetchArgs) => UserRequests.affiliates(args.id!, args.count, args.cursor),
+	USER_ARTICLES: (args: IFetchArgs) => UserRequests.articles(args.id!, args.count, args.cursor),
 	USER_ANALYTICS: (args: IFetchArgs) =>
 		UserRequests.analytics(
 			args.fromTime!,

@@ -2,6 +2,7 @@
 export * from './Rettiwt';
 
 // ENUMS
+export * from './enums/Article';
 export * from './enums/raw/Analytics';
 export * from './enums/raw/Media';
 export * from './enums/raw/Notification';
@@ -20,6 +21,7 @@ export * from './enums/Tweet';
 export * from './models/args/FetchArgs';
 export * from './models/args/PostArgs';
 export * from './models/args/ProfileArgs';
+export * from './models/data/Article';
 export * from './models/data/BookmarkFolder';
 export * from './models/data/Conversation';
 export * from './models/data/CursoredData';
@@ -31,6 +33,8 @@ export * from './models/data/List';
 export * from './models/data/Notification';
 export * from './models/data/Space';
 export * from './models/data/Tweet';
+export * from './models/data/PublishedArticlePage';
+export * from './models/data/TweetArticle';
 export * from './models/data/User';
 export * from './models/data/UserAbout';
 export * from './models/errors/TwitterError';
@@ -57,6 +61,7 @@ export * from './services/public/UserService';
 export * from './types/args/FetchArgs';
 export * from './types/args/PostArgs';
 export * from './types/args/ProfileArgs';
+export * from './types/data/Article';
 export * from './types/data/BookmarkFolder';
 export * from './types/data/Conversation';
 export * from './types/data/CursoredData';
@@ -68,10 +73,17 @@ export * from './types/data/List';
 export * from './types/data/Notification';
 export * from './types/data/Space';
 export * from './types/data/Tweet';
+export * from './types/data/PublishedArticlePage';
+export * from './types/data/TweetArticle';
 export * from './types/data/User';
 export * from './types/data/UserAbout';
 export * from './types/errors/TwitterError';
 export * from './types/params/Variables';
+export { IArticle as IRawArticle } from './types/raw/base/Article';
+export { IArticleDeleteResponse as IRawArticleDeleteResponse } from './types/raw/article/Delete';
+export { IArticleDraftCreateResponse as IRawArticleDraftCreateResponse } from './types/raw/article/DraftCreate';
+export { IArticleEntitiesResponse as IRawArticleEntitiesResponse } from './types/raw/article/Entities';
+export { IArticleUpdateTitleResponse as IRawArticleUpdateTitleResponse } from './types/raw/article/UpdateTitle';
 export { IAnalytics as IRawAnalytics } from './types/raw/base/Analytic';
 export { IBookmarkFolder as IRawBookmarkFolder } from './types/raw/base/BookmarkFolder';
 export { ICursor as IRawCursor } from './types/raw/base/Cursor';
@@ -85,6 +97,13 @@ export { IMessage as IRawMessage } from './types/raw/base/Message';
 export { INotification as IRawNotification } from './types/raw/base/Notification';
 export { IRawSpace } from './types/raw/base/Space';
 export { ITweet as IRawTweet } from './types/raw/base/Tweet';
+export {
+	ITweetArticle as IRawTweetArticle,
+	ITweetArticleContentState as IRawTweetArticleContentState,
+	ITweetArticleLifecycleState as IRawTweetArticleLifecycleState,
+	ITweetArticleMedia as IRawTweetArticleMedia,
+	ITweetArticleMetadata as IRawTweetArticleMetadata,
+} from './types/raw/base/TweetArticle';
 export { IUser as IRawUser } from './types/raw/base/User';
 export { IDataResult as IRawDataResult } from './types/raw/composite/DataResult';
 export { ITimelineTweet as IRawTimelineTweet } from './types/raw/composite/TimelineTweet';
@@ -123,6 +142,7 @@ export { ITweetUnpostResponse as IRawTweetUnpostResponse } from './types/raw/twe
 export { ITweetUnretweetResponse as IRawTweetUnretweetResponse } from './types/raw/tweet/Unretweet';
 export { ITweetUnscheduleResponse as ITRawTweetUnscheduleResponse } from './types/raw/tweet/Unschedule';
 export { IUserAboutResponse as IRawUserAboutResponse } from './types/raw/user/About';
+export { IUserArticlesResponse as IRawUserArticlesResponse } from './types/raw/user/Articles';
 export { IUserAffiliatesResponse as IRawUserAffiliatesResponse } from './types/raw/user/Affiliates';
 export { IUserAnalyticsResponse as IRawUserAnalyticsResponse } from './types/raw/user/Analytics';
 export { IUserBookmarkFoldersResponse as IRawUserBookmarkFoldersResponse } from './types/raw/user/BookmarkFolders';
