@@ -9,6 +9,7 @@ import { IArticleDeleteResponse } from '../../types/raw/article/Delete';
 import { IArticleDraftCreateResponse } from '../../types/raw/article/DraftCreate';
 import { IArticleEntitiesResponse } from '../../types/raw/article/Entities';
 import { IArticleUpdateTitleResponse } from '../../types/raw/article/UpdateTitle';
+import { ITweetRepliesResponse } from '../../types/raw/tweet/Replies';
 
 import { FetcherService } from './FetcherService';
 
@@ -103,6 +104,30 @@ export class ArticleService extends FetcherService {
 		const data = Extractors[resource](response.data);
 
 		return data;
+	}
+
+	/**
+	 * Get a complete published Article by the ID of the tweet containing it.
+	 *
+	 * @param id - The ID of the tweet containing the Article.
+	 *
+	 * @returns The Article, or `undefined` when the tweet does not contain one.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 * const article = await rettiwt.article.details('2083935229757337948');
+	 * console.log(article?.title, article?.text);
+	 * ```
+	 */
+	public async details(id: string): Promise<Article | undefined> {
+		const resource = ResourceType.ARTICLE_DETAILS;
+		const response = await this.request<ITweetRepliesResponse>(resource, { id: id });
+
+		return Extractors[resource](response.data, id);
 	}
 
 	/**

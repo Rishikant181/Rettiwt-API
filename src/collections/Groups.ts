@@ -18,6 +18,7 @@ export const AllowGuestAuthenticationGroup = [
  * @internal
  */
 export const FetchResourcesGroup = [
+	ResourceType.ARTICLE_DETAILS,
 	ResourceType.ARTICLE_ENTITIES,
 	ResourceType.JOB_DETAILS,
 	ResourceType.JOB_LOCATIONS,
@@ -38,6 +39,7 @@ export const FetchResourcesGroup = [
 	ResourceType.TWEET_RETWEETERS,
 	ResourceType.TWEET_SEARCH,
 	ResourceType.USER_AFFILIATES,
+	ResourceType.USER_ARTICLES,
 	ResourceType.USER_ANALYTICS,
 	ResourceType.USER_BOOKMARKS,
 	ResourceType.USER_BOOKMARK_FOLDERS,

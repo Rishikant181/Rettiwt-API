@@ -11,6 +11,9 @@ export interface IArticle {
 	/** The details of the user who authored the Article. */
 	author?: IUser;
 
+	/** The cover media shown for the published Article. */
+	coverMedia?: IArticleMedia;
+
 	/** The raw content state of the Article. */
 	contentState: IArticleContentState;
 
@@ -24,7 +27,7 @@ export interface IArticle {
 	lifecycle?: ArticleLifecycle | string;
 
 	/** The media entities attached to the Article. */
-	media?: unknown[];
+	media?: IArticleMedia[];
 
 	/** The last modification date of the Article. */
 	modifiedAt?: string;
@@ -32,8 +35,35 @@ export interface IArticle {
 	/** The preview text of the Article. */
 	previewText?: string;
 
+	/** The first publication date of the Article. */
+	publishedAt?: string;
+
+	/** Plain text derived from the Article content blocks. */
+	text: string;
+
 	/** The title of the Article. */
 	title?: string;
+
+	/** The ID of the tweet that exposes a published Article. */
+	tweetId?: string;
+
+	/** The public URL of the tweet that exposes a published Article. */
+	url?: string;
+}
+
+/**
+ * Normalized media attached to an Article.
+ *
+ * @public
+ */
+export interface IArticleMedia {
+	height?: number;
+	id?: string;
+	mediaId?: string;
+	mediaKey?: string;
+	type: string;
+	url: string;
+	width?: number;
 }
 
 /**

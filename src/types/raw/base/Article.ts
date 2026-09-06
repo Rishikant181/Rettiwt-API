@@ -13,12 +13,13 @@ import { IUser } from './User';
  */
 export interface IArticle {
 	content_state?: IArticleContentState;
-	id: string;
+	cover_media?: IArticleMedia;
+	id?: string;
 	lifecycle_state?: IArticleLifecycleState;
-	media_entities?: unknown[];
+	media_entities?: IArticleMedia[] | Record<string, IArticleMedia>;
 	metadata?: IArticleMetadata;
 	preview_text?: string;
-	rest_id: string;
+	rest_id?: string;
 	title?: string;
 }
 
@@ -28,8 +29,9 @@ export interface IArticle {
  * @public
  */
 export interface IArticleContentState {
-	blocks: IArticleContentBlock[];
-	entityMap: Record<string, unknown> | unknown[];
+	blocks?: IArticleContentBlock[];
+	entityMap?: Record<string, unknown> | unknown[];
+	entity_map?: Record<string, unknown> | unknown[];
 }
 
 /**
@@ -38,9 +40,9 @@ export interface IArticleContentState {
  * @public
  */
 export interface IArticleContentBlock {
-	data: Record<string, unknown>;
-	entityRanges: IArticleEntityRange[];
-	inlineStyleRanges: IArticleInlineStyleRange[];
+	data?: Record<string, unknown>;
+	entityRanges?: IArticleEntityRange[];
+	inlineStyleRanges?: IArticleInlineStyleRange[];
 	key: string;
 	text: string;
 	type: string;
@@ -74,8 +76,33 @@ export interface IArticleInlineStyleRange {
  * @public
  */
 export interface IArticleLifecycleState {
-	lifecycle: ArticleLifecycle | string;
-	modified_at_secs?: number;
+	lifecycle?: ArticleLifecycle | string;
+	modified_at_secs?: number | string;
+}
+
+/**
+ * Represents raw media attached to an Article.
+ *
+ * @public
+ */
+export interface IArticleMedia {
+	id?: string;
+	id_str?: string;
+	media_id?: string;
+	media_info?: {
+		original_img_height?: number;
+		original_img_url?: string;
+		original_img_width?: number;
+	};
+	media_key?: string;
+	media_url_https?: string;
+	original_info?: {
+		height?: number;
+		width?: number;
+	};
+	rest_id?: string;
+	type?: string;
+	url?: string;
 }
 
 /**
@@ -85,6 +112,7 @@ export interface IArticleLifecycleState {
  */
 export interface IArticleMetadata {
 	author_results?: IDataResult<IUser>;
-	created_at_secs?: number;
-	modified_at_secs?: number;
+	created_at_secs?: number | string;
+	first_published_at_secs?: number | string;
+	modified_at_secs?: number | string;
 }

@@ -31,6 +31,7 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
 - 'User' authentication (logging in) grants access to the following resources/actions:
 
     - Article Delete
+    - Article Details
     - Article Draft Create
     - Article Drafts
     - Article List
@@ -69,6 +70,7 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - Tweet Unretweet
     - Tweet Unschedule
     - User Affiliates
+    - User Articles
     - User Analytics (Only for Premium accounts)
     - User About Profile (by username)
     - User Bookmarks
@@ -158,10 +160,11 @@ A new Rettiwt instance can be initialized using the following code snippets:
 - `const rettiwt = new Rettiwt()` (for 'guest' authentication)
 - `const rettiwt = new Rettiwt({ apiKey: API_KEY })` (for 'user' authentication)
 
-The Rettiwt class has six members:
+The Rettiwt class has seven members:
 
 - `article` member, for accessing resources related to Articles.
 - `dm` member, for accessing resources related to direct messages.
+- `job` member, for accessing resources related to X Jobs.
 - `list` member, for accessing resources related to lists.
 - `space` member, for accessing resources related to spaces.
 - `tweet` member, for accessing resources related to tweets.
@@ -614,9 +617,11 @@ So far, the following operations are supported:
 
 - [Creating an Article draft](https://rishikant181.github.io/Rettiwt-API/classes/ArticleService.html#createDraft)
 - [Deleting an Article](https://rishikant181.github.io/Rettiwt-API/classes/ArticleService.html#delete)
+- [Getting a published Article by its containing tweet ID](https://rishikant181.github.io/Rettiwt-API/classes/ArticleService.html#details)
 - [Getting the draft Articles of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/ArticleService.html#drafts)
 - [Getting the list of Articles by lifecycle state](https://rishikant181.github.io/Rettiwt-API/classes/ArticleService.html#list)
 - [Updating an Article title](https://rishikant181.github.io/Rettiwt-API/classes/ArticleService.html#updateTitle)
+- [Getting the Articles published by a user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#articles)
 
 ### Direct Messages
 
@@ -669,6 +674,7 @@ So far, the following operations are supported:
 ### Users
 
 - [Getting the list of users affiliated with the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#affiliates)
+- [Getting the Articles published by a user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#articles)
 - [Getting the analytics of the logged-in user (premium accounts only)](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#analytics)
 - [Getting the about profile of a user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#about)
 - [Getting the list of tweets bookmarked by the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#bookmarks)
@@ -719,6 +725,8 @@ Help for the CLI can be obtained from the CLI itself:
 - For searching X Jobs, use the command `rettiwt job search <keyword>`
 - For fetching the edit history of a tweet, use the command `rettiwt tweet history <tweet_id>`
 - For fetching suggested users from the Connect tab, use the command `rettiwt user suggestions`
+- For fetching the Articles published by a user, use the command `rettiwt user articles <user_id> [count] [cursor]`
+- For Article draft and lifecycle commands, use `rettiwt article --help`
 
 ## API Reference
 

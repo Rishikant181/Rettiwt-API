@@ -33,6 +33,21 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// Articles
+	user.command('articles')
+		.description('Fetch the Articles published by the given user')
+		.argument('<id>', 'The id of the user')
+		.argument('[count]', 'The number of Articles to fetch')
+		.argument('[cursor]', 'The cursor to the batch of Articles to fetch')
+		.action(async (id: string, count?: string, cursor?: string) => {
+			try {
+				const articles = await rettiwt.user.articles(id, count ? parseInt(count) : undefined, cursor);
+				output(articles);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Analytics
 	user.command('analytics')
 		.description('Fetch the analytics of the logged-in user (premium accounts only)')

@@ -135,6 +135,7 @@ export { ITweetUnscheduleResponse as ITRawTweetUnscheduleResponse } from './type
 export { IUserAboutResponse as IRawUserAboutResponse } from './types/raw/user/About';
 export { IUserAffiliatesResponse as IRawUserAffiliatesResponse } from './types/raw/user/Affiliates';
 export { IUserAnalyticsResponse as IRawUserAnalyticsResponse } from './types/raw/user/Analytics';
+export { IUserArticlesResponse as IRawUserArticlesResponse } from './types/raw/user/Articles';
 export { IUserBookmarkFoldersResponse as IRawUserBookmarkFoldersResponse } from './types/raw/user/BookmarkFolders';
 export { IUserBookmarkFolderTweetsResponse as IRawUserBookmarkFolderTweetsResponse } from './types/raw/user/BookmarkFolderTweets';
 export { IUserBookmarksResponse as IRawUserBookmarksResponse } from './types/raw/user/Bookmarks';

@@ -42,7 +42,8 @@ export class CursoredData<T extends Notification | Tweet | User | List | Bookmar
 			this.list = Article.multiple(response) as T[];
 			const sliceInfo = (response as IArticleEntitiesResponse).data?.user?.result?.articles_article_mixer_slice
 				?.slice_info;
-			this.next = sliceInfo?.next_cursor ?? '';
+			this.next =
+				sliceInfo?.next_cursor ?? findByFilter<IRawCursor>(response, 'cursorType', 'Bottom')[0]?.value ?? '';
 		} else if (type == BaseType.TWEET) {
 			this.list = Tweet.timeline(response) as T[];
 			this.next = findByFilter<IRawCursor>(response, 'cursorType', 'Bottom')[0]?.value ?? '';

@@ -1,6 +1,7 @@
 /* eslint-disable */
 
 import { IDataResult } from '../composite/DataResult';
+import { IArticle } from './Article';
 import { IUser } from './User';
 import { IMedia, IExtendedMedia } from './Media';
 import { ILimitedVisibilityTweet } from './LimitedVisibilityTweet';
@@ -23,6 +24,9 @@ export interface ITweet {
 	note_tweet: ITweetNote;
 	legacy: ITweetLegacy;
 	quick_promote_eligibility: ITweetQuickPromoteEligibilityInfo;
+	article?: {
+		article_results: IDataResult<IArticle>;
+	};
 }
 
 export interface ITweetCore {

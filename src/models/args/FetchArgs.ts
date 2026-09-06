@@ -21,8 +21,8 @@ export class FetchArgs implements IFetchArgs {
 	public id?: string;
 	public ids?: string[];
 	public isMetatagsQuery?: boolean;
-	public lifecycle?: ArticleLifecycle;
 	public jobFilter?: JobSearchFilter;
+	public lifecycle?: ArticleLifecycle;
 	public maxId?: string;
 	public metrics?: RawAnalyticsMetric[];
 	public showVerifiedFollowers?: boolean;

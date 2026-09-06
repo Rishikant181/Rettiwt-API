@@ -3,6 +3,8 @@ import { AxiosRequestConfig } from 'axios';
 import { ArticleLifecycle } from '../enums/Article';
 import { IArticleDraft } from '../types/args/PostArgs';
 
+import { TweetRequests } from './Tweet';
+
 /**
  * Collection of requests related to Articles.
  *
@@ -53,6 +55,17 @@ export class ArticleRequests {
 				queryId: 'e4lWqB6m2TA8Fn_j9L9xEA',
 			},
 		};
+	}
+
+	/**
+	 * Builds the request used to fetch a published Article by its containing tweet ID.
+	 *
+	 * X exposes the complete public Article payload within its tweet-detail response.
+	 *
+	 * @param id - The id of the tweet containing the Article.
+	 */
+	public static details(id: string): AxiosRequestConfig {
+		return TweetRequests.replies(id);
 	}
 
 	/**

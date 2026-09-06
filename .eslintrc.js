@@ -18,6 +18,20 @@ module.exports = {
 		jest: true,
 	},
 	ignorePatterns: ['.eslintrc.js', 'eslint.config.mjs'],
+	overrides: [
+		{
+			files: ['tests/**/*.js'],
+			extends: ['plugin:@typescript-eslint/disable-type-checked'],
+			parserOptions: {
+				project: false,
+			},
+			rules: {
+				'@typescript-eslint/explicit-function-return-type': 'off',
+				'@typescript-eslint/explicit-module-boundary-types': 'off',
+				'@typescript-eslint/no-require-imports': 'off',
+			},
+		},
+	],
 	rules: {
 		'@typescript-eslint/naming-convention': [
 			'warn',
