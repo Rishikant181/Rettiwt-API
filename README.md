@@ -38,11 +38,17 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - Direct Message Inbox
     - Direct Message Conversations
     - Direct Message Delete Conversation
+    - Job Details
+    - Job Locations
+    - Job Search
     - List Add Member
     - List Details
     - List Members
+    - List Mute
     - List Remove Member
     - List Tweets
+    - List Unmute
+    - List Update
     - Space Details
     - Tweet Details - Single and Bulk
     - Tweet History
@@ -79,8 +85,10 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - User Media
     - User Notification
     - User Recommended Feed
+    - User Remove Follower
     - User Replies Timeline
     - User Search
+    - User Suggestions
     - User Subscriptions
     - User Timeline
     - User Unfollow
@@ -90,7 +98,18 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - User Username Change
     - User Password Change
 
-By default, Rettiwt-API uses 'guest' authentication. If however, access to the full set of resources is required, 'user' authentication can be used. This is done by using the cookies associated with your Twitter/X account, and encoding them into an `API_KEY` for convenience. The said `API_KEY` can be obtained by using a **Firefox** extension, as follows:
+By default, Rettiwt-API uses 'guest' authentication. If however, access to the full set of resources is required, 'user' authentication can be used. This is done by using the cookies associated with your Twitter/X account, and encoding them into an `API_KEY` for convenience. The said `API_KEY` can be obtained by using a **Firefox** extension or manually from your browser (Chrome/Chromium-Based/Firefox/Firefox-Based), as follows:
+
+### Manual Method
+
+1. Open your browser (Chrome/Chromium-Based/Firefox/Firefox-Based) and go to Twitter/X.
+2. Open your browser developer tools by pressing `F12` on your keyboard.
+3. Navigate to Applications -> Cookies (for Chrome/Chromium-Based) or Storage -> Cookies (for Firefox/Firefox-Based).
+4. Copy the values of the 3 fields: `auth_token`, `ct0`, `twid`. These server as your authentication credentials.
+5. Go to `Console` of your browser developer tools, and execute the command: `btoa("auth_token=<auth_token_value>;ct0=<ct0_value>;twid=<twid_value>;")`. Substitute the values of the tokens with the values you copied.
+6. The output string is your API_KEY.
+
+### Firefox Extension Method
 
 1. Install the [Rettiwt Auth Helper extension](https://addons.mozilla.org/en-US/firefox/addon/rettiwt-auth-helper) from Firefox Add-Ons, and allow it to run it in in-private mode.
 2. Switch to in-private mode and login to Twitter/X.
@@ -103,7 +122,7 @@ By default, Rettiwt-API uses 'guest' authentication. If however, access to the f
 #### Notes:
 
 - `API_KEY` created in this way should last 5 years from the date of login, as long as the credentials to the account aren't changed.
-- This approach can also be done without going into n-private mode, in which case you can either login as usual or skip the login step if you're already logged in, and continue from the steps after login. However, this makes the `API_KEY` to last only as long as the Twitter/X account isn't logged out of (you may exit the browser as usual) or 5 years, whichever comes first. That's why it's recommended to use incognito/in-private mode, so that the `API_KEY` isn't accidentially revoked by logging out.
+- This approach can also be done without going into incognito/in-private mode, in which case you can either login as usual or skip the login step if you're already logged in, and continue from the steps after login. However, this makes the `API_KEY` to last only as long as the Twitter/X account isn't logged out of (you may exit the browser as usual) or 5 years, whichever comes first. That's why it's recommended to use incognito/in-private mode, so that the `API_KEY` isn't accidentially revoked by logging out.
 
 ## The API_KEY
 
@@ -270,7 +289,49 @@ rettiwt.tweet.search({
 });
 ```
 
-### 4. Getting the edit history of a tweet
+### 4. Searching X Jobs
+
+```ts
+import { Rettiwt } from 'rettiwt-api';
+
+// Creating a new Rettiwt instance using the API_KEY
+const rettiwt = new Rettiwt({ apiKey: API_KEY });
+
+// Fetching the first 25 jobs matching Discord
+rettiwt.job.search('Discord', 25)
+.then(data => {
+	...
+})
+.catch(err => {
+	...
+});
+```
+
+The details of a specific job can be fetched using its job ID:
+
+```ts
+rettiwt.job.details('<job_id>')
+.then(data => {
+	...
+})
+.catch(err => {
+	...
+});
+```
+
+Suggested locations for the jobs location selector can be fetched as follows:
+
+```ts
+rettiwt.job.locations('Grenoble')
+.then(data => {
+	...
+})
+.catch(err => {
+	...
+});
+```
+
+### 5. Getting the edit history of a tweet
 
 ```ts
 import { Rettiwt } from 'rettiwt-api';
@@ -563,13 +624,22 @@ So far, the following operations are supported:
 - [Getting a specific conversation with full message history](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#conversation)
 - [Deleting a conversation](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#deleteConversation)
 
+### Jobs
+
+- [Getting the details of an X Job](https://rishikant181.github.io/Rettiwt-API/classes/JobService.html#details)
+- [Getting suggested X Job locations](https://rishikant181.github.io/Rettiwt-API/classes/JobService.html#locations)
+- [Searching for X Jobs](https://rishikant181.github.io/Rettiwt-API/classes/JobService.html#search)
+
 ### List
 
 - [Adding a member to a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#addMember)
 - [Getting the details of a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#details)
 - [Getting the members of a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#members)
+- [Muting a list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#mute)
 - [Removing a member from a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#removeMember)
 - [Getting the list of tweets from a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#tweets)
+- [Unmuting a list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#unmute)
+- [Updating a list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#update)
 
 ### Space
 
@@ -606,6 +676,7 @@ So far, the following operations are supported:
 - [Getting the list of tweets in a specific bookmark folder](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#bookmarkFolderTweets)
 - [Getting the details of a user/multiple users](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#details)
 - [Following a given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#follow)
+- [Removing a follower](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#removeFollower)
 - [Getting the followed feed of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#followed)
 - [Getting the list of users who follow the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#followers)
 - [Getting the list of users who are followed by the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#following)
@@ -617,6 +688,7 @@ So far, the following operations are supported:
 - [Getting the recommended feed of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#recommended)
 - [Getting the replies timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#replies)
 - [Searching for a username](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#search)
+- [Getting suggested users from the Connect tab](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#suggestions)
 - [Getting the tweet timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#timeline)
 - [Unfollowing a given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#unfollow)
 - [Updating the profile of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#updateProfile)
@@ -642,7 +714,11 @@ Help for the CLI can be obtained from the CLI itself:
 
 - For help regarding the available commands, use the command `rettiwt help`
 - For help regarding a specific command, use the command `rettiwt help <command_name>`
+- For fetching the details of an X Job, use the command `rettiwt job details <job_id>`
+- For fetching suggested X Job locations, use the command `rettiwt job locations <query>`
+- For searching X Jobs, use the command `rettiwt job search <keyword>`
 - For fetching the edit history of a tweet, use the command `rettiwt tweet history <tweet_id>`
+- For fetching suggested users from the Connect tab, use the command `rettiwt user suggestions`
 
 ## API Reference
 
