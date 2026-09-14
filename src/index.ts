@@ -34,6 +34,7 @@ export * from './models/data/Tweet';
 export * from './models/data/User';
 export * from './models/data/UserAbout';
 export * from './models/errors/TwitterError';
+export * from './models/XChatSession';
 
 // REQUESTS
 export * from './requests/DirectMessage';
