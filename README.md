@@ -592,6 +592,28 @@ So far, the following operations are supported:
 - [Getting a specific conversation with full message history](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#conversation)
 - [Deleting a conversation](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#deleteConversation)
 
+Encrypted XChat messages can be decoded when their 32-byte conversation key is supplied as a
+`Uint8Array`, hexadecimal string, or base64/base64url string. A key can be provided for one call:
+
+```ts
+const conversation = await rettiwt.dm.conversation('394028042:1645287614', {
+	xChatConversationKey: process.env.XCHAT_CONVERSATION_KEY,
+});
+```
+
+For applications that keep keys in a secure store, configure an asynchronous provider instead:
+
+```ts
+const rettiwt = new Rettiwt({
+	apiKey: API_KEY,
+	xChatConversationKeyProvider: async (conversationId) => keyStore.get(conversationId),
+});
+```
+
+Messages whose key is unavailable or invalid are preserved with an empty body and
+`isEncrypted: true`. Successfully decrypted XChat messages also retain `isEncrypted: true` to
+indicate how their payload was transported. Rettiwt does not persist conversation keys.
+
 ### Jobs
 
 - [Getting the details of an X Job](https://rishikant181.github.io/Rettiwt-API/classes/JobService.html#details)

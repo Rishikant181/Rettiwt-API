@@ -10,7 +10,7 @@ import { XChatConversationKey } from '../types/args/DirectMessageArgs';
 export class XChatCrypto {
 	private static _decodeKey(key: XChatConversationKey): Buffer | undefined {
 		if (key instanceof Uint8Array) {
-			return Buffer.from(key);
+			return key.length === 32 ? Buffer.from(key) : undefined;
 		}
 
 		const normalized = key.trim();
@@ -18,17 +18,21 @@ export class XChatCrypto {
 			return Buffer.from(normalized, 'hex');
 		}
 
+		if (!/^[A-Za-z0-9+/_-]+={0,2}$/.test(normalized)) {
+			return undefined;
+		}
+
 		const base64 = normalized.replace(/-/g, '+').replace(/_/g, '/');
 		const decoded = Buffer.from(base64, 'base64');
 
-		return decoded.length > 0 ? decoded : undefined;
+		return decoded.length === 32 ? decoded : undefined;
 	}
 
 	private static _decryptMessagePayload(key: Buffer, payload: Buffer): Buffer | undefined {
 		const nonceLength = 24;
 		const macLength = 16;
 
-		if (key.length !== 32 || payload.length <= nonceLength + macLength) {
+		if (payload.length <= nonceLength + macLength) {
 			return undefined;
 		}
 
