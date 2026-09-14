@@ -236,6 +236,7 @@ export class Conversation implements IConversation {
 		response: IConversationPageResponse,
 		conversationId?: string,
 		options?: IDecodedConversationMessageOptions,
+		conversationMetadata?: RawConversation,
 	): Conversation | undefined {
 		const messages = DirectMessage.sortByTime(DirectMessage.listFromResponse(response, options), false);
 		const resolvedConversationId = conversationId ?? messages[0]?.conversationId ?? '';
@@ -244,16 +245,26 @@ export class Conversation implements IConversation {
 			return undefined;
 		}
 
-		const participantsFromId = resolvedConversationId.split(':').filter(Boolean);
-		const participantIds = new Set<string>(participantsFromId);
-		for (const message of messages) {
-			if (message.senderId) {
-				participantIds.add(message.senderId);
-			}
-			if (message.recipientId) {
-				participantIds.add(message.recipientId);
-			}
+		if (conversationMetadata) {
+			return new Conversation(
+				/* eslint-disable @typescript-eslint/naming-convention */
+				{
+					...conversationMetadata,
+					max_entry_id: messages[0]?.id ?? '',
+					min_entry_id: messages[messages.length - 1]?.id ?? '',
+					status: response.data?.get_conversation_page?.has_more ? 'HAS_MORE' : 'AT_END',
+				},
+				/* eslint-enable @typescript-eslint/naming-convention */
+				messages,
+			);
 		}
+
+		// Personal conversation IDs encode both participants. Group IDs do not,
+		// so message authors must not be presented as an authoritative roster.
+		const participantsFromId = resolvedConversationId.includes(':')
+			? resolvedConversationId.split(':').filter(Boolean)
+			: [];
+		const participantIds = new Set<string>(participantsFromId);
 
 		const latestMessage = messages[0];
 		const syntheticConversation: Partial<RawConversation> =
@@ -269,7 +280,7 @@ export class Conversation implements IConversation {
 				sort_timestamp: latestMessage ? String(Date.parse(latestMessage.createdAt)) : '',
 				status: response.data?.get_conversation_page?.has_more ? 'HAS_MORE' : 'AT_END',
 				trusted: true,
-				type: participantIds.size > 2 ? 'GROUP_DM' : 'ONE_TO_ONE',
+				type: resolvedConversationId.includes(':') ? 'ONE_TO_ONE' : 'GROUP_DM',
 			};
 		/* eslint-enable @typescript-eslint/naming-convention */
 

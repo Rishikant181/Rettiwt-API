@@ -7,7 +7,7 @@ import { RettiwtConfig } from '../../models/RettiwtConfig';
 import { XChatSession } from '../../models/XChatSession';
 import { IDMConversationOptions, IXChatSigningKey } from '../../types/args/DirectMessageArgs';
 import { IConversationPageResponse } from '../../types/raw/dm/ConversationPage';
-import { IInboxInitialResponse } from '../../types/raw/dm/InboxInitial';
+import { IInboxInitialResponse, Conversation as RawConversation } from '../../types/raw/dm/InboxInitial';
 import { IInboxTimelineResponse } from '../../types/raw/dm/InboxTimeline';
 import { IXChatPublicKeysResponse } from '../../types/raw/dm/XChatPublicKeys';
 
@@ -19,6 +19,7 @@ import { FetcherService } from './FetcherService';
  * @public
  */
 export class DirectMessageService extends FetcherService {
+	private readonly _conversationMetadata = new Map<string, RawConversation>();
 	private _xChatSession?: XChatSession;
 
 	/**
@@ -71,6 +72,24 @@ export class DirectMessageService extends FetcherService {
 		);
 	}
 
+	private _cacheConversationMetadata(conversations?: Record<string, RawConversation>): void {
+		for (const [conversationId, conversation] of Object.entries(conversations ?? {})) {
+			this._conversationMetadata.set(DirectMessageService._normalizeConversationId(conversationId), conversation);
+		}
+	}
+
+	private async _getConversationMetadata(conversationId: string): Promise<RawConversation | undefined> {
+		const cached = this._conversationMetadata.get(conversationId);
+		if (cached) {
+			return cached;
+		}
+
+		const response = await this.request<IInboxInitialResponse>(ResourceType.DM_INBOX_INITIAL_STATE, {});
+		this._cacheConversationMetadata(response.data.inbox_initial_state?.conversations);
+
+		return this._conversationMetadata.get(conversationId);
+	}
+
 	private async _getXChatPublicKeys(
 		userIds: string[],
 		includeJuiceboxTokens = false,
@@ -88,13 +107,19 @@ export class DirectMessageService extends FetcherService {
 		).data;
 	}
 
-	private async _setConversationSigningKeys(encodedEvents: string[], conversationId: string): Promise<void> {
+	private async _setConversationSigningKeys(
+		events: string[],
+		conversationId: string,
+		metadata?: RawConversation,
+	): Promise<void> {
 		if (!this._xChatSession?.isUnlocked) {
 			return;
 		}
 
-		const senderIds = DMEventDecoder.decodeMessages(encodedEvents).map((event) => event.senderId);
-		const participantIds = conversationId.includes(':') ? conversationId.split(':') : [];
+		const senderIds = DMEventDecoder.decodeMessages(events).map((event) => event.senderId);
+		const participantIds = conversationId.includes(':')
+			? conversationId.split(':')
+			: (metadata?.participants.map((participant) => participant.user_id) ?? []);
 		const response = await this._getXChatPublicKeys([...senderIds, ...participantIds, this.config.userId ?? '']);
 		this._xChatSession.setSigningKeys(DirectMessageService._toSigningKeys(response));
 	}
@@ -229,16 +254,29 @@ export class DirectMessageService extends FetcherService {
 			maxId: cursor,
 		});
 		const encodedEvents = response.data.data?.get_conversation_page?.encoded_message_events ?? [];
+		const keyChangeEvents = response.data.data?.get_conversation_page?.missing_conversation_key_change_events ?? [];
+		const conversationMetadata = normalizedConversationId.includes(':')
+			? undefined
+			: await this._getConversationMetadata(normalizedConversationId);
 		if (xChatSession === this._xChatSession) {
-			await this._setConversationSigningKeys(encodedEvents, normalizedConversationId);
+			await this._setConversationSigningKeys(
+				[...keyChangeEvents, ...encodedEvents],
+				normalizedConversationId,
+				conversationMetadata,
+			);
 		}
 
 		// Deserializing response
-		const data = Conversation.fromConversationPage(response.data, normalizedConversationId, {
-			conversationKeys: Object.keys(conversationKeys).length > 0 ? conversationKeys : undefined,
-			keyChangeEvents: response.data.data?.get_conversation_page?.missing_conversation_key_change_events,
-			xChatSession,
-		});
+		const data = Conversation.fromConversationPage(
+			response.data,
+			normalizedConversationId,
+			{
+				conversationKeys: Object.keys(conversationKeys).length > 0 ? conversationKeys : undefined,
+				keyChangeEvents,
+				xChatSession,
+			},
+			conversationMetadata,
+		);
 
 		return data;
 	}
@@ -311,6 +349,7 @@ export class DirectMessageService extends FetcherService {
 			const response = await this.request<IInboxTimelineResponse>(resource, {
 				maxId: cursor,
 			});
+			this._cacheConversationMetadata(response.data.inbox_timeline?.conversations);
 
 			// Deserializing response
 			const data = Extractors[resource](response.data);
@@ -323,6 +362,7 @@ export class DirectMessageService extends FetcherService {
 
 			// Fetching raw inbox initial state
 			const response = await this.request<IInboxInitialResponse>(resource, {});
+			this._cacheConversationMetadata(response.data.inbox_initial_state?.conversations);
 
 			// Deserializing response
 			const data = Extractors[resource](response.data);
