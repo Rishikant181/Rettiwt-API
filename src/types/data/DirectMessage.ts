@@ -19,7 +19,7 @@ export interface IDirectMessage {
 	/** The text content of the message. */
 	text: string;
 
-	/** Whether the message payload is end-to-end encrypted and not decrypted locally. */
+	/** Whether the message was transported as an end-to-end encrypted XChat payload. */
 	isEncrypted?: boolean;
 
 	/** The timestamp when the message was sent (ISO 8601 format). */

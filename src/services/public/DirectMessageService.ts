@@ -124,7 +124,16 @@ export class DirectMessageService extends FetcherService {
 		this._xChatSession.setSigningKeys(DirectMessageService._toSigningKeys(response));
 	}
 
-	/** Recover this account's XChat identity with its existing chat PIN. */
+	/**
+	 * Recover this account's XChat identity with its existing chat PIN.
+	 *
+	 * @remarks Requires the optional `@xdevplatform/chat-xdk` and `juicebox-sdk` packages.
+	 * The PIN is passed to the official SDK and is not retained by Rettiwt.
+	 *
+	 * @param pin - The account's existing XChat PIN as text or UTF-8 bytes.
+	 * @throws If authentication is unavailable, recovery metadata is missing, the optional SDK is not installed,
+	 * or the PIN cannot unlock the account's key backup.
+	 */
 	public async unlockXChat(pin: string | Uint8Array): Promise<void> {
 		const userId = this.config.userId;
 		if (!userId) {
@@ -183,7 +192,7 @@ export class DirectMessageService extends FetcherService {
 		this._xChatSession = session;
 	}
 
-	/** Clear recovered private keys and disable automatic XChat decryption. */
+	/** Permanently clear the internally recovered keys and disable automatic XChat decryption. */
 	// eslint-disable-next-line @typescript-eslint/member-ordering
 	public lockXChat(): void {
 		this._xChatSession?.free();
@@ -195,7 +204,8 @@ export class DirectMessageService extends FetcherService {
 	 * Use this to load complete message history for a conversation identified from the inbox.
 	 *
 	 * @param conversationId - The ID of the conversation (e.g., "394028042:1645287614").
-	 * @param cursor - The cursor for pagination. Is equal to the ID of the oldest event from the previous batch.
+	 * @param cursorOrOptions - Either the oldest event ID from the previous page or decoding options for this call.
+	 * @param options - Decoding options when a pagination cursor is supplied as the second argument.
 	 *
 	 * @returns The conversation with full message history, or undefined if not found.
 	 *

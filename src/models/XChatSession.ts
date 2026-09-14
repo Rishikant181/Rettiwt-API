@@ -32,6 +32,8 @@ export interface IXChatSessionOptions {
 /**
  * An XChat cryptographic session backed by X's official Chat XDK.
  *
+ * @see {@link https://github.com/xdevplatform/chat-xdk | Chat XDK on GitHub}
+ *
  * @public
  */
 export class XChatSession {

@@ -592,6 +592,8 @@ So far, the following operations are supported:
 - [Getting a specific conversation with full message history](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#conversation)
 - [Deleting a conversation](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#deleteConversation)
 
+#### Decrypting XChat with a conversation key
+
 Encrypted XChat messages can be decoded when their 32-byte conversation key is supplied as a
 `Uint8Array`, hexadecimal string, or base64/base64url string. A key can be provided for one call:
 
@@ -612,10 +614,15 @@ const rettiwt = new Rettiwt({
 
 Messages whose key is unavailable or invalid are preserved with an empty body and
 `isEncrypted: true`. Successfully decrypted XChat messages also retain `isEncrypted: true` to
-indicate how their payload was transported. Rettiwt does not persist conversation keys.
+indicate how their payload was transported; the flag does not indicate whether local decryption
+succeeded. Rettiwt does not persist conversation keys.
 
-PIN-based recovery is optional and does not increase the install size for other Rettiwt users.
-Install X's official Chat SDK and its Juicebox peer when the feature is needed:
+#### Recovering XChat keys with a PIN
+
+PIN-based recovery and verified event decryption are powered by X's open-source
+[Chat XDK](https://github.com/xdevplatform/chat-xdk), which made this integration significantly
+faster to implement. The SDK is optional and does not increase the install size for other Rettiwt
+users. Install it and its Juicebox peer when the feature is needed:
 
 ```sh
 npm install @xdevplatform/chat-xdk juicebox-sdk
@@ -640,6 +647,10 @@ Recovery metadata and realm tokens are fetched when `unlockXChat` is called and 
 Rettiwt. Participant signing keys are refreshed before decrypting each conversation page. Never
 hard-code or log the PIN. Juicebox limits incorrect recovery attempts, so only test with the known
 PIN.
+
+Call `lockXChat()` when the recovered session is no longer needed. Calling `conversation()` after
+locking still returns encrypted message shells unless a conversation key or another unlocked session
+is supplied.
 
 ### Jobs
 
