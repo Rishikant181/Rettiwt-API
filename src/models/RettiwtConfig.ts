@@ -54,6 +54,7 @@ export class RettiwtConfig implements IRettiwtConfig {
 	public readonly timeout?: number;
 	public readonly xChatConversationKeyProvider?: IRettiwtConfig['xChatConversationKeyProvider'];
 	public readonly xChatConversationKeys?: IRettiwtConfig['xChatConversationKeys'];
+	public readonly xChatSession?: IRettiwtConfig['xChatSession'];
 
 	/**
 	 * @param config - The config for Rettiwt of type {@link IRettiwtConfig}.
@@ -71,6 +72,7 @@ export class RettiwtConfig implements IRettiwtConfig {
 		this.timeout = config?.timeout;
 		this.xChatConversationKeyProvider = config?.xChatConversationKeyProvider;
 		this.xChatConversationKeys = config?.xChatConversationKeys;
+		this.xChatSession = config?.xChatSession;
 		this.apiKey = config?.apiKey;
 		this._headers = {
 			...DefaultHeaders,

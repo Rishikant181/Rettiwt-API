@@ -614,6 +614,33 @@ Messages whose key is unavailable or invalid are preserved with an empty body an
 `isEncrypted: true`. Successfully decrypted XChat messages also retain `isEncrypted: true` to
 indicate how their payload was transported. Rettiwt does not persist conversation keys.
 
+To recover rotated conversation keys automatically, create and unlock an `XChatSession` using the
+account's Juicebox configuration and a short-lived realm-token provider. The PIN is passed directly
+to the official X Chat SDK and is not retained by Rettiwt:
+
+```ts
+import { Rettiwt, XChatSession } from 'rettiwt-api';
+
+const xChatSession = await XChatSession.create({
+	juiceboxConfig: JSON.stringify(juiceboxConfig),
+	getAuthToken: async (realmId) => getRealmToken(realmId),
+});
+
+await xChatSession.unlock(process.env.XCHAT_PIN!);
+xChatSession.setIdentity(USER_ID, PUBLIC_KEY_VERSION);
+xChatSession.setSigningKeys(participantSigningKeys);
+xChatSession.setCacheKeys(true);
+
+const rettiwt = new Rettiwt({ apiKey: API_KEY, xChatSession });
+const conversation = await rettiwt.dm.conversation(CONVERSATION_ID);
+
+// Clear private and cached key material when the session is no longer needed.
+xChatSession.free();
+```
+
+Signature verification remains enabled by the official SDK. Supply the participants' registered
+signing keys before decoding a conversation.
+
 ### Jobs
 
 - [Getting the details of an X Job](https://rishikant181.github.io/Rettiwt-API/classes/JobService.html#details)

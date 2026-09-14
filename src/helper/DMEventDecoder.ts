@@ -2,6 +2,9 @@ import { XChatConversationKey } from '../types/args/DirectMessageArgs';
 
 import { XChatCrypto } from './XChatCrypto';
 
+import type { XChatSession } from '../models/XChatSession';
+import type { Event as XChatEvent } from '@xdevplatform/chat-xdk';
+
 interface ITlvField {
 	id: number;
 	kind: 'bytes' | 'bool' | 'u32' | 'u64' | 'object' | 'list';
@@ -22,6 +25,8 @@ export interface IDecodedConversationMessage {
 
 export interface IDecodedConversationMessageOptions {
 	conversationKeys?: Record<string, XChatConversationKey>;
+	keyChangeEvents?: string[];
+	xChatSession?: XChatSession;
 }
 
 const DefaultMediaHosts = /^(https?:\/\/(?:video|pbs)\.twimg\.com\/)/i;
@@ -108,6 +113,55 @@ export class DMEventDecoder {
 		}
 
 		return decoded;
+	}
+
+	private static _decodeXChatEvent(event: XChatEvent): IDecodedConversationMessage | undefined {
+		if (event.type !== 'message' || !event.conversationId || !event.senderId) {
+			return undefined;
+		}
+
+		const createdAtMs = event.createdAtMsec ? String(event.createdAtMsec) : '';
+		const mediaUrls = (event.attachments ?? [])
+			.flatMap((attachment) => [attachment.legacyMediaUrlHttps, attachment.legacyMediaPreviewUrl, attachment.url])
+			.filter((url): url is string => typeof url === 'string');
+
+		return {
+			id: event.id ?? event.sequenceId ?? '',
+			conversationId: event.conversationId,
+			createdAt: DMEventDecoder._toIsoDate(createdAtMs),
+			createdAtMs,
+			isEncrypted: true,
+			mediaUrls: mediaUrls.length > 0 ? [...new Set(mediaUrls)] : undefined,
+			recipientId: DMEventDecoder._inferRecipientId(event.conversationId, event.senderId),
+			senderId: event.senderId,
+			text: event.content?.text ?? '',
+		};
+	}
+
+	private static _decodeXChatEvents(
+		encodedEvents: string[],
+		options?: IDecodedConversationMessageOptions,
+	): Map<string, IDecodedConversationMessage> {
+		const decodedByEvent = new Map<string, IDecodedConversationMessage>();
+		const session = options?.xChatSession;
+
+		if (!session?.isUnlocked) {
+			return decodedByEvent;
+		}
+
+		const result = session.decryptEvents([...(options?.keyChangeEvents ?? []), ...encodedEvents]);
+		for (const message of result.messages) {
+			if (!message.originalB64) {
+				continue;
+			}
+
+			const decoded = DMEventDecoder._decodeXChatEvent(message.event);
+			if (decoded) {
+				decodedByEvent.set(message.originalB64, decoded);
+			}
+		}
+
+		return decodedByEvent;
 	}
 
 	private static _extractPayloadBytes(fields: ITlvField[]): Buffer | undefined {
@@ -395,8 +449,13 @@ export class DMEventDecoder {
 		encodedEvents: string[],
 		options?: IDecodedConversationMessageOptions,
 	): IDecodedConversationMessage[] {
+		const sessionMessages = DMEventDecoder._decodeXChatEvents(encodedEvents, options);
+
 		return encodedEvents
-			.map((encodedEvent) => DMEventDecoder.decodeMessage(encodedEvent, options))
+			.map(
+				(encodedEvent) =>
+					sessionMessages.get(encodedEvent) ?? DMEventDecoder.decodeMessage(encodedEvent, options),
+			)
 			.filter((message): message is IDecodedConversationMessage => message !== undefined);
 	}
 }

@@ -63,6 +63,7 @@ export class DirectMessageService extends FetcherService {
 		const resource = ResourceType.DM_CONVERSATION;
 		const cursor = typeof cursorOrOptions === 'string' ? cursorOrOptions : undefined;
 		const conversationOptions = typeof cursorOrOptions === 'object' ? cursorOrOptions : options;
+		const xChatSession = conversationOptions?.xChatSession ?? this.config.xChatSession;
 		const conversationKeys = {
 			...this.config.xChatConversationKeys,
 			...conversationOptions?.xChatConversationKeys,
@@ -86,6 +87,8 @@ export class DirectMessageService extends FetcherService {
 		// Deserializing response
 		const data = Conversation.fromConversationPage(response.data, conversationId, {
 			conversationKeys: Object.keys(conversationKeys).length > 0 ? conversationKeys : undefined,
+			keyChangeEvents: response.data.data?.get_conversation_page?.missing_conversation_key_change_events,
+			xChatSession,
 		});
 
 		return data;
