@@ -1,9 +1,7 @@
 import { AxiosProxyConfig, AxiosResponse } from 'axios';
 
-import { XChatConversationKey, XChatConversationKeyProvider } from './args/DirectMessageArgs';
+import { IXChatDecryptor, XChatConversationKey, XChatConversationKeyProvider } from './args/DirectMessageArgs';
 import { IErrorHandler } from './ErrorHandler';
-
-import type { XChatSession } from '../models/XChatSession';
 
 /**
  * The configuration for initializing a new Rettiwt instance.
@@ -72,7 +70,7 @@ export interface IRettiwtConfig {
 	xChatConversationKeyProvider?: XChatConversationKeyProvider;
 
 	/** Optional unlocked session used to recover and cache versioned XChat keys. */
-	xChatSession?: XChatSession;
+	xChatSession?: IXChatDecryptor;
 
 	/**
 	 * Optional custom HTTP headers to add to all requests to Twitter API.

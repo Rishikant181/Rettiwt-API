@@ -614,9 +614,16 @@ Messages whose key is unavailable or invalid are preserved with an empty body an
 `isEncrypted: true`. Successfully decrypted XChat messages also retain `isEncrypted: true` to
 indicate how their payload was transported. Rettiwt does not persist conversation keys.
 
-To recover rotated conversation keys automatically, create and unlock an `XChatSession` using the
-account's Juicebox configuration and a short-lived realm-token provider. The PIN is passed directly
-to the official X Chat SDK and is not retained by Rettiwt:
+PIN-based recovery is optional and does not increase the install size for other Rettiwt users.
+Install X's official Chat SDK and its Juicebox peer when the feature is needed:
+
+```sh
+npm install @xdevplatform/chat-xdk juicebox-sdk
+```
+
+Then create and unlock an `XChatSession` using the account's Juicebox configuration, registered key
+version, and a short-lived realm-token provider. The PIN is passed directly to the official SDK and
+is not retained by Rettiwt:
 
 ```ts
 import { Rettiwt, XChatSession } from 'rettiwt-api';
@@ -624,12 +631,12 @@ import { Rettiwt, XChatSession } from 'rettiwt-api';
 const xChatSession = await XChatSession.create({
 	juiceboxConfig: JSON.stringify(juiceboxConfig),
 	getAuthToken: async (realmId) => getRealmToken(realmId),
+	userId: USER_ID,
+	signingKeyVersion: PUBLIC_KEY_VERSION,
+	signingKeys: participantSigningKeys,
 });
 
 await xChatSession.unlock(process.env.XCHAT_PIN!);
-xChatSession.setIdentity(USER_ID, PUBLIC_KEY_VERSION);
-xChatSession.setSigningKeys(participantSigningKeys);
-xChatSession.setCacheKeys(true);
 
 const rettiwt = new Rettiwt({ apiKey: API_KEY, xChatSession });
 const conversation = await rettiwt.dm.conversation(CONVERSATION_ID);
@@ -638,8 +645,11 @@ const conversation = await rettiwt.dm.conversation(CONVERSATION_ID);
 xChatSession.free();
 ```
 
-Signature verification remains enabled by the official SDK. Supply the participants' registered
-signing keys before decoding a conversation.
+The Juicebox configuration and public-key version come from the account's registered XChat
+public-key record. Realm tokens must be resolved by trusted application code and must not be logged
+or persisted by Rettiwt. Signature verification remains enabled; update the session's signing keys
+when conversation participants or their registered key versions change. Never hard-code or log the
+PIN. Juicebox limits incorrect recovery attempts, so only test with the known PIN.
 
 ### Jobs
 

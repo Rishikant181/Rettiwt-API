@@ -1,4 +1,15 @@
-import type { ChatWithJuicebox, DecryptEventsResult, SigningKeyEntry } from '@xdevplatform/chat-xdk';
+import { IXChatDecryptResult, IXChatSigningKey } from '../types/args/DirectMessageArgs';
+
+interface IXChatClient {
+	decryptEvents(events: string[]): IXChatDecryptResult;
+	free(): void;
+	hasIdentityKey(): boolean;
+	lock(): void;
+	setCacheKeys(enabled: boolean): void;
+	setIdentity(userId: string, signingKeyVersion: string): void;
+	setSigningKeys(signingKeys: IXChatSigningKey[]): void;
+	unlock(pin: string | Uint8Array): Promise<void>;
+}
 
 /** Options used to create a PIN-backed XChat session. */
 export interface IXChatSessionOptions {
@@ -8,19 +19,25 @@ export interface IXChatSessionOptions {
 	/** Resolve a short-lived Juicebox authorization token for a realm. */
 	getAuthToken: (realmId: string) => Promise<string>;
 
-	/** Optional local limit for PIN attempts. */
-	maxGuessCount?: number;
+	/** User ID that owns the registered XChat keys. */
+	userId: string;
+
+	/** Version of the user's registered XChat signing key. */
+	signingKeyVersion: string;
+
+	/** Registered participant keys used to verify incoming event signatures. */
+	signingKeys?: IXChatSigningKey[];
 }
 
 /**
- * An unlocked XChat cryptographic session backed by X's official Chat XDK.
+ * An XChat cryptographic session backed by X's official Chat XDK.
  *
  * @public
  */
 export class XChatSession {
-	private readonly _chat: ChatWithJuicebox;
+	private readonly _chat: IXChatClient;
 
-	private constructor(chat: ChatWithJuicebox) {
+	private constructor(chat: IXChatClient) {
 		this._chat = chat;
 	}
 
@@ -29,16 +46,25 @@ export class XChatSession {
 		return this._chat.hasIdentityKey();
 	}
 
-	/** Create a locked session without retaining a PIN. */
+	/** Create a locked session with identity, verification, and versioned caching configured. */
 	public static async create(options: IXChatSessionOptions): Promise<XChatSession> {
 		const { createChat } = await import('@xdevplatform/chat-xdk');
-		const chat = await createChat(options);
+		const chat = await createChat({
+			getAuthToken: options.getAuthToken,
+			juiceboxConfig: options.juiceboxConfig,
+		});
+
+		chat.setIdentity(options.userId, options.signingKeyVersion);
+		chat.setCacheKeys(true);
+		if (options.signingKeys) {
+			chat.setSigningKeys(options.signingKeys);
+		}
 
 		return new XChatSession(chat);
 	}
 
 	/** Decrypt messages and recover conversation keys from key-change events. */
-	public decryptEvents(events: string[]): DecryptEventsResult {
+	public decryptEvents(events: string[]): IXChatDecryptResult {
 		return this._chat.decryptEvents(events);
 	}
 
@@ -52,18 +78,8 @@ export class XChatSession {
 		this._chat.lock();
 	}
 
-	/** Enable the in-memory, version-aware conversation-key cache. */
-	public setCacheKeys(enabled: boolean): void {
-		this._chat.setCacheKeys(enabled);
-	}
-
-	/** Set the account identity used by XChat event verification. */
-	public setIdentity(userId: string, signingKeyVersion: string): void {
-		this._chat.setIdentity(userId, signingKeyVersion);
-	}
-
 	/** Replace the public signing keys used to verify incoming events. */
-	public setSigningKeys(signingKeys: SigningKeyEntry[]): void {
+	public setSigningKeys(signingKeys: IXChatSigningKey[]): void {
 		this._chat.setSigningKeys(signingKeys);
 	}
 
@@ -72,5 +88,3 @@ export class XChatSession {
 		await this._chat.unlock(pin);
 	}
 }
-
-export type { SigningKeyEntry as IXChatSigningKey } from '@xdevplatform/chat-xdk';

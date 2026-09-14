@@ -1,9 +1,6 @@
-import { XChatConversationKey } from '../types/args/DirectMessageArgs';
+import { IXChatDecryptor, IXChatEvent, XChatConversationKey } from '../types/args/DirectMessageArgs';
 
 import { XChatCrypto } from './XChatCrypto';
-
-import type { XChatSession } from '../models/XChatSession';
-import type { Event as XChatEvent } from '@xdevplatform/chat-xdk';
 
 interface ITlvField {
 	id: number;
@@ -26,7 +23,7 @@ export interface IDecodedConversationMessage {
 export interface IDecodedConversationMessageOptions {
 	conversationKeys?: Record<string, XChatConversationKey>;
 	keyChangeEvents?: string[];
-	xChatSession?: XChatSession;
+	xChatSession?: IXChatDecryptor;
 }
 
 const DefaultMediaHosts = /^(https?:\/\/(?:video|pbs)\.twimg\.com\/)/i;
@@ -115,7 +112,7 @@ export class DMEventDecoder {
 		return decoded;
 	}
 
-	private static _decodeXChatEvent(event: XChatEvent): IDecodedConversationMessage | undefined {
+	private static _decodeXChatEvent(event: IXChatEvent): IDecodedConversationMessage | undefined {
 		if (event.type !== 'message' || !event.conversationId || !event.senderId) {
 			return undefined;
 		}
@@ -149,7 +146,13 @@ export class DMEventDecoder {
 			return decodedByEvent;
 		}
 
-		const result = session.decryptEvents([...(options?.keyChangeEvents ?? []), ...encodedEvents]);
+		let result;
+		try {
+			result = session.decryptEvents([...(options?.keyChangeEvents ?? []), ...encodedEvents]);
+		} catch {
+			return decodedByEvent;
+		}
+
 		for (const message of result.messages) {
 			if (!message.originalB64) {
 				continue;
