@@ -138,8 +138,8 @@ export class DMEventDecoder {
 	private static _decodeXChatEvents(
 		encodedEvents: string[],
 		options?: IDecodedConversationMessageOptions,
-	): Map<string, IDecodedConversationMessage> {
-		const decodedByEvent = new Map<string, IDecodedConversationMessage>();
+	): Map<string, IDecodedConversationMessage | undefined> {
+		const decodedByEvent = new Map<string, IDecodedConversationMessage | undefined>();
 		const session = options?.xChatSession;
 
 		if (!session?.isUnlocked) {
@@ -159,9 +159,10 @@ export class DMEventDecoder {
 			}
 
 			const decoded = DMEventDecoder._decodeXChatEvent(message.event);
-			if (decoded) {
-				decodedByEvent.set(message.originalB64, decoded);
-			}
+			// Remember every event handled by the SDK. A handled reaction or control
+			// event intentionally maps to undefined and must not become an empty
+			// encrypted-message shell through the manual-key fallback below.
+			decodedByEvent.set(message.originalB64, decoded);
 		}
 
 		return decodedByEvent;
@@ -455,9 +456,10 @@ export class DMEventDecoder {
 		const sessionMessages = DMEventDecoder._decodeXChatEvents(encodedEvents, options);
 
 		return encodedEvents
-			.map(
-				(encodedEvent) =>
-					sessionMessages.get(encodedEvent) ?? DMEventDecoder.decodeMessage(encodedEvent, options),
+			.map((encodedEvent) =>
+				sessionMessages.has(encodedEvent)
+					? sessionMessages.get(encodedEvent)
+					: DMEventDecoder.decodeMessage(encodedEvent, options),
 			)
 			.filter((message): message is IDecodedConversationMessage => message !== undefined);
 	}
