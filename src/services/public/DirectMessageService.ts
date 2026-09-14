@@ -39,6 +39,10 @@ export class DirectMessageService extends FetcherService {
 		}
 	}
 
+	private static _normalizeConversationId(conversationId: string): string {
+		return /^\d+-\d+$/.test(conversationId) ? conversationId.replace('-', ':') : conversationId;
+	}
+
 	private static _toSigningKeys(response: IXChatPublicKeysResponse): IXChatSigningKey[] {
 		return (response.data?.user_results_by_rest_ids ?? []).flatMap((user) =>
 			(user.result?.get_public_keys?.public_keys_with_token_map ?? []).flatMap((record) => {
@@ -197,6 +201,7 @@ export class DirectMessageService extends FetcherService {
 		cursorOrOptions?: string | IDMConversationOptions,
 		options?: IDMConversationOptions,
 	): Promise<Conversation | undefined> {
+		const normalizedConversationId = DirectMessageService._normalizeConversationId(conversationId);
 		const resource = ResourceType.DM_CONVERSATION;
 		const cursor = typeof cursorOrOptions === 'string' ? cursorOrOptions : undefined;
 		const conversationOptions = typeof cursorOrOptions === 'object' ? cursorOrOptions : options;
@@ -205,28 +210,31 @@ export class DirectMessageService extends FetcherService {
 			...this.config.xChatConversationKeys,
 			...conversationOptions?.xChatConversationKeys,
 		};
+		if (conversationKeys[conversationId] && normalizedConversationId !== conversationId) {
+			conversationKeys[normalizedConversationId] = conversationKeys[conversationId];
+		}
 		const conversationKeyProvider =
 			conversationOptions?.xChatConversationKeyProvider ?? this.config.xChatConversationKeyProvider;
 		const providedConversationKey = await conversationKeyProvider?.(conversationId);
 
 		if (conversationOptions?.xChatConversationKey) {
-			conversationKeys[conversationId] = conversationOptions.xChatConversationKey;
+			conversationKeys[normalizedConversationId] = conversationOptions.xChatConversationKey;
 		} else if (providedConversationKey) {
-			conversationKeys[conversationId] = providedConversationKey;
+			conversationKeys[normalizedConversationId] = providedConversationKey;
 		}
 
 		// Fetching raw conversation page
 		const response = await this.request<IConversationPageResponse>(resource, {
-			conversationId,
+			conversationId: normalizedConversationId,
 			maxId: cursor,
 		});
 		const encodedEvents = response.data.data?.get_conversation_page?.encoded_message_events ?? [];
 		if (xChatSession === this._xChatSession) {
-			await this._setConversationSigningKeys(encodedEvents, conversationId);
+			await this._setConversationSigningKeys(encodedEvents, normalizedConversationId);
 		}
 
 		// Deserializing response
-		const data = Conversation.fromConversationPage(response.data, conversationId, {
+		const data = Conversation.fromConversationPage(response.data, normalizedConversationId, {
 			conversationKeys: Object.keys(conversationKeys).length > 0 ? conversationKeys : undefined,
 			keyChangeEvents: response.data.data?.get_conversation_page?.missing_conversation_key_change_events,
 			xChatSession,
