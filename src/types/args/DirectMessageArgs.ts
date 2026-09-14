@@ -40,6 +40,13 @@ export interface IXChatDecryptor {
 	decryptEvents(events: string[]): IXChatDecryptResult;
 }
 
+/** An XChat decryptor whose signature-verification keys can be refreshed. */
+export interface IXChatSession extends IXChatDecryptor {
+	free(): void;
+	lock(): void;
+	setSigningKeys(signingKeys: IXChatSigningKey[]): void;
+}
+
 export interface IDMConversationOptions {
 	xChatConversationKey?: XChatConversationKey;
 	xChatConversationKeyProvider?: XChatConversationKeyProvider;

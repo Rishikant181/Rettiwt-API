@@ -101,6 +101,9 @@ export interface IFetchArgs {
 	 */
 	ids?: string[];
 
+	/** Whether XChat public-key results should include Juicebox recovery tokens. */
+	includeJuiceboxTokens?: boolean;
+
 	/**
 	 * Whether to include replay information when fetching space details.
 	 *

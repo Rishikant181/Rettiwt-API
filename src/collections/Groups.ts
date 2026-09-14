@@ -25,6 +25,7 @@ export const FetchResourcesGroup = [
 	ResourceType.LIST_MEMBERS,
 	ResourceType.LIST_TWEETS,
 	ResourceType.DM_CONVERSATION,
+	ResourceType.DM_XCHAT_PUBLIC_KEYS,
 	ResourceType.DM_INBOX_INITIAL_STATE,
 	ResourceType.DM_INBOX_TIMELINE,
 	ResourceType.SPACE_DETAILS,

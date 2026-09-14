@@ -621,35 +621,25 @@ Install X's official Chat SDK and its Juicebox peer when the feature is needed:
 npm install @xdevplatform/chat-xdk juicebox-sdk
 ```
 
-Then create and unlock an `XChatSession` using the account's Juicebox configuration, registered key
-version, and a short-lived realm-token provider. The PIN is passed directly to the official SDK and
-is not retained by Rettiwt:
+Rettiwt can fetch the account's registered key, Juicebox configuration, realm tokens, and participant
+signing keys automatically using the configured API key. The PIN is passed directly to the official
+SDK and is not retained by Rettiwt:
 
 ```ts
-import { Rettiwt, XChatSession } from 'rettiwt-api';
+import { Rettiwt } from 'rettiwt-api';
 
-const xChatSession = await XChatSession.create({
-	juiceboxConfig: JSON.stringify(juiceboxConfig),
-	getAuthToken: async (realmId) => getRealmToken(realmId),
-	userId: USER_ID,
-	signingKeyVersion: PUBLIC_KEY_VERSION,
-	signingKeys: participantSigningKeys,
-});
-
-await xChatSession.unlock(process.env.XCHAT_PIN!);
-
-const rettiwt = new Rettiwt({ apiKey: API_KEY, xChatSession });
+const rettiwt = new Rettiwt({ apiKey: API_KEY });
+await rettiwt.dm.unlockXChat(process.env.XCHAT_PIN!);
 const conversation = await rettiwt.dm.conversation(CONVERSATION_ID);
 
 // Clear private and cached key material when the session is no longer needed.
-xChatSession.free();
+rettiwt.dm.lockXChat();
 ```
 
-The Juicebox configuration and public-key version come from the account's registered XChat
-public-key record. Realm tokens must be resolved by trusted application code and must not be logged
-or persisted by Rettiwt. Signature verification remains enabled; update the session's signing keys
-when conversation participants or their registered key versions change. Never hard-code or log the
-PIN. Juicebox limits incorrect recovery attempts, so only test with the known PIN.
+Recovery metadata and realm tokens are fetched when `unlockXChat` is called and are not persisted by
+Rettiwt. Participant signing keys are refreshed before decrypting each conversation page. Never
+hard-code or log the PIN. Juicebox limits incorrect recovery attempts, so only test with the known
+PIN.
 
 ### Jobs
 
