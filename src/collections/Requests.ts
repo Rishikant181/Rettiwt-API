@@ -2,6 +2,7 @@ import { AxiosRequestConfig } from 'axios';
 
 import { ResourceType } from '../enums/Resource';
 import { DMRequests } from '../requests/DirectMessage';
+import { JobRequests } from '../requests/Job';
 import { ListRequests } from '../requests/List';
 import { MediaRequests } from '../requests/Media';
 import { SpaceRequests } from '../requests/Space';
@@ -20,11 +21,20 @@ import { TweetRepliesSortTypeMap } from './Tweet';
 export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs | IPostArgs) => AxiosRequestConfig } = {
 	/* eslint-disable @typescript-eslint/naming-convention */
 
+	JOB_DETAILS: (args: IFetchArgs) => JobRequests.details(args.id!),
+	JOB_LOCATIONS: (args: IFetchArgs) => JobRequests.locations(args.id!),
+	JOB_SEARCH: (args: IFetchArgs) => JobRequests.search(args.jobFilter!, args.count, args.cursor),
+
+	LIST_CREATE: (args: IPostArgs) => ListRequests.create(args.list!),
+	LIST_DELETE: (args: IPostArgs) => ListRequests.delete(args.id!),
 	LIST_DETAILS: (args: IFetchArgs) => ListRequests.details(args.id!),
 	LIST_MEMBERS: (args: IFetchArgs) => ListRequests.members(args.id!, args.count, args.cursor),
 	LIST_MEMBER_ADD: (args: IPostArgs) => ListRequests.addMember(args.id!, args.userId!),
 	LIST_MEMBER_REMOVE: (args: IPostArgs) => ListRequests.removeMember(args.id!, args.userId!),
+	LIST_MUTE: (args: IPostArgs) => ListRequests.mute(args.id!),
 	LIST_TWEETS: (args: IFetchArgs) => ListRequests.tweets(args.id!, args.count, args.cursor),
+	LIST_UNMUTE: (args: IPostArgs) => ListRequests.unmute(args.id!),
+	LIST_UPDATE: (args: IPostArgs) => ListRequests.update(args.id!, args.listUpdates!),
 
 	MEDIA_UPLOAD_APPEND: (args: IPostArgs) => MediaRequests.appendUpload(args.upload!.id!, args.upload!.media!),
 	MEDIA_UPLOAD_FINALIZE: (args: IPostArgs) => MediaRequests.finalizeUpload(args.upload!.id!),
@@ -42,6 +52,7 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	TWEET_DETAILS: (args: IFetchArgs) => TweetRequests.details(args.id!),
 	TWEET_DETAILS_ALT: (args: IFetchArgs) => TweetRequests.replies(args.id!),
 	TWEET_DETAILS_BULK: (args: IFetchArgs) => TweetRequests.bulkDetails(args.ids!),
+	TWEET_HISTORY: (args: IFetchArgs) => TweetRequests.history(args.id!),
 	TWEET_LIKE: (args: IPostArgs) => TweetRequests.like(args.id!),
 	TWEET_LIKERS: (args: IFetchArgs) => TweetRequests.likers(args.id!, args.count, args.cursor),
 	TWEET_POST: (args: IPostArgs) => TweetRequests.post(args.tweet!),
@@ -87,6 +98,7 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	USER_NOTIFICATIONS: (args: IFetchArgs) => UserRequests.notifications(args.count, args.cursor),
 	USER_REMOVE_FOLLOWER: (args: IPostArgs) => UserRequests.removeFollower(args.id!),
 	USER_SEARCH: (args: IFetchArgs) => UserRequests.search(args.id!, args.count, args.cursor),
+	USER_SUGGESTIONS: (args: IFetchArgs) => UserRequests.suggestions(args.creatorOnly),
 	USER_SUBSCRIPTIONS: (args: IFetchArgs) => UserRequests.subscriptions(args.id!, args.count, args.cursor),
 	USER_TIMELINE: (args: IFetchArgs) => UserRequests.tweets(args.id!, args.count, args.cursor),
 	USER_TIMELINE_AND_REPLIES: (args: IFetchArgs) => UserRequests.tweetsAndReplies(args.id!, args.count, args.cursor),

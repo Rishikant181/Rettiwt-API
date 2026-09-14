@@ -18,6 +18,10 @@ export interface IPostArgs {
 	 * - {@link ResourceType.TWEET_UNLIKE}
 	 * - {@link ResourceType.TWEET_UNPOST}
 	 * - {@link ResourceType.TWEET_UNRETWEET}
+	 * - {@link ResourceType.LIST_DELETE}
+	 * - {@link ResourceType.LIST_MUTE}
+	 * - {@link ResourceType.LIST_UNMUTE}
+	 * - {@link ResourceType.LIST_UPDATE}
 	 * - {@link ResourceType.USER_FOLLOW}
 	 * - {@link ResourceType.USER_UNFOLLOW}
 	 *
@@ -25,6 +29,23 @@ export interface IPostArgs {
 	 * `id` is still accepted for backward compatibility.
 	 */
 	id?: string;
+
+	/**
+	 * The list that is to be created.
+	 *
+	 * @remarks
+	 * Required only when creating a list using the following resources:
+	 * - {@link ResourceType.LIST_CREATE}
+	 */
+	list?: INewList;
+
+	/**
+	 * The updates to apply to an existing list.
+	 *
+	 * @remarks
+	 * Required only when updating a list using {@link ResourceType.LIST_UPDATE}.
+	 */
+	listUpdates?: IListUpdates;
 
 	/**
 	 * The new username to set.
@@ -102,6 +123,43 @@ export interface IPostArgs {
 	 * Required only when changing password using {@link ResourceType.USER_PASSWORD_CHANGE}.
 	 */
 	changePassword?: IChangePasswordArgs;
+}
+
+/**
+ * Configuration for the list to be created.
+ *
+ * @public
+ */
+export interface INewList {
+	/** The list name. */
+	name: string;
+
+	/** The list description. */
+	description?: string;
+
+	/** Whether the list is private. */
+	isPrivate?: boolean;
+}
+
+/**
+ * Configuration for the updates to apply to an existing list.
+ *
+ * @public
+ */
+export interface IListUpdates {
+	/** The updated list name. */
+	name?: string;
+
+	/**
+	 * The updated list description.
+	 *
+	 * @remarks
+	 * Use an empty string to clear the existing description.
+	 */
+	description?: string;
+
+	/** Whether the list is private. */
+	isPrivate?: boolean;
 }
 
 /**

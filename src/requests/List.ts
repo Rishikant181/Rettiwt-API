@@ -1,5 +1,7 @@
 import { AxiosRequestConfig } from 'axios';
 
+import { IListUpdates, INewList } from '../types/args/PostArgs';
+
 /**
  * Collection of requests related to lists.
  *
@@ -31,6 +33,54 @@ export class ListRequests {
 				},
 
 				/* eslint-enable @typescript-eslint/naming-convention */
+			},
+		};
+	}
+
+	/**
+	 * @param list - The details of the list to create.
+	 */
+	public static create(list: INewList): AxiosRequestConfig {
+		return {
+			method: 'post',
+			headers: { referer: 'https://x.com/i/lists/create' },
+			url: 'https://x.com/i/api/graphql/4lSOF4GqldI-NbiFET4ofQ/CreateList',
+			data: {
+				/* eslint-disable @typescript-eslint/naming-convention */
+
+				variables: {
+					isPrivate: list.isPrivate ?? false,
+					name: list.name,
+					...(list.description !== undefined ? { description: list.description } : {}),
+				},
+				features: {
+					profile_label_improvements_pcf_label_in_post_enabled: true,
+					responsive_web_profile_redirect_enabled: false,
+					rweb_tipjar_consumption_enabled: false,
+					verified_phone_label_enabled: false,
+					responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
+					responsive_web_graphql_timeline_navigation_enabled: true,
+				},
+				queryId: '4lSOF4GqldI-NbiFET4ofQ',
+
+				/* eslint-enable @typescript-eslint/naming-convention */
+			},
+		};
+	}
+
+	/**
+	 * @param id - The ID of the list to delete.
+	 */
+	public static delete(id: string): AxiosRequestConfig {
+		return {
+			method: 'post',
+			headers: { referer: `https://x.com/i/lists/${id}/info` },
+			url: 'https://x.com/i/api/graphql/UnN9Th1BDbeLjpgjGSpL3Q/DeleteList',
+			data: {
+				variables: {
+					listId: id,
+				},
+				queryId: 'UnN9Th1BDbeLjpgjGSpL3Q',
 			},
 		};
 	}
@@ -112,6 +162,23 @@ export class ListRequests {
 					responsive_web_enhance_cards_enabled: false,
 				}),
 				/* eslint-enable @typescript-eslint/naming-convention */
+			},
+		};
+	}
+
+	/**
+	 * @param id - The ID of the list to mute.
+	 */
+	public static mute(id: string): AxiosRequestConfig {
+		return {
+			method: 'post',
+			headers: { referer: `https://x.com/i/lists/${id}` },
+			url: 'https://x.com/i/api/graphql/ZYyanJsskNUcltu9bliMLA/MuteList',
+			data: {
+				variables: {
+					listId: id,
+				},
+				queryId: 'ZYyanJsskNUcltu9bliMLA',
 			},
 		};
 	}
@@ -200,6 +267,56 @@ export class ListRequests {
 				/* eslint-enable @typescript-eslint/naming-convention */
 			},
 			paramsSerializer: { encode: encodeURIComponent },
+		};
+	}
+
+	/**
+	 * @param id - The ID of the list to unmute.
+	 */
+	public static unmute(id: string): AxiosRequestConfig {
+		return {
+			method: 'post',
+			headers: { referer: `https://x.com/i/lists/${id}` },
+			url: 'https://x.com/i/api/graphql/pMZrHRNsmEkXgbn3tOyr7Q/UnmuteList',
+			data: {
+				variables: {
+					listId: id,
+				},
+				queryId: 'pMZrHRNsmEkXgbn3tOyr7Q',
+			},
+		};
+	}
+
+	/**
+	 * @param id - The ID of the list to update.
+	 * @param updates - The updates to apply.
+	 */
+	public static update(id: string, updates: IListUpdates): AxiosRequestConfig {
+		return {
+			method: 'post',
+			headers: { referer: `https://x.com/i/lists/${id}/info` },
+			url: 'https://x.com/i/api/graphql/UzVGAR_brbQw1n3mH_PqRA/UpdateList',
+			data: {
+				/* eslint-disable @typescript-eslint/naming-convention */
+
+				variables: {
+					listId: id,
+					...(updates.isPrivate !== undefined ? { isPrivate: updates.isPrivate } : {}),
+					...(updates.description !== undefined ? { description: updates.description } : {}),
+					...(updates.name !== undefined ? { name: updates.name } : {}),
+				},
+				features: {
+					profile_label_improvements_pcf_label_in_post_enabled: true,
+					responsive_web_profile_redirect_enabled: false,
+					rweb_tipjar_consumption_enabled: false,
+					verified_phone_label_enabled: false,
+					responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
+					responsive_web_graphql_timeline_navigation_enabled: true,
+				},
+				queryId: 'UzVGAR_brbQw1n3mH_PqRA',
+
+				/* eslint-enable @typescript-eslint/naming-convention */
+			},
 		};
 	}
 }

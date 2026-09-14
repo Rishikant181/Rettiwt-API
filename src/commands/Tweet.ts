@@ -55,6 +55,20 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// History
+	tweet
+		.command('history')
+		.description('Fetch the edit history of a tweet')
+		.argument('<id>', 'The id of the tweet')
+		.action(async (id: string) => {
+			try {
+				const tweets = await rettiwt.tweet.history(id);
+				output(tweets);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Like
 	tweet
 		.command('like')

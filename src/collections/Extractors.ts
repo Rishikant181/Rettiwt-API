@@ -4,6 +4,8 @@ import { BookmarkFolder } from '../models/data/BookmarkFolder';
 import { Conversation } from '../models/data/Conversation';
 import { CursoredData } from '../models/data/CursoredData';
 import { Inbox } from '../models/data/Inbox';
+import { Job } from '../models/data/Job';
+import { JobLocation } from '../models/data/JobLocation';
 import { List } from '../models/data/List';
 import { Notification } from '../models/data/Notification';
 import { Space } from '../models/data/Space';
@@ -13,16 +15,25 @@ import { UserAbout } from '../models/data/UserAbout';
 import { IConversationPageResponse } from '../types/raw/dm/ConversationPage';
 import { IInboxInitialResponse } from '../types/raw/dm/InboxInitial';
 import { IInboxTimelineResponse } from '../types/raw/dm/InboxTimeline';
+import { IJobScreenQueryResponse } from '../types/raw/job/JobScreenQuery';
+import { IJobSearchQueryScreenJobsQueryResponse } from '../types/raw/job/JobSearchQueryScreenJobsQuery';
+import { ILocationSelectorQueryResponse } from '../types/raw/job/LocationSelectorQuery';
 import { IListMemberAddResponse } from '../types/raw/list/AddMember';
+import { IListCreateResponse } from '../types/raw/list/Create';
+import { IListDeleteResponse } from '../types/raw/list/Delete';
 import { IListDetailsResponse } from '../types/raw/list/Details';
 import { IListMembersResponse } from '../types/raw/list/Members';
+import { IListMuteResponse } from '../types/raw/list/Mute';
 import { IListMemberRemoveResponse } from '../types/raw/list/RemoveMember';
 import { IListTweetsResponse } from '../types/raw/list/Tweets';
+import { IListUnmuteResponse } from '../types/raw/list/Unmute';
+import { IListUpdateResponse } from '../types/raw/list/Update';
 import { IMediaInitializeUploadResponse } from '../types/raw/media/InitalizeUpload';
 import { IAudioSpaceByIdResponse } from '../types/raw/space/AudioSpaceById';
 import { ITweetBookmarkResponse } from '../types/raw/tweet/Bookmark';
 import { ITweetDetailsResponse } from '../types/raw/tweet/Details';
 import { ITweetDetailsBulkResponse } from '../types/raw/tweet/DetailsBulk';
+import { ITweetHistoryResponse } from '../types/raw/tweet/History';
 import { ITweetLikeResponse } from '../types/raw/tweet/Like';
 import { ITweetLikersResponse } from '../types/raw/tweet/Likers';
 import { ITweetPostNoteResponse, ITweetPostResponse } from '../types/raw/tweet/Post';
@@ -60,6 +71,7 @@ import { IUserRemoveFollowerResponse } from '../types/raw/user/RemoveFollower';
 import { IUserSearchResponse } from '../types/raw/user/Search';
 import { IUserSettingsResponse } from '../types/raw/user/Settings';
 import { IUserSubscriptionsResponse } from '../types/raw/user/Subscriptions';
+import { IUserSuggestionsResponse } from '../types/raw/user/Suggestions';
 import { IUserTweetsResponse } from '../types/raw/user/Tweets';
 import { IUserTweetsAndRepliesResponse } from '../types/raw/user/TweetsAndReplies';
 import { IUserUnfollowResponse } from '../types/raw/user/Unfollow';
@@ -72,6 +84,13 @@ import { IUserUnfollowResponse } from '../types/raw/user/Unfollow';
 export const Extractors = {
 	/* eslint-disable @typescript-eslint/naming-convention */
 
+	JOB_DETAILS: (response: IJobScreenQueryResponse, id: string): Job | undefined => Job.single(response, id),
+	JOB_LOCATIONS: (response: ILocationSelectorQueryResponse): JobLocation[] => JobLocation.list(response),
+	JOB_SEARCH: (response: IJobSearchQueryScreenJobsQueryResponse): CursoredData<Job> =>
+		new CursoredData<Job>(response, BaseType.JOB),
+
+	LIST_CREATE: (response: IListCreateResponse): string | undefined => response.data?.list?.id_str ?? undefined,
+	LIST_DELETE: (response: IListDeleteResponse): boolean => response.data?.list_delete === 'Done',
 	LIST_DETAILS: (response: IListDetailsResponse, id: string): List | undefined => List.single(response, id),
 	LIST_MEMBERS: (response: IListMembersResponse): CursoredData<User> =>
 		new CursoredData<User>(response, BaseType.USER),
@@ -79,8 +98,12 @@ export const Extractors = {
 		response.data?.list?.member_count ?? undefined,
 	LIST_MEMBER_REMOVE: (response: IListMemberRemoveResponse): number | undefined =>
 		response.data?.list?.member_count ?? undefined,
+	LIST_MUTE: (response: IListMuteResponse): boolean => response.data?.list === 'Done',
 	LIST_TWEETS: (response: IListTweetsResponse): CursoredData<Tweet> =>
 		new CursoredData<Tweet>(response, BaseType.TWEET),
+	LIST_UNMUTE: (response: IListUnmuteResponse): boolean => response.data?.list === 'Done',
+	LIST_UPDATE: (response: IListUpdateResponse): List | undefined =>
+		response.data?.list ? new List(response.data.list) : undefined,
 
 	MEDIA_UPLOAD_APPEND: (): void => undefined,
 	MEDIA_UPLOAD_FINALIZE: (): void => undefined,
@@ -98,6 +121,7 @@ export const Extractors = {
 	TWEET_DETAILS: (response: ITweetDetailsResponse, id: string): Tweet | undefined => Tweet.single(response, id),
 	TWEET_DETAILS_ALT: (response: ITweetRepliesResponse, id: string): Tweet | undefined => Tweet.single(response, id),
 	TWEET_DETAILS_BULK: (response: ITweetDetailsBulkResponse, ids: string[]): Tweet[] => Tweet.multiple(response, ids),
+	TWEET_HISTORY: (response: ITweetHistoryResponse): Tweet[] => Tweet.timeline(response),
 	TWEET_LIKE: (response: ITweetLikeResponse): boolean => (response?.data?.favorite_tweet ? true : false),
 	TWEET_LIKERS: (response: ITweetLikersResponse): CursoredData<User> =>
 		new CursoredData<User>(response, BaseType.USER),
@@ -158,6 +182,8 @@ export const Extractors = {
 	USER_REMOVE_FOLLOWER: (response: IUserRemoveFollowerResponse): boolean =>
 		response?.data?.remove_follower?.unfollow_success_reason ? true : false,
 	USER_SEARCH: (response: IUserSearchResponse): CursoredData<User> => new CursoredData<User>(response, BaseType.USER),
+	USER_SUGGESTIONS: (response: IUserSuggestionsResponse): CursoredData<User> =>
+		new CursoredData<User>(response, BaseType.USER),
 	USER_SUBSCRIPTIONS: (response: IUserSubscriptionsResponse): CursoredData<User> =>
 		new CursoredData<User>(response, BaseType.USER),
 	USER_TIMELINE: (response: IUserTweetsResponse): CursoredData<Tweet> =>

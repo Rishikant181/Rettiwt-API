@@ -18,6 +18,9 @@ export const AllowGuestAuthenticationGroup = [
  * @internal
  */
 export const FetchResourcesGroup = [
+	ResourceType.JOB_DETAILS,
+	ResourceType.JOB_LOCATIONS,
+	ResourceType.JOB_SEARCH,
 	ResourceType.LIST_DETAILS,
 	ResourceType.LIST_MEMBERS,
 	ResourceType.LIST_TWEETS,
@@ -28,6 +31,7 @@ export const FetchResourcesGroup = [
 	ResourceType.TWEET_DETAILS,
 	ResourceType.TWEET_DETAILS_ALT,
 	ResourceType.TWEET_DETAILS_BULK,
+	ResourceType.TWEET_HISTORY,
 	ResourceType.TWEET_LIKERS,
 	ResourceType.TWEET_REPLIES,
 	ResourceType.TWEET_RETWEETERS,
@@ -51,6 +55,7 @@ export const FetchResourcesGroup = [
 	ResourceType.USER_MEDIA,
 	ResourceType.USER_NOTIFICATIONS,
 	ResourceType.USER_SEARCH,
+	ResourceType.USER_SUGGESTIONS,
 	ResourceType.USER_SUBSCRIPTIONS,
 	ResourceType.USER_TIMELINE,
 	ResourceType.USER_TIMELINE_AND_REPLIES,
@@ -62,8 +67,13 @@ export const FetchResourcesGroup = [
  * @internal
  */
 export const PostResourcesGroup = [
+	ResourceType.LIST_CREATE,
+	ResourceType.LIST_DELETE,
 	ResourceType.LIST_MEMBER_ADD,
 	ResourceType.LIST_MEMBER_REMOVE,
+	ResourceType.LIST_MUTE,
+	ResourceType.LIST_UNMUTE,
+	ResourceType.LIST_UPDATE,
 	ResourceType.MEDIA_UPLOAD_APPEND,
 	ResourceType.MEDIA_UPLOAD_FINALIZE,
 	ResourceType.MEDIA_UPLOAD_INITIALIZE,

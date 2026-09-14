@@ -2,6 +2,20 @@ import { Command, createCommand } from 'commander';
 
 import { output } from '../helper/CliUtils';
 import { Rettiwt } from '../Rettiwt';
+import { IListUpdates } from '../types/args/PostArgs';
+
+type ListCreateOptions = {
+	description?: boolean | string;
+	private?: boolean;
+};
+
+type ListUpdateOptions = ListCreateOptions & {
+	public?: boolean;
+};
+
+function getDescription(description?: boolean | string): string | undefined {
+	return typeof description === 'string' ? description : undefined;
+}
 
 /**
  * Creates a new 'list' command which uses the given Rettiwt instance.
@@ -12,6 +26,92 @@ import { Rettiwt } from '../Rettiwt';
 function createListCommand(rettiwt: Rettiwt): Command {
 	// Creating the 'list' command
 	const list = createCommand('list').description('Access resources related to lists');
+
+	// Create
+	list.command('create')
+		.description('Create a new list')
+		.argument('<name>', 'The name of the tweet list')
+		.option('-d, --description [string]', 'The description of the tweet list')
+		.option('--private', 'Create a private list')
+		.action(async (name: string, options?: ListCreateOptions) => {
+			try {
+				const id = await rettiwt.list.create({
+					name: name,
+					description: getDescription(options?.description),
+					isPrivate: options?.private,
+				});
+				output(id);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// Update
+	list.command('update')
+		.description('Update a list')
+		.argument('<id>', 'The ID of the tweet list')
+		.argument('[name]', 'The updated name of the tweet list')
+		.option('-d, --description [string]', 'The updated description of the tweet list')
+		.option('--private', 'Update to a private list')
+		.option('--public', 'Update to a public list')
+		.action(async (id: string, name?: string, options?: ListUpdateOptions) => {
+			try {
+				if (options?.private && options?.public) {
+					throw new Error('List cannot be both private and public');
+				}
+
+				const updates: IListUpdates = {
+					...(name !== undefined ? { name: name } : {}),
+					...(typeof options?.description === 'string' ? { description: options.description } : {}),
+					...(options?.private ? { isPrivate: true } : {}),
+					...(options?.public ? { isPrivate: false } : {}),
+				};
+
+				const details = await rettiwt.list.update(id, updates);
+				output(details);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// Delete
+	list.command('delete')
+		.description('Delete a list')
+		.argument('<id>', 'The ID of the tweet list')
+		.action(async (id: string) => {
+			try {
+				const deleted = await rettiwt.list.delete(id);
+				output(deleted);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// Mute
+	list.command('mute')
+		.description('Mute a list')
+		.argument('<id>', 'The ID of the tweet list')
+		.action(async (id: string) => {
+			try {
+				const muted = await rettiwt.list.mute(id);
+				output(muted);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// Unmute
+	list.command('unmute')
+		.description('Unmute a list')
+		.argument('<id>', 'The ID of the tweet list')
+		.action(async (id: string) => {
+			try {
+				const unmuted = await rettiwt.list.unmute(id);
+				output(unmuted);
+			} catch (error) {
+				output(error);
+			}
+		});
 
 	// Add member
 	list.command('add-member')

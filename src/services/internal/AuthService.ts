@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 
 import { Cookie } from 'cookiejar';
 
@@ -192,17 +192,17 @@ export class AuthService {
 					.map((item) => new Cookie(item)),
 			);
 
-			const refreshResponse = await axios.get('https://x.com/i/api/1.1/account/verify_credentials.json', {
-				headers: {
-					...cred.toHeader(),
-					authorization:
-						'Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA',
+			const refreshResponse = await config.instance.get(
+				'https://x.com/i/api/1.1/account/verify_credentials.json',
+				{
+					headers: {
+						...cred.toHeader(),
+						authorization:
+							'Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA',
+					},
+					validateStatus: () => true,
 				},
-				httpAgent: config.httpAgent,
-				httpsAgent: config.httpsAgent,
-				proxy: config.axiosProxyConfig,
-				validateStatus: () => true,
-			});
+			);
 
 			// Getting the new API key
 			const newApiKey = AuthService.getApiKeyFromReponse(refreshResponse, config);
@@ -245,16 +245,13 @@ export class AuthService {
 		const cred: AuthCredential = new AuthCredential();
 
 		// Getting the guest token
-		await axios
+		await this._config.instance
 			.post<{
 				/* eslint-disable @typescript-eslint/naming-convention */
 				guest_token: string;
 				/* eslint-enable @typescript-eslint/naming-convention */
 			}>('https://api.twitter.com/1.1/guest/activate.json', undefined, {
 				headers: cred.toHeader(),
-				httpAgent: this._config.httpAgent,
-				httpsAgent: this._config.httpsAgent,
-				proxy: this._config.axiosProxyConfig,
 			})
 			.then((res) => {
 				cred.guestToken = res.data.guest_token;

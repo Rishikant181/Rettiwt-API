@@ -36,6 +36,7 @@ import { IUserRemoveFollowerResponse } from '../../types/raw/user/RemoveFollower
 import { IUserSearchResponse } from '../../types/raw/user/Search';
 import { IUserSettingsResponse } from '../../types/raw/user/Settings';
 import { IUserSubscriptionsResponse } from '../../types/raw/user/Subscriptions';
+import { IUserSuggestionsResponse } from '../../types/raw/user/Suggestions';
 import { IUserTweetsResponse } from '../../types/raw/user/Tweets';
 import { IUserTweetsAndRepliesResponse } from '../../types/raw/user/TweetsAndReplies';
 import { IUserUnfollowResponse } from '../../types/raw/user/Unfollow';
@@ -1206,6 +1207,27 @@ export class UserService extends FetcherService {
 			id: id ?? this.config.userId,
 			count: count,
 			cursor: cursor,
+		});
+
+		// Deserializing response
+		const data = Extractors[resource](response.data);
+
+		return data;
+	}
+
+	/**
+	 * Get the list of suggested users from the Connect tab.
+	 *
+	 * @param creatorOnly - Whether to fetch creator-only suggestions.
+	 *
+	 * @returns The list of suggested users.
+	 */
+	public async suggestions(creatorOnly?: boolean): Promise<CursoredData<User>> {
+		const resource = ResourceType.USER_SUGGESTIONS;
+
+		// Fetching raw list of suggested users
+		const response = await this.request<IUserSuggestionsResponse>(resource, {
+			creatorOnly: creatorOnly,
 		});
 
 		// Deserializing response
