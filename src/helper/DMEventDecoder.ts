@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/member-ordering */
+
 import { IXChatDecryptor, IXChatEvent, XChatConversationKey } from '../types/args/DirectMessageArgs';
 
 import { XChatCrypto } from './XChatCrypto';
@@ -6,6 +8,13 @@ interface ITlvField {
 	id: number;
 	kind: 'bytes' | 'bool' | 'u32' | 'u64' | 'object' | 'list';
 	value: Buffer | boolean | number | bigint | ITlvField[];
+}
+
+type IMessageEnvelope = Omit<IDecodedConversationMessage, 'isEncrypted' | 'mediaUrls' | 'text'>;
+
+interface IDecodedEnvelope {
+	message: IMessageEnvelope;
+	payload: Buffer;
 }
 
 export interface IDecodedConversationMessage {
@@ -69,12 +78,6 @@ const MessageField = {
  * @internal
  */
 export class DMEventDecoder {
-	private static _collectMediaUrls(fields: ITlvField[]): string[] {
-		const urls = DMEventDecoder._collectStrings(fields).filter((value) => DefaultMediaHosts.test(value));
-
-		return [...new Set(urls)];
-	}
-
 	private static _collectStrings(fields: ITlvField[]): string[] {
 		const values: string[] = [];
 
@@ -90,6 +93,30 @@ export class DMEventDecoder {
 		}
 
 		return values;
+	}
+
+	private static _decodeEnvelope(encodedEvent: string): IDecodedEnvelope | undefined {
+		const fields = DMEventDecoder._tryParseTlvDocument(Buffer.from(encodedEvent, 'base64'));
+		const payload = fields ? DMEventDecoder._findPayload(fields) : undefined;
+		if (!fields || !payload) {
+			return undefined;
+		}
+
+		const conversationId = DMEventDecoder._readFieldAsString(fields, OuterEventField.conversationId) ?? '';
+		const senderId = DMEventDecoder._readFieldAsString(fields, OuterEventField.senderId) ?? '';
+		const createdAtMs = DMEventDecoder._readFieldAsString(fields, OuterEventField.createdAtMs) ?? '';
+
+		return {
+			message: {
+				id: DMEventDecoder._readFieldAsString(fields, OuterEventField.messageId) ?? '',
+				conversationId,
+				createdAt: DMEventDecoder._toIsoDate(createdAtMs),
+				createdAtMs,
+				recipientId: DMEventDecoder._inferRecipientId(conversationId, senderId),
+				senderId,
+			},
+			payload,
+		};
 	}
 
 	private static _decodeBytes(value: Buffer): string | undefined {
@@ -168,7 +195,7 @@ export class DMEventDecoder {
 		return decodedByEvent;
 	}
 
-	private static _extractPayloadBytes(fields: ITlvField[]): Buffer | undefined {
+	private static _findPayload(fields: ITlvField[]): Buffer | undefined {
 		const payloadWrapper = DMEventDecoder._getFieldChildren(fields, OuterEventField.payloadWrapper);
 		if (!payloadWrapper) {
 			return undefined;
@@ -194,12 +221,8 @@ export class DMEventDecoder {
 		return undefined;
 	}
 
-	private static _getChildField(fields: ITlvField[], fieldId: number): ITlvField | undefined {
-		return fields.find((field) => field.id === fieldId);
-	}
-
 	private static _getFieldChildren(fields: ITlvField[], fieldId: number): ITlvField[] | undefined {
-		const field = DMEventDecoder._getChildField(fields, fieldId);
+		const field = fields.find((candidate) => candidate.id === fieldId);
 		if (!field || (field.kind !== 'object' && field.kind !== 'list')) {
 			return undefined;
 		}
@@ -207,8 +230,8 @@ export class DMEventDecoder {
 		return field.value as ITlvField[];
 	}
 
-	private static _getFieldString(fields: ITlvField[], fieldId: number): string | undefined {
-		const field = DMEventDecoder._getChildField(fields, fieldId);
+	private static _readFieldAsString(fields: ITlvField[], fieldId: number): string | undefined {
+		const field = fields.find((candidate) => candidate.id === fieldId);
 		if (!field) {
 			return undefined;
 		}
@@ -259,72 +282,43 @@ export class DMEventDecoder {
 	}
 
 	private static _parseField(buffer: Buffer, offset: number, endOffset: number): [ITlvField, number] {
-		if (offset + 3 > endOffset) {
-			throw new Error('Invalid TLV payload');
-		}
+		DMEventDecoder._requireBytes(offset, 3, endOffset);
 
 		const kind = buffer[offset];
 		const id = buffer.readUInt16BE(offset + 1);
 
 		switch (kind) {
-			case TlvKind.bool:
-				return [
-					{
-						id,
-						kind: 'bool',
-						value: buffer[offset + 3] === TlvKind.separator,
-					},
-					offset + 4,
-				];
+			case TlvKind.bool: {
+				DMEventDecoder._requireBytes(offset, 4, endOffset);
+				return [{ id, kind: 'bool', value: buffer[offset + 3] === TlvKind.separator }, offset + 4];
+			}
 
-			case TlvKind.u32:
-				return [
-					{
-						id,
-						kind: 'u32',
-						value: buffer.readUInt32BE(offset + 3),
-					},
-					offset + 7,
-				];
+			case TlvKind.u32: {
+				DMEventDecoder._requireBytes(offset, 7, endOffset);
+				return [{ id, kind: 'u32', value: buffer.readUInt32BE(offset + 3) }, offset + 7];
+			}
 
-			case TlvKind.u64:
-				return [
-					{
-						id,
-						kind: 'u64',
-						value:
-							(BigInt(buffer.readUInt32BE(offset + 3)) << 32n) | BigInt(buffer.readUInt32BE(offset + 7)),
-					},
-					offset + 11,
-				];
+			case TlvKind.u64: {
+				DMEventDecoder._requireBytes(offset, 11, endOffset);
+				const value =
+					(BigInt(buffer.readUInt32BE(offset + 3)) << 32n) | BigInt(buffer.readUInt32BE(offset + 7));
+				return [{ id, kind: 'u64', value }, offset + 11];
+			}
 
 			case TlvKind.bytes: {
+				DMEventDecoder._requireBytes(offset, 7, endOffset);
 				const length = buffer.readUInt32BE(offset + 3);
 				const valueStart = offset + 7;
 				const valueEnd = valueStart + length;
-
-				return [
-					{
-						id,
-						kind: 'bytes',
-						value: buffer.subarray(valueStart, valueEnd),
-					},
-					valueEnd,
-				];
+				DMEventDecoder._requireBytes(valueStart, length, endOffset);
+				return [{ id, kind: 'bytes', value: buffer.subarray(valueStart, valueEnd) }, valueEnd];
 			}
 
 			case TlvKind.object:
 			case TlvKind.list: {
 				const [children, nextCursor] = DMEventDecoder._parseContainer(buffer, offset + 3, endOffset);
 
-				return [
-					{
-						id,
-						kind: kind === TlvKind.object ? 'object' : 'list',
-						value: children,
-					},
-					nextCursor,
-				];
+				return [{ id, kind: kind === TlvKind.object ? 'object' : 'list', value: children }, nextCursor];
 			}
 
 			default:
@@ -332,12 +326,18 @@ export class DMEventDecoder {
 		}
 	}
 
+	private static _requireBytes(offset: number, length: number, endOffset: number): void {
+		if (length < 0 || offset < 0 || offset + length > endOffset) {
+			throw new Error('Invalid TLV payload');
+		}
+	}
+
 	private static _parseMessagePayload(
 		payloadBytes: Buffer,
-		outerMessage: Omit<IDecodedConversationMessage, 'isEncrypted' | 'mediaUrls' | 'text'>,
+		outerMessage: IMessageEnvelope,
 		isEncrypted = false,
 	): IDecodedConversationMessage | undefined {
-		const payloadFields = DMEventDecoder._safeParseRoot(payloadBytes);
+		const payloadFields = DMEventDecoder._tryParseTlvDocument(payloadBytes);
 		if (!payloadFields) {
 			return undefined;
 		}
@@ -351,8 +351,10 @@ export class DMEventDecoder {
 			return undefined;
 		}
 
-		const text = DMEventDecoder._getFieldString(messageFields, MessageField.text) ?? '';
-		const mediaUrls = DMEventDecoder._collectMediaUrls(messageFields);
+		const text = DMEventDecoder._readFieldAsString(messageFields, MessageField.text) ?? '';
+		const mediaUrls = [
+			...new Set(DMEventDecoder._collectStrings(messageFields).filter((value) => DefaultMediaHosts.test(value))),
+		];
 
 		return {
 			...outerMessage,
@@ -362,13 +364,9 @@ export class DMEventDecoder {
 		};
 	}
 
-	private static _parseRoot(buffer: Buffer): ITlvField[] {
-		return DMEventDecoder._parseContainer(buffer, 0, buffer.length)[0];
-	}
-
-	private static _safeParseRoot(buffer: Buffer): ITlvField[] | undefined {
+	private static _tryParseTlvDocument(buffer: Buffer): ITlvField[] | undefined {
 		try {
-			return DMEventDecoder._parseRoot(buffer);
+			return DMEventDecoder._parseContainer(buffer, 0, buffer.length)[0];
 		} catch {
 			return undefined;
 		}
@@ -393,45 +391,22 @@ export class DMEventDecoder {
 		encodedEvent: string,
 		options?: IDecodedConversationMessageOptions,
 	): IDecodedConversationMessage | undefined {
-		const eventBuffer = Buffer.from(encodedEvent, 'base64');
-		const outerFields = DMEventDecoder._safeParseRoot(eventBuffer);
-		if (!outerFields) {
+		const envelope = DMEventDecoder._decodeEnvelope(encodedEvent);
+		if (!envelope) {
 			return undefined;
 		}
 
-		const payloadBytes = DMEventDecoder._extractPayloadBytes(outerFields);
-
-		if (!payloadBytes) {
-			return undefined;
-		}
-
-		const messageId = DMEventDecoder._getFieldString(outerFields, OuterEventField.messageId) ?? '';
-		const senderId = DMEventDecoder._getFieldString(outerFields, OuterEventField.senderId) ?? '';
-		const conversationId = DMEventDecoder._getFieldString(outerFields, OuterEventField.conversationId) ?? '';
-		const createdAtMs = DMEventDecoder._getFieldString(outerFields, OuterEventField.createdAtMs) ?? '';
-		const recipientId = DMEventDecoder._inferRecipientId(conversationId, senderId);
-		const outerMessage = {
-			id: messageId,
-			conversationId,
-			createdAt: DMEventDecoder._toIsoDate(createdAtMs),
-			createdAtMs,
-			recipientId,
-			senderId,
-		};
-		const decodedPayload = DMEventDecoder._parseMessagePayload(payloadBytes, outerMessage);
+		const { message, payload } = envelope;
+		const decodedPayload = DMEventDecoder._parseMessagePayload(payload, message);
 		if (decodedPayload) {
 			return decodedPayload;
 		}
 
-		const conversationKey = options?.conversationKeys?.[conversationId];
+		const conversationKey = options?.conversationKeys?.[message.conversationId];
 		if (conversationKey) {
-			const decryptedPayload = XChatCrypto.decryptPayload(payloadBytes, conversationKey);
+			const decryptedPayload = XChatCrypto.decryptPayload(payload, conversationKey);
 			if (decryptedPayload) {
-				const decodedDecryptedPayload = DMEventDecoder._parseMessagePayload(
-					decryptedPayload,
-					outerMessage,
-					true,
-				);
+				const decodedDecryptedPayload = DMEventDecoder._parseMessagePayload(decryptedPayload, message, true);
 				if (decodedDecryptedPayload) {
 					return decodedDecryptedPayload;
 				}
@@ -439,7 +414,7 @@ export class DMEventDecoder {
 		}
 
 		return {
-			...outerMessage,
+			...message,
 			isEncrypted: true,
 			text: '',
 		};
