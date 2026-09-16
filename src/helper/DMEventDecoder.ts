@@ -78,363 +78,358 @@ const MessageField = {
  * @internal
  */
 
-function _collectStrings(fields: ITlvField[]): string[] {
-		const values: string[] = [];
+function collectStrings(fields: ITlvField[]): string[] {
+	const values: string[] = [];
 
-		for (const field of fields) {
-			if (field.kind === 'bytes') {
-				const value = decodeBytes(field.value as Buffer);
-				if (value !== undefined) {
-					values.push(value);
-				}
-			} else if (field.kind === 'object' || field.kind === 'list') {
-				values.push(...collectStrings(field.value as ITlvField[]));
+	for (const field of fields) {
+		if (field.kind === 'bytes') {
+			const value = decodeBytes(field.value as Buffer);
+			if (value !== undefined) {
+				values.push(value);
 			}
+		} else if (field.kind === 'object' || field.kind === 'list') {
+			values.push(...collectStrings(field.value as ITlvField[]));
 		}
-
-		return values;
 	}
 
-function _decodeEnvelope(encodedEvent: string): IDecodedEnvelope | undefined {
-		const fields = tryParseTlvDocument(Buffer.from(encodedEvent, 'base64'));
-		const payload = fields ? findPayload(fields) : undefined;
-		if (!fields || !payload) {
-			return undefined;
-		}
+	return values;
+}
 
-		const conversationId = readFieldAsString(fields, OuterEventField.conversationId) ?? '';
-		const senderId = readFieldAsString(fields, OuterEventField.senderId) ?? '';
-		const createdAtMs = readFieldAsString(fields, OuterEventField.createdAtMs) ?? '';
-
-		return {
-			message: {
-				id: readFieldAsString(fields, OuterEventField.messageId) ?? '',
-				conversationId,
-				createdAt: toIsoDate(createdAtMs),
-				createdAtMs,
-				recipientId: inferRecipientId(conversationId, senderId),
-				senderId,
-			},
-			payload,
-		};
+function decodeEnvelope(encodedEvent: string): IDecodedEnvelope | undefined {
+	const fields = tryParseTlvDocument(Buffer.from(encodedEvent, 'base64'));
+	const payload = fields ? findPayload(fields) : undefined;
+	if (!fields || !payload) {
+		return undefined;
 	}
 
-function _decodeBytes(value: Buffer): string | undefined {
-		if (value.includes(0)) {
-			return undefined;
-		}
+	const conversationId = readFieldAsString(fields, OuterEventField.conversationId) ?? '';
+	const senderId = readFieldAsString(fields, OuterEventField.senderId) ?? '';
+	const createdAtMs = readFieldAsString(fields, OuterEventField.createdAtMs) ?? '';
 
-		const decoded = value.toString('utf8');
-		if (decoded.includes('\uFFFD')) {
-			return undefined;
-		}
-
-		for (const char of decoded) {
-			const code = char.charCodeAt(0);
-			if (code < 32 && char !== '\n' && char !== '\r' && char !== '\t') {
-				return undefined;
-			}
-		}
-
-		return decoded;
-	}
-
-function _decodeXChatEvent(event: IXChatEvent): IDecodedConversationMessage | undefined {
-		if (event.type !== 'message' || !event.conversationId || !event.senderId) {
-			return undefined;
-		}
-
-		const createdAtMs = event.createdAtMsec ? String(event.createdAtMsec) : '';
-		const mediaUrls = (event.attachments ?? [])
-			.flatMap((attachment) => [attachment.legacyMediaUrlHttps, attachment.legacyMediaPreviewUrl, attachment.url])
-			.filter((url): url is string => typeof url === 'string');
-
-		return {
-			id: event.id ?? event.sequenceId ?? '',
-			conversationId: event.conversationId,
+	return {
+		message: {
+			id: readFieldAsString(fields, OuterEventField.messageId) ?? '',
+			conversationId,
 			createdAt: toIsoDate(createdAtMs),
 			createdAtMs,
-			isEncrypted: true,
-			mediaUrls: mediaUrls.length > 0 ? [...new Set(mediaUrls)] : undefined,
-			recipientId: inferRecipientId(event.conversationId, event.senderId),
-			senderId: event.senderId,
-			text: event.content?.text ?? '',
-		};
+			recipientId: inferRecipientId(conversationId, senderId),
+			senderId,
+		},
+		payload,
+	};
+}
+
+function decodeBytes(value: Buffer): string | undefined {
+	if (value.includes(0)) {
+		return undefined;
 	}
 
-function _decodeXChatEvents(
-		encodedEvents: string[],
-		options?: IDecodedConversationMessageOptions,
-	): Map<string, IDecodedConversationMessage | undefined> {
-		const decodedByEvent = new Map<string, IDecodedConversationMessage | undefined>();
-		const session = options?.xChatSession;
+	const decoded = value.toString('utf8');
+	if (decoded.includes('\uFFFD')) {
+		return undefined;
+	}
 
-		if (!session?.isUnlocked) {
-			return decodedByEvent;
+	for (const char of decoded) {
+		const code = char.charCodeAt(0);
+		if (code < 32 && char !== '\n' && char !== '\r' && char !== '\t') {
+			return undefined;
 		}
+	}
 
-		let result;
-		try {
-			result = session.decryptEvents([...(options?.keyChangeEvents ?? []), ...encodedEvents]);
-		} catch {
-			return decodedByEvent;
-		}
+	return decoded;
+}
 
-		for (const message of result.messages) {
-			if (!message.originalB64) {
-				continue;
-			}
+function decodeXChatEvent(event: IXChatEvent): IDecodedConversationMessage | undefined {
+	if (event.type !== 'message' || !event.conversationId || !event.senderId) {
+		return undefined;
+	}
 
-			const decoded = decodeXChatEvent(message.event);
-			// Remember every event handled by the SDK. A handled reaction or control
-			// event intentionally maps to undefined and must not become an empty
-			// encrypted-message shell through the manual-key fallback below.
-			decodedByEvent.set(message.originalB64, decoded);
-		}
+	const createdAtMs = event.createdAtMsec ? String(event.createdAtMsec) : '';
+	const mediaUrls = (event.attachments ?? [])
+		.flatMap((attachment) => [attachment.legacyMediaUrlHttps, attachment.legacyMediaPreviewUrl, attachment.url])
+		.filter((url): url is string => typeof url === 'string');
 
+	return {
+		id: event.id ?? event.sequenceId ?? '',
+		conversationId: event.conversationId,
+		createdAt: toIsoDate(createdAtMs),
+		createdAtMs,
+		isEncrypted: true,
+		mediaUrls: mediaUrls.length > 0 ? [...new Set(mediaUrls)] : undefined,
+		recipientId: inferRecipientId(event.conversationId, event.senderId),
+		senderId: event.senderId,
+		text: event.content?.text ?? '',
+	};
+}
+
+function decodeXChatEvents(
+	encodedEvents: string[],
+	options?: IDecodedConversationMessageOptions,
+): Map<string, IDecodedConversationMessage | undefined> {
+	const decodedByEvent = new Map<string, IDecodedConversationMessage | undefined>();
+	const session = options?.xChatSession;
+
+	if (!session?.isUnlocked) {
 		return decodedByEvent;
 	}
 
-function _findPayload(fields: ITlvField[]): Buffer | undefined {
-		const payloadWrapper = getFieldChildren(fields, OuterEventField.payloadWrapper);
-		if (!payloadWrapper) {
-			return undefined;
-		}
-
-		return findBytesField(payloadWrapper, PayloadWrapperField.encodedPayload);
+	let result;
+	try {
+		result = session.decryptEvents([...(options?.keyChangeEvents ?? []), ...encodedEvents]);
+	} catch {
+		return decodedByEvent;
 	}
 
-function _findBytesField(fields: ITlvField[], fieldId: number): Buffer | undefined {
-		for (const field of fields) {
-			if (field.id === fieldId && field.kind === 'bytes') {
-				return field.value as Buffer;
-			}
-
-			if (field.kind === 'object' || field.kind === 'list') {
-				const value = findBytesField(field.value as ITlvField[], fieldId);
-				if (value) {
-					return value;
-				}
-			}
+	for (const message of result.messages) {
+		if (!message.originalB64) {
+			continue;
 		}
 
+		const decoded = decodeXChatEvent(message.event);
+		// Remember every event handled by the SDK. A handled reaction or control
+		// event intentionally maps to undefined and must not become an empty
+		// encrypted-message shell through the manual-key fallback below.
+		decodedByEvent.set(message.originalB64, decoded);
+	}
+
+	return decodedByEvent;
+}
+
+function findPayload(fields: ITlvField[]): Buffer | undefined {
+	const payloadWrapper = getFieldChildren(fields, OuterEventField.payloadWrapper);
+	if (!payloadWrapper) {
 		return undefined;
 	}
 
-function _getFieldChildren(fields: ITlvField[], fieldId: number): ITlvField[] | undefined {
-		const field = fields.find((candidate) => candidate.id === fieldId);
-		if (!field || (field.kind !== 'object' && field.kind !== 'list')) {
-			return undefined;
+	return findBytesField(payloadWrapper, PayloadWrapperField.encodedPayload);
+}
+
+function findBytesField(fields: ITlvField[], fieldId: number): Buffer | undefined {
+	for (const field of fields) {
+		if (field.id === fieldId && field.kind === 'bytes') {
+			return field.value as Buffer;
 		}
 
-		return field.value as ITlvField[];
+		if (field.kind === 'object' || field.kind === 'list') {
+			const value = findBytesField(field.value as ITlvField[], fieldId);
+			if (value) {
+				return value;
+			}
+		}
 	}
 
-function _readFieldAsString(fields: ITlvField[], fieldId: number): string | undefined {
-		const field = fields.find((candidate) => candidate.id === fieldId);
-		if (!field) {
-			return undefined;
-		}
+	return undefined;
+}
 
-		if (field.kind === 'bytes') {
-			return decodeBytes(field.value as Buffer);
-		}
-
-		if (field.kind === 'u32' || field.kind === 'u64') {
-			return field.kind === 'u32' ? String(field.value as number) : String(field.value as bigint);
-		}
-
-		if (field.kind === 'bool') {
-			return String(field.value === true);
-		}
-
+function getFieldChildren(fields: ITlvField[], fieldId: number): ITlvField[] | undefined {
+	const field = fields.find((candidate) => candidate.id === fieldId);
+	if (!field || (field.kind !== 'object' && field.kind !== 'list')) {
 		return undefined;
 	}
 
-function _inferRecipientId(conversationId: string, senderId: string): string | undefined {
-		const participants = conversationId.split(':').filter(Boolean);
-		if (participants.length !== 2) {
-			return undefined;
-		}
+	return field.value as ITlvField[];
+}
 
-		return participants.find((participantId) => participantId !== senderId);
+function readFieldAsString(fields: ITlvField[], fieldId: number): string | undefined {
+	const field = fields.find((candidate) => candidate.id === fieldId);
+	if (!field) {
+		return undefined;
 	}
 
-function _parseContainer(buffer: Buffer, offset: number, endOffset: number): [ITlvField[], number] {
-		const fields: ITlvField[] = [];
-		let cursor = offset;
-
-		while (cursor < endOffset) {
-			if (buffer[cursor] === TlvKind.terminator) {
-				return [fields, cursor + 1];
-			}
-			if (buffer[cursor] === TlvKind.separator) {
-				cursor++;
-				continue;
-			}
-
-			const [field, nextCursor] = parseField(buffer, cursor, endOffset);
-			fields.push(field);
-			cursor = nextCursor;
-		}
-
-		return [fields, cursor];
+	if (field.kind === 'bytes') {
+		return decodeBytes(field.value as Buffer);
 	}
 
-function _parseField(buffer: Buffer, offset: number, endOffset: number): [ITlvField, number] {
-		requireBytes(offset, 3, endOffset);
+	if (field.kind === 'u32' || field.kind === 'u64') {
+		return field.kind === 'u32' ? String(field.value as number) : String(field.value as bigint);
+	}
 
-		const kind = buffer[offset];
-		const id = buffer.readUInt16BE(offset + 1);
+	if (field.kind === 'bool') {
+		return String(field.value === true);
+	}
 
-		switch (kind) {
-			case TlvKind.bool: {
-				requireBytes(offset, 4, endOffset);
-				return [{ id, kind: 'bool', value: buffer[offset + 3] === TlvKind.separator }, offset + 4];
-			}
+	return undefined;
+}
 
-			case TlvKind.u32: {
-				requireBytes(offset, 7, endOffset);
-				return [{ id, kind: 'u32', value: buffer.readUInt32BE(offset + 3) }, offset + 7];
-			}
+function inferRecipientId(conversationId: string, senderId: string): string | undefined {
+	const participants = conversationId.split(':').filter(Boolean);
+	if (participants.length !== 2) {
+		return undefined;
+	}
 
-			case TlvKind.u64: {
-				requireBytes(offset, 11, endOffset);
-				const value =
-					(BigInt(buffer.readUInt32BE(offset + 3)) << 32n) | BigInt(buffer.readUInt32BE(offset + 7));
-				return [{ id, kind: 'u64', value }, offset + 11];
-			}
+	return participants.find((participantId) => participantId !== senderId);
+}
 
-			case TlvKind.bytes: {
-				requireBytes(offset, 7, endOffset);
-				const length = buffer.readUInt32BE(offset + 3);
-				const valueStart = offset + 7;
-				const valueEnd = valueStart + length;
-				requireBytes(valueStart, length, endOffset);
-				return [{ id, kind: 'bytes', value: buffer.subarray(valueStart, valueEnd) }, valueEnd];
-			}
+function parseContainer(buffer: Buffer, offset: number, endOffset: number): [ITlvField[], number] {
+	const fields: ITlvField[] = [];
+	let cursor = offset;
 
-			case TlvKind.object:
-			case TlvKind.list: {
-				const [children, nextCursor] = parseContainer(buffer, offset + 3, endOffset);
+	while (cursor < endOffset) {
+		if (buffer[cursor] === TlvKind.terminator) {
+			return [fields, cursor + 1];
+		}
+		if (buffer[cursor] === TlvKind.separator) {
+			cursor++;
+			continue;
+		}
 
-				return [{ id, kind: kind === TlvKind.object ? 'object' : 'list', value: children }, nextCursor];
-			}
+		const [field, nextCursor] = parseField(buffer, cursor, endOffset);
+		fields.push(field);
+		cursor = nextCursor;
+	}
 
-			default:
-				throw new Error(`Unsupported TLV kind: ${kind.toString(16)}`);
+	return [fields, cursor];
+}
+
+function parseField(buffer: Buffer, offset: number, endOffset: number): [ITlvField, number] {
+	requireBytes(offset, 3, endOffset);
+
+	const kind = buffer[offset];
+	const id = buffer.readUInt16BE(offset + 1);
+
+	switch (kind) {
+		case TlvKind.bool: {
+			requireBytes(offset, 4, endOffset);
+			return [{ id, kind: 'bool', value: buffer[offset + 3] === TlvKind.separator }, offset + 4];
+		}
+
+		case TlvKind.u32: {
+			requireBytes(offset, 7, endOffset);
+			return [{ id, kind: 'u32', value: buffer.readUInt32BE(offset + 3) }, offset + 7];
+		}
+
+		case TlvKind.u64: {
+			requireBytes(offset, 11, endOffset);
+			const value = (BigInt(buffer.readUInt32BE(offset + 3)) << 32n) | BigInt(buffer.readUInt32BE(offset + 7));
+			return [{ id, kind: 'u64', value }, offset + 11];
+		}
+
+		case TlvKind.bytes: {
+			requireBytes(offset, 7, endOffset);
+			const length = buffer.readUInt32BE(offset + 3);
+			const valueStart = offset + 7;
+			const valueEnd = valueStart + length;
+			requireBytes(valueStart, length, endOffset);
+			return [{ id, kind: 'bytes', value: buffer.subarray(valueStart, valueEnd) }, valueEnd];
+		}
+
+		case TlvKind.object:
+		case TlvKind.list: {
+			const [children, nextCursor] = parseContainer(buffer, offset + 3, endOffset);
+
+			return [{ id, kind: kind === TlvKind.object ? 'object' : 'list', value: children }, nextCursor];
+		}
+
+		default:
+			throw new Error(`Unsupported TLV kind: ${kind.toString(16)}`);
+	}
+}
+
+function requireBytes(offset: number, length: number, endOffset: number): void {
+	if (length < 0 || offset < 0 || offset + length > endOffset) {
+		throw new Error('Invalid TLV payload');
+	}
+}
+
+function parseMessagePayload(
+	payloadBytes: Buffer,
+	outerMessage: IMessageEnvelope,
+	isEncrypted = false,
+): IDecodedConversationMessage | undefined {
+	const payloadFields = tryParseTlvDocument(payloadBytes);
+	if (!payloadFields) {
+		return undefined;
+	}
+
+	const eventFields = getFieldChildren(payloadFields, PayloadField.event);
+	const messageFields = eventFields ? getFieldChildren(eventFields, EventField.message) : undefined;
+	if (!messageFields) {
+		// Field 2 in the inner payload is currently used for reactions.
+		return undefined;
+	}
+
+	const text = readFieldAsString(messageFields, MessageField.text) ?? '';
+	const mediaUrls = [...new Set(collectStrings(messageFields).filter((value) => DefaultMediaHosts.test(value)))];
+
+	return {
+		...outerMessage,
+		isEncrypted,
+		mediaUrls: mediaUrls.length > 0 ? mediaUrls : undefined,
+		text,
+	};
+}
+
+function tryParseTlvDocument(buffer: Buffer): ITlvField[] | undefined {
+	try {
+		return parseContainer(buffer, 0, buffer.length)[0];
+	} catch {
+		return undefined;
+	}
+}
+
+function toIsoDate(timestamp: string): string {
+	const numericTimestamp = Number(timestamp);
+	if (!Number.isNaN(numericTimestamp)) {
+		const date = new Date(numericTimestamp);
+		if (!Number.isNaN(date.getTime())) {
+			return date.toISOString();
 		}
 	}
 
-function _requireBytes(offset: number, length: number, endOffset: number): void {
-		if (length < 0 || offset < 0 || offset + length > endOffset) {
-			throw new Error('Invalid TLV payload');
-		}
-	}
+	return new Date().toISOString();
+}
 
-function _parseMessagePayload(
-		payloadBytes: Buffer,
-		outerMessage: IMessageEnvelope,
-		isEncrypted = false,
-	): IDecodedConversationMessage | undefined {
-		const payloadFields = tryParseTlvDocument(payloadBytes);
-		if (!payloadFields) {
-			return undefined;
-		}
-
-		const eventFields = getFieldChildren(payloadFields, PayloadField.event);
-		const messageFields = eventFields
-			? getFieldChildren(eventFields, EventField.message)
-			: undefined;
-		if (!messageFields) {
-			// Field 2 in the inner payload is currently used for reactions.
-			return undefined;
-		}
-
-		const text = readFieldAsString(messageFields, MessageField.text) ?? '';
-		const mediaUrls = [
-			...new Set(collectStrings(messageFields).filter((value) => DefaultMediaHosts.test(value))),
-		];
-
-		return {
-			...outerMessage,
-			isEncrypted,
-			mediaUrls: mediaUrls.length > 0 ? mediaUrls : undefined,
-			text,
-		};
-	}
-
-function _tryParseTlvDocument(buffer: Buffer): ITlvField[] | undefined {
-		try {
-			return parseContainer(buffer, 0, buffer.length)[0];
-		} catch {
-			return undefined;
-		}
-	}
-
-function _toIsoDate(timestamp: string): string {
-		const numericTimestamp = Number(timestamp);
-		if (!Number.isNaN(numericTimestamp)) {
-			const date = new Date(numericTimestamp);
-			if (!Number.isNaN(date.getTime())) {
-				return date.toISOString();
-			}
-		}
-
-		return new Date().toISOString();
-	}
-
-	/**
-	 * Decode a single encoded message event.
-	 */
+/**
+ * Decode a single encoded message event.
+ */
 export function decodeMessage(
-		encodedEvent: string,
-		options?: IDecodedConversationMessageOptions,
-	): IDecodedConversationMessage | undefined {
-		const envelope = decodeEnvelope(encodedEvent);
-		if (!envelope) {
-			return undefined;
-		}
+	encodedEvent: string,
+	options?: IDecodedConversationMessageOptions,
+): IDecodedConversationMessage | undefined {
+	const envelope = decodeEnvelope(encodedEvent);
+	if (!envelope) {
+		return undefined;
+	}
 
-		const { message, payload } = envelope;
-		const decodedPayload = parseMessagePayload(payload, message);
-		if (decodedPayload) {
-			return decodedPayload;
-		}
+	const { message, payload } = envelope;
+	const decodedPayload = parseMessagePayload(payload, message);
+	if (decodedPayload) {
+		return decodedPayload;
+	}
 
-		const conversationKey = options?.conversationKeys?.[message.conversationId];
-		if (conversationKey) {
-			const decryptedPayload = decryptPayload(payload, conversationKey);
-			if (decryptedPayload) {
-				const decodedDecryptedPayload = parseMessagePayload(decryptedPayload, message, true);
-				if (decodedDecryptedPayload) {
-					return decodedDecryptedPayload;
-				}
+	const conversationKey = options?.conversationKeys?.[message.conversationId];
+	if (conversationKey) {
+		const decryptedPayload = decryptPayload(payload, conversationKey);
+		if (decryptedPayload) {
+			const decodedDecryptedPayload = parseMessagePayload(decryptedPayload, message, true);
+			if (decodedDecryptedPayload) {
+				return decodedDecryptedPayload;
 			}
 		}
-
-		return {
-			...message,
-			isEncrypted: true,
-			text: '',
-		};
 	}
 
-	/**
-	 * Decode a list of message events and discard non-message events such as
-	 * reactions that do not map to the current DirectMessage model.
-	 */
+	return {
+		...message,
+		isEncrypted: true,
+		text: '',
+	};
+}
+
+/**
+ * Decode a list of message events and discard non-message events such as
+ * reactions that do not map to the current DirectMessage model.
+ */
 export function decodeMessages(
-		encodedEvents: string[],
-		options?: IDecodedConversationMessageOptions,
-	): IDecodedConversationMessage[] {
-		const sessionMessages = decodeXChatEvents(encodedEvents, options);
+	encodedEvents: string[],
+	options?: IDecodedConversationMessageOptions,
+): IDecodedConversationMessage[] {
+	const sessionMessages = decodeXChatEvents(encodedEvents, options);
 
-		return encodedEvents
-			.map((encodedEvent) =>
-				sessionMessages.has(encodedEvent)
-					? sessionMessages.get(encodedEvent)
-					: decodeMessage(encodedEvent, options),
-			)
-			.filter((message): message is IDecodedConversationMessage => message !== undefined);
-	}
+	return encodedEvents
+		.map((encodedEvent) =>
+			sessionMessages.has(encodedEvent)
+				? sessionMessages.get(encodedEvent)
+				: decodeMessage(encodedEvent, options),
+		)
+		.filter((message): message is IDecodedConversationMessage => message !== undefined);
+}
