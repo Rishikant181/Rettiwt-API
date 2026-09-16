@@ -18,12 +18,23 @@ function createDirectMessageCommand(rettiwt: Rettiwt): Command {
 		.description('Get the full conversation history for a specific conversation')
 		.argument('<conversation-id>', 'The ID of the conversation (e.g., "394028042:1645287614")')
 		.argument('[cursor]', 'The cursor for pagination (oldest event id from previous response)')
-		.action(async (conversationId: string, cursor?: string) => {
+		.option('--pin <pin>', 'The XChat PIN used to decrypt the conversation')
+		.action(async (conversationId: string, cursor: string | undefined, command: Command) => {
+			const pin = command.opts<{ pin?: string }>().pin;
+
 			try {
+				if (pin !== undefined) {
+					await rettiwt.dm.unlockXChat(pin);
+				}
+
 				const conversation = await rettiwt.dm.conversation(conversationId, cursor);
 				output(conversation);
 			} catch (error) {
 				output(error);
+			} finally {
+				if (pin !== undefined) {
+					rettiwt.dm.lockXChat();
+				}
 			}
 		});
 
