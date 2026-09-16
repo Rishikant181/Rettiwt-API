@@ -1,7 +1,7 @@
 import { AxiosProxyConfig, AxiosResponse } from 'axios';
 
-import { IXChatDecryptor, XChatConversationKey, XChatConversationKeyProvider } from './args/DirectMessageArgs';
 import { IErrorHandler } from './ErrorHandler';
+import { IXChatDecryptor, XChatConversationKey, XChatConversationKeyProvider } from './XChatSession';
 
 /**
  * The configuration for initializing a new Rettiwt instance.

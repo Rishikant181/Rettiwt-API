@@ -1,33 +1,4 @@
-import { IXChatDecryptResult, IXChatSigningKey } from '../types/args/DirectMessageArgs';
-
-interface IXChatClient {
-	decryptEvents(events: string[]): IXChatDecryptResult;
-	free(): void;
-	hasIdentityKey(): boolean;
-	lock(): void;
-	setCacheKeys(enabled: boolean): void;
-	setIdentity(userId: string, signingKeyVersion: string): void;
-	setSigningKeys(signingKeys: IXChatSigningKey[]): void;
-	unlock(pin: string | Uint8Array): Promise<void>;
-}
-
-/** Options used to create a PIN-backed XChat session. */
-export interface IXChatSessionOptions {
-	/** Juicebox configuration returned with the account's XChat public-key record. */
-	juiceboxConfig: string;
-
-	/** Resolve a short-lived Juicebox authorization token for a realm. */
-	getAuthToken: (realmId: string) => Promise<string>;
-
-	/** User ID that owns the registered XChat keys. */
-	userId: string;
-
-	/** Version of the user's registered XChat signing key. */
-	signingKeyVersion: string;
-
-	/** Registered participant keys used to verify incoming event signatures. */
-	signingKeys?: IXChatSigningKey[];
-}
+import { IXChatClient, IXChatDecryptResult, IXChatSessionOptions, IXChatSigningKey } from '../types/XChatSession';
 
 /**
  * An XChat cryptographic session backed by X's official Chat XDK.

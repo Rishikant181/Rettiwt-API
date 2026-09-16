@@ -9,6 +9,7 @@ import { SocksProxyAgent } from 'socks-proxy-agent';
 import { AuthService } from '../services/internal/AuthService';
 import { IErrorHandler } from '../types/ErrorHandler';
 import { IRettiwtConfig } from '../types/RettiwtConfig';
+import { IXChatDecryptor, XChatConversationKey, XChatConversationKeyProvider } from '../types/XChatSession';
 
 /**
  * The default headers.
@@ -52,9 +53,9 @@ export class RettiwtConfig implements IRettiwtConfig {
 	public readonly maxRetries: number;
 	public readonly responseMiddleware?: (response: AxiosResponse) => void | Promise<void>;
 	public readonly timeout?: number;
-	public readonly xChatConversationKeyProvider?: IRettiwtConfig['xChatConversationKeyProvider'];
-	public readonly xChatConversationKeys?: IRettiwtConfig['xChatConversationKeys'];
-	public readonly xChatSession?: IRettiwtConfig['xChatSession'];
+	public readonly xChatConversationKeyProvider?: XChatConversationKeyProvider;
+	public readonly xChatConversationKeys?: Record<string, XChatConversationKey>;
+	public readonly xChatSession?: IXChatDecryptor;
 
 	/**
 	 * @param config - The config for Rettiwt of type {@link IRettiwtConfig}.

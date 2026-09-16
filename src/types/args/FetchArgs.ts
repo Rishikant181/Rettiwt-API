@@ -1,6 +1,19 @@
 import { JobEmploymentType, JobLocationType, JobSeniorityLevel } from '../../enums/Job';
 import { RawAnalyticsGranularity, RawAnalyticsMetric } from '../../enums/raw/Analytics';
 import { TweetRepliesSortType } from '../../enums/Tweet';
+import { IXChatDecryptor, XChatConversationKey, XChatConversationKeyProvider } from '../XChatSession';
+
+/** Options for fetching and decoding one XChat conversation page. */
+export interface IDMConversationOptions {
+	/** Conversation key used only for this request. */
+	xChatConversationKey?: XChatConversationKey;
+	/** Key resolver used for this request instead of the configured provider. */
+	xChatConversationKeyProvider?: XChatConversationKeyProvider;
+	/** Conversation keys indexed by conversation ID; overrides configured keys with matching IDs. */
+	xChatConversationKeys?: Record<string, XChatConversationKey>;
+	/** Unlocked decryptor used for this request instead of the configured session. */
+	xChatSession?: IXChatDecryptor;
+}
 
 /**
  * Options specifying the data that is to be fetched.

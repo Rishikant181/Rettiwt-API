@@ -1,11 +1,12 @@
 import { Extractors } from '../../collections/Extractors';
 import { ResourceType } from '../../enums/Resource';
-import { DMEventDecoder } from '../../helper/DMEventDecoder';
+import { decodeMessages } from '../../helper/DMEventDecoder';
 import { Conversation } from '../../models/data/Conversation';
 import { Inbox } from '../../models/data/Inbox';
 import { RettiwtConfig } from '../../models/RettiwtConfig';
 import { XChatSession } from '../../models/XChatSession';
-import { IDMConversationOptions, IXChatSigningKey } from '../../types/args/DirectMessageArgs';
+import { IDMConversationOptions } from '../../types/args/FetchArgs';
+import { IXChatSigningKey } from '../../types/XChatSession';
 import { IConversationPageResponse } from '../../types/raw/dm/ConversationPage';
 import { IInboxInitialResponse, Conversation as RawConversation } from '../../types/raw/dm/InboxInitial';
 import { IInboxTimelineResponse } from '../../types/raw/dm/InboxTimeline';
@@ -116,7 +117,7 @@ export class DirectMessageService extends FetcherService {
 			return;
 		}
 
-		const senderIds = DMEventDecoder.decodeMessages(events).map((event) => event.senderId);
+		const senderIds = decodeMessages(events).map((event) => event.senderId);
 		const participantIds = conversationId.includes(':')
 			? conversationId.split(':')
 			: (metadata?.participants.map((participant) => participant.user_id) ?? []);
