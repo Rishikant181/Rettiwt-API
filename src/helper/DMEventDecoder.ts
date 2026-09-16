@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/member-ordering */
 
-import { IXChatDecryptor, IXChatEvent, XChatConversationKey } from '../types/args/DirectMessageArgs';
+import { IXChatDecryptor, IXChatEvent, XChatConversationKey } from '../types/XChatSession';
 
-import { XChatCrypto } from './XChatCrypto';
+import { decryptPayload } from './XChatCrypto';
 
 interface ITlvField {
 	id: number;
@@ -77,49 +77,49 @@ const MessageField = {
  *
  * @internal
  */
-export class DMEventDecoder {
-	private static _collectStrings(fields: ITlvField[]): string[] {
+
+function _collectStrings(fields: ITlvField[]): string[] {
 		const values: string[] = [];
 
 		for (const field of fields) {
 			if (field.kind === 'bytes') {
-				const value = DMEventDecoder._decodeBytes(field.value as Buffer);
+				const value = decodeBytes(field.value as Buffer);
 				if (value !== undefined) {
 					values.push(value);
 				}
 			} else if (field.kind === 'object' || field.kind === 'list') {
-				values.push(...DMEventDecoder._collectStrings(field.value as ITlvField[]));
+				values.push(...collectStrings(field.value as ITlvField[]));
 			}
 		}
 
 		return values;
 	}
 
-	private static _decodeEnvelope(encodedEvent: string): IDecodedEnvelope | undefined {
-		const fields = DMEventDecoder._tryParseTlvDocument(Buffer.from(encodedEvent, 'base64'));
-		const payload = fields ? DMEventDecoder._findPayload(fields) : undefined;
+function _decodeEnvelope(encodedEvent: string): IDecodedEnvelope | undefined {
+		const fields = tryParseTlvDocument(Buffer.from(encodedEvent, 'base64'));
+		const payload = fields ? findPayload(fields) : undefined;
 		if (!fields || !payload) {
 			return undefined;
 		}
 
-		const conversationId = DMEventDecoder._readFieldAsString(fields, OuterEventField.conversationId) ?? '';
-		const senderId = DMEventDecoder._readFieldAsString(fields, OuterEventField.senderId) ?? '';
-		const createdAtMs = DMEventDecoder._readFieldAsString(fields, OuterEventField.createdAtMs) ?? '';
+		const conversationId = readFieldAsString(fields, OuterEventField.conversationId) ?? '';
+		const senderId = readFieldAsString(fields, OuterEventField.senderId) ?? '';
+		const createdAtMs = readFieldAsString(fields, OuterEventField.createdAtMs) ?? '';
 
 		return {
 			message: {
-				id: DMEventDecoder._readFieldAsString(fields, OuterEventField.messageId) ?? '',
+				id: readFieldAsString(fields, OuterEventField.messageId) ?? '',
 				conversationId,
-				createdAt: DMEventDecoder._toIsoDate(createdAtMs),
+				createdAt: toIsoDate(createdAtMs),
 				createdAtMs,
-				recipientId: DMEventDecoder._inferRecipientId(conversationId, senderId),
+				recipientId: inferRecipientId(conversationId, senderId),
 				senderId,
 			},
 			payload,
 		};
 	}
 
-	private static _decodeBytes(value: Buffer): string | undefined {
+function _decodeBytes(value: Buffer): string | undefined {
 		if (value.includes(0)) {
 			return undefined;
 		}
@@ -139,7 +139,7 @@ export class DMEventDecoder {
 		return decoded;
 	}
 
-	private static _decodeXChatEvent(event: IXChatEvent): IDecodedConversationMessage | undefined {
+function _decodeXChatEvent(event: IXChatEvent): IDecodedConversationMessage | undefined {
 		if (event.type !== 'message' || !event.conversationId || !event.senderId) {
 			return undefined;
 		}
@@ -152,17 +152,17 @@ export class DMEventDecoder {
 		return {
 			id: event.id ?? event.sequenceId ?? '',
 			conversationId: event.conversationId,
-			createdAt: DMEventDecoder._toIsoDate(createdAtMs),
+			createdAt: toIsoDate(createdAtMs),
 			createdAtMs,
 			isEncrypted: true,
 			mediaUrls: mediaUrls.length > 0 ? [...new Set(mediaUrls)] : undefined,
-			recipientId: DMEventDecoder._inferRecipientId(event.conversationId, event.senderId),
+			recipientId: inferRecipientId(event.conversationId, event.senderId),
 			senderId: event.senderId,
 			text: event.content?.text ?? '',
 		};
 	}
 
-	private static _decodeXChatEvents(
+function _decodeXChatEvents(
 		encodedEvents: string[],
 		options?: IDecodedConversationMessageOptions,
 	): Map<string, IDecodedConversationMessage | undefined> {
@@ -185,7 +185,7 @@ export class DMEventDecoder {
 				continue;
 			}
 
-			const decoded = DMEventDecoder._decodeXChatEvent(message.event);
+			const decoded = decodeXChatEvent(message.event);
 			// Remember every event handled by the SDK. A handled reaction or control
 			// event intentionally maps to undefined and must not become an empty
 			// encrypted-message shell through the manual-key fallback below.
@@ -195,23 +195,23 @@ export class DMEventDecoder {
 		return decodedByEvent;
 	}
 
-	private static _findPayload(fields: ITlvField[]): Buffer | undefined {
-		const payloadWrapper = DMEventDecoder._getFieldChildren(fields, OuterEventField.payloadWrapper);
+function _findPayload(fields: ITlvField[]): Buffer | undefined {
+		const payloadWrapper = getFieldChildren(fields, OuterEventField.payloadWrapper);
 		if (!payloadWrapper) {
 			return undefined;
 		}
 
-		return DMEventDecoder._findBytesField(payloadWrapper, PayloadWrapperField.encodedPayload);
+		return findBytesField(payloadWrapper, PayloadWrapperField.encodedPayload);
 	}
 
-	private static _findBytesField(fields: ITlvField[], fieldId: number): Buffer | undefined {
+function _findBytesField(fields: ITlvField[], fieldId: number): Buffer | undefined {
 		for (const field of fields) {
 			if (field.id === fieldId && field.kind === 'bytes') {
 				return field.value as Buffer;
 			}
 
 			if (field.kind === 'object' || field.kind === 'list') {
-				const value = DMEventDecoder._findBytesField(field.value as ITlvField[], fieldId);
+				const value = findBytesField(field.value as ITlvField[], fieldId);
 				if (value) {
 					return value;
 				}
@@ -221,7 +221,7 @@ export class DMEventDecoder {
 		return undefined;
 	}
 
-	private static _getFieldChildren(fields: ITlvField[], fieldId: number): ITlvField[] | undefined {
+function _getFieldChildren(fields: ITlvField[], fieldId: number): ITlvField[] | undefined {
 		const field = fields.find((candidate) => candidate.id === fieldId);
 		if (!field || (field.kind !== 'object' && field.kind !== 'list')) {
 			return undefined;
@@ -230,14 +230,14 @@ export class DMEventDecoder {
 		return field.value as ITlvField[];
 	}
 
-	private static _readFieldAsString(fields: ITlvField[], fieldId: number): string | undefined {
+function _readFieldAsString(fields: ITlvField[], fieldId: number): string | undefined {
 		const field = fields.find((candidate) => candidate.id === fieldId);
 		if (!field) {
 			return undefined;
 		}
 
 		if (field.kind === 'bytes') {
-			return DMEventDecoder._decodeBytes(field.value as Buffer);
+			return decodeBytes(field.value as Buffer);
 		}
 
 		if (field.kind === 'u32' || field.kind === 'u64') {
@@ -251,7 +251,7 @@ export class DMEventDecoder {
 		return undefined;
 	}
 
-	private static _inferRecipientId(conversationId: string, senderId: string): string | undefined {
+function _inferRecipientId(conversationId: string, senderId: string): string | undefined {
 		const participants = conversationId.split(':').filter(Boolean);
 		if (participants.length !== 2) {
 			return undefined;
@@ -260,7 +260,7 @@ export class DMEventDecoder {
 		return participants.find((participantId) => participantId !== senderId);
 	}
 
-	private static _parseContainer(buffer: Buffer, offset: number, endOffset: number): [ITlvField[], number] {
+function _parseContainer(buffer: Buffer, offset: number, endOffset: number): [ITlvField[], number] {
 		const fields: ITlvField[] = [];
 		let cursor = offset;
 
@@ -273,7 +273,7 @@ export class DMEventDecoder {
 				continue;
 			}
 
-			const [field, nextCursor] = DMEventDecoder._parseField(buffer, cursor, endOffset);
+			const [field, nextCursor] = parseField(buffer, cursor, endOffset);
 			fields.push(field);
 			cursor = nextCursor;
 		}
@@ -281,42 +281,42 @@ export class DMEventDecoder {
 		return [fields, cursor];
 	}
 
-	private static _parseField(buffer: Buffer, offset: number, endOffset: number): [ITlvField, number] {
-		DMEventDecoder._requireBytes(offset, 3, endOffset);
+function _parseField(buffer: Buffer, offset: number, endOffset: number): [ITlvField, number] {
+		requireBytes(offset, 3, endOffset);
 
 		const kind = buffer[offset];
 		const id = buffer.readUInt16BE(offset + 1);
 
 		switch (kind) {
 			case TlvKind.bool: {
-				DMEventDecoder._requireBytes(offset, 4, endOffset);
+				requireBytes(offset, 4, endOffset);
 				return [{ id, kind: 'bool', value: buffer[offset + 3] === TlvKind.separator }, offset + 4];
 			}
 
 			case TlvKind.u32: {
-				DMEventDecoder._requireBytes(offset, 7, endOffset);
+				requireBytes(offset, 7, endOffset);
 				return [{ id, kind: 'u32', value: buffer.readUInt32BE(offset + 3) }, offset + 7];
 			}
 
 			case TlvKind.u64: {
-				DMEventDecoder._requireBytes(offset, 11, endOffset);
+				requireBytes(offset, 11, endOffset);
 				const value =
 					(BigInt(buffer.readUInt32BE(offset + 3)) << 32n) | BigInt(buffer.readUInt32BE(offset + 7));
 				return [{ id, kind: 'u64', value }, offset + 11];
 			}
 
 			case TlvKind.bytes: {
-				DMEventDecoder._requireBytes(offset, 7, endOffset);
+				requireBytes(offset, 7, endOffset);
 				const length = buffer.readUInt32BE(offset + 3);
 				const valueStart = offset + 7;
 				const valueEnd = valueStart + length;
-				DMEventDecoder._requireBytes(valueStart, length, endOffset);
+				requireBytes(valueStart, length, endOffset);
 				return [{ id, kind: 'bytes', value: buffer.subarray(valueStart, valueEnd) }, valueEnd];
 			}
 
 			case TlvKind.object:
 			case TlvKind.list: {
-				const [children, nextCursor] = DMEventDecoder._parseContainer(buffer, offset + 3, endOffset);
+				const [children, nextCursor] = parseContainer(buffer, offset + 3, endOffset);
 
 				return [{ id, kind: kind === TlvKind.object ? 'object' : 'list', value: children }, nextCursor];
 			}
@@ -326,34 +326,34 @@ export class DMEventDecoder {
 		}
 	}
 
-	private static _requireBytes(offset: number, length: number, endOffset: number): void {
+function _requireBytes(offset: number, length: number, endOffset: number): void {
 		if (length < 0 || offset < 0 || offset + length > endOffset) {
 			throw new Error('Invalid TLV payload');
 		}
 	}
 
-	private static _parseMessagePayload(
+function _parseMessagePayload(
 		payloadBytes: Buffer,
 		outerMessage: IMessageEnvelope,
 		isEncrypted = false,
 	): IDecodedConversationMessage | undefined {
-		const payloadFields = DMEventDecoder._tryParseTlvDocument(payloadBytes);
+		const payloadFields = tryParseTlvDocument(payloadBytes);
 		if (!payloadFields) {
 			return undefined;
 		}
 
-		const eventFields = DMEventDecoder._getFieldChildren(payloadFields, PayloadField.event);
+		const eventFields = getFieldChildren(payloadFields, PayloadField.event);
 		const messageFields = eventFields
-			? DMEventDecoder._getFieldChildren(eventFields, EventField.message)
+			? getFieldChildren(eventFields, EventField.message)
 			: undefined;
 		if (!messageFields) {
 			// Field 2 in the inner payload is currently used for reactions.
 			return undefined;
 		}
 
-		const text = DMEventDecoder._readFieldAsString(messageFields, MessageField.text) ?? '';
+		const text = readFieldAsString(messageFields, MessageField.text) ?? '';
 		const mediaUrls = [
-			...new Set(DMEventDecoder._collectStrings(messageFields).filter((value) => DefaultMediaHosts.test(value))),
+			...new Set(collectStrings(messageFields).filter((value) => DefaultMediaHosts.test(value))),
 		];
 
 		return {
@@ -364,15 +364,15 @@ export class DMEventDecoder {
 		};
 	}
 
-	private static _tryParseTlvDocument(buffer: Buffer): ITlvField[] | undefined {
+function _tryParseTlvDocument(buffer: Buffer): ITlvField[] | undefined {
 		try {
-			return DMEventDecoder._parseContainer(buffer, 0, buffer.length)[0];
+			return parseContainer(buffer, 0, buffer.length)[0];
 		} catch {
 			return undefined;
 		}
 	}
 
-	private static _toIsoDate(timestamp: string): string {
+function _toIsoDate(timestamp: string): string {
 		const numericTimestamp = Number(timestamp);
 		if (!Number.isNaN(numericTimestamp)) {
 			const date = new Date(numericTimestamp);
@@ -387,26 +387,26 @@ export class DMEventDecoder {
 	/**
 	 * Decode a single encoded message event.
 	 */
-	public static decodeMessage(
+export function decodeMessage(
 		encodedEvent: string,
 		options?: IDecodedConversationMessageOptions,
 	): IDecodedConversationMessage | undefined {
-		const envelope = DMEventDecoder._decodeEnvelope(encodedEvent);
+		const envelope = decodeEnvelope(encodedEvent);
 		if (!envelope) {
 			return undefined;
 		}
 
 		const { message, payload } = envelope;
-		const decodedPayload = DMEventDecoder._parseMessagePayload(payload, message);
+		const decodedPayload = parseMessagePayload(payload, message);
 		if (decodedPayload) {
 			return decodedPayload;
 		}
 
 		const conversationKey = options?.conversationKeys?.[message.conversationId];
 		if (conversationKey) {
-			const decryptedPayload = XChatCrypto.decryptPayload(payload, conversationKey);
+			const decryptedPayload = decryptPayload(payload, conversationKey);
 			if (decryptedPayload) {
-				const decodedDecryptedPayload = DMEventDecoder._parseMessagePayload(decryptedPayload, message, true);
+				const decodedDecryptedPayload = parseMessagePayload(decryptedPayload, message, true);
 				if (decodedDecryptedPayload) {
 					return decodedDecryptedPayload;
 				}
@@ -424,18 +424,17 @@ export class DMEventDecoder {
 	 * Decode a list of message events and discard non-message events such as
 	 * reactions that do not map to the current DirectMessage model.
 	 */
-	public static decodeMessages(
+export function decodeMessages(
 		encodedEvents: string[],
 		options?: IDecodedConversationMessageOptions,
 	): IDecodedConversationMessage[] {
-		const sessionMessages = DMEventDecoder._decodeXChatEvents(encodedEvents, options);
+		const sessionMessages = decodeXChatEvents(encodedEvents, options);
 
 		return encodedEvents
 			.map((encodedEvent) =>
 				sessionMessages.has(encodedEvent)
 					? sessionMessages.get(encodedEvent)
-					: DMEventDecoder.decodeMessage(encodedEvent, options),
+					: decodeMessage(encodedEvent, options),
 			)
 			.filter((message): message is IDecodedConversationMessage => message !== undefined);
 	}
-}
