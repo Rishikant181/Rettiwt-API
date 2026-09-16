@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/member-ordering */
 
-import { DMEventDecoder, IDecodedConversationMessageOptions } from '../../helper/DMEventDecoder';
+import { decodeMessages, IDecodedConversationMessageOptions } from '../../helper/DMEventDecoder';
 import { IDirectMessage } from '../../types/data/DirectMessage';
 import { IMessage as IRawMessage } from '../../types/raw/base/Message';
 import { IConversationTimelineResponse } from '../../types/raw/dm/Conversation';
 import { IConversationPageResponse } from '../../types/raw/dm/ConversationPage';
 import { IInboxInitialResponse } from '../../types/raw/dm/InboxInitial';
 import { IInboxTimelineResponse } from '../../types/raw/dm/InboxTimeline';
+import { IXChatMessage } from '../../types/raw/dm/XChatMessage';
 
 /**
  * Type guard to check if the response is an IInboxInitialResponse
@@ -67,7 +68,7 @@ function isConversationPageResponse(
  */
 export class DirectMessage implements IDirectMessage {
 	/** The raw message details. */
-	private readonly _raw: IRawMessage | Record<string, unknown>;
+	private readonly _raw: IRawMessage | IXChatMessage;
 
 	public conversationId: string;
 	public createdAt: string;
@@ -84,7 +85,7 @@ export class DirectMessage implements IDirectMessage {
 	 * @param message - The raw message details from the API response.
 	 */
 	public constructor(message: unknown) {
-		this._raw = message as IRawMessage | Record<string, unknown>;
+		this._raw = message as IRawMessage | IXChatMessage;
 
 		const parsedData = this._parseMessageData(message);
 
@@ -101,7 +102,7 @@ export class DirectMessage implements IDirectMessage {
 	}
 
 	/** The raw message details. */
-	public get raw(): IRawMessage | Record<string, unknown> {
+	public get raw(): IRawMessage | IXChatMessage {
 		return this._raw;
 	}
 
@@ -162,7 +163,7 @@ export class DirectMessage implements IDirectMessage {
 	): DirectMessage[] {
 		const encodedEvents = response.data?.get_conversation_page?.encoded_message_events ?? [];
 
-		return DMEventDecoder.decodeMessages(encodedEvents, options).map(
+		return decodeMessages(encodedEvents, options).map(
 			(decodedMessage) =>
 				new DirectMessage(
 					/* eslint-disable @typescript-eslint/naming-convention */
