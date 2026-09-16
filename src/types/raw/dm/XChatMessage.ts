@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+
 /**
  * The normalized message shape produced from an encoded XChat event.
  *

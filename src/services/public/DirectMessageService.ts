@@ -6,11 +6,11 @@ import { Inbox } from '../../models/data/Inbox';
 import { RettiwtConfig } from '../../models/RettiwtConfig';
 import { XChatSession } from '../../models/XChatSession';
 import { IDMConversationOptions } from '../../types/args/FetchArgs';
-import { IXChatSigningKey } from '../../types/XChatSession';
 import { IConversationPageResponse } from '../../types/raw/dm/ConversationPage';
 import { IInboxInitialResponse, Conversation as RawConversation } from '../../types/raw/dm/InboxInitial';
 import { IInboxTimelineResponse } from '../../types/raw/dm/InboxTimeline';
 import { IXChatPublicKeysResponse } from '../../types/raw/dm/XChatPublicKeys';
+import { IXChatSigningKey } from '../../types/XChatSession';
 
 import { FetcherService } from './FetcherService';
 

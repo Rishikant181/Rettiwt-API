@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/member-ordering */
-
 import { IXChatDecryptor, IXChatEvent, XChatConversationKey } from '../types/XChatSession';
 
 import { decryptPayload } from './XChatCrypto';
