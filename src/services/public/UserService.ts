@@ -402,7 +402,7 @@ export class UserService extends FetcherService {
 		// If password change was successful
 		if (data === true) {
 			// Getting the new API key
-			const newApiKey = AuthService.getApiKeyFromReponse(response);
+			const newApiKey = AuthService.getApiKeyFromReponse(response, this.config);
 
 			// If new API key is generated, update current API key
 			if (newApiKey !== undefined) {
