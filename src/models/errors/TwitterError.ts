@@ -19,10 +19,11 @@ export class TwitterError extends Error implements ITwitterError {
 	 */
 	public constructor(error: AxiosError<IRawErrorData | IRawErrorDetails>) {
 		super(error.message);
+		// Network level failures such as timeouts and refused connections carry no response body
 		this.details = (
-			(error.response?.data as IRawErrorData).errors
+			(error.response?.data as IRawErrorData | undefined)?.errors
 				? (error.response?.data as IRawErrorData).errors.map((item) => new TwitterErrorDetails(item))
-				: [new TwitterErrorDetails(error.response?.data as IRawErrorDetails)]
+				: [new TwitterErrorDetails((error.response?.data ?? {}) as IRawErrorDetails)]
 		).map((item) => item.toJSON());
 		this.message = error.message;
 		this.name = 'TWITTER_ERROR';
