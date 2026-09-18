@@ -133,6 +133,9 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+# Editors
+.zed
+
 # Test files
 test
 
