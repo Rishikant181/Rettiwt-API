@@ -37,7 +37,7 @@ const RettiwtInstance = new Rettiwt({
 	proxy: Program.opts().proxy as string,
 	timeout: Program.opts().timeout ? Number(Program.opts().timeout) : undefined,
 	maxRetries: Program.opts().retries as number,
-	delay: Program.opts().delay as number,
+	delay: Program.opts().delay ? Number(Program.opts().delay) : undefined,
 });
 
 // Adding sub-commands
