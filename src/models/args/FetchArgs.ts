@@ -19,6 +19,7 @@ export class FetchArgs implements IFetchArgs {
 	public granularity?: RawAnalyticsGranularity;
 	public id?: string;
 	public ids?: string[];
+	public includeJuiceboxTokens?: boolean;
 	public isMetatagsQuery?: boolean;
 	public jobFilter?: JobSearchFilter;
 	public maxId?: string;
@@ -35,6 +36,7 @@ export class FetchArgs implements IFetchArgs {
 	public constructor(args: IFetchArgs) {
 		this.id = args.id;
 		this.ids = args.ids;
+		this.includeJuiceboxTokens = args.includeJuiceboxTokens;
 		this.isMetatagsQuery = args.isMetatagsQuery;
 		this.jobFilter = args.jobFilter ? new JobSearchFilter(args.jobFilter) : undefined;
 		this.count = args.count;

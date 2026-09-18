@@ -592,6 +592,66 @@ So far, the following operations are supported:
 - [Getting a specific conversation with full message history](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#conversation)
 - [Deleting a conversation](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#deleteConversation)
 
+#### Decrypting XChat with a conversation key
+
+Encrypted XChat messages can be decoded when their 32-byte conversation key is supplied as a
+`Uint8Array`, hexadecimal string, or base64/base64url string. A key can be provided for one call:
+
+```ts
+const conversation = await rettiwt.dm.conversation('394028042:1645287614', {
+	xChatConversationKey: process.env.XCHAT_CONVERSATION_KEY,
+});
+```
+
+For applications that keep keys in a secure store, configure an asynchronous provider instead:
+
+```ts
+const rettiwt = new Rettiwt({
+	apiKey: API_KEY,
+	xChatConversationKeyProvider: async (conversationId) => keyStore.get(conversationId),
+});
+```
+
+Messages whose key is unavailable or invalid are preserved with an empty body and
+`isEncrypted: true`. Successfully decrypted XChat messages also retain `isEncrypted: true` to
+indicate how their payload was transported; the flag does not indicate whether local decryption
+succeeded. Rettiwt does not persist conversation keys.
+
+#### Recovering XChat keys with a PIN
+
+PIN-based recovery and verified event decryption are powered by X's open-source
+[Chat XDK](https://github.com/xdevplatform/chat-xdk), which made this integration significantly
+faster to implement. The SDK is optional and does not increase the install size for other Rettiwt
+users. Install it and its Juicebox peer when the feature is needed:
+
+```sh
+npm install @xdevplatform/chat-xdk juicebox-sdk
+```
+
+Rettiwt can fetch the account's registered key, Juicebox configuration, realm tokens, and participant
+signing keys automatically using the configured API key. The PIN is passed directly to the official
+SDK and is not retained by Rettiwt:
+
+```ts
+import { Rettiwt } from 'rettiwt-api';
+
+const rettiwt = new Rettiwt({ apiKey: API_KEY });
+await rettiwt.dm.unlockXChat(process.env.XCHAT_PIN!);
+const conversation = await rettiwt.dm.conversation(CONVERSATION_ID);
+
+// Clear private and cached key material when the session is no longer needed.
+rettiwt.dm.lockXChat();
+```
+
+Recovery metadata and realm tokens are fetched when `unlockXChat` is called and are not persisted by
+Rettiwt. Participant signing keys are refreshed before decrypting each conversation page. Never
+hard-code or log the PIN. Juicebox limits incorrect recovery attempts, so only test with the known
+PIN.
+
+Call `lockXChat()` when the recovered session is no longer needed. Calling `conversation()` after
+locking still returns encrypted message shells unless a conversation key or another unlocked session
+is supplied.
+
 ### Jobs
 
 - [Getting the details of an X Job](https://rishikant181.github.io/Rettiwt-API/classes/JobService.html#details)

@@ -41,6 +41,7 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	MEDIA_UPLOAD_INITIALIZE: (args: IPostArgs) => MediaRequests.initializeUpload(args.upload!.size!),
 
 	DM_CONVERSATION: (args: IFetchArgs) => DMRequests.conversation(args.conversationId!, args.maxId),
+	DM_XCHAT_PUBLIC_KEYS: (args: IFetchArgs) => DMRequests.xChatPublicKeys(args.ids!, args.includeJuiceboxTokens),
 	DM_INBOX_INITIAL_STATE: () => DMRequests.inboxInitial(),
 	DM_INBOX_TIMELINE: (args: IFetchArgs) => DMRequests.inboxTimeline(args.maxId),
 	DM_DELETE_CONVERSATION: (args: IPostArgs) => DMRequests.deleteConversation(args.conversationId!),

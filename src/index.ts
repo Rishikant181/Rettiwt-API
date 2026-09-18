@@ -34,6 +34,7 @@ export * from './models/data/Tweet';
 export * from './models/data/User';
 export * from './models/data/UserAbout';
 export * from './models/errors/TwitterError';
+export * from './models/XChatSession';
 
 // REQUESTS
 export * from './requests/DirectMessage';
@@ -151,7 +152,9 @@ export { IUserSettingsResponse as IRawUserSettingsResponse } from './types/raw/u
 export { IUserChangePasswordResponse as IRawUserChangePasswordResponse } from './types/raw/user/ChangePassword';
 export * from './types/ErrorHandler';
 export * from './types/RettiwtConfig';
+export * from './types/XChatSession';
 export { IConversationTimelineResponse as IRawConversationTimelineResponse } from './types/raw/dm/Conversation';
+export { IConversationPageResponse as IRawConversationPageResponse } from './types/raw/dm/ConversationPage';
 export { IInboxInitialResponse as IRawInboxInitialResponse } from './types/raw/dm/InboxInitial';
 export { IInboxTimelineResponse as IRawInboxTimelineResponse } from './types/raw/dm/InboxTimeline';
 export { IUserUpdatesResponse as IRawUserUpdatesResponse } from './types/raw/dm/UserUpdates';
