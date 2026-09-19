@@ -345,8 +345,9 @@ export class FetcherService {
 					error = err;
 					continue;
 				}
-				// Else, delegate error handling
+				// Else, save the error and delegate error handling
 				else {
+					error = err;
 					this._errorHandler.handle(err);
 				}
 			} finally {
