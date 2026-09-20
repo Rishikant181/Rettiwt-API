@@ -1,5 +1,6 @@
 import { MediaType } from '../../enums/Media';
 
+import { ITweetArticle } from './TweetArticle';
 import { IUser } from './User';
 
 /**
@@ -8,6 +9,9 @@ import { IUser } from './User';
  * @public
  */
 export interface ITweet {
+	/** The X Article attached to this tweet, if any. */
+	article?: ITweetArticle;
+
 	/** The number of bookmarks of a tweet. */
 	bookmarkCount?: number;
 
