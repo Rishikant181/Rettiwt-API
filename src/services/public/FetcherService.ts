@@ -122,7 +122,7 @@ export class FetcherService {
 
 	private async _handleXMigration(): Promise<Document> {
 		// Fetch X.com homepage
-		const homePageResponse = await this.config.instance.get<string>('https://x.com/home', {
+		const homePageResponse = await this.config.instance.get<string>('https://x.com/i/jf/', {
 			headers: this.config.headers,
 		});
 
