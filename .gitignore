@@ -140,6 +140,7 @@ test
 docs
 
 .idea
+.zed
 
 # Debugging
 src/debug.ts
