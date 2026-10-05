@@ -93,7 +93,7 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - User Username Change
     - User Password Change
 
-By default, Rettiwt-API uses 'guest' authentication. If however, access to the full set of resources is required, 'user' authentication can be used. This is done by using the cookies associated with your Twitter/X account, and encoding them into an `API_KEY` for convenience. The said `API_KEY` can be obtained by using a **Firefox** extension or manually from your browser (Chrome/Chromium-Based/Firefox/Firefox-Based), as follows:
+By default, Rettiwt-API uses 'guest' authentication. If however, access to the full set of resources is required, 'user' authentication can be used. This is done by using the cookies associated with your Twitter/X account, and encoding them into an `API_KEY` for convenience. The said `API_KEY` can be obtained by using a **Firefox** extension, manually from your browser (Chrome/Chromium-Based/Firefox/Firefox-Based), or through the optional third-party userscript described below.
 
 ### Manual Method
 
@@ -103,6 +103,18 @@ By default, Rettiwt-API uses 'guest' authentication. If however, access to the f
 4. Copy the values of the 3 fields: `auth_token`, `ct0`, `twid`. These server as your authentication credentials.
 5. Go to `Console` of your browser developer tools, and execute the command: `btoa("auth_token=<auth_token_value>;ct0=<ct0_value>;twid=<twid_value>;")`. Substitute the values of the tokens with the values you copied.
 6. The output string is your API_KEY.
+
+### Third-Party ScriptCat Userscript
+
+The third-party [Rettiwt API Key Generator](https://scriptcat.org/en/script-show-page/8274) can generate a Rettiwt-API-compatible `API_KEY` from your current X/Twitter login cookies. It requires the [ScriptCat](https://github.com/scriptscat/scriptcat) userscript manager.
+
+1. Install [ScriptCat](https://github.com/scriptscat/scriptcat).
+2. Install the [Rettiwt API Key Generator](https://scriptcat.org/en/script-show-page/8274) userscript.
+3. Sign in to X/Twitter.
+4. Open the ScriptCat menu on `x.com` or `twitter.com` and run the generator.
+5. Store the generated `API_KEY` securely.
+
+> This is a third-party userscript and is not part of Rettiwt-API.
 
 ### Firefox Extension Method
 
