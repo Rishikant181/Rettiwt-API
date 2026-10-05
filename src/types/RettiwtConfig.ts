@@ -1,6 +1,7 @@
 import { AxiosProxyConfig, AxiosResponse } from 'axios';
 
 import { IErrorHandler } from './ErrorHandler';
+import { TransactionIdGenerator } from './TransactionId';
 import { IXChatDecryptor, XChatConversationKey, XChatConversationKeyProvider } from './XChatSession';
 
 /**
@@ -57,6 +58,9 @@ export interface IRettiwtConfig {
 
 	/** Optional custom error handler to define error conditions and process API/HTTP errors in responses. */
 	errorHandler?: IErrorHandler;
+
+	/** Optional custom function to use for generating X client transaction IDs. */
+	transactionIdGenerator?: TransactionIdGenerator;
 
 	/**
 	 * Optional XChat conversation keys, indexed by conversation ID, used to decrypt

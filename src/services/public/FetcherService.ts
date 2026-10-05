@@ -1,13 +1,13 @@
 import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 import { Cookie } from 'cookiejar';
 import { parseHTML } from 'linkedom';
-import { ClientTransaction } from 'x-client-transaction-id';
 
 import { AllowGuestAuthenticationGroup, FetchResourcesGroup, PostResourcesGroup } from '../../collections/Groups';
 import { Requests } from '../../collections/Requests';
 import { ApiErrors } from '../../enums/Api';
 import { LogActions } from '../../enums/Logging';
 import { ResourceType } from '../../enums/Resource';
+import { generateTransactionId } from '../../helper/TransactionId';
 import { FetchArgs } from '../../models/args/FetchArgs';
 import { PostArgs } from '../../models/args/PostArgs';
 import { AuthCredential } from '../../models/auth/AuthCredential';
@@ -104,14 +104,8 @@ export class FetcherService {
 		// Get the X homepage HTML document (using utility function)
 		const document = await this._handleXMigration();
 
-		// Create and initialize ClientTransaction instance
-		const transaction = await ClientTransaction.create(document);
-
-		// Getting the URL path excluding all params
-		const path = new URL(url).pathname.split('?')[0].trim();
-
 		// Generating the transaction ID
-		const tid = await transaction.generateTransactionId(method.toUpperCase(), path);
+		const tid = await (this.config.transactionIdGenerator ?? generateTransactionId)(document, method, url);
 
 		return {
 			/* eslint-disable @typescript-eslint/naming-convention */
