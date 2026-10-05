@@ -614,9 +614,12 @@ So far, the following operations are supported:
 
 - [Creating an Article draft](https://rishikant181.github.io/Rettiwt-API/classes/ArticleService.html#createDraft)
 - [Deleting an Article](https://rishikant181.github.io/Rettiwt-API/classes/ArticleService.html#delete)
+- [Getting a published Article by tweet ID](https://rishikant181.github.io/Rettiwt-API/classes/ArticleService.html#details)
 - [Getting the draft Articles of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/ArticleService.html#drafts)
 - [Getting the list of Articles by lifecycle state](https://rishikant181.github.io/Rettiwt-API/classes/ArticleService.html#list)
 - [Updating an Article title](https://rishikant181.github.io/Rettiwt-API/classes/ArticleService.html#updateTitle)
+
+Published Articles for a user are available through [`UserService.articles`](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#articles).
 
 ### Direct Messages
 
@@ -779,6 +782,8 @@ Help for the CLI can be obtained from the CLI itself:
 - For searching X Jobs, use the command `rettiwt job search <keyword>`
 - For fetching the edit history of a tweet, use the command `rettiwt tweet history <tweet_id>`
 - For fetching suggested users from the Connect tab, use the command `rettiwt user suggestions`
+- For fetching a published Article, use `rettiwt article details <tweet_id>`
+- For fetching the Articles published by a user, use `rettiwt user articles <user_id> [count] [cursor]`
 
 ## API Reference
 

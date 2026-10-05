@@ -1,4 +1,5 @@
 const assert = require('node:assert/strict');
+const { execFileSync } = require('node:child_process');
 const test = require('node:test');
 
 const {
@@ -202,6 +203,7 @@ test('UserRequests.articles builds a cursored UserArticlesTweets request', () =>
 	assert.equal(FetchResourcesGroup.includes(ResourceType.USER_ARTICLES), true);
 	assert.equal(FetchResourcesGroup.includes(ResourceType.ARTICLE_DETAILS), true);
 });
+
 test('UserRequests.articles omits absent optional parameters', () => {
 	const request = UserRequests.articles('1466675689554202624');
 	const variables = JSON.parse(request.params.variables);
@@ -211,4 +213,17 @@ test('UserRequests.articles omits absent optional parameters', () => {
 		includePromotedContent: false,
 		withVoice: true,
 	});
+});
+
+test('published Article commands are exposed by the CLI', () => {
+	const articleHelp = execFileSync(process.execPath, ['dist/cli.js', 'article', '--help'], { encoding: 'utf8' });
+	const userHelp = execFileSync(process.execPath, ['dist/cli.js', 'user', 'articles', '--help'], {
+		encoding: 'utf8',
+	});
+
+	assert.match(articleHelp, /details/);
+	assert.doesNotMatch(articleHelp, /create-draft/);
+	assert.match(userHelp, /Fetch the Articles published/);
+	assert.match(userHelp, /\[count\]/);
+	assert.match(userHelp, /\[cursor\]/);
 });
