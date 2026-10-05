@@ -13,6 +13,7 @@ import { BookmarkFolder } from './BookmarkFolder';
 import { Job } from './Job';
 import { List } from './List';
 import { Notification } from './Notification';
+import { PublishedArticle } from './PublishedArticle';
 import { Tweet } from './Tweet';
 import { User } from './User';
 
@@ -23,8 +24,9 @@ import { User } from './User';
  *
  * @public
  */
-export class CursoredData<T extends Notification | Tweet | User | List | BookmarkFolder | Job | Article>
-	implements ICursoredData<T>
+export class CursoredData<
+	T extends Notification | Tweet | User | List | BookmarkFolder | Job | Article | PublishedArticle,
+> implements ICursoredData<T>
 {
 	public list: T[];
 	public next: string;
@@ -43,6 +45,9 @@ export class CursoredData<T extends Notification | Tweet | User | List | Bookmar
 			const sliceInfo = (response as IArticleEntitiesResponse).data?.user?.result?.articles_article_mixer_slice
 				?.slice_info;
 			this.next = sliceInfo?.next_cursor ?? '';
+		} else if (type == BaseType.PUBLISHED_ARTICLE) {
+			this.list = PublishedArticle.multiple(response) as T[];
+			this.next = findByFilter<IRawCursor>(response, 'cursorType', 'Bottom')[0]?.value ?? '';
 		} else if (type == BaseType.TWEET) {
 			this.list = Tweet.timeline(response) as T[];
 			this.next = findByFilter<IRawCursor>(response, 'cursorType', 'Bottom')[0]?.value ?? '';

@@ -2,32 +2,10 @@ import { ArticleLifecycle } from '../../enums/Article';
 
 import { IUser } from './User';
 
-/**
- * The details of a single Article.
- *
- * @public
- */
-export interface IArticle {
-	/** The details of the user who authored the Article. */
-	author?: IUser;
-
-	/** The raw content state of the Article. */
-	contentState: IArticleContentState;
-
-	/** The creation date of the Article. */
-	createdAt?: string;
-
-	/** The rest id of the Article. */
+/** Fields shared by lifecycle and published Articles. */
+export interface IBaseArticle {
+	/** The identifier selected by the concrete Article model. */
 	id: string;
-
-	/** The lifecycle state of the Article. */
-	lifecycle?: ArticleLifecycle | string;
-
-	/** The media entities attached to the Article. */
-	media?: unknown[];
-
-	/** The last modification date of the Article. */
-	modifiedAt?: string;
 
 	/** The preview text of the Article. */
 	previewText?: string;
@@ -36,72 +14,97 @@ export interface IArticle {
 	title?: string;
 }
 
-/**
- * The Draft.js-like content state of an Article.
- *
- * @public
- */
-export interface IArticleContentState {
-	/** The list of content blocks of the Article. */
-	blocks: IArticleContentBlock[];
+/** A lifecycle Article entity used for drafts and Article management. */
+export interface IArticle extends IBaseArticle {
+	/** The user who authored the lifecycle Article. */
+	author?: IUser;
 
-	/** The entity map of the Article. */
+	/** The lifecycle Article content state. */
+	contentState: IArticleContentState;
+
+	/** The creation date of the lifecycle Article. */
+	createdAt?: string;
+
+	/** The lifecycle state of the Article. */
+	lifecycle?: ArticleLifecycle | string;
+
+	/** Media entities returned by the lifecycle Article endpoint. */
+	media?: unknown[];
+
+	/** The last modification date of the lifecycle Article. */
+	modifiedAt?: string;
+}
+
+/** An Article exposed through a published tweet. */
+export interface IPublishedArticle extends IBaseArticle {
+	/** The published Article content state, when returned by X. */
+	contentState?: IPublishedArticleContentState;
+
+	/** The cover media shown for the published Article. */
+	coverMedia?: IPublishedArticleMedia;
+
+	/** Normalized media attached to the published Article. */
+	media?: IPublishedArticleMedia[];
+
+	/** The first publication date of the Article. */
+	publishedAt?: string;
+
+	/** Plain text derived from the returned content blocks. */
+	text?: string;
+}
+
+/** Normalized media attached to a published Article. */
+export interface IPublishedArticleMedia {
+	height: number;
+	id: string;
+	mediaId: string;
+	mediaKey: string;
+	url: string;
+	width: number;
+}
+
+/** The Draft.js-like content state of a lifecycle Article. */
+export interface IArticleContentState {
+	blocks: IArticleContentBlock[];
 	entityMap: Record<string, unknown> | unknown[];
 }
 
-/**
- * The details of a single Article content block.
- *
- * @public
- */
+/** The content state returned for a published Article. */
+export interface IPublishedArticleContentState {
+	blocks?: IPublishedArticleContentBlock[];
+	entityMap?: Record<string, unknown> | unknown[];
+}
+
+/** A lifecycle Article content block. */
 export interface IArticleContentBlock {
-	/** Additional data for this content block. */
 	data: Record<string, unknown>;
-
-	/** The entity ranges in this content block. */
 	entityRanges: IArticleEntityRange[];
-
-	/** The inline style ranges in this content block. */
 	inlineStyleRanges: IArticleInlineStyleRange[];
-
-	/** The key of this content block. */
 	key: string;
-
-	/** The text in this content block. */
 	text: string;
-
-	/** The type of this content block. */
 	type: string;
 }
 
-/**
- * The details of an Article entity range.
- *
- * @public
- */
+/** A content block returned for a published Article. */
+export interface IPublishedArticleContentBlock {
+	data?: Record<string, unknown>;
+	entityRanges?: IArticleEntityRange[];
+	inlineStyleRanges?: IArticleInlineStyleRange[];
+	key: string;
+	text: string;
+	type: string;
+}
+
+/** The details of an Article entity range. */
 export interface IArticleEntityRange {
-	/** The entity key. */
 	key: number;
-
-	/** The range length. */
 	length: number;
-
-	/** The range offset. */
 	offset: number;
 }
 
-/**
- * The details of an Article inline style range.
- *
- * @public
- */
+/** The details of an Article inline style range. */
 export interface IArticleInlineStyleRange {
-	/** The range length. */
 	length: number;
-
-	/** The range offset. */
 	offset: number;
-
-	/** The inline style name. */
 	style: string;
 }

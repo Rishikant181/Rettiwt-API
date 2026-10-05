@@ -7,6 +7,7 @@ import { IArticleEntitiesResponse } from '../../types/raw/article/Entities';
 import { IArticleUpdateTitleResponse } from '../../types/raw/article/UpdateTitle';
 import { IArticle as IRawArticle } from '../../types/raw/base/Article';
 
+import { BaseArticle } from './BaseArticle';
 import { User } from './User';
 
 /**
@@ -14,25 +15,19 @@ import { User } from './User';
  *
  * @public
  */
-export class Article implements IArticle {
-	/** The raw Article details. */
-	private readonly _raw: IRawArticle;
-
+export class Article extends BaseArticle implements IArticle {
 	public author?: User;
 	public contentState: IArticleContentState;
 	public createdAt?: string;
-	public id: string;
 	public lifecycle?: ArticleLifecycle | string;
 	public media?: unknown[];
 	public modifiedAt?: string;
-	public previewText?: string;
-	public title?: string;
 
 	/**
 	 * @param article - The raw Article details.
 	 */
 	public constructor(article: IRawArticle) {
-		this._raw = { ...article };
+		super(article, article.rest_id);
 		this.id = article.rest_id;
 		this.title = article.title;
 		this.previewText = article.preview_text?.length ? article.preview_text : undefined;
@@ -51,8 +46,8 @@ export class Article implements IArticle {
 	}
 
 	/** The raw Article details. */
-	public get raw(): IRawArticle {
-		return { ...this._raw };
+	public override get raw(): IRawArticle {
+		return { ...this._raw } as IRawArticle;
 	}
 
 	/**
@@ -174,7 +169,7 @@ export class Article implements IArticle {
 	/**
 	 * @returns A serializable JSON representation of `this` object.
 	 */
-	public toJSON(): IArticle {
+	public override toJSON(): IArticle {
 		return {
 			author: this.author?.toJSON(),
 			contentState: this.contentState,

@@ -1,4 +1,4 @@
-import { IArticle } from './Article';
+import { IArticle, IPublishedArticle } from './Article';
 import { IBookmarkFolder } from './BookmarkFolder';
 import { IConversation } from './Conversation';
 import { IDirectMessage } from './DirectMessage';
@@ -25,7 +25,8 @@ export interface ICursoredData<
 		| IList
 		| IBookmarkFolder
 		| IJob
-		| IArticle,
+		| IArticle
+		| IPublishedArticle,
 > {
 	/** The batch of data of the given type. */
 	list: T[];
