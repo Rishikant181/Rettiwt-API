@@ -1,6 +1,5 @@
 import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 import { Cookie } from 'cookiejar';
-import { parseHTML } from 'linkedom';
 
 import { AllowGuestAuthenticationGroup, FetchResourcesGroup, PostResourcesGroup } from '../../collections/Groups';
 import { Requests } from '../../collections/Requests';
@@ -8,6 +7,7 @@ import { ApiErrors } from '../../enums/Api';
 import { LogActions } from '../../enums/Logging';
 import { ResourceType } from '../../enums/Resource';
 import { generateTransactionId } from '../../helper/TransactionId';
+import { resolveXHomepage } from '../../helper/XHomepage';
 import { FetchArgs } from '../../models/args/FetchArgs';
 import { PostArgs } from '../../models/args/PostArgs';
 import { AuthCredential } from '../../models/auth/AuthCredential';
@@ -18,6 +18,7 @@ import { IPostArgs } from '../../types/args/PostArgs';
 import { ITransactionHeader } from '../../types/auth/TransactionHeader';
 import { IErrorHandler } from '../../types/ErrorHandler';
 import { IErrorData } from '../../types/raw/base/Error';
+import { ITransactionIdGeneratorContext, ITransactionIdInput } from '../../types/TransactionId';
 
 import { AuthService } from '../internal/AuthService';
 import { ErrorService } from '../internal/ErrorService';
@@ -101,88 +102,24 @@ export class FetcherService {
 	 * @returns The header containing the transaction ID.
 	 */
 	private async _getTransactionHeader(method: string, url: string): Promise<ITransactionHeader> {
-		// Get the X homepage HTML document (using utility function)
-		const document = await this._handleXMigration();
+		const input: ITransactionIdInput = {
+			method: method.toUpperCase(),
+			path: new URL(url).pathname.split('?')[0].trim(),
+		};
 
-		// Generating the transaction ID
-		const tid = await (this.config.transactionIdGenerator ?? generateTransactionId)(document, method, url);
+		const context: ITransactionIdGeneratorContext = {
+			resolveXHomepage: () => resolveXHomepage(this.config),
+		};
+
+		const tid = this.config.transactionIdGenerator
+			? await this.config.transactionIdGenerator(input, context)
+			: await generateTransactionId((await context.resolveXHomepage()).document, input);
 
 		return {
 			/* eslint-disable @typescript-eslint/naming-convention */
 			'x-client-transaction-id': tid,
 			/* eslint-enable @typescript-eslint/naming-convention */
 		};
-	}
-
-	private async _handleXMigration(): Promise<Document> {
-		// Fetch X.com homepage
-		const homePageResponse = await this.config.instance.get<string>('https://x.com/i/jf/', {
-			headers: this.config.headers,
-		});
-
-		// Parse HTML using linkedom
-		let document = parseHTML(homePageResponse.data).document;
-
-		// Check for migration redirection links
-		const migrationRedirectionRegex = new RegExp(
-			'(http(?:s)?://(?:www\\.)?(twitter|x){1}\\.com(/x)?/migrate([/?])?tok=[a-zA-Z0-9%\\-_]+)+',
-			'i',
-		);
-
-		const metaRefresh = document.querySelector("meta[http-equiv='refresh']");
-		const metaContent = metaRefresh ? metaRefresh.getAttribute('content') || '' : '';
-
-		const migrationRedirectionUrl =
-			migrationRedirectionRegex.exec(metaContent) || migrationRedirectionRegex.exec(homePageResponse.data);
-
-		if (migrationRedirectionUrl) {
-			// Follow redirection URL
-			const redirectResponse = await this.config.instance.get<string>(migrationRedirectionUrl[0]);
-
-			document = parseHTML(redirectResponse.data).document;
-		}
-
-		// Handle migration form if present
-		const migrationForm =
-			document.querySelector("form[name='f']") ||
-			document.querySelector("form[action='https://x.com/x/migrate']");
-
-		if (migrationForm) {
-			const url = migrationForm.getAttribute('action') || 'https://x.com/x/migrate';
-			const method = migrationForm.getAttribute('method') || 'POST';
-
-			// Collect form input fields
-			const requestPayload = new FormData();
-
-			const inputFields = migrationForm.querySelectorAll('input');
-			for (const element of Array.from(inputFields)) {
-				const name = element.getAttribute('name');
-				const value = element.getAttribute('value');
-				if (name && value) {
-					requestPayload.append(name, value);
-				}
-			}
-
-			// Submit form using POST request
-			const formResponse = await this.config.instance.request<string>({
-				method: method,
-				url: url,
-				data: requestPayload,
-				headers: {
-					/* eslint-disable @typescript-eslint/naming-convention */
-
-					'Content-Type': 'multipart/form-data',
-					...this.config.headers,
-
-					/* eslint-enable @typescript-eslint/naming-convention */
-				},
-			});
-
-			document = parseHTML(formResponse.data).document;
-		}
-
-		// Return final DOM document
-		return document;
 	}
 
 	/**
