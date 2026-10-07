@@ -34,6 +34,7 @@ export * from './models/data/Tweet';
 export * from './models/data/User';
 export * from './models/data/UserAbout';
 export * from './models/errors/TwitterError';
+export * from './models/RettiwtConfig';
 export * from './models/XChatSession';
 
 // REQUESTS
@@ -155,6 +156,7 @@ export * from './types/RettiwtConfig';
 export * from './types/TransactionId';
 export * from './types/XChatSession';
 export * from './helper/TransactionId';
+export * from './helper/XHomepage';
 export { IConversationTimelineResponse as IRawConversationTimelineResponse } from './types/raw/dm/Conversation';
 export { IConversationPageResponse as IRawConversationPageResponse } from './types/raw/dm/ConversationPage';
 export { IInboxInitialResponse as IRawInboxInitialResponse } from './types/raw/dm/InboxInitial';

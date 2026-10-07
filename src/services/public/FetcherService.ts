@@ -18,7 +18,7 @@ import { IPostArgs } from '../../types/args/PostArgs';
 import { ITransactionHeader } from '../../types/auth/TransactionHeader';
 import { IErrorHandler } from '../../types/ErrorHandler';
 import { IErrorData } from '../../types/raw/base/Error';
-import { ITransactionIdGeneratorContext, ITransactionIdInput } from '../../types/TransactionId';
+import { ITransactionIdInput } from '../../types/TransactionId';
 
 import { AuthService } from '../internal/AuthService';
 import { ErrorService } from '../internal/ErrorService';
@@ -107,13 +107,9 @@ export class FetcherService {
 			path: new URL(url).pathname.split('?')[0].trim(),
 		};
 
-		const context: ITransactionIdGeneratorContext = {
-			resolveXHomepage: () => resolveXHomepage(this.config),
-		};
-
 		const tid = this.config.transactionIdGenerator
-			? await this.config.transactionIdGenerator(input, context)
-			: await generateTransactionId((await context.resolveXHomepage()).document, input);
+			? await this.config.transactionIdGenerator(input, this.config)
+			: await generateTransactionId((await resolveXHomepage(this.config)).document, input);
 
 		return {
 			/* eslint-disable @typescript-eslint/naming-convention */

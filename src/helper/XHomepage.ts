@@ -10,7 +10,7 @@ import { IXHomepage } from '../types/TransactionId';
  *
  * @returns The final X homepage after completing any migration flow.
  *
- * @internal
+ * @public
  */
 export async function resolveXHomepage(config: RettiwtConfig): Promise<IXHomepage> {
 	// Fetch X.com homepage
