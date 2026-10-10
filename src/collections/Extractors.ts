@@ -1,5 +1,6 @@
 import { BaseType } from '../enums/Data';
 import { Analytics } from '../models/data/Analytics';
+import { Article } from '../models/data/Article';
 import { BookmarkFolder } from '../models/data/BookmarkFolder';
 import { Conversation } from '../models/data/Conversation';
 import { CursoredData } from '../models/data/CursoredData';
@@ -8,10 +9,15 @@ import { Job } from '../models/data/Job';
 import { JobLocation } from '../models/data/JobLocation';
 import { List } from '../models/data/List';
 import { Notification } from '../models/data/Notification';
+import { PublishedArticle } from '../models/data/PublishedArticle';
 import { Space } from '../models/data/Space';
 import { Tweet } from '../models/data/Tweet';
 import { User } from '../models/data/User';
 import { UserAbout } from '../models/data/UserAbout';
+import { IArticleDeleteResponse } from '../types/raw/article/Delete';
+import { IArticleDraftCreateResponse } from '../types/raw/article/DraftCreate';
+import { IArticleEntitiesResponse } from '../types/raw/article/Entities';
+import { IArticleUpdateTitleResponse } from '../types/raw/article/UpdateTitle';
 import { IConversationPageResponse } from '../types/raw/dm/ConversationPage';
 import { IInboxInitialResponse } from '../types/raw/dm/InboxInitial';
 import { IInboxTimelineResponse } from '../types/raw/dm/InboxTimeline';
@@ -50,6 +56,7 @@ import { ITweetUnscheduleResponse } from '../types/raw/tweet/Unschedule';
 import { IUserAboutResponse } from '../types/raw/user/About';
 import { IUserAffiliatesResponse } from '../types/raw/user/Affiliates';
 import { IUserAnalyticsResponse } from '../types/raw/user/Analytics';
+import { IUserArticlesResponse } from '../types/raw/user/Articles';
 import { IUserBookmarkFoldersResponse } from '../types/raw/user/BookmarkFolders';
 import { IUserBookmarkFolderTweetsResponse } from '../types/raw/user/BookmarkFolderTweets';
 import { IUserBookmarksResponse } from '../types/raw/user/Bookmarks';
@@ -83,6 +90,16 @@ import { IUserUnfollowResponse } from '../types/raw/user/Unfollow';
  */
 export const Extractors = {
 	/* eslint-disable @typescript-eslint/naming-convention */
+
+	ARTICLE_DELETE: (response: IArticleDeleteResponse): boolean => response?.data?.articleentity_delete === 'Done',
+	ARTICLE_DETAILS: (response: ITweetRepliesResponse, id: string): PublishedArticle | undefined =>
+		PublishedArticle.single(response, id),
+	ARTICLE_DRAFT_CREATE: (response: IArticleDraftCreateResponse): Article | undefined =>
+		Article.fromDraftCreate(response),
+	ARTICLE_ENTITIES: (response: IArticleEntitiesResponse): CursoredData<Article> =>
+		new CursoredData<Article>(response, BaseType.ARTICLE),
+	ARTICLE_TITLE_UPDATE: (response: IArticleUpdateTitleResponse): Article | undefined =>
+		Article.fromTitleUpdate(response),
 
 	JOB_DETAILS: (response: IJobScreenQueryResponse, id: string): Job | undefined => Job.single(response, id),
 	JOB_LOCATIONS: (response: ILocationSelectorQueryResponse): JobLocation[] => JobLocation.list(response),
@@ -148,6 +165,8 @@ export const Extractors = {
 
 	USER_AFFILIATES: (response: IUserAffiliatesResponse): CursoredData<User> =>
 		new CursoredData<User>(response, BaseType.USER),
+	USER_ARTICLES: (response: IUserArticlesResponse): CursoredData<PublishedArticle> =>
+		new CursoredData<PublishedArticle>(response, BaseType.PUBLISHED_ARTICLE),
 	USER_ANALYTICS: (response: IUserAnalyticsResponse): Analytics =>
 		new Analytics(response.data.viewer_v2.user_results.result),
 	USER_BOOKMARKS: (response: IUserBookmarksResponse): CursoredData<Tweet> =>

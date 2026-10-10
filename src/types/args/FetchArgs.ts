@@ -1,3 +1,4 @@
+import { ArticleLifecycle } from '../../enums/Article';
 import { JobEmploymentType, JobLocationType, JobSeniorityLevel } from '../../enums/Job';
 import { RawAnalyticsGranularity, RawAnalyticsMetric } from '../../enums/raw/Analytics';
 import { TweetRepliesSortType } from '../../enums/Tweet';
@@ -116,6 +117,14 @@ export interface IFetchArgs {
 
 	/** Whether XChat public-key results should include Juicebox recovery tokens. */
 	includeJuiceboxTokens?: boolean;
+
+	/**
+	 * The lifecycle of the Articles to fetch.
+	 *
+	 * @remarks
+	 * - Only works for {@link ResourceType.ARTICLE_ENTITIES}.
+	 */
+	lifecycle?: ArticleLifecycle;
 
 	/**
 	 * Whether to include replay information when fetching space details.

@@ -3,14 +3,17 @@ import { BaseType } from '../../enums/Data';
 import { findByFilter } from '../../helper/JsonUtils';
 
 import { ICursoredData } from '../../types/data/CursoredData';
+import { IArticleEntitiesResponse } from '../../types/raw/article/Entities';
 import { ICursor as IRawCursor } from '../../types/raw/base/Cursor';
 import { IJobSearchQueryScreenJobsQueryResponse } from '../../types/raw/job/JobSearchQueryScreenJobsQuery';
 import { IUserBookmarkFoldersResponse } from '../../types/raw/user/BookmarkFolders';
 
+import { Article } from './Article';
 import { BookmarkFolder } from './BookmarkFolder';
 import { Job } from './Job';
 import { List } from './List';
 import { Notification } from './Notification';
+import { PublishedArticle } from './PublishedArticle';
 import { Tweet } from './Tweet';
 import { User } from './User';
 
@@ -21,8 +24,9 @@ import { User } from './User';
  *
  * @public
  */
-export class CursoredData<T extends Notification | Tweet | User | List | BookmarkFolder | Job>
-	implements ICursoredData<T>
+export class CursoredData<
+	T extends Notification | Tweet | User | List | BookmarkFolder | Job | Article | PublishedArticle,
+> implements ICursoredData<T>
 {
 	public list: T[];
 	public next: string;
@@ -36,7 +40,15 @@ export class CursoredData<T extends Notification | Tweet | User | List | Bookmar
 		this.list = [];
 		this.next = '';
 
-		if (type == BaseType.TWEET) {
+		if (type == BaseType.ARTICLE) {
+			this.list = Article.multiple(response) as T[];
+			const sliceInfo = (response as IArticleEntitiesResponse).data?.user?.result?.articles_article_mixer_slice
+				?.slice_info;
+			this.next = sliceInfo?.next_cursor ?? '';
+		} else if (type == BaseType.PUBLISHED_ARTICLE) {
+			this.list = PublishedArticle.multiple(response) as T[];
+			this.next = findByFilter<IRawCursor>(response, 'cursorType', 'Bottom')[0]?.value ?? '';
+		} else if (type == BaseType.TWEET) {
 			this.list = Tweet.timeline(response) as T[];
 			this.next = findByFilter<IRawCursor>(response, 'cursorType', 'Bottom')[0]?.value ?? '';
 		} else if (type == BaseType.USER) {

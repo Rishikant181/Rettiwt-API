@@ -2,6 +2,7 @@
 
 import { createCommand } from 'commander';
 
+import article from './commands/Article';
 import dm from './commands/DirectMessage';
 import job from './commands/Job';
 import list from './commands/List';
@@ -41,6 +42,7 @@ const RettiwtInstance = new Rettiwt({
 });
 
 // Adding sub-commands
+Program.addCommand(article(RettiwtInstance));
 Program.addCommand(dm(RettiwtInstance));
 Program.addCommand(job(RettiwtInstance));
 Program.addCommand(list(RettiwtInstance));

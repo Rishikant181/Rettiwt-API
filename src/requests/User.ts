@@ -122,6 +122,35 @@ export class UserRequests {
 	}
 
 	/**
+	 * @param id - The id of the user whose published Articles are to be fetched.
+	 * @param count - The number of Articles to fetch.
+	 * @param cursor - The cursor to the batch of Articles to fetch.
+	 */
+	public static articles(id: string, count?: number, cursor?: string): AxiosRequestConfig {
+		const request = UserRequests.tweets(id, count, cursor);
+		const params = request.params as Record<string, string>;
+
+		request.url = 'https://x.com/i/api/graphql/8zBy9h4L90aDL02RsBcCFg/UserArticlesTweets';
+		params.variables = JSON.stringify({
+			userId: id,
+			count: count,
+			includePromotedContent: false,
+			withVoice: true,
+			...(cursor ? { cursor: cursor } : {}),
+		});
+		params.fieldToggles = JSON.stringify({
+			withPayments: false,
+			withAuxiliaryUserLabels: false,
+			withArticleRichContentState: true,
+			withArticlePlainText: true,
+			withGrokAnalyze: false,
+			withDisallowedReplyControls: false,
+		});
+
+		return request;
+	}
+
+	/**
 	 * Fetches tweets from a specific bookmark folder.
 	 *
 	 * @param folderId - The ID of the bookmark folder.

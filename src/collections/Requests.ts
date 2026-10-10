@@ -1,6 +1,7 @@
 import { AxiosRequestConfig } from 'axios';
 
 import { ResourceType } from '../enums/Resource';
+import { ArticleRequests } from '../requests/Article';
 import { DMRequests } from '../requests/DirectMessage';
 import { JobRequests } from '../requests/Job';
 import { ListRequests } from '../requests/List';
@@ -20,6 +21,12 @@ import { TweetRepliesSortTypeMap } from './Tweet';
  */
 export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs | IPostArgs) => AxiosRequestConfig } = {
 	/* eslint-disable @typescript-eslint/naming-convention */
+
+	ARTICLE_DELETE: (args: IPostArgs) => ArticleRequests.delete(args.id!),
+	ARTICLE_DETAILS: (args: IFetchArgs) => ArticleRequests.details(args.id!),
+	ARTICLE_DRAFT_CREATE: (args: IPostArgs) => ArticleRequests.createDraft(args.articleDraft),
+	ARTICLE_ENTITIES: (args: IFetchArgs) => ArticleRequests.entities(args.id!, args.lifecycle, args.count, args.cursor),
+	ARTICLE_TITLE_UPDATE: (args: IPostArgs) => ArticleRequests.updateTitle(args.id!, args.title ?? ''),
 
 	JOB_DETAILS: (args: IFetchArgs) => JobRequests.details(args.id!),
 	JOB_LOCATIONS: (args: IFetchArgs) => JobRequests.locations(args.id!),
@@ -71,6 +78,7 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	TWEET_UNSCHEDULE: (args: IPostArgs) => TweetRequests.unschedule(args.id!),
 
 	USER_AFFILIATES: (args: IFetchArgs) => UserRequests.affiliates(args.id!, args.count, args.cursor),
+	USER_ARTICLES: (args: IFetchArgs) => UserRequests.articles(args.id!, args.count, args.cursor),
 	USER_ANALYTICS: (args: IFetchArgs) =>
 		UserRequests.analytics(
 			args.fromTime!,
