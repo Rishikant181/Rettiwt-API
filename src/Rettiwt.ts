@@ -1,6 +1,7 @@
 import { AxiosProxyConfig } from 'axios';
 
 import { RettiwtConfig } from './models/RettiwtConfig';
+import { CallService } from './services/public/CallService';
 import { DirectMessageService } from './services/public/DirectMessageService';
 import { JobService } from './services/public/JobService';
 import { ListService } from './services/public/ListService';
@@ -46,6 +47,9 @@ export class Rettiwt {
 	/** The configuration for Rettiwt. */
 	private _config: RettiwtConfig;
 
+	/** The instance used to fetch data related to X Calls. */
+	public call: CallService;
+
 	/** The instance used to fetch data related to direct messages. */
 	public dm: DirectMessageService;
 
@@ -71,6 +75,7 @@ export class Rettiwt {
 	 */
 	public constructor(config?: IRettiwtConfig) {
 		this._config = new RettiwtConfig(config);
+		this.call = new CallService(this._config);
 		this.dm = new DirectMessageService(this._config);
 		this.job = new JobService(this._config);
 		this.list = new ListService(this._config);

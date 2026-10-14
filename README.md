@@ -355,6 +355,48 @@ rettiwt.tweet.history('<tweet_id>')
 });
 ```
 
+### 6. Scheduling and managing X Calls
+
+[X Calls](https://x.com/i/calls) lets the logged-in user schedule audio/video calls in a calendar. Times are passed as `Date` objects and returned as ISO strings. Each item returned by `list()` is one occurrence of an event, so a recurring call appears once per occurrence. To act on one occurrence, pass its `occurrence` value as an option.
+
+```ts
+import { CallRecurrenceScope, CallRsvpStatus, Rettiwt } from 'rettiwt-api';
+
+// Creating a new Rettiwt instance using the API_KEY
+const rettiwt = new Rettiwt({ apiKey: API_KEY });
+
+// Finding people who can be invited
+const [guest] = (await rettiwt.call.search('<username>')).filter((user) => user.canInvite);
+
+// Scheduling a weekly 30 minutes call, and emailing the invitation
+const id = await rettiwt.call.schedule({
+	title: 'Weekly sync',
+	startsAt: new Date('2026-10-15T10:00:00Z'),
+	duration: 30,
+	inviteeIds: [guest.id],
+	recurrence: 'FREQ=WEEKLY;BYDAY=TH',
+	emailGuests: true,
+});
+
+// Listing the calendar for the next 7 days (scheduled calls, holidays and linked Google/Outlook events)
+const calls = await rettiwt.call.list();
+
+// Moving only the next occurrence one hour later
+const next = calls.find((call) => call.id === id)!;
+await rettiwt.call.update(
+	id!,
+	{ startsAt: new Date(new Date(next.startsAt).getTime() + 3600000) },
+	{ occurrence: new Date(next.occurrence), scope: CallRecurrenceScope.THIS },
+);
+
+// Responding to an invitation, and being reminded 10 minutes before
+await rettiwt.call.rsvp('<call_id>', CallRsvpStatus.ACCEPTED);
+await rettiwt.call.remind('<call_id>', 10);
+
+// Cancelling the whole series
+await rettiwt.call.cancel(id!, { scope: CallRecurrenceScope.ALL, emailGuests: true });
+```
+
 ## Using a response middleware
 
 `Rettiwt` allows configuring a response middleware, which provides access to the raw `AxiosResponse` object, as received from Twitter. The middleware is non-blocking in nature, and serves purely as an accessorial method.
@@ -597,6 +639,22 @@ For handling and processing of data returned by the functions, it's always advis
 ## Features
 
 So far, the following operations are supported:
+
+### Calls
+
+- [Getting the shared calendar (busy slots) of a user](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#availability)
+- [Getting the external calendars linked to X Calls](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#calendars)
+- [Cancelling a scheduled call](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#cancel)
+- [Creating a call link to use later](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#create)
+- [Customizing the color/visibility of a scheduled call](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#customize)
+- [Getting the calendar of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#list)
+- [Syncing the linked external calendars](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#refreshCalendars)
+- [Setting the reminder of a scheduled call](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#remind)
+- [Responding to a scheduled call invitation](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#rsvp)
+- [Scheduling a new call](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#schedule)
+- [Searching for people to invite to a call](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#search)
+- [Unlinking an external calendar](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#unlinkCalendar)
+- [Updating a scheduled call](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#update)
 
 ### Direct Messages
 

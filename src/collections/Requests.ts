@@ -1,6 +1,7 @@
 import { AxiosRequestConfig } from 'axios';
 
 import { ResourceType } from '../enums/Resource';
+import { CallRequests } from '../requests/Call';
 import { DMRequests } from '../requests/DirectMessage';
 import { JobRequests } from '../requests/Job';
 import { ListRequests } from '../requests/List';
@@ -20,6 +21,20 @@ import { TweetRepliesSortTypeMap } from './Tweet';
  */
 export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs | IPostArgs) => AxiosRequestConfig } = {
 	/* eslint-disable @typescript-eslint/naming-convention */
+
+	CALL_CALENDAR_REFRESH: (args: IFetchArgs) => CallRequests.refreshCalendars(args.fromTime!, args.toTime!),
+	CALL_CALENDAR_UNLINK: (args: IPostArgs) => CallRequests.unlinkCalendar(args.calendarProvider!),
+	CALL_CALENDARS: () => CallRequests.linkedCalendars(),
+	CALL_CANCEL: (args: IPostArgs) => CallRequests.cancel(args.id!, args.callOccurrence),
+	CALL_CREATE: (args: IPostArgs) => CallRequests.create(args.audioOnly),
+	CALL_CUSTOMIZE: (args: IPostArgs) => CallRequests.customize(args.id!, args.callCustomization!, args.callOccurrence),
+	CALL_LIST: (args: IFetchArgs) => CallRequests.list(args.fromTime!, args.toTime!),
+	CALL_REMINDER: (args: IPostArgs) => CallRequests.reminder(args.id!, args.reminder!, args.callOccurrence),
+	CALL_RSVP: (args: IPostArgs) => CallRequests.rsvp(args.id!, args.rsvp!, args.callOccurrence),
+	CALL_SCHEDULE: (args: IPostArgs) => CallRequests.schedule(args.call!),
+	CALL_SEARCH_PEOPLE: (args: IFetchArgs) => CallRequests.searchPeople(args.id!, args.count),
+	CALL_UPDATE: (args: IPostArgs) => CallRequests.update(args.id!, args.callUpdates!, args.callOccurrence),
+	CALL_USER_AVAILABILITY: (args: IFetchArgs) => CallRequests.userAvailability(args.id!, args.fromTime!, args.toTime!),
 
 	JOB_DETAILS: (args: IFetchArgs) => JobRequests.details(args.id!),
 	JOB_LOCATIONS: (args: IFetchArgs) => JobRequests.locations(args.id!),
