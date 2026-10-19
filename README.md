@@ -104,6 +104,7 @@ A new Rettiwt instance can be initialized using the following code snippets:
 
 The Rettiwt class has five members:
 
+- `call` member, for accessing resources related to calls.
 - `dm` member, for accessing resources related to direct messages.
 - `list` member, for accessing resources related to lists.
 - `space` member, for accessing resources related to spaces.
