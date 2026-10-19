@@ -18,6 +18,11 @@ export const AllowGuestAuthenticationGroup = [
  * @internal
  */
 export const FetchResourcesGroup = [
+	ResourceType.CALL_CALENDAR_REFRESH,
+	ResourceType.CALL_CALENDARS,
+	ResourceType.CALL_LIST,
+	ResourceType.CALL_SEARCH_PEOPLE,
+	ResourceType.CALL_USER_AVAILABILITY,
 	ResourceType.JOB_DETAILS,
 	ResourceType.JOB_LOCATIONS,
 	ResourceType.JOB_SEARCH,
@@ -68,6 +73,14 @@ export const FetchResourcesGroup = [
  * @internal
  */
 export const PostResourcesGroup = [
+	ResourceType.CALL_CALENDAR_UNLINK,
+	ResourceType.CALL_CANCEL,
+	ResourceType.CALL_CREATE,
+	ResourceType.CALL_CUSTOMIZE,
+	ResourceType.CALL_REMINDER,
+	ResourceType.CALL_RSVP,
+	ResourceType.CALL_SCHEDULE,
+	ResourceType.CALL_UPDATE,
 	ResourceType.LIST_CREATE,
 	ResourceType.LIST_DELETE,
 	ResourceType.LIST_MEMBER_ADD,

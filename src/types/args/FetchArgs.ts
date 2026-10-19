@@ -102,7 +102,7 @@ export interface IFetchArgs {
 	 *
 	 * @remarks
 	 * - Required for all resources except {@link ResourceType.TWEET_SEARCH} and {@link ResourceType.USER_TIMELINE_RECOMMENDED}.
-	 * - For {@link ResourceType.USER_DETAILS_BY_USERNAME}, {@link ResourceType.USER_ABOUT_BY_USERNAME}, and {@link ResourceType.USER_SEARCH}, can be alphanumeric, while for others, is strictly numeric.
+	 * - For {@link ResourceType.USER_DETAILS_BY_USERNAME}, {@link ResourceType.USER_ABOUT_BY_USERNAME}, {@link ResourceType.USER_SEARCH} and {@link ResourceType.CALL_SEARCH_PEOPLE}, can be alphanumeric, while for others, is strictly numeric.
 	 */
 	id?: string;
 
@@ -153,7 +153,7 @@ export interface IFetchArgs {
 	 * The date to start fetching data from.
 	 *
 	 * @remarks
-	 * - Only works for {@link EResourceType.USER_ANALYTICS}.
+	 * - Only works for {@link EResourceType.USER_ANALYTICS}, {@link ResourceType.CALL_LIST}, {@link ResourceType.CALL_CALENDAR_REFRESH} and {@link ResourceType.CALL_USER_AVAILABILITY}.
 	 */
 	fromTime?: Date;
 
@@ -161,7 +161,7 @@ export interface IFetchArgs {
 	 * The date to end fetching data at.
 	 *
 	 * @remarks
-	 * - Only works for {@link EResourceType.USER_ANALYTICS}.
+	 * - Only works for {@link EResourceType.USER_ANALYTICS}, {@link ResourceType.CALL_LIST}, {@link ResourceType.CALL_CALENDAR_REFRESH} and {@link ResourceType.CALL_USER_AVAILABILITY}.
 	 */
 	toTime?: Date;
 

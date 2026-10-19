@@ -1,6 +1,8 @@
 import { BaseType } from '../enums/Data';
 import { Analytics } from '../models/data/Analytics';
 import { BookmarkFolder } from '../models/data/BookmarkFolder';
+import { CalendarLink } from '../models/data/CalendarLink';
+import { CallUser } from '../models/data/CallUser';
 import { Conversation } from '../models/data/Conversation';
 import { CursoredData } from '../models/data/CursoredData';
 import { Inbox } from '../models/data/Inbox';
@@ -8,10 +10,24 @@ import { Job } from '../models/data/Job';
 import { JobLocation } from '../models/data/JobLocation';
 import { List } from '../models/data/List';
 import { Notification } from '../models/data/Notification';
+import { ScheduledCall } from '../models/data/ScheduledCall';
 import { Space } from '../models/data/Space';
 import { Tweet } from '../models/data/Tweet';
 import { User } from '../models/data/User';
 import { UserAbout } from '../models/data/UserAbout';
+import { IExternalCalendarLinksListResponse } from '../types/raw/call/ExternalCalendarLinksList';
+import { IExternalCalendarLinksUnlinkResponse } from '../types/raw/call/ExternalCalendarLinksUnlink';
+import { IScheduledCallsApiCancelResponse } from '../types/raw/call/ScheduledCallsApiCancel';
+import { IScheduledCallsApiListResponse } from '../types/raw/call/ScheduledCallsApiList';
+import { IScheduledCallsApiListUserResponse } from '../types/raw/call/ScheduledCallsApiListUser';
+import { IScheduledCallsApiRefreshExternalResponse } from '../types/raw/call/ScheduledCallsApiRefreshExternal';
+import { IScheduledCallsApiRsvpResponse } from '../types/raw/call/ScheduledCallsApiRsvp';
+import { IScheduledCallsApiScheduleResponse } from '../types/raw/call/ScheduledCallsApiSchedule';
+import { IScheduledCallsApiSearchPeopleResponse } from '../types/raw/call/ScheduledCallsApiSearchPeople';
+import { IScheduledCallsApiSetEventMetadataResponse } from '../types/raw/call/ScheduledCallsApiSetEventMetadata';
+import { IScheduledCallsApiSetEventReminderResponse } from '../types/raw/call/ScheduledCallsApiSetEventReminder';
+import { IScheduledCallsApiUpdateResponse } from '../types/raw/call/ScheduledCallsApiUpdate';
+import { IXCallsStartCallResponse } from '../types/raw/call/XCallsStartCall';
 import { IConversationPageResponse } from '../types/raw/dm/ConversationPage';
 import { IInboxInitialResponse } from '../types/raw/dm/InboxInitial';
 import { IInboxTimelineResponse } from '../types/raw/dm/InboxTimeline';
@@ -83,6 +99,33 @@ import { IUserUnfollowResponse } from '../types/raw/user/Unfollow';
  */
 export const Extractors = {
 	/* eslint-disable @typescript-eslint/naming-convention */
+
+	CALL_CALENDAR_REFRESH: (response: IScheduledCallsApiRefreshExternalResponse): ScheduledCall[] =>
+		ScheduledCall.multiple([{ rest_id: '', occurrences: response.data?.calendar_refresh_external ?? [] }]),
+	CALL_CALENDAR_UNLINK: (response: IExternalCalendarLinksUnlinkResponse): boolean =>
+		response?.data?.calendar_unlink_external?.success === true,
+	CALL_CALENDARS: (response: IExternalCalendarLinksListResponse): CalendarLink[] => CalendarLink.multiple(response),
+	CALL_CANCEL: (response: IScheduledCallsApiCancelResponse): boolean =>
+		response?.data?.calendar_cancel_event?.success === true,
+	CALL_CREATE: (response: IXCallsStartCallResponse): string | undefined =>
+		response?.data?.xchat_start_call?.call?.call_id ?? undefined,
+	CALL_CUSTOMIZE: (response: IScheduledCallsApiSetEventMetadataResponse): boolean =>
+		response?.data?.calendar_set_event_metadata?.event?.rest_id ? true : false,
+	CALL_LIST: (response: IScheduledCallsApiListResponse): ScheduledCall[] =>
+		ScheduledCall.multiple(response.data?.calendar_list_events?.events ?? []),
+	CALL_REMINDER: (response: IScheduledCallsApiSetEventReminderResponse): boolean =>
+		response?.data?.calendar_set_event_reminder?.event?.rest_id ? true : false,
+	CALL_RSVP: (response: IScheduledCallsApiRsvpResponse): boolean =>
+		response?.data?.calendar_rsvp_event?.event?.rest_id ? true : false,
+	CALL_SCHEDULE: (response: IScheduledCallsApiScheduleResponse): string | undefined =>
+		response?.data?.calendar_schedule_event?.event?.rest_id ?? undefined,
+	CALL_SEARCH_PEOPLE: (response: IScheduledCallsApiSearchPeopleResponse): CallUser[] => CallUser.multiple(response),
+	CALL_UPDATE: (response: IScheduledCallsApiUpdateResponse): boolean =>
+		response?.data?.calendar_update_event?.event?.rest_id ? true : false,
+	CALL_USER_AVAILABILITY: (response: IScheduledCallsApiListUserResponse): ScheduledCall[] | undefined =>
+		response.data?.user_result_by_rest_id?.result?.calendar_events
+			? ScheduledCall.multiple(response.data.user_result_by_rest_id.result.calendar_events.events ?? [])
+			: undefined,
 
 	JOB_DETAILS: (response: IJobScreenQueryResponse, id: string): Job | undefined => Job.single(response, id),
 	JOB_LOCATIONS: (response: ILocationSelectorQueryResponse): JobLocation[] => JobLocation.list(response),
