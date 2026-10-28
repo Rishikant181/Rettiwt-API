@@ -335,6 +335,35 @@ await rettiwt.call.remind('<call_id>', 10);
 await rettiwt.call.cancel(id!, { scope: CallRecurrenceScope.ALL, emailGuests: true });
 ```
 
+### 7. Uploading media and setting its metadata
+
+After uploading a media file, its alt text, sensitive content warnings and other options can be set before it is attached to a tweet. Only the options that are specified are sent; omitted options keep their default values.
+
+```ts
+import { Rettiwt, SensitiveWarning } from 'rettiwt-api';
+
+// Creating a new Rettiwt instance using the API_KEY
+const rettiwt = new Rettiwt({ apiKey: API_KEY });
+
+// Uploading a media file
+const id = await rettiwt.tweet.upload('mountains.jpg');
+
+// Setting the metadata of the uploaded media
+await rettiwt.tweet.setMediaMetadata({
+	id: id,
+	altText: 'A snowy mountain range at sunrise',
+	sensitiveWarning: [SensitiveWarning.OTHER],
+	allowDownload: false,
+	blockGrokEdit: true,
+	aiGenerated: false,
+});
+
+// Posting a tweet with the media
+await rettiwt.tweet.post({ text: 'Sunrise', media: [{ id: id }] });
+```
+
+The metadata must be set before the media is posted in a tweet, and within the 24 hours for which the uploaded media is retained.
+
 ## Using a response middleware
 
 `Rettiwt` allows configuring a response middleware, which provides access to the raw `AxiosResponse` object, as received from Twitter. The middleware is non-blocking in nature, and serves purely as an accessorial method.
@@ -703,6 +732,7 @@ So far, the following operations are supported:
 - [Unretweeting a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unretweet)
 - [Unscheduling a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unschedule)
 - [Uploading a media file for a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#upload)
+- [Setting the metadata (alt text, sensitive content warnings, etc.) of an uploaded media file](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#setMediaMetadata)
 
 ### Users
 
@@ -757,6 +787,7 @@ Help for the CLI can be obtained from the CLI itself:
 - For searching X Jobs, use the command `rettiwt job search <keyword>`
 - For fetching the edit history of a tweet, use the command `rettiwt tweet history <tweet_id>`
 - For fetching suggested users from the Connect tab, use the command `rettiwt user suggestions`
+- For setting the metadata of an uploaded media file, use the command `rettiwt tweet set-media-metadata <media_id>` (see `rettiwt help tweet set-media-metadata` for the available options)
 
 ## API Reference
 

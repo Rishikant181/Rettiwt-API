@@ -1,5 +1,6 @@
 import { Command, createCommand } from 'commander';
 
+import { SensitiveWarning } from '../enums/SensitiveWarning';
 import { TweetRepliesSortType } from '../enums/Tweet';
 import { output } from '../helper/CliUtils';
 import { TweetFilter } from '../models/args/FetchArgs';
@@ -354,6 +355,51 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 				output(error);
 			}
 		});
+
+	// Set media metadata
+	tweet
+		.command('set-media-metadata')
+		.description('Set the metadata of an uploaded media item')
+		.argument('<id>', 'The id of the uploaded media item')
+		.option('-a, --alt-text [string]', 'The alternative text (description) of the media item')
+		.option(
+			'-s, --sensitive [string]',
+			`Comma-separated list of sensitive content warnings (${Object.values(SensitiveWarning).join(', ')})`,
+		)
+		.option('--allow-download [boolean]', 'Whether other users are allowed to download the media item (true/false)')
+		.option('--block-grok-edit [boolean]', 'Whether to block Grok from editing the media item (true/false)')
+		.option('--ai-generated [boolean]', 'Whether to mark the media item as AI-generated (true/false)')
+		.action(
+			async (
+				id: string,
+				options?: {
+					altText?: string;
+					sensitive?: string;
+					allowDownload?: string;
+					blockGrokEdit?: string;
+					aiGenerated?: string;
+				},
+			) => {
+				try {
+					const toBoolean = (value?: string): boolean | undefined =>
+						value === undefined ? undefined : value.toLowerCase() === 'true';
+
+					await rettiwt.tweet.setMediaMetadata({
+						id: id,
+						altText: options?.altText,
+						sensitiveWarning: options?.sensitive
+							? (options.sensitive.split(',').map((item) => item.trim()) as SensitiveWarning[])
+							: undefined,
+						allowDownload: toBoolean(options?.allowDownload),
+						blockGrokEdit: toBoolean(options?.blockGrokEdit),
+						aiGenerated: toBoolean(options?.aiGenerated),
+					});
+					output(true);
+				} catch (error) {
+					output(error);
+				}
+			},
+		);
 
 	return tweet;
 }

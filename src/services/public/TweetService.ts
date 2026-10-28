@@ -9,7 +9,7 @@ import { User } from '../../models/data/User';
 
 import { RettiwtConfig } from '../../models/RettiwtConfig';
 import { ITweetFilter } from '../../types/args/FetchArgs';
-import { INewTweet } from '../../types/args/PostArgs';
+import { IMediaMetadataArgs, INewTweet } from '../../types/args/PostArgs';
 import { IMediaInitializeUploadResponse } from '../../types/raw/media/InitalizeUpload';
 
 import { ITweetBookmarkResponse } from '../../types/raw/tweet/Bookmark';
@@ -620,6 +620,46 @@ export class TweetService extends FetcherService {
 		data.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
 
 		return data;
+	}
+
+	/**
+	 * Set the metadata (alt text, sensitive content warnings, etc.) of an uploaded media item.
+	 *
+	 * @param args - The id of the uploaded media item, and the metadata to set for it.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt, SensitiveWarning } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Uploading a file called mountains.jpg and setting its metadata
+	 * rettiwt.tweet.upload('mountains.jpg')
+	 * .then(id => rettiwt.tweet.setMediaMetadata({
+	 * 	id: id,
+	 * 	altText: 'A snowy mountain range at sunrise',
+	 * 	sensitiveWarning: [SensitiveWarning.OTHER],
+	 * 	allowDownload: false,
+	 * 	blockGrokEdit: true,
+	 * }))
+	 * .then(() => {
+	 * 	console.log('Metadata set');
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @remarks
+	 *
+	 * - The media must first be uploaded using {@link TweetService.upload}, and the metadata must be set
+	 * before the media is included in a posted tweet.
+	 * - Only the specified options are sent. Omitted options keep their default values.
+	 */
+	public async setMediaMetadata(args: IMediaMetadataArgs): Promise<void> {
+		await this.request<unknown>(ResourceType.MEDIA_METADATA_CREATE, { mediaMetadata: args });
 	}
 
 	/**
