@@ -1,3 +1,5 @@
+import { isAxiosError } from 'axios';
+
 import { Extractors } from '../../collections/Extractors';
 import { RawAnalyticsGranularity, RawAnalyticsMetric } from '../../enums/raw/Analytics';
 import { ResourceType } from '../../enums/Resource';
@@ -8,6 +10,7 @@ import { CursoredData } from '../../models/data/CursoredData';
 import { List } from '../../models/data/List';
 import { Notification } from '../../models/data/Notification';
 import { Tweet } from '../../models/data/Tweet';
+import { UnderTheHoodReport } from '../../models/data/UnderTheHoodReport';
 import { User } from '../../models/data/User';
 import { UserAbout } from '../../models/data/UserAbout';
 import { RettiwtConfig } from '../../models/RettiwtConfig';
@@ -39,6 +42,7 @@ import { IUserSubscriptionsResponse } from '../../types/raw/user/Subscriptions';
 import { IUserSuggestionsResponse } from '../../types/raw/user/Suggestions';
 import { IUserTweetsResponse } from '../../types/raw/user/Tweets';
 import { IUserTweetsAndRepliesResponse } from '../../types/raw/user/TweetsAndReplies';
+import { IUserUnderTheHoodDownloadResponse } from '../../types/raw/user/UnderTheHoodDownload';
 import { IUserUnfollowResponse } from '../../types/raw/user/Unfollow';
 
 import { AuthService } from '../internal/AuthService';
@@ -1282,6 +1286,52 @@ export class UserService extends FetcherService {
 		const data = Extractors[resource](response.data);
 
 		return data;
+	}
+
+	/**
+	 * Get the "Under the hood" transparency report of the logged-in user.
+	 *
+	 * The report covers the latest complete month and lists the labels that could limit post visibility and were applied to the user's posts or account during that period.
+	 *
+	 * @returns The report of the logged-in user, or `undefined` if no report is available.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the "Under the hood" report of the logged-in user
+	 * rettiwt.user.underTheHood()
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async underTheHood(): Promise<UnderTheHoodReport | undefined> {
+		const resource = ResourceType.USER_UNDER_THE_HOOD;
+
+		try {
+			// Fetching the raw report
+			const response = await this.request<IUserUnderTheHoodDownloadResponse>(resource, {});
+
+			// Deserializing response
+			const data = Extractors[resource](response.data);
+
+			return data;
+		} catch (error) {
+			// X responds with 404 when no report is available for the user
+			if (isAxiosError(error) && error.status === 404) {
+				return undefined;
+			}
+
+			throw error;
+		}
 	}
 
 	/**

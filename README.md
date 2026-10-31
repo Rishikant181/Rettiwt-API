@@ -335,6 +335,27 @@ await rettiwt.call.remind('<call_id>', 10);
 await rettiwt.call.cancel(id!, { scope: CallRecurrenceScope.ALL, emailGuests: true });
 ```
 
+### 7. Getting the "Under the hood" report of the logged-in user
+
+The ["Under the hood" report](https://x.com/i/jf/under_the_hood/report) lists the labels that could limit post visibility and were applied to the logged-in user's posts or account during the latest complete month. `underTheHood()` returns `undefined` when X has no report available for the account.
+
+```ts
+import { Rettiwt } from 'rettiwt-api';
+
+// Creating a new Rettiwt instance using the API_KEY
+const rettiwt = new Rettiwt({ apiKey: API_KEY });
+
+// Fetching the report of the logged-in user
+rettiwt.user.underTheHood()
+.then(report => {
+	// Printing each post label, e.g. '<label>: 3 of 40 posts (7.50%)'
+	report?.postLabels.forEach(label => console.log(`${label.label}: ${label.posts} of ${label.totalPosts} posts (${label.percentage})`));
+})
+.catch(err => {
+	...
+});
+```
+
 ## Using a response middleware
 
 `Rettiwt` allows configuring a response middleware, which provides access to the raw `AxiosResponse` object, as received from Twitter. The middleware is non-blocking in nature, and serves purely as an accessorial method.
@@ -728,6 +749,7 @@ So far, the following operations are supported:
 - [Searching for a username](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#search)
 - [Getting suggested users from the Connect tab](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#suggestions)
 - [Getting the tweet timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#timeline)
+- [Getting the "Under the hood" visibility report of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#underTheHood)
 - [Unfollowing a given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#unfollow)
 - [Updating the profile of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#updateProfile)
 - [Updating the profile image of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#updateProfileImage)
@@ -757,6 +779,7 @@ Help for the CLI can be obtained from the CLI itself:
 - For searching X Jobs, use the command `rettiwt job search <keyword>`
 - For fetching the edit history of a tweet, use the command `rettiwt tweet history <tweet_id>`
 - For fetching suggested users from the Connect tab, use the command `rettiwt user suggestions`
+- For fetching the "Under the hood" visibility report of the logged-in user, use the command `rettiwt user under-the-hood`
 
 ## API Reference
 

@@ -349,6 +349,18 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// Under the hood
+	user.command('under-the-hood')
+		.description('Fetch the "Under the hood" transparency report of the logged-in user')
+		.action(async () => {
+			try {
+				const report = await rettiwt.user.underTheHood();
+				output(report);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Unfollow
 	user.command('unfollow')
 		.description('Unfollow a user')

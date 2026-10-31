@@ -65,6 +65,7 @@ export const FetchResourcesGroup = [
 	ResourceType.USER_SUBSCRIPTIONS,
 	ResourceType.USER_TIMELINE,
 	ResourceType.USER_TIMELINE_AND_REPLIES,
+	ResourceType.USER_UNDER_THE_HOOD,
 ];
 
 /**
