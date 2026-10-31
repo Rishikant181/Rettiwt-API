@@ -349,8 +349,7 @@ const rettiwt = new Rettiwt({ apiKey: API_KEY });
 const id = await rettiwt.tweet.upload('mountains.jpg');
 
 // Setting the metadata of the uploaded media
-await rettiwt.tweet.setMediaMetadata({
-	id: id,
+await rettiwt.tweet.setMediaMetadata(id, {
 	altText: 'A snowy mountain range at sunrise',
 	sensitiveWarning: [SensitiveWarning.OTHER],
 	allowDownload: false,
