@@ -384,8 +384,7 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 					const toBoolean = (value?: string): boolean | undefined =>
 						value === undefined ? undefined : value.toLowerCase() === 'true';
 
-					await rettiwt.tweet.setMediaMetadata({
-						id: id,
+					await rettiwt.tweet.setMediaMetadata(id, {
 						altText: options?.altText,
 						sensitiveWarning: options?.sensitive
 							? (options.sensitive.split(',').map((item) => item.trim()) as SensitiveWarning[])
