@@ -118,6 +118,7 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	USER_SUBSCRIPTIONS: (args: IFetchArgs) => UserRequests.subscriptions(args.id!, args.count, args.cursor),
 	USER_TIMELINE: (args: IFetchArgs) => UserRequests.tweets(args.id!, args.count, args.cursor),
 	USER_TIMELINE_AND_REPLIES: (args: IFetchArgs) => UserRequests.tweetsAndReplies(args.id!, args.count, args.cursor),
+	USER_UNDER_THE_HOOD: () => UserRequests.underTheHood(),
 	USER_UNFOLLOW: (args: IPostArgs) => UserRequests.unfollow(args.id!),
 	USER_PROFILE_UPDATE: (args: IPostArgs) => UserRequests.updateProfile(args.profileOptions!),
 	USER_PROFILE_IMAGE_UPDATE: (args: IPostArgs) => UserRequests.updateProfileImage(args.profileImage!),

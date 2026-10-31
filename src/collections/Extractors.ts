@@ -13,6 +13,7 @@ import { Notification } from '../models/data/Notification';
 import { ScheduledCall } from '../models/data/ScheduledCall';
 import { Space } from '../models/data/Space';
 import { Tweet } from '../models/data/Tweet';
+import { UnderTheHoodReport } from '../models/data/UnderTheHoodReport';
 import { User } from '../models/data/User';
 import { UserAbout } from '../models/data/UserAbout';
 import { IExternalCalendarLinksListResponse } from '../types/raw/call/ExternalCalendarLinksList';
@@ -90,6 +91,7 @@ import { IUserSubscriptionsResponse } from '../types/raw/user/Subscriptions';
 import { IUserSuggestionsResponse } from '../types/raw/user/Suggestions';
 import { IUserTweetsResponse } from '../types/raw/user/Tweets';
 import { IUserTweetsAndRepliesResponse } from '../types/raw/user/TweetsAndReplies';
+import { IUserUnderTheHoodDownloadResponse } from '../types/raw/user/UnderTheHoodDownload';
 import { IUserUnfollowResponse } from '../types/raw/user/Unfollow';
 
 /**
@@ -233,6 +235,8 @@ export const Extractors = {
 		new CursoredData<Tweet>(response, BaseType.TWEET),
 	USER_TIMELINE_AND_REPLIES: (response: IUserTweetsAndRepliesResponse): CursoredData<Tweet> =>
 		new CursoredData<Tweet>(response, BaseType.TWEET),
+	USER_UNDER_THE_HOOD: (response: IUserUnderTheHoodDownloadResponse): UnderTheHoodReport | undefined =>
+		UnderTheHoodReport.single(response),
 	USER_UNFOLLOW: (response: IUserUnfollowResponse): boolean => (response?.id ? true : false),
 	USER_PROFILE_UPDATE: (response: IUserProfileUpdateResponse): boolean => (response?.name ? true : false),
 	USER_PROFILE_IMAGE_UPDATE: (response: IUserProfileUpdateResponse): boolean =>

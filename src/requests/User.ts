@@ -1313,6 +1313,13 @@ export class UserRequests {
 		};
 	}
 
+	public static underTheHood(): AxiosRequestConfig {
+		return {
+			method: 'get',
+			url: 'https://x.com/i/jfapi/under_the_hood/download',
+		};
+	}
+
 	/**
 	 * @param id - The id of the user to be unfollowed.
 	 */
