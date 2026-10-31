@@ -152,6 +152,7 @@ export const Extractors = {
 	MEDIA_UPLOAD_FINALIZE: (): void => undefined,
 	MEDIA_UPLOAD_INITIALIZE: (response: IMediaInitializeUploadResponse): string =>
 		response.media_id_string ?? undefined,
+	MEDIA_METADATA_CREATE: (): void => undefined,
 
 	DM_CONVERSATION: (response: IConversationPageResponse, conversationId?: string): Conversation | undefined =>
 		Conversation.fromConversationPage(response, conversationId),

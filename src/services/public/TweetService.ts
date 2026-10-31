@@ -637,8 +637,7 @@ export class TweetService extends FetcherService {
 	 *
 	 * // Uploading a file called mountains.jpg and setting its metadata
 	 * rettiwt.tweet.upload('mountains.jpg')
-	 * .then(id => rettiwt.tweet.setMediaMetadata({
-	 * 	id: id,
+	 * .then(id => rettiwt.tweet.setMediaMetadata(id, {
 	 * 	altText: 'A snowy mountain range at sunrise',
 	 * 	sensitiveWarning: [SensitiveWarning.OTHER],
 	 * 	allowDownload: false,
@@ -658,8 +657,10 @@ export class TweetService extends FetcherService {
 	 * before the media is included in a posted tweet.
 	 * - Only the specified options are sent. Omitted options keep their default values.
 	 */
-	public async setMediaMetadata(args: IMediaMetadataArgs): Promise<void> {
-		await this.request<unknown>(ResourceType.MEDIA_METADATA_CREATE, { mediaMetadata: args });
+	public async setMediaMetadata(id: string, args: Omit<IMediaMetadataArgs, 'id'>): Promise<boolean> {
+		await this.request<void>(ResourceType.MEDIA_METADATA_CREATE, { mediaMetadata: { ...args, id } });
+		
+		return true;
 	}
 
 	/**
