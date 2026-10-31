@@ -47,15 +47,15 @@ export class MediaRequests {
 				...(args.altText !== undefined && { alt_text: { text: args.altText } }),
 
 				...(args.sensitiveWarning !== undefined && { sensitive_media_warning: args.sensitiveWarning }),
-				
+
 				...(args.allowDownload !== undefined && {
 					allow_download_status: { allow_download: String(args.allowDownload) },
 				}),
-				
+
 				...(args.blockGrokEdit !== undefined && {
 					grok_actions: { block_grok_edit: String(args.blockGrokEdit) },
 				}),
-				
+
 				...(args.aiGenerated !== undefined && {
 					self_reported_ai_generated: { self_reported_ai_generated: String(args.aiGenerated) },
 				}),

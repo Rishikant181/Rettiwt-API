@@ -659,7 +659,7 @@ export class TweetService extends FetcherService {
 	 */
 	public async setMediaMetadata(id: string, args: Omit<IMediaMetadataArgs, 'id'>): Promise<boolean> {
 		await this.request<void>(ResourceType.MEDIA_METADATA_CREATE, { mediaMetadata: { ...args, id } });
-		
+
 		return true;
 	}
 
