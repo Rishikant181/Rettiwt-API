@@ -1,10 +1,12 @@
 import { CalendarProvider, CallRsvpStatus } from '../../enums/Call';
+import { SensitiveWarning } from '../../enums/SensitiveWarning';
 import {
 	ICallCustomization,
 	ICallOccurrenceOptions,
 	ICallUpdates,
 	IChangePasswordArgs,
 	IListUpdates,
+	IMediaMetadataArgs,
 	INewCall,
 	INewList,
 	INewTweet,
@@ -32,6 +34,7 @@ export class PostArgs implements IPostArgs {
 	public id?: string;
 	public list?: NewList;
 	public listUpdates?: ListUpdates;
+	public mediaMetadata?: MediaMetadataArgs;
 	public profileBanner?: string;
 	public profileImage?: string;
 	public profileOptions?: ProfileUpdateOptions;
@@ -51,6 +54,7 @@ export class PostArgs implements IPostArgs {
 		this.list = args.list ? new NewList(args.list) : undefined;
 		this.tweet = args.tweet ? new NewTweet(args.tweet) : undefined;
 		this.upload = args.upload ? new UploadArgs(args.upload) : undefined;
+		this.mediaMetadata = args.mediaMetadata ? new MediaMetadataArgs(args.mediaMetadata) : undefined;
 		this.userId = args.userId;
 		this.username = PostArgs._validateNonEmptyString(args.username, 'Username');
 		this.conversationId = args.conversationId;
@@ -213,6 +217,55 @@ export class UploadArgs implements IUploadArgs {
 		this.size = args.size;
 		this.media = args.media;
 		this.id = args.id;
+	}
+}
+
+/**
+ * Options specifying the metadata to set for an uploaded media item.
+ *
+ * @public
+ */
+export class MediaMetadataArgs implements IMediaMetadataArgs {
+	public aiGenerated?: boolean;
+	public allowDownload?: boolean;
+	public altText?: string;
+	public blockGrokEdit?: boolean;
+	public id: string;
+	public sensitiveWarning?: SensitiveWarning[];
+
+	/**
+	 * @param args - The metadata to set for the media item.
+	 */
+	public constructor(args: IMediaMetadataArgs) {
+		if (!args.id || args.id.trim().length === 0) {
+			throw new Error('Media id cannot be empty');
+		}
+
+		if (args.sensitiveWarning) {
+			const valid = Object.values(SensitiveWarning);
+			for (const warning of args.sensitiveWarning) {
+				if (!valid.includes(warning)) {
+					throw new Error(`Invalid sensitive warning '${warning}'. Must be one of: ${valid.join(', ')}`);
+				}
+			}
+		}
+
+		if (
+			args.altText === undefined &&
+			args.sensitiveWarning === undefined &&
+			args.allowDownload === undefined &&
+			args.blockGrokEdit === undefined &&
+			args.aiGenerated === undefined
+		) {
+			throw new Error('At least one media metadata option must be specified');
+		}
+
+		this.id = args.id;
+		this.altText = args.altText;
+		this.sensitiveWarning = args.sensitiveWarning;
+		this.allowDownload = args.allowDownload;
+		this.blockGrokEdit = args.blockGrokEdit;
+		this.aiGenerated = args.aiGenerated;
 	}
 }
 

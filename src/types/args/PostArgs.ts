@@ -1,4 +1,5 @@
 import { CalendarColor, CalendarProvider, CallRecurrenceScope, CallRsvpStatus } from '../../enums/Call';
+import { SensitiveWarning } from '../../enums/SensitiveWarning';
 
 import { IProfileUpdateOptions } from './ProfileArgs';
 
@@ -80,6 +81,14 @@ export interface IPostArgs {
 	 * - {@link ResourceType.MEDIA_UPLOAD_INITIALIZE}
 	 */
 	upload?: IUploadArgs;
+
+	/**
+	 * The metadata to set for an already uploaded media item.
+	 *
+	 * @remarks
+	 * Required only when setting media metadata using {@link ResourceType.MEDIA_METADATA_CREATE}.
+	 */
+	mediaMetadata?: IMediaMetadataArgs;
 
 	/**
 	 * The id of the target user.
@@ -309,6 +318,34 @@ export interface IUploadArgs {
 	 * @remarks The size must be \<= 5242880 bytes.
 	 */
 	size?: number;
+}
+
+/**
+ * Options specifying the metadata to set for an uploaded media item.
+ *
+ * @remarks
+ * Only the options that are specified are sent. Omitted options keep their default values.
+ *
+ * @public
+ */
+export interface IMediaMetadataArgs {
+	/** The id of the uploaded media item. */
+	id: string;
+
+	/** The alternative text (description) of the media item. */
+	altText?: string;
+
+	/** The sensitive content warnings to attach to the media item. */
+	sensitiveWarning?: SensitiveWarning[];
+
+	/** Whether other users are allowed to download the media item. */
+	allowDownload?: boolean;
+
+	/** Whether to block Grok from editing the media item. */
+	blockGrokEdit?: boolean;
+
+	/** Whether to mark the media item as AI-generated. */
+	aiGenerated?: boolean;
 }
 
 /**

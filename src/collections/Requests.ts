@@ -54,6 +54,7 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	MEDIA_UPLOAD_APPEND: (args: IPostArgs) => MediaRequests.appendUpload(args.upload!.id!, args.upload!.media!),
 	MEDIA_UPLOAD_FINALIZE: (args: IPostArgs) => MediaRequests.finalizeUpload(args.upload!.id!),
 	MEDIA_UPLOAD_INITIALIZE: (args: IPostArgs) => MediaRequests.initializeUpload(args.upload!.size!),
+	MEDIA_METADATA_CREATE: (args: IPostArgs) => MediaRequests.createMetadata(args.mediaMetadata!),
 
 	DM_CONVERSATION: (args: IFetchArgs) => DMRequests.conversation(args.conversationId!, args.maxId),
 	DM_XCHAT_PUBLIC_KEYS: (args: IFetchArgs) => DMRequests.xChatPublicKeys(args.ids!, args.includeJuiceboxTokens),
