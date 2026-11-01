@@ -9,6 +9,7 @@ import { SocksProxyAgent } from 'socks-proxy-agent';
 import { AuthService } from '../services/internal/AuthService';
 import { IErrorHandler } from '../types/ErrorHandler';
 import { IRettiwtConfig } from '../types/RettiwtConfig';
+import { TransactionIdGenerator } from '../types/TransactionId';
 import { IXChatDecryptor, XChatConversationKey, XChatConversationKeyProvider } from '../types/XChatSession';
 
 /**
@@ -53,6 +54,7 @@ export class RettiwtConfig implements IRettiwtConfig {
 	public readonly maxRetries: number;
 	public readonly responseMiddleware?: (response: AxiosResponse) => void | Promise<void>;
 	public readonly timeout?: number;
+	public readonly transactionIdGenerator?: TransactionIdGenerator;
 	public readonly xChatConversationKeyProvider?: XChatConversationKeyProvider;
 	public readonly xChatConversationKeys?: Record<string, XChatConversationKey>;
 	public readonly xChatSession?: IXChatDecryptor;
@@ -71,6 +73,7 @@ export class RettiwtConfig implements IRettiwtConfig {
 		this.responseMiddleware = config?.responseMiddleware;
 		this.logging = config?.logging;
 		this.timeout = config?.timeout;
+		this.transactionIdGenerator = config?.transactionIdGenerator;
 		this.xChatConversationKeyProvider = config?.xChatConversationKeyProvider;
 		this.xChatConversationKeys = config?.xChatConversationKeys;
 		this.xChatSession = config?.xChatSession;
