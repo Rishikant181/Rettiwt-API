@@ -16,6 +16,7 @@ export * from './enums/Media';
 export * from './enums/Notification';
 export * from './enums/Resource';
 export * from './enums/Tweet';
+export * from './enums/SensitiveWarning';
 
 // MODELS
 export * from './models/args/FetchArgs';

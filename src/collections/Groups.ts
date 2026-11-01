@@ -91,6 +91,7 @@ export const PostResourcesGroup = [
 	ResourceType.MEDIA_UPLOAD_APPEND,
 	ResourceType.MEDIA_UPLOAD_FINALIZE,
 	ResourceType.MEDIA_UPLOAD_INITIALIZE,
+	ResourceType.MEDIA_METADATA_CREATE,
 	ResourceType.DM_DELETE_CONVERSATION,
 	ResourceType.TWEET_BOOKMARK,
 	ResourceType.TWEET_LIKE,
