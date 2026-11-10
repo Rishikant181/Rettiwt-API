@@ -1,6 +1,13 @@
+import { CalendarProvider, CallRsvpStatus } from '../../enums/Call';
+import { SensitiveWarning } from '../../enums/SensitiveWarning';
 import {
+	ICallCustomization,
+	ICallOccurrenceOptions,
+	ICallUpdates,
 	IChangePasswordArgs,
 	IListUpdates,
+	IMediaMetadataArgs,
+	INewCall,
 	INewList,
 	INewTweet,
 	INewTweetMedia,
@@ -16,14 +23,23 @@ import { ProfileUpdateOptions } from './ProfileArgs';
  * @public
  */
 export class PostArgs implements IPostArgs {
+	public audioOnly?: boolean;
+	public calendarProvider?: CalendarProvider;
+	public call?: NewCall;
+	public callCustomization?: ICallCustomization;
+	public callOccurrence?: ICallOccurrenceOptions;
+	public callUpdates?: CallUpdates;
 	public changePassword?: ChangePasswordArgs;
 	public conversationId?: string;
 	public id?: string;
 	public list?: NewList;
 	public listUpdates?: ListUpdates;
+	public mediaMetadata?: MediaMetadataArgs;
 	public profileBanner?: string;
 	public profileImage?: string;
 	public profileOptions?: ProfileUpdateOptions;
+	public reminder?: number;
+	public rsvp?: CallRsvpStatus;
 	public tweet?: NewTweet;
 	public upload?: UploadArgs;
 	public userId?: string;
@@ -38,6 +54,7 @@ export class PostArgs implements IPostArgs {
 		this.list = args.list ? new NewList(args.list) : undefined;
 		this.tweet = args.tweet ? new NewTweet(args.tweet) : undefined;
 		this.upload = args.upload ? new UploadArgs(args.upload) : undefined;
+		this.mediaMetadata = args.mediaMetadata ? new MediaMetadataArgs(args.mediaMetadata) : undefined;
 		this.userId = args.userId;
 		this.username = PostArgs._validateNonEmptyString(args.username, 'Username');
 		this.conversationId = args.conversationId;
@@ -46,6 +63,14 @@ export class PostArgs implements IPostArgs {
 		this.profileBanner = PostArgs._validateNonEmptyString(args.profileBanner, 'Profile banner');
 		this.changePassword = args.changePassword ? new ChangePasswordArgs(args.changePassword) : undefined;
 		this.listUpdates = args.listUpdates ? new ListUpdates(args.listUpdates) : undefined;
+		this.audioOnly = args.audioOnly;
+		this.calendarProvider = args.calendarProvider;
+		this.call = args.call ? new NewCall(args.call) : undefined;
+		this.callCustomization = args.callCustomization;
+		this.callOccurrence = args.callOccurrence;
+		this.callUpdates = args.callUpdates ? new CallUpdates(args.callUpdates) : undefined;
+		this.reminder = PostArgs._validateReminder(args.reminder);
+		this.rsvp = args.rsvp;
 	}
 
 	/**
@@ -67,6 +92,25 @@ export class PostArgs implements IPostArgs {
 
 		if (value.trim().length === 0) {
 			throw new Error(`${fieldName} cannot be empty`);
+		}
+
+		return value;
+	}
+
+	/**
+	 * Validates that a reminder is a valid number of minutes (0 to 10080).
+	 *
+	 * @param value - The reminder to validate.
+	 *
+	 * @returns The validated reminder. If data was `undefined`, returns `undefined`.
+	 */
+	private static _validateReminder(value: number | undefined): number | undefined {
+		if (value === undefined) {
+			return undefined;
+		}
+
+		if (!Number.isInteger(value) || value < 0 || value > 10080) {
+			throw new Error('Reminder must be an integer between 0 and 10080 minutes');
 		}
 
 		return value;
@@ -177,6 +221,55 @@ export class UploadArgs implements IUploadArgs {
 }
 
 /**
+ * Options specifying the metadata to set for an uploaded media item.
+ *
+ * @public
+ */
+export class MediaMetadataArgs implements IMediaMetadataArgs {
+	public aiGenerated?: boolean;
+	public allowDownload?: boolean;
+	public altText?: string;
+	public blockGrokEdit?: boolean;
+	public id: string;
+	public sensitiveWarning?: SensitiveWarning[];
+
+	/**
+	 * @param args - The metadata to set for the media item.
+	 */
+	public constructor(args: IMediaMetadataArgs) {
+		if (!args.id || args.id.trim().length === 0) {
+			throw new Error('Media id cannot be empty');
+		}
+
+		if (args.sensitiveWarning) {
+			const valid = Object.values(SensitiveWarning);
+			for (const warning of args.sensitiveWarning) {
+				if (!valid.includes(warning)) {
+					throw new Error(`Invalid sensitive warning '${warning}'. Must be one of: ${valid.join(', ')}`);
+				}
+			}
+		}
+
+		if (
+			args.altText === undefined &&
+			args.sensitiveWarning === undefined &&
+			args.allowDownload === undefined &&
+			args.blockGrokEdit === undefined &&
+			args.aiGenerated === undefined
+		) {
+			throw new Error('At least one media metadata option must be specified');
+		}
+
+		this.id = args.id;
+		this.altText = args.altText;
+		this.sensitiveWarning = args.sensitiveWarning;
+		this.allowDownload = args.allowDownload;
+		this.blockGrokEdit = args.blockGrokEdit;
+		this.aiGenerated = args.aiGenerated;
+	}
+}
+
+/**
  * The args for changing authenticated user's password.
  *
  * @public
@@ -198,5 +291,84 @@ export class ChangePasswordArgs implements IChangePasswordArgs {
 
 		this.currentPassword = args.currentPassword;
 		this.newPassword = args.newPassword;
+	}
+}
+
+/**
+ * Validates that the given call duration is a positive integer number of minutes.
+ *
+ * @param duration - The duration to validate.
+ */
+function validateCallDuration(duration: number | undefined): number | undefined {
+	if (duration !== undefined && (!Number.isInteger(duration) || duration < 1)) {
+		throw new Error('Call duration must be an integer of at least 1 minute');
+	}
+
+	return duration;
+}
+
+/**
+ * Configuration for the call to be scheduled.
+ *
+ * @public
+ */
+export class NewCall implements INewCall {
+	public description?: string;
+	public duration: number;
+	public emailGuests?: boolean;
+	public inviteeIds?: string[];
+	public recurrence?: string;
+	public startsAt: Date;
+	public timeZone?: string;
+	public title?: string;
+
+	/**
+	 * @param newCall - The args specifying the call to be scheduled.
+	 */
+	public constructor(newCall: INewCall) {
+		if (!(newCall.startsAt instanceof Date) || isNaN(newCall.startsAt.getTime())) {
+			throw new Error('Call start must be a valid date');
+		}
+
+		this.description = newCall.description;
+		this.duration = validateCallDuration(newCall.duration) ?? 60;
+		this.emailGuests = newCall.emailGuests;
+		this.inviteeIds = newCall.inviteeIds;
+		this.recurrence = newCall.recurrence;
+		this.startsAt = newCall.startsAt;
+		this.timeZone = newCall.timeZone;
+		this.title = newCall.title;
+	}
+}
+
+/**
+ * The updates to apply to a scheduled call.
+ *
+ * @public
+ */
+export class CallUpdates implements ICallUpdates {
+	public description?: string;
+	public duration?: number;
+	public inviteeIds?: string[];
+	public recurrence?: string;
+	public startsAt?: Date;
+	public timeZone?: string;
+	public title?: string;
+
+	/**
+	 * @param updates - The updates to apply to the scheduled call.
+	 */
+	public constructor(updates: ICallUpdates) {
+		if (updates.startsAt !== undefined && isNaN(updates.startsAt.getTime())) {
+			throw new Error('Call start must be a valid date');
+		}
+
+		this.description = updates.description;
+		this.duration = validateCallDuration(updates.duration);
+		this.inviteeIds = updates.inviteeIds;
+		this.recurrence = updates.recurrence;
+		this.startsAt = updates.startsAt;
+		this.timeZone = updates.timeZone;
+		this.title = updates.title;
 	}
 }

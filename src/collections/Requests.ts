@@ -1,7 +1,9 @@
 import { AxiosRequestConfig } from 'axios';
 
 import { ResourceType } from '../enums/Resource';
+import { CallRequests } from '../requests/Call';
 import { DMRequests } from '../requests/DirectMessage';
+import { JobRequests } from '../requests/Job';
 import { ListRequests } from '../requests/List';
 import { MediaRequests } from '../requests/Media';
 import { SpaceRequests } from '../requests/Space';
@@ -20,6 +22,24 @@ import { TweetRepliesSortTypeMap } from './Tweet';
 export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs | IPostArgs) => AxiosRequestConfig } = {
 	/* eslint-disable @typescript-eslint/naming-convention */
 
+	CALL_CALENDAR_REFRESH: (args: IFetchArgs) => CallRequests.refreshCalendars(args.fromTime!, args.toTime!),
+	CALL_CALENDAR_UNLINK: (args: IPostArgs) => CallRequests.unlinkCalendar(args.calendarProvider!),
+	CALL_CALENDARS: () => CallRequests.linkedCalendars(),
+	CALL_CANCEL: (args: IPostArgs) => CallRequests.cancel(args.id!, args.callOccurrence),
+	CALL_CREATE: (args: IPostArgs) => CallRequests.create(args.audioOnly),
+	CALL_CUSTOMIZE: (args: IPostArgs) => CallRequests.customize(args.id!, args.callCustomization!, args.callOccurrence),
+	CALL_LIST: (args: IFetchArgs) => CallRequests.list(args.fromTime!, args.toTime!),
+	CALL_REMINDER: (args: IPostArgs) => CallRequests.reminder(args.id!, args.reminder!, args.callOccurrence),
+	CALL_RSVP: (args: IPostArgs) => CallRequests.rsvp(args.id!, args.rsvp!, args.callOccurrence),
+	CALL_SCHEDULE: (args: IPostArgs) => CallRequests.schedule(args.call!),
+	CALL_SEARCH_PEOPLE: (args: IFetchArgs) => CallRequests.searchPeople(args.id!, args.count),
+	CALL_UPDATE: (args: IPostArgs) => CallRequests.update(args.id!, args.callUpdates!, args.callOccurrence),
+	CALL_USER_AVAILABILITY: (args: IFetchArgs) => CallRequests.userAvailability(args.id!, args.fromTime!, args.toTime!),
+
+	JOB_DETAILS: (args: IFetchArgs) => JobRequests.details(args.id!),
+	JOB_LOCATIONS: (args: IFetchArgs) => JobRequests.locations(args.id!),
+	JOB_SEARCH: (args: IFetchArgs) => JobRequests.search(args.jobFilter!, args.count, args.cursor),
+
 	LIST_CREATE: (args: IPostArgs) => ListRequests.create(args.list!),
 	LIST_DELETE: (args: IPostArgs) => ListRequests.delete(args.id!),
 	LIST_DETAILS: (args: IFetchArgs) => ListRequests.details(args.id!),
@@ -34,8 +54,10 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	MEDIA_UPLOAD_APPEND: (args: IPostArgs) => MediaRequests.appendUpload(args.upload!.id!, args.upload!.media!),
 	MEDIA_UPLOAD_FINALIZE: (args: IPostArgs) => MediaRequests.finalizeUpload(args.upload!.id!),
 	MEDIA_UPLOAD_INITIALIZE: (args: IPostArgs) => MediaRequests.initializeUpload(args.upload!.size!),
+	MEDIA_METADATA_CREATE: (args: IPostArgs) => MediaRequests.createMetadata(args.mediaMetadata!),
 
 	DM_CONVERSATION: (args: IFetchArgs) => DMRequests.conversation(args.conversationId!, args.maxId),
+	DM_XCHAT_PUBLIC_KEYS: (args: IFetchArgs) => DMRequests.xChatPublicKeys(args.ids!, args.includeJuiceboxTokens),
 	DM_INBOX_INITIAL_STATE: () => DMRequests.inboxInitial(),
 	DM_INBOX_TIMELINE: (args: IFetchArgs) => DMRequests.inboxTimeline(args.maxId),
 	DM_DELETE_CONVERSATION: (args: IPostArgs) => DMRequests.deleteConversation(args.conversationId!),
@@ -93,6 +115,7 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	USER_NOTIFICATIONS: (args: IFetchArgs) => UserRequests.notifications(args.count, args.cursor),
 	USER_REMOVE_FOLLOWER: (args: IPostArgs) => UserRequests.removeFollower(args.id!),
 	USER_SEARCH: (args: IFetchArgs) => UserRequests.search(args.id!, args.count, args.cursor),
+	USER_SUGGESTIONS: (args: IFetchArgs) => UserRequests.suggestions(args.creatorOnly),
 	USER_SUBSCRIPTIONS: (args: IFetchArgs) => UserRequests.subscriptions(args.id!, args.count, args.cursor),
 	USER_TIMELINE: (args: IFetchArgs) => UserRequests.tweets(args.id!, args.count, args.cursor),
 	USER_TIMELINE_AND_REPLIES: (args: IFetchArgs) => UserRequests.tweetsAndReplies(args.id!, args.count, args.cursor),

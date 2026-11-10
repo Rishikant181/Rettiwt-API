@@ -1,7 +1,9 @@
 import { AxiosProxyConfig } from 'axios';
 
 import { RettiwtConfig } from './models/RettiwtConfig';
+import { CallService } from './services/public/CallService';
 import { DirectMessageService } from './services/public/DirectMessageService';
+import { JobService } from './services/public/JobService';
 import { ListService } from './services/public/ListService';
 import { SpaceService } from './services/public/SpaceService';
 import { TweetService } from './services/public/TweetService';
@@ -23,14 +25,6 @@ import { IRettiwtConfig } from './types/RettiwtConfig';
  * const rettiwt = new Rettiwt();
  * ```
  *
- * @example Creating a Rettiwt instance with 'guest' authentication, using a pre-generated guest key:
- * ```
- * import { Rettiwt } from 'rettiwt-api';
- *
- * // Creating a new Rettiwt instance
- * const rettiwt = new Rettiwt({ guestKey: 'GUEST_KEY' });
- * ```
- *
  * @example Creating a Rettiwt instance with 'user' authentication:
  * ```
  * import { Rettiwt } from 'rettiwt-api';
@@ -44,7 +38,7 @@ import { IRettiwtConfig } from './types/RettiwtConfig';
  * import { Rettiwt } from 'rettiwt-api';
  *
  * // Creating a new Rettiwt instance
- * const rettiwt = new Rettiwt({ apiKey: 'API_KEY', logging: true, proxyUrl: 'URL_TO_PROXY_SERVER' });
+ * const rettiwt = new Rettiwt({ apiKey: 'API_KEY', logging: true, proxy: 'URL_TO_PROXY_SERVER' });
  * ```
  *
  * @public
@@ -53,8 +47,14 @@ export class Rettiwt {
 	/** The configuration for Rettiwt. */
 	private _config: RettiwtConfig;
 
+	/** The instance used to fetch data related to X Calls. */
+	public call: CallService;
+
 	/** The instance used to fetch data related to direct messages. */
 	public dm: DirectMessageService;
+
+	/** The instance used to fetch data related to X Jobs. */
+	public job: JobService;
 
 	/** The instance used to fetch data related to lists. */
 	public list: ListService;
@@ -75,7 +75,9 @@ export class Rettiwt {
 	 */
 	public constructor(config?: IRettiwtConfig) {
 		this._config = new RettiwtConfig(config);
+		this.call = new CallService(this._config);
 		this.dm = new DirectMessageService(this._config);
+		this.job = new JobService(this._config);
 		this.list = new ListService(this._config);
 		this.space = new SpaceService(this._config);
 		this.tweet = new TweetService(this._config);

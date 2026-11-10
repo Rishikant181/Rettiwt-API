@@ -1,3 +1,6 @@
+import { CalendarColor, CalendarProvider, CallRecurrenceScope, CallRsvpStatus } from '../../enums/Call';
+import { SensitiveWarning } from '../../enums/SensitiveWarning';
+
 import { IProfileUpdateOptions } from './ProfileArgs';
 
 /**
@@ -24,6 +27,11 @@ export interface IPostArgs {
 	 * - {@link ResourceType.LIST_UPDATE}
 	 * - {@link ResourceType.USER_FOLLOW}
 	 * - {@link ResourceType.USER_UNFOLLOW}
+	 * - {@link ResourceType.CALL_CANCEL}
+	 * - {@link ResourceType.CALL_CUSTOMIZE}
+	 * - {@link ResourceType.CALL_REMINDER}
+	 * - {@link ResourceType.CALL_RSVP}
+	 * - {@link ResourceType.CALL_UPDATE}
 	 *
 	 * For {@link ResourceType.USER_USERNAME_CHANGE}, use {@link IPostArgs.username}.
 	 * `id` is still accepted for backward compatibility.
@@ -75,6 +83,14 @@ export interface IPostArgs {
 	upload?: IUploadArgs;
 
 	/**
+	 * The metadata to set for an already uploaded media item.
+	 *
+	 * @remarks
+	 * Required only when setting media metadata using {@link ResourceType.MEDIA_METADATA_CREATE}.
+	 */
+	mediaMetadata?: IMediaMetadataArgs;
+
+	/**
 	 * The id of the target user.
 	 *
 	 * @remarks
@@ -123,6 +139,75 @@ export interface IPostArgs {
 	 * Required only when changing password using {@link ResourceType.USER_PASSWORD_CHANGE}.
 	 */
 	changePassword?: IChangePasswordArgs;
+
+	/**
+	 * Whether the call to create is audio-only.
+	 *
+	 * @remarks
+	 * Used only when creating a call using {@link ResourceType.CALL_CREATE}.
+	 */
+	audioOnly?: boolean;
+
+	/**
+	 * The external calendar provider.
+	 *
+	 * @remarks
+	 * Required only when unlinking a calendar using {@link ResourceType.CALL_CALENDAR_UNLINK}.
+	 */
+	calendarProvider?: CalendarProvider;
+
+	/**
+	 * The call that is to be scheduled.
+	 *
+	 * @remarks
+	 * Required only when scheduling a call using {@link ResourceType.CALL_SCHEDULE}.
+	 */
+	call?: INewCall;
+
+	/**
+	 * The customization (color, visibility) to apply to a scheduled call.
+	 *
+	 * @remarks
+	 * Required only when customizing a scheduled call using {@link ResourceType.CALL_CUSTOMIZE}.
+	 */
+	callCustomization?: ICallCustomization;
+
+	/**
+	 * The occurrence(s) of the scheduled call to act on.
+	 *
+	 * @remarks
+	 * Used only with the following resources:
+	 * - {@link ResourceType.CALL_CANCEL}
+	 * - {@link ResourceType.CALL_CUSTOMIZE}
+	 * - {@link ResourceType.CALL_REMINDER}
+	 * - {@link ResourceType.CALL_RSVP}
+	 * - {@link ResourceType.CALL_UPDATE}
+	 */
+	callOccurrence?: ICallOccurrenceOptions;
+
+	/**
+	 * The updates to apply to a scheduled call.
+	 *
+	 * @remarks
+	 * Required only when updating a scheduled call using {@link ResourceType.CALL_UPDATE}.
+	 */
+	callUpdates?: ICallUpdates;
+
+	/**
+	 * The number of minutes before a scheduled call at which to be reminded of it (0 to 10080).
+	 *
+	 * @remarks
+	 * Required only when setting a reminder using {@link ResourceType.CALL_REMINDER}.
+	 */
+	reminder?: number;
+
+	/**
+	 * The RSVP status to respond to a scheduled call invitation with.
+	 *
+	 * @remarks
+	 * Required only when responding to an invitation using {@link ResourceType.CALL_RSVP}.
+	 */
+	rsvp?: CallRsvpStatus;
 }
 
 /**
@@ -236,6 +321,34 @@ export interface IUploadArgs {
 }
 
 /**
+ * Options specifying the metadata to set for an uploaded media item.
+ *
+ * @remarks
+ * Only the options that are specified are sent. Omitted options keep their default values.
+ *
+ * @public
+ */
+export interface IMediaMetadataArgs {
+	/** The id of the uploaded media item. */
+	id: string;
+
+	/** The alternative text (description) of the media item. */
+	altText?: string;
+
+	/** The sensitive content warnings to attach to the media item. */
+	sensitiveWarning?: SensitiveWarning[];
+
+	/** Whether other users are allowed to download the media item. */
+	allowDownload?: boolean;
+
+	/** Whether to block Grok from editing the media item. */
+	blockGrokEdit?: boolean;
+
+	/** Whether to mark the media item as AI-generated. */
+	aiGenerated?: boolean;
+}
+
+/**
  * Arguments for changing the account password.
  *
  * @public
@@ -246,4 +359,122 @@ export interface IChangePasswordArgs {
 
 	/** The new password to set. */
 	newPassword: string;
+}
+
+/**
+ * Configuration for the call to be scheduled.
+ *
+ * @public
+ */
+export interface INewCall {
+	/** The description of the call. */
+	description?: string;
+
+	/**
+	 * The duration of the call, in minutes.
+	 *
+	 * @defaultValue 60
+	 */
+	duration?: number;
+
+	/** Whether to send an invitation email to the guests. */
+	emailGuests?: boolean;
+
+	/** The ids of the users to invite to the call. */
+	inviteeIds?: string[];
+
+	/**
+	 * The recurrence rule (RFC 5545 RRULE) of the call, for recurring calls.
+	 *
+	 * @example 'FREQ=WEEKLY;BYDAY=MO,TH'
+	 */
+	recurrence?: string;
+
+	/** The date and time at which the call starts. */
+	startsAt: Date;
+
+	/**
+	 * The IANA time zone of the call.
+	 *
+	 * @defaultValue The time zone of the current environment.
+	 */
+	timeZone?: string;
+
+	/** The title of the call. */
+	title?: string;
+}
+
+/**
+ * The updates to apply to a scheduled call.
+ *
+ * @public
+ */
+export interface ICallUpdates {
+	/** The new description of the call. */
+	description?: string;
+
+	/** The new duration of the call, in minutes. */
+	duration?: number;
+
+	/** The new list of ids of the users invited to the call. */
+	inviteeIds?: string[];
+
+	/** The new recurrence rule (RFC 5545 RRULE) of the call. Use an empty string to stop the recurrence. */
+	recurrence?: string;
+
+	/** The new date and time at which the call starts. */
+	startsAt?: Date;
+
+	/**
+	 * The IANA time zone of the new start time.
+	 *
+	 * @defaultValue The time zone of the current environment.
+	 */
+	timeZone?: string;
+
+	/** The new title of the call. */
+	title?: string;
+}
+
+/**
+ * The occurrence(s) of a scheduled call to act on.
+ *
+ * @public
+ */
+export interface ICallOccurrenceOptions {
+	/**
+	 * Whether to notify the guests by email (for updates and cancellations).
+	 */
+	emailGuests?: boolean;
+
+	/**
+	 * The original start of the target occurrence, for recurring calls.
+	 *
+	 * @remarks
+	 * Use the `occurrence` field of the target {@link ScheduledCall}.
+	 */
+	occurrence?: Date;
+
+	/**
+	 * The occurrences of a recurring call the action applies to.
+	 *
+	 * @defaultValue {@link CallRecurrenceScope.THIS}
+	 */
+	scope?: CallRecurrenceScope;
+}
+
+/**
+ * The customization (color, visibility) to apply to a scheduled call, for the logged-in user only.
+ *
+ * @remarks
+ * The given customization replaces the previous one.
+ *
+ * @public
+ */
+export interface ICallCustomization {
+	/** The color of the call in the calendar. */
+	color?: CalendarColor;
+
+	/** Whether to remove the call from the calendar. */
+	hidden?: boolean;
 }

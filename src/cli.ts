@@ -2,7 +2,9 @@
 
 import { createCommand } from 'commander';
 
+import call from './commands/Call';
 import dm from './commands/DirectMessage';
+import job from './commands/Job';
 import list from './commands/List';
 import space from './commands/Space';
 import tweet from './commands/Tweet';
@@ -36,11 +38,13 @@ const RettiwtInstance = new Rettiwt({
 	proxy: Program.opts().proxy as string,
 	timeout: Program.opts().timeout ? Number(Program.opts().timeout) : undefined,
 	maxRetries: Program.opts().retries as number,
-	delay: Program.opts().delay as number,
+	delay: Program.opts().delay ? Number(Program.opts().delay) : undefined,
 });
 
 // Adding sub-commands
+Program.addCommand(call(RettiwtInstance));
 Program.addCommand(dm(RettiwtInstance));
+Program.addCommand(job(RettiwtInstance));
 Program.addCommand(list(RettiwtInstance));
 Program.addCommand(space(RettiwtInstance));
 Program.addCommand(tweet(RettiwtInstance));

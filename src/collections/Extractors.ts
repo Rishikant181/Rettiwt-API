@@ -1,18 +1,39 @@
 import { BaseType } from '../enums/Data';
 import { Analytics } from '../models/data/Analytics';
 import { BookmarkFolder } from '../models/data/BookmarkFolder';
+import { CalendarLink } from '../models/data/CalendarLink';
+import { CallUser } from '../models/data/CallUser';
 import { Conversation } from '../models/data/Conversation';
 import { CursoredData } from '../models/data/CursoredData';
 import { Inbox } from '../models/data/Inbox';
+import { Job } from '../models/data/Job';
+import { JobLocation } from '../models/data/JobLocation';
 import { List } from '../models/data/List';
 import { Notification } from '../models/data/Notification';
+import { ScheduledCall } from '../models/data/ScheduledCall';
 import { Space } from '../models/data/Space';
 import { Tweet } from '../models/data/Tweet';
 import { User } from '../models/data/User';
 import { UserAbout } from '../models/data/UserAbout';
-import { IConversationTimelineResponse } from '../types/raw/dm/Conversation';
+import { IExternalCalendarLinksListResponse } from '../types/raw/call/ExternalCalendarLinksList';
+import { IExternalCalendarLinksUnlinkResponse } from '../types/raw/call/ExternalCalendarLinksUnlink';
+import { IScheduledCallsApiCancelResponse } from '../types/raw/call/ScheduledCallsApiCancel';
+import { IScheduledCallsApiListResponse } from '../types/raw/call/ScheduledCallsApiList';
+import { IScheduledCallsApiListUserResponse } from '../types/raw/call/ScheduledCallsApiListUser';
+import { IScheduledCallsApiRefreshExternalResponse } from '../types/raw/call/ScheduledCallsApiRefreshExternal';
+import { IScheduledCallsApiRsvpResponse } from '../types/raw/call/ScheduledCallsApiRsvp';
+import { IScheduledCallsApiScheduleResponse } from '../types/raw/call/ScheduledCallsApiSchedule';
+import { IScheduledCallsApiSearchPeopleResponse } from '../types/raw/call/ScheduledCallsApiSearchPeople';
+import { IScheduledCallsApiSetEventMetadataResponse } from '../types/raw/call/ScheduledCallsApiSetEventMetadata';
+import { IScheduledCallsApiSetEventReminderResponse } from '../types/raw/call/ScheduledCallsApiSetEventReminder';
+import { IScheduledCallsApiUpdateResponse } from '../types/raw/call/ScheduledCallsApiUpdate';
+import { IXCallsStartCallResponse } from '../types/raw/call/XCallsStartCall';
+import { IConversationPageResponse } from '../types/raw/dm/ConversationPage';
 import { IInboxInitialResponse } from '../types/raw/dm/InboxInitial';
 import { IInboxTimelineResponse } from '../types/raw/dm/InboxTimeline';
+import { IJobScreenQueryResponse } from '../types/raw/job/JobScreenQuery';
+import { IJobSearchQueryScreenJobsQueryResponse } from '../types/raw/job/JobSearchQueryScreenJobsQuery';
+import { ILocationSelectorQueryResponse } from '../types/raw/job/LocationSelectorQuery';
 import { IListMemberAddResponse } from '../types/raw/list/AddMember';
 import { IListCreateResponse } from '../types/raw/list/Create';
 import { IListDeleteResponse } from '../types/raw/list/Delete';
@@ -66,6 +87,7 @@ import { IUserRemoveFollowerResponse } from '../types/raw/user/RemoveFollower';
 import { IUserSearchResponse } from '../types/raw/user/Search';
 import { IUserSettingsResponse } from '../types/raw/user/Settings';
 import { IUserSubscriptionsResponse } from '../types/raw/user/Subscriptions';
+import { IUserSuggestionsResponse } from '../types/raw/user/Suggestions';
 import { IUserTweetsResponse } from '../types/raw/user/Tweets';
 import { IUserTweetsAndRepliesResponse } from '../types/raw/user/TweetsAndReplies';
 import { IUserUnfollowResponse } from '../types/raw/user/Unfollow';
@@ -77,6 +99,38 @@ import { IUserUnfollowResponse } from '../types/raw/user/Unfollow';
  */
 export const Extractors = {
 	/* eslint-disable @typescript-eslint/naming-convention */
+
+	CALL_CALENDAR_REFRESH: (response: IScheduledCallsApiRefreshExternalResponse): ScheduledCall[] =>
+		ScheduledCall.multiple([{ rest_id: '', occurrences: response.data?.calendar_refresh_external ?? [] }]),
+	CALL_CALENDAR_UNLINK: (response: IExternalCalendarLinksUnlinkResponse): boolean =>
+		response?.data?.calendar_unlink_external?.success === true,
+	CALL_CALENDARS: (response: IExternalCalendarLinksListResponse): CalendarLink[] => CalendarLink.multiple(response),
+	CALL_CANCEL: (response: IScheduledCallsApiCancelResponse): boolean =>
+		response?.data?.calendar_cancel_event?.success === true,
+	CALL_CREATE: (response: IXCallsStartCallResponse): string | undefined =>
+		response?.data?.xchat_start_call?.call?.call_id ?? undefined,
+	CALL_CUSTOMIZE: (response: IScheduledCallsApiSetEventMetadataResponse): boolean =>
+		response?.data?.calendar_set_event_metadata?.event?.rest_id ? true : false,
+	CALL_LIST: (response: IScheduledCallsApiListResponse): ScheduledCall[] =>
+		ScheduledCall.multiple(response.data?.calendar_list_events?.events ?? []),
+	CALL_REMINDER: (response: IScheduledCallsApiSetEventReminderResponse): boolean =>
+		response?.data?.calendar_set_event_reminder?.event?.rest_id ? true : false,
+	CALL_RSVP: (response: IScheduledCallsApiRsvpResponse): boolean =>
+		response?.data?.calendar_rsvp_event?.event?.rest_id ? true : false,
+	CALL_SCHEDULE: (response: IScheduledCallsApiScheduleResponse): string | undefined =>
+		response?.data?.calendar_schedule_event?.event?.rest_id ?? undefined,
+	CALL_SEARCH_PEOPLE: (response: IScheduledCallsApiSearchPeopleResponse): CallUser[] => CallUser.multiple(response),
+	CALL_UPDATE: (response: IScheduledCallsApiUpdateResponse): boolean =>
+		response?.data?.calendar_update_event?.event?.rest_id ? true : false,
+	CALL_USER_AVAILABILITY: (response: IScheduledCallsApiListUserResponse): ScheduledCall[] | undefined =>
+		response.data?.user_result_by_rest_id?.result?.calendar_events
+			? ScheduledCall.multiple(response.data.user_result_by_rest_id.result.calendar_events.events ?? [])
+			: undefined,
+
+	JOB_DETAILS: (response: IJobScreenQueryResponse, id: string): Job | undefined => Job.single(response, id),
+	JOB_LOCATIONS: (response: ILocationSelectorQueryResponse): JobLocation[] => JobLocation.list(response),
+	JOB_SEARCH: (response: IJobSearchQueryScreenJobsQueryResponse): CursoredData<Job> =>
+		new CursoredData<Job>(response, BaseType.JOB),
 
 	LIST_CREATE: (response: IListCreateResponse): string | undefined => response.data?.list?.id_str ?? undefined,
 	LIST_DELETE: (response: IListDeleteResponse): boolean => response.data?.list_delete === 'Done',
@@ -98,9 +152,10 @@ export const Extractors = {
 	MEDIA_UPLOAD_FINALIZE: (): void => undefined,
 	MEDIA_UPLOAD_INITIALIZE: (response: IMediaInitializeUploadResponse): string =>
 		response.media_id_string ?? undefined,
+	MEDIA_METADATA_CREATE: (): void => undefined,
 
-	DM_CONVERSATION: (response: IConversationTimelineResponse): Conversation | undefined =>
-		Conversation.fromConversationTimeline(response),
+	DM_CONVERSATION: (response: IConversationPageResponse, conversationId?: string): Conversation | undefined =>
+		Conversation.fromConversationPage(response, conversationId),
 	DM_INBOX_INITIAL_STATE: (response: IInboxInitialResponse): Inbox => new Inbox(response),
 	DM_INBOX_TIMELINE: (response: IInboxTimelineResponse): Inbox => new Inbox(response),
 
@@ -171,6 +226,8 @@ export const Extractors = {
 	USER_REMOVE_FOLLOWER: (response: IUserRemoveFollowerResponse): boolean =>
 		response?.data?.remove_follower?.unfollow_success_reason ? true : false,
 	USER_SEARCH: (response: IUserSearchResponse): CursoredData<User> => new CursoredData<User>(response, BaseType.USER),
+	USER_SUGGESTIONS: (response: IUserSuggestionsResponse): CursoredData<User> =>
+		new CursoredData<User>(response, BaseType.USER),
 	USER_SUBSCRIPTIONS: (response: IUserSubscriptionsResponse): CursoredData<User> =>
 		new CursoredData<User>(response, BaseType.USER),
 	USER_TIMELINE: (response: IUserTweetsResponse): CursoredData<Tweet> =>
@@ -182,7 +239,7 @@ export const Extractors = {
 	USER_PROFILE_IMAGE_UPDATE: (response: IUserProfileUpdateResponse): boolean =>
 		response?.profile_image_url || response?.profile_image_url_https ? true : false,
 	USER_PROFILE_BANNER_UPDATE: (response: IUserProfileUpdateResponse): boolean =>
-		!response || response?.profile_banner_url || response?.profile_banner_url_https ? true : false,
+		response?.profile_banner_url || response?.profile_banner_url_https ? true : false,
 	USER_USERNAME_CHANGE: (response: IUserSettingsResponse): string | undefined => response?.screen_name ?? undefined,
 	USER_PASSWORD_CHANGE: (response: IUserChangePasswordResponse): boolean => response?.status === 'ok',
 

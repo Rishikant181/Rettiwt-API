@@ -18,10 +18,19 @@ export const AllowGuestAuthenticationGroup = [
  * @internal
  */
 export const FetchResourcesGroup = [
+	ResourceType.CALL_CALENDAR_REFRESH,
+	ResourceType.CALL_CALENDARS,
+	ResourceType.CALL_LIST,
+	ResourceType.CALL_SEARCH_PEOPLE,
+	ResourceType.CALL_USER_AVAILABILITY,
+	ResourceType.JOB_DETAILS,
+	ResourceType.JOB_LOCATIONS,
+	ResourceType.JOB_SEARCH,
 	ResourceType.LIST_DETAILS,
 	ResourceType.LIST_MEMBERS,
 	ResourceType.LIST_TWEETS,
 	ResourceType.DM_CONVERSATION,
+	ResourceType.DM_XCHAT_PUBLIC_KEYS,
 	ResourceType.DM_INBOX_INITIAL_STATE,
 	ResourceType.DM_INBOX_TIMELINE,
 	ResourceType.SPACE_DETAILS,
@@ -52,6 +61,7 @@ export const FetchResourcesGroup = [
 	ResourceType.USER_MEDIA,
 	ResourceType.USER_NOTIFICATIONS,
 	ResourceType.USER_SEARCH,
+	ResourceType.USER_SUGGESTIONS,
 	ResourceType.USER_SUBSCRIPTIONS,
 	ResourceType.USER_TIMELINE,
 	ResourceType.USER_TIMELINE_AND_REPLIES,
@@ -63,6 +73,14 @@ export const FetchResourcesGroup = [
  * @internal
  */
 export const PostResourcesGroup = [
+	ResourceType.CALL_CALENDAR_UNLINK,
+	ResourceType.CALL_CANCEL,
+	ResourceType.CALL_CREATE,
+	ResourceType.CALL_CUSTOMIZE,
+	ResourceType.CALL_REMINDER,
+	ResourceType.CALL_RSVP,
+	ResourceType.CALL_SCHEDULE,
+	ResourceType.CALL_UPDATE,
 	ResourceType.LIST_CREATE,
 	ResourceType.LIST_DELETE,
 	ResourceType.LIST_MEMBER_ADD,
@@ -73,6 +91,7 @@ export const PostResourcesGroup = [
 	ResourceType.MEDIA_UPLOAD_APPEND,
 	ResourceType.MEDIA_UPLOAD_FINALIZE,
 	ResourceType.MEDIA_UPLOAD_INITIALIZE,
+	ResourceType.MEDIA_METADATA_CREATE,
 	ResourceType.DM_DELETE_CONVERSATION,
 	ResourceType.TWEET_BOOKMARK,
 	ResourceType.TWEET_LIKE,

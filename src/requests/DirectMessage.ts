@@ -52,32 +52,65 @@ const DMUserIncludeParams = {
 	/* eslint-enable @typescript-eslint/naming-convention */
 };
 
+const DMConversationPageQuerySettings = {
+	/* eslint-disable @typescript-eslint/naming-convention */
+
+	conversation_event_limit: 200,
+	inbox_conversation_event_limit: 5,
+	inbox_conversation_limit: 20,
+	user_event_limit: 500,
+
+	/* eslint-enable @typescript-eslint/naming-convention */
+};
+
+const InitialDMConversationSequenceId = '9223372036854775807';
+
 /**
  * Collection of requests related to direct messages.
  *
  * @public
  */
 export class DMRequests {
+	/** Get registered XChat public keys and, when requested, PIN-recovery metadata. */
+	public static xChatPublicKeys(userIds: string[], includeJuiceboxTokens = false): AxiosRequestConfig {
+		return {
+			method: 'get',
+			url: 'https://api.x.com/graphql/RQAjOoIX9dIsHoVjuVV0Iw/GetPublicKeys',
+			params: {
+				variables: JSON.stringify({
+					/* eslint-disable @typescript-eslint/naming-convention */
+					ids: [...new Set(userIds)],
+					include_juicebox_tokens: includeJuiceboxTokens,
+					/* eslint-enable @typescript-eslint/naming-convention */
+				}),
+			},
+			paramsSerializer: { encode: encodeURIComponent },
+		};
+	}
+
 	/**
-	 * Get a specific DM conversation
-	 * @param conversationId - The conversation ID (e.g., "394028042-1712730991884689408")
-	 * @param maxId - Maximum ID for pagination (optional)
+	 * Get a specific DM conversation page.
+	 * @param conversationId - The conversation ID (e.g., "394028042:1645287614")
+	 * @param maxId - Oldest loaded event ID from the previous page (optional)
 	 */
+	// eslint-disable-next-line @typescript-eslint/member-ordering
 	public static conversation(conversationId: string, maxId?: string): AxiosRequestConfig {
-		const context = maxId ? 'FETCH_DM_CONVERSATION_HISTORY' : 'FETCH_DM_CONVERSATION';
+		const variables: Record<string, unknown> = {
+			/* eslint-disable @typescript-eslint/naming-convention */
+
+			conversation_id: conversationId,
+			min_conversation_key_version: InitialDMConversationSequenceId,
+			min_local_sequence_id: maxId || InitialDMConversationSequenceId,
+			query_settings: DMConversationPageQuerySettings,
+
+			/* eslint-enable @typescript-eslint/naming-convention */
+		};
 
 		return {
 			method: 'get',
-			url: `https://x.com/i/api/1.1/dm/conversation/${conversationId}.json`,
+			url: 'https://api.x.com/graphql/IVlXls9JTnbgQ1gxsGAfJA/GetConversationPageQuery',
 			params: {
-				...BaseDMParams,
-				...DMUserIncludeParams,
-				/* eslint-disable @typescript-eslint/naming-convention */
-				max_id: maxId,
-				context: context,
-				dm_users: false,
-				include_conversation_info: true,
-				/* eslint-enable @typescript-eslint/naming-convention */
+				variables: JSON.stringify(variables),
 			},
 			paramsSerializer: { encode: encodeURIComponent },
 		};

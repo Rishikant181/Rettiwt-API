@@ -1,7 +1,7 @@
 import { Agent as HttpAgent } from 'http';
 import { Agent as HttpsAgent } from 'https';
 
-import { AxiosProxyConfig, AxiosResponse } from 'axios';
+import { AxiosInstance, AxiosProxyConfig, AxiosRequestConfig, AxiosResponse, create } from 'axios';
 import { HttpProxyAgent } from 'http-proxy-agent';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import { SocksProxyAgent } from 'socks-proxy-agent';
@@ -9,6 +9,7 @@ import { SocksProxyAgent } from 'socks-proxy-agent';
 import { AuthService } from '../services/internal/AuthService';
 import { IErrorHandler } from '../types/ErrorHandler';
 import { IRettiwtConfig } from '../types/RettiwtConfig';
+import { IXChatDecryptor, XChatConversationKey, XChatConversationKeyProvider } from '../types/XChatSession';
 
 /**
  * The default headers.
@@ -40,16 +41,21 @@ export class RettiwtConfig implements IRettiwtConfig {
 	private _headers: { [key: string]: string };
 	private _httpAgent: HttpAgent;
 	private _httpsAgent: HttpsAgent;
+	private _instance: AxiosInstance;
 	private _proxy?: AxiosProxyConfig | string | null;
 	private _userId: string | undefined;
 
 	// Parameters that can be set once, upon initialization
 	public readonly delay?: number | (() => number | Promise<number>);
 	public readonly errorHandler?: IErrorHandler;
+	public readonly fetch?: typeof fetch;
 	public readonly logging?: boolean;
 	public readonly maxRetries: number;
 	public readonly responseMiddleware?: (response: AxiosResponse) => void | Promise<void>;
 	public readonly timeout?: number;
+	public readonly xChatConversationKeyProvider?: XChatConversationKeyProvider;
+	public readonly xChatConversationKeys?: Record<string, XChatConversationKey>;
+	public readonly xChatSession?: IXChatDecryptor;
 
 	/**
 	 * @param config - The config for Rettiwt of type {@link IRettiwtConfig}.
@@ -59,11 +65,15 @@ export class RettiwtConfig implements IRettiwtConfig {
 		this._proxy = config?.proxy;
 		this._userId = config?.apiKey ? AuthService.getUserId(config?.apiKey) : undefined;
 		this.delay = config?.delay ?? 0;
+		this.fetch = config?.fetch;
 		this.maxRetries = config?.maxRetries ?? 0;
 		this.errorHandler = config?.errorHandler;
 		this.responseMiddleware = config?.responseMiddleware;
 		this.logging = config?.logging;
 		this.timeout = config?.timeout;
+		this.xChatConversationKeyProvider = config?.xChatConversationKeyProvider;
+		this.xChatConversationKeys = config?.xChatConversationKeys;
+		this.xChatSession = config?.xChatSession;
 		this.apiKey = config?.apiKey;
 		this._headers = {
 			...DefaultHeaders,
@@ -74,6 +84,9 @@ export class RettiwtConfig implements IRettiwtConfig {
 		const agents = this._getRequestAgents(config?.proxy);
 		this._httpAgent = agents.httpAgent;
 		this._httpsAgent = agents.httpsAgent;
+
+		// Creating the shared Axios instance
+		this._instance = this._createAxiosInstance();
 	}
 
 	public get apiKey(): string | undefined {
@@ -115,6 +128,16 @@ export class RettiwtConfig implements IRettiwtConfig {
 		return this._httpsAgent;
 	}
 
+	/**
+	 * The shared HTTP client instance used for all HTTP requests.
+	 *
+	 * @remarks The instance is configured with the proxy/adapter/timeout/fetch settings
+	 * from this config, and is updated when the `proxy` is changed dynamically.
+	 */
+	public get instance(): AxiosInstance {
+		return this._instance;
+	}
+
 	/** The ID of the user associated with the API key, if any. */
 	public get userId(): string | undefined {
 		return this._userId;
@@ -139,6 +162,35 @@ export class RettiwtConfig implements IRettiwtConfig {
 		this._httpsAgent = agents.httpsAgent;
 
 		this._proxy = proxy;
+
+		// Update the shared instance defaults
+		this._instance.defaults.httpAgent = this._httpAgent;
+		this._instance.defaults.httpsAgent = this._httpsAgent;
+		this._instance.defaults.proxy = this.axiosProxyConfig;
+	}
+
+	/**
+	 * Creates the shared HTTP client instance with the current configuration.
+	 *
+	 * @returns The configured Axios instance.
+	 */
+	private _createAxiosInstance(): AxiosInstance {
+		const config: AxiosRequestConfig = {
+			httpAgent: this._httpAgent,
+			httpsAgent: this._httpsAgent,
+			proxy: this.axiosProxyConfig,
+		};
+
+		if (this.fetch !== undefined) {
+			config.adapter = 'fetch';
+			config.env = { fetch: this.fetch };
+		}
+
+		if (this.timeout !== undefined) {
+			config.timeout = this.timeout;
+		}
+
+		return create(config);
 	}
 
 	/**

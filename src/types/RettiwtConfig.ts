@@ -1,6 +1,7 @@
 import { AxiosProxyConfig, AxiosResponse } from 'axios';
 
 import { IErrorHandler } from './ErrorHandler';
+import { IXChatDecryptor, XChatConversationKey, XChatConversationKeyProvider } from './XChatSession';
 
 /**
  * The configuration for initializing a new Rettiwt instance.
@@ -58,6 +59,20 @@ export interface IRettiwtConfig {
 	errorHandler?: IErrorHandler;
 
 	/**
+	 * Optional XChat conversation keys, indexed by conversation ID, used to decrypt
+	 * encrypted DM payloads returned by the XChat conversation endpoint.
+	 */
+	xChatConversationKeys?: Record<string, XChatConversationKey>;
+
+	/**
+	 * Optional provider used to resolve a local XChat conversation key on demand.
+	 */
+	xChatConversationKeyProvider?: XChatConversationKeyProvider;
+
+	/** Optional unlocked session used to recover and cache versioned XChat keys. */
+	xChatSession?: IXChatDecryptor;
+
+	/**
 	 * Optional custom HTTP headers to add to all requests to Twitter API.
 	 *
 	 * @remarks Custom headers can be useful for proxies, avoiding rate limits, etc.
@@ -77,4 +92,17 @@ export interface IRettiwtConfig {
 	 * @remarks Recommended to use a value of 5 combined with a `delay` of 1000 to prevent error 404.
 	 */
 	maxRetries?: number;
+
+	/**
+	 * A custom `fetch` implementation to use for making HTTP requests.
+	 *
+	 * @remarks
+	 * <br>
+	 * - When specified, the underlying HTTP client switches to a fetch-based transport.
+	 * - Allows injecting a fetch-compatible client (e.g. a browser-impersonation client)
+	 *   to control TLS/HTTP fingerprints or run in environments without Node.js HTTP agents.
+	 *
+	 * @see {@link https://axios.rest/pages/advanced/fetch-adapter}
+	 */
+	fetch?: typeof fetch;
 }

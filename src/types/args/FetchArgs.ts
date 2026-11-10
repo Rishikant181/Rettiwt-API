@@ -1,5 +1,19 @@
+import { JobEmploymentType, JobLocationType, JobSeniorityLevel } from '../../enums/Job';
 import { RawAnalyticsGranularity, RawAnalyticsMetric } from '../../enums/raw/Analytics';
 import { TweetRepliesSortType } from '../../enums/Tweet';
+import { IXChatDecryptor, XChatConversationKey, XChatConversationKeyProvider } from '../XChatSession';
+
+/** Options for fetching and decoding one XChat conversation page. */
+export interface IDMConversationOptions {
+	/** Conversation key used only for this request. */
+	xChatConversationKey?: XChatConversationKey;
+	/** Key resolver used for this request instead of the configured provider. */
+	xChatConversationKeyProvider?: XChatConversationKeyProvider;
+	/** Conversation keys indexed by conversation ID; overrides configured keys with matching IDs. */
+	xChatConversationKeys?: Record<string, XChatConversationKey>;
+	/** Unlocked decryptor used for this request instead of the configured session. */
+	xChatSession?: IXChatDecryptor;
+}
 
 /**
  * Options specifying the data that is to be fetched.
@@ -46,6 +60,7 @@ export interface IFetchArgs {
 	 * - Has not effect for:
 	 * 	- {@link ResourceType.USER_FEED_FOLLOWED}
 	 * 	- {@link ResourceType.USER_FEED_RECOMMENDED}
+	 * 	- {@link ResourceType.USER_SUGGESTIONS}
 	 */
 	count?: number;
 
@@ -59,6 +74,14 @@ export interface IFetchArgs {
 	cursor?: string;
 
 	/**
+	 * Whether to fetch creator-only suggested users.
+	 *
+	 * @remarks
+	 * - Only works for {@link ResourceType.USER_SUGGESTIONS}.
+	 */
+	creatorOnly?: boolean;
+
+	/**
 	 * The filter for searching tweets.
 	 *
 	 * @remarks
@@ -67,11 +90,19 @@ export interface IFetchArgs {
 	filter?: ITweetFilter;
 
 	/**
+	 * The filter for searching X Jobs.
+	 *
+	 * @remarks
+	 * Required when searching for X Jobs using {@link ResourceType.JOB_SEARCH}.
+	 */
+	jobFilter?: IJobSearchFilter;
+
+	/**
 	 * The id of the target resource.
 	 *
 	 * @remarks
 	 * - Required for all resources except {@link ResourceType.TWEET_SEARCH} and {@link ResourceType.USER_TIMELINE_RECOMMENDED}.
-	 * - For {@link ResourceType.USER_DETAILS_BY_USERNAME}, {@link ResourceType.USER_ABOUT_BY_USERNAME}, and {@link ResourceType.USER_SEARCH}, can be alphanumeric, while for others, is strictly numeric.
+	 * - For {@link ResourceType.USER_DETAILS_BY_USERNAME}, {@link ResourceType.USER_ABOUT_BY_USERNAME}, {@link ResourceType.USER_SEARCH} and {@link ResourceType.CALL_SEARCH_PEOPLE}, can be alphanumeric, while for others, is strictly numeric.
 	 */
 	id?: string;
 
@@ -82,6 +113,9 @@ export interface IFetchArgs {
 	 * - Required only for {@link ResourceType.TWEET_DETAILS_BULK} and {@link ResourceType.USER_DETAILS_BY_IDS_BULK}.
 	 */
 	ids?: string[];
+
+	/** Whether XChat public-key results should include Juicebox recovery tokens. */
+	includeJuiceboxTokens?: boolean;
 
 	/**
 	 * Whether to include replay information when fetching space details.
@@ -119,7 +153,7 @@ export interface IFetchArgs {
 	 * The date to start fetching data from.
 	 *
 	 * @remarks
-	 * - Only works for {@link EResourceType.USER_ANALYTICS}.
+	 * - Only works for {@link EResourceType.USER_ANALYTICS}, {@link ResourceType.CALL_LIST}, {@link ResourceType.CALL_CALENDAR_REFRESH} and {@link ResourceType.CALL_USER_AVAILABILITY}.
 	 */
 	fromTime?: Date;
 
@@ -127,7 +161,7 @@ export interface IFetchArgs {
 	 * The date to end fetching data at.
 	 *
 	 * @remarks
-	 * - Only works for {@link EResourceType.USER_ANALYTICS}.
+	 * - Only works for {@link EResourceType.USER_ANALYTICS}, {@link ResourceType.CALL_LIST}, {@link ResourceType.CALL_CALENDAR_REFRESH} and {@link ResourceType.CALL_USER_AVAILABILITY}.
 	 */
 	toTime?: Date;
 
@@ -270,4 +304,38 @@ export interface ITweetFilter {
 
 	/** Whether to fetch top tweets or not. */
 	top?: boolean;
+}
+
+/**
+ * The filter to be used for searching X Jobs.
+ *
+ * @public
+ */
+export interface IJobSearchFilter {
+	/** The company whose jobs are to be searched. */
+	companyName?: string;
+
+	/** The employment types to search. */
+	employmentTypes?: JobEmploymentType[];
+
+	/** The industry to search. */
+	industry?: string;
+
+	/** The keyword to search. */
+	keyword?: string;
+
+	/** The location to search. */
+	location?: string;
+
+	/** The location id to search. */
+	locationId?: string;
+
+	/** The location ids to search. */
+	locationIds?: string[];
+
+	/** The location types to search. */
+	locationTypes?: JobLocationType[];
+
+	/** The seniority levels to search. */
+	seniorityLevels?: JobSeniorityLevel[];
 }

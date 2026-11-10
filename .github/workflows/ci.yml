@@ -14,7 +14,7 @@ jobs:
         strategy:
             matrix:
                 os: [ubuntu-latest]
-                node: [22]
+                node: [22, 24]
 
         steps:
             - name: Checkout
@@ -22,6 +22,8 @@ jobs:
 
             - name: Install node
               uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ matrix.node }}
 
             - name: Install dependencies
               run: npm install

@@ -4,7 +4,7 @@ A CLI tool and an API for fetching data from Twitter for free!
 
 ## Prerequisites
 
-- NodeJS 22
+- NodeJS 22 or 24
 - A working Twitter account (optional)
 
 ## Installation
@@ -28,68 +28,9 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - User Details (by username)
     - User Timeline
 
-- 'User' authentication (logging in) grants access to the following resources/actions:
+- 'User' authentication (logging in) grants access to everything else, plus the ones allowed by 'Guest' authentication.
 
-    - Direct Message Inbox
-    - Direct Message Conversations
-    - Direct Message Delete Conversation
-    - List Add Member
-    - List Details
-    - List Members
-    - List Mute
-    - List Remove Member
-    - List Tweets
-    - List Unmute
-    - List Update
-    - Space Details
-    - Tweet Details - Single and Bulk
-    - Tweet History
-    - Tweet Bookmark
-    - Tweet Like
-    - Tweet Likers
-    - Tweet Media Upload
-    - Tweet Post
-    - Tweet Replies
-    - Tweet Retweet
-    - Tweet Retweeters
-    - Tweet Schedule
-    - Tweet Search
-    - Tweet Stream
-    - Tweet Unbookmark
-    - Tweet Unlike
-    - Tweet Unpost
-    - Tweet Unretweet
-    - Tweet Unschedule
-    - User Affiliates
-    - User Analytics (Only for Premium accounts)
-    - User About Profile (by username)
-    - User Bookmarks
-    - User Bookmark Folders
-    - User Bookmark Folder Tweets
-    - User Details - Single (by ID and Username) and Bulk (by ID only)
-    - User Follow
-    - User Followed Feed
-    - User Followers
-    - User Following
-    - User Highlights
-    - User Likes
-    - User Lists
-    - User Media
-    - User Notification
-    - User Recommended Feed
-    - User Remove Follower
-    - User Replies Timeline
-    - User Search
-    - User Subscriptions
-    - User Timeline
-    - User Unfollow
-    - User Profile Update
-    - User Profile Image Update
-    - User Profile Banner Update
-    - User Username Change
-    - User Password Change
-
-By default, Rettiwt-API uses 'guest' authentication. If however, access to the full set of resources is required, 'user' authentication can be used. This is done by using the cookies associated with your Twitter/X account, and encoding them into an `API_KEY` for convenience. The said `API_KEY` can be obtained by using a **Firefox** extension or manually from your browser (Chrome/Chromium-Based/Firefox/Firefox-Based), as follows:
+By default, Rettiwt-API uses 'guest' authentication. If however, access to the full set of resources is required, 'user' authentication can be used. This is done by using the cookies associated with your Twitter/X account, and encoding them into an `API_KEY` for convenience. The said `API_KEY` can be obtained by using a **Firefox** extension, manually from your browser (Chrome/Chromium-Based/Firefox/Firefox-Based), or through the optional third-party userscript described below.
 
 ### Manual Method
 
@@ -99,6 +40,18 @@ By default, Rettiwt-API uses 'guest' authentication. If however, access to the f
 4. Copy the values of the 3 fields: `auth_token`, `ct0`, `twid`. These server as your authentication credentials.
 5. Go to `Console` of your browser developer tools, and execute the command: `btoa("auth_token=<auth_token_value>;ct0=<ct0_value>;twid=<twid_value>;")`. Substitute the values of the tokens with the values you copied.
 6. The output string is your API_KEY.
+
+### Third-Party ScriptCat Userscript
+
+The third-party [Rettiwt API Key Generator](https://scriptcat.org/en/script-show-page/8274) can generate a Rettiwt-API-compatible `API_KEY` from your current X/Twitter login cookies. It requires the [ScriptCat](https://github.com/scriptscat/scriptcat) userscript manager.
+
+1. Install [ScriptCat](https://github.com/scriptscat/scriptcat).
+2. Install the [Rettiwt API Key Generator](https://scriptcat.org/en/script-show-page/8274) userscript.
+3. Sign in to X/Twitter.
+4. Open the ScriptCat menu on `x.com` or `twitter.com` and run the generator.
+5. Store the generated `API_KEY` securely.
+
+> This is a third-party userscript and is not part of Rettiwt-API.
 
 ### Firefox Extension Method
 
@@ -151,6 +104,7 @@ A new Rettiwt instance can be initialized using the following code snippets:
 
 The Rettiwt class has five members:
 
+- `call` member, for accessing resources related to calls.
 - `dm` member, for accessing resources related to direct messages.
 - `list` member, for accessing resources related to lists.
 - `space` member, for accessing resources related to spaces.
@@ -250,7 +204,7 @@ For more information regarding the different available filter options, please re
 
 ### 3. Getting the next batch of data using a cursor
 
-The previous example fetches the the list of tweets matching the given filter. Since no count is specified, in this case, a default of 20 such Tweets are fetched initially. The following example demonstrates how to use the [cursor string](https://rishikant181.github.io/Rettiwt-API/classes/Cursor.html#value) obtained from the [response](https://rishikant181.github.io/Rettiwt-API/classes/CursoredData.html) object's [next](https://rishikant181.github.io/Rettiwt-API/classes/CursoredData.html#next) field, from the previous example, to fetch the next batch of tweets:
+The previous example fetches the the list of tweets matching the given filter. Since no count is specified, in this case, a default of 20 such Tweets are fetched initially. The following example demonstrates how to use the [cursor string](https://rishikant181.github.io/Rettiwt-API/classes/CursoredData.html#next) obtained from the [response](https://rishikant181.github.io/Rettiwt-API/classes/CursoredData.html) object's [next](https://rishikant181.github.io/Rettiwt-API/classes/CursoredData.html#next) field, from the previous example, to fetch the next batch of tweets:
 
 ```ts
 import { Rettiwt } from 'rettiwt-api';
@@ -279,7 +233,49 @@ rettiwt.tweet.search({
 });
 ```
 
-### 4. Getting the edit history of a tweet
+### 4. Searching X Jobs
+
+```ts
+import { Rettiwt } from 'rettiwt-api';
+
+// Creating a new Rettiwt instance using the API_KEY
+const rettiwt = new Rettiwt({ apiKey: API_KEY });
+
+// Fetching the first 25 jobs matching Discord
+rettiwt.job.search('Discord', 25)
+.then(data => {
+	...
+})
+.catch(err => {
+	...
+});
+```
+
+The details of a specific job can be fetched using its job ID:
+
+```ts
+rettiwt.job.details('<job_id>')
+.then(data => {
+	...
+})
+.catch(err => {
+	...
+});
+```
+
+Suggested locations for the jobs location selector can be fetched as follows:
+
+```ts
+rettiwt.job.locations('Grenoble')
+.then(data => {
+	...
+})
+.catch(err => {
+	...
+});
+```
+
+### 5. Getting the edit history of a tweet
 
 ```ts
 import { Rettiwt } from 'rettiwt-api';
@@ -296,6 +292,76 @@ rettiwt.tweet.history('<tweet_id>')
 	...
 });
 ```
+
+### 6. Scheduling and managing X Calls
+
+[X Calls](https://x.com/i/calls) lets the logged-in user schedule audio/video calls in a calendar. Times are passed as `Date` objects and returned as ISO strings. Each item returned by `list()` is one occurrence of an event, so a recurring call appears once per occurrence. To act on one occurrence, pass its `occurrence` value as an option.
+
+```ts
+import { CallRecurrenceScope, CallRsvpStatus, Rettiwt } from 'rettiwt-api';
+
+// Creating a new Rettiwt instance using the API_KEY
+const rettiwt = new Rettiwt({ apiKey: API_KEY });
+
+// Finding people who can be invited
+const [guest] = (await rettiwt.call.search('<username>')).filter((user) => user.canInvite);
+
+// Scheduling a weekly 30 minutes call, and emailing the invitation
+const id = await rettiwt.call.schedule({
+	title: 'Weekly sync',
+	startsAt: new Date('2026-10-15T10:00:00Z'),
+	duration: 30,
+	inviteeIds: [guest.id],
+	recurrence: 'FREQ=WEEKLY;BYDAY=TH',
+	emailGuests: true,
+});
+
+// Listing the calendar for the next 7 days (scheduled calls, holidays and linked Google/Outlook events)
+const calls = await rettiwt.call.list();
+
+// Moving only the next occurrence one hour later
+const next = calls.find((call) => call.id === id)!;
+await rettiwt.call.update(
+	id!,
+	{ startsAt: new Date(new Date(next.startsAt).getTime() + 3600000) },
+	{ occurrence: new Date(next.occurrence), scope: CallRecurrenceScope.THIS },
+);
+
+// Responding to an invitation, and being reminded 10 minutes before
+await rettiwt.call.rsvp('<call_id>', CallRsvpStatus.ACCEPTED);
+await rettiwt.call.remind('<call_id>', 10);
+
+// Cancelling the whole series
+await rettiwt.call.cancel(id!, { scope: CallRecurrenceScope.ALL, emailGuests: true });
+```
+
+### 7. Uploading media and setting its metadata
+
+After uploading a media file, its alt text, sensitive content warnings and other options can be set before it is attached to a tweet. Only the options that are specified are sent; omitted options keep their default values.
+
+```ts
+import { Rettiwt, SensitiveWarning } from 'rettiwt-api';
+
+// Creating a new Rettiwt instance using the API_KEY
+const rettiwt = new Rettiwt({ apiKey: API_KEY });
+
+// Uploading a media file
+const id = await rettiwt.tweet.upload('mountains.jpg');
+
+// Setting the metadata of the uploaded media
+await rettiwt.tweet.setMediaMetadata(id, {
+	altText: 'A snowy mountain range at sunrise',
+	sensitiveWarning: [SensitiveWarning.OTHER],
+	allowDownload: false,
+	blockGrokEdit: true,
+	aiGenerated: false,
+});
+
+// Posting a tweet with the media
+await rettiwt.tweet.post({ text: 'Sunrise', media: [{ id: id }] });
+```
+
+The metadata must be set before the media is posted in a tweet, and within the 24 hours for which the uploaded media is retained.
 
 ## Using a response middleware
 
@@ -398,6 +464,68 @@ For masking of IP address using a proxy server (HTTP/HTTPS/SOCKS), use the follo
     ```
 
 This creates a Rettiwt instance which uses the given proxy server for making requests to Twitter.
+
+## Encrypted Chats
+
+### Decrypting XChat with a conversation key
+
+Encrypted XChat messages can be decoded when their 32-byte conversation key is supplied as a
+`Uint8Array`, hexadecimal string, or base64/base64url string. A key can be provided for one call:
+
+```ts
+const conversation = await rettiwt.dm.conversation('394028042:1645287614', {
+	xChatConversationKey: process.env.XCHAT_CONVERSATION_KEY,
+});
+```
+
+For applications that keep keys in a secure store, configure an asynchronous provider instead:
+
+```ts
+const rettiwt = new Rettiwt({
+	apiKey: API_KEY,
+	xChatConversationKeyProvider: async (conversationId) => keyStore.get(conversationId),
+});
+```
+
+Messages whose key is unavailable or invalid are preserved with an empty body and
+`isEncrypted: true`. Successfully decrypted XChat messages also retain `isEncrypted: true` to
+indicate how their payload was transported; the flag does not indicate whether local decryption
+succeeded. Rettiwt does not persist conversation keys.
+
+### Recovering XChat keys with a PIN
+
+PIN-based recovery and verified event decryption are powered by X's open-source
+[Chat XDK](https://github.com/xdevplatform/chat-xdk), which made this integration significantly
+faster to implement. The SDK is optional and does not increase the install size for other Rettiwt
+users. Install it and its Juicebox peer when the feature is needed:
+
+```sh
+npm install @xdevplatform/chat-xdk juicebox-sdk
+```
+
+Rettiwt can fetch the account's registered key, Juicebox configuration, realm tokens, and participant
+signing keys automatically using the configured API key. The PIN is passed directly to the official
+SDK and is not retained by Rettiwt:
+
+```ts
+import { Rettiwt } from 'rettiwt-api';
+
+const rettiwt = new Rettiwt({ apiKey: API_KEY });
+await rettiwt.dm.unlockXChat(process.env.XCHAT_PIN!);
+const conversation = await rettiwt.dm.conversation(CONVERSATION_ID);
+
+// Clear private and cached key material when the session is no longer needed.
+rettiwt.dm.lockXChat();
+```
+
+Recovery metadata and realm tokens are fetched when `unlockXChat` is called and are not persisted by
+Rettiwt. Participant signing keys are refreshed before decrypting each conversation page. Never
+hard-code or log the PIN. Juicebox limits incorrect recovery attempts, so only test with the known
+PIN.
+
+Call `lockXChat()` when the recovered session is no longer needed. Calling `conversation()` after
+locking still returns encrypted message shells unless a conversation key or another unlocked session
+is supplied.
 
 ## Debug logs
 
@@ -524,7 +652,7 @@ fetcher
 	});
 ```
 
-As demonstrated by the example, the raw data can be accessed by using the `request` method of the `FetcherService` class, which takes two parameters. The first parameter is the name of the requested resource, while the second is an object specifying the associated arguments required for the given resource. The complete list of resource type can be checked [here](https://rishikant181.github.io/Rettiwt-API/enums/AuthService.html#ResourceType). As for the resource specific argurments, they are the same as that of the methods of `Rettiwt` class' methods for the respective resources, but structured as an object. Notice how the `FetcherService` class takes the same arguments as the `Rettiwt` class, and the arguments have the same effects as they have in case of `Rettiwt` class.
+As demonstrated by the example, the raw data can be accessed by using the `request` method of the `FetcherService` class, which takes two parameters. The first parameter is the name of the requested resource, while the second is an object specifying the associated arguments required for the given resource. The complete list of resource type can be checked [here](https://rishikant181.github.io/Rettiwt-API/enums/ResourceType.html). As for the resource specific argurments, they are the same as that of the methods of `Rettiwt` class' methods for the respective resources, but structured as an object. Notice how the `FetcherService` class takes the same arguments as the `Rettiwt` class, and the arguments have the same effects as they have in case of `Rettiwt` class.
 
 #### Notes:
 
@@ -540,11 +668,33 @@ For handling and processing of data returned by the functions, it's always advis
 
 So far, the following operations are supported:
 
+### Calls
+
+- [Getting the shared calendar (busy slots) of a user](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#availability)
+- [Getting the external calendars linked to X Calls](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#calendars)
+- [Cancelling a scheduled call](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#cancel)
+- [Creating a call link to use later](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#create)
+- [Customizing the color/visibility of a scheduled call](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#customize)
+- [Getting the calendar of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#list)
+- [Syncing the linked external calendars](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#refreshCalendars)
+- [Setting the reminder of a scheduled call](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#remind)
+- [Responding to a scheduled call invitation](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#rsvp)
+- [Scheduling a new call](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#schedule)
+- [Searching for people to invite to a call](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#search)
+- [Unlinking an external calendar](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#unlinkCalendar)
+- [Updating a scheduled call](https://rishikant181.github.io/Rettiwt-API/classes/CallService.html#update)
+
 ### Direct Messages
 
 - [Getting the DM inbox](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#inbox)
 - [Getting a specific conversation with full message history](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#conversation)
 - [Deleting a conversation](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#deleteConversation)
+
+### Jobs
+
+- [Getting the details of an X Job](https://rishikant181.github.io/Rettiwt-API/classes/JobService.html#details)
+- [Getting suggested X Job locations](https://rishikant181.github.io/Rettiwt-API/classes/JobService.html#locations)
+- [Searching for X Jobs](https://rishikant181.github.io/Rettiwt-API/classes/JobService.html#search)
 
 ### List
 
@@ -581,6 +731,7 @@ So far, the following operations are supported:
 - [Unretweeting a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unretweet)
 - [Unscheduling a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unschedule)
 - [Uploading a media file for a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#upload)
+- [Setting the metadata (alt text, sensitive content warnings, etc.) of an uploaded media file](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#setMediaMetadata)
 
 ### Users
 
@@ -604,6 +755,7 @@ So far, the following operations are supported:
 - [Getting the recommended feed of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#recommended)
 - [Getting the replies timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#replies)
 - [Searching for a username](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#search)
+- [Getting suggested users from the Connect tab](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#suggestions)
 - [Getting the tweet timeline of the given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#timeline)
 - [Unfollowing a given user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#unfollow)
 - [Updating the profile of the logged-in user](https://rishikant181.github.io/Rettiwt-API/classes/UserService.html#updateProfile)
@@ -629,7 +781,12 @@ Help for the CLI can be obtained from the CLI itself:
 
 - For help regarding the available commands, use the command `rettiwt help`
 - For help regarding a specific command, use the command `rettiwt help <command_name>`
+- For fetching the details of an X Job, use the command `rettiwt job details <job_id>`
+- For fetching suggested X Job locations, use the command `rettiwt job locations <query>`
+- For searching X Jobs, use the command `rettiwt job search <keyword>`
 - For fetching the edit history of a tweet, use the command `rettiwt tweet history <tweet_id>`
+- For fetching suggested users from the Connect tab, use the command `rettiwt user suggestions`
+- For setting the metadata of an uploaded media file, use the command `rettiwt tweet set-media-metadata <media_id>` (see `rettiwt help tweet set-media-metadata` for the available options)
 
 ## API Reference
 

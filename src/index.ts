@@ -8,32 +8,43 @@ export * from './enums/raw/Notification';
 export * from './enums/raw/Tweet';
 export * from './enums/Api';
 export * from './enums/Authentication';
+export * from './enums/Call';
 export * from './enums/Data';
+export * from './enums/Job';
 export * from './enums/Logging';
 export * from './enums/Media';
 export * from './enums/Notification';
 export * from './enums/Resource';
 export * from './enums/Tweet';
+export * from './enums/SensitiveWarning';
 
 // MODELS
 export * from './models/args/FetchArgs';
 export * from './models/args/PostArgs';
 export * from './models/args/ProfileArgs';
 export * from './models/data/BookmarkFolder';
+export * from './models/data/CalendarLink';
+export * from './models/data/CallUser';
 export * from './models/data/Conversation';
 export * from './models/data/CursoredData';
 export * from './models/data/DirectMessage';
 export * from './models/data/Inbox';
+export * from './models/data/Job';
+export * from './models/data/JobLocation';
 export * from './models/data/List';
 export * from './models/data/Notification';
+export * from './models/data/ScheduledCall';
 export * from './models/data/Space';
 export * from './models/data/Tweet';
 export * from './models/data/User';
 export * from './models/data/UserAbout';
 export * from './models/errors/TwitterError';
+export * from './models/XChatSession';
 
 // REQUESTS
+export * from './requests/Call';
 export * from './requests/DirectMessage';
+export * from './requests/Job';
 export * from './requests/List';
 export * from './requests/Media';
 export * from './requests/Space';
@@ -41,8 +52,10 @@ export * from './requests/Tweet';
 export * from './requests/User';
 
 // SERVICES
+export * from './services/public/CallService';
 export * from './services/public/DirectMessageService';
 export * from './services/public/FetcherService';
+export * from './services/public/JobService';
 export * from './services/public/ListService';
 export * from './services/public/SpaceService';
 export * from './services/public/TweetService';
@@ -53,12 +66,17 @@ export * from './types/args/FetchArgs';
 export * from './types/args/PostArgs';
 export * from './types/args/ProfileArgs';
 export * from './types/data/BookmarkFolder';
+export * from './types/data/CalendarLink';
+export * from './types/data/CallUser';
 export * from './types/data/Conversation';
 export * from './types/data/CursoredData';
 export * from './types/data/DirectMessage';
 export * from './types/data/Inbox';
+export * from './types/data/Job';
+export * from './types/data/JobLocation';
 export * from './types/data/List';
 export * from './types/data/Notification';
+export * from './types/data/ScheduledCall';
 export * from './types/data/Space';
 export * from './types/data/Tweet';
 export * from './types/data/User';
@@ -67,8 +85,16 @@ export * from './types/errors/TwitterError';
 export * from './types/params/Variables';
 export { IAnalytics as IRawAnalytics } from './types/raw/base/Analytic';
 export { IBookmarkFolder as IRawBookmarkFolder } from './types/raw/base/BookmarkFolder';
+export {
+	ICalendarEvent as IRawCalendarEvent,
+	ICalendarEventOccurrence as IRawCalendarEventOccurrence,
+	ICalendarExternalLink as IRawCalendarExternalLink,
+	ICalendarUser as IRawCalendarUser,
+} from './types/raw/base/Calendar';
 export { ICursor as IRawCursor } from './types/raw/base/Cursor';
 export { IErrorData as IRawErrorData, IErrorDetails as IRawErrorDetails } from './types/raw/base/Error';
+export { IJob as IRawJob, IJobResult as IRawJobResult } from './types/raw/base/Job';
+export { IJobLocation as IRawJobLocation } from './types/raw/base/JobLocation';
 export { ILimitedVisibilityTweet as IRawLimitedVisibilityTweet } from './types/raw/base/LimitedVisibilityTweet';
 export { IList as IRawList } from './types/raw/base/List';
 export { IMedia as IRawMedia } from './types/raw/base/Media';
@@ -81,6 +107,22 @@ export { IDataResult as IRawDataResult } from './types/raw/composite/DataResult'
 export { ITimelineTweet as IRawTimelineTweet } from './types/raw/composite/TimelineTweet';
 export { ITimelineUser as IRawTimelineUser } from './types/raw/composite/TimelineUser';
 export { IResponse as IRawResponse } from './types/raw/generic/Response';
+export { IExternalCalendarLinksListResponse as IRawExternalCalendarLinksListResponse } from './types/raw/call/ExternalCalendarLinksList';
+export { IExternalCalendarLinksUnlinkResponse as IRawExternalCalendarLinksUnlinkResponse } from './types/raw/call/ExternalCalendarLinksUnlink';
+export { IScheduledCallsApiCancelResponse as IRawScheduledCallsApiCancelResponse } from './types/raw/call/ScheduledCallsApiCancel';
+export { IScheduledCallsApiListResponse as IRawScheduledCallsApiListResponse } from './types/raw/call/ScheduledCallsApiList';
+export { IScheduledCallsApiListUserResponse as IRawScheduledCallsApiListUserResponse } from './types/raw/call/ScheduledCallsApiListUser';
+export { IScheduledCallsApiRefreshExternalResponse as IRawScheduledCallsApiRefreshExternalResponse } from './types/raw/call/ScheduledCallsApiRefreshExternal';
+export { IScheduledCallsApiRsvpResponse as IRawScheduledCallsApiRsvpResponse } from './types/raw/call/ScheduledCallsApiRsvp';
+export { IScheduledCallsApiScheduleResponse as IRawScheduledCallsApiScheduleResponse } from './types/raw/call/ScheduledCallsApiSchedule';
+export { IScheduledCallsApiSearchPeopleResponse as IRawScheduledCallsApiSearchPeopleResponse } from './types/raw/call/ScheduledCallsApiSearchPeople';
+export { IScheduledCallsApiSetEventMetadataResponse as IRawScheduledCallsApiSetEventMetadataResponse } from './types/raw/call/ScheduledCallsApiSetEventMetadata';
+export { IScheduledCallsApiSetEventReminderResponse as IRawScheduledCallsApiSetEventReminderResponse } from './types/raw/call/ScheduledCallsApiSetEventReminder';
+export { IScheduledCallsApiUpdateResponse as IRawScheduledCallsApiUpdateResponse } from './types/raw/call/ScheduledCallsApiUpdate';
+export { IXCallsStartCallResponse as IRawXCallsStartCallResponse } from './types/raw/call/XCallsStartCall';
+export { IJobScreenQueryResponse as IRawJobScreenQueryResponse } from './types/raw/job/JobScreenQuery';
+export { IJobSearchQueryScreenJobsQueryResponse as IRawJobSearchQueryScreenJobsQueryResponse } from './types/raw/job/JobSearchQueryScreenJobsQuery';
+export { ILocationSelectorQueryResponse as IRawLocationSelectorQueryResponse } from './types/raw/job/LocationSelectorQuery';
 export { IListMemberAddResponse as IRawListMemberAddResponse } from './types/raw/list/AddMember';
 export { IListCreateResponse as IRawListCreateResponse } from './types/raw/list/Create';
 export { IListDeleteResponse as IRawListDeleteResponse } from './types/raw/list/Delete';
@@ -129,6 +171,7 @@ export { IUserNotificationsResponse as IRawUserNotificationsResponse } from './t
 export { IUserRecommendedResponse as IRawUserRecommendedResponse } from './types/raw/user/Recommended';
 export { IUserSearchResponse as IRawUserSearchResponse } from './types/raw/user/Search';
 export { IUserScheduledResponse as IRawUserScheduledResponse } from './types/raw/user/Scheduled';
+export { IUserSuggestionsResponse as IRawUserSuggestionsResponse } from './types/raw/user/Suggestions';
 export { IUserSubscriptionsResponse as IRawUserSubscriptionsResponse } from './types/raw/user/Subscriptions';
 export { IUserTweetsResponse as IRawUserTweetsResponse } from './types/raw/user/Tweets';
 export { IUserTweetsAndRepliesResponse as IRawUserTweetsAndRepliesResponse } from './types/raw/user/TweetsAndReplies';
@@ -138,7 +181,9 @@ export { IUserSettingsResponse as IRawUserSettingsResponse } from './types/raw/u
 export { IUserChangePasswordResponse as IRawUserChangePasswordResponse } from './types/raw/user/ChangePassword';
 export * from './types/ErrorHandler';
 export * from './types/RettiwtConfig';
+export * from './types/XChatSession';
 export { IConversationTimelineResponse as IRawConversationTimelineResponse } from './types/raw/dm/Conversation';
+export { IConversationPageResponse as IRawConversationPageResponse } from './types/raw/dm/ConversationPage';
 export { IInboxInitialResponse as IRawInboxInitialResponse } from './types/raw/dm/InboxInitial';
 export { IInboxTimelineResponse as IRawInboxTimelineResponse } from './types/raw/dm/InboxTimeline';
 export { IUserUpdatesResponse as IRawUserUpdatesResponse } from './types/raw/dm/UserUpdates';
