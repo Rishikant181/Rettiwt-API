@@ -239,7 +239,9 @@ function readFieldAsString(fields: ITlvField[], fieldId: number): string | undef
 	}
 
 	if (field.kind === 'u32' || field.kind === 'u64') {
-		return field.kind === 'u32' ? String(field.value as number) : String(field.value as bigint);
+		/* eslint-disable @typescript-eslint/no-base-to-string */
+		return field.kind === 'u32' ? String(field.value) : String(field.value);
+		/* eslint-enable @typescript-eslint/no-base-to-string */
 	}
 
 	if (field.kind === 'bool') {
